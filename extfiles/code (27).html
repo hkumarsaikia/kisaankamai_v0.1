@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Owner Benefits | Kisan Kamai</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f8f9ff",
+                    "surface-container-highest": "#dfe2ea",
+                    "surface-bright": "#f8f9ff",
+                    "outline": "#717974",
+                    "on-tertiary-fixed-variant": "#693c00",
+                    "primary-fixed-dim": "#a6cfbd",
+                    "on-tertiary-fixed": "#2c1600",
+                    "tertiary-container": "#4f2c00",
+                    "inverse-on-surface": "#eef1f9",
+                    "secondary-container": "#ffa274",
+                    "on-surface-variant": "#414844",
+                    "surface-variant": "#dfe2ea",
+                    "secondary": "#934a24",
+                    "on-primary-fixed": "#002117",
+                    "secondary-fixed": "#ffdbcc",
+                    "primary-fixed": "#c2ecd9",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#f1f3fc",
+                    "on-secondary-container": "#783610",
+                    "surface-container-high": "#e5e8f0",
+                    "background": "#f8f9ff",
+                    "on-primary-fixed-variant": "#284e40",
+                    "on-surface": "#181c22",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#d7dae2",
+                    "tertiary": "#321900",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#75340e",
+                    "secondary-fixed-dim": "#ffb693",
+                    "inverse-surface": "#2d3137",
+                    "primary": "#00251a",
+                    "tertiary-fixed-dim": "#ffb870",
+                    "surface-tint": "#406657",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#143b2e",
+                    "outline-variant": "#c1c8c3",
+                    "on-tertiary-container": "#da8b31",
+                    "on-secondary-fixed": "#351000",
+                    "on-primary-container": "#7ea594",
+                    "surface-container": "#ebeef6",
+                    "inverse-primary": "#a6cfbd",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffdcbe",
+                    "on-background": "#181c22"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(20, 59, 46, 0.1);
+      }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-white/95 dark:bg-emerald-950/95 backdrop-blur-md shadow-sm border-b border-emerald-100 dark:border-emerald-800/50">
+<nav class="flex justify-between items-center max-w-7xl mx-auto px-6 h-20">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50">Kisan Kamai</span>
+<div class="hidden md:flex gap-6">
+<a class="font-manrope text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">Browse</a>
+<a class="font-manrope text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">How it Works</a>
+<a class="font-manrope text-sm font-semibold tracking-tight text-emerald-700 dark:text-emerald-300 border-b-2 border-emerald-700 dark:border-emerald-300 pb-1" href="#">List Equipment</a>
+<a class="font-manrope text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">Help</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-manrope text-sm font-semibold tracking-tight text-emerald-900 px-4 py-2 hover:bg-emerald-50/50 transition-all">मराठी</button>
+<button class="font-manrope text-sm font-semibold tracking-tight bg-primary-container text-white px-6 py-2.5 rounded-lg hover:opacity-90 transition-all">Sign In</button>
+</div>
+</nav>
+</header>
+<main class="pt-20">
+<!-- Section 1: Hero - Maximize Potential -->
+<section class="relative min-h-[716px] flex items-center overflow-hidden bg-primary-container">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-30 mix-blend-overlay" data-alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDILWsQRNajInaI5a7jkQTRsstGwl2AA2NN_k_7oiF0S-YWOG_P4HVjH2rCUOhbxtn76t29FzI2U7WbpkT7Qll0kxq-HKkzGbwUaqHITy1xL9wR0B4ACznS3guY6iPm0r_7TnU0UWyaHyoZmsCAGi7rXA5C3WF4GkWDEjJ03BbuNApwslfcWjCwFBnnDh_wa8MCpgFz2ET36oU4kgsR1fo83S9BgU-x-fD3vdkhe7wtkaW6J7kVkL7EF-OsINEh378JTV9vJ6A_J-SA"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary-container via-primary-container/80 to-transparent"></div>
+</div>
+<div class="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="space-y-8">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-on-tertiary-container/20 border border-on-tertiary-container/30 rounded-full text-on-tertiary-container font-label text-xs font-bold uppercase tracking-widest">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
+                        Owner Opportunity
+                    </div>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold text-white leading-tight">
+                        Maximize Your <br/><span class="text-on-secondary-container">Machine's Potential.</span>
+</h1>
+<p class="text-on-primary-container text-lg md:text-xl max-w-xl font-medium leading-relaxed">
+                        Turn your idle farming equipment into a consistent revenue stream. Connect with verified farmers in Sangli, Satara, and Kolhapur districts.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-secondary-container text-on-secondary-container font-bold px-8 py-4 rounded-xl hover:scale-105 transition-transform flex items-center gap-2">
+                            List Your Machine Now
+                            <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+<button class="bg-white/10 backdrop-blur text-white border border-white/20 font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all">
+                            View Success Stories
+                        </button>
+</div>
+</div>
+<div class="hidden lg:grid grid-cols-2 gap-4">
+<div class="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl mt-12">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl mb-4">account_balance_wallet</span>
+<h3 class="text-white font-bold text-xl mb-2">Steady Income</h3>
+<p class="text-on-primary-container text-sm">Supplement your seasonal earnings with consistent rental requests from local farmers.</p>
+</div>
+<div class="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl">
+<span class="material-symbols-outlined text-on-secondary-container text-4xl mb-4">verified_user</span>
+<h3 class="text-white font-bold text-xl mb-2">Verified Renters</h3>
+<p class="text-on-primary-container text-sm">Every renter is KYC-verified. Your equipment is in safe, professional hands.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Earnings Calculator -->
+<section class="py-24 bg-surface relative overflow-hidden">
+<div class="max-w-7xl mx-auto px-6">
+<div class="mb-16 text-center max-w-3xl mx-auto">
+<h2 class="font-headline text-4xl font-extrabold text-primary mb-4">How much can you earn?</h2>
+<p class="text-on-surface-variant font-medium">Select your equipment type to see estimated monthly earnings based on local market rates in Western Maharashtra.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Calculator Sidebar -->
+<div class="lg:col-span-1 bg-white p-8 rounded-3xl shadow-sm border border-outline-variant/30 space-y-8">
+<div>
+<label class="block text-sm font-bold text-primary mb-4 uppercase tracking-wider">Equipment Type</label>
+<div class="space-y-3">
+<button class="w-full flex justify-between items-center px-4 py-3 rounded-xl border-2 border-primary bg-primary/5 text-primary font-bold">
+<span class="flex items-center gap-3"><span class="material-symbols-outlined">agriculture</span> Tractor (45HP+)</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</button>
+<button class="w-full flex justify-between items-center px-4 py-3 rounded-xl border border-outline-variant text-on-surface-variant font-medium hover:border-primary/50 transition-colors">
+<span class="flex items-center gap-3"><span class="material-symbols-outlined">settings_input_component</span> Harvester</span>
+</button>
+<button class="w-full flex justify-between items-center px-4 py-3 rounded-xl border border-outline-variant text-on-surface-variant font-medium hover:border-primary/50 transition-colors">
+<span class="flex items-center gap-3"><span class="material-symbols-outlined">tire_repair</span> Rotavator</span>
+</button>
+</div>
+</div>
+<div>
+<label class="block text-sm font-bold text-primary mb-4 uppercase tracking-wider">Operational District</label>
+<select class="w-full rounded-xl border-outline-variant focus:ring-primary focus:border-primary py-3">
+<option>Sangli</option>
+<option>Satara</option>
+<option>Kolhapur</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-bold text-primary mb-4 uppercase tracking-wider">Expected Usage (Days/Month)</label>
+<input class="w-full accent-primary h-2 bg-surface-container rounded-lg appearance-none cursor-pointer" max="25" min="5" type="range" value="15"/>
+<div class="flex justify-between mt-2 text-xs font-bold text-on-surface-variant">
+<span>5 Days</span>
+<span>25 Days</span>
+</div>
+</div>
+</div>
+<!-- Earnings Display - Bento Style -->
+<div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="md:col-span-2 bg-primary-container text-white p-10 rounded-3xl flex flex-col justify-between relative overflow-hidden">
+<div class="relative z-10">
+<span class="text-on-primary-container text-sm font-bold uppercase tracking-widest">Estimated Monthly Earnings</span>
+<div class="text-6xl font-extrabold mt-4 mb-2">₹45,000 - ₹62,000</div>
+<p class="text-on-primary-container max-w-sm">Based on typical rental demand for 45HP tractors in Kolhapur during the Rabi season.</p>
+</div>
+<div class="mt-8 flex gap-4 relative z-10">
+<div class="bg-white/10 px-4 py-2 rounded-lg border border-white/20">
+<span class="block text-[10px] uppercase font-bold text-on-primary-container">Avg. Daily Rate</span>
+<span class="text-lg font-bold">₹3,500</span>
+</div>
+<div class="bg-white/10 px-4 py-2 rounded-lg border border-white/20">
+<span class="block text-[10px] uppercase font-bold text-on-primary-container">Market Demand</span>
+<span class="text-lg font-bold">High</span>
+</div>
+</div>
+<span class="material-symbols-outlined absolute -right-8 -bottom-8 text-[200px] opacity-5 text-white">payments</span>
+</div>
+<div class="bg-secondary/5 border border-secondary/10 p-8 rounded-3xl flex flex-col justify-center">
+<h4 class="text-secondary font-extrabold text-2xl mb-2">Platform Fee</h4>
+<p class="text-on-surface-variant text-sm font-medium">Transparent 10% commission only when you earn. No hidden listing charges.</p>
+</div>
+<div class="bg-tertiary/5 border border-tertiary/10 p-8 rounded-3xl flex flex-col justify-center">
+<h4 class="text-tertiary font-extrabold text-2xl mb-2">Payout Speed</h4>
+<p class="text-on-surface-variant text-sm font-medium">Earnings are transferred directly to your bank account within 48 hours of job completion.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Seasonal Opportunities -->
+<section class="py-24 bg-white">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+<div>
+<h2 class="font-headline text-4xl font-extrabold text-primary mb-2">Seasonal Demand Forecast</h2>
+<p class="text-on-surface-variant font-medium">Plan your listing according to local crop cycles in Western Maharashtra.</p>
+</div>
+<div class="flex bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button class="px-6 py-2 rounded-full bg-primary text-white font-bold text-sm">Kharif</button>
+<button class="px-6 py-2 rounded-full text-on-surface-variant font-bold text-sm">Rabi</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Kharif Focus -->
+<div class="group relative aspect-[4/5] rounded-[2rem] overflow-hidden">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" data-alt="Close up of lush green rice paddy fields in Maharashtra during the monsoon season with raindrops" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiZlgPkcTpl63KlbPfe1tfbMdyXN-LUY6Ic3T949MGVA0l5-rx09oerBQSM8J0oVPrs3pJy0U3D7NRgmicdjIUfdTrPZHRF0rVGXZrbDMPNW2P0rVwd_3E72E_wa3V84uK7iD4GPj_1xm28YMEZB1dOrAeLVfec8BSLp0p1iUty3LyTpW4Qu_bGieDJfptdCIaLYyqPU5PeHBxPa6fclBrs78N9isvXA-pqMQs4OjPlOlWTlBa_O6hD7M4lVRARPHCOLiDQdk-oz1K"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent"></div>
+<div class="absolute bottom-0 p-8 text-white">
+<span class="text-secondary-container font-bold text-xs uppercase tracking-widest">June - October</span>
+<h3 class="text-2xl font-extrabold mt-2 mb-4">Rice &amp; Sugarcane</h3>
+<ul class="space-y-2 text-sm text-white/80 font-medium">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Land Preparation</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Sowing &amp; Transplanting</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm">check</span> Spraying Support</li>
+</ul>
+</div>
+</div>
+<div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-surface p-8 rounded-[2rem] border border-outline-variant/20">
+<div class="w-12 h-12 bg-primary-container text-on-primary-container rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+<h4 class="text-xl font-bold text-primary mb-3">Sangli - Satara Hub</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">High demand for rotavators and small-batch seeders for turmeric and grape cultivation during the pre-monsoon phase.</p>
+</div>
+<div class="bg-surface p-8 rounded-[2rem] border border-outline-variant/20">
+<div class="w-12 h-12 bg-secondary text-white rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined">trending_up</span>
+</div>
+<h4 class="text-xl font-bold text-primary mb-3">Peak Utilization</h4>
+<p class="text-on-surface-variant text-sm leading-relaxed">Owners reporting 85%+ machine utilization during July-August peak planting seasons in Kolhapur district.</p>
+</div>
+<div class="md:col-span-2 bg-gradient-to-br from-primary-container to-emerald-900 p-8 rounded-[2rem] text-white flex flex-col md:flex-row items-center gap-8">
+<div class="flex-1">
+<h4 class="text-2xl font-extrabold mb-2">Want a custom forecast?</h4>
+<p class="text-on-primary-container text-sm">Talk to our local field officers in Satara for specific village-level demand insights.</p>
+</div>
+<button class="bg-white text-primary font-bold px-6 py-3 rounded-xl whitespace-nowrap">Consult Expert</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Owner Stories - Trust & Safe Handoff -->
+<section class="py-24 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+<div>
+<div class="inline-block px-4 py-1 bg-secondary/10 text-secondary rounded-full text-xs font-bold uppercase mb-4 tracking-widest">Trust &amp; Safety</div>
+<h2 class="font-headline text-4xl font-extrabold text-primary mb-6">Your machine is our priority.</h2>
+<div class="space-y-8">
+<div class="flex gap-6">
+<div class="shrink-0 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">security</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary mb-1">Safe Handoff Protocol</h4>
+<p class="text-on-surface-variant text-sm">Digital checklist and photo-verification at both pickup and return ensures your equipment's condition is documented.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="shrink-0 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary mb-1">KYC Verified Community</h4>
+<p class="text-on-surface-variant text-sm">We only allow farmers with verified identities and past successful rental history to book premium machines.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="shrink-0 w-12 h-12 rounded-full bg-white flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary mb-1">24/7 Field Support</h4>
+<p class="text-on-surface-variant text-sm">Local Marathi-speaking support available for any operational issues or mechanical emergencies during the rental period.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="relative">
+<div class="glass-card p-8 rounded-[2.5rem] relative z-10 shadow-xl">
+<div class="flex items-center gap-4 mb-6">
+<img class="w-16 h-16 rounded-full object-cover border-2 border-primary/20" data-alt="Portrait of a smiling Indian man in his 40s, a rural equipment owner, wearing a clean shirt and looking proud" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiLWaczkz-WEOKJpqz5ETaxr77Xsk3OZ-U5gnOSs2-MgkEQc4-bgosTD9zxBKDwh911Ee7UT1taA_nrV7rFiVqs8sya_bnIeWEJMsPMjRuC1IDQiaHEDP7020Si7ALO17Hz-2Jz-fldXjrhnwe3xMDg_P2FYqMQrXAe4Np7jQ-7hT0mja4pqLMio03w8aYgLLPJVDCNSBk7YO6McY9Bc-gFBxZcGAZ7V08TPMy3jd49655TFUa0GMZaU3UAIq2N81HeKZRKQxLcUMK"/>
+<div>
+<h5 class="font-bold text-primary">Sanjay Deshmukh</h5>
+<p class="text-xs text-on-surface-variant font-medium">Tractor Owner • Karad, Satara</p>
+</div>
+<div class="ml-auto text-on-tertiary-container font-bold text-sm">
+<span class="material-symbols-outlined text-sm align-middle" style="font-variation-settings: 'FILL' 1;">star</span> 4.9/5
+                                </div>
+</div>
+<p class="text-on-surface font-medium italic leading-relaxed mb-8">
+                                "I was hesitant about giving my New Holland tractor to someone else. But Kisan Kamai’s verification and their clear photo-check before and after the rental gave me confidence. Now, my tractor pays for its own EMI and maintenance through rental income during the off-season."
+                            </p>
+<div class="flex items-center justify-between pt-6 border-t border-outline-variant/30">
+<div class="text-xs text-on-surface-variant font-bold uppercase tracking-wider">Total Earnings to date</div>
+<div class="text-2xl font-extrabold text-primary">₹3.2 Lakhs</div>
+</div>
+</div>
+<div class="absolute -top-4 -right-4 w-24 h-24 bg-tertiary-fixed rounded-full -z-0 opacity-50"></div>
+<div class="absolute -bottom-10 -left-10 w-48 h-48 bg-primary-fixed rounded-full -z-0 opacity-30 blur-2xl"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final CTA -->
+<section class="py-20 bg-primary-container relative overflow-hidden">
+<div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold text-white mb-6">Ready to list your machine?</h2>
+<p class="text-on-primary-container text-lg mb-10 max-w-2xl mx-auto">Join the 1,500+ equipment owners in Western Maharashtra earning through Kisan Kamai. Listing takes less than 5 minutes.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-4">
+<button class="bg-secondary-container text-on-secondary-container font-bold px-10 py-4 rounded-xl hover:scale-105 transition-transform">Get Started Today</button>
+<button class="bg-transparent border border-white/30 text-white font-bold px-10 py-4 rounded-xl hover:bg-white/10 transition-all">Talk to Area Manager</button>
+</div>
+</div>
+<div class="absolute inset-0 opacity-10">
+<div class="absolute top-0 left-0 w-64 h-64 border-[40px] border-white/20 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+<div class="absolute bottom-0 right-0 w-96 h-96 border-[60px] border-white/20 rounded-full translate-x-1/3 translate-y-1/3"></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-0 pt-12 pb-8 bg-emerald-900 dark:bg-black border-t border-emerald-800 dark:border-emerald-900">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<span class="text-xl font-black text-white">Kisan Kamai</span>
+<p class="text-emerald-200/70 text-sm mt-4 font-manrope leading-relaxed">Empowering farmers and equipment owners across Maharashtra through technology and trust.</p>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-white font-bold text-sm mb-2">Company</span>
+<a class="text-emerald-200/70 hover:text-white transition-colors text-sm font-manrope" href="#">About Us</a>
+<a class="text-emerald-200/70 hover:text-white transition-colors text-sm font-manrope" href="#">Safety &amp; Insurance</a>
+<a class="text-emerald-200/70 hover:text-white transition-colors text-sm font-manrope" href="#">Privacy Policy</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-white font-bold text-sm mb-2">Support</span>
+<a class="text-white underline text-sm font-manrope" href="#">Marathi Support</a>
+<a class="text-emerald-200/70 hover:text-white transition-colors text-sm font-manrope" href="#">Terms of Service</a>
+<a class="text-emerald-200/70 hover:text-white transition-colors text-sm font-manrope" href="#">Contact Support</a>
+</div>
+<div class="flex flex-col gap-3">
+<span class="text-white font-bold text-sm mb-2">Contact</span>
+<p class="text-emerald-200/70 text-sm font-manrope">Regional Office: Satara Road,<br/>Kolhapur - 416003</p>
+<div class="flex gap-4 mt-4">
+<span class="material-symbols-outlined text-white/50 cursor-pointer hover:text-white">social_leaderboard</span>
+<span class="material-symbols-outlined text-white/50 cursor-pointer hover:text-white">language</span>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-emerald-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-emerald-200/50 text-xs font-manrope">© 2024 Kisan Kamai. Rooted in Trust.</p>
+<div class="flex gap-6">
+<span class="text-emerald-200/50 text-xs font-manrope">Sangli</span>
+<span class="text-emerald-200/50 text-xs font-manrope">Satara</span>
+<span class="text-emerald-200/50 text-xs font-manrope">Kolhapur</span>
+</div>
+</div>
+</footer>
+</body></html>

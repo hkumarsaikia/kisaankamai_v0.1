@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kisan Kamai - Renter Journey Map</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Mukta:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#ffdcbe",
+                    "on-tertiary-fixed-variant": "#693c00",
+                    "surface-variant": "#dfe2ea",
+                    "surface-tint": "#406657",
+                    "surface-container": "#ebeef6",
+                    "on-primary-fixed-variant": "#284e40",
+                    "primary": "#00251a",
+                    "outline-variant": "#c1c8c3",
+                    "primary-fixed-dim": "#a6cfbd",
+                    "on-primary-container": "#7ea594",
+                    "tertiary": "#321900",
+                    "tertiary-container": "#4f2c00",
+                    "surface-container-low": "#f1f3fc",
+                    "on-error-container": "#93000a",
+                    "on-error": "#ffffff",
+                    "background": "#f8f9ff",
+                    "surface-bright": "#f8f9ff",
+                    "primary-container": "#143b2e",
+                    "primary-fixed": "#c2ecd9",
+                    "secondary-fixed-dim": "#ffb693",
+                    "on-tertiary-fixed": "#2c1600",
+                    "inverse-primary": "#a6cfbd",
+                    "error-container": "#ffdad6",
+                    "surface-container-highest": "#dfe2ea",
+                    "on-surface": "#181c22",
+                    "on-tertiary-container": "#da8b31",
+                    "on-secondary-fixed": "#351000",
+                    "inverse-on-surface": "#eef1f9",
+                    "on-surface-variant": "#414844",
+                    "on-secondary-fixed-variant": "#75340e",
+                    "outline": "#717974",
+                    "tertiary-fixed-dim": "#ffb870",
+                    "on-secondary-container": "#783610",
+                    "on-primary-fixed": "#002117",
+                    "inverse-surface": "#2d3137",
+                    "surface": "#f8f9ff",
+                    "surface-dim": "#d7dae2",
+                    "secondary-fixed": "#ffdbcc",
+                    "on-background": "#181c22",
+                    "error": "#ba1a1a",
+                    "on-secondary": "#ffffff",
+                    "surface-container-high": "#e5e8f0",
+                    "surface-container-lowest": "#ffffff",
+                    "secondary-container": "#ffa274",
+                    "secondary": "#934a24",
+                    "on-tertiary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Inter"]
+            }
+          },
+        }
+      }
+    </script>
+<style>
+        .journey-line {
+            background-image: linear-gradient(90deg, #143b2e 50%, transparent 50%);
+            background-size: 20px 1px;
+            background-repeat: repeat-x;
+        }
+        .step-glow {
+            box-shadow: 0 0 40px -10px rgba(20, 59, 46, 0.15);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-emerald-950/80 backdrop-blur-xl shadow-sm">
+<div class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tighter">Kisan Kamai</div>
+<nav class="hidden md:flex items-center gap-8 font-['Manrope'] font-semibold tracking-tight text-emerald-800/70">
+<a class="hover:text-orange-700 transition-colors duration-300" href="#">Rent Equipment</a>
+<a class="hover:text-orange-700 transition-colors duration-300" href="#">Equipment Owners</a>
+<a class="hover:text-orange-700 transition-colors duration-300" href="#">Marketplace</a>
+<a class="hover:text-orange-700 transition-colors duration-300" href="#">Advisory</a>
+</nav>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex items-center gap-4">
+<span class="material-symbols-outlined text-emerald-900 cursor-pointer">language</span>
+<span class="material-symbols-outlined text-emerald-900 cursor-pointer">shopping_cart</span>
+<span class="material-symbols-outlined text-emerald-900 cursor-pointer">notifications</span>
+</div>
+<button class="bg-primary-container text-on-primary px-6 py-2 rounded-full font-bold scale-95 active:scale-90 transition-transform">Sign In</button>
+</div>
+</div>
+</header>
+<main class="pt-32 pb-24 px-6 max-w-7xl mx-auto">
+<!-- Journey Map Header -->
+<div class="text-center mb-20">
+<span class="inline-block px-4 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed text-sm font-bold tracking-widest uppercase mb-4">Discovery Flow</span>
+<h1 class="text-5xl md:text-6xl font-black text-primary tracking-tight mb-6 leading-tight">The Renter's Journey</h1>
+<p class="max-w-2xl mx-auto text-on-surface-variant text-lg">A cinematic walkthrough of how farmers discover, choose, and book premium agricultural equipment on Kisan Kamai.</p>
+</div>
+<!-- Visual Flow Connector (Desktop) -->
+<div class="relative">
+<div class="hidden xl:block absolute top-1/2 left-0 w-full h-px journey-line opacity-30 -translate-y-1/2"></div>
+<!-- Step 1: Home -->
+<div class="grid grid-cols-1 xl:grid-cols-6 gap-12 relative z-10">
+<!-- Home -->
+<div class="xl:col-span-1 group">
+<div class="relative mb-6">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden step-glow border border-surface-variant group-hover:border-primary-container transition-colors duration-500">
+<img class="w-full h-full object-cover" data-alt="Modern Indian farmer looking at a mobile phone in a sunny wheat field, warm cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBTuNDLmOL-OKGKaMB3dozyTNgObXzlEjh7ZUMFw_sjP_fWHLSxvovTx14ozKhGfw1rH5rVCNs8QSkSDgA84sRkA224iihoCr8eOmhHoMH38TBLeXMFBLtect1yCoUDPpCebeIHJqtVazrSXXI6gknpO0PNNAhiYUSt1lU-Bb90PgUSWB-cqSrc29unqLDOSCBBzNn_9xo_FByFbwM_J8Yq-FIfjnRAKS9Ghgr0pt1p2vUGwcXzRDxvQz3JLriMaWcmPmdybnn5V_b4"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Step 01</p>
+<p class="text-lg font-bold">Home</p>
+</div>
+</div>
+<div class="absolute -right-4 top-1/2 -translate-y-1/2 hidden xl:flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg z-20">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Farmer arrives at the landing page, greeting them in English or Marathi with high-trust visuals.</p>
+</div>
+<!-- Rent Equipment -->
+<div class="xl:col-span-1 group">
+<div class="relative mb-6">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden step-glow border border-surface-variant group-hover:border-primary-container transition-colors duration-500">
+<img class="w-full h-full object-cover" data-alt="A clean UI interface showing agricultural categories like tractors and harvesters with realistic equipment photos" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQ2h2wuahxUN_si41VChBhAxKTSOK4RivgKB3lLoqClk_HQJGmY66KPe1r1MXjcl5J8g5q-kNElLqEWMMqDD-USw3BSby7_ZYYPc2gaZrA4-Yz7ul7L19V8LiNhm75tq6IsSO5ucm2OWAXf8JSNiTxvyqz2MjTHtsxkOOpUxQXnmJvtwe_YGt5s-0juuFPZhv1rGAgFnfwyOzW23EHMaK0WgPTzlNmC0BtJIZcMxXsVNoiMMI9ZqIq2yhm2x49pCRgQXdBHPWBDmfZ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Step 02</p>
+<p class="text-lg font-bold">Rent</p>
+</div>
+</div>
+<div class="absolute -right-4 top-1/2 -translate-y-1/2 hidden xl:flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg z-20">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Direct entry into the renting ecosystem, choosing location and equipment categories.</p>
+</div>
+<!-- Search Results -->
+<div class="xl:col-span-1 group">
+<div class="relative mb-6">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden step-glow border border-surface-variant group-hover:border-primary-container transition-colors duration-500">
+<img class="w-full h-full object-cover" data-alt="A grid of tractor listings on a clean marketplace UI, showing pricing and ratings in a premium layout" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDffvwuy-mpD9oyjT-1SkvN48hIHCduf2YMCPOHOLR5SYxM8t9ZGhc2htpc7u_deehA0o_sUdOW3e7R9lnf1mx3t6geZxyKo6uEjPyYy-Ji2iXHEkFCRf3IUBWGPrPXrcT4jTsxoBeDF9eu7UyV5FxsCxGof3fK1_2cSvNSAIsEd4ykMe1F73DgHOQLH0h0ohFITvi2o98VxM8D5WvuttUUSbWfHJ5lrPbXgde9cFDYal6JJN0cJKjaMwzhgtgE2DBPbp1HAq93WSfV"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Step 03</p>
+<p class="text-lg font-bold">Browse</p>
+</div>
+</div>
+<div class="absolute -right-4 top-1/2 -translate-y-1/2 hidden xl:flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg z-20">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Filtering by proximity, price, and equipment power. Seeing real-world availability.</p>
+</div>
+<!-- Detail -->
+<div class="xl:col-span-1 group">
+<div class="relative mb-6">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden step-glow border border-surface-variant group-hover:border-primary-container transition-colors duration-500">
+<img class="w-full h-full object-cover" data-alt="Detailed view of a John Deere tractor in a field, cinematic sunlight, focusing on the mechanical details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArQS4Sxe9bro7wD6ErKQkRbsgSN5evUZkXrd3gcPdSSSXlPu7NsRML_mtnZGbb8uDKgpMf_SCC-eY0ungAQ8j-Qre50Y349YTLdxQYGmk31OIwzmDa1ThIVJIFFlNbtNiUK4aIUhLVRU1wyN5vvtzyfv8vNyQOL-4qW5q5c4yfODt3MKx-VE7ROoM5_YeILtu-Bv-7qzx5mIeHyJXzfhMSpLAn65VFRCdSMnX9uwAI9vmsEdrCxV3JHORv-4ixJepYxCBpJ-cOgT2e"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Step 04</p>
+<p class="text-lg font-bold">Details</p>
+</div>
+</div>
+<div class="absolute -right-4 top-1/2 -translate-y-1/2 hidden xl:flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg z-20">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Deep dive into specifications, operator status, and clear rental terms.</p>
+</div>
+<!-- Booking -->
+<div class="xl:col-span-1 group">
+<div class="relative mb-6">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden step-glow border border-surface-variant group-hover:border-primary-container transition-colors duration-500">
+<img class="w-full h-full object-cover" data-alt="Person filling out a simple form on a tablet device, clean focus on hands and interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSN9cdW9Wb2t_X0c-wxCh3D7ueulzds8bxArtQqHMraQF56toaLjwrCjwbI0_Q38DmZny2H9e3ckNA1VEzgCjGMPXlId4fFs9sRllNgfNHpMQ9h3MAI2zq16Z0h0XPvwIdcii-5VKGwfTpclbR_OGOaJ9DOM2dq93XulIT7bdAo-KQggu2UvR_7H3P9cCe1R40zdjS08mui1roAcDTax8FhLjp0KCP8uniHOJzIwhC-CvIMcpkFUPW0bEjmwHmxoLCukQtskKEAEIP"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Step 05</p>
+<p class="text-lg font-bold">Booking</p>
+</div>
+</div>
+<div class="absolute -right-4 top-1/2 -translate-y-1/2 hidden xl:flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white shadow-lg z-20">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Selecting dates and confirming the service location for the owner's log.</p>
+</div>
+<!-- Submitted -->
+<div class="xl:col-span-1 group">
+<div class="relative mb-6">
+<div class="aspect-[4/5] rounded-2xl overflow-hidden step-glow border border-surface-variant group-hover:border-primary-container transition-colors duration-500">
+<img class="w-full h-full object-cover" data-alt="A checkmark icon on a green background with a blurred field in the distance, symbol of success" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApSQG-UEKOa-m5Y3MRYffOda1mcyMpq0iOMspsoGgf-qamd59mTHkN34yActuhKiEGupFC1bqOu1KqoNvBHVTy42pkmwln0yXnaGixqu_WEIfLFVn22jBPDtsZ_XgaYaTsbPuIrMp49pLPCcRsD-yyQvKo3gFCxXEtZaSrap1XwCGf-LoqF1nC7AqMnlXhnu3D3WXg70cguppaQvK8JCBr1XRxT-THmmiwyM1eB1gU7BcOyX4N1IyBb94MSXfVNRP86NEsv1Tx6iOh"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-4 left-4 text-white">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-70">Step 06</p>
+<p class="text-lg font-bold">Success</p>
+</div>
+</div>
+</div>
+<p class="text-sm text-on-surface-variant leading-relaxed">Booking request received. Support agent coordinates the owner/operator dispatch.</p>
+</div>
+</div>
+</div>
+<!-- Featured Renter UX Principles -->
+<div class="mt-32 grid md:grid-cols-3 gap-8">
+<div class="p-8 rounded-[2rem] bg-white border border-surface-variant hover:shadow-xl transition-all duration-300">
+<div class="w-12 h-12 rounded-2xl bg-primary-fixed flex items-center justify-center text-primary-container mb-6">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-primary">Contextual Discovery</h3>
+<p class="text-on-surface-variant leading-relaxed">The search adjusts based on current season and local farming cycles to show relevant equipment first.</p>
+</div>
+<div class="p-8 rounded-[2rem] bg-white border border-surface-variant hover:shadow-xl transition-all duration-300">
+<div class="w-12 h-12 rounded-2xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed mb-6">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-primary">High-Trust Details</h3>
+<p class="text-on-surface-variant leading-relaxed">Every listing features verified photographs, transparent per-hour pricing, and maintenance history.</p>
+</div>
+<div class="p-8 rounded-[2rem] bg-white border border-surface-variant hover:shadow-xl transition-all duration-300">
+<div class="w-12 h-12 rounded-2xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed mb-6">
+<span class="material-symbols-outlined">support_agent</span>
+</div>
+<h3 class="text-xl font-bold mb-3 text-primary">Assisted Booking</h3>
+<p class="text-on-surface-variant leading-relaxed">A dedicated Kisan Kamai advisor oversees every booking to ensure smooth coordination between parties.</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-emerald-950 dark:bg-black w-full pt-20 pb-10 border-t border-emerald-900">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-8 max-w-screen-2xl mx-auto">
+<div class="col-span-1 md:col-span-1">
+<div class="text-3xl font-black text-white mb-6">Kisan Kamai</div>
+<p class="text-emerald-200/60 font-['Manrope'] text-sm tracking-wide">Empowering Indian farmers through modern technology and shared rural prosperity.</p>
+</div>
+<div class="flex flex-col gap-4">
+<p class="text-white font-bold mb-2">Company</p>
+<a class="text-emerald-200/60 hover:text-white underline transition-all text-sm" href="#">About Us</a>
+<a class="text-emerald-200/60 hover:text-white underline transition-all text-sm" href="#">How it Works</a>
+<a class="text-emerald-200/60 hover:text-white underline transition-all text-sm" href="#">Contact Support</a>
+</div>
+<div class="flex flex-col gap-4">
+<p class="text-white font-bold mb-2">Legal</p>
+<a class="text-emerald-200/60 hover:text-white underline transition-all text-sm" href="#">Terms of Service</a>
+<a class="text-emerald-200/60 hover:text-white underline transition-all text-sm" href="#">Privacy Policy</a>
+<a class="text-emerald-200/60 hover:text-white underline transition-all text-sm" href="#">Cookie Policy</a>
+</div>
+<div class="flex flex-col gap-4">
+<p class="text-white font-bold mb-2">Language</p>
+<a class="text-orange-500 font-bold text-sm" href="#">English</a>
+<a class="text-emerald-200/60 hover:text-white transition-all text-sm" href="#">मराठी (Marathi)</a>
+</div>
+</div>
+<div class="mt-20 text-center border-t border-emerald-900/50 pt-8">
+<p class="text-emerald-200/40 text-sm font-['Manrope']">© 2024 Kisan Kamai. Empowering Rural Prosperity.</p>
+</div>
+</footer>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-20 z-50 bg-white/90 dark:bg-emerald-950/90 backdrop-blur-lg flex justify-around items-center px-6 pb-2 border-t border-emerald-100 dark:border-emerald-900 shadow-[0_-10px_40px_rgba(0,0,0,0.1)]">
+<a class="flex flex-col items-center text-orange-700 dark:text-orange-500 scale-110 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Mukta'] text-[12px] font-bold">Home</span>
+</a>
+<a class="flex flex-col items-center text-emerald-800/50 dark:text-emerald-200/50 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">handyman</span>
+<span class="font-['Mukta'] text-[12px] font-bold">Rent</span>
+</a>
+<a class="flex flex-col items-center text-emerald-800/50 dark:text-emerald-200/50 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">currency_rupee</span>
+<span class="font-['Mukta'] text-[12px] font-bold">Earn</span>
+</a>
+<a class="flex flex-col items-center text-emerald-800/50 dark:text-emerald-200/50 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Mukta'] text-[12px] font-bold">Profile</span>
+</a>
+</nav>
+</body></html>

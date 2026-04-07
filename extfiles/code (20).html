@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Mukta:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-fixed": "#ffdcbe",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "surface-variant": "#dfe2ea",
+                        "surface-tint": "#406657",
+                        "surface-container": "#ebeef6",
+                        "on-primary-fixed-variant": "#284e40",
+                        "primary": "#00251a",
+                        "outline-variant": "#c1c8c3",
+                        "primary-fixed-dim": "#a6cfbd",
+                        "on-primary-container": "#7ea594",
+                        "tertiary": "#321900",
+                        "tertiary-container": "#4f2c00",
+                        "surface-container-low": "#f1f3fc",
+                        "on-error-container": "#93000a",
+                        "on-error": "#ffffff",
+                        "background": "#f8f9ff",
+                        "surface-bright": "#f8f9ff",
+                        "primary-container": "#143b2e",
+                        "primary-fixed": "#c2ecd9",
+                        "secondary-fixed-dim": "#ffb693",
+                        "on-tertiary-fixed": "#2c1600",
+                        "inverse-primary": "#a6cfbd",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#dfe2ea",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-container": "#da8b31",
+                        "on-secondary-fixed": "#351000",
+                        "inverse-on-surface": "#eef1f9",
+                        "on-surface-variant": "#414844",
+                        "on-secondary-fixed-variant": "#75340e",
+                        "outline": "#717974",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "on-secondary-container": "#783610",
+                        "on-primary-fixed": "#002117",
+                        "inverse-surface": "#2d3137",
+                        "surface": "#f8f9ff",
+                        "surface-dim": "#d7dae2",
+                        "secondary-fixed": "#ffdbcc",
+                        "on-background": "#181c22",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "surface-container-high": "#e5e8f0",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-container": "#ffa274",
+                        "secondary": "#934a24",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen">
+<!-- Top Navigation Shell -->
+<header class="fixed top-0 w-full z-50 bg-white/80 dark:bg-emerald-950/80 backdrop-blur-xl shadow-sm">
+<nav class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="text-2xl font-black text-emerald-900 dark:text-emerald-50 tracking-tighter">Kisan Kamai</div>
+<div class="hidden md:flex space-x-8 font-['Manrope'] font-semibold tracking-tight">
+<a class="text-emerald-900 dark:text-emerald-50 border-b-2 border-orange-700" href="#">Rent Equipment</a>
+<a class="text-emerald-800/70 dark:text-emerald-200/70 hover:text-orange-700 transition-colors duration-300" href="#">Equipment Owners</a>
+<a class="text-emerald-800/70 dark:text-emerald-200/70 hover:text-orange-700 transition-colors duration-300" href="#">Marketplace</a>
+<a class="text-emerald-800/70 dark:text-emerald-200/70 hover:text-orange-700 transition-colors duration-300" href="#">Advisory</a>
+</div>
+<div class="flex items-center space-x-6">
+<span class="material-symbols-outlined text-emerald-900 cursor-pointer scale-95 active:scale-90 transition-transform">language</span>
+<span class="material-symbols-outlined text-emerald-900 cursor-pointer scale-95 active:scale-90 transition-transform">notifications</span>
+<button class="bg-primary-container text-on-primary px-6 py-2 rounded-xl font-bold scale-95 active:scale-90 transition-transform">Sign In</button>
+</div>
+</nav>
+</header>
+<main class="pt-32 pb-24 px-6 max-w-screen-xl mx-auto">
+<!-- Error State Header -->
+<section class="mb-12">
+<div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+<div class="max-w-2xl">
+<div class="flex items-center gap-2 mb-4">
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">location_off</span>
+                            Currently Unavailable
+                        </span>
+</div>
+<h1 class="text-4xl md:text-5xl font-black text-primary tracking-tight mb-4">No results in Satara</h1>
+<p class="text-on-surface-variant text-lg max-w-xl">
+                        We couldn't find any equipment matching your criteria in the Satara region right now. Don't worry, we're here to help you get the job done.
+                    </p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-3 bg-primary-container text-white rounded-2xl font-bold flex items-center gap-2 shadow-lg scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">call</span>
+                        Request Callback
+                    </button>
+<button class="px-6 py-3 border-2 border-outline text-primary rounded-2xl font-bold flex items-center gap-2 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined">notifications_active</span>
+                        Notify Me
+                    </button>
+</div>
+</div>
+</section>
+<!-- Recovery Content Bento Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Area Suggestion Card -->
+<div class="lg:col-span-2 bg-white rounded-[2rem] p-8 shadow-sm border border-outline-variant flex flex-col md:flex-row gap-8 overflow-hidden relative">
+<div class="flex-1 z-10">
+<h3 class="text-2xl font-bold text-primary mb-2">Nearby Availability</h3>
+<p class="text-on-surface-variant mb-6">We found high availability in Kolhapur district, just 45km away from your location.</p>
+<div class="space-y-4">
+<div class="flex items-center gap-4 p-4 bg-surface-container rounded-2xl border border-primary/5 hover:border-primary/20 transition-all cursor-pointer">
+<div class="w-16 h-16 rounded-xl bg-emerald-100 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">agriculture</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Heavy Duty Tractors</h4>
+<p class="text-sm text-on-surface-variant">12 units available in Kolhapur</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-primary">arrow_forward_ios</span>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container rounded-2xl border border-primary/5 hover:border-primary/20 transition-all cursor-pointer">
+<div class="w-16 h-16 rounded-xl bg-orange-50 flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-container text-3xl">precision_manufacturing</span>
+</div>
+<div>
+<h4 class="font-bold text-lg">Rice Harvesters</h4>
+<p class="text-sm text-on-surface-variant">4 units available in Kolhapur</p>
+</div>
+<span class="material-symbols-outlined ml-auto text-primary">arrow_forward_ios</span>
+</div>
+</div>
+<button class="mt-8 text-primary font-bold flex items-center gap-2 hover:underline">
+                        View all results in Kolhapur
+                        <span class="material-symbols-outlined">east</span>
+</button>
+</div>
+<div class="md:w-1/3 min-h-[300px] rounded-3xl overflow-hidden shadow-inner relative">
+<img class="absolute inset-0 w-full h-full object-cover grayscale-[0.3] opacity-80" data-alt="Modern satellite map view of rural farm lands with green and brown patches in Satara district, Maharashtra" data-location="Satara, Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw9QSlLEJDDyXxXc6Xt33wVLcql4DHyciw4N-m_tENtHtefJQv9SiIlgddkcXKj5s1O9TrJpugEMKjbNg46As1hS_mTU6JQMRbAC4rbja5VHALdcBIqE3lukrrV_g3XpbJxNcBYrnAI2cBLTWH0NrMHegK80GS5qOmWru1k9CRlw_4xgVIU3xHgBM5n7qCCCYyz_A9s4537QZgiiFhNPc0pZ0dSLQXdE8reV_z_zLsgoXZxKXzR53vm88jcc9KRKNs269KM2BERwJu"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="relative">
+<div class="w-12 h-12 bg-primary/20 rounded-full animate-ping absolute -inset-0"></div>
+<div class="w-12 h-12 bg-white rounded-full shadow-xl flex items-center justify-center relative">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Support Vertical Card -->
+<div class="bg-primary-container text-white rounded-[2rem] p-8 shadow-xl flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-orange-500">support_agent</span>
+</div>
+<h3 class="text-2xl font-bold mb-4 leading-tight">Need urgent help?</h3>
+<p class="text-emerald-100/80 mb-8">Our rural coordinators can manually check with local equipment owners who might not be listed yet.</p>
+<ul class="space-y-4 mb-8">
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+<span>Direct coordination</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+<span>Verified local owners</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-400 text-lg">check_circle</span>
+<span>Priority booking</span>
+</li>
+</ul>
+</div>
+<button class="w-full bg-white text-primary font-black py-4 rounded-2xl hover:bg-emerald-50 transition-colors">
+                    Talk to an Expert
+                </button>
+</div>
+</div>
+<!-- Help Categories Section -->
+<section class="mt-16">
+<h3 class="text-xl font-bold text-primary mb-8 flex items-center gap-2">
+<span class="w-8 h-[2px] bg-orange-700"></span>
+                OTHER WAYS TO PROCEED
+            </h3>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Option 1 -->
+<div class="bg-white p-6 rounded-3xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-primary mb-4 block group-hover:scale-110 transition-transform">schedule</span>
+<h4 class="font-bold text-lg mb-2">Change Dates</h4>
+<p class="text-sm text-on-surface-variant">See if equipment becomes available in the coming days.</p>
+</div>
+<!-- Option 2 -->
+<div class="bg-white p-6 rounded-3xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-primary mb-4 block group-hover:scale-110 transition-transform">tune</span>
+<h4 class="font-bold text-lg mb-2">Adjust Filters</h4>
+<p class="text-sm text-on-surface-variant">Broaden your search by removing some technical requirements.</p>
+</div>
+<!-- Option 3 -->
+<div class="bg-white p-6 rounded-3xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-primary mb-4 block group-hover:scale-110 transition-transform">local_shipping</span>
+<h4 class="font-bold text-lg mb-2">Check Logistics</h4>
+<p class="text-sm text-on-surface-variant">Ask about long-distance delivery options for your area.</p>
+</div>
+<!-- Option 4 -->
+<div class="bg-white p-6 rounded-3xl border border-outline-variant hover:border-primary transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-primary mb-4 block group-hover:scale-110 transition-transform">history_edu</span>
+<h4 class="font-bold text-lg mb-2">List Requirement</h4>
+<p class="text-sm text-on-surface-variant">Post what you need and let owners find you directly.</p>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="bg-emerald-950 dark:bg-black w-full pt-20 pb-10 border-t border-emerald-900">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-12 px-8 max-w-screen-2xl mx-auto font-['Manrope'] text-sm tracking-wide text-emerald-50">
+<div class="md:col-span-1">
+<div class="text-3xl font-black text-white mb-6">Kisan Kamai</div>
+<p class="text-emerald-200/60 leading-relaxed mb-4">Empowering farmers with modern technology and accessible equipment rental solutions across India.</p>
+</div>
+<div>
+<h5 class="font-bold text-white mb-6 uppercase tracking-widest text-xs">Platform</h5>
+<ul class="space-y-4">
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Rent Equipment</a></li>
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Equipment Owners</a></li>
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Marketplace</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-white mb-6 uppercase tracking-widest text-xs">Support</h5>
+<ul class="space-y-4">
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Help Center</a></li>
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Safety Guidelines</a></li>
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h5 class="font-bold text-white mb-6 uppercase tracking-widest text-xs">Legal</h5>
+<ul class="space-y-4">
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Terms of Service</a></li>
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Privacy Policy</a></li>
+<li><a class="text-emerald-200/60 hover:text-white underline transition-all" href="#">Language: English/मराठी</a></li>
+</ul>
+</div>
+</div>
+<div class="mt-20 px-8 max-w-screen-2xl mx-auto border-t border-emerald-900/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-emerald-200/40">© 2024 Kisan Kamai. Empowering Rural Prosperity.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-emerald-200/40 hover:text-white transition-colors cursor-pointer">social_leaderboard</span>
+<span class="material-symbols-outlined text-emerald-200/40 hover:text-white transition-colors cursor-pointer">smart_display</span>
+</div>
+</div>
+</footer>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-20 z-50 bg-white/90 dark:bg-emerald-950/90 backdrop-blur-lg flex justify-around items-center px-6 pb-2 border-t border-emerald-100 dark:border-emerald-900 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] rounded-t-[32px]">
+<a class="flex flex-col items-center text-emerald-800/50 dark:text-emerald-200/50 font-['Mukta'] text-[12px] font-bold" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+            Home
+        </a>
+<a class="flex flex-col items-center text-orange-700 dark:text-orange-500 scale-110 font-['Mukta'] text-[12px] font-bold" href="#">
+<span class="material-symbols-outlined mb-1">handyman</span>
+            Rent
+        </a>
+<a class="flex flex-col items-center text-emerald-800/50 dark:text-emerald-200/50 font-['Mukta'] text-[12px] font-bold" href="#">
+<span class="material-symbols-outlined mb-1">currency_rupee</span>
+            Earn
+        </a>
+<a class="flex flex-col items-center text-emerald-800/50 dark:text-emerald-200/50 font-['Mukta'] text-[12px] font-bold" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+            Profile
+        </a>
+</nav>
+</body></html>

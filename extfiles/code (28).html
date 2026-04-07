@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kisan Kamai - Owner Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f8f9ff",
+                    "surface-container-highest": "#dfe2ea",
+                    "surface-bright": "#f8f9ff",
+                    "outline": "#717974",
+                    "on-tertiary-fixed-variant": "#693c00",
+                    "primary-fixed-dim": "#a6cfbd",
+                    "on-tertiary-fixed": "#2c1600",
+                    "tertiary-container": "#4f2c00",
+                    "inverse-on-surface": "#eef1f9",
+                    "secondary-container": "#ffa274",
+                    "on-surface-variant": "#414844",
+                    "surface-variant": "#dfe2ea",
+                    "secondary": "#934a24",
+                    "on-primary-fixed": "#002117",
+                    "secondary-fixed": "#ffdbcc",
+                    "primary-fixed": "#c2ecd9",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#f1f3fc",
+                    "on-secondary-container": "#783610",
+                    "surface-container-high": "#e5e8f0",
+                    "background": "#f8f9ff",
+                    "on-primary-fixed-variant": "#284e40",
+                    "on-surface": "#181c22",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#d7dae2",
+                    "tertiary": "#321900",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#75340e",
+                    "secondary-fixed-dim": "#ffb693",
+                    "inverse-surface": "#2d3137",
+                    "primary": "#00251a",
+                    "tertiary-fixed-dim": "#ffb870",
+                    "surface-tint": "#406657",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#143b2e",
+                    "outline-variant": "#c1c8c3",
+                    "on-tertiary-container": "#da8b31",
+                    "on-secondary-fixed": "#351000",
+                    "on-surface": "#181c22",
+                    "surface-container": "#ebeef6",
+                    "inverse-primary": "#a6cfbd",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffdcbe",
+                    "on-background": "#181c22"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .step-active { color: #143b2e; border-color: #143b2e; }
+        .step-inactive { color: #717974; border-color: #dfe2ea; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-background selection:bg-secondary-container/30">
+<!-- TopNavBar - Shared Component -->
+<header class="fixed top-0 w-full z-50 bg-white/95 dark:bg-emerald-950/95 backdrop-blur-md shadow-sm border-b border-emerald-100 dark:border-emerald-800/50">
+<nav class="flex justify-between items-center max-w-7xl mx-auto px-6 h-20">
+<div class="text-2xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50">Kisan Kamai</div>
+<div class="hidden md:flex items-center space-x-8 font-manrope text-sm font-semibold tracking-tight">
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">Browse</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">How it Works</a>
+<a class="text-emerald-700 dark:text-emerald-300 border-b-2 border-emerald-700 dark:border-emerald-300 pb-1" href="#">List Equipment</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">Help</a>
+</div>
+<div class="flex items-center space-x-6">
+<button class="text-slate-600 dark:text-slate-400 font-semibold hover:text-emerald-800 transition-colors">मराठी</button>
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-lg font-bold hover:opacity-90 active:scale-[0.99] transition-all">Sign In</button>
+</div>
+</nav>
+</header>
+<main class="pt-32 pb-20 px-6 max-w-5xl mx-auto">
+<!-- Registration Progress Header -->
+<div class="mb-12 text-center">
+<h1 class="font-headline text-4xl font-extrabold text-primary mb-3">Partner with Kisan Kamai</h1>
+<p class="text-on-surface-variant max-w-xl mx-auto">Join the trusted network of equipment owners across Maharashtra. Start your journey in minutes.</p>
+</div>
+<!-- Multi-Step Stepper -->
+<div class="mb-16 flex items-center justify-between max-w-2xl mx-auto relative">
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-surface-container-highest -z-10 -translate-y-1/2"></div>
+<div class="flex flex-col items-center gap-2 bg-surface px-4">
+<div class="w-10 h-10 rounded-full border-2 step-active flex items-center justify-center bg-white font-bold">1</div>
+<span class="text-xs font-label font-semibold text-primary uppercase tracking-wider">Account</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface px-4">
+<div class="w-10 h-10 rounded-full border-2 step-inactive flex items-center justify-center bg-white font-bold">2</div>
+<span class="text-xs font-label font-semibold text-outline uppercase tracking-wider">Location</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface px-4">
+<div class="w-10 h-10 rounded-full border-2 step-inactive flex items-center justify-center bg-white font-bold">3</div>
+<span class="text-xs font-label font-semibold text-outline uppercase tracking-wider">Equipment</span>
+</div>
+<div class="flex flex-col items-center gap-2 bg-surface px-4">
+<div class="w-10 h-10 rounded-full border-2 step-inactive flex items-center justify-center bg-white font-bold">4</div>
+<span class="text-xs font-label font-semibold text-outline uppercase tracking-wider">Verify</span>
+</div>
+</div>
+<!-- Registration Form Container -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<!-- Main Form Card -->
+<div class="lg:col-span-7 bg-white p-8 md:p-10 rounded-2xl shadow-sm border border-emerald-50">
+<!-- Step 1: Account Setup (Active View) -->
+<div class="space-y-8">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-headline font-bold text-primary">Account Setup</h2>
+<span class="text-sm font-medium bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full">Step 1 of 4</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="space-y-2">
+<label class="text-sm font-label font-bold text-on-surface">Full Name / पूर्ण नाव</label>
+<input class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-container/20 placeholder:text-outline-variant" placeholder="Enter name" type="text"/>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-label font-bold text-on-surface">Phone Number / फोन नंबर</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-outline font-medium border-r border-outline-variant pr-3">+91</span>
+<input class="w-full bg-surface-container-low border-none rounded-xl pl-16 pr-4 py-3 focus:ring-2 focus:ring-primary-container/20 placeholder:text-outline-variant" placeholder="9876543210" type="tel"/>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-label font-bold text-on-surface">Village or Town / गाव किंवा शहर</label>
+<select class="w-full bg-surface-container-low border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-container/20 appearance-none">
+<option disabled="" selected="">Select District / जिल्हा निवडा</option>
+<option>Sangli / सांगली</option>
+<option>Satara / सातारा</option>
+<option>Kolhapur / कोल्हापूर</option>
+<option>Pune / पुणे</option>
+</select>
+</div>
+<div class="pt-6 border-t border-surface-container-highest flex items-center justify-between">
+<p class="text-xs text-on-surface-variant font-medium max-w-[200px]">By continuing, you agree to our Terms of Service.</p>
+<button class="bg-primary-container text-white px-10 py-3.5 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 group">
+                            Next Step
+                            <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Step 3: Equipment Teaser (Hidden in Step 1) -->
+<!-- This section represents the visual design of other steps -->
+<div class="mt-20 opacity-30 pointer-events-none hidden md:block">
+<h3 class="text-lg font-headline font-bold text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-600" data-icon="agriculture">agriculture</span>
+                        Upcoming: Equipment Details
+                    </h3>
+<div class="grid grid-cols-3 gap-4">
+<div class="h-24 bg-surface-container border border-dashed rounded-xl"></div>
+<div class="h-24 bg-surface-container border border-dashed rounded-xl"></div>
+<div class="h-24 bg-surface-container border border-dashed rounded-xl"></div>
+</div>
+</div>
+</div>
+<!-- Side Info Panel -->
+<div class="lg:col-span-5 space-y-6">
+<!-- Trust Card -->
+<div class="bg-primary-container rounded-2xl p-8 text-white relative overflow-hidden">
+<div class="relative z-10">
+<div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary-container" data-icon="verified_user" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h3 class="text-2xl font-headline font-bold mb-3 tracking-tight">Owner Guarantees</h3>
+<ul class="space-y-4 text-on-primary-container/90 font-medium">
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="check_circle">check_circle</span>
+                                Verified renters only
+                            </li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="check_circle">check_circle</span>
+                                Secure payment protection
+                            </li>
+<li class="flex gap-3">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="check_circle">check_circle</span>
+                                24/7 Marathi &amp; English support
+                            </li>
+</ul>
+</div>
+<!-- Aesthetic Background Graphic -->
+<div class="absolute -bottom-10 -right-10 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+</div>
+<!-- Testimonial / Social Proof -->
+<div class="bg-white p-6 rounded-2xl border border-emerald-50 shadow-sm flex gap-4">
+<img alt="Smiling farmer" class="w-16 h-16 rounded-full object-cover" data-alt="Close-up portrait of a cheerful middle-aged Indian farmer in a field with golden sunlight in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe1l4Rc-GUuzR3V1QmZL3Dx_Eh9y_2-2Ccd0mq_0xQPMgDwu2zOiqPJQnhEf2bZ0dvByc_z-AH0-qrFDr2WluU5B9icN4761QJjuqgxpfWIIFXCIQh3kajZIygqwiUF6G-_-0s30ZmxEOIuuaqYpRyx7dTCb4Hb0USO5eRVw2vXAO3mxIFFErO6cWbGWwRdrxnbPpPbPFv2tX7HbEFrxHb0OSVS_C9mWbX7rbamP5SPub42ricZrVH_xMbIc3FNbi3Sv0mm2Fu6BSL"/>
+<div>
+<p class="italic text-on-surface-variant text-sm mb-2">"Kisan Kamai helped me earn extra income from my rotavator when I wasn't using it. Very trustworthy."</p>
+<p class="font-bold text-primary text-sm">— Rahul P., Sangli</p>
+</div>
+</div>
+<!-- Support Anchor -->
+<div class="flex items-center justify-center gap-4 py-4 px-6 border-2 border-dashed border-surface-container-highest rounded-2xl">
+<span class="material-symbols-outlined text-outline" data-icon="help">help</span>
+<p class="text-sm text-outline font-medium">Need help registering? <a class="text-secondary font-bold hover:underline" href="#">Call Support</a></p>
+</div>
+</div>
+</div>
+<!-- Final Success Message Mock (Initially Hidden, shown after Step 4) -->
+<!-- Hidden by default in this flow representation, but styled for future state -->
+<div class="hidden mt-20 text-center max-w-2xl mx-auto p-12 bg-white rounded-3xl shadow-xl border border-emerald-100">
+<div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+<span class="material-symbols-outlined text-4xl" data-icon="celebration" style="font-variation-settings: 'FILL' 1;">celebration</span>
+</div>
+<h2 class="text-3xl font-headline font-extrabold text-primary mb-2">Welcome to the Kisan Kamai Family</h2>
+<p class="text-on-surface-variant mb-8">Your account is ready. Our local representative will call you shortly to finalize your first listing.</p>
+<button class="bg-primary-container text-white px-12 py-4 rounded-xl font-bold hover:scale-[1.02] transition-transform">Go to Dashboard</button>
+</div>
+</main>
+<!-- Footer - Shared Component -->
+<footer class="w-full mt-20 pt-12 pb-8 bg-emerald-900 dark:bg-black border-t border-emerald-800 dark:border-emerald-900">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="space-y-4">
+<div class="text-xl font-black text-white">Kisan Kamai</div>
+<p class="text-emerald-200/70 font-manrope text-sm leading-relaxed">Modernizing Indian agriculture through trusted equipment sharing.</p>
+</div>
+<div class="space-y-4">
+<h4 class="text-white font-bold">Quick Links</h4>
+<ul class="space-y-2">
+<li><a class="text-emerald-200/70 hover:text-white transition-colors text-sm" href="#">About Us</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors text-sm" href="#">Safety &amp; Insurance</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors text-sm font-bold underline" href="#">मराठी सपोर्ट</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="text-white font-bold">Legal</h4>
+<ul class="space-y-2">
+<li><a class="text-emerald-200/70 hover:text-white transition-colors text-sm" href="#">Privacy Policy</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors text-sm" href="#">Terms of Service</a></li>
+</ul>
+</div>
+<div class="space-y-4">
+<h4 class="text-white font-bold">Connect</h4>
+<div class="flex gap-4">
+<span class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white cursor-pointer hover:bg-white/20">FB</span>
+<span class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white cursor-pointer hover:bg-white/20">WA</span>
+</div>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-emerald-800/50 text-center">
+<p class="text-emerald-200/50 text-xs font-manrope">© 2024 Kisan Kamai. Rooted in Trust.</p>
+</div>
+</footer>
+</body></html>

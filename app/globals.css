@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Dark mode color overrides */
+  .dark {
+    --color-background: #0f1a14;
+    --color-surface: #0f1a14;
+    --color-on-surface: #e0e3eb;
+    --color-on-background: #e0e3eb;
+  }
+}
+
+@layer utilities {
+  .mini-page-shadow {
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.1), 0 2px 10px -2px rgba(0, 0, 0, 0.05);
+  }
+  .card-shadow {
+    box-shadow: 0 4px 24px -4px rgba(0, 37, 26, 0.08), 0 2px 8px -2px rgba(0, 37, 26, 0.04);
+  }
+  .card-shadow-lg {
+    box-shadow: 0 8px 40px -8px rgba(0, 37, 26, 0.12), 0 4px 16px -4px rgba(0, 37, 26, 0.06);
+  }
+  .card-shadow-xl {
+    box-shadow: 0 20px 60px -12px rgba(0, 37, 26, 0.15), 0 8px 24px -8px rgba(0, 37, 26, 0.08);
+  }
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Smooth scrolling globally */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Marathi text line-height fix */
+.marathi-text {
+  line-height: 1.6;
+}
+
+/* Legal content styling */
+.legal-content p { margin-bottom: 1.25rem; line-height: 1.8; }
+.legal-content h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 700; font-size: 1.5rem; }
+.legal-content h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 600; font-size: 1.125rem; }
+.legal-content ul { margin-bottom: 1.25rem; padding-left: 1.5rem; list-style-type: disc; }
+.legal-content li { margin-bottom: 0.5rem; }
+
+/* No scrollbar utility */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Rent Equipment | Kisan Kamai</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#717974",
+                        "surface-dim": "#d7dae2",
+                        "inverse-surface": "#2d3137",
+                        "surface-container": "#ebeef6",
+                        "secondary-fixed-dim": "#ffb693",
+                        "on-primary-container": "#7ea594",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e5e8f0",
+                        "tertiary": "#321900",
+                        "tertiary-fixed": "#ffdcbe",
+                        "on-secondary-fixed": "#351000",
+                        "on-error-container": "#93000a",
+                        "surface-bright": "#f8f9ff",
+                        "surface": "#f8f9ff",
+                        "inverse-primary": "#a6cfbd",
+                        "secondary-fixed": "#ffdbcc",
+                        "on-secondary-container": "#783610",
+                        "on-surface": "#181c22",
+                        "inverse-on-surface": "#eef1f9",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "surface-container-highest": "#dfe2ea",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "tertiary-container": "#4f2c00",
+                        "background": "#f8f9ff",
+                        "primary-container": "#143b2e",
+                        "on-primary": "#ffffff",
+                        "primary": "#00251a",
+                        "error": "#ba1a1a",
+                        "error-container": "#ffdad6",
+                        "on-background": "#181c22",
+                        "on-tertiary-fixed": "#2c1600",
+                        "secondary": "#934a24",
+                        "on-primary-fixed-variant": "#284e40",
+                        "surface-variant": "#dfe2ea",
+                        "on-surface-variant": "#414844",
+                        "on-primary-fixed": "#002117",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "secondary-container": "#ffa274",
+                        "surface-container-low": "#f1f3fc",
+                        "on-tertiary-container": "#da8b31",
+                        "on-secondary-fixed-variant": "#75340e",
+                        "outline-variant": "#c1c8c3",
+                        "primary-fixed-dim": "#a6cfbd",
+                        "surface-tint": "#406657",
+                        "primary-fixed": "#c2ecd9"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+        .font-label { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- TopNavBar -->
+<header class="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-2xl font-black tracking-tight text-emerald-900 dark:text-emerald-50" href="#">Kisan Kamai</a>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-700 pb-1" href="#">Rent Equipment</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">List Equipment</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">Categories</a>
+<a class="text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">How it Works</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden lg:flex items-center gap-2 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all">
+<span class="material-symbols-outlined">translate</span>
+<span class="font-label text-sm font-semibold tracking-wide">मराठी</span>
+</button>
+<div class="flex items-center gap-2">
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 rounded-lg transition-all relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+</div>
+<button class="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:scale-[0.98] transition-transform">Sign In</button>
+</div>
+</div>
+</header>
+<main class="min-h-screen">
+<!-- Search & Discovery Shell -->
+<section class="bg-white dark:bg-slate-900 border-b border-outline-variant/30 sticky top-[72px] z-40">
+<div class="max-w-7xl mx-auto px-6 py-6">
+<div class="flex flex-col md:flex-row items-center gap-4">
+<!-- Location Selector -->
+<div class="w-full md:w-1/3 relative group">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">location_on</span>
+<select class="w-full pl-12 pr-4 py-3 bg-surface-container-low dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary-container appearance-none font-medium cursor-pointer">
+<option>Sangli, Maharashtra</option>
+<option>Satara, Maharashtra</option>
+<option>Kolhapur, Maharashtra</option>
+</select>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline pointer-events-none">expand_more</span>
+</div>
+<!-- Search Input -->
+<div class="w-full md:w-1/2 relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline">search</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-low dark:bg-slate-800 border-none rounded-xl focus:ring-2 focus:ring-primary-container font-medium" placeholder="Search for Tractors, Harvesters, or Implements..." type="text"/>
+</div>
+<!-- Toggle View -->
+<div class="flex bg-surface-container-low dark:bg-slate-800 p-1 rounded-xl w-full md:w-auto">
+<button class="flex-1 md:w-12 h-10 flex items-center justify-center bg-white dark:bg-slate-700 rounded-lg shadow-sm text-primary-container">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="flex-1 md:w-12 h-10 flex items-center justify-center text-outline hover:text-primary-container">
+<span class="material-symbols-outlined">map</span>
+</button>
+</div>
+</div>
+<!-- Category Filters Chips -->
+<div class="flex items-center gap-3 mt-6 overflow-x-auto pb-2 scrollbar-hide">
+<button class="px-5 py-2 bg-primary-container text-white rounded-full font-label text-sm font-semibold whitespace-nowrap">All Equipment</button>
+<button class="px-5 py-2 bg-surface-container-highest dark:bg-slate-800 text-on-surface rounded-full font-label text-sm font-medium whitespace-nowrap hover:bg-outline-variant/30 transition-colors">Tractors</button>
+<button class="px-5 py-2 bg-surface-container-highest dark:bg-slate-800 text-on-surface rounded-full font-label text-sm font-medium whitespace-nowrap hover:bg-outline-variant/30 transition-colors">Harvesters</button>
+<button class="px-5 py-2 bg-surface-container-highest dark:bg-slate-800 text-on-surface rounded-full font-label text-sm font-medium whitespace-nowrap hover:bg-outline-variant/30 transition-colors">Rotavators</button>
+<button class="px-5 py-2 bg-surface-container-highest dark:bg-slate-800 text-on-surface rounded-full font-label text-sm font-medium whitespace-nowrap hover:bg-outline-variant/30 transition-colors">Seeders</button>
+<button class="px-5 py-2 bg-surface-container-highest dark:bg-slate-800 text-on-surface rounded-full font-label text-sm font-medium whitespace-nowrap hover:bg-outline-variant/30 transition-colors">Sprayers</button>
+<button class="px-5 py-2 bg-surface-container-highest dark:bg-slate-800 text-on-surface rounded-full font-label text-sm font-medium whitespace-nowrap hover:bg-outline-variant/30 transition-colors">Ploughs</button>
+<div class="h-6 w-px bg-outline-variant/50 mx-2"></div>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-full font-label text-sm font-semibold hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-sm">tune</span>
+                        More Filters
+                    </button>
+</div>
+</div>
+</section>
+<!-- Main Discovery Area -->
+<section class="max-w-7xl mx-auto px-6 py-8">
+<div class="flex items-baseline justify-between mb-8">
+<div>
+<h1 class="text-2xl font-bold text-primary">Available Equipment in Sangli</h1>
+<p class="text-on-surface-variant font-medium mt-1">Found 24 premium machines ready for your field</p>
+</div>
+<div class="flex items-center gap-2 text-sm font-semibold text-outline">
+<span>Sort by:</span>
+<button class="flex items-center gap-1 text-primary">Popularity <span class="material-symbols-outlined">expand_more</span></button>
+</div>
+</div>
+<!-- Results Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Equipment Card 1 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-outline-variant/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="modern red tractor parked in a lush green indian farm field under bright daylight, premium finish" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPWvvZ2_8Ow_lDSICAFb-m0-q7-C6hfmNe0OFRKjjnZNC7RB2l4iZHqAqaLuXM_DGnjdYjX2rQq0kWL-Cerb7tsdEjd2OnRXwWyat8dGsCfcn--c9uoHlW09eECIqulVEJsPO7_m7XtJhc_vfnx9VAJZoDcEh-0Dvx2FHxDvJXSCDvBXMj75C3LlLQ4tdV5Uy_tMVbNkUqay_NOBamyMUTFvr4fLw_zFV77s74J06hs8wqCh4ZuA2RLdMKEQeEKtj4umKvgQhhUaZw"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-xs">4.9</span>
+</div>
+<button class="absolute top-4 right-4 w-10 h-10 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-error transition-all">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary mb-1 block">Tractor • Mahindra 575</span>
+<h3 class="text-lg font-extrabold text-primary leading-tight">Mahindra Novo 575 DI</h3>
+</div>
+<div class="text-right">
+<span class="block text-xl font-black text-emerald-900">₹800</span>
+<span class="text-[10px] font-bold text-outline-variant uppercase">per hour</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-slate-100 dark:border-slate-800 mb-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">settings_suggest</span>
+<span class="text-xs font-semibold">45 HP</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">distance</span>
+<span class="text-xs font-semibold">4.2 km away</span>
+</div>
+<div class="flex items-center gap-1.5 text-emerald-700">
+<span class="material-symbols-outlined text-lg">verified</span>
+<span class="text-xs font-semibold">Verified</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
+<img alt="Owner" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDIm1XX0yEgIPs-9fCAtT7_jNGTg5Ub_jYR62XtB2K8jp-PZ-_aFg1Q3aM-iUoWGta00__GuCb9FR5TR_aB31Q6lH1J_9-QkvYY7cbYNpHzFApVCyBeH0WltC-1SfmYHSWEC-3ZAQsmqwcr9RFwvPjv9Z2fJ_HoRFWDz0vDTYWJJd6Eva1QnN40bKe9yQZ9z5G6GZTgeerFZ0diXY6nECFZiDpqDaGjCPh5JSUYSrbsegiEJJ2s7u7UsVFw6yBUI9M0cEUHnqlUJqRB"/>
+</div>
+<div class="flex items-center pl-4">
+<span class="text-xs font-bold text-on-surface-variant">Owned by Rahul P.</span>
+</div>
+</div>
+<button class="bg-primary-container text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-primary transition-colors">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Equipment Card 2 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-outline-variant/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="heavy-duty combine harvester operating in a golden wheat field in Maharashtra during sunset, dust and golden light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ7oUvUALj7SDziTR9cKw09jxax1tKS_b7sXUeHrrZUckyODiJNtoKOiZkGkteJORMFJDU6c0Y8ql6Ly2g-JfnrT1gOqzyUBhs9_jfA36Hd62B-1vEbibVr3a12XNRY7r1Uhx0jQynG8Q_ew6UPFUJxi358BbidrUEfTBHZUT2Isoce5MfM8Tski9j12lk5DORg23MdNwo6zwFGAETPGdT72HNrlEsiRRWKDsBmV54gWFxdHnYsyyqPXD2-ZVVwzbfKFlxiRjWwMnM"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-xs">4.7</span>
+</div>
+<span class="absolute top-4 right-4 bg-secondary text-white px-3 py-1 rounded-lg font-black text-[10px] tracking-widest uppercase">Popular Choice</span>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary mb-1 block">Harvester • John Deere</span>
+<h3 class="text-lg font-extrabold text-primary leading-tight">John Deere W70 Combine</h3>
+</div>
+<div class="text-right">
+<span class="block text-xl font-black text-emerald-900">₹2,500</span>
+<span class="text-[10px] font-bold text-outline-variant uppercase">per hour</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-slate-100 dark:border-slate-800 mb-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">precision_manufacturing</span>
+<span class="text-xs font-semibold">100 HP</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">distance</span>
+<span class="text-xs font-semibold">8.5 km away</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 flex items-center justify-center">
+<span class="material-symbols-outlined text-sm">person</span>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Owned by Sangli Agri-Hub</span>
+</div>
+<button class="bg-primary-container text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-primary transition-colors">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Equipment Card 3 -->
+<div class="group bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-outline-variant/20 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+<div class="relative h-56 overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="rotavator attachment for tractor resting on dry soil in a rural setting, high detail engineering metal texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_f2OYvabqpLh_n0dq9_3mv54MBqVantkDYpjoJMb6HdjTMv-oLLJCORZ925eiNFubIR4E_8S6HIAtQrT0qDVr3B7_jbq799cBMsVuQzjZokvhcV1dy__bbAjsP6Tnfw7FDqS9MNcUGJ-spP2OwKzBafBMgzDgCj5UbgiOvezlHbEIpbcE3yCh0xIZSl1viwRkWL2ZIv6g1-m05KRcgQQV6yYf8_cpNDJneomhV5-QsOElD-fUOua-TK1csQa4fufEmguRnY5zVzQb"/>
+<div class="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-bold text-xs">5.0</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-3">
+<div>
+<span class="text-[10px] font-black uppercase tracking-widest text-secondary mb-1 block">Implement • Shaktiman</span>
+<h3 class="text-lg font-extrabold text-primary leading-tight">Shaktiman Regular Light</h3>
+</div>
+<div class="text-right">
+<span class="block text-xl font-black text-emerald-900">₹350</span>
+<span class="text-[10px] font-bold text-outline-variant uppercase">per hour</span>
+</div>
+</div>
+<div class="flex items-center gap-4 py-4 border-y border-slate-100 dark:border-slate-800 mb-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">width</span>
+<span class="text-xs font-semibold">6 feet width</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-lg">distance</span>
+<span class="text-xs font-semibold">1.2 km away</span>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200 overflow-hidden">
+<img alt="Owner" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPiG8sXtGgHpzF9ziEYuC4a2o1lxmiyZv-qKdAheWl3Shj4ygYYqCUECq9nldsnLlMC4rZkhkyfwNZc3XUqUe8roR6Gec0-D0wsbEE27ey61GPVk13-b9otLcM3oAcJsMDzEy_ozn5c1y0yXZkCEUxSvDsYCYcsb2UFMB8s51hXFLSGuZJDzBp1brpYgtKkeKUS8JBp6w_6ZCD06lZ3D-3YJxT2WLMRC0Xa06WYJl1f-MBvwUW_oZwEfXzM3psUQAct0J1Tl3iFYaf"/>
+</div>
+<span class="text-xs font-bold text-on-surface-variant">Owned by Vikas G.</span>
+</div>
+<button class="bg-primary-container text-white px-5 py-2.5 rounded-xl font-bold text-sm hover:bg-primary transition-colors">Book Now</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Fallback/Low Inventory Section -->
+<div class="mt-20 p-1 bg-gradient-to-r from-emerald-100 to-amber-50 dark:from-slate-800 dark:to-slate-900 rounded-3xl">
+<div class="bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl rounded-[22px] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8">
+<div class="max-w-xl">
+<h2 class="text-3xl font-black text-primary leading-tight mb-4">Can't find the specific equipment you're looking for?</h2>
+<p class="text-on-surface-variant text-lg font-medium">Our fleet is growing daily. Tell us your requirements and our local coordinator will find the best match for your field in Sangli within 2 hours.</p>
+<div class="flex flex-wrap gap-4 mt-8">
+<div class="flex items-center gap-3 px-4 py-2 bg-white/80 dark:bg-slate-800 rounded-xl shadow-sm border border-emerald-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-emerald-700">support_agent</span>
+<span class="text-sm font-bold">24/7 Field Support</span>
+</div>
+<div class="flex items-center gap-3 px-4 py-2 bg-white/80 dark:bg-slate-800 rounded-xl shadow-sm border border-emerald-100 dark:border-slate-700">
+<span class="material-symbols-outlined text-emerald-700">verified_user</span>
+<span class="text-sm font-bold">Guaranteed Delivery</span>
+</div>
+</div>
+</div>
+<div class="w-full md:w-96 bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-xl shadow-emerald-900/5 border border-outline-variant/20">
+<h4 class="font-black text-lg mb-6">Request Callback</h4>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-black uppercase tracking-wider text-outline mb-1.5">Full Name</label>
+<input class="w-full px-4 py-3 bg-surface-container-low dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-primary-container font-medium" placeholder="e.g. Ramesh Patil" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-black uppercase tracking-wider text-outline mb-1.5">Phone Number</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-outline">+91</span>
+<input class="w-full pl-12 pr-4 py-3 bg-surface-container-low dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-primary-container font-medium" placeholder="Enter 10 digit number" type="tel"/>
+</div>
+</div>
+<div>
+<label class="block text-xs font-black uppercase tracking-wider text-outline mb-1.5">Equipment Needed</label>
+<input class="w-full px-4 py-3 bg-surface-container-low dark:bg-slate-700 border-none rounded-xl focus:ring-2 focus:ring-primary-container font-medium" placeholder="e.g. Laser Leveler" type="text"/>
+</div>
+<button class="w-full py-4 bg-secondary text-white rounded-xl font-black tracking-wide uppercase hover:scale-[0.98] transition-transform mt-2">Get Free Callback</button>
+<p class="text-[10px] text-center text-outline font-medium">Our experts typically respond within 15 minutes</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Map Discovery Sneak Peak -->
+<section class="max-w-7xl mx-auto px-6 py-20">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+<div class="order-2 lg:order-1 relative rounded-3xl overflow-hidden h-[400px] border-4 border-white shadow-2xl">
+<img class="w-full h-full object-cover grayscale opacity-30" data-alt="clean UI design of a map showing rural locations with premium green pins and equipment thumbnails in a clean interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjbD2erNpM3I3VXhzDHdzBFkZhEAWAd2U3aSUJ4RqlfPa9i8D0g1jrQwRSwoVcH9BnCaCxxw8p-jFOFcXbsfus7rz5m2bNG3hrE9MzseWLCT4z-EOKb8hEm874LAfLh-E8wZLUSu2NW-i9lgqcct7h8NlEM9_V9H0pDV4ew24L94eRFZkwpTeG1C_XxiNSLKMSci9n4y1LHgFB3RNc2pyi-RX1hCPwgAsj76Fzqe9Wppjk_8wIvsYQNrkze4dyZwVz6yNI317ytHx3"/>
+<div class="absolute inset-0 flex items-center justify-center bg-emerald-900/10 backdrop-blur-[2px]">
+<div class="text-center p-8 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl max-w-sm border border-emerald-100">
+<span class="material-symbols-outlined text-5xl text-emerald-900 mb-4">explore</span>
+<h3 class="text-xl font-black text-primary mb-2">Explore Interactive Map</h3>
+<p class="text-on-surface-variant font-medium text-sm mb-6">See exactly where the nearest tractors and harvesters are located around your village.</p>
+<button class="bg-primary-container text-white px-8 py-3 rounded-xl font-bold hover:bg-primary transition-all">Switch to Map View</button>
+</div>
+</div>
+</div>
+<div class="order-1 lg:order-2">
+<span class="font-label text-secondary font-black uppercase tracking-[0.2em] text-xs">Trust &amp; Safety</span>
+<h2 class="text-4xl font-black text-primary mt-4 mb-6 leading-tight">Every machine is verified for performance</h2>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="w-12 h-12 shrink-0 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-400">task_alt</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary">Mechanical Inspection</h4>
+<p class="text-on-surface-variant font-medium">All equipment listed on Kisan Kamai undergoes a 24-point performance check before being verified.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-12 h-12 shrink-0 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-400">receipt_long</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary">Transparent Pricing</h4>
+<p class="text-on-surface-variant font-medium">No hidden costs. The price you see includes operator charges and basic fuel estimates for the district.</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-12 h-12 shrink-0 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-900 dark:text-emerald-400">person_celebrate</span>
+</div>
+<div>
+<h4 class="font-bold text-lg text-primary">Local Support</h4>
+<p class="text-on-surface-variant font-medium">Dedicated support hubs in Sangli, Satara, and Kolhapur to ensure your farming never stops.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-8 w-full px-6 py-12 max-w-7xl mx-auto">
+<div class="col-span-2 md:col-span-1">
+<span class="text-xl font-black text-emerald-900 dark:text-emerald-50 mb-4 block">Kisan Kamai</span>
+<p class="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-6">Empowering Indian farmers with modern technology and shared equipment access.</p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-lg bg-emerald-900 flex items-center justify-center text-white" href="#"><span class="material-symbols-outlined text-xl">language</span></a>
+<a class="w-10 h-10 rounded-lg bg-emerald-900 flex items-center justify-center text-white" href="#"><span class="material-symbols-outlined text-xl">thumb_up</span></a>
+</div>
+</div>
+<div>
+<span class="font-label font-semibold uppercase tracking-wider text-xs text-emerald-900 dark:text-emerald-500 mb-6 block">Marketplace</span>
+<ul class="space-y-4">
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">Rent Equipment</a></li>
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">List Equipment</a></li>
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">Categories</a></li>
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">Safety &amp; Trust</a></li>
+</ul>
+</div>
+<div>
+<span class="font-label font-semibold uppercase tracking-wider text-xs text-emerald-900 dark:text-emerald-500 mb-6 block">Company</span>
+<ul class="space-y-4">
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">About Us</a></li>
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">Privacy Policy</a></li>
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">Terms of Service</a></li>
+<li><a class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-300 underline-offset-4 hover:underline" href="#">Help Center</a></li>
+</ul>
+</div>
+<div>
+<span class="font-label font-semibold uppercase tracking-wider text-xs text-emerald-900 dark:text-emerald-500 mb-6 block">Contact</span>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-4">Questions? We are here to help 24/7.</p>
+<a class="flex items-center gap-2 text-emerald-900 dark:text-emerald-400 font-bold mb-4" href="tel:+910000000000">
+<span class="material-symbols-outlined text-lg">call</span>
+                    +91 1800-KISAN-KAMAI
+                </a>
+<button class="w-full bg-emerald-900/5 dark:bg-emerald-400/5 border border-emerald-900/10 dark:border-emerald-400/10 py-3 rounded-lg text-emerald-900 dark:text-emerald-400 font-bold text-sm">Contact Support</button>
+</div>
+</div>
+<div class="border-t border-slate-200 dark:border-slate-800 py-8">
+<div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="text-slate-500 dark:text-slate-400 text-sm">© 2024 Kisan Kamai. Rooted in Trust, Driven by Tech.</span>
+<div class="flex items-center gap-6">
+<span class="text-xs font-bold text-slate-400 flex items-center gap-1"><span class="material-symbols-outlined text-sm">public</span> Maharashtra, India</span>
+</div>
+</div>
+</div>
+</footer>
+<!-- FAB for quick action - suppressed based on context (Discovery page) but shown for Booking Support -->
+<button class="fixed bottom-8 right-8 bg-secondary text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 z-50">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</body></html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Inter:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed-variant": "#75340e",
+                        "inverse-on-surface": "#eef1f9",
+                        "outline-variant": "#c1c8c3",
+                        "primary-container": "#143b2e",
+                        "on-surface": "#181c22",
+                        "on-primary-fixed": "#002117",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "tertiary-container": "#4f2c00",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9ff",
+                        "outline": "#717974",
+                        "on-tertiary-fixed": "#2c1600",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#dfe2ea",
+                        "on-primary-fixed-variant": "#284e40",
+                        "surface-container-high": "#e5e8f0",
+                        "surface-dim": "#d7dae2",
+                        "tertiary": "#321900",
+                        "secondary-fixed-dim": "#ffb693",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "inverse-primary": "#a6cfbd",
+                        "on-secondary-container": "#783610",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "primary": "#00251a",
+                        "surface-container": "#ebeef6",
+                        "surface-tint": "#406657",
+                        "secondary": "#934a24",
+                        "primary-fixed": "#c2ecd9",
+                        "on-primary-container": "#7ea594",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f1f3fc",
+                        "on-tertiary-container": "#da8b31",
+                        "secondary-fixed": "#ffdbcc",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#2d3137",
+                        "primary-fixed-dim": "#a6cfbd",
+                        "surface-variant": "#dfe2ea",
+                        "on-secondary-fixed": "#351000",
+                        "tertiary-fixed": "#ffdcbe",
+                        "secondary-container": "#ffa274",
+                        "on-background": "#181c22",
+                        "surface-bright": "#f8f9ff",
+                        "surface": "#f8f9ff",
+                        "on-surface-variant": "#414844"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<header class="fixed top-0 w-full z-50 bg-white/95 dark:bg-emerald-950/95 backdrop-blur-md shadow-sm border-b border-emerald-100 dark:border-emerald-800">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<div class="text-2xl font-extrabold text-emerald-900 dark:text-emerald-50 tracking-tighter cursor-pointer">Kisan Kamai</div>
+<nav class="hidden md:flex items-center space-x-8">
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200 cursor-pointer" href="#">Find Equipment</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200 cursor-pointer" href="#">List Equipment</a>
+<a class="text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-700 dark:border-emerald-400 pb-1 cursor-pointer" href="#">Locations</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200 cursor-pointer" href="#">Support</a>
+</nav>
+<div class="flex items-center space-x-6">
+<button class="text-emerald-900 dark:text-emerald-50 font-bold hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200 cursor-pointer">मराठी</button>
+<button class="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:opacity-90 transition-opacity">Login / Register</button>
+</div>
+</div>
+</header>
+<main class="pt-20">
+<section class="relative h-[400px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" class="w-full h-full object-cover" data-alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrSpZOMk74aBsSIese2JWI0cHKeiaZObCNMRdhtYhkXOrrPS9QzTvPz2EIGQpSNPJtnZDKU-JA8YEgSIrUPakgZ-KJTyWZ7xWSPn_Veki49pHC2NCiEVFBDSjKLvJbRXXov-hx9BUF1gYISDkDtFiDNHPDNZhV4xRd6yViNV5bNTUlybVsxBTolfJGEjFMhFq_EKr8YjUmhfS49tYOgQjELe3e5s_soLwqjfNHTo96lgGbkHo1J434kxWHKuqozZ_lB_Q6bWCdn2q6"/>
+<div class="absolute inset-0 bg-gradient-to-r from-primary-container/80 to-transparent"></div>
+</div>
+<div class="max-w-7xl mx-auto px-6 relative z-10 w-full">
+<div class="max-w-2xl">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-4 inline-block">Western Maharashtra</span>
+<h1 class="text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">Serving the heart of Indian Agriculture.</h1>
+<p class="text-xl text-emerald-50/90 font-medium">Currently active across Sangli, Satara, and Kolhapur districts, bringing modern mechanization to every field.</p>
+</div>
+</div>
+</section>
+<section class="py-24 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<div class="lg:col-span-8 space-y-8">
+<div class="bg-white rounded-2xl shadow-xl shadow-emerald-900/5 p-4 border border-emerald-100 h-[600px] relative overflow-hidden">
+<div class="absolute top-6 left-6 z-10 space-y-2">
+<h2 class="text-xl font-bold text-primary">Interactive Service Map</h2>
+<p class="text-sm text-slate-500 font-medium">Explore active clusters and equipment hubs.</p>
+</div>
+<div class="w-full h-full rounded-xl bg-slate-100 flex items-center justify-center relative overflow-hidden border border-slate-200">
+<img alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" class="w-full h-full object-cover opacity-40 grayscale" data-alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" data-location="Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQkwnPgFRNqcp_PJa-0Wr_hCpM8dLrifhN7RfvecRbIQj_la-63LKy9oaJ_Z5s5CSJyStD63GskB4ao0k26Q6yrLL4ydX7z9vIN5cgM90GHNNNolHMPA4ntTWWh_h3bWc8q6z4WXl3P1X1BtNW49XaAYCgY42JnVvzFDnVmF4nfE-kBSFfpRkGtI-D_2Ds1olQhGkXkTNsUlemRfrsT48GVVOQOQZ2P8OwSrXHZQW9L5H1-KQVL1q5cp7Q2XCxDofVctyd0f2srLwG"/>
+<div class="absolute inset-0 p-12">
+<div class="relative w-full h-full">
+<div class="absolute top-[30%] left-[40%] group">
+<div class="w-6 h-6 bg-secondary rounded-full animate-ping absolute opacity-50"></div>
+<div class="w-6 h-6 bg-secondary rounded-full relative flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-[12px] text-white" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="absolute top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-lg shadow-lg border border-slate-100 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-sm font-bold block">Satara Hub</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-widest">12 Active Harvesters</span>
+</div>
+</div>
+<div class="absolute top-[60%] left-[55%] group">
+<div class="w-6 h-6 bg-secondary rounded-full animate-ping absolute opacity-50"></div>
+<div class="w-6 h-6 bg-secondary rounded-full relative flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-[12px] text-white" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="absolute top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-lg shadow-lg border border-slate-100 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-sm font-bold block">Sangli Cluster</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-widest">24 Active Tractors</span>
+</div>
+</div>
+<div class="absolute top-[80%] left-[35%] group">
+<div class="w-6 h-6 bg-secondary rounded-full animate-ping absolute opacity-50"></div>
+<div class="w-6 h-6 bg-secondary rounded-full relative flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-[12px] text-white" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="absolute top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-lg shadow-lg border border-slate-100 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-sm font-bold block">Kolhapur Hub</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-widest">8 Sugarcane Loaders</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-white p-8 rounded-2xl border border-emerald-50 shadow-sm">
+<h3 class="text-3xl font-extrabold text-primary mb-1">Satara</h3>
+<p class="text-sm text-slate-500 mb-4 font-medium">District Coverage</p>
+<ul class="space-y-2 text-on-surface-variant font-medium">
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Karad Cluster</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Phaltan Hub</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Wai Region</li>
+</ul>
+</div>
+<div class="bg-white p-8 rounded-2xl border border-emerald-50 shadow-sm">
+<h3 class="text-3xl font-extrabold text-primary mb-1">Sangli</h3>
+<p class="text-sm text-slate-500 mb-4 font-medium">District Coverage</p>
+<ul class="space-y-2 text-on-surface-variant font-medium">
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Miraj Cluster</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Tasgaon Hub</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Walwa Region</li>
+</ul>
+</div>
+<div class="bg-white p-8 rounded-2xl border border-emerald-50 shadow-sm">
+<h3 class="text-3xl font-extrabold text-primary mb-1">Kolhapur</h3>
+<p class="text-sm text-slate-500 mb-4 font-medium">District Coverage</p>
+<ul class="space-y-2 text-on-surface-variant font-medium">
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Hatkanangale Hub</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Shirol Cluster</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Panhala Region</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 sticky top-28">
+<div class="bg-primary-container text-white p-8 rounded-3xl shadow-2xl">
+<h2 class="text-2xl font-bold mb-2">Expanding Soon?</h2>
+<p class="text-emerald-50/70 text-sm mb-8">Not in your area yet? Submit a request and we'll prioritize your cluster for our next expansion phase.</p>
+<form class="space-y-4">
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">Full Name</label>
+<input class="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white placeholder-emerald-700 focus:ring-secondary focus:border-secondary" placeholder="Enter your name" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">WhatsApp Number</label>
+<input class="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white placeholder-emerald-700 focus:ring-secondary focus:border-secondary" placeholder="+91 00000 00000" type="tel"/>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">Your Village / Taluka</label>
+<input class="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white placeholder-emerald-700 focus:ring-secondary focus:border-secondary" placeholder="e.g. Vita, Khanapur" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">Primary Equipment Needed</label>
+<select class="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white focus:ring-secondary focus:border-secondary appearance-none">
+<option>Tractors &amp; Implements</option>
+<option>Sugarcane Harvesters</option>
+<option>Rotavators</option>
+<option>Drone Spraying</option>
+</select>
+</div>
+<button class="w-full bg-secondary text-white font-bold py-4 rounded-xl hover:bg-on-secondary-container transition-colors shadow-lg mt-4" type="submit">
+                                    Submit Request
+                                </button>
+</form>
+<p class="mt-6 text-[10px] text-emerald-50/50 text-center leading-relaxed">By submitting, you agree to receive updates about service availability in your area via WhatsApp/SMS.</p>
+</div>
+<div class="mt-8 bg-tertiary-container text-on-tertiary-container p-6 rounded-2xl flex items-center gap-4">
+<span class="material-symbols-outlined text-4xl text-on-tertiary-container">support_agent</span>
+<div>
+<h4 class="font-bold">Need Direct Help?</h4>
+<p class="text-sm opacity-90">Call our field support at +91 98765 43210</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-24 max-w-7xl mx-auto px-6">
+<div class="bg-white p-12 rounded-[40px] border border-emerald-50 shadow-sm">
+<div class="max-w-3xl mb-16">
+<h2 class="text-4xl font-extrabold text-primary tracking-tight mb-6">Empowering Maharashtra's Farmers through Modern Mechanisation.</h2>
+<p class="text-lg text-on-surface-variant leading-relaxed">At Kisan Kamai, we understand that timely access to the right equipment is the difference between a successful harvest and a lost season. By digitizing equipment rental across Sangli, Satara, and Kolhapur, we are reducing costs and increasing efficiency for thousands of local growers.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<div class="space-y-4">
+<div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-800" style="font-variation-settings: 'FILL' 1;">precision_manufacturing</span>
+</div>
+<h3 class="text-xl font-bold text-primary">Advanced Implements</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Access the latest laser levelers, power tillers, and specialized sugarcane harvesters that were previously unaffordable for individual farmers.</p>
+</div>
+<div class="space-y-4">
+<div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-800" style="font-variation-settings: 'FILL' 1;">speed</span>
+</div>
+<h3 class="text-xl font-bold text-primary">Timely Operations</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Our local hub strategy ensures that equipment reaches your field exactly when the soil and weather conditions are optimal for sowing or harvest.</p>
+</div>
+<div class="space-y-4">
+<div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-emerald-800" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<h3 class="text-xl font-bold text-primary">Cost Efficiency</h3>
+<p class="text-on-surface-variant text-sm leading-relaxed">Pay only for what you use. Avoid heavy EMIs and maintenance costs of owning large machinery while benefiting from modern technology.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-24 px-6">
+<div class="max-w-7xl mx-auto rounded-[40px] h-[500px] overflow-hidden relative">
+<img alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" class="w-full h-full object-cover" data-alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKZC6B7aV2-8Ka9mee1ZzwnZknocKwMstNFKqdI5VdFgsEv7OEScTd_0nxSJ6PdwftGGGCIuUlukLZKyXDe8A3pLtMEOhRvRRujpMxR4-zjp_DRGqdtBZbo2ESf7qLwNOBZfFtHzOykNve4CfJiYPxHWKZayfNjEHubp01zEBp6tEb3AaIUhEboTWBBdBCzny9FFiQOPivIHi_i06-UZnOamQm8h4rNnAcrI34PRNhBIIeXWkPo5m0aTw3lBuijXENUoHQ-IiGYjb_"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent flex flex-col justify-end p-12">
+<div class="max-w-2xl">
+<h2 class="text-4xl font-extrabold text-white mb-6">Rooted in Trust. <br/>Serving Indian Agriculture.</h2>
+<div class="flex gap-4">
+<button class="bg-secondary text-white px-8 py-4 rounded-xl font-extrabold hover:opacity-90 transition-opacity">Find Equipment in My Area</button>
+<button class="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-extrabold hover:bg-white/20 transition-all">Contact Us</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-slate-900 dark:bg-black w-full py-16 border-t border-slate-800">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<span class="text-xl font-bold text-white mb-4 block">Kisan Kamai</span>
+<p class="text-slate-400 text-sm leading-relaxed font-manrope">Empowering the Indian farmer with seamless access to high-quality agricultural equipment.</p>
+</div>
+<div>
+<h4 class="text-emerald-500 font-bold mb-6 uppercase tracking-widest text-xs">Platform</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">Find Equipment</a></li>
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">List Equipment</a></li>
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">Equipment Categories</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-emerald-500 font-bold mb-6 uppercase tracking-widest text-xs">Company</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">About Us</a></li>
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">Partner with Us</a></li>
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">Contact Support</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-emerald-500 font-bold mb-6 uppercase tracking-widest text-xs">Legal</h4>
+<ul class="space-y-4">
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">Terms of Service</a></li>
+<li><a class="text-slate-400 font-manrope text-sm hover:text-emerald-400 transition-all duration-300" href="#">Privacy Policy</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-slate-400 text-sm font-manrope">© 2024 Kisan Kamai. Rooted in Trust. Serving Indian Agriculture.</p>
+<div class="flex gap-6">
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white transition-colors">social_leaderboard</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-white transition-colors">share</span>
+</div>
+</div>
+</footer>
+</body></html>

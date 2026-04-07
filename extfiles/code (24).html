@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>List Your Equipment | Kisan Kamai</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f8f9ff",
+                    "surface-container-highest": "#dfe2ea",
+                    "surface-bright": "#f8f9ff",
+                    "outline": "#717974",
+                    "on-tertiary-fixed-variant": "#693c00",
+                    "primary-fixed-dim": "#a6cfbd",
+                    "on-tertiary-fixed": "#2c1600",
+                    "tertiary-container": "#4f2c00",
+                    "inverse-on-surface": "#eef1f9",
+                    "secondary-container": "#ffa274",
+                    "on-surface-variant": "#414844",
+                    "surface-variant": "#dfe2ea",
+                    "secondary": "#934a24",
+                    "on-primary-fixed": "#002117",
+                    "secondary-fixed": "#ffdbcc",
+                    "primary-fixed": "#c2ecd9",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#f1f3fc",
+                    "on-secondary-container": "#783610",
+                    "surface-container-high": "#e5e8f0",
+                    "background": "#f8f9ff",
+                    "on-primary-fixed-variant": "#284e40",
+                    "on-surface": "#181c22",
+                    "error": "#ba1a1a",
+                    "on-error": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#d7dae2",
+                    "tertiary": "#321900",
+                    "error-container": "#ffdad6",
+                    "on-secondary-fixed-variant": "#75340e",
+                    "secondary-fixed-dim": "#ffb693",
+                    "inverse-surface": "#2d3137",
+                    "primary": "#00251a",
+                    "tertiary-fixed-dim": "#ffb870",
+                    "surface-tint": "#406657",
+                    "surface-container-lowest": "#ffffff",
+                    "primary-container": "#143b2e",
+                    "outline-variant": "#c1c8c3",
+                    "on-tertiary-container": "#da8b31",
+                    "on-secondary-fixed": "#351000",
+                    "on-primary-container": "#7ea594",
+                    "surface-container": "#ebeef6",
+                    "inverse-primary": "#a6cfbd",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-fixed": "#ffdcbe",
+                    "on-background": "#181c22"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Manrope"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .premium-blur {
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-background font-body text-on-background antialiased">
+<!-- TopNavBar Component -->
+<header class="fixed top-0 w-full z-50 bg-white/95 dark:bg-emerald-950/95 backdrop-blur-md border-b border-emerald-100 dark:border-emerald-800/50 shadow-sm">
+<nav class="flex justify-between items-center max-w-7xl mx-auto px-6 h-20">
+<div class="flex items-center gap-8">
+<span class="text-2xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50">Kisan Kamai</span>
+<div class="hidden md:flex gap-6 items-center">
+<a class="font-manrope text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">Browse</a>
+<a class="font-manrope text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">How it Works</a>
+<a class="font-manrope text-sm font-semibold tracking-tight text-emerald-700 dark:text-emerald-300 border-b-2 border-emerald-700 dark:border-emerald-300 pb-1" href="#">List Equipment</a>
+<a class="font-manrope text-sm font-semibold tracking-tight text-slate-600 dark:text-slate-400 hover:text-emerald-800 dark:hover:text-emerald-200 transition-colors" href="#">Help</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="font-manrope text-sm font-semibold tracking-tight text-emerald-900 dark:text-emerald-50 px-4 py-2 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/30 transition-all duration-200 rounded-lg">मराठी</button>
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-lg font-manrope text-sm font-semibold tracking-tight hover:opacity-90 active:scale-[0.99] transition-all">Sign In</button>
+</div>
+</nav>
+</header>
+<main class="pt-20">
+<!-- Hero Section -->
+<section class="relative min-h-[870px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-gradient-to-r from-primary-container via-primary-container/80 to-transparent z-10"></div>
+<img alt="Owner with tractor" class="w-full h-full object-cover" data-alt="A smiling Indian farmer standing proudly next to his clean modern green tractor in a lush sugarcane field in Kolhapur at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpJNrHUhz2IVLOk8s20PA7GB7Td4tJa3tkVfqY2uvx4s3YdLgn1vqZX12LfmdgfhNIPSsL-yc67FdukLdGtl02Z8M_XgXPkHu5fN0MHfiib-OLwDso9DhjaNGZ85EJs484Lth2-XlFRgZ7D8Z7YwRujfWl6at-ANFRZ7JiNgI9_zqJOF9FThdiLwtaGJsEJxNTJw3kw9dTyquLXw2IL6PNz5OygaUfcoFoHdCDNRs4CqLnCQm0F9nbvG59y_VaMsoTZbnAUWgzUIM7"/>
+</div>
+<div class="relative z-20 max-w-7xl mx-auto px-6 w-full">
+<div class="max-w-2xl">
+<span class="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container/20 text-secondary-container rounded-full text-xs font-bold tracking-widest uppercase mb-6">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
+                        Empowering Rural Owners
+                    </span>
+<h1 class="font-headline text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6">
+                        Your Equipment, <br/>
+<span class="text-on-tertiary-container">Your Extra Income.</span>
+</h1>
+<p class="font-body text-xl text-on-primary-container/90 mb-10 leading-relaxed max-w-xl">
+                        List your tractors, harvesters, and implements on Kisan Kamai. Reach verified farmers across Sangli, Satara, and Kolhapur.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-secondary text-white px-8 py-4 rounded-xl font-headline font-bold text-lg hover:brightness-110 active:scale-95 transition-all shadow-lg shadow-secondary/20">
+                            List and Earn Now
+                        </button>
+<button class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-8 py-4 rounded-xl font-headline font-bold text-lg hover:bg-white/20 active:scale-95 transition-all">
+                            Check Earnings Potential
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Why List Section (Efficiency, Trust, Payments) -->
+<section class="py-24 bg-white">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div class="max-w-2xl">
+<h2 class="font-headline text-4xl font-extrabold text-primary mb-4">Why Partners Choose Kisan Kamai</h2>
+<p class="text-on-surface-variant text-lg">We build technology to ensure your expensive machinery is never sitting idle when it could be earning.</p>
+</div>
+<div class="hidden md:block h-px flex-grow mx-12 bg-outline-variant/30"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Efficiency Card -->
+<div class="p-8 rounded-3xl bg-surface-container-low border border-surface-container-highest group hover:border-primary-container/30 transition-all">
+<div class="w-14 h-14 rounded-2xl bg-primary-container flex items-center justify-center mb-6 shadow-inner">
+<span class="material-symbols-outlined text-on-primary-container text-3xl" data-icon="speed">speed</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-4">Maximum Efficiency</h3>
+<p class="text-on-surface-variant leading-relaxed">Reduce downtime by filling gaps in your seasonal schedule. Our smart matching connects you with nearby demand instantly.</p>
+</div>
+<!-- Trust Card -->
+<div class="p-8 rounded-3xl bg-surface-container-low border border-surface-container-highest group hover:border-primary-container/30 transition-all">
+<div class="w-14 h-14 rounded-2xl bg-primary-container flex items-center justify-center mb-6 shadow-inner">
+<span class="material-symbols-outlined text-on-primary-container text-3xl" data-icon="verified_user">verified_user</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-4">Verified Trust</h3>
+<p class="text-on-surface-variant leading-relaxed">Every renter is identity-verified. We provide the security layer you need to lease your equipment with complete peace of mind.</p>
+</div>
+<!-- Payments Card -->
+<div class="p-8 rounded-3xl bg-surface-container-low border border-surface-container-highest group hover:border-primary-container/30 transition-all">
+<div class="w-14 h-14 rounded-2xl bg-primary-container flex items-center justify-center mb-6 shadow-inner">
+<span class="material-symbols-outlined text-on-primary-container text-3xl" data-icon="payments">payments</span>
+</div>
+<h3 class="font-headline text-2xl font-bold text-primary mb-4">Secure Payments</h3>
+<p class="text-on-surface-variant leading-relaxed">No more chasing collections. Payments are handled securely through the platform and transferred directly to your bank account.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- 3-Step Guide Section -->
+<section class="py-24 bg-primary-container relative overflow-hidden">
+<!-- Background Decorative Elements -->
+<div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
+<svg class="w-full h-full text-white fill-current" viewbox="0 0 100 100">
+<circle cx="100" cy="0" r="80"></circle>
+</svg>
+</div>
+<div class="max-w-7xl mx-auto px-6 relative z-10">
+<div class="text-center mb-20">
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold text-white mb-4">Start Earning in Minutes</h2>
+<p class="text-on-primary-container text-lg max-w-xl mx-auto">Three simple steps to transition from owner to professional equipment partner.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-0 relative">
+<!-- Progress Line -->
+<div class="hidden md:block absolute top-12 left-0 w-full h-[2px] bg-white/10 z-0"></div>
+<!-- Step 1 -->
+<div class="flex flex-col items-center px-8 relative z-10">
+<div class="w-24 h-24 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-3xl font-black mb-8 border-8 border-primary-container shadow-xl">1</div>
+<h4 class="font-headline text-2xl font-bold text-white mb-3 text-center">Create Profile</h4>
+<p class="text-on-primary-container text-center leading-relaxed">Enter your personal details and location. Set up your KYC to receive payments.</p>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center px-8 relative z-10 mt-16 md:mt-0">
+<div class="w-24 h-24 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-3xl font-black mb-8 border-8 border-primary-container shadow-xl">2</div>
+<h4 class="font-headline text-2xl font-bold text-white mb-3 text-center">Add Details</h4>
+<p class="text-on-primary-container text-center leading-relaxed">Upload clear photos, model information, and set your daily or hourly rental rates.</p>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center px-8 relative z-10 mt-16 md:mt-0">
+<div class="w-24 h-24 rounded-full bg-on-tertiary-container text-white flex items-center justify-center text-3xl font-black mb-8 border-8 border-primary-container shadow-xl">3</div>
+<h4 class="font-headline text-2xl font-bold text-white mb-3 text-center">Go Live</h4>
+<p class="text-on-primary-container text-center leading-relaxed">Your listing is verified and published. Start receiving booking requests from local farmers.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Categories Section -->
+<section class="py-24 bg-surface">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex items-center justify-between mb-12">
+<h2 class="font-headline text-4xl font-extrabold text-primary">What Can You List?</h2>
+<div class="flex gap-2">
+<span class="px-4 py-1 bg-primary/5 rounded-full text-primary text-sm font-semibold border border-primary/10">Sangli</span>
+<span class="px-4 py-1 bg-primary/5 rounded-full text-primary text-sm font-semibold border border-primary/10">Satara</span>
+<span class="px-4 py-1 bg-primary/5 rounded-full text-primary text-sm font-semibold border border-primary/10">Kolhapur</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Tractor Card -->
+<div class="relative group rounded-3xl overflow-hidden aspect-[4/5] shadow-lg">
+<img alt="Tractors" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Modern red and blue Indian tractors parked in a neat row in a sunny farm courtyard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBukZQoo5oJvbevO4qV7eu-5dby7ya1GJpkvTMIXTHsCIrNR6cgRzo54NK0074M6OhAGoPYJL7szxrJXEW3vAOYUh4e_pUxtCu3znzHcm7ShNPbxPIoP8acImacO4UjCMtLAGeP2mXB-JmZ78MhhwAzue44BgWw1EJwAMrFa3BWEYMmEMqYumO7OKgY92HBbto86xJyvIwUcgxhiqldIEd0n98NDTjiLHckPI4JRm7m_q_KXPMF5d_Qv7126uqqthXj-L1H8OJXQh4p"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<h3 class="font-headline text-2xl font-bold text-white mb-2">Tractors</h3>
+<p class="text-white/80 text-sm mb-4">40HP - 90HP utility and heavy-duty tractors.</p>
+<button class="w-full py-3 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-xl text-sm font-bold hover:bg-white/30 transition-all uppercase tracking-wider">List Now</button>
+</div>
+</div>
+<!-- Harvester Card -->
+<div class="relative group rounded-3xl overflow-hidden aspect-[4/5] shadow-lg">
+<img alt="Harvesters" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Combine harvester working in a golden wheat field in Maharashtra under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC07V_J8rC9ZxUmwsJkDMPLUHPrVlFCfmLY6NrCUUoob2MglR3lPKgWnIl1Tb16YvOvE9Wdt-Iqeo8dF97x5ZlbTyhSu_8ax0tIXeAbxif6c6zi1G8mIqdv4_z88AqrjDPNGgCFJFN2jEjJOn3KHawqmuKn0k7psO3qpSSz_9Q74gdoP5Cm2HnzmqYgbS8YeQwce_YUqbJ-6TYD5icCHJAHSx5KvD88HDqlQVc0n7I6xV7vtPYTdEAE6xa_EVGjcKmBt_EFnCrcVCbM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<h3 class="font-headline text-2xl font-bold text-white mb-2">Harvesters</h3>
+<p class="text-white/80 text-sm mb-4">Sugar cane, maize, and grain combine harvesters.</p>
+<button class="w-full py-3 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-xl text-sm font-bold hover:bg-white/30 transition-all uppercase tracking-wider">List Now</button>
+</div>
+</div>
+<!-- Implements Card -->
+<div class="relative group rounded-3xl overflow-hidden aspect-[4/5] shadow-lg">
+<img alt="Implements" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Close up of a heavy duty agricultural rotavator and seeder attachments in a rustic barn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWNILv7etn7BACAHYnqBIb4d8ktEUtzdDUp6alIpwc94MAjjKoI9hxCiggbV8_SsvJyYmq4pMBsLby8-7S6tdwZrLF8qMGRWduXvnORhMyuPWrracmAskfqO34CzCDw5zfkJG3qtLsPFMtisgo8rgOWaojAMva6bPQAwBdQFWtj6SOWHz9MgR_Xw0qwYb23vHe9MXWo2tUnWd46qkthXZN_gwFkn2u2M19IVTNFPNB5R52l-jj_1m8HT9OPCa9V9z-jSLXqR75jjIK"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8 w-full">
+<h3 class="font-headline text-2xl font-bold text-white mb-2">Implements</h3>
+<p class="text-white/80 text-sm mb-4">Rotavators, seeders, plows, and sprayers.</p>
+<button class="w-full py-3 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-xl text-sm font-bold hover:bg-white/30 transition-all uppercase tracking-wider">List Now</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-24 px-6">
+<div class="max-w-7xl mx-auto rounded-[3rem] bg-on-tertiary-fixed relative overflow-hidden flex flex-col md:flex-row items-center">
+<div class="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent"></div>
+<div class="p-12 md:p-20 relative z-10 md:w-3/5">
+<h2 class="font-headline text-4xl md:text-5xl font-extrabold text-white mb-8">Ready to grow your farming business?</h2>
+<p class="text-on-tertiary-fixed-variant text-xl mb-10 leading-relaxed">Join hundreds of equipment owners in South Maharashtra who are earning better through Kisan Kamai.</p>
+<div class="flex flex-wrap gap-6">
+<button class="bg-white text-primary px-10 py-5 rounded-2xl font-headline font-extrabold text-xl shadow-xl hover:scale-105 active:scale-95 transition-all">Start Listing Today</button>
+<div class="flex flex-col">
+<span class="text-white/60 text-sm font-semibold mb-1">Talk to an expert</span>
+<span class="text-white font-bold text-xl tracking-wide">+91 1800-KISAN-KAMAI</span>
+</div>
+</div>
+</div>
+<div class="md:w-2/5 p-12 md:p-20 flex justify-center items-center">
+<div class="relative">
+<div class="absolute -inset-10 bg-on-tertiary-container/30 blur-3xl rounded-full"></div>
+<div class="relative bg-white/10 backdrop-blur-xl border border-white/20 p-8 rounded-3xl text-white">
+<div class="flex items-center gap-4 mb-6">
+<div class="w-12 h-12 rounded-full bg-emerald-500 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+<div>
+<div class="font-bold text-lg">Verified Partner</div>
+<div class="text-sm text-white/70">Sangli District</div>
+</div>
+</div>
+<blockquote class="text-lg italic leading-relaxed text-white/90">
+                                "Listing my rotavator during the off-season helped me cover its yearly maintenance and earn extra. The platform makes everything easy."
+                            </blockquote>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="w-full mt-20 pt-12 pb-8 bg-emerald-900 dark:bg-black border-t border-emerald-800 dark:border-emerald-900">
+<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="col-span-1 md:col-span-1">
+<span class="text-xl font-black text-white">Kisan Kamai</span>
+<p class="mt-4 text-emerald-200/70 font-manrope text-sm leading-relaxed">
+                    Connecting farmers with the machinery they need. Rooted in the rich soil of Maharashtra.
+                </p>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Company</h4>
+<ul class="space-y-4">
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">About Us</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">Safety &amp; Insurance</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">Marathi Support</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Resources</h4>
+<ul class="space-y-4">
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">Owner Guide</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">Renting Tips</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">Pricing Calculator</a></li>
+</ul>
+</div>
+<div>
+<h4 class="text-white font-bold mb-6">Legal</h4>
+<ul class="space-y-4">
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">Privacy Policy</a></li>
+<li><a class="text-emerald-200/70 hover:text-white transition-colors font-manrope text-sm" href="#">Terms of Service</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-emerald-800">
+<p class="text-emerald-200/70 font-manrope text-sm text-center">© 2024 Kisan Kamai. Rooted in Trust.</p>
+</div>
+</footer>
+</body></html>
