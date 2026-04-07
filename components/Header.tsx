@@ -17,6 +17,7 @@ const navLinks = [
 export const Header = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const { language, setLanguage, langText } = useLanguage();
 
   return (
@@ -27,24 +28,35 @@ export const Header = () => {
             <Link href="/" className="text-2xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50 font-headline">
               Kisan Kamai
             </Link>
-            <nav className="hidden lg:flex items-center gap-6">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={
-                      isActive
-                        ? "text-emerald-700 dark:text-emerald-400 font-bold border-b-2 border-emerald-700 dark:border-emerald-400 pb-1 transition-colors"
-                        : "text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200"
-                    }
-                  >
-                    {langText(link.label, link.labelMr)}
-                  </Link>
-                );
-              })}
-            </nav>
+            <div className="hidden lg:relative lg:block">
+              <button 
+                onClick={() => setDesktopMenuOpen(!desktopMenuOpen)}
+                className="flex items-center gap-1 text-slate-600 dark:text-slate-400 font-medium hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors duration-200"
+              >
+                {langText("Menu", "मेनू")} <span className="material-symbols-outlined text-sm">{desktopMenuOpen ? 'expand_less' : 'expand_more'}</span>
+              </button>
+              {desktopMenuOpen && (
+                <div className="absolute top-full left-0 mt-4 w-56 bg-white dark:bg-emerald-950 rounded-xl shadow-xl border border-emerald-100 dark:border-emerald-800 overflow-hidden py-2" onMouseLeave={() => setDesktopMenuOpen(false)}>
+                  {navLinks.map((link) => {
+                    const isActive = pathname === link.href;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => setDesktopMenuOpen(false)}
+                        className={`block px-5 py-3 text-sm transition-colors ${
+                          isActive
+                            ? "bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 font-bold"
+                            : "text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-emerald-900/50 font-medium"
+                        }`}
+                      >
+                        {langText(link.label, link.labelMr)}
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <ThemeToggle />

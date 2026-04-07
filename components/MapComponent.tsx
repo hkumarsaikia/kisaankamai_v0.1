@@ -11,10 +11,18 @@ interface MapMarker {
   color?: string;
 }
 
+interface MapCircle {
+  lat: number;
+  lng: number;
+  radius: number;
+  color?: string;
+}
+
 interface MapComponentProps {
   center?: [number, number];
   zoom?: number;
   markers?: MapMarker[];
+  circles?: MapCircle[];
   height?: string;
   className?: string;
   showControls?: boolean;
@@ -24,6 +32,7 @@ export default function MapComponent({
   center = [16.85, 74.55],
   zoom = 10,
   markers = [],
+  circles = [],
   height = "500px",
   className = "",
   showControls = true,
@@ -129,7 +138,20 @@ export default function MapComponent({
         }
       });
 
-      // Fit bounds if multiple markers
+      // Add Coverage Circles
+      circles.forEach((c) => {
+        const circleColor = c.color || "#047857"; // emerald-700
+        L.circle([c.lat, c.lng], {
+          color: circleColor,
+          fillColor: circleColor,
+          fillOpacity: 0.15,
+          weight: 2,
+          radius: c.radius,
+        }).addTo(map);
+      });
+
+      // Fit bounds if multiple markers or circles
+
       if (markers.length > 1) {
         const bounds = L.latLngBounds(markers.map((m) => [m.lat, m.lng]));
         map.fitBounds(bounds, { padding: [50, 50] });

@@ -4,6 +4,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState, useEffect } from "react";
 
 const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
 
@@ -14,13 +16,50 @@ const nearbyMarkers = [
 ];
 
 const equipmentCards = [
-  { cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBPWvvZ2_8Ow_lDSICAFb-m0-q7-C6hfmNe0OFRKjjnZNC7RB2l4iZHqAqaLuXM_DGnjdYjX2rQq0kWL-Cerb7tsdEjd2OnRXwWyat8dGsCfcn--c9uoHlW09eECIqulVEJsPO7_m7XtJhc_vfnx9VAJZoDcEh-0Dvx2FHxDvJXSCDvBXMj75C3LlLQ4tdV5Uy_tMVbNkUqay_NOBamyMUTFvr4fLw_zFV77s74J06hs8wqCh4ZuA2RLdMKEQeEKtj4umKvgQhhUaZw", ownerImg: "https://lh3.googleusercontent.com/aida-public/AB6AXuDIm1XX0yEgIPs-9fCAtT7_jNGTg5Ub_jYR62XtB2K8jp-PZ-_aFg1Q3aM-iUoWGta00__GuCb9FR5TR_aB31Q6lH1J_9-QkvYY7cbYNpHzFApVCyBeH0WltC-1SfmYHSWEC-3ZAQsmqwcr9RFwvPjv9Z2fJ_HoRFWDz0vDTYWJJd6Eva1QnN40bKe9yQZ9z5G6GZTgeerFZ0diXY6nECFZiDpqDaGjCPh5JSUYSrbsegiEJJ2s7u7UsVFw6yBUI9M0cEUHnqlUJqRB", verified: true },
-  { cat: "Harvester • John Deere", name: "John Deere W70 Combine", price: "₹2,500", unit: "per hour", rating: "4.7", hp: "100 HP", dist: "8.5 km", owner: "Sangli Agri-Hub", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAZ7oUvUALj7SDziTR9cKw09jxax1tKS_b7sXUeHrrZUckyODiJNtoKOiZkGkteJORMFJDU6c0Y8ql6Ly2g-JfnrT1gOqzyUBhs9_jfA36Hd62B-1vEbibVr3a12XNRY7r1Uhx0jQynG8Q_ew6UPFUJxi358BbidrUEfTBHZUT2Isoce5MfM8Tski9j12lk5DORg23MdNwo6zwFGAETPGdT72HNrlEsiRRWKDsBmV54gWFxdHnYsyyqPXD2-ZVVwzbfKFlxiRjWwMnM", popular: true },
-  { cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC_f2OYvabqpLh_n0dq9_3mv54MBqVantkDYpjoJMb6HdjTMv-oLLJCORZ925eiNFubIR4E_8S6HIAtQrT0qDVr3B7_jbq799cBMsVuQzjZokvhcV1dy__bbAjsP6Tnfw7FDqS9MNcUGJ-spP2OwKzBafBMgzDgCj5UbgiOvezlHbEIpbcE3yCh0xIZSl1viwRkWL2ZIv6g1-m05KRcgQQV6yYf8_cpNDJneomhV5-QsOElD-fUOua-TK1csQa4fufEmguRnY5zVzQb", ownerImg: "https://lh3.googleusercontent.com/aida-public/AB6AXuAPiG8sXtGgHpzF9ziEYuC4a2o1lxmiyZv-qKdAheWl3Shj4ygYYqCUECq9nldsnLlMC4rZkhkyfwNZc3XUqUe8roR6Gec0-D0wsbEE27ey61GPVk13-b9otLcM3oAcJsMDzEy_ozn5c1y0yXZkCEUxSvDsYCYcsb2UFMB8s51hXFLSGuZJDzBp1brpYgtKkeKUS8JBp6w_6ZCD06lZ3D-3YJxT2WLMRC0Xa06WYJl1f-MBvwUW_oZwEfXzM3psUQAct0J1Tl3iFYaf" },
+  { location: "Kalwan", cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBPWvvZ2_8Ow_lDSICAFb-m0-q7-C6hfmNe0OFRKjjnZNC7RB2l4iZHqAqaLuXM_DGnjdYjX2rQq0kWL-Cerb7tsdEjd2OnRXwWyat8dGsCfcn--c9uoHlW09eECIqulVEJsPO7_m7XtJhc_vfnx9VAJZoDcEh-0Dvx2FHxDvJXSCDvBXMj75C3LlLQ4tdV5Uy_tMVbNkUqay_NOBamyMUTFvr4fLw_zFV77s74J06hs8wqCh4ZuA2RLdMKEQeEKtj4umKvgQhhUaZw", ownerImg: "https://lh3.googleusercontent.com/aida-public/AB6AXuDIm1XX0yEgIPs-9fCAtT7_jNGTg5Ub_jYR62XtB2K8jp-PZ-_aFg1Q3aM-iUoWGta00__GuCb9FR5TR_aB31Q6lH1J_9-QkvYY7cbYNpHzFApVCyBeH0WltC-1SfmYHSWEC-3ZAQsmqwcr9RFwvPjv9Z2fJ_HoRFWDz0vDTYWJJd6Eva1QnN40bKe9yQZ9z5G6GZTgeerFZ0diXY6nECFZiDpqDaGjCPh5JSUYSrbsegiEJJ2s7u7UsVFw6yBUI9M0cEUHnqlUJqRB", verified: true },
+  { location: "Mukhed", cat: "Harvester • John Deere", name: "John Deere W70 Combine", price: "₹2,500", unit: "per hour", rating: "4.7", hp: "100 HP", dist: "8.5 km", owner: "Sangli Agri-Hub", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuAZ7oUvUALj7SDziTR9cKw09jxax1tKS_b7sXUeHrrZUckyODiJNtoKOiZkGkteJORMFJDU6c0Y8ql6Ly2g-JfnrT1gOqzyUBhs9_jfA36Hd62B-1vEbibVr3a12XNRY7r1Uhx0jQynG8Q_ew6UPFUJxi358BbidrUEfTBHZUT2Isoce5MfM8Tski9j12lk5DORg23MdNwo6zwFGAETPGdT72HNrlEsiRRWKDsBmV54gWFxdHnYsyyqPXD2-ZVVwzbfKFlxiRjWwMnM", popular: true },
+  { location: "Kalwan", cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuC_f2OYvabqpLh_n0dq9_3mv54MBqVantkDYpjoJMb6HdjTMv-oLLJCORZ925eiNFubIR4E_8S6HIAtQrT0qDVr3B7_jbq799cBMsVuQzjZokvhcV1dy__bbAjsP6Tnfw7FDqS9MNcUGJ-spP2OwKzBafBMgzDgCj5UbgiOvezlHbEIpbcE3yCh0xIZSl1viwRkWL2ZIv6g1-m05KRcgQQV6yYf8_cpNDJneomhV5-QsOElD-fUOua-TK1csQa4fufEmguRnY5zVzQb", ownerImg: "https://lh3.googleusercontent.com/aida-public/AB6AXuAPiG8sXtGgHpzF9ziEYuC4a2o1lxmiyZv-qKdAheWl3Shj4ygYYqCUECq9nldsnLlMC4rZkhkyfwNZc3XUqUe8roR6Gec0-D0wsbEE27ey61GPVk13-b9otLcM3oAcJsMDzEy_ozn5c1y0yXZkCEUxSvDsYCYcsb2UFMB8s51hXFLSGuZJDzBp1brpYgtKkeKUS8JBp6w_6ZCD06lZ3D-3YJxT2WLMRC0Xa06WYJl1f-MBvwUW_oZwEfXzM3psUQAct0J1Tl3iFYaf" },
+  { location: "Mukhed", cat: "Tractor • Swaraj", name: "Swaraj 744 FE", price: "₹750", unit: "per hour", rating: "4.8", hp: "48 HP", dist: "2.1 km", owner: "Suresh", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBeYZkgPtT1CB2DRr74jXatRMZxsAdZPeHXb9EZLzta1OkRzg-51UM6cU9fwtEyq1Fxe0DNDNzxhmQpzS3XT78_inszbrqKHipCjgAtAnmQHJ2DF47aaWisB0j9cg9qookoOgvlXfRMwDoATcDX2mCgHeM9s4vkJZxH3lEP2bHUGRRcl3icIHYwaaW_JRHf9_ftAKddSlqzk-_RR_vgYXT_cdFYfpbZ-_bhdehYLIjyfwKUAnU5dqvcN1Lnuv1GZqT0MDreKEDaNYQv", verified: true },
 ];
 
-export default function RentEquipment() {
+function RentEquipmentInner() {
   const { langText } = useLanguage();
+  const searchParams = useSearchParams();
+  
+  const initialLoc = searchParams.get("location") || "";
+  const initialQuery = searchParams.get("query") || "";
+
+  const [activeLocation, setActiveLocation] = useState(initialLoc);
+  const [activeQuery, setActiveQuery] = useState(initialQuery);
+  const [suggestionMsg, setSuggestionMsg] = useState("");
+
+  const handlePincodeSearch = (val: string) => {
+    setActiveLocation(val);
+    if (val === "423501" || val.toLowerCase() === "kalwan") {
+      setActiveLocation("Kalwan");
+      setSuggestionMsg("");
+    } else if (val === "431715" || val.toLowerCase() === "mukhed") {
+      setActiveLocation("Mukhed");
+      setSuggestionMsg("");
+    } else if (/^\d{6}$/.test(val)) {
+      setSuggestionMsg(langText("Location not found in our system. Suggesting nearby available locations.", "आमच्या सिस्टममध्ये स्थान आढळले नाही. जवळपासच्या उपलब्ध स्थानांची सूचना देत आहोत."));
+      setActiveLocation("Kalwan");
+    } else {
+      setSuggestionMsg("");
+    }
+  };
+
+  useEffect(() => {
+    if (initialLoc) {
+      handlePincodeSearch(initialLoc);
+    }
+  }, [initialLoc]);
+
+  const filteredCards = equipmentCards.filter(eq => {
+    const locMatch = (activeLocation === "Kalwan" || activeLocation === "Mukhed") ? eq.location === activeLocation : true;
+    const queryMatch = activeQuery === "" || eq.cat.toLowerCase().includes(activeQuery.toLowerCase()) || eq.name.toLowerCase().includes(activeQuery.toLowerCase());
+    return locMatch && queryMatch;
+  });
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-[#0f1a14]">
@@ -32,15 +71,25 @@ export default function RentEquipment() {
             <div className="flex flex-col md:flex-row items-center gap-4">
               <div className="w-full md:w-1/3 relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline dark:text-slate-400">location_on</span>
-                <select className="w-full pl-12 pr-4 py-3 bg-surface-container-low dark:bg-emerald-900/30 dark:text-white border-none rounded-xl focus:ring-2 focus:ring-primary-container appearance-none font-medium cursor-pointer">
-                  <option>{langText("Sangli, Maharashtra", "सांगली, महाराष्ट्र")}</option>
-                  <option>{langText("Satara, Maharashtra", "सातारा, महाराष्ट्र")}</option>
-                  <option>{langText("Kolhapur, Maharashtra", "कोल्हापूर, महाराष्ट्र")}</option>
-                </select>
+                <input 
+                  className="w-full pl-12 pr-4 py-3 bg-surface-container-low dark:bg-emerald-900/30 dark:text-white border-none rounded-xl focus:ring-2 focus:ring-primary-container font-medium" 
+                  placeholder={langText("Enter Location or Pincode", "स्थान किंवा पिनकोड टाका")} 
+                  type="text" 
+                  value={activeLocation}
+                  onChange={(e) => setActiveLocation(e.target.value)}
+                  onBlur={(e) => handlePincodeSearch(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handlePincodeSearch(activeLocation)}
+                />
               </div>
               <div className="w-full md:w-1/2 relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-outline dark:text-slate-400">search</span>
-                <input className="w-full pl-12 pr-4 py-3 bg-surface-container-low dark:bg-emerald-900/30 dark:text-white border-none rounded-xl focus:ring-2 focus:ring-primary-container font-medium" placeholder={langText("Search for Tractors, Harvesters...", "ट्रॅक्टर, हार्वेस्टर शोधा...")} type="text" />
+                <input 
+                  className="w-full pl-12 pr-4 py-3 bg-surface-container-low dark:bg-emerald-900/30 dark:text-white border-none rounded-xl focus:ring-2 focus:ring-primary-container font-medium" 
+                  placeholder={langText("Search for Tractors, Harvesters...", "ट्रॅक्टर, हार्वेस्टर शोधा...")} 
+                  type="text"
+                  value={activeQuery}
+                  onChange={(e) => setActiveQuery(e.target.value)}
+                />
               </div>
               <div className="flex bg-surface-container-low dark:bg-emerald-900/30 p-1 rounded-xl w-full md:w-auto">
                 <button className="flex-1 md:w-12 h-10 flex items-center justify-center bg-white dark:bg-emerald-800 rounded-lg shadow-sm text-primary-container dark:text-emerald-400"><span className="material-symbols-outlined">grid_view</span></button>
@@ -58,14 +107,23 @@ export default function RentEquipment() {
               </button>
             </div>
           </div>
+          {suggestionMsg && (
+            <div className="max-w-7xl mx-auto px-6 pb-4">
+              <div className="bg-amber-100 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-200 px-4 py-3 rounded-lg flex items-center gap-2 text-sm font-semibold">
+                <span className="material-symbols-outlined text-sm">info</span>
+                {suggestionMsg}
+              </div>
+            </div>
+          )}
         </section>
 
         {/* Main Discovery Area */}
         <section className="max-w-7xl mx-auto px-6 py-8">
           <div className="flex items-baseline justify-between mb-8">
             <div>
-              <h1 className="text-2xl font-bold text-primary dark:text-emerald-50">{langText("Available Equipment in Sangli", "सांगलीतील उपलब्ध उपकरणे")}</h1>
-              <p className="text-on-surface-variant dark:text-slate-400 font-medium mt-1">{langText("Found 24 premium machines ready for your field", "तुमच्या शेतासाठी 24 प्रीमियम मशीन तयार")}</p>
+              <h1 className="text-2xl font-bold text-primary dark:text-emerald-50">{langText(`Available Equipment${activeLocation ? ' in ' + activeLocation : ''}`, `${activeLocation ? activeLocation + ' मधील ' : ''}उपलब्ध उपकरणे`)}</h1>
+              <p className="text-on-surface-variant dark:text-slate-400 font-medium mt-1">{langText(`Found ${filteredCards.length} premium machines ready for your field`, `तुमच्या शेतासाठी ${filteredCards.length} प्रीमियम मशीन तयार आढळल्या`)}</p>
+
             </div>
             <div className="flex items-center gap-2 text-sm font-semibold text-outline dark:text-slate-400">
               <span>{langText("Sort by:", "क्रमवारी:")}</span>
@@ -75,7 +133,11 @@ export default function RentEquipment() {
 
           {/* Results Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {equipmentCards.map((eq) => (
+            {filteredCards.length === 0 ? (
+              <div className="col-span-full py-12 text-center text-slate-500 font-medium">
+                {langText("No equipment found matching your criteria.", "तुमच्या निकषांशी जुळणारे कोणतेही उपकरण आढळले नाही.")}
+              </div>
+            ) : filteredCards.map((eq) => (
               <div key={eq.name} className="group bg-white dark:bg-emerald-900/20 rounded-2xl overflow-hidden border border-outline-variant/20 dark:border-emerald-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <div className="relative h-56 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -171,8 +233,11 @@ export default function RentEquipment() {
             <div className="order-2 lg:order-1 relative rounded-3xl overflow-hidden h-[400px] border-4 border-white dark:border-emerald-800 shadow-2xl">
               <MapComponent
                 center={[16.855, 74.56]}
-                zoom={13}
+                zoom={12}
                 markers={nearbyMarkers}
+                circles={[
+                  { lat: 16.855, lng: 74.56, radius: 4000, color: "#10b981" }
+                ]}
                 height="100%"
                 showControls={true}
                 className="rounded-none"
@@ -205,5 +270,13 @@ export default function RentEquipment() {
       <button className="fixed bottom-8 right-8 bg-secondary text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform active:scale-95 z-50"><span className="material-symbols-outlined">chat_bubble</span></button>
       <Footer />
     </div>
+  );
+}
+
+export default function RentEquipment() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Loading...</div>}>
+      <RentEquipmentInner />
+    </Suspense>
   );
 }

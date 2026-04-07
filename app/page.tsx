@@ -5,6 +5,8 @@ import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
 
@@ -14,8 +16,36 @@ const homepageMarkers = [
   { lat: 16.70, lng: 74.23, label: "Kolhapur", sublabel: "Active Hub", color: "#693c00" },
 ];
 
+const heroImages = [
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuBhZ6nzq8ftAMceWSrFYkP1nwSI2jAbJwA7ZWwvOf_Z9ZQdUCvUZwUYtR1yqnz9pdq72MP6BLfd1WhABoQcet8jPpzUyxcQdd6wLaENEFoGWcKF2YfFxRxGIWtUzNCJVCiAzw7923oSc8s18vysXR1cL1BsIQOWKrXHjNHlMozyqkR3hjioSQ3_AXyjeA12oP6d1gdjPieMLdlt-yyQ1X5dbVnJ6sQc6K0pW8VAgdL-pQ2brKvNmj9paok8mnQroq5W7U1lbTkysUZ3",
+  "https://images.unsplash.com/photo-1628189689456-bf55b0a3f683?auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1592982537447-6f29e1dbdd0f?auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1586771107445-d3af15c2ba5c?auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1563514222080-e5f804fc8408?auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?auto=format&fit=crop&q=80"
+];
+
 export default function Home() {
   const { langText } = useLanguage();
+  const router = useRouter();
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [searchLocation, setSearchLocation] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleSearch = () => {
+    router.push(`/rent-equipment?location=${encodeURIComponent(searchLocation)}&query=${encodeURIComponent(searchQuery)}`);
+  };
+
+  const setSlide = (index: number) => {
+    setCurrentSlide(index);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-[#0f1a14] text-on-surface">
@@ -24,13 +54,36 @@ export default function Home() {
         {/* Hero Section */}
         <section className="relative min-h-[870px] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="w-full h-full object-cover" alt="Modern tractor plowing a vast golden-brown field in rural India during sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhZ6nzq8ftAMceWSrFYkP1nwSI2jAbJwA7ZWwvOf_Z9ZQdUCvUZwUYtR1yqnz9pdq72MP6BLfd1WhABoQcet8jPpzUyxcQdd6wLaENEFoGWcKF2YfFxRxGIWtUzNCJVCiAzw7923oSc8s18vysXR1cL1BsIQOWKrXHjNHlMozyqkR3hjioSQ3_AXyjeA12oP6d1gdjPieMLdlt-yyQ1X5dbVnJ6sQc6K0pW8VAgdL-pQ2brKvNmj9paok8mnQroq5W7U1lbTkysUZ3" />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/40 to-transparent"></div>
+            {heroImages.map((src, index) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                key={src}
+                className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-1000 ${
+                  index === currentSlide ? "opacity-100" : "opacity-0"
+                }`}
+                alt="Agricultural Equipment Imagery"
+                src={src}
+              />
+            ))}
+            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/60 to-black/30"></div>
+            
+            {/* Slider Controls */}
+            <button 
+              onClick={() => setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/20 hover:bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all z-20"
+            >
+              <span className="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button 
+              onClick={() => setCurrentSlide((prev) => (prev + 1) % heroImages.length)}
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/20 hover:bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all z-20"
+            >
+              <span className="material-symbols-outlined">chevron_right</span>
+            </button>
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+          <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center w-full">
             <div className="text-white">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-6">
+              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-6 mt-16 lg:mt-0">
                 <span className="w-2 h-2 bg-secondary rounded-full transform dark:bg-amber-400"></span>
                 <span className="text-sm font-label font-bold uppercase tracking-widest">{langText("Now Serving Western Maharashtra", "आता पश्चिम महाराष्ट्रात सेवा देत आहोत")}</span>
               </div>
@@ -43,13 +96,30 @@ export default function Home() {
               <div className="bg-white dark:bg-emerald-950 p-2 rounded-xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-2xl border border-transparent dark:border-emerald-800">
                 <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b md:border-b-0 md:border-r border-slate-100 dark:border-emerald-800/50">
                   <span className="material-symbols-outlined text-secondary dark:text-emerald-400">location_on</span>
-                  <input className="w-full border-none focus:ring-0 text-on-surface dark:text-emerald-50 placeholder:text-slate-400 dark:placeholder-slate-500 bg-transparent" placeholder={langText("Select Location (Sangli, Satara...)", "स्थान निवडा (सांगली, सातारा...)")} type="text" />
+                  <select 
+                    className="w-full border-none focus:ring-0 text-on-surface dark:text-emerald-50 bg-transparent cursor-pointer font-medium"
+                    value={searchLocation}
+                    onChange={(e) => setSearchLocation(e.target.value)}
+                  >
+                    <option value="" disabled>{langText("Select Location", "स्थान निवड")}</option>
+                    <option value="Kalwan">{langText("Kalwan", "कळवण")}</option>
+                    <option value="Mukhed">{langText("Mukhed", "मुखेड")}</option>
+                    <option value="More locations coming soon..." disabled>{langText("More locations coming soon...", "लवकरच अधिक स्थाने येत आहेत...")}</option>
+                  </select>
                 </div>
                 <div className="flex-1 flex items-center gap-3 px-4 py-3">
                   <span className="material-symbols-outlined text-secondary dark:text-emerald-400">agriculture</span>
-                  <input className="w-full border-none focus:ring-0 text-on-surface dark:text-emerald-50 placeholder:text-slate-400 dark:placeholder-slate-500 bg-transparent" placeholder={langText("Search Tractors, Harvesters...", "ट्रॅक्टर्स, हार्वेस्टर्स शोधा...")} type="text" />
+                  <input 
+                    className="w-full border-none focus:ring-0 text-on-surface dark:text-emerald-50 placeholder:text-slate-400 dark:placeholder-slate-500 bg-transparent font-medium" 
+                    placeholder={langText("Search Tractors, Harvesters...", "ट्रॅक्टर्स, हार्वेस्टर्स शोधा...")} 
+                    type="text" 
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                  />
                 </div>
-                <button className="bg-secondary dark:bg-emerald-700 text-white px-8 py-4 rounded-lg font-bold hover:bg-secondary/90 dark:hover:bg-emerald-600 transition-all">
+                <button onClick={handleSearch} className="bg-secondary dark:bg-emerald-700 text-white px-8 py-4 rounded-lg font-bold hover:bg-secondary/90 dark:hover:bg-emerald-600 transition-all flex items-center justify-center gap-2">
+                  <span className="material-symbols-outlined text-lg">search</span>
                   {langText("Search Now", "आत्ताच शोधा")}
                 </button>
               </div>
@@ -57,19 +127,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Trust Strip */}
-        <section className="bg-surface-container-highest/30 dark:bg-emerald-950/50 py-8 border-b border-slate-200 dark:border-emerald-800/50">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-wrap justify-between items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-              <span className="font-black text-xl text-primary dark:text-emerald-200">Swaraj Tractors</span>
-              <span className="font-black text-xl text-primary dark:text-emerald-200">Mahindra Farm</span>
-              <span className="font-black text-xl text-primary dark:text-emerald-200">John Deere</span>
-              <span className="font-black text-xl text-primary dark:text-emerald-200">New Holland</span>
-              <span className="font-black text-xl text-primary dark:text-emerald-200">Massey Ferguson</span>
-              <span className="font-black text-xl text-primary dark:text-emerald-200">Kubota</span>
-            </div>
-          </div>
-        </section>
+
 
         {/* Featured Categories */}
         <section className="py-24 bg-white dark:bg-emerald-950">
@@ -79,50 +137,68 @@ export default function Home() {
               <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">{langText("Explore Equipment Categories", "उपकरण वर्गवारी शोधा")}</h2>
                 <p className="text-slate-600 dark:text-slate-400 max-w-xl">{langText("From land preparation to harvesting, find the right tool for every stage of your farming cycle.", "जमीन तयारीपासून कापणीपर्यंत, तुमच्या शेती चक्राच्या प्रत्येक टप्प्यासाठी व्योग्य साधन शोधा.")}</p>
               </div>
-              <Link className="text-secondary font-bold flex items-center gap-2 hover:gap-3 transition-all" href="/rent-equipment">
+              <Link className="text-secondary font-bold flex items-center gap-2 hover:gap-3 transition-all" href="/categories">
                 {langText("View All Categories", "सर्व वर्गवारी पहा")} <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
               {/* Tractors */}
-              <Link href="/rent-equipment" className="group relative h-[450px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="High-horsepower tractor parked in a vibrant green farm field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBeYZkgPtT1CB2DRr74jXatRMZxsAdZPeHXb9EZLzta1OkRzg-51UM6cU9fwtEyq1Fxe0DNDNzxhmQpzS3XT78_inszbrqKHipCjgAtAnmQHJ2DF47aaWisB0j9cg9qookoOgvlXfRMwDoATcDX2mCgHeM9s4vkJZxH3lEP2bHUGRRcl3icIHYwaaW_JRHf9_ftAKddSlqzk-_RR_vgYXT_cdFYfpbZ-_bhdehYLIjyfwKUAnU5dqvcN1Lnuv1GZqT0MDreKEDaNYQv" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <div className="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-4 uppercase tracking-wider">{langText("Heavy Duty", "जड शक्ती")}</div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{langText("Tractors", "ट्रॅक्टर्स")}</h3>
-                  <p className="text-white/70 text-sm mb-6">{langText("45 HP to 75 HP tractors available for immediate rent.", "45 HP ते 75 HP ट्रॅक्टर तात्काळ भाड्याने उपलब्ध.")}</p>
-                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined">chevron_right</span>
+                <div className="absolute bottom-0 left-0 p-6 w-full">
+                  <h3 className="text-xl font-bold text-white mb-2">{langText("Tractors", "ट्रॅक्टर्स")}</h3>
+                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
+                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined text-sm">chevron_right</span>
                   </div>
                 </div>
               </Link>
               {/* Harvesters */}
-              <Link href="/rent-equipment" className="group relative h-[450px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Combine harvester working through a wheat field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVmvbUiNz9Y79Yb45dHYtKeuMnBHJbbyltug7gB6AP4g77aPrvgd53M28uBrNqj3aMOSDVc7AArhGhEm1WgvEpfJrsJ52N7og-SIjmTqQvosoc6HHWBhO93tJO1TcYGg4AMunwMP4L3lNVCCxKnq9bIA44W5v82XwooWnyNy-iwGUQmTRSijWuY30IxW2ltnvhzFiDW7WREeNHUb4QETd4Z_u4t64CSreHmIK0tCFKrjDxjNyFRghffOI61VCF-YOAGZQfFfZfKpqi" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <div className="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-4 uppercase tracking-wider">{langText("Multi-Crop", "बहु-पीक")}</div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{langText("Harvesters", "हार्वेस्टर्स")}</h3>
-                  <p className="text-white/70 text-sm mb-6">{langText("Efficiency at scale for grain, corn, and soy crops.", "धान्य, मका आणि सोयाबीन पिकांसाठी मोठ्या प्रमाणात कार्यक्षमता.")}</p>
-                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined">chevron_right</span>
+                <div className="absolute bottom-0 left-0 p-6 w-full">
+                  <h3 className="text-xl font-bold text-white mb-2">{langText("Harvesters", "हार्वेस्टर्स")}</h3>
+                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
+                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined text-sm">chevron_right</span>
                   </div>
                 </div>
               </Link>
               {/* Implements */}
-              <Link href="/rent-equipment" className="group relative h-[450px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Agricultural implements including a rotavator and seed drill" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxAyAip2db-I7yhNxtnmMQiY4x8GjoDKqNbDpry_5Otkuux9iqpLbBaKpwcvVpPlI57lOgEwpHLrmy7C9lb6YuMJAPRO9Vrrdz4uNltn7v2BQvff5nFy7RxCRDIz6cVDrZWoR_aRGlz4n5Jkzx9CkpwPJFQlZ51TmGOnlZcMDz-uoeDVYHGFKL1iO4Jaq-_0Zs9hAUu57ILEypAsIwlzR4OQFotLlKfbtGuowQ3wQLUMV5f3dJDhvQ5-lFlBa-BA5hbDOPb4hkVs7K" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
-                <div className="absolute bottom-0 left-0 p-8 w-full">
-                  <div className="bg-secondary text-white text-xs font-bold px-3 py-1 rounded-full w-fit mb-4 uppercase tracking-wider">{langText("Specialized Tools", "विशेष साधने")}</div>
-                  <h3 className="text-2xl font-bold text-white mb-2">{langText("Implements", "उपकरणे")}</h3>
-                  <p className="text-white/70 text-sm mb-6">{langText("Rotavators, seed drills, and plows for precision farming.", "रोटावेटर, बीज ड्रिल आणि नांगर अचूक शेतीसाठी.")}</p>
-                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined">chevron_right</span>
+                <div className="absolute bottom-0 left-0 p-6 w-full">
+                  <h3 className="text-xl font-bold text-white mb-2">{langText("Implements", "उपकरणे")}</h3>
+                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
+                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined text-sm">chevron_right</span>
+                  </div>
+                </div>
+              </Link>
+              {/* Ploughs */}
+              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ploughing" src="https://images.unsplash.com/photo-1589922589088-34eb1bb9b2b3?auto=format&fit=crop&q=80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 p-6 w-full">
+                  <h3 className="text-xl font-bold text-white mb-2">{langText("Ploughs", "नांगर")}</h3>
+                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
+                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined text-sm">chevron_right</span>
+                  </div>
+                </div>
+              </Link>
+              {/* Sprayers */}
+              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Sprayer" src="https://images.unsplash.com/photo-1530836369250-ef71a3f5e481?auto=format&fit=crop&q=80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 p-6 w-full">
+                  <h3 className="text-xl font-bold text-white mb-2">{langText("Sprayers", "फवारणी यंत्रे")}</h3>
+                  <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
+                    {langText("Browse Models", "मॉडेल्स पहा")} <span className="material-symbols-outlined text-sm">chevron_right</span>
                   </div>
                 </div>
               </Link>
