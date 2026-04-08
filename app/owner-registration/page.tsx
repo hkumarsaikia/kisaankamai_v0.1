@@ -1,117 +1,231 @@
-"use client";
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { useLanguage } from "@/components/LanguageContext";
-import Link from "next/link";
 
 export default function OwnerRegistration() {
-  const { langText } = useLanguage();
-
   return (
-    <div className="min-h-screen flex flex-col bg-surface dark:bg-slate-950 font-body text-on-background dark:text-slate-200 selection:bg-secondary-container/30">
+    <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
       <Header />
-      <main className="flex-grow pt-32 pb-20 px-6 max-w-5xl mx-auto w-full">
-        {/* Registration Progress Header */}
-        <div className="mb-12 text-center">
-          <h1 className="font-headline text-4xl font-extrabold text-primary dark:text-emerald-50 mb-3">{langText("Partner with Kisan Kamai", "किसान कमाईसोबत भागीदारी करा")}</h1>
-          <p className="text-on-surface-variant dark:text-slate-400 max-w-xl mx-auto">{langText("Join the trusted network of equipment owners across Maharashtra. Start your journey in minutes.", "महाराष्ट्रभरातील उपकरण मालकांच्या विश्वसनीय नेटवर्कमध्ये सामील व्हा. मिनिटांत तुमचा प्रवास सुरू करा.")}</p>
-        </div>
+      <main className="flex-grow">
 
-        {/* Multi-Step Stepper */}
-        <div className="mb-16 flex items-center justify-between max-w-2xl mx-auto relative">
-          <div className="absolute top-1/2 left-0 w-full h-0.5 bg-surface-container-highest dark:bg-emerald-800/50 -z-10 -translate-y-1/2"></div>
-          {[
-            { num: "1", label: langText("Account", "खाते"), active: true },
-            { num: "2", label: langText("Location", "स्थान"), active: false },
-            { num: "3", label: langText("Equipment", "उपकरणे"), active: false },
-            { num: "4", label: langText("Verify", "पडताळणी"), active: false },
-          ].map((step) => (
-            <div key={step.num} className="flex flex-col items-center gap-2 bg-surface dark:bg-slate-950 px-4">
-              <div className={`w-10 h-10 rounded-full border-2 flex items-center justify-center font-bold ${step.active ? "border-primary dark:border-emerald-400 text-primary dark:text-emerald-400 bg-white dark:bg-slate-900/50" : "border-surface-container-highest dark:border-slate-800 text-outline dark:text-slate-500 bg-white dark:bg-slate-900/40"}`}>{step.num}</div>
-              <span className={`text-xs font-label font-semibold uppercase tracking-wider ${step.active ? "text-primary dark:text-emerald-400" : "text-outline dark:text-slate-500"}`}>{step.label}</span>
-            </div>
-          ))}
-        </div>
+{/*  TopNavBar  */}
 
-        {/* Registration Form Container */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+<main className="pt-32 pb-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+{/*  Progress Header  */}
+<div className="mb-12">
+<h1 className="text-3xl font-extrabold text-primary mb-2">List Your Equipment</h1>
+<p className="text-on-surface-variant mb-8">आपले उपकरण भाड्याने देण्यासाठी नोंदणी करा</p>
+<div className="flex items-center justify-between border-b border-outline-variant overflow-x-auto whitespace-nowrap scrollbar-hide">
+<div className="px-4 pb-4 step-active flex items-center gap-2">
+<span className="material-symbols-outlined text-lg" data-icon="info">info</span>
+<span>Basic Info</span>
+</div>
+<div className="px-4 pb-4 step-inactive flex items-center gap-2">
+<span className="material-symbols-outlined text-lg" data-icon="image">image</span>
+<span>Images</span>
+</div>
+<div className="px-4 pb-4 step-inactive flex items-center gap-2">
+<span className="material-symbols-outlined text-lg" data-icon="payments">payments</span>
+<span>Pricing</span>
+</div>
+<div className="px-4 pb-4 step-inactive flex items-center gap-2">
+<span className="material-symbols-outlined text-lg" data-icon="location_on">location_on</span>
+<span>Location</span>
+</div>
+<div className="px-4 pb-4 step-inactive flex items-center gap-2">
+<span className="material-symbols-outlined text-lg" data-icon="person">person</span>
+<span>Operator</span>
+</div>
+</div>
+</div>
+<div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+{/*  Form Section  */}
+<div className="lg:col-span-2 space-y-10">
+{/*  Section 1: Basic Info  */}
+<section className="bg-surface-container-lowest p-8 rounded-xl border border-surface-container-highest shadow-sm">
+<h2 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+<span className="material-symbols-outlined" data-icon="agriculture">agriculture</span>
+                        Equipment Details / उपकरणाची माहिती
+                    </h2>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Equipment Type / उपकरणाचा प्रकार</label>
+<select className="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary bg-white transition-all">
+<option>Select Type</option>
+<option>Tractor (ट्रॅक्टर)</option>
+<option>Harvester (कापणी यंत्र)</option>
+<option>Rotavator (रोटाव्हेटर)</option>
+<option>Seeder (पेरणी यंत्र)</option>
+</select>
+</div>
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Brand / मेक (उदा. Mahindra)</label>
+<input className="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary" placeholder="e.g. John Deere" type="text"/>
+</div>
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Model &amp; Year / मॉडेल आणि वर्ष</label>
+<input className="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary" placeholder="e.g. 5050E, 2022" type="text"/>
+</div>
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Horsepower / अश्वशक्ती (HP)</label>
+<input className="w-full p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary" placeholder="e.g. 45" type="number"/>
+</div>
+</div>
+</section>
+{/*  Section 2: Upload UI  */}
+<section className="bg-surface-container-lowest p-8 rounded-xl border border-surface-container-highest shadow-sm">
+<h2 className="text-xl font-bold text-primary mb-2 flex items-center gap-2">
+<span className="material-symbols-outlined" data-icon="add_a_photo">add_a_photo</span>
+                        Photos / फोटो
+                    </h2>
+<p className="text-sm text-on-surface-variant mb-6">Upload clear photos of your equipment for better visibility.</p>
+<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div className="aspect-square border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center bg-surface-container-low hover:bg-emerald-50 transition-colors cursor-pointer group">
+<span className="material-symbols-outlined text-3xl text-outline mb-2 group-hover:text-primary transition-colors" data-icon="upload">upload</span>
+<span className="text-xs font-bold text-on-surface-variant">Add Cover</span>
+</div>
+<div className="relative group aspect-square rounded-xl overflow-hidden shadow-sm">
+<img className="w-full h-full object-cover" data-alt="Close-up of a modern green tractor parked in a vibrant wheat field at midday with sharp details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkU1MDeqjUKzld2Xll9nkvPbvF0gMqRaji9Gm7O3jaoKRJtWk3XHh63cCoKryTrkdH-hxl07dCiVnZzYhS2ZGgAQ_vxTq4Jl9PWQPPkr6QTtNMyT7uy-v7ry0HNPBRWnX0bz1IiJeGDQ84XeK7OWe9fEQXY3oHJfm1bhvzRkoV36Ge5w6fbxAzr8wmMjmdu6-nhXRNsSxP8l0BTo8e-5nNVLXK45smzYtLK57qRlrwZdtQzGlyvMWmmlx6V1Tgvd5bhzpXvXvppKmk"/>
+<button className="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full hover:bg-white text-error">
+<span className="material-symbols-outlined text-sm" data-icon="close">close</span>
+</button>
+</div>
+<div className="aspect-square border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center bg-surface-container-low cursor-not-allowed">
+<span className="material-symbols-outlined text-outline/50" data-icon="image">image</span>
+</div>
+<div className="aspect-square border-2 border-dashed border-outline-variant rounded-xl flex flex-col items-center justify-center bg-surface-container-low cursor-not-allowed">
+<span className="material-symbols-outlined text-outline/50" data-icon="image">image</span>
+</div>
+</div>
+</section>
+{/*  Section 3: Pricing  */}
+<section className="bg-surface-container-lowest p-8 rounded-xl border border-surface-container-highest shadow-sm">
+<h2 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+<span className="material-symbols-outlined" data-icon="currency_rupee">currency_rupee</span>
+                        Pricing &amp; Billing / किंमत आणि बिलिंग
+                    </h2>
+<div className="space-y-6">
+<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Rate per Hour / प्रति तास दर</label>
+<div className="relative">
+<span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">₹</span>
+<input className="w-full pl-10 p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary" placeholder="800" type="number"/>
+</div>
+</div>
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Rate per Acre / प्रति एकर दर (Optional)</label>
+<div className="relative">
+<span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant font-bold">₹</span>
+<input className="w-full pl-10 p-3 rounded-lg border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary" placeholder="1200" type="number"/>
+</div>
+</div>
+</div>
+<div className="p-4 bg-tertiary-fixed rounded-lg flex gap-4">
+<span className="material-symbols-outlined text-on-tertiary-fixed" data-icon="lightbulb">lightbulb</span>
+<p className="text-xs text-on-tertiary-fixed-variant leading-relaxed">
+<strong>Tip:</strong> Farmers in your area usually charge ₹750–₹900 per hour for 45HP tractors. Competitive pricing helps you get more bookings.
+                            </p>
+</div>
+</div>
+</section>
+{/*  Section 4: Location & Availability  */}
+<section className="bg-surface-container-lowest p-8 rounded-xl border border-surface-container-highest shadow-sm">
+<h2 className="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+<span className="material-symbols-outlined" data-icon="distance">distance</span>
+                        Operational Area / कार्यक्षेत्र
+                    </h2>
+<div className="space-y-6">
+<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">District / जिल्हा</label>
+<select className="w-full p-3 rounded-lg border border-outline-variant bg-white">
+<option>Satara</option>
+<option>Pune</option>
+<option>Nashik</option>
+</select>
+</div>
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Taluka / तालुका</label>
+<input className="w-full p-3 rounded-lg border border-outline-variant" placeholder="e.g. Karad" type="text"/>
+</div>
+<div className="space-y-2">
+<label className="font-label text-sm font-semibold text-on-surface-variant">Radius / त्रिज्या (KM)</label>
+<input className="w-full p-3 rounded-lg border border-outline-variant" placeholder="15" type="number"/>
+</div>
+</div>
+<div className="h-48 bg-surface-container-high rounded-xl overflow-hidden relative border border-outline-variant">
+<img className="w-full h-full object-cover grayscale opacity-50" data-alt="Stylized map showing Satara district topography with markers for agriculture hubs and clean vector lines" data-location="Satara, India" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE2XpOUK9ws4B1N6CsCWTe7S7UDqF8-gogrPFqOKFs_Lfe3KJhjTiiEr7JfQZsoWfGgMKUDSvQLDF533vqWJQrrctAM5ZqtLS_3nrqQVsB2AwwqagakQnPoPIWWlcf2h5qDg8UC3RWc6gqaPzlARv3Edd2a6a77ZL_rDbnQqjKiHD0d5e8591pumrwm_CEdlSy_OAHK-nduKvdRoDD9qBgCqRZhpWGCbIm0y3At9LEpOdDOiwUCKU8tPnYaLSJW_Ji3WHvJB_Mrl9G"/>
+<div className="absolute inset-0 flex items-center justify-center">
+<div className="bg-primary/20 p-8 rounded-full border-2 border-primary animate-pulse"></div>
+<div className="absolute bg-white px-3 py-1.5 rounded-full shadow-lg border border-primary flex items-center gap-2">
+<span className="material-symbols-outlined text-primary text-sm" data-icon="location_on" style={{'fontVariationSettings': '\'FILL\' 1'}}>location_on</span>
+<span className="text-xs font-bold text-primary">Karad, Satara</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+{/*  Navigation Buttons  */}
+<div className="flex items-center justify-between pt-6">
+<button className="px-8 py-3 text-primary font-bold hover:bg-emerald-50 rounded-lg transition-all">
+                        Back / मागे
+                    </button>
+<button className="px-10 py-3 bg-primary text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all">
+                        Continue / पुढे सुरू ठेवा
+                    </button>
+</div>
+</div>
+{/*  Preview Card (Sticky)  */}
+<div className="lg:col-span-1">
+<div className="sticky top-28 space-y-6">
+<div className="bg-white rounded-2xl border border-surface-container-highest shadow-xl overflow-hidden">
+<div className="aspect-[4/3] relative">
+<img className="w-full h-full object-cover" data-alt="Powerful blue tractor with large tires parked in a lush green field under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEqtpz50nGqO5PXychK55yTwvYxHnpQvgY7YdcTK_wZJDASU4EzqAKbR_qU1-7K49zffPeSVaKRx51vhC2xAOLDAPxhBECAYCYwXuhLqq8feYZMidBF4zldokMW10bkfDS4AmZSYQaZwopI95ndz-ri-flHU9u0oUlCA7hzuFWDGAiIHsB9qRF1M_3o5Hl7gIBGneiGkMwoh-xF0Y40IaAEMh8td4aOpML_HiSUFoGTdyAiRDaQ7EPhBf1NLQ8EB5bcwlrgIImNmb7"/>
+<div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">Live Preview</div>
+</div>
+<div className="p-6">
+<div className="flex justify-between items-start mb-2">
+<div>
+<p className="text-xs font-bold text-secondary uppercase tracking-widest">Tractor</p>
+<h3 className="text-xl font-extrabold text-primary">Mahindra 575 DI</h3>
+</div>
+<div className="text-right">
+<p className="text-lg font-black text-primary">₹850</p>
+<p className="text-[10px] text-on-surface-variant font-bold">PER HOUR</p>
+</div>
+</div>
+<div className="flex flex-wrap gap-2 mb-6">
+<span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded">45 HP</span>
+<span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded">Power Steering</span>
+<span className="bg-emerald-50 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded">2022 Model</span>
+</div>
+<div className="flex items-center gap-3 pt-4 border-t border-surface-container-highest">
+<div className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img className="w-full h-full object-cover" data-alt="Portrait of a smiling Indian farmer in a white shirt with a green landscape in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwok2EnfZT5USD1LJz32y3_ABau9sOGvXTwhePspXxEe3zcfrni3xkR84C3zdglew-2ihRO7PPDItpBmfbGLG0LWHwAWKDR3wO5pQHVHesVviwnaxqqCKVFiv4rwhhGAdvzgyefqjT_uIOBdHUpZc6YU3ErXFOQtkAiztE-L4ZG1Ib4NV9Scl6muOQNqmWS6rVQDJJhoG9njf7MS-p4fTdEfnqT6fPiJm7XCk6Jlzaqb1hewhTCB8Th1vf4-NA7P8JdnxX3xW8Zr7s"/>
+</div>
+<div>
+<p className="text-xs font-bold text-primary">Sunil Deshmukh</p>
+<p className="text-[10px] text-on-surface-variant">Verified Owner • Karad</p>
+</div>
+</div>
+</div>
+</div>
+<div className="bg-secondary-fixed/30 p-6 rounded-2xl border border-secondary-container/20">
+<h4 className="text-on-secondary-fixed-variant font-bold text-sm mb-2 flex items-center gap-2">
+<span className="material-symbols-outlined text-lg" data-icon="verified_user">verified_user</span>
+                            Trust Policy
+                        </h4>
+<p className="text-xs text-on-secondary-fixed-variant/80 leading-relaxed">
+                            Your listing will be reviewed within 24 hours. Ensure all information is accurate to avoid rejection.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+{/*  Footer  */}
 
-          {/* Main Form Card */}
-          <div className="lg:col-span-7 bg-white dark:bg-slate-900/40 p-8 md:p-10 rounded-2xl shadow-sm border border-emerald-50 dark:border-slate-800/50">
-            <div className="space-y-8">
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-headline font-bold text-primary dark:text-emerald-50">{langText("Account Setup", "खाते सेटअप")}</h2>
-                <span className="text-sm font-medium bg-emerald-50 dark:bg-emerald-800/30 text-emerald-700 dark:text-emerald-400 px-3 py-1 rounded-full">{langText("Step 1 of 4", "पायरी 1 / 4")}</span>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-label font-bold text-on-surface dark:text-emerald-200">{langText("Full Name / पूर्ण नाव", "पूर्ण नाव / Full Name")}</label>
-                  <input className="w-full bg-surface-container-low dark:bg-slate-900/50 dark:text-white border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-container/20 placeholder:text-outline-variant dark:placeholder:text-slate-500" placeholder={langText("Enter name", "नाव टाका")} type="text"/>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-label font-bold text-on-surface dark:text-emerald-200">{langText("Phone Number / फोन नंबर", "फोन नंबर / Phone Number")}</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-outline dark:text-slate-400 font-medium border-r border-outline-variant dark:border-slate-700 pr-3">+91</span>
-                    <input className="w-full bg-surface-container-low dark:bg-slate-900/50 dark:text-white border-none rounded-xl pl-16 pr-4 py-3 focus:ring-2 focus:ring-primary-container/20 placeholder:text-outline-variant dark:placeholder:text-slate-500" placeholder="9876543210" type="tel"/>
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-sm font-label font-bold text-on-surface dark:text-emerald-200">{langText("Village or Town / गाव किंवा शहर", "गाव किंवा शहर / Village or Town")}</label>
-                <select defaultValue="" className="w-full bg-surface-container-low dark:bg-slate-900/50 dark:text-white border-none rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary-container/20 appearance-none">
-                  <option value="" disabled>{langText("Select District / जिल्हा निवडा", "जिल्हा निवडा / Select District")}</option>
-                  <option value="sangli">{langText("Sangli / सांगली", "सांगली / Sangli")}</option>
-                  <option value="satara">{langText("Satara / सातारा", "सातारा / Satara")}</option>
-                  <option value="kolhapur">{langText("Kolhapur / कोल्हापूर", "कोल्हापूर / Kolhapur")}</option>
-                  <option value="pune">{langText("Pune / पुणे", "पुणे / Pune")}</option>
-                </select>
-              </div>
-
-              <div className="pt-6 border-t border-surface-container-highest dark:border-slate-800/50 flex items-center justify-between">
-                <p className="text-xs text-on-surface-variant dark:text-slate-400 font-medium max-w-[200px]">{langText("By continuing, you agree to our Terms of Service.", "पुढे जाऊन, तुम्ही आमच्या सेवा अटींशी सहमत आहात.")}</p>
-                <button className="bg-primary-container text-white px-10 py-3.5 rounded-xl font-bold hover:shadow-lg transition-all flex items-center gap-2 group">
-                  {langText("Next Step", "पुढील पायरी")}
-                  <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Side Info Panel */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="bg-primary-container rounded-2xl p-8 text-white relative overflow-hidden">
-              <div className="relative z-10">
-                <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mb-6">
-                  <span className="material-symbols-outlined text-secondary-container" style={{fontVariationSettings: "'FILL' 1"}}>verified_user</span>
-                </div>
-                <h3 className="text-2xl font-headline font-bold mb-3 tracking-tight">{langText("Owner Guarantees", "मालकांची हमी")}</h3>
-                <ul className="space-y-4 text-on-primary-container/90 font-medium">
-                  <li className="flex gap-3"><span className="material-symbols-outlined text-on-tertiary-container">check_circle</span>{langText("Verified renters only", "केवळ सत्यापित भाडेकरू")}</li>
-                  <li className="flex gap-3"><span className="material-symbols-outlined text-on-tertiary-container">check_circle</span>{langText("Secure payment protection", "सुरक्षित पेमेंट संरक्षण")}</li>
-                  <li className="flex gap-3"><span className="material-symbols-outlined text-on-tertiary-container">check_circle</span>{langText("24/7 Marathi & English support", "24/7 मराठी व इंग्रजी सपोर्ट")}</li>
-                </ul>
-              </div>
-              <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900/40 p-6 rounded-2xl border border-emerald-50 dark:border-slate-800/50 shadow-sm flex gap-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="Smiling farmer" className="w-16 h-16 rounded-full object-cover" src="/assets/generated/seed_drill.png"/>
-              <div>
-                <p className="italic text-on-surface-variant dark:text-slate-300 text-sm mb-2">{langText("\"Kisan Kamai helped me earn extra income from my rotavator when I wasn't using it. Very trustworthy.\"", "\"किसान कमाईने मला माझा रोटाव्हेटर वापरत नसताना अतिरिक्त उत्पन्न कमवण्यास मदत केली. अत्यंत विश्वासार्ह.\"")}</p>
-                <p className="font-bold text-primary dark:text-emerald-400 text-sm">— Rahul P., {langText("Sangli", "सांगली")}</p>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-center gap-4 py-4 px-6 border-2 border-dashed border-surface-container-highest dark:border-slate-800/50 rounded-2xl">
-              <span className="material-symbols-outlined text-outline dark:text-slate-500">help</span>
-              <p className="text-sm text-outline dark:text-slate-400 font-medium">{langText("Need help registering?", "नोंदणीसाठी मदत हवी?")} <Link className="text-secondary dark:text-amber-400 font-bold hover:underline" href="/support">{langText("Call Support", "सपोर्ट कॉल करा")}</Link></p>
-            </div>
-          </div>
-        </div>
       </main>
       <Footer />
     </div>

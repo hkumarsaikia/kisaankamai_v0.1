@@ -47,21 +47,41 @@ def convert_to_tsx(html_path):
     
     return body_content
 
-base_dir = '/home/hksaikia/Desktop/Work/Website/kisan_kamai_v1'
-export_dir = os.path.join(base_dir, 'FilesKisanKamai')
+base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+export_dir = os.path.join(base_dir, 'extfiles')
+
+# Generic page wrapper template
+def wrap_page(c, name):
+    return f'''import {{ Header }} from "@/components/Header";
+import {{ Footer }} from "@/components/Footer";
+
+export default function {name}() {{
+  return (
+    <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
+      <Header />
+      <main className="flex-grow">
+{c}
+      </main>
+      <Footer />
+    </div>
+  );
+}}
+'''
 
 mappings = [
-  {"file": '17.html', "dest": 'components/Header.tsx', "wrapper": lambda c: f'export const Header = () => {{\n  return (\n    <>\n{c}\n    </>\n  );\n}};\n' },
-  {"file": '68.html', "dest": 'components/Footer.tsx', "wrapper": lambda c: f'export const Footer = () => {{\n  return (\n    <>\n{c}\n    </>\n  );\n}};\n' },
-  {"file": '13.html', "dest": 'app/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function Home() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '112.html', "dest": 'app/rent-equipment/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function RentEquipment() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '118.html', "dest": 'app/list-equipment/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function ListEquipment() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '74.html', "dest": 'app/equipment/[slug]/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function EquipmentDetail() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '12.html', "dest": 'app/support/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function Support() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '4.html', "dest": 'app/faq/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function FAQ() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '80.html', "dest": 'app/about/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function About() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '27.html', "dest": 'app/mr/rent-equipment/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function MR_RentEquipment() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' },
-  {"file": '41.html', "dest": 'app/mr/list-equipment/page.tsx', "wrapper": lambda c: f'import {{ Header }} from "@/components/Header";\nimport {{ Footer }} from "@/components/Footer";\n\nexport default function MR_ListEquipment() {{\n  return (\n    <div className="min-h-screen flex flex-col">\n      <Header />\n      <main className="flex-grow">\n{c}\n      </main>\n      <Footer />\n    </div>\n  );\n}}\n' }
+  {"file": 'pages (1).html', "dest": 'app/locations/[city]/page.tsx', "wrapper": lambda c: wrap_page(c, 'RegionalSearch')},
+  {"file": 'pages (4).html', "dest": 'app/booking/[equipmentId]/page.tsx', "wrapper": lambda c: wrap_page(c, 'BookingFlow')},
+  {"file": 'pages (5).html', "dest": 'app/locations/[city]/no-results/page.tsx', "wrapper": lambda c: wrap_page(c, 'NoResultsLoc')},
+  {"file": 'pages (2).html', "dest": 'app/equipment/[slug]/page.tsx', "wrapper": lambda c: wrap_page(c, 'EquipmentDetail')},
+  {"file": 'pages (3).html', "dest": 'app/equipment/[slug]/gallery/page.tsx', "wrapper": lambda c: wrap_page(c, 'EquipmentDetailVariant')},
+  {"file": 'pages (6).html', "dest": 'app/list-equipment/page.tsx', "wrapper": lambda c: wrap_page(c, 'ListEquipment')},
+  {"file": 'pages (7).html', "dest": 'app/owner-experience/page.tsx', "wrapper": lambda c: wrap_page(c, 'OwnerExperience')},
+  {"file": 'pages (8).html', "dest": 'app/owner-registration/page.tsx', "wrapper": lambda c: wrap_page(c, 'OwnerRegistration')},
+  {"file": 'pages (9).html', "dest": 'app/owner-dashboard/bookings/page.tsx', "wrapper": lambda c: wrap_page(c, 'OwnerDashboardBookings')},
+  {"file": 'pages (10).html', "dest": 'app/locations/page.tsx', "wrapper": lambda c: wrap_page(c, 'Locations')},
+  {"file": 'pages (11).html', "dest": 'app/about/page.tsx', "wrapper": lambda c: wrap_page(c, 'AboutUs')},
+  {"file": 'pages (12).html', "dest": 'app/legal/page.tsx', "wrapper": lambda c: wrap_page(c, 'LegalCenter')},
+  {"file": 'pages (13).html', "dest": 'app/trust-safety/page.tsx', "wrapper": lambda c: wrap_page(c, 'TrustSafety')}
 ]
 
 for m in mappings:
@@ -71,7 +91,7 @@ for m in mappings:
         dest_path = os.path.join(base_dir, m['dest'])
         os.makedirs(os.path.dirname(dest_path), exist_ok=True)
         
-        # Remove original headers/footers/navbars if it's a page and already imported
+        # Strip internal duplicated navs
         if m['dest'].startswith('app/'):
             tsx_content = re.sub(r'<header[^>]*>.*?</header>', '', tsx_content, flags=re.IGNORECASE|re.DOTALL)
             tsx_content = re.sub(r'<footer[^>]*>.*?</footer>', '', tsx_content, flags=re.IGNORECASE|re.DOTALL)
@@ -79,8 +99,8 @@ for m in mappings:
         
         with open(dest_path, 'w', encoding='utf-8') as f:
             f.write(m['wrapper'](tsx_content))
-        print("Converted", m['file'], "to", m['dest'])
+        print("Successfully integrated mapping: ", m['file'], " ===> ", m['dest'])
     else:
-        print("Skipped", m['file'])
+        print("Warning: Could not process", m['file'])
 
-print("Conversion script finished.")
+print("Phase 1: Extension Pages Base Conversion finished.")

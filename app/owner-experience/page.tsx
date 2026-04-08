@@ -1,169 +1,186 @@
-"use client";
-
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { useLanguage } from "@/components/LanguageContext";
 
-export default function OwnerExperiencePage() {
-  const { langText } = useLanguage();
-
+export default function OwnerExperience() {
   return (
-    <main className="bg-surface dark:bg-slate-950 min-h-screen">
+    <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
       <Header />
-      <div className="pt-20 pb-32">
-        {/* Hero Section: Owner Acquisition */}
-        <section className="relative h-[530px] flex items-end px-6 pb-12 overflow-hidden bg-primary-container dark:bg-slate-950">
-          <div className="absolute inset-0 z-0">
-            <img
-              className="w-full h-full object-cover"
-              alt="Cinematic shot of a modern green tractor in a golden wheat field at sunset, high-end agricultural photography with warm light"
-              src="/assets/generated/seed_drill.png"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-primary-container dark:from-emerald-950 via-primary-container/40 dark:via-emerald-950/60 to-transparent"></div>
-          </div>
-          <div className="relative z-10 space-y-4 max-w-7xl mx-auto w-full">
-            <span className="bg-secondary dark:bg-emerald-700 text-white px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase">
-              {langText("Earning Potential", "कमाईची क्षमता")}
-            </span>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight font-headline">
-              {langText("Turn your tractor into steady income.", "तुमच्या ट्रॅक्टरला नियमित उत्पन्नाचे साधन बनवा.")}
-            </h1>
-            <p className="text-on-primary-container dark:text-emerald-100 text-lg font-medium opacity-90 max-w-2xl">
-              {langText(
-                "Join 500+ verified equipment owners in Maharashtra earning weekly.",
-                "महाराष्ट्रातील ५०० हून अधिक सत्यापित उपकरण मालकांमध्ये सामील व्हा जे साप्ताहिक कमाई करत आहेत."
-              )}
-            </p>
-          </div>
-        </section>
+      <main className="flex-grow">
 
-        {/* Stats Bento Grid */}
-        <section className="px-6 -mt-8 relative z-20 max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white dark:bg-slate-900/60 p-5 rounded-xl shadow-lg border border-emerald-50 dark:border-slate-800">
-              <div className="flex items-center justify-between mb-2">
-                <span className="material-symbols-outlined text-secondary dark:text-amber-400">payments</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">{langText("Avg. Monthly", "सरासरी मासिक")}</p>
-              <p className="text-xl md:text-3xl font-extrabold text-primary dark:text-emerald-50">₹45,000+</p>
-            </div>
-            <div className="bg-white dark:bg-slate-900/60 p-5 rounded-xl shadow-lg border border-emerald-50 dark:border-slate-800">
-              <div className="flex items-center justify-between mb-2">
-                <span className="material-symbols-outlined text-tertiary-fixed-dim dark:text-emerald-400" style={{ fontVariationSettings: "'FILL' 1" }}>verified_user</span>
-              </div>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-wider">{langText("Security", "सुरक्षा")}</p>
-              <p className="text-xl md:text-3xl font-extrabold text-primary dark:text-emerald-50">{langText("100% Safe", "१००% सुरक्षित")}</p>
-            </div>
-          </div>
-        </section>
+{/*  TopNavBar  */}
 
-        {/* Multi-step Form: Add Equipment Preview */}
-        <section className="mt-20 px-6 max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            
-            {/* Listing Management Interface Preview */}
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl md:text-4xl font-extrabold text-primary dark:text-emerald-50 font-headline">{langText("My Equipment", "माझी उपकरणे")}</h2>
-                <button className="text-sm font-bold text-secondary dark:text-emerald-400 flex items-center gap-1">
-                  {langText("View All", "सर्व पहा")} <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                </button>
-              </div>
+<main>
+{/*  Hero Section  */}
+<section className="relative min-h-[819px] flex items-center overflow-hidden">
+<div className="absolute inset-0 z-0">
+<img alt="Equipment Owner" className="w-full h-full object-cover brightness-[0.4]" data-alt="A professional Indian farmer standing proudly next to a high-end modern green tractor in a vast sun-drenched wheat field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0zmJeaPs1dObsXyNQTGsEbQSjfDd3Z9ykBz-xrB7P0hPiFcpkwzGFOcrWyzF0eXBQcfWxCWOCdYc84KWMGrbtqqGa5q-uElB6dywQpDO3EIKlWxTZFK_cvotGftAsBHTVbmzksOQfpVpYlYlwd1tT4V_JSnYVj9cIfdJUU39NsQL6gsNfB8tQnRq9V0sydN3bqGj4rDk1oG4_Gp2YZ3O6E4HNXzWI7QByAbflUyoYR9lddSdlm7SflX6YiuIW0qPTC20y1rVWkHZD"/>
+</div>
+<div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+<div className="text-white">
+<span className="inline-block px-3 py-1 bg-secondary text-white text-xs font-bold rounded-full mb-6 tracking-widest uppercase">OWNER OPPORTUNITY</span>
+<h1 className="text-5xl md:text-7xl font-black leading-tight mb-6">Your machinery,<br/><span className="text-secondary-container">Now a business.</span></h1>
+<p className="text-lg md:text-xl text-slate-200 max-w-lg mb-8 leading-relaxed">Unlock the hidden value of your farm equipment. Join India's most trusted marketplace to earn up to ₹85,000 extra per season by renting to verified farmers.</p>
+<div className="flex flex-col sm:flex-row gap-4">
+<button className="px-8 py-4 bg-secondary-container text-on-secondary-container font-black text-lg rounded-xl hover:scale-105 transition-transform shadow-xl">Get Started Free</button>
+<button className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold text-lg rounded-xl flex items-center gap-2 hover:bg-white/20 transition-all">
+<span className="material-symbols-outlined" data-icon="play_circle">play_circle</span>
+                            See How it Works
+                        </button>
+</div>
+</div>
+{/*  Earnings Calculator Preview  */}
+<div className="glass-panel p-8 rounded-3xl shadow-2xl">
+<h3 className="text-2xl font-bold text-primary-container dark:text-primary-fixed mb-6">Estimate Your Earnings</h3>
+<div className="space-y-6">
+<div>
+<label className="block text-sm font-label font-semibold text-outline mb-2">Select Equipment Type</label>
+<select className="w-full bg-surface-container border-none rounded-lg p-3 text-on-surface focus:ring-2 focus:ring-secondary">
+<option>50HP+ Modern Tractor</option>
+<option>Combine Harvester</option>
+<option>Rotavator / Cultivator</option>
+<option>Laser Land Leveler</option>
+</select>
+</div>
+<div>
+<label className="block text-sm font-label font-semibold text-outline mb-2">Expected Rental Days (per season)</label>
+<input className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-secondary" max="60" min="10" type="range" value="30"/>
+<div className="flex justify-between text-xs text-slate-500 mt-2">
+<span>10 Days</span>
+<span>60 Days</span>
+</div>
+</div>
+<div className="pt-6 border-t border-slate-200 dark:border-slate-700">
+<p className="text-sm text-slate-500 mb-1">Estimated Seasonal Revenue</p>
+<p className="text-4xl font-black text-secondary">₹45,000 - ₹72,000</p>
+<p className="text-[10px] text-slate-400 mt-2 uppercase tracking-tighter">*Based on average regional demand and equipment age</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+{/*  Trust Signals  */}
+<section className="py-16 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+<div className="max-w-7xl mx-auto px-6">
+<div className="flex flex-wrap justify-center gap-12 md:gap-24 items-center opacity-70 grayscale hover:grayscale-0 transition-all">
+<div className="flex items-center gap-2 font-bold text-slate-500"><span className="material-symbols-outlined" data-icon="verified_user">verified_user</span> Verified Renters</div>
+<div className="flex items-center gap-2 font-bold text-slate-500"><span className="material-symbols-outlined" data-icon="payments">payments</span> Secure Payments</div>
+<div className="flex items-center gap-2 font-bold text-slate-500"><span className="material-symbols-outlined" data-icon="shield_with_heart">shield_with_heart</span> Damage Support</div>
+<div className="flex items-center gap-2 font-bold text-slate-500"><span className="material-symbols-outlined" data-icon="support_agent">support_agent</span> 24/7 Assistance</div>
+</div>
+</div>
+</section>
+{/*  Listing Process  */}
+<section className="py-24 bg-surface-container-low dark:bg-slate-950">
+<div className="max-w-7xl mx-auto px-6">
+<div className="text-center max-w-3xl mx-auto mb-16">
+<h2 className="text-4xl font-black text-primary-container dark:text-primary-fixed mb-4">Start Earning in 3 Simple Steps</h2>
+<p className="text-lg text-slate-600 dark:text-slate-400">We've simplified the listing process so you can focus on managing your farm while we handle the bookings.</p>
+</div>
+<div className="grid md:grid-cols-3 gap-12">
+<div className="relative">
+<div className="w-16 h-16 bg-primary-container text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-primary-container/20">
+<span className="material-symbols-outlined text-3xl" data-icon="add_a_photo">add_a_photo</span>
+</div>
+<h4 className="text-xl font-bold mb-3">1. List Your Equipment</h4>
+<p className="text-slate-600 dark:text-slate-400 leading-relaxed">Upload clear photos, set your daily price, and define your service radius. We'll optimize your profile for visibility.</p>
+<div className="hidden md:block absolute top-8 -right-6 text-slate-300">
+<span className="material-symbols-outlined text-4xl" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<div className="relative">
+<div className="w-16 h-16 bg-secondary text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-secondary/20">
+<span className="material-symbols-outlined text-3xl" data-icon="event_available">event_available</span>
+</div>
+<h4 className="text-xl font-bold mb-3">2. Manage Requests</h4>
+<p className="text-slate-600 dark:text-slate-400 leading-relaxed">Receive booking requests directly on your phone. Review renter profiles and accept jobs that fit your schedule.</p>
+<div className="hidden md:block absolute top-8 -right-6 text-slate-300">
+<span className="material-symbols-outlined text-4xl" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<div>
+<div className="w-16 h-16 bg-tertiary-container text-on-tertiary-container rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-tertiary/20">
+<span className="material-symbols-outlined text-3xl" data-icon="account_balance_wallet">account_balance_wallet</span>
+</div>
+<h4 className="text-xl font-bold mb-3">3. Get Paid Safely</h4>
+<p className="text-slate-600 dark:text-slate-400 leading-relaxed">Funds are collected upfront and released directly to your bank account after the service is completed successfully.</p>
+</div>
+</div>
+</div>
+</section>
+{/*  Bento Grid Benefits  */}
+<section className="py-24 bg-white dark:bg-slate-900 overflow-hidden">
+<div className="max-w-7xl mx-auto px-6">
+<div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 h-auto md:h-[600px]">
+{/*  Main Feature  */}
+<div className="md:col-span-2 md:row-span-2 bg-primary-container rounded-3xl p-10 flex flex-col justify-end relative overflow-hidden group">
+<img alt="Control" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="Modern high-tech control panel inside a tractor cab with GPS navigation display and ergonomic controls in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHJBC_Z8UxCrm3y2H7Jtrd4pPovGFUHy07oagxN71Bkbx5t4Mgkmk3CAAQphOzfD_ps3gGx0lM0qKPmkJsplV-i9uND8aCiC2A5EoLObg7sdgW5LEvNrorixV6CKnAaCTIg_VPkHtmwWc7-1VhEyuPQv1pObkagixXSEhfZKOZtgs87ErXmlCkcxRf7Z6yTSvvFi1oEP8-jGGJZrtpqhora9ROHTD2eSpWRNcXP2p8ZXq9KZeXmq9LetFk2SBrLG_f1RCebz2mdOXW"/>
+<div className="relative z-10">
+<h3 className="text-3xl font-black text-white mb-4">Total Control over Availability</h3>
+<p className="text-emerald-100 text-lg leading-relaxed">Decide exactly when your machines are available. Block dates for your own farm work with a single tap in the owner dashboard.</p>
+</div>
+</div>
+{/*  Secondary 1  */}
+<div className="md:col-span-2 bg-surface-container rounded-3xl p-8 flex items-center gap-6 group">
+<div className="flex-1">
+<h4 className="text-xl font-bold text-primary-container mb-2">Verified Community</h4>
+<p className="text-slate-600 dark:text-slate-500">Every renter undergoes a strict KYC check. Rent with peace of mind knowing who is using your equipment.</p>
+</div>
+<div className="w-32 h-32 bg-white dark:bg-slate-800 rounded-2xl flex-shrink-0 shadow-sm overflow-hidden">
+<img alt="Security" className="w-full h-full object-cover" data-alt="Close up of a hand holding a digital smartphone with a secure checkmark verification badge and green interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRLWVn3ooQucvqzhCFTn1ouEOZoLwL1m3sPyQgVU27EJqRdlsFl0WYvwA1dkWyfRCt0uVf-3J_o2Gyg1cZoqYB6aHeqtYmDAfCwEw9NShjphJksOrXGgc6AsUEESgZAUHLP7SbP0ShdUqt5VMuGogLvkg-AV6jZO33IVJ2riN1oVaHRsr0HQJ0enn5b7DodrUo5RQalS0qZXLBj3LPTKHrsQrsVsnmIyehGAeNPPyv6RXpYO_WXd-AtvjTNIqu9ApXnNe7uiLRRKqF"/>
+</div>
+</div>
+{/*  Secondary 2  */}
+<div className="bg-secondary text-white rounded-3xl p-8 flex flex-col justify-between">
+<span className="material-symbols-outlined text-4xl" data-icon="trending_up">trending_up</span>
+<div>
+<h4 className="text-lg font-bold mb-1">Maximized ROI</h4>
+<p className="text-sm text-secondary-fixed opacity-90">Recover your machinery investment 40% faster by filling idle days.</p>
+</div>
+</div>
+{/*  Secondary 3  */}
+<div className="bg-slate-900 rounded-3xl p-8 flex flex-col justify-between relative overflow-hidden">
+<div className="relative z-10">
+<h4 className="text-lg font-bold text-white mb-1">Local Network</h4>
+<p className="text-sm text-slate-400">Build relationships with reliable farmers in your own taluka.</p>
+</div>
+<span className="material-symbols-outlined text-secondary text-6xl absolute -bottom-4 -right-4 opacity-20" data-icon="location_on">location_on</span>
+</div>
+</div>
+</div>
+</section>
+{/*  Testimonial  */}
+<section className="py-24 bg-surface-container-highest dark:bg-slate-950">
+<div className="max-w-4xl mx-auto px-6 text-center">
+<div className="mb-10 inline-block p-1 bg-white dark:bg-slate-800 rounded-full border border-slate-200 dark:border-slate-700">
+<img alt="Testimonial Avatar" className="w-20 h-20 rounded-full object-cover shadow-lg" data-alt="Portrait of a smiling successful middle-aged Indian farmer wearing a clean white shirt and traditional headgear" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC288Tn6p_bd_qzMmymZd6nsehJtpuhQ-aApxiCLpySZGgPiah4aO9XdjO8YZTVC66sZGgH2eVDKGOXCXnquwc6_p2qcfQXDfgqgmAT6JvEd9TUWYyPyZP2g5flk-jdOQXmIWAwAIJXk2euQ0YLHHZHZ7orkK_-oWCsx0y8koHoUKol9zV7mAz4unhwqKn9TujrZa9Xt-gzVYmjirpL_FdDra5zQZozmjNQnDFn7xCp-SqP8kGtOcGEqR8O1S2RWZQHQiuwVRzNvyP_"/>
+</div>
+<h3 className="text-3xl font-black italic text-primary-container dark:text-emerald-50 mb-8">"Listing my harvester on Kisan Kamai was the smartest business decision I made this year. I covered my annual maintenance costs in just the first two weeks of the harvest season."</h3>
+<div>
+<p className="font-bold text-lg text-primary-container dark:text-emerald-400">Sandeep Deshmukh</p>
+<p className="text-slate-500 uppercase tracking-widest text-xs font-semibold">Equipment Owner, Nashik District</p>
+</div>
+</div>
+</section>
+{/*  Final CTA  */}
+<section className="py-24 relative overflow-hidden">
+<div className="absolute inset-0 bg-primary-container">
+<div className="absolute inset-0 opacity-20" style={{'backgroundImage': 'radial-gradient(#ffffff 1px, transparent 1px)', 'backgroundSize': '40px 40px'}}></div>
+</div>
+<div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+<h2 className="text-4xl md:text-6xl font-black text-white mb-8">Ready to grow your farm business?</h2>
+<p className="text-emerald-100 text-xl mb-12 max-w-2xl mx-auto">Join 1,200+ equipment owners already earning with Kisan Kamai. Free to list, premium to use.</p>
+<div className="flex flex-col sm:flex-row justify-center gap-4">
+<button className="px-10 py-5 bg-secondary text-white font-black text-xl rounded-2xl hover:bg-secondary/90 transition-all shadow-2xl">Start Listing Now</button>
+<button className="px-10 py-5 bg-transparent border-2 border-white/40 text-white font-bold text-xl rounded-2xl hover:bg-white/10 transition-all">Talk to an Agent</button>
+</div>
+</div>
+</section>
+</main>
+{/*  Footer  */}
 
-              {/* Active Listing Card */}
-              <div className="bg-white dark:bg-slate-900/50 rounded-2xl shadow-sm border border-emerald-50 dark:border-slate-800/50 overflow-hidden mb-6 hover:shadow-lg transition-shadow">
-                <div className="relative h-48">
-                  <img
-                    className="w-full h-full object-cover"
-                    alt="Modern Mahindra tractor parked in a clean farmyard, bright natural daylight, crisp focus on agricultural machinery"
-                    src="/assets/generated/seed_drill.png"
-                  />
-                  <div className="absolute top-4 left-4 bg-emerald-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">{langText("Active Listing", "सक्रिय सूची")}</div>
-                </div>
-                <div className="p-5">
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-lg font-bold text-primary dark:text-emerald-50">John Deere 5050 D</h3>
-                    <p className="text-secondary dark:text-emerald-400 font-extrabold">₹800/hr</p>
-                  </div>
-                  <div className="flex items-center gap-4 text-sm text-slate-500 dark:text-slate-400 mb-4">
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-base">calendar_today</span>
-                      <span>{langText("12 Bookings", "१२ बुकिंग्ज")}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="material-symbols-outlined text-base">location_on</span>
-                      <span>{langText("Pune Dist.", "पुणे जिल्हा")}</span>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <button className="flex-1 py-3 border border-emerald-100 dark:border-slate-800 rounded-lg text-sm font-bold text-primary dark:text-emerald-50 bg-emerald-50/50 dark:bg-slate-900/70 hover:bg-emerald-100 dark:hover:bg-emerald-800 transition-colors">{langText("Edit Details", "सविस्तर माहिती संपादित करा")}</button>
-                    <button className="px-4 py-3 border border-emerald-100 dark:border-slate-800 rounded-lg text-primary dark:text-emerald-50 hover:bg-emerald-50 dark:hover:bg-slate-900/70 transition-colors">
-                      <span className="material-symbols-outlined">more_horiz</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            {/* Quick Add Form */}
-            <div className="bg-primary-container text-white rounded-3xl p-8 shadow-xl">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <p className="text-on-primary-container dark:text-emerald-300 text-xs font-bold uppercase tracking-widest mb-1">{langText("Step 1 of 3", "पायरी १ पैकी ३")}</p>
-                  <h2 className="text-2xl font-extrabold font-headline leading-tight">{langText("Add New Equipment", "नवीन उपकरणे जोडा")}</h2>
-                </div>
-                <div className="h-12 w-12 rounded-full border-4 border-slate-800 flex items-center justify-center">
-                  <span className="text-sm font-bold">33%</span>
-                </div>
-              </div>
-
-              <form className="space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-on-primary-container dark:text-emerald-100 ml-1">{langText("Equipment Category", "उपकरणाचा प्रकार")}</label>
-                  <div className="relative">
-                    <select className="w-full bg-slate-900/70 border-slate-800 rounded-xl py-4 px-4 text-white appearance-none focus:ring-secondary focus:border-secondary transition-all">
-                      <option>{langText("Tractors", "ट्रॅक्टर्स")}</option>
-                      <option>{langText("Harvesters", "हार्वेस्टर्स")}</option>
-                      <option>{langText("Rotavators", "रोटाव्हेटर्स")}</option>
-                      <option>{langText("Seeders", "पेरणी यंत्रे")}</option>
-                    </select>
-                    <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-on-primary-container dark:text-emerald-100 ml-1">{langText("Make & Model", "बनवा आणि मॉडेल")}</label>
-                  <input
-                    className="w-full bg-slate-900/70 border-slate-800 rounded-xl py-4 px-4 text-white placeholder-emerald-700/50 focus:ring-secondary focus:border-secondary transition-all"
-                    placeholder={langText("e.g. Mahindra Arjun 555", "उदा. महिंद्रा अर्जुन ५५५")}
-                    type="text"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-on-primary-container dark:text-emerald-100 ml-1">{langText("Daily Rental Price (₹)", "दररोज भाड्याची किंमत (₹)")}</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-on-primary-container font-bold">₹</span>
-                    <input
-                      className="w-full bg-slate-900/70 border-slate-800 rounded-xl py-4 pl-10 pr-4 text-white placeholder-emerald-700/50 focus:ring-secondary focus:border-secondary transition-all"
-                      placeholder="5000"
-                      type="number"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  className="w-full bg-secondary dark:bg-emerald-600 hover:bg-secondary/90 dark:hover:bg-emerald-500 text-white py-5 rounded-2xl font-extrabold text-lg shadow-xl shadow-black/20 mt-4 active:scale-95 transition-all"
-                  type="button"
-                >
-                  {langText("Next: Upload Photos", "पुढे: फोटो अपलोड करा")}
-                </button>
-              </form>
-            </div>
-          </div>
-        </section>
-      </div>
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }

@@ -16,8 +16,8 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    basePath: '/kisaankamai_v0.1',
-    assetPrefix: '/kisaankamai_v0.1',
+    // basePath: '/kisaankamai_v0.1',
+    // assetPrefix: '/kisaankamai_v0.1',
 
 };
 
