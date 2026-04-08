@@ -20,25 +20,25 @@ const modelData: Record<string, { en: string, mr: string, items: { name: string,
     en: "Harvesters", mr: "हार्वेस्टर्स",
     items: [
       { name: "John Deere W70 Combine", hp: "100 HP", img: "/assets/generated/harvester_action.png" },
-      { name: "Preet 987", hp: "76 HP", img: "/assets/generated/seed_drill.png" }
+      { name: "Preet 987", hp: "76 HP", img: "/assets/generated/harvester_action.png" }
     ]
   },
   ploughs: {
     en: "Ploughs", mr: "नांगर",
     items: [
-      { name: "Lemken Reversible", hp: "Suitable for 45+ HP", img: "/assets/generated/seed_drill.png" }
+      { name: "Lemken Reversible", hp: "Suitable for 45+ HP", img: "/assets/generated/rotavator.png" }
     ]
   },
   sprayers: {
     en: "Sprayers", mr: "फवारणी यंत्रे",
     items: [
-      { name: "ASPEE Boom Sprayer", hp: "Tractor Mounted", img: "/assets/generated/seed_drill.png" }
+      { name: "ASPEE Boom Sprayer", hp: "Tractor Mounted", img: "/assets/generated/sprayer.png" }
     ]
   },
   implements: {
     en: "Implements", mr: "उपकरणे",
     items: [
-        { name: "Shaktiman Rotavator", hp: "6 ft width", img: "/assets/generated/rotavator.png" }
+        { name: "Shaktiman Rotavator", hp: "6 ft width", img: "/assets/generated/hero_tractor.png" }
     ]
   }
 };

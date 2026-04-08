@@ -47,7 +47,7 @@ def replace_images_in_file(filepath):
     modified = False
     for i, line in enumerate(lines):
         # We target all placeholder injections and fix them
-        if 'src="/assets/generated/' in line or 'src=\\"/assets/generated/' in line:
+        if '/assets/generated/' in line:
             
             # Search context precisely within Alt tags exclusively
             alt_match = re.search(r'alt="([^"]*)"', line, re.IGNORECASE)
@@ -70,8 +70,8 @@ def replace_images_in_file(filepath):
                     replacement = img
                     break
             
-            # Replace the broken generic image with the rigorously checked variant
-            new_line = re.sub(r'src=["\']/assets/generated/[^"\']*["\']', f'src="{replacement}"', line)
+            # Replace the broken generic image with the rigorously checked variant (Array properties and src tags)
+            new_line = re.sub(r'(src=|img:\s*|ownerImg:\s*)["\']/assets/generated/[^"\']*["\']', fr'\g<1>"{replacement}"', line)
             
             if new_line != lines[i]:
                 lines[i] = new_line

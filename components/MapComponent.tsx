@@ -63,6 +63,23 @@ export default function MapComponent({
     setMap(null);
   }, []);
 
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  if (!apiKey || apiKey === "") {
+    const fallbackUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${center[1]-0.1},${center[0]-0.1},${center[1]+0.1},${center[0]+0.1}&layer=mapnik&marker=${center[0]},${center[1]}`;
+    return (
+      <div className={`overflow-hidden rounded-3xl shadow-xl dark:border-slate-800 ${className}`} style={{ height, width: "100%", border: '1px solid #e2e8f0' }}>
+        <iframe 
+          width="100%" 
+          height="100%" 
+          frameBorder="0" 
+          scrolling="no" 
+          src={fallbackUrl}
+          style={{ border: 0 }}
+        ></iframe>
+      </div>
+    );
+  }
+
   if (!isLoaded) {
     return (
       <div

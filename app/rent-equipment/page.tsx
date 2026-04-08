@@ -16,10 +16,10 @@ const nearbyMarkers = [
 ];
 
 const equipmentCards = [
-  { location: "Kalwan", cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: "/assets/generated/seed_drill.png", ownerImg: "/assets/generated/seed_drill.png", verified: true },
+  { location: "Kalwan", cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: "/assets/generated/harvester_action.png", ownerImg: "/assets/generated/harvester_action.png", verified: true },
   { location: "Mukhed", cat: "Harvester • John Deere", name: "John Deere W70 Combine", price: "₹2,500", unit: "per hour", rating: "4.7", hp: "100 HP", dist: "8.5 km", owner: "Sangli Agri-Hub", img: "/assets/generated/harvester_action.png", popular: true },
-  { location: "Kalwan", cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: "/assets/generated/seed_drill.png", ownerImg: "/assets/generated/seed_drill.png" },
-  { location: "Mukhed", cat: "Tractor • Swaraj", name: "Swaraj 744 FE", price: "₹750", unit: "per hour", rating: "4.8", hp: "48 HP", dist: "2.1 km", owner: "Suresh", img: "/assets/generated/seed_drill.png", verified: true },
+  { location: "Kalwan", cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: "/assets/generated/harvester_action.png", ownerImg: "/assets/generated/harvester_action.png" },
+  { location: "Mukhed", cat: "Tractor • Swaraj", name: "Swaraj 744 FE", price: "₹750", unit: "per hour", rating: "4.8", hp: "48 HP", dist: "2.1 km", owner: "Suresh", img: "/assets/generated/harvester_action.png", verified: true },
 ];
 
 function RentEquipmentInner() {
