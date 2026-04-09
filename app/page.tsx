@@ -138,68 +138,68 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-12">
               {/* Renter Path */}
               <div className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800/50">
-                <div className="w-16 h-16 bg-emerald-500 rounded-2xl flex items-center justify-center text-white mb-8">
+                <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-[#00251a] mb-8">
                   <span className="material-symbols-outlined text-3xl">shopping_cart</span>
                 </div>
                 <h3 className="text-3xl font-black text-primary dark:text-emerald-50 mb-8">{langText("Rent with Confidence", "आत्मविश्वासाने भाडे")}</h3>
                 <div className="space-y-8">
                   <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 font-bold border-2 border-emerald-500 text-emerald-600 rounded-full flex items-center justify-center">1</span>
+                    <span className="flex-shrink-0 w-8 h-8 font-bold bg-[#00251a] text-white rounded-full flex items-center justify-center">1</span>
                     <div>
                       <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Search & Filter", "शोधा आणि फिल्टर करा")}</h4>
                       <p className="text-slate-500 dark:text-slate-400">{langText("Find equipment by type, location, and power rating across Maharashtra.", "महाराष्ट्रातील प्रकार, स्थान आणि पॉवर रेटिंगनुसार उपकरणे शोधा.")}</p>
                     </div>
                   </div>
                   <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 font-bold border-2 border-emerald-500 text-emerald-600 rounded-full flex items-center justify-center">2</span>
+                    <span className="flex-shrink-0 w-8 h-8 font-bold bg-[#00251a] text-white rounded-full flex items-center justify-center">2</span>
                     <div>
                       <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Secure Booking", "सुरक्षित बुकिंग")}</h4>
                       <p className="text-slate-500 dark:text-slate-400">{langText("Submit your request and get confirmation from vetted local equipment owners.", "तुमची विनंती सबमिट करा आणि सत्यापित स्थानिक उपकरण मालकांकडून पुष्टी मिळवा.")}</p>
                     </div>
                   </div>
                   <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 font-bold border-2 border-emerald-500 text-emerald-600 rounded-full flex items-center justify-center">3</span>
+                    <span className="flex-shrink-0 w-8 h-8 font-bold bg-[#00251a] text-white rounded-full flex items-center justify-center">3</span>
                     <div>
                       <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Harvest Success", "यशस्वी कापणी")}</h4>
                       <p className="text-slate-500 dark:text-slate-400">{langText("Equipment delivered or picked up. Pay through secure digital channels or cash.", "उपकरणे वितरित किंवा उचलली. डिजिटल किंवा रोख माध्यमातून पैसे द्या.")}</p>
                     </div>
                   </div>
                 </div>
-                <Link href="/rent-equipment" className="block w-full mt-12 bg-primary-container text-white py-4 rounded-xl font-bold hover:bg-primary transition-all text-center">
+                <Link href="/rent-equipment" className="block w-full mt-12 bg-[#00251a] text-white py-4 rounded-xl font-bold hover:bg-[#00251a]/90 transition-all text-center">
                   {langText("Start Renting Now", "आत्ताच भाडे सुरू करा")}
                 </Link>
               </div>
               {/* Owner Path */}
-              <div className="bg-primary-container p-10 rounded-3xl shadow-sm text-white relative overflow-hidden">
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center text-amber-500 mb-8 border border-white/20">
+              <div className="bg-[#13322b] p-10 rounded-3xl shadow-sm text-white relative overflow-hidden flex flex-col justify-between">
+                <div className="relative z-10 w-full">
+                  <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-8 border border-white/20">
                     <span className="material-symbols-outlined text-3xl">currency_rupee</span>
                   </div>
                   <h3 className="text-3xl font-black mb-8">{langText("Maximize Your Fleet", "तुमच्या यंत्रसामग्रीचा जास्तीत जास्त वापर")}</h3>
                   <div className="space-y-8">
                     <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 font-bold border-2 border-amber-500 text-amber-500 rounded-full flex items-center justify-center">1</span>
+                      <span className="flex-shrink-0 w-8 h-8 font-bold bg-[#934a24] text-white rounded-full flex items-center justify-center">1</span>
                       <div>
                         <h4 className="font-bold text-lg mb-1 text-white">{langText("List Your Fleet", "तुमची यंत्रसामग्री सूचीबद्ध करा")}</h4>
                         <p className="text-white/70">{langText("Upload photos, set your rates, and specify equipment availability schedules.", "फोटो अपलोड करा, दर सेट करा आणि उपकरण उपलब्धता वेळापत्रक निर्दिष्ट करा.")}</p>
                       </div>
                     </div>
                     <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 font-bold border-2 border-amber-500 text-amber-500 rounded-full flex items-center justify-center">2</span>
+                      <span className="flex-shrink-0 w-8 h-8 font-bold bg-[#934a24] text-white rounded-full flex items-center justify-center">2</span>
                       <div>
                         <h4 className="font-bold text-lg mb-1 text-white">{langText("Manage Bookings", "बुकिंग व्यवस्थापित करा")}</h4>
                         <p className="text-white/70">{langText("Approve rental requests and coordinate with local farmers in your area.", "भाडे विनंत्या मंजूर करा आणि तुमच्या क्षेत्रातील स्थानिक शेतकऱ्यांसोबत समन्वय करा.")}</p>
                       </div>
                     </div>
                     <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 font-bold border-2 border-amber-500 text-amber-500 rounded-full flex items-center justify-center">3</span>
+                      <span className="flex-shrink-0 w-8 h-8 font-bold bg-[#934a24] text-white rounded-full flex items-center justify-center">3</span>
                       <div>
                         <h4 className="font-bold text-lg mb-1 text-white">{langText("Get Paid Fast", "लवकर पैसे मिळवा")}</h4>
                         <p className="text-white/70">{langText("Receive guaranteed payouts directly to your bank account after completion.", "पूर्ण झाल्यानंतर सीधे तुमच्या बँक खात्यात हमी देणे प्राप्त करा.")}</p>
                       </div>
                     </div>
                   </div>
-                  <Link href="/owner-registration" className="block w-full mt-12 bg-white/10 border border-amber-500/50 text-white py-4 rounded-xl font-bold hover:bg-amber-500 hover:text-primary-container transition-all text-center">
+                  <Link href="/owner-registration" className="block w-full mt-12 bg-[#934a24] text-white py-4 rounded-xl font-bold hover:bg-[#7a3b1a] transition-all text-center">
                     {langText("Register as Owner", "मालक म्हणून नोंदणी करा")}
                   </Link>
                 </div>
