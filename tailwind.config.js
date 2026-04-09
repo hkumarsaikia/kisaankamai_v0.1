@@ -54,7 +54,12 @@ module.exports = {
         "outline-variant": "#c1c8c3",
         "primary-fixed-dim": "#a6cfbd",
         "surface-tint": "#406657",
-        "primary-fixed": "#c2ecd9"
+        "primary-fixed": "#c2ecd9",
+        slate: {
+          950: '#1a1d21',
+          900: '#23272b'
+        },
+        black: '#1a1d21'
       },
       borderRadius: {
         "DEFAULT": "0.25rem",

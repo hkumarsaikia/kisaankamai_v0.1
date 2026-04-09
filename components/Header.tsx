@@ -7,9 +7,30 @@ import { ThemeToggle } from "./ThemeToggle";
 import { useLanguage } from "./LanguageContext";
 
 const navLinks = [
-  { href: "/rent-equipment", label: "Find Equipment", labelMr: "उपकरणे शोधा" },
-  { href: "/list-equipment", label: "List Equipment", labelMr: "उपकरणे सूचीबद्ध करा" },
-  { href: "/about", label: "About Us", labelMr: "आमच्याबद्दल" },
+  { 
+    href: "/rent-equipment", label: "Find Equipment", labelMr: "उपकरणे शोधा",
+    dropdown: [
+      { href: "/categories", label: "All Categories", labelMr: "सर्व वर्गवारी" },
+      { href: "/models", label: "Browse Models", labelMr: "मॉडेल्स पहा" },
+      { href: "/locations", label: "Locations", labelMr: "स्थाने" }
+    ]
+  },
+  { 
+    href: "/list-equipment", label: "List Equipment", labelMr: "उपकरणे सूचीबद्ध करा",
+    dropdown: [
+      { href: "/owner-registration", label: "Register Equipment", labelMr: "उपकरणे नोंदणी करा" },
+      { href: "/owner-benefits", label: "Owner Benefits", labelMr: "मालकांचे फायदे" },
+      { href: "/owner-dashboard", label: "Owner Dashboard", labelMr: "मालक डॅशबोर्ड" }
+    ]
+  },
+  { 
+    href: "/about", label: "About Us", labelMr: "आमच्याबद्दल",
+    dropdown: [
+      { href: "/partner", label: "Partner with Us", labelMr: "आमच्यासोबत भागीदारी" },
+      { href: "/trust-safety", label: "Trust & Safety", labelMr: "विश्वास आणि सुरक्षा" },
+      { href: "/legal", label: "Legal & Policies", labelMr: "कायदेशीर आणि धोरणे" }
+    ]
+  },
   { href: "/faq", label: "FAQ", labelMr: "वारंवार विचारले जाणारे प्रश्न" },
   { href: "/support", label: "Support", labelMr: "मदत" },
 ];
@@ -30,19 +51,34 @@ export const Header = () => {
             </Link>
             <div className="hidden lg:flex items-center gap-6 ml-4">
               {navLinks.map((link) => {
-                const isActive = pathname === link.href;
+                const isActive = pathname === link.href || (link.dropdown && link.dropdown.some(d => pathname === d.href));
                 return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`text-sm tracking-wide transition-colors ${
-                      isActive
-                        ? "text-emerald-700 dark:text-emerald-400 font-bold"
-                        : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 font-medium"
-                    }`}
-                  >
-                    {langText(link.label, link.labelMr)}
-                  </Link>
+                  <div key={link.href} className="relative group py-6 -my-6">
+                    <Link
+                      href={link.href}
+                      className={`text-sm tracking-wide transition-colors flex items-center gap-1 ${
+                        isActive
+                          ? "text-emerald-700 dark:text-emerald-400 font-bold"
+                          : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 font-medium"
+                      }`}
+                    >
+                      {langText(link.label, link.labelMr)}
+                      {link.dropdown && <span className="material-symbols-outlined text-[16px]">expand_more</span>}
+                    </Link>
+                    {link.dropdown && (
+                      <div className="absolute top-full left-0 mt-0 w-56 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+                        {link.dropdown.map((sublink) => (
+                          <Link
+                            key={sublink.href}
+                            href={sublink.href}
+                            className="block px-5 py-3 text-sm text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-800 hover:text-emerald-700 dark:hover:text-emerald-400 font-medium transition-colors"
+                          >
+                            {langText(sublink.label, sublink.labelMr)}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>

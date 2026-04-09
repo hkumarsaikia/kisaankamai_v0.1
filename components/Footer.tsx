@@ -20,14 +20,14 @@ export const Footer = () => {
             )}
           </p>
           <div className="flex gap-4">
+            <a href="https://x.com/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
+              <span className="font-black text-lg">X</span>
+            </a>
             <a href="https://linkedin.com/company/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
-              <span className="material-symbols-outlined text-lg">social_leaderboard</span>
+              <span className="font-black text-lg">in</span>
             </a>
-            <a href="https://twitter.com/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
-              <span className="material-symbols-outlined text-lg">language</span>
-            </a>
-            <a href="mailto:support@kisankamai.com" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
-              <span className="material-symbols-outlined text-lg">mail</span>
+            <a href="https://instagram.com/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
+              <span className="material-symbols-outlined text-lg">photo_camera</span>
             </a>
           </div>
         </div>
@@ -82,8 +82,8 @@ export const Footer = () => {
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-slate-400 text-sm">{langText("© 2024 Kisan Kamai. Rooted in Trust. Serving Indian Agriculture.", "© 2024 किसान कमाई. विश्वासात रुजलेले. भारतीय शेतीची सेवा.")}</p>
-        <p className="text-slate-500 italic text-sm">{langText("Built for the hard-working farmers of Sangli, Satara & Kolhapur.", "सांगली, सातारा आणि कोल्हापूरच्या कष्टकरी शेतकऱ्यांसाठी बनवलेले.")}</p>
+        <p className="text-slate-400 text-sm">{langText("© 2026 Kisan Kamai. Rooted in Trust. Serving Indian Agriculture.", "© 2026 किसान कमाई. विश्वासात रुजलेले. भारतीय शेतीची सेवा.")}</p>
+        <p className="text-slate-500 italic text-sm">{langText("Built for the hard-working farmers of India.", "भारताच्या कष्टकरी शेतकऱ्यांसाठी बनवलेले.")}</p>
       </div>
     </footer>
   );

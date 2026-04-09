@@ -54,8 +54,13 @@ html {
   line-height: 1.6;
 }
 
+/* Paragraph Justification */
+p {
+  text-align: justify;
+}
+
 /* Legal content styling */
-.legal-content p { margin-bottom: 1.25rem; line-height: 1.8; }
+.legal-content p { margin-bottom: 1.25rem; line-height: 1.8; text-align: justify; }
 .legal-content h2 { margin-top: 2.5rem; margin-bottom: 1rem; font-weight: 700; font-size: 1.5rem; }
 .legal-content h3 { margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 600; font-size: 1.125rem; }
 .legal-content ul { margin-bottom: 1.25rem; padding-left: 1.5rem; list-style-type: disc; }

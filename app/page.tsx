@@ -11,9 +11,8 @@ import { useRouter } from "next/navigation";
 const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
 
 const homepageMarkers = [
-  { lat: 17.00, lng: 74.00, label: "Satara", sublabel: "Active Hub", color: "#934a24" },
-  { lat: 16.85, lng: 74.57, label: "Sangli", sublabel: "HQ • Primary Hub", color: "#00251a" },
-  { lat: 16.70, lng: 74.23, label: "Kolhapur", sublabel: "Active Hub", color: "#693c00" },
+  { lat: 20.48, lng: 73.80, label: "Kalwan", sublabel: "Active Hub", color: "#934a24" },
+  { lat: 18.77, lng: 77.36, label: "Mukhed", sublabel: "HQ • Primary Hub", color: "#00251a" },
 ];
 
 const heroImages = [
@@ -58,7 +57,7 @@ export default function Home() {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={src}
-                className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-1000 ${
+                className={`w-full h-full object-cover md:object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${
                   index === currentSlide ? "opacity-100" : "opacity-0"
                 }`}
                 alt="Agricultural Equipment Imagery"
@@ -85,7 +84,7 @@ export default function Home() {
             <div className="text-white">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-6 mt-16 lg:mt-0">
                 <span className="w-2 h-2 bg-secondary rounded-full transform dark:bg-amber-400"></span>
-                <span className="text-sm font-label font-bold uppercase tracking-widest">{langText("Now Serving Western Maharashtra", "आता पश्चिम महाराष्ट्रात सेवा देत आहोत")}</span>
+                <span className="text-sm font-label font-bold uppercase tracking-widest">{langText("Now Serving Maharashtra", "आता महाराष्ट्रात सेवा देत आहोत")}</span>
               </div>
               <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
                 {langText("Modern Machinery for Every Farm.", "प्रत्येक शेतीसाठी आधुनिक यंत्रसामग्री.")}
@@ -128,6 +127,87 @@ export default function Home() {
         </section>
 
 
+
+        {/* How it Works */}
+        <section className="py-24 bg-surface-container-low dark:bg-slate-950/30">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">{langText("The Kisan Kamai Way", "किसान कमाई पद्धत")}</h2>
+              <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">{langText("Whether you are looking to rent or listing your own fleet, our process is built on transparency and local trust.", "तुम्ही भाडे शोधत असाल किंवा तुमची स्वतःची यंत्रसामग्री सूचीबद्ध करत असाल, आमची प्रक्रिया पारदर्शकता आणि स्थानिक विश्वासावर आधारित आहे.")}</p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-12">
+              {/* Renter Path */}
+              <div className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800/50">
+                <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-900 mb-8">
+                  <span className="material-symbols-outlined text-3xl">shopping_cart</span>
+                </div>
+                <h3 className="text-3xl font-black text-primary dark:text-emerald-50 mb-8">{langText("Rent with Confidence", "आत्मविश्वासाने भाडे")}</h3>
+                <div className="space-y-8">
+                  <div className="flex gap-6">
+                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">1</span>
+                    <div>
+                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Search & Filter", "शोधा आणि फिल्टर करा")}</h4>
+                      <p className="text-slate-500 dark:text-slate-400">{langText("Find equipment by type, location, and power rating across Maharashtra.", "महाराष्ट्रातील प्रकार, स्थान आणि पॉवर रेटिंगनुसार उपकरणे शोधा.")}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6">
+                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">2</span>
+                    <div>
+                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Secure Booking", "सुरक्षित बुकिंग")}</h4>
+                      <p className="text-slate-500 dark:text-slate-400">{langText("Submit your request and get confirmation from vetted local equipment owners.", "तुमची विनंती सबमिट करा आणि सत्यापित स्थानिक उपकरण मालकांकडून पुष्टी मिळवा.")}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-6">
+                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">3</span>
+                    <div>
+                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Harvest Success", "यशस्वी कापणी")}</h4>
+                      <p className="text-slate-500 dark:text-slate-400">{langText("Equipment delivered or picked up. Pay through secure digital channels or cash.", "उपकरणे वितरित किंवा उचलली. डिजिटल किंवा रोख माध्यमातून पैसे द्या.")}</p>
+                    </div>
+                  </div>
+                </div>
+                <Link href="/renter-journey" className="block w-full mt-12 bg-primary-container text-white py-4 rounded-xl font-bold hover:bg-primary transition-all text-center">
+                  {langText("Start Renting Now", "आत्ताच भाडे सुरू करा")}
+                </Link>
+              </div>
+              {/* Owner Path */}
+              <div className="bg-primary-container p-10 rounded-3xl shadow-sm text-white relative overflow-hidden">
+                <div className="relative z-10">
+                  <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-8 border border-white/20">
+                    <span className="material-symbols-outlined text-3xl">currency_rupee</span>
+                  </div>
+                  <h3 className="text-3xl font-black mb-8">{langText("Maximize Your Fleet", "तुमच्या यंत्रसामग्रीचा जास्तीत जास्त वापर")}</h3>
+                  <div className="space-y-8">
+                    <div className="flex gap-6">
+                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">1</span>
+                      <div>
+                        <h4 className="font-bold text-lg mb-1 text-white">{langText("List Your Fleet", "तुमची यंत्रसामग्री सूचीबद्ध करा")}</h4>
+                        <p className="text-white/70">{langText("Upload photos, set your rates, and specify equipment availability schedules.", "फोटो अपलोड करा, दर सेट करा आणि उपकरण उपलब्धता वेळापत्रक निर्दिष्ट करा.")}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-6">
+                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">2</span>
+                      <div>
+                        <h4 className="font-bold text-lg mb-1 text-white">{langText("Manage Bookings", "बुकिंग व्यवस्थापित करा")}</h4>
+                        <p className="text-white/70">{langText("Approve rental requests and coordinate with local farmers in your area.", "भाडे विनंत्या मंजूर करा आणि तुमच्या क्षेत्रातील स्थानिक शेतकऱ्यांसोबत समन्वय करा.")}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-6">
+                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">3</span>
+                      <div>
+                        <h4 className="font-bold text-lg mb-1 text-white">{langText("Get Paid Fast", "लवकर पैसे मिळवा")}</h4>
+                        <p className="text-white/70">{langText("Receive guaranteed payouts directly to your bank account after completion.", "पूर्ण झाल्यानंतर सीधे तुमच्या बँक खात्यात हमी देणे प्राप्त करा.")}</p>
+                      </div>
+                    </div>
+                  </div>
+                  <Link href="/owner-registration" className="block w-full mt-12 bg-secondary text-white py-4 rounded-xl font-bold hover:bg-secondary/90 transition-all text-center">
+                    {langText("Register as Owner", "मालक म्हणून नोंदणी करा")}
+                  </Link>
+                </div>
+                <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-secondary/10 rounded-full blur-3xl"></div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         {/* Featured Categories */}
         <section className="py-24 bg-white dark:bg-slate-950">
@@ -206,87 +286,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* How it Works */}
-        <section className="py-24 bg-surface-container-low dark:bg-slate-950/30">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">{langText("The Kisan Kamai Way", "किसान कमाई पद्धत")}</h2>
-              <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">{langText("Whether you are looking to rent or listing your own fleet, our process is built on transparency and local trust.", "तुम्ही भाडे शोधत असाल किंवा तुमची स्वतःची यंत्रसामग्री सूचीबद्ध करत असाल, आमची प्रक्रिया पारदर्शकता आणि स्थानिक विश्वासावर आधारित आहे.")}</p>
-            </div>
-            <div className="grid md:grid-cols-2 gap-12">
-              {/* Renter Path */}
-              <div className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800/50">
-                <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-900 mb-8">
-                  <span className="material-symbols-outlined text-3xl">shopping_cart</span>
-                </div>
-                <h3 className="text-3xl font-black text-primary dark:text-emerald-50 mb-8">{langText("Rent with Confidence", "आत्मविश्वासाने भाडे")}</h3>
-                <div className="space-y-8">
-                  <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">1</span>
-                    <div>
-                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Search & Filter", "शोधा आणि फिल्टर करा")}</h4>
-                      <p className="text-slate-500 dark:text-slate-400">{langText("Find equipment by type, location, and power rating across Western Maharashtra.", "पश्चिम महाराष्ट्रातील प्रकार, स्थान आणि पॉवर रेटिंगनुसार उपकरणे शोधा.")}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">2</span>
-                    <div>
-                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Secure Booking", "सुरक्षित बुकिंग")}</h4>
-                      <p className="text-slate-500 dark:text-slate-400">{langText("Submit your request and get confirmation from vetted local equipment owners.", "तुमची विनंती सबमिट करा आणि सत्यापित स्थानिक उपकरण मालकांकडून पुष्टी मिळवा.")}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">3</span>
-                    <div>
-                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Harvest Success", "यशस्वी कापणी")}</h4>
-                      <p className="text-slate-500 dark:text-slate-400">{langText("Equipment delivered or picked up. Pay through secure digital channels or cash.", "उपकरणे वितरित किंवा उचलली. डिजिटल किंवा रोख माध्यमातून पैसे द्या.")}</p>
-                    </div>
-                  </div>
-                </div>
-                <Link href="/renter-journey" className="block w-full mt-12 bg-primary-container text-white py-4 rounded-xl font-bold hover:bg-primary transition-all text-center">
-                  {langText("Start Renting Now", "आत्ताच भाडे सुरू करा")}
-                </Link>
-              </div>
-              {/* Owner Path */}
-              <div className="bg-primary-container p-10 rounded-3xl shadow-sm text-white relative overflow-hidden">
-                <div className="relative z-10">
-                  <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-8 border border-white/20">
-                    <span className="material-symbols-outlined text-3xl">currency_rupee</span>
-                  </div>
-                  <h3 className="text-3xl font-black mb-8">{langText("Maximize Your Fleet", "तुमच्या यंत्रसामग्रीचा जास्तीत जास्त वापर")}</h3>
-                  <div className="space-y-8">
-                    <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">1</span>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1 text-white">{langText("List Your Fleet", "तुमची यंत्रसामग्री सूचीबद्ध करा")}</h4>
-                        <p className="text-white/70">{langText("Upload photos, set your rates, and specify equipment availability schedules.", "फोटो अपलोड करा, दर सेट करा आणि उपकरण उपलब्धता वेळापत्रक निर्दिष्ट करा.")}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">2</span>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1 text-white">{langText("Manage Bookings", "बुकिंग व्यवस्थापित करा")}</h4>
-                        <p className="text-white/70">{langText("Approve rental requests and coordinate with local farmers in your area.", "भाडे विनंत्या मंजूर करा आणि तुमच्या क्षेत्रातील स्थानिक शेतकऱ्यांसोबत समन्वय करा.")}</p>
-                      </div>
-                    </div>
-                    <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">3</span>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1 text-white">{langText("Get Paid Fast", "लवकर पैसे मिळवा")}</h4>
-                        <p className="text-white/70">{langText("Receive guaranteed payouts directly to your bank account after completion.", "पूर्ण झाल्यानंतर सीधे तुमच्या बँक खात्यात हमी देणे प्राप्त करा.")}</p>
-                      </div>
-                    </div>
-                  </div>
-                  <Link href="/owner-registration" className="block w-full mt-12 bg-secondary text-white py-4 rounded-xl font-bold hover:bg-secondary/90 transition-all text-center">
-                    {langText("Register as Owner", "मालक म्हणून नोंदणी करा")}
-                  </Link>
-                </div>
-                <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-secondary/10 rounded-full blur-3xl"></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Why Kisan Kamai */}
         <section className="py-24 bg-white dark:bg-slate-950 overflow-hidden">
           <div className="max-w-7xl mx-auto px-6">
@@ -351,10 +350,10 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-12 gap-12 items-center">
               <div className="md:col-span-4">
-                <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-6 tracking-tight">{langText("Expanding Across Western Maharashtra", "पश्चिम महाराष्ट्र्यात विस्तार होत आहे")}</h2>
+                <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-6 tracking-tight">{langText("Expanding Across Maharashtra", "पश्चिम महाराष्ट्र्यात विस्तार होत आहे")}</h2>
                 <p className="text-slate-600 dark:text-slate-400 mb-8">{langText("We are currently focused on providing the best service within these three core districts, ensuring fast delivery and local support.", "आम्ही सध्या या तीन मुख्य जिल्ह्यांमध्ये सर्वोत्तम सेवा प्रदान करण्यावर लक्ष केंद्रित आहोत.")}</p>
                 <ul className="space-y-4">
-                  {[langText("Sangli District", "सांगली जिल्हा"), langText("Satara District", "सातारा जिल्हा"), langText("Kolhapur District", "कोल्हापूर जिल्हा")].map((d) => (
+                  {[langText("Kalwan", "कळवण"), langText("Mukhed", "मुखेड")].map((d) => (
                     <li key={d} className="flex items-center gap-3 font-bold text-lg text-primary dark:text-emerald-50">
                       <span className="w-6 h-6 bg-secondary text-white rounded-full flex items-center justify-center text-xs">✓</span> {d}
                     </li>
@@ -402,7 +401,7 @@ export default function Home() {
                   <img className="w-12 h-12 rounded-full object-cover" alt="Rajesh Deshmukh" src="/assets/generated/farmer_portrait.png" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Rajesh Deshmukh</h5>
-                    <p className="text-xs font-label text-slate-400">Sangli District</p>
+                    <p className="text-xs font-label text-slate-400">Kalwan</p>
                   </div>
                 </div>
               </div>
@@ -420,7 +419,7 @@ export default function Home() {
                   <img className="w-12 h-12 rounded-full object-cover" alt="Sanjay Kulkarni" src="/assets/generated/farmer_portrait.png" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Sanjay Kulkarni</h5>
-                    <p className="text-xs font-label text-slate-400">Satara District</p>
+                    <p className="text-xs font-label text-slate-400">Mukhed</p>
                   </div>
                 </div>
               </div>
@@ -438,7 +437,7 @@ export default function Home() {
                   <img className="w-12 h-12 rounded-full object-cover" alt="Vikas More" src="/assets/generated/farmer_portrait.png" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Vikas More</h5>
-                    <p className="text-xs font-label text-slate-400">Kolhapur District</p>
+                    <p className="text-xs font-label text-slate-400">Kalwan</p>
                   </div>
                 </div>
               </div>
@@ -461,18 +460,21 @@ export default function Home() {
               <div className="bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 p-6 cursor-pointer group">
                 <div className="flex justify-between items-center">
                   <h4 className="font-bold text-lg text-primary dark:text-emerald-50">What happens if the equipment breaks down during work?</h4>
+<p className="mt-4 text-slate-600 dark:text-slate-400 hidden group-hover:block">Don't worry. Our platform requires owners to handle immediate malfunctions. You must notify us within 2 hours of breakdown, and you will receive a prorated refund or replacement equipment depending on availability.</p>
                   <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add</span>
                 </div>
               </div>
               <div className="bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 p-6 cursor-pointer group">
                 <div className="flex justify-between items-center">
                   <h4 className="font-bold text-lg text-primary dark:text-emerald-50">Are there any hidden service charges?</h4>
+<p className="mt-4 text-slate-600 dark:text-slate-400 hidden group-hover:block">No. The price you see at booking is exactly what you pay. It includes the equipment cost, and if required, the driver's fee. Kisan Kamai takes a small transparent commission directly from the owner's payout.</p>
                   <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add</span>
                 </div>
               </div>
               <div className="bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 p-6 cursor-pointer group">
                 <div className="flex justify-between items-center">
                   <h4 className="font-bold text-lg text-primary dark:text-emerald-50">How can I pay for my rental?</h4>
+<p className="mt-4 text-slate-600 dark:text-slate-400 hidden group-hover:block">You can pay securely via UPI, Credit/Debit cards, Net Banking, or choose Cash on Delivery directly to the equipment owner when the machinery arrives at your field.</p>
                   <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add</span>
                 </div>
               </div>
@@ -489,7 +491,7 @@ export default function Home() {
           </div>
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
             <h2 className="text-5xl font-black mb-8 leading-tight">{langText("Ready to Transform Your Farming Journey?", "तुमच्या शेतीचा प्रवास बदलायला तयार आहात?")}</h2>
-            <p className="text-xl text-white/70 mb-12">{langText("Join thousands of farmers in Western Maharashtra using Kisan Kamai to access world-class machinery today.", "आज जागतिक दर्जाची यंत्रसामग्री मिळवण्यासाठी किसान कमाई वापरणाऱ्या पश्चिम महाराष्ट्रातील हजारो शेतकऱ्यांमध्ये सामील व्हा.")}</p>
+            <p className="text-xl text-white/70 mb-12">{langText("Join thousands of farmers in Maharashtra using Kisan Kamai to access world-class machinery today.", "आज जागतिक दर्जाची यंत्रसामग्री मिळवण्यासाठी किसान कमाई वापरणाऱ्या महाराष्ट्रातील हजारो शेतकऱ्यांमध्ये सामील व्हा.")}</p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
               <Link href="/rent-equipment" className="bg-secondary text-white px-10 py-5 rounded-xl text-lg font-black hover:bg-secondary/90 shadow-xl transition-all text-center">
                 {langText("Browse Equipment", "उपकरणे शोधा")}
