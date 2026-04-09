@@ -101,8 +101,11 @@ export const Header = () => {
             >
               {language === "en" ? "मराठी" : "English"}
             </button>
-            <button className="bg-primary-container text-on-primary px-6 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-lg shadow-primary-container/10">
+            <button className="bg-transparent border-2 border-primary text-primary px-5 py-2 rounded-xl font-bold hover:bg-primary/5 active:scale-95 transition-all hidden sm:block">
               {langText("Sign In", "लॉगिन करा")}
+            </button>
+            <button className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20">
+              {langText("Register", "नोंदणी करा")}
             </button>
             {/* Mobile menu button */}
             <button
