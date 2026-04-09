@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
     output: 'export',
     images: {
@@ -16,9 +18,8 @@ const nextConfig = {
     eslint: {
         ignoreDuringBuilds: true,
     },
-    // basePath: '/kisaankamai_v0.1',
-    // assetPrefix: '/kisaankamai_v0.1',
-
+    basePath: isProd ? '/kisaankamai_v0.1' : '',
+    assetPrefix: isProd ? '/kisaankamai_v0.1/' : '',
 };
 
 export default nextConfig;
