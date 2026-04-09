@@ -1,6 +1,12 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
+export function generateStaticParams() {
+  return [
+    { equipmentId: '1' }, { equipmentId: '2' }, { equipmentId: '3' }, { equipmentId: '4' }, { equipmentId: '5' }
+  ];
+}
+
 export default function BookingFlow() {
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">

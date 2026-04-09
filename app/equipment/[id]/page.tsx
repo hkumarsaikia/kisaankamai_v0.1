@@ -1,8 +1,9 @@
 import EquipmentDetailClient from "./EquipmentDetailClient";
 
 export function generateStaticParams() {
-  // Define the IDs that should be pre-rendered
-  return [{ id: "1" }, { id: "2" }, { id: "3" }];
+  return [
+    { id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }, { id: '5' }
+  ];
 }
 
 export default function Page({ params }: { params: { id: string } }) {

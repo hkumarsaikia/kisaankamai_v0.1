@@ -1,6 +1,12 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
+export function generateStaticParams() {
+  return [
+    { city: 'kalwan' }, { city: 'mukhed' }, { city: 'sangli' }, { city: 'pune' }, { city: 'mumbai' }
+  ];
+}
+
 export default function RegionalSearch() {
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">

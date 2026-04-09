@@ -1,6 +1,15 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
+export function generateStaticParams() {
+  return [
+    { slug: 'tractors' }, { slug: 'harvesters' }, { slug: 'ploughs' },
+    { slug: 'sprayers' }, { slug: 'implements' }, { slug: 'pumps' },
+    { slug: 'rotavators' }, { slug: 'balers' }, { slug: 'seeders' },
+    { slug: 'trolleys' }, { slug: 'threshers' }
+  ];
+}
+
 export default function EquipmentDetailVariant() {
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
