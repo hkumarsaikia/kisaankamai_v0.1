@@ -11,8 +11,8 @@ import { useRouter } from "next/navigation";
 const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
 
 const homepageMarkers = [
-  { lat: 20.48, lng: 73.80, label: "Kalwan", sublabel: "Active Hub", color: "#934a24" },
-  { lat: 18.77, lng: 77.36, label: "Mukhed", sublabel: "HQ • Primary Hub", color: "#00251a" },
+  { lat: 20.48, lng: 73.80, label: "Kalwan Area", sublabel: "Active Hub", color: "#934a24" },
+  { lat: 18.77, lng: 77.36, label: "Mukhed Area", sublabel: "HQ • Primary Hub", color: "#00251a" },
 ];
 
 const heroImages = [
@@ -352,7 +352,7 @@ export default function Home() {
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-6 tracking-tight">{langText("Expanding Across Maharashtra", "पश्चिम महाराष्ट्र्यात विस्तार होत आहे")}</h2>
                 <p className="text-slate-600 dark:text-slate-400 mb-8">{langText("We are currently focused on providing the best service within these three core districts, ensuring fast delivery and local support.", "आम्ही सध्या या तीन मुख्य जिल्ह्यांमध्ये सर्वोत्तम सेवा प्रदान करण्यावर लक्ष केंद्रित आहोत.")}</p>
                 <ul className="space-y-4">
-                  {[langText("Kalwan", "कळवण"), langText("Mukhed", "मुखेड")].map((d) => (
+                  {[langText("Kalwan Area", "कळवण परिसर"), langText("Mukhed Area", "मुखेड परिसर")].map((d) => (
                     <li key={d} className="flex items-center gap-3 font-bold text-lg text-primary dark:text-emerald-50">
                       <span className="w-6 h-6 bg-secondary text-white rounded-full flex items-center justify-center text-xs">✓</span> {d}
                     </li>
@@ -400,7 +400,7 @@ export default function Home() {
                   <img className="w-12 h-12 rounded-full object-cover" alt="Rajesh Deshmukh" src="/assets/generated/farmer_portrait.png" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Rajesh Deshmukh</h5>
-                    <p className="text-xs font-label text-slate-400">Kalwan</p>
+                    <p className="text-xs font-label text-slate-400">Kalwan Area</p>
                   </div>
                 </div>
               </div>
@@ -418,7 +418,7 @@ export default function Home() {
                   <img className="w-12 h-12 rounded-full object-cover" alt="Sanjay Kulkarni" src="/assets/generated/farmer_portrait.png" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Sanjay Kulkarni</h5>
-                    <p className="text-xs font-label text-slate-400">Mukhed</p>
+                    <p className="text-xs font-label text-slate-400">Mukhed Area</p>
                   </div>
                 </div>
               </div>
@@ -436,7 +436,7 @@ export default function Home() {
                   <img className="w-12 h-12 rounded-full object-cover" alt="Vikas More" src="/assets/generated/farmer_portrait.png" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Vikas More</h5>
-                    <p className="text-xs font-label text-slate-400">Kalwan</p>
+                    <p className="text-xs font-label text-slate-400">Kalwan Area</p>
                   </div>
                 </div>
               </div>

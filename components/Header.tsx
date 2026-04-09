@@ -97,11 +97,11 @@ export const Header = () => {
             <ThemeToggle />
             <button
               onClick={() => setLanguage(language === "en" ? "mr" : "en")}
-              className="hidden md:flex items-center gap-1.5 text-slate-600 dark:text-slate-400 px-3 py-2 hover:bg-emerald-50 dark:hover:bg-slate-900/50 rounded-lg transition-all font-mukta text-sm font-semibold"
+              className="hidden md:flex items-center gap-1.5 text-primary dark:text-primary-fixed px-3 py-2 hover:bg-emerald-50 dark:hover:bg-slate-900/50 rounded-lg transition-all font-mukta text-sm font-semibold"
             >
               {language === "en" ? "मराठी" : "English"}
             </button>
-            <button className="bg-transparent border-2 border-primary text-primary px-5 py-2 rounded-xl font-bold hover:bg-primary/5 active:scale-95 transition-all hidden sm:block">
+            <button className="bg-transparent border-2 border-primary dark:border-primary-fixed text-primary dark:text-primary-fixed px-5 py-2 rounded-xl font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/10 active:scale-95 transition-all hidden sm:block">
               {langText("Sign In", "लॉगिन करा")}
             </button>
             <button className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20">

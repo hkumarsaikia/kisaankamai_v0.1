@@ -16,10 +16,10 @@ const nearbyMarkers = [
 ];
 
 const equipmentCards = [
-  { location: "Kalwan", cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: "/assets/generated/maha_tractor.png", ownerImg: "/assets/generated/maha_farmer_1.png", verified: true },
-  { location: "Mukhed", cat: "Harvester • John Deere", name: "John Deere W70 Combine", price: "₹2,500", unit: "per hour", rating: "4.7", hp: "100 HP", dist: "8.5 km", owner: "Sangli Agri-Hub", img: "/assets/generated/maha_harvester.png", ownerImg: "/assets/generated/maha_farmer_2.png", popular: true },
-  { location: "Kalwan", cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: "/assets/generated/maha_implement.png", ownerImg: "/assets/generated/maha_farmer_3.png" },
-  { location: "Mukhed", cat: "Tractor • Swaraj", name: "Swaraj 744 FE", price: "₹750", unit: "per hour", rating: "4.8", hp: "48 HP", dist: "2.1 km", owner: "Suresh", img: "/assets/generated/hero_tractor.png", ownerImg: "/assets/generated/farmer_portrait.png", verified: true },
+  { location: "Kalwan Area", cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: "/assets/generated/maha_tractor.png", ownerImg: "/assets/generated/maha_farmer_1.png", verified: true },
+  { location: "Mukhed Area", cat: "Harvester • John Deere", name: "John Deere W70 Combine", price: "₹2,500", unit: "per hour", rating: "4.7", hp: "100 HP", dist: "8.5 km", owner: "Sangli Agri-Hub", img: "/assets/generated/maha_harvester.png", ownerImg: "/assets/generated/maha_farmer_2.png", popular: true },
+  { location: "Kalwan Area", cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: "/assets/generated/maha_implement.png", ownerImg: "/assets/generated/maha_farmer_3.png" },
+  { location: "Mukhed Area", cat: "Tractor • Swaraj", name: "Swaraj 744 FE", price: "₹750", unit: "per hour", rating: "4.8", hp: "48 HP", dist: "2.1 km", owner: "Suresh", img: "/assets/generated/hero_tractor.png", ownerImg: "/assets/generated/farmer_portrait.png", verified: true },
 ];
 
 function RentEquipmentInner() {
@@ -35,15 +35,15 @@ function RentEquipmentInner() {
 
   const handlePincodeSearch = (val: string) => {
     setActiveLocation(val);
-    if (val === "423501" || val.toLowerCase() === "kalwan") {
-      setActiveLocation("Kalwan");
+    if (val === "423501" || val.toLowerCase() === "kalwan" || val.toLowerCase() === "kalwan area") {
+      setActiveLocation("Kalwan Area");
       setSuggestionMsg("");
-    } else if (val === "431715" || val.toLowerCase() === "mukhed") {
-      setActiveLocation("Mukhed");
+    } else if (val === "431715" || val.toLowerCase() === "mukhed" || val.toLowerCase() === "mukhed area") {
+      setActiveLocation("Mukhed Area");
       setSuggestionMsg("");
     } else if (/^\d{6}$/.test(val)) {
       setSuggestionMsg(langText("Location not found in our system. Suggesting nearby available locations.", "आमच्या सिस्टममध्ये स्थान आढळले नाही. जवळपासच्या उपलब्ध स्थानांची सूचना देत आहोत."));
-      setActiveLocation("Kalwan");
+      setActiveLocation("Kalwan Area");
     } else {
       setSuggestionMsg("");
     }
@@ -56,7 +56,7 @@ function RentEquipmentInner() {
   }, [initialLoc]);
 
   const filteredCards = equipmentCards.filter(eq => {
-    const locMatch = (activeLocation === "Kalwan" || activeLocation === "Mukhed") ? eq.location === activeLocation : true;
+    const locMatch = (activeLocation === "Kalwan Area" || activeLocation === "Mukhed Area") ? eq.location === activeLocation : true;
     const queryMatch = activeQuery === "" || eq.cat.toLowerCase().includes(activeQuery.toLowerCase()) || eq.name.toLowerCase().includes(activeQuery.toLowerCase());
     return locMatch && queryMatch;
   });

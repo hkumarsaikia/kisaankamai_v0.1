@@ -11,6 +11,8 @@ const hubMarkers = [
   { lat: 16.8547, lng: 74.5643, label: "Sangli Hub", sublabel: "Market Yard Road, Sangli 416416", color: "#00251a" },
   { lat: 17.6805, lng: 74.0183, label: "Satara Hub", sublabel: "Bombay Restaurant Chowk, Satara 415001", color: "#934a24" },
   { lat: 16.7050, lng: 74.2433, label: "Kolhapur Hub", sublabel: "Shiroli Pulachi, Kolhapur 416122", color: "#693c00" },
+  { lat: 20.48, lng: 73.80, label: "Kalwan Area Hub", sublabel: "Active Hub - Nashik Region", color: "#934a24" },
+  { lat: 18.77, lng: 77.36, label: "Mukhed Area Hub", sublabel: "HQ • Primary Hub - Nanded Region", color: "#00251a" },
 ];
 
 export default function Support() {
@@ -163,6 +165,8 @@ export default function Support() {
                     { name: langText("Sangli District Hub", "सांगली जिल्हा हब"), addr: "Market Yard Road, Sangli, Maharashtra 416416" },
                     { name: langText("Satara District Hub", "सातारा जिल्हा हब"), addr: "Bombay Restaurant Chowk, Satara, Maharashtra 415001" },
                     { name: langText("Kolhapur Regional Hub", "कोल्हापूर प्रादेशिक हब"), addr: "Shiroli Pulachi, Kolhapur, Maharashtra 416122" },
+                    { name: langText("Kalwan Area Hub", "कळवण परिसर हब"), addr: "Nashik Region, Maharashtra 423501" },
+                    { name: langText("Mukhed Area Hub", "मुखेड परिसर हब"), addr: "Nanded Region, Maharashtra 431715" },
                   ].map((hub) => (
                     <div key={hub.name} className="flex items-start gap-4">
                       <span className="material-symbols-outlined text-secondary">location_on</span>
