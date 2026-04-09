@@ -137,73 +137,80 @@ export default function Home() {
             </div>
             <div className="grid md:grid-cols-2 gap-12">
               {/* Renter Path */}
-              <div className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800/50">
-                <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-900 mb-8">
+              <div className="relative group bg-white/60 dark:bg-slate-900/40 backdrop-blur-3xl p-10 md:p-12 rounded-[2.5rem] shadow-xl border border-white/80 dark:border-slate-800/80 hover:border-emerald-500/30 transition-all duration-500 overflow-hidden transform hover:-translate-y-1">
+                <div className="absolute -top-32 -right-32 w-96 h-96 bg-emerald-100/50 dark:bg-emerald-900/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 mb-8 transform group-hover:scale-110 transition-transform duration-500 relative z-10">
                   <span className="material-symbols-outlined text-3xl">shopping_cart</span>
                 </div>
-                <h3 className="text-3xl font-black text-primary dark:text-emerald-50 mb-8">{langText("Rent with Confidence", "आत्मविश्वासाने भाडे")}</h3>
-                <div className="space-y-8">
-                  <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">1</span>
-                    <div>
-                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Search & Filter", "शोधा आणि फिल्टर करा")}</h4>
-                      <p className="text-slate-500 dark:text-slate-400">{langText("Find equipment by type, location, and power rating across Maharashtra.", "महाराष्ट्रातील प्रकार, स्थान आणि पॉवर रेटिंगनुसार उपकरणे शोधा.")}</p>
+                <h3 className="text-3xl font-black text-primary dark:text-emerald-50 mb-8 relative z-10">{langText("Rent with Confidence", "आत्मविश्वासाने भाडे")}</h3>
+                <div className="relative space-y-10 before:absolute before:inset-0 before:ml-[15px] before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 dark:before:via-slate-800 before:to-transparent z-10 mt-12">
+                  <div className="relative flex gap-6 items-start group/step">
+                    <span className="flex-shrink-0 w-8 h-8 bg-white dark:bg-slate-800 border-[3px] border-emerald-500 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center font-bold shadow-sm group-hover/step:bg-emerald-500 group-hover/step:text-white transition-all duration-300 z-10">1</span>
+                    <div className="transform group-hover/step:translate-x-2 transition-transform duration-300">
+                      <h4 className="font-bold text-lg mb-1 text-slate-800 dark:text-white group-hover/step:text-emerald-600 dark:group-hover/step:text-emerald-400 transition-colors">{langText("Search & Filter", "शोधा आणि फिल्टर करा")}</h4>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{langText("Find equipment by type, location, and power rating across Maharashtra.", "महाराष्ट्रातील प्रकार, स्थान आणि पॉवर रेटिंगनुसार उपकरणे शोधा.")}</p>
                     </div>
                   </div>
-                  <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">2</span>
-                    <div>
-                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Secure Booking", "सुरक्षित बुकिंग")}</h4>
-                      <p className="text-slate-500 dark:text-slate-400">{langText("Submit your request and get confirmation from vetted local equipment owners.", "तुमची विनंती सबमिट करा आणि सत्यापित स्थानिक उपकरण मालकांकडून पुष्टी मिळवा.")}</p>
+                  <div className="relative flex gap-6 items-start group/step">
+                    <span className="flex-shrink-0 w-8 h-8 bg-white dark:bg-slate-800 border-[3px] border-emerald-500 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center font-bold shadow-sm group-hover/step:bg-emerald-500 group-hover/step:text-white transition-all duration-300 z-10">2</span>
+                    <div className="transform group-hover/step:translate-x-2 transition-transform duration-300">
+                      <h4 className="font-bold text-lg mb-1 text-slate-800 dark:text-white group-hover/step:text-emerald-600 dark:group-hover/step:text-emerald-400 transition-colors">{langText("Secure Booking", "सुरक्षित बुकिंग")}</h4>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{langText("Submit your request and get confirmation from vetted local equipment owners.", "तुमची विनंती सबमिट करा आणि सत्यापित स्थानिक उपकरण मालकांकडून पुष्टी मिळवा.")}</p>
                     </div>
                   </div>
-                  <div className="flex gap-6">
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary text-white rounded-full flex items-center justify-center font-bold">3</span>
-                    <div>
-                      <h4 className="font-bold text-lg mb-1 dark:text-white">{langText("Harvest Success", "यशस्वी कापणी")}</h4>
-                      <p className="text-slate-500 dark:text-slate-400">{langText("Equipment delivered or picked up. Pay through secure digital channels or cash.", "उपकरणे वितरित किंवा उचलली. डिजिटल किंवा रोख माध्यमातून पैसे द्या.")}</p>
+                  <div className="relative flex gap-6 items-start group/step">
+                    <span className="flex-shrink-0 w-8 h-8 bg-white dark:bg-slate-800 border-[3px] border-emerald-500 text-emerald-600 dark:text-emerald-400 rounded-full flex items-center justify-center font-bold shadow-sm group-hover/step:bg-emerald-500 group-hover/step:text-white transition-all duration-300 z-10">3</span>
+                    <div className="transform group-hover/step:translate-x-2 transition-transform duration-300">
+                      <h4 className="font-bold text-lg mb-1 text-slate-800 dark:text-white group-hover/step:text-emerald-600 dark:group-hover/step:text-emerald-400 transition-colors">{langText("Harvest Success", "यशस्वी कापणी")}</h4>
+                      <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{langText("Equipment delivered or picked up. Pay through secure digital channels or cash.", "उपकरणे वितरित किंवा उचलली. डिजिटल किंवा रोख माध्यमातून पैसे द्या.")}</p>
                     </div>
                   </div>
                 </div>
-                <Link href="/renter-journey" className="block w-full mt-12 bg-primary-container text-white py-4 rounded-xl font-bold hover:bg-primary transition-all text-center">
-                  {langText("Start Renting Now", "आत्ताच भाडे सुरू करा")}
+                <Link href="/rent-equipment" className="relative group/btn block w-full mt-12 bg-emerald-600 text-white py-4 rounded-xl font-bold overflow-hidden transition-all text-center z-10 shadow-lg shadow-emerald-600/30">
+                  <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
+                  <span className="relative z-10 flex items-center justify-center gap-2">{langText("Start Renting Now", "आत्ताच भाडे सुरू करा")} <span className="material-symbols-outlined text-sm">arrow_forward</span></span>
                 </Link>
               </div>
               {/* Owner Path */}
-              <div className="bg-primary-container p-10 rounded-3xl shadow-sm text-white relative overflow-hidden">
+              <div className="relative group bg-gradient-to-br from-[#0c261c] to-[#071610] p-10 md:p-12 rounded-[2.5rem] shadow-2xl border border-white/5 overflow-hidden transform hover:-translate-y-1 transition-transform duration-500">
+                <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+                <div className="absolute -top-32 -right-32 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
+                
                 <div className="relative z-10">
-                  <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-white mb-8 border border-white/20">
+                  <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center text-amber-400 mb-8 border border-white/10 shadow-lg transform group-hover:scale-110 transition-transform duration-500">
                     <span className="material-symbols-outlined text-3xl">currency_rupee</span>
                   </div>
-                  <h3 className="text-3xl font-black mb-8">{langText("Maximize Your Fleet", "तुमच्या यंत्रसामग्रीचा जास्तीत जास्त वापर")}</h3>
-                  <div className="space-y-8">
-                    <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">1</span>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1 text-white">{langText("List Your Fleet", "तुमची यंत्रसामग्री सूचीबद्ध करा")}</h4>
-                        <p className="text-white/70">{langText("Upload photos, set your rates, and specify equipment availability schedules.", "फोटो अपलोड करा, दर सेट करा आणि उपकरण उपलब्धता वेळापत्रक निर्दिष्ट करा.")}</p>
+                  <h3 className="text-3xl font-black text-white mb-8">{langText("Maximize Your Fleet", "तुमच्या यंत्रसामग्रीचा जास्तीत जास्त वापर")}</h3>
+                  
+                  <div className="relative space-y-10 before:absolute before:inset-0 before:ml-[15px] before:-translate-x-px before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/20 before:to-transparent mt-12 mb-12">
+                    <div className="relative flex gap-6 items-start group/step">
+                      <span className="flex-shrink-0 w-8 h-8 bg-[#0c261c] border-[3px] border-amber-500 text-amber-400 rounded-full flex items-center justify-center font-bold shadow-sm group-hover/step:bg-amber-500 group-hover/step:text-[#0c261c] transition-all duration-300 z-10">1</span>
+                      <div className="transform group-hover/step:translate-x-2 transition-transform duration-300">
+                        <h4 className="font-bold text-lg mb-1 text-white group-hover/step:text-amber-400 transition-colors">{langText("List Your Fleet", "तुमची यंत्रसामग्री सूचीबद्ध करा")}</h4>
+                        <p className="text-white/60 text-sm leading-relaxed">{langText("Upload photos, set your rates, and specify equipment availability schedules.", "फोटो अपलोड करा, दर सेट करा आणि उपकरण उपलब्धता वेळापत्रक निर्दिष्ट करा.")}</p>
                       </div>
                     </div>
-                    <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">2</span>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1 text-white">{langText("Manage Bookings", "बुकिंग व्यवस्थापित करा")}</h4>
-                        <p className="text-white/70">{langText("Approve rental requests and coordinate with local farmers in your area.", "भाडे विनंत्या मंजूर करा आणि तुमच्या क्षेत्रातील स्थानिक शेतकऱ्यांसोबत समन्वय करा.")}</p>
+                    <div className="relative flex gap-6 items-start group/step">
+                      <span className="flex-shrink-0 w-8 h-8 bg-[#0c261c] border-[3px] border-amber-500 text-amber-400 rounded-full flex items-center justify-center font-bold shadow-sm group-hover/step:bg-amber-500 group-hover/step:text-[#0c261c] transition-all duration-300 z-10">2</span>
+                      <div className="transform group-hover/step:translate-x-2 transition-transform duration-300">
+                        <h4 className="font-bold text-lg mb-1 text-white group-hover/step:text-amber-400 transition-colors">{langText("Manage Bookings", "बुकिंग व्यवस्थापित करा")}</h4>
+                        <p className="text-white/60 text-sm leading-relaxed">{langText("Approve rental requests and coordinate with local farmers in your area.", "भाडे विनंत्या मंजूर करा आणि तुमच्या क्षेत्रातील स्थानिक शेतकऱ्यांसोबत समन्वय करा.")}</p>
                       </div>
                     </div>
-                    <div className="flex gap-6">
-                      <span className="flex-shrink-0 w-8 h-8 bg-secondary text-white rounded-full flex items-center justify-center font-bold">3</span>
-                      <div>
-                        <h4 className="font-bold text-lg mb-1 text-white">{langText("Get Paid Fast", "लवकर पैसे मिळवा")}</h4>
-                        <p className="text-white/70">{langText("Receive guaranteed payouts directly to your bank account after completion.", "पूर्ण झाल्यानंतर सीधे तुमच्या बँक खात्यात हमी देणे प्राप्त करा.")}</p>
+                    <div className="relative flex gap-6 items-start group/step">
+                      <span className="flex-shrink-0 w-8 h-8 bg-[#0c261c] border-[3px] border-amber-500 text-amber-400 rounded-full flex items-center justify-center font-bold shadow-sm group-hover/step:bg-amber-500 group-hover/step:text-[#0c261c] transition-all duration-300 z-10">3</span>
+                      <div className="transform group-hover/step:translate-x-2 transition-transform duration-300">
+                        <h4 className="font-bold text-lg mb-1 text-white group-hover/step:text-amber-400 transition-colors">{langText("Get Paid Fast", "लवकर पैसे मिळवा")}</h4>
+                        <p className="text-white/60 text-sm leading-relaxed">{langText("Receive guaranteed payouts directly to your bank account after completion.", "पूर्ण झाल्यानंतर सीधे तुमच्या बँक खात्यात हमी देणे प्राप्त करा.")}</p>
                       </div>
                     </div>
                   </div>
-                  <Link href="/owner-registration" className="block w-full mt-12 bg-secondary text-white py-4 rounded-xl font-bold hover:bg-secondary/90 transition-all text-center">
-                    {langText("Register as Owner", "मालक म्हणून नोंदणी करा")}
+                  
+                  <Link href="/owner-registration" className="relative group/btn block w-full mt-12 bg-amber-500 text-[#0c261c] py-4 rounded-xl font-bold overflow-hidden transition-all text-center z-10 shadow-lg shadow-amber-500/20">
+                    <div className="absolute inset-0 bg-white/30 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 ease-out"></div>
+                    <span className="relative z-10 flex items-center justify-center gap-2">{langText("Register as Owner", "मालक म्हणून नोंदणी करा")} <span className="material-symbols-outlined text-sm">arrow_forward</span></span>
                   </Link>
                 </div>
-                <div className="absolute -bottom-12 -right-12 w-64 h-64 bg-secondary/10 rounded-full blur-3xl"></div>
               </div>
             </div>
           </div>

@@ -10,25 +10,25 @@ const navLinks = [
   { 
     href: "/rent-equipment", label: "Find Equipment", labelMr: "उपकरणे शोधा",
     dropdown: [
-      { href: "/categories", label: "All Categories", labelMr: "सर्व वर्गवारी" },
-      { href: "/models", label: "Browse Models", labelMr: "मॉडेल्स पहा" },
-      { href: "/locations", label: "Locations", labelMr: "स्थाने" }
+      { href: "/categories", label: "All Categories", labelMr: "सर्व वर्गवारी", icon: "category", desc: "Browse by machine type" },
+      { href: "/models", label: "Browse Models", labelMr: "मॉडेल्स पहा", icon: "agriculture", desc: "Find specific tractors" },
+      { href: "/locations", label: "Locations", labelMr: "स्थाने", icon: "map", desc: "Find rentals near you" }
     ]
   },
   { 
     href: "/list-equipment", label: "List Equipment", labelMr: "उपकरणे सूचीबद्ध करा",
     dropdown: [
-      { href: "/owner-registration", label: "Register Equipment", labelMr: "उपकरणे नोंदणी करा" },
-      { href: "/owner-benefits", label: "Owner Benefits", labelMr: "मालकांचे फायदे" },
-      { href: "/owner-dashboard", label: "Owner Dashboard", labelMr: "मालक डॅशबोर्ड" }
+      { href: "/owner-registration", label: "Register Equipment", labelMr: "उपकरणे नोंदणी करा", icon: "add_circle", desc: "List your machine" },
+      { href: "/owner-benefits", label: "Owner Benefits", labelMr: "मालकांचे फायदे", icon: "workspace_premium", desc: "Why host with us" },
+      { href: "/owner-dashboard", label: "Owner Dashboard", labelMr: "मालक डॅशबोर्ड", icon: "dashboard", desc: "Manage your fleet" }
     ]
   },
   { 
     href: "/about", label: "About Us", labelMr: "आमच्याबद्दल",
     dropdown: [
-      { href: "/partner", label: "Partner with Us", labelMr: "आमच्यासोबत भागीदारी" },
-      { href: "/trust-safety", label: "Trust & Safety", labelMr: "विश्वास आणि सुरक्षा" },
-      { href: "/legal", label: "Legal & Policies", labelMr: "कायदेशीर आणि धोरणे" }
+      { href: "/partner", label: "Partner with Us", labelMr: "आमच्यासोबत भागीदारी", icon: "handshake", desc: "Join our network" },
+      { href: "/trust-safety", label: "Trust & Safety", labelMr: "विश्वास आणि सुरक्षा", icon: "verified_user", desc: "Our guarantee" },
+      { href: "/legal", label: "Legal & Policies", labelMr: "कायदेशीर आणि धोरणे", icon: "gavel", desc: "Terms of service" }
     ]
   },
   { href: "/faq", label: "FAQ", labelMr: "वारंवार विचारले जाणारे प्रश्न" },
@@ -66,16 +66,27 @@ export const Header = () => {
                       {link.dropdown && <span className="material-symbols-outlined text-[16px]">expand_more</span>}
                     </Link>
                     {link.dropdown && (
-                      <div className="absolute top-full left-0 mt-0 w-56 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
-                        {link.dropdown.map((sublink) => (
-                          <Link
-                            key={sublink.href}
-                            href={sublink.href}
-                            className="block px-5 py-3 text-sm text-slate-600 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-800 hover:text-emerald-700 dark:hover:text-emerald-400 font-medium transition-colors"
-                          >
-                            {langText(sublink.label, sublink.labelMr)}
-                          </Link>
-                        ))}
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 pt-6 w-[340px] opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-white/40 dark:border-slate-700/50 rounded-3xl shadow-2xl overflow-hidden translate-y-4 group-hover:translate-y-0 transition-transform duration-300 flex flex-col p-3">
+                          {link.dropdown.map((sublink) => (
+                            <Link
+                              key={sublink.href}
+                              href={sublink.href}
+                              className="group/item flex items-start gap-4 p-3 rounded-2xl hover:bg-emerald-50/80 dark:hover:bg-slate-800/80 transition-all duration-300 relative overflow-hidden"
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-emerald-100/0 via-emerald-100/50 to-emerald-100/0 dark:from-emerald-900/0 dark:via-emerald-900/20 dark:to-emerald-900/0 translate-x-[-100%] group-hover/item:translate-x-[100%] transition-transform duration-1000"></div>
+                              <div className="w-10 h-10 shrink-0 rounded-xl bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center border border-slate-100 dark:border-slate-700/50 group-hover/item:bg-emerald-100 dark:group-hover/item:bg-emerald-900/50 group-hover/item:border-emerald-200 dark:group-hover/item:border-emerald-800/50 transition-colors z-10">
+                                <span className="material-symbols-outlined text-[20px] text-slate-500 dark:text-slate-400 group-hover/item:text-emerald-700 dark:group-hover/item:text-emerald-400 transition-colors">{sublink.icon}</span>
+                              </div>
+                              <div className="z-10">
+                                <h4 className="text-sm font-bold text-slate-800 dark:text-slate-200 group-hover/item:text-emerald-700 dark:group-hover/item:text-emerald-400 transition-colors">
+                                  {langText(sublink.label, sublink.labelMr)}
+                                </h4>
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">{sublink.desc}</p>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
                       </div>
                     )}
                   </div>
