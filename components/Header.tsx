@@ -58,8 +58,8 @@ export const Header = () => {
                       href={link.href}
                       className={`text-sm tracking-wide transition-colors flex items-center gap-1 ${
                         isActive
-                          ? "text-emerald-700 dark:text-emerald-400 font-bold"
-                          : "text-slate-600 dark:text-slate-300 hover:text-emerald-700 dark:hover:text-emerald-400 font-medium"
+                          ? "text-primary dark:text-primary-fixed font-bold"
+                          : "text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary-fixed font-medium"
                       }`}
                     >
                       {langText(link.label, link.labelMr)}
@@ -72,13 +72,13 @@ export const Header = () => {
                             <Link
                               key={sublink.href}
                               href={sublink.href}
-                              className="group/item flex items-start gap-4 p-3 rounded-2xl hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
+                              className="group/item flex items-start gap-4 p-3 rounded-2xl hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors"
                             >
-                              <div className="w-12 h-12 shrink-0 rounded-2xl bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover/item:bg-emerald-500 group-hover/item:text-white transition-colors border border-emerald-100 dark:border-emerald-800/30">
+                              <div className="w-12 h-12 shrink-0 rounded-2xl bg-primary-container/10 dark:bg-primary-container/20 flex items-center justify-center text-primary dark:text-primary-fixed group-hover/item:bg-primary group-hover/item:text-on-primary transition-colors border border-primary/10 dark:border-primary-fixed/30">
                                 <span className="material-symbols-outlined text-[24px]">{sublink.icon}</span>
                               </div>
                               <div className="pt-0.5">
-                                <h4 className="text-[15px] font-bold text-slate-900 dark:text-slate-100 group-hover/item:text-emerald-700 dark:group-hover/item:text-emerald-400 transition-colors">
+                                <h4 className="text-[15px] font-bold text-slate-900 dark:text-slate-100 group-hover/item:text-primary dark:group-hover/item:text-primary-fixed transition-colors">
                                   {langText(sublink.label, sublink.labelMr)}
                                 </h4>
                                 <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">{sublink.desc}</p>
@@ -132,8 +132,8 @@ export const Header = () => {
                   onClick={() => setMobileOpen(false)}
                   className={`block px-4 py-3 rounded-xl font-medium transition-colors ${
                     isActive
-                      ? "bg-primary-container/10 text-emerald-700 dark:text-emerald-400 font-bold"
-                      : "text-slate-700 dark:text-slate-300 hover:bg-emerald-50 dark:hover:bg-slate-900/50"
+                      ? "bg-primary-container/10 text-primary dark:text-primary-fixed font-bold"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-surface-container hover:text-primary"
                   }`}
                 >
                   {link.label}

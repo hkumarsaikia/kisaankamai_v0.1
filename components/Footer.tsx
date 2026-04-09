@@ -10,7 +10,11 @@ export const Footer = () => {
     <footer className="bg-slate-900 dark:bg-black w-full py-16 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
         <div className="col-span-1 md:col-span-1">
-          <Link href="/" className="text-xl font-bold text-white mb-4 block font-headline">
+          <Link 
+            href="/" 
+            className="text-5xl md:text-[54px] font-headline tracking-wider block mb-8 transition-transform hover:-translate-y-1"
+            style={{ color: 'transparent', WebkitTextStroke: '1px #10b981' }}
+          >
             Kisan Kamai
           </Link>
           <p className="text-slate-400 leading-relaxed mb-6">
@@ -23,11 +27,11 @@ export const Footer = () => {
             <a href="https://x.com/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
               <span className="font-black text-lg">X</span>
             </a>
-            <a href="https://linkedin.com/company/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
+            <a href="https://linkedin.com/company/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-[#0077b5] transition-colors">
               <span className="font-black text-lg">in</span>
             </a>
-            <a href="https://instagram.com/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
-              <span className="material-symbols-outlined text-lg">photo_camera</span>
+            <a href="https://youtube.com/@kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-[#ff0000] transition-colors">
+              <span className="material-symbols-outlined text-[24px]">smart_display</span>
             </a>
           </div>
         </div>
