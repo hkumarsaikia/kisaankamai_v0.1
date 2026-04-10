@@ -5,11 +5,12 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useLanguage } from "./LanguageContext";
+import { assetPath } from "@/lib/site";
 
 const navLinks = [
   { 
     href: "/rent-equipment", label: "Find Equipment", labelMr: "उपकरणे शोधा",
-    featured: { img: "/assets/generated/harvester_action.png", title: "Harvesting Season Ready", titleMr: "कापणीचा हंगाम", label: "Book Heavy Machinery Now", url: "/models" },
+    featured: { img: assetPath("/assets/generated/harvester_action.png"), title: "Harvesting Season Ready", titleMr: "कापणीचा हंगाम", label: "Book Heavy Machinery Now", url: "/models" },
     dropdown: [
       { href: "/categories", label: "All Categories", labelMr: "सर्व वर्गवारी", icon: "category", desc: "Browse by machine type" },
       { href: "/models", label: "Browse Models", labelMr: "मॉडेल्स पहा", icon: "agriculture", desc: "Find specific tractors" },
@@ -18,7 +19,7 @@ const navLinks = [
   },
   { 
     href: "/list-equipment", label: "List Equipment", labelMr: "उपकरणे सूचीबद्ध करा",
-    featured: { img: "/assets/generated/hero_tractor.png", title: "Earn With Your Fleet", titleMr: "पैसे कमवा", label: "See Owner Benefits", url: "/owner-benefits" },
+    featured: { img: assetPath("/assets/generated/hero_tractor.png"), title: "Earn With Your Fleet", titleMr: "पैसे कमवा", label: "See Owner Benefits", url: "/owner-benefits" },
     dropdown: [
       { href: "/owner-registration", label: "Register Equipment", labelMr: "उपकरणे नोंदणी करा", icon: "add_circle", desc: "List your machine" },
       { href: "/owner-benefits", label: "Owner Benefits", labelMr: "मालकांचे फायदे", icon: "workspace_premium", desc: "Why host with us" },
@@ -27,7 +28,7 @@ const navLinks = [
   },
   { 
     href: "/about", label: "About Us", labelMr: "आमच्याबद्दल",
-    featured: { img: "/assets/generated/farmer_handshake.png", title: "Trust in Agriculture", titleMr: "कृषी मध्ये विश्वास", label: "Read Our Story", url: "/about" },
+    featured: { img: assetPath("/assets/generated/farmer_handshake.png"), title: "Trust in Agriculture", titleMr: "कृषी मध्ये विश्वास", label: "Read Our Story", url: "/about" },
     dropdown: [
       { href: "/partner", label: "Partner with Us", labelMr: "आमच्यासोबत भागीदारी", icon: "handshake", desc: "Join our network" },
       { href: "/trust-safety", label: "Trust & Safety", labelMr: "विश्वास आणि सुरक्षा", icon: "verified_user", desc: "Our guarantee" },
@@ -41,7 +42,6 @@ const navLinks = [
 export const Header = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [desktopMenuOpen, setDesktopMenuOpen] = useState(false);
   const { language, setLanguage, langText } = useLanguage();
 
   return (
@@ -97,7 +97,7 @@ export const Header = () => {
                             <div className="w-[320px] bg-slate-50 dark:bg-slate-950/50 p-8 border-l border-emerald-100 dark:border-slate-800 flex flex-col pt-10">
                               <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-4">{langText("What's new?", "नवीन काय आहे?")}</h3>
                               <Link href={link.featured.url} className="group/card block relative rounded-2xl overflow-hidden shadow-md flex-grow">
-                                <img src={link.featured.img} alt={link.featured.title} className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 min-h-[160px]" />
+                                <img src={assetPath(link.featured.img)} alt={link.featured.title} className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 min-h-[160px]" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
                                   <span className="inline-block px-2.5 py-1 bg-white/20 backdrop-blur-md rounded-md text-white text-[10px] font-bold uppercase tracking-wider mb-2 w-max shadow-sm">{langText("Featured", "खास")}</span>
                                   <h4 className="text-white font-bold text-lg leading-tight group-hover/card:text-emerald-300 transition-colors">{langText(link.featured.title, link.featured.titleMr)}</h4>
@@ -121,12 +121,12 @@ export const Header = () => {
             >
               {language === "en" ? "मराठी" : "English"}
             </button>
-            <button className="bg-transparent border-2 border-primary dark:border-primary-fixed text-primary dark:text-primary-fixed px-5 py-2 rounded-xl font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/10 active:scale-95 transition-all hidden sm:block">
-              {langText("Sign In", "लॉगिन करा")}
-            </button>
-            <button className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20">
+            <Link href="/login" className="bg-transparent border-2 border-primary dark:border-primary-fixed text-primary dark:text-primary-fixed px-5 py-2 rounded-xl font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/10 active:scale-95 transition-all hidden sm:block">
+              {langText("Login", "लॉगिन करा")}
+            </Link>
+            <Link href="/register" className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20">
               {langText("Register", "नोंदणी करा")}
-            </button>
+            </Link>
             {/* Mobile menu button */}
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -156,16 +156,16 @@ export const Header = () => {
                       : "text-slate-700 dark:text-slate-300 hover:bg-surface-container hover:text-primary"
                   }`}
                 >
-                  {link.label}
+                  {langText(link.label, link.labelMr)}
                 </Link>
               );
             })}
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
               <Link href="/partner" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-3 bg-secondary/10 text-secondary rounded-xl font-bold text-sm">
-                Partner With Us
+                {langText("Partner With Us", "आमच्यासोबत भागीदारी")}
               </Link>
               <Link href="/legal" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-3 bg-slate-100 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 rounded-xl font-medium text-sm">
-                Legal
+                {langText("Legal", "कायदेशीर")}
               </Link>
             </div>
           </div>

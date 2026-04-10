@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
@@ -167,9 +168,9 @@ export default function OwnerRegistration() {
 </section>
 {/*  Navigation Buttons  */}
 <div className="flex items-center justify-between pt-6">
-<button className="px-8 py-3 text-primary font-bold hover:bg-emerald-50 rounded-lg transition-all">
-                        Back / मागे
-                    </button>
+<Link href="/owner-dashboard" className="px-8 py-3 text-primary font-bold hover:bg-emerald-50 rounded-lg transition-all">
+                        Skip / वगळा
+                    </Link>
 <button className="px-10 py-3 bg-primary text-white font-bold rounded-lg shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all">
                         Continue / पुढे सुरू ठेवा
                     </button>

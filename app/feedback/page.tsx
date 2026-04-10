@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";

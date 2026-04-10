@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
+import { LanguageToggle } from "@/components/LanguageToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { assetPath } from "@/lib/site";
 
 // Note: This page uses its own sidebar and mobile nav, acting as an app layout
 export default function OwnerDashboardPage() {
@@ -12,11 +14,14 @@ export default function OwnerDashboardPage() {
     <div className="bg-background dark:bg-slate-950 min-h-screen font-body text-on-background antialiased flex">
       {/* SideNavBar (Shared Component) */}
       <aside className="hidden lg:flex flex-col fixed left-0 top-0 h-screen w-64 border-r border-surface-container-highest dark:border-slate-800/50 bg-white dark:bg-slate-950 z-40">
-        <div className="px-6 py-8 flex justify-between items-center">
+        <div className="px-6 py-8 space-y-4">
+          <div className="flex justify-between items-center gap-3">
           <Link href="/" className="text-xl font-bold text-primary dark:text-emerald-50 tracking-tighter">
             Kisan Kamai
           </Link>
           <ThemeToggle />
+          </div>
+          <LanguageToggle compact />
         </div>
         <div className="px-4 mb-6">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low dark:bg-slate-900/50 border border-surface-container-highest dark:border-slate-800/50">
@@ -24,7 +29,7 @@ export default function OwnerDashboardPage() {
               <img
                 className="w-full h-full object-cover"
                 alt="Owner portrait"
-                src="/assets/generated/farmer_portrait.png"
+                src={assetPath("/assets/generated/farmer_portrait.png")}
               />
             </div>
             <div className="flex flex-col">
@@ -60,18 +65,18 @@ export default function OwnerDashboardPage() {
           </a>
         </nav>
         <div className="p-4 space-y-2 border-t border-surface-container-highest dark:border-slate-800/50">
-          <button className="w-full flex items-center justify-center gap-2 bg-primary-container text-white py-3 px-4 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">
+          <Link href="/owner-registration" className="w-full flex items-center justify-center gap-2 bg-primary-container text-white py-3 px-4 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">
             <span className="material-symbols-outlined text-sm">add</span>
             {langText("Add New Listing", "नवीन नोंद जोडा")}
-          </button>
-          <a className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/60 rounded-lg transition-all" href="#tab">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/60 rounded-lg transition-all" href="/support">
             <span className="material-symbols-outlined">support_agent</span>
             <span className="font-manrope text-sm font-medium">{langText("Support", "मदत")}</span>
-          </a>
-          <a className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/60 rounded-lg transition-all" href="/">
+          </Link>
+          <Link className="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/60 rounded-lg transition-all" href="/">
             <span className="material-symbols-outlined">logout</span>
             <span className="font-manrope text-sm font-medium">{langText("Sign Out", "साइन आउट")}</span>
-          </a>
+          </Link>
         </div>
       </aside>
 
@@ -81,6 +86,7 @@ export default function OwnerDashboardPage() {
         <header className="sticky top-0 z-30 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-surface-container-highest dark:border-slate-800/50 px-6 py-4 flex justify-between items-center lg:hidden">
           <span className="text-xl font-extrabold text-primary dark:text-emerald-50">Kisan Kamai</span>
           <div className="flex gap-2">
+            <LanguageToggle compact />
             <ThemeToggle />
             <button className="p-2 text-on-surface dark:text-emerald-100">
               <span className="material-symbols-outlined">menu</span>
@@ -114,17 +120,24 @@ export default function OwnerDashboardPage() {
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* Left: New Requests Column */}
             <div className="xl:col-span-2 space-y-6">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="text-lg font-bold text-primary dark:text-emerald-50 flex items-center gap-2">
                   {langText("New Requests", "नवीन विनंत्या")} <span className="bg-secondary-container dark:bg-amber-600 text-on-secondary-container dark:text-white px-2 py-0.5 rounded-full text-xs">2</span>
                 </h2>
+                <Link
+                  href="/owner-registration"
+                  className="inline-flex items-center gap-2 rounded-xl border border-primary-container/30 bg-primary-container/10 px-4 py-2 text-sm font-bold text-primary transition-colors hover:bg-primary-container/20 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300 dark:hover:bg-emerald-500/20"
+                >
+                  <span className="material-symbols-outlined text-base">add_circle</span>
+                  {langText("List More Equipment", "अधिक उपकरणे सूचीबद्ध करा")}
+                </Link>
               </div>
 
               {/* Request Card 1 */}
               <div className="bg-white dark:bg-slate-900/40 rounded-2xl p-5 border border-surface-container-highest dark:border-slate-800/50 shadow-sm hover:card-shadow-lg transition-all group">
                 <div className="flex flex-col md:flex-row gap-6">
                   <div className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-surface-container dark:bg-slate-900 flex-shrink-0">
-                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Tractor" src="/assets/generated/hero_tractor.png" />
+                    <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Tractor" src={assetPath("/assets/generated/hero_tractor.png")} />
                   </div>
                   <div className="flex-1 flex flex-col justify-between">
                     <div className="flex justify-between items-start">
@@ -132,7 +145,7 @@ export default function OwnerDashboardPage() {
                         <h3 className="text-base font-bold text-primary dark:text-emerald-100">Mahindra Yuvo 575 DI</h3>
                         <div className="flex items-center gap-2 mt-1">
                           <div className="w-6 h-6 rounded-full overflow-hidden bg-surface-container-highest">
-                            <img className="w-full h-full object-cover" alt="User portrait" src="/assets/generated/farmer_portrait.png" />
+                            <img className="w-full h-full object-cover" alt="User portrait" src={assetPath("/assets/generated/farmer_portrait.png")} />
                           </div>
                           <span className="text-sm font-semibold text-on-surface dark:text-slate-300">Rajesh Deshmukh <span className="text-on-surface-variant dark:text-slate-500 font-normal">{langText("from Satara", "साताऱ्याहून")}</span></span>
                         </div>
@@ -201,9 +214,9 @@ export default function OwnerDashboardPage() {
         <a className="flex flex-col items-center p-2 text-primary dark:text-emerald-400" href="#tab">
           <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>calendar_today</span>
         </a>
-        <a className="bg-primary-container text-white w-12 h-12 rounded-full flex items-center justify-center -mt-8 shadow-lg" href="#tab">
+        <Link href="/owner-registration" className="bg-primary-container text-white w-12 h-12 rounded-full flex items-center justify-center -mt-8 shadow-lg">
           <span className="material-symbols-outlined">add</span>
-        </a>
+        </Link>
         <a className="flex flex-col items-center p-2 text-slate-500 dark:text-slate-400" href="#tab">
           <span className="material-symbols-outlined">payments</span>
         </a>

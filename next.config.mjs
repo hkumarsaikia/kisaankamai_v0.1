@@ -2,7 +2,7 @@
 const isProd = process.env.NODE_ENV === 'production';
 
 const nextConfig = {
-    output: 'export',
+    ...(isProd ? { output: 'export' } : {}),
     images: {
         unoptimized: true,
         remotePatterns: [
@@ -12,11 +12,8 @@ const nextConfig = {
             }
         ]
     },
-    typescript: {
-        ignoreBuildErrors: true,
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
+    env: {
+        NEXT_PUBLIC_BASE_PATH: isProd ? '/kisaankamai_v0.1' : '',
     },
     basePath: isProd ? '/kisaankamai_v0.1' : '',
     assetPrefix: isProd ? '/kisaankamai_v0.1/' : '',

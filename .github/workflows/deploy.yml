@@ -42,8 +42,6 @@ jobs:
         run: npm install --legacy-peer-deps
       - name: Build with Next.js
         run: npm run build
-      - name: Patch Static Image Paths for GitHub Pages
-        run: find ./out -type f \( -name "*.html" -o -name "*.js" \) -exec sed -i 's|/assets/generated/|/kisaankamai_v0.1/assets/generated/|g' {} +
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -61,4 +59,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-

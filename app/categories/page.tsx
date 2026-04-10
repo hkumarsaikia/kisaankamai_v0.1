@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import Link from "next/link";
+import { assetPath } from "@/lib/site";
 
 export default function Categories() {
   const { langText } = useLanguage();
@@ -19,17 +20,17 @@ export default function Categories() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { id: "tractors", img: "/assets/generated/hero_tractor.png", name: "Tractors", mrName: "ट्रॅक्टर्स" },
-              { id: "harvesters", img: "/assets/generated/harvester_action.png", name: "Harvesters", mrName: "हार्वेस्टर्स" },
-              { id: "implements", img: "/assets/generated/implement_4k.png", name: "Implements", mrName: "उपकरणे" },
-              { id: "ploughs", img: "/assets/generated/plough_4k.png", name: "Ploughs", mrName: "नांगर" },
-              { id: "sprayers", img: "/assets/generated/sprayer.png", name: "Sprayers", mrName: "फवारणी यंत्रे" },
-              { id: "rotavators", img: "/assets/generated/rotavator.png", name: "Rotavators", mrName: "रोटाव्हेटर्स" },
-              { id: "seeders", img: "/assets/generated/seed_drill.png", name: "Seeders", mrName: "सीडर्स" },
-              { id: "threshers", img: "/assets/generated/thresher_4k.png", name: "Threshers", mrName: "थ्रेशर्स" },
-              { id: "pumps", img: "/assets/generated/water_pump.png", name: "Water Pumps", mrName: "पाण्याचे पंप" },
-              { id: "balers", img: "/assets/generated/baler_4k.png", name: "Balers", mrName: "बेलर्स" },
-              { id: "trolleys", img: "/assets/generated/trolley.png", name: "Trolleys & Trailers", mrName: "ट्रॉली आणि ट्रेलर्स" }
+              { id: "tractors", img: assetPath("/assets/generated/hero_tractor.png"), name: "Tractors", mrName: "ट्रॅक्टर्स" },
+              { id: "harvesters", img: assetPath("/assets/generated/harvester_action.png"), name: "Harvesters", mrName: "हार्वेस्टर्स" },
+              { id: "implements", img: assetPath("/assets/generated/implement_4k.png"), name: "Implements", mrName: "उपकरणे" },
+              { id: "ploughs", img: assetPath("/assets/generated/plough_4k.png"), name: "Ploughs", mrName: "नांगर" },
+              { id: "sprayers", img: assetPath("/assets/generated/sprayer.png"), name: "Sprayers", mrName: "फवारणी यंत्रे" },
+              { id: "rotavators", img: assetPath("/assets/generated/rotavator.png"), name: "Rotavators", mrName: "रोटाव्हेटर्स" },
+              { id: "seeders", img: assetPath("/assets/generated/seed_drill.png"), name: "Seeders", mrName: "सीडर्स" },
+              { id: "threshers", img: assetPath("/assets/generated/thresher_4k.png"), name: "Threshers", mrName: "थ्रेशर्स" },
+              { id: "pumps", img: assetPath("/assets/generated/water_pump.png"), name: "Water Pumps", mrName: "पाण्याचे पंप" },
+              { id: "balers", img: assetPath("/assets/generated/baler_4k.png"), name: "Balers", mrName: "बेलर्स" },
+              { id: "trolleys", img: assetPath("/assets/generated/trolley.png"), name: "Trolleys & Trailers", mrName: "ट्रॉली आणि ट्रेलर्स" }
             ].map(cat => (
               <Link key={cat.id} href={`/models?category=${cat.id}`} className="group relative h-[400px] overflow-hidden rounded-3xl shadow-xl cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -50,3 +51,4 @@ export default function Categories() {
     </div>
   );
 }
+

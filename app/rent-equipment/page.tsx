@@ -5,7 +5,8 @@ import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useCallback } from "react";
+import { assetPath } from "@/lib/site";
 
 const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
 
@@ -16,10 +17,10 @@ const nearbyMarkers = [
 ];
 
 const equipmentCards = [
-  { location: "Kalwan Area", cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: "/assets/generated/maha_tractor.png", ownerImg: "/assets/generated/maha_farmer_1.png", verified: true },
-  { location: "Mukhed Area", cat: "Harvester • John Deere", name: "John Deere W70 Combine", price: "₹2,500", unit: "per hour", rating: "4.7", hp: "100 HP", dist: "8.5 km", owner: "Sangli Agri-Hub", img: "/assets/generated/maha_harvester.png", ownerImg: "/assets/generated/maha_farmer_2.png", popular: true },
-  { location: "Kalwan Area", cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: "/assets/generated/maha_implement.png", ownerImg: "/assets/generated/maha_farmer_3.png" },
-  { location: "Mukhed Area", cat: "Tractor • Swaraj", name: "Swaraj 744 FE", price: "₹750", unit: "per hour", rating: "4.8", hp: "48 HP", dist: "2.1 km", owner: "Suresh", img: "/assets/generated/hero_tractor.png", ownerImg: "/assets/generated/farmer_portrait.png", verified: true },
+  { location: "Kalwan Area", cat: "Tractor • Mahindra 575", name: "Mahindra Novo 575 DI", price: "₹800", unit: "per hour", rating: "4.9", hp: "45 HP", dist: "4.2 km", owner: "Rahul P.", img: assetPath("/assets/generated/maha_tractor.png"), ownerImg: assetPath("/assets/generated/maha_farmer_1.png"), verified: true },
+  { location: "Mukhed Area", cat: "Harvester • John Deere", name: "John Deere W70 Combine", price: "₹2,500", unit: "per hour", rating: "4.7", hp: "100 HP", dist: "8.5 km", owner: "Sangli Agri-Hub", img: assetPath("/assets/generated/maha_harvester.png"), ownerImg: assetPath("/assets/generated/maha_farmer_2.png"), popular: true },
+  { location: "Kalwan Area", cat: "Implement • Shaktiman", name: "Shaktiman Regular Light", price: "₹350", unit: "per hour", rating: "5.0", hp: "6 ft width", dist: "1.2 km", owner: "Vikas G.", img: assetPath("/assets/generated/maha_implement.png"), ownerImg: assetPath("/assets/generated/maha_farmer_3.png") },
+  { location: "Mukhed Area", cat: "Tractor • Swaraj", name: "Swaraj 744 FE", price: "₹750", unit: "per hour", rating: "4.8", hp: "48 HP", dist: "2.1 km", owner: "Suresh", img: assetPath("/assets/generated/hero_tractor.png"), ownerImg: assetPath("/assets/generated/farmer_portrait.png"), verified: true },
 ];
 
 function RentEquipmentInner() {
@@ -33,7 +34,7 @@ function RentEquipmentInner() {
   const [activeQuery, setActiveQuery] = useState(initialQuery);
   const [suggestionMsg, setSuggestionMsg] = useState("");
 
-  const handlePincodeSearch = (val: string) => {
+  const handlePincodeSearch = useCallback((val: string) => {
     setActiveLocation(val);
     if (val === "423501" || val.toLowerCase() === "kalwan" || val.toLowerCase() === "kalwan area") {
       setActiveLocation("Kalwan Area");
@@ -47,13 +48,13 @@ function RentEquipmentInner() {
     } else {
       setSuggestionMsg("");
     }
-  };
+  }, [langText]);
 
   useEffect(() => {
     if (initialLoc) {
       handlePincodeSearch(initialLoc);
     }
-  }, [initialLoc]);
+  }, [handlePincodeSearch, initialLoc]);
 
   const filteredCards = equipmentCards.filter(eq => {
     const locMatch = (activeLocation === "Kalwan Area" || activeLocation === "Mukhed Area") ? eq.location === activeLocation : true;
@@ -280,3 +281,4 @@ export default function RentEquipment() {
     </Suspense>
   );
 }
+

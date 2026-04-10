@@ -5,13 +5,14 @@ import { Footer } from "@/components/Footer";
 import Link from "next/link";
 import { useLanguage } from "@/components/LanguageContext";
 import dynamic from "next/dynamic";
+import { assetPath } from "@/lib/site";
 
 const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
 
 export default function EquipmentDetailClient({ id }: { id: string }) {
   const { langText } = useLanguage();
   return (
-    <main className="bg-surface dark:bg-slate-950 min-h-screen">
+    <main className="bg-surface dark:bg-slate-950 min-h-screen" data-equipment-id={id}>
       <Header />
       <div className="pt-24 pb-12 px-4 md:px-8 max-w-screen-2xl mx-auto">
         {/* Breadcrumbs */}
@@ -32,7 +33,7 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
                 <img
                   className="w-full h-full object-cover"
                   alt="Modern John Deere tractor in Indian sugarcane field at sunrise"
-                  src="/assets/generated/hero_tractor.png"
+                  src={assetPath("/assets/generated/hero_tractor.png")}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
                   <span className="text-white font-headline font-medium">Main Field View - Sangli, Maharashtra</span>
@@ -40,13 +41,13 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
               </div>
               <div className="grid grid-cols-4 gap-4">
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50">
-                  <img className="w-full h-full object-cover" alt="Tractor engine close-up" src="/assets/generated/hero_tractor.png" />
+                  <img className="w-full h-full object-cover" alt="Tractor engine close-up" src={assetPath("/assets/generated/hero_tractor.png")} />
                 </div>
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50">
-                  <img className="w-full h-full object-cover" alt="Dashboard controls" src="/assets/generated/hero_tractor.png" />
+                  <img className="w-full h-full object-cover" alt="Dashboard controls" src={assetPath("/assets/generated/hero_tractor.png")} />
                 </div>
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50">
-                  <img className="w-full h-full object-cover" alt="Rear view with rotavator" src="/assets/generated/rotavator.png" />
+                  <img className="w-full h-full object-cover" alt="Rear view with rotavator" src={assetPath("/assets/generated/rotavator.png")} />
                 </div>
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50 relative flex items-center justify-center cursor-pointer group">
                   <div className="absolute inset-0 bg-primary-container/80 backdrop-blur-sm group-hover:bg-primary-container transition-colors" />
@@ -126,7 +127,7 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
                 <h2 className="text-2xl font-headline font-bold text-primary dark:text-emerald-50">{langText("Owner Details", "मालक माहिती")}</h2>
                 <div className="bg-surface-container-low dark:bg-slate-900/40 p-6 rounded-3xl flex items-center gap-5 border border-outline-variant/20 dark:border-slate-800/50 card-shadow">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white dark:border-slate-800 shadow-lg">
-                    <img className="w-full h-full object-cover" alt="Owner Sanjay Patil" src="/assets/generated/farmer_portrait.png" />
+                    <img className="w-full h-full object-cover" alt="Owner Sanjay Patil" src={assetPath("/assets/generated/farmer_portrait.png")} />
                   </div>
                   <div>
                     <p className="text-xs font-label text-outline dark:text-slate-500 uppercase tracking-widest">Listing Owner</p>
@@ -221,9 +222,9 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
           </div>
           <div className="flex gap-6 overflow-x-auto no-scrollbar pb-8">
             {[
-              { name: "Mahindra 575 DI", location: "Tasgaon, Sangli", hp: "45 HP", price: "₹750/hr", rating: "4.7", img: "/assets/generated/seed_drill.png" },
-              { name: "Kubota MU5502", location: "Miraj, Sangli", hp: "50 HP", price: "₹600/hr", rating: "4.8", img: "/assets/generated/seed_drill.png" },
-              { name: "Swaraj 855 FE", location: "Vita, Sangli", hp: "55 HP", price: "₹800/hr", rating: "4.9", img: "/assets/generated/seed_drill.png" },
+              { name: "Mahindra 575 DI", location: "Tasgaon, Sangli", hp: "45 HP", price: "₹750/hr", rating: "4.7", img: assetPath("/assets/generated/seed_drill.png") },
+              { name: "Kubota MU5502", location: "Miraj, Sangli", hp: "50 HP", price: "₹600/hr", rating: "4.8", img: assetPath("/assets/generated/seed_drill.png") },
+              { name: "Swaraj 855 FE", location: "Vita, Sangli", hp: "55 HP", price: "₹800/hr", rating: "4.9", img: assetPath("/assets/generated/seed_drill.png") },
             ].map((eq) => (
               <Link key={eq.name} href="/equipment/1" className="min-w-[320px] bg-white dark:bg-slate-900/40 rounded-3xl border border-outline-variant/30 dark:border-slate-800/50 overflow-hidden group card-shadow hover:card-shadow-lg transition-all">
                 <div className="h-48 overflow-hidden relative">
@@ -249,3 +250,4 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
     </main>
   );
 }
+

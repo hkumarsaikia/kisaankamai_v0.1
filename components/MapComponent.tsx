@@ -44,7 +44,6 @@ export default function MapComponent({
     // We pass an empty string if undefined. Google maps standard behavior is to show "For development purposes only" if not provided/invalid.
   });
 
-  const [map, setMap] = useState<google.maps.Map | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null);
 
   const centerObj = useMemo(() => ({ lat: center[0], lng: center[1] }), [center]);
@@ -56,11 +55,9 @@ export default function MapComponent({
       mapInstance.fitBounds(bounds);
       mapInstance.panToBounds(bounds);
     }
-    setMap(mapInstance);
   }, [markers]);
 
   const onUnmount = useCallback(function callback() {
-    setMap(null);
   }, []);
 
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;

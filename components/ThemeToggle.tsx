@@ -3,7 +3,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -14,14 +14,17 @@ export function ThemeToggle() {
     return <div className="w-8 h-8" />;
   }
 
+  const isDark = resolvedTheme === "dark";
+
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      type="button"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
       className="p-2 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface"
-      aria-label="Toggle Dark Mode"
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       <span className="material-symbols-outlined text-[20px]">
-        {theme === "dark" ? "light_mode" : "dark_mode"}
+        {isDark ? "light_mode" : "dark_mode"}
       </span>
     </button>
   );

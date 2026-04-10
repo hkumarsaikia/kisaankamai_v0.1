@@ -6,39 +6,40 @@ import { useLanguage } from "@/components/LanguageContext";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import Link from "next/link";
+import { assetPath } from "@/lib/site";
 
 const modelData: Record<string, { en: string, mr: string, items: { name: string, hp: string, img: string }[] }> = {
   tractors: {
     en: "Tractors", mr: "ट्रॅक्टर्स",
     items: [
-      { name: "Mahindra Novo 575 DI", hp: "45 HP", img: "/assets/generated/maha_tractor.png" },
-      { name: "Swaraj 744 FE", hp: "48 HP", img: "/assets/generated/hero_tractor.png" },
-      { name: "John Deere 5310", hp: "55 HP", img: "/assets/generated/modern_farm_tech.png" }
+      { name: "Mahindra Novo 575 DI", hp: "45 HP", img: assetPath("/assets/generated/maha_tractor.png") },
+      { name: "Swaraj 744 FE", hp: "48 HP", img: assetPath("/assets/generated/hero_tractor.png") },
+      { name: "John Deere 5310", hp: "55 HP", img: assetPath("/assets/generated/modern_farm_tech.png") }
     ]
   },
   harvesters: {
     en: "Harvesters", mr: "हार्वेस्टर्स",
     items: [
-      { name: "John Deere W70 Combine", hp: "100 HP", img: "/assets/generated/maha_harvester.png" },
-      { name: "Preet 987", hp: "76 HP", img: "/assets/generated/harvester_action.png" }
+      { name: "John Deere W70 Combine", hp: "100 HP", img: assetPath("/assets/generated/maha_harvester.png") },
+      { name: "Preet 987", hp: "76 HP", img: assetPath("/assets/generated/harvester_action.png") }
     ]
   },
   ploughs: {
     en: "Ploughs", mr: "नांगर",
     items: [
-      { name: "Lemken Reversible", hp: "Suitable for 45+ HP", img: "/assets/generated/plough_4k.png" }
+      { name: "Lemken Reversible", hp: "Suitable for 45+ HP", img: assetPath("/assets/generated/plough_4k.png") }
     ]
   },
   sprayers: {
     en: "Sprayers", mr: "फवारणी यंत्रे",
     items: [
-      { name: "ASPEE Boom Sprayer", hp: "Tractor Mounted", img: "/assets/generated/sprayer.png" }
+      { name: "ASPEE Boom Sprayer", hp: "Tractor Mounted", img: assetPath("/assets/generated/sprayer.png") }
     ]
   },
   implements: {
     en: "Implements", mr: "उपकरणे",
     items: [
-        { name: "Shaktiman Rotavator", hp: "6 ft width", img: "/assets/generated/maha_implement.png" }
+        { name: "Shaktiman Rotavator", hp: "6 ft width", img: assetPath("/assets/generated/maha_implement.png") }
     ]
   }
 };
@@ -106,3 +107,4 @@ export default function Models() {
     </Suspense>
   );
 }
+

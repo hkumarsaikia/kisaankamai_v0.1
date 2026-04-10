@@ -3,6 +3,7 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
+import { assetPath } from "@/lib/site";
 
 export default function BookingFlowPage() {
   const { langText } = useLanguage();
@@ -134,7 +135,7 @@ export default function BookingFlowPage() {
               {/* Equipment Card Preview */}
               <div className="bg-white dark:bg-slate-900/40 rounded-[32px] overflow-hidden shadow-sm border border-surface-variant dark:border-slate-800/50">
                 <div className="h-48 relative">
-                  <img className="w-full h-full object-cover" alt="Tractor" src="/assets/generated/hero_tractor.png" />
+                  <img className="w-full h-full object-cover" alt="Tractor" src={assetPath("/assets/generated/hero_tractor.png")} />
                   <div className="absolute top-4 left-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary dark:text-emerald-100 flex items-center gap-1">
                     <span className="material-symbols-outlined text-sm text-amber-500" style={{ fontVariationSettings: "'FILL' 1" }}>star</span>
                     4.9 {langText("(120+ Bookings)", "(१२०+ बुकिंग्ज)")}
@@ -178,3 +179,4 @@ export default function BookingFlowPage() {
     </main>
   );
 }
+

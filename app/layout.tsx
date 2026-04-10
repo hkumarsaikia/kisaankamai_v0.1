@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Manrope, Inter, Mukta } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
+import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
 import "./globals.css";
 
@@ -30,7 +31,9 @@ export default function RootLayout({
       <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
-            {children}
+            <AuthProvider>
+              {children}
+            </AuthProvider>
             <BackToTop />
           </LanguageProvider>
         </ThemeProvider>

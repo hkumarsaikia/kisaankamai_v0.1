@@ -82,7 +82,7 @@ export default function ListEquipment() {
 <section className="py-24 bg-primary-container relative overflow-hidden">
 {/*  Background Decorative Elements  */}
 <div className="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
-<svg className="w-full h-full text-white fill-current" viewbox="0 0 100 100">
+<svg className="w-full h-full text-white fill-current" viewBox="0 0 100 100">
 <circle cx="100" cy="0" r="80"></circle>
 </svg>
 </div>
