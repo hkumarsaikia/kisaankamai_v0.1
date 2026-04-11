@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDjstec2LZmBGV_2CwhnrIJDOIGOl5Y-Cs",
-  authDomain: "kisan-kamai-otp-test.firebaseapp.com",
-  projectId: "kisan-kamai-otp-test",
-  storageBucket: "kisan-kamai-otp-test.firebasestorage.app",
-  messagingSenderId: "703663766582",
-  appId: "1:703663766582:web:76221dca9031159b0d2c97"
+  apiKey: "AIzaSyD9TTYR36f4dWCW1Qhp-iiemjqyDv278mE",
+  authDomain: "kisaan-kamai-auth-prod.firebaseapp.com",
+  projectId: "kisaan-kamai-auth-prod",
+  storageBucket: "kisaan-kamai-auth-prod.firebasestorage.app",
+  messagingSenderId: "390146762141",
+  appId: "1:390146762141:web:03e3107836a01b5331bb74"
 };
 
 const app = initializeApp(firebaseConfig);
