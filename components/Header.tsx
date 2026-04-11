@@ -150,19 +150,23 @@ export const Header = () => {
               {language === "en" ? "मराठी" : "English"}
             </button>
 
-            {/* Always show Login + Register */}
-            <Link
-              href="/login"
-              className="bg-transparent border-2 border-primary dark:border-primary-fixed text-primary dark:text-primary-fixed px-5 py-2 rounded-xl font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/10 active:scale-95 transition-all hidden sm:block"
-            >
-              {langText("Login", "लॉगिन करा")}
-            </Link>
-            <Link
-              href="/register"
-              className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20 hidden sm:block"
-            >
-              {langText("Register", "नोंदणी करा")}
-            </Link>
+            {/* Show Login + Register only if not logged in */}
+            {!loading && !user && (
+              <>
+                <Link
+                  href="/login"
+                  className="bg-transparent border-2 border-primary dark:border-primary-fixed text-primary dark:text-primary-fixed px-5 py-2 rounded-xl font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/10 active:scale-95 transition-all hidden sm:block"
+                >
+                  {langText("Login", "लॉगिन करा")}
+                </Link>
+                <Link
+                  href="/register"
+                  className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20 hidden sm:block"
+                >
+                  {langText("Register", "नोंदणी करा")}
+                </Link>
+              </>
+            )}
 
             {/* Logged-in: Avatar + Dropdown */}
             {!loading && user && (

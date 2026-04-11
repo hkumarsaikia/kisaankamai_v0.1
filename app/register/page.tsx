@@ -3,6 +3,7 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
+import { useAuth } from "@/components/AuthContext";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -19,8 +20,15 @@ declare global {
 
 export default function RegisterPage() {
   const { langText } = useLanguage();
+  const { user, loading } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/owner-dashboard");
+    }
+  }, [user, loading, router]);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -117,14 +125,15 @@ export default function RegisterPage() {
   }, [isTimerActive, timer]);
 
   useEffect(() => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': () => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-        }
-      });
-    }
+    // Cleanup stale recaptcha on unmount or fast-refresh
+    return () => {
+      if (window.recaptchaVerifier) {
+        try {
+          window.recaptchaVerifier.clear();
+        } catch (e) {}
+        window.recaptchaVerifier = undefined;
+      }
+    };
   }, []);
 
   const selectPincodeLocation = (office: any) => {
@@ -158,6 +167,11 @@ export default function RegisterPage() {
     setIsSendingOtp(true);
     setOtpError("");
     try {
+      if (!window.recaptchaVerifier) {
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+          size: 'invisible'
+        });
+      }
       const appVerifier = window.recaptchaVerifier;
       const confirmation = await signInWithPhoneNumber(auth, "+91" + phone, appVerifier);
       setConfirmationResult(confirmation);
