@@ -27,20 +27,20 @@ export default function EquipmentDetail() {
 {/*  High-End Gallery  */}
 <section className="space-y-4">
 <div className="aspect-[16/9] w-full rounded-3xl overflow-hidden bg-surface-variant relative group">
-<img className="w-full h-full object-cover" data-alt="Modern high-performance John Deere tractor parked in a lush green Indian sugarcane field at sunrise with warm cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSyY2H9kmQ5H_MJHOrceuJUebS7Ji01L0-gQwyB68e-c7XWXXfhkzYDyyWBZYBrMRAg1sexAjcmLl4rsCV8RP3knzPrAAOJ73B9al5H57K4KHMjynhj35aIj2UbXmoF1iZdm0AVkLKJNcSWXWFEtcL1e8sCEW0jgL6XVBESQHx7djz0eaOUHCale4bGXMqTqDgctAQZVD75FZtMTGXQbFmD4gJwPlglP6t4xN6YA4q4_wm1VPpSmoCvsG9LNyEty-MjtgEq-pSdkbf"/>
+<img className="w-full h-full object-cover" data-alt="Modern high-performance John Deere tractor parked in a lush green Indian sugarcane field at sunrise with warm cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSyY2H9kmQ5H_MJHOrceuJUebS7Ji01L0-gQwyB68e-c7XWXXfhkzYDyyWBZYBrMRAg1sexAjcmLl4rsCV8RP3knzPrAAOJ73B9al5H57K4KHMjynhj35aIj2UbXmoF1iZdm0AVkLKJNcSWXWFEtcL1e8sCEW0jgL6XVBESQHx7djz0eaOUHCale4bGXMqTqDgctAQZVD75FZtMTGXQbFmD4gJwPlglP6t4xN6YA4q4_wm1VPpSmoCvsG9LNyEty-MjtgEq-pSdkbf"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
 <span className="text-white font-headline font-medium">Main Field View - Sangli, Maharashtra</span>
 </div>
 </div>
 <div className="grid grid-cols-4 gap-4">
 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant">
-<img className="w-full h-full object-cover" data-alt="Close up view of tractor engine and heavy duty wheels in an agricultural setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh9eiUT5qY0JurzZdIslVNqF7pZNYO1y6LAaS8RSxom-FogcaqyPRMDnW_493lmSmyl7iic7hWm1CCC2dsfXxLHqbo2XV25KP6hqSErCCSmp5ctrTUQE8MuIyejzg5rUsE9xVMm5GDcmQdpF5_Se_lsQn4zgd6loLqGeITe2o3tfmFetq9rME5454MmIiUYDmUtYhXbepoHmYtnSPjP-mxKWnWgNvik-F8yu5BMIAeJMjtYGC_y-P4CKI87wSqu-3c2rL6JLp00VQ4"/>
+<img className="w-full h-full object-cover" data-alt="Close up view of tractor engine and heavy duty wheels in an agricultural setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAh9eiUT5qY0JurzZdIslVNqF7pZNYO1y6LAaS8RSxom-FogcaqyPRMDnW_493lmSmyl7iic7hWm1CCC2dsfXxLHqbo2XV25KP6hqSErCCSmp5ctrTUQE8MuIyejzg5rUsE9xVMm5GDcmQdpF5_Se_lsQn4zgd6loLqGeITe2o3tfmFetq9rME5454MmIiUYDmUtYhXbepoHmYtnSPjP-mxKWnWgNvik-F8yu5BMIAeJMjtYGC_y-P4CKI87wSqu-3c2rL6JLp00VQ4"loading="lazy" decoding="async" />
 </div>
 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant">
-<img className="w-full h-full object-cover" data-alt="Ergonomic dashboard and controls inside a modern tractor cabin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJUayHc4m8eHQkQSlfUK-R5jvF0g5GtZfHm6Ya9vR5eq0ndLOT8pUFBV9oN8VAY2VQukqBtZVxPl70x0bq2WEj-xKWzEn6WV8D2oUu2wcP7YgdFgNRFRpM96aMZeKWonakgA2jVZHG2etfijeH4KGAwIzYzPCNL0WdHBy7hVwB7DOeSmyQ5hn5gWV_-G9YroXHNEkKCelFqHq59OIVR_3A46U4hRAast-iHSAVTlNu6C2ANbset1-ZfRNc66dpHOA7WDrs2dQvt_g6"/>
+<img className="w-full h-full object-cover" data-alt="Ergonomic dashboard and controls inside a modern tractor cabin" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJUayHc4m8eHQkQSlfUK-R5jvF0g5GtZfHm6Ya9vR5eq0ndLOT8pUFBV9oN8VAY2VQukqBtZVxPl70x0bq2WEj-xKWzEn6WV8D2oUu2wcP7YgdFgNRFRpM96aMZeKWonakgA2jVZHG2etfijeH4KGAwIzYzPCNL0WdHBy7hVwB7DOeSmyQ5hn5gWV_-G9YroXHNEkKCelFqHq59OIVR_3A46U4hRAast-iHSAVTlNu6C2ANbset1-ZfRNc66dpHOA7WDrs2dQvt_g6"loading="lazy" decoding="async" />
 </div>
 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant">
-<img className="w-full h-full object-crop" data-alt="Rear view of tractor with rotavator attachment in a plowed field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXl4OftQjfNzN_r4M-_69LZ8nlx8tLuvc0JnRfU_q-I2u-jVTez_jgxihOCs4fcinOX5VuMj_GEBDFkirhWvRentCkYNUBzTvO1d2lVN8K3mBO7EPst1O6YcrB-CfUFt5MJd4gReaoZMezfvqLijoUaiDd61dR69AI-qXWqUI30B2pIzk2wUH3D5pcztdT7VBRyMRjDew0EUemZWAPXIAKA6R0pC5pTVoa8JKdpt9z1E0t1QJcIMII6gGsNYRqAf8_2ziCBOXl55Yx"/>
+<img className="w-full h-full object-crop" data-alt="Rear view of tractor with rotavator attachment in a plowed field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXl4OftQjfNzN_r4M-_69LZ8nlx8tLuvc0JnRfU_q-I2u-jVTez_jgxihOCs4fcinOX5VuMj_GEBDFkirhWvRentCkYNUBzTvO1d2lVN8K3mBO7EPst1O6YcrB-CfUFt5MJd4gReaoZMezfvqLijoUaiDd61dR69AI-qXWqUI30B2pIzk2wUH3D5pcztdT7VBRyMRjDew0EUemZWAPXIAKA6R0pC5pTVoa8JKdpt9z1E0t1QJcIMII6gGsNYRqAf8_2ziCBOXl55Yx"loading="lazy" decoding="async" />
 </div>
 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant relative flex items-center justify-center cursor-pointer group">
 <div className="absolute inset-0 bg-primary-container/80 backdrop-blur-sm group-hover:bg-primary-container transition-colors"></div>
@@ -136,7 +136,7 @@ export default function EquipmentDetail() {
 <h2 className="text-2xl font-headline font-bold text-primary">Owner Details</h2>
 <div className="bg-surface-container-low p-6 rounded-3xl flex items-center gap-5 border border-outline-variant/20">
 <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white shadow-lg">
-<img className="w-full h-full object-cover" data-alt="Portrait of a smiling professional Indian farm equipment owner wearing a clean shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx8BPkFHHBamaE-An0NzPhipkcRgYV4yxQwFlNhqIFtfQgtcYBE32I6H3zqvoMXVq98g6KnWjw_hznamk3yYw2EeQ2oYAHGvcZtqGPC-Ax0quwp2DaHiOKLFaXrT_kkZrJcnFMmVoHCNNOeJOeKtZXk1m8wkTS-F2XIbJPZz9ZsMV8gvq76TcK1ZaXxkQq7NFMG0TbSeOv2gv9lwNU4QAIHmx7Mton5nRBIInSJRHMJ9QwLIU9KirhwYAhU8bCt40CZj4ompQ4nZNp"/>
+<img className="w-full h-full object-cover" data-alt="Portrait of a smiling professional Indian farm equipment owner wearing a clean shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCx8BPkFHHBamaE-An0NzPhipkcRgYV4yxQwFlNhqIFtfQgtcYBE32I6H3zqvoMXVq98g6KnWjw_hznamk3yYw2EeQ2oYAHGvcZtqGPC-Ax0quwp2DaHiOKLFaXrT_kkZrJcnFMmVoHCNNOeJOeKtZXk1m8wkTS-F2XIbJPZz9ZsMV8gvq76TcK1ZaXxkQq7NFMG0TbSeOv2gv9lwNU4QAIHmx7Mton5nRBIInSJRHMJ9QwLIU9KirhwYAhU8bCt40CZj4ompQ4nZNp"loading="lazy" decoding="async" />
 </div>
 <div>
 <p className="text-xs font-label text-outline uppercase tracking-widest">Listing Owner</p>
@@ -206,7 +206,7 @@ export default function EquipmentDetail() {
 </div>
 {/*  Local Map Preview  */}
 <div className="bg-surface-container-highest rounded-3xl overflow-hidden relative h-48 border border-outline-variant">
-<img className="w-full h-full object-cover opacity-60 grayscale mix-blend-multiply" data-alt="Top down satellite view style abstract map showing agricultural field patterns and village roads" data-location="Sangli, Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqjjSxhYO7axJt_TQZ7nMnz-n9kYSVAw9LlPLNsSu_A78_ikYptP2v_6XXFHHkOHNtjwvLi_RsJSra8HdK-gxQv-ifAEWSQp7weu2vV0QObwtPHUE7p8L1dY3E2vD2QZUFBEt-OxZC3g0uW7p_UP3MQ4UhnwiIc9AL1KYdOwjLvrBGbofEJy_MAYUZr4cpC_UIRO1M1PK3KP8e4H64HDihsVR3sY36XDciEa_mvRtWBe60akNVp_uRr69L3Tyx2Wr_RBkDHJV9g_H0"/>
+<img className="w-full h-full object-cover opacity-60 grayscale mix-blend-multiply" data-alt="Top down satellite view style abstract map showing agricultural field patterns and village roads" data-location="Sangli, Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqjjSxhYO7axJt_TQZ7nMnz-n9kYSVAw9LlPLNsSu_A78_ikYptP2v_6XXFHHkOHNtjwvLi_RsJSra8HdK-gxQv-ifAEWSQp7weu2vV0QObwtPHUE7p8L1dY3E2vD2QZUFBEt-OxZC3g0uW7p_UP3MQ4UhnwiIc9AL1KYdOwjLvrBGbofEJy_MAYUZr4cpC_UIRO1M1PK3KP8e4H64HDihsVR3sY36XDciEa_mvRtWBe60akNVp_uRr69L3Tyx2Wr_RBkDHJV9g_H0"loading="lazy" decoding="async" />
 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
 <div className="relative">
 <span className="material-symbols-outlined text-secondary text-5xl drop-shadow-xl" style={{'fontVariationSettings': '\'FILL\' 1'}}>location_on</span>
@@ -239,7 +239,7 @@ export default function EquipmentDetail() {
 {/*  Card 1  */}
 <div className="min-w-[320px] bg-white rounded-3xl border border-outline-variant/30 overflow-hidden group">
 <div className="h-48 overflow-hidden relative">
-<img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Powerful Mahindra tractor in a golden sunset field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8aPstg-9kV4PXknfBO-qOSkcyG7JAfRa3VhAam-Tpe4-Nf1DddIgB64mI66T79HrpdTgJwexYkRVqGCvP1A4z0nySQvwXfRxwpB5gaWL6EnppfR9l37aIPGHHdZR7YSOaSC0biV2jDSDZPuM8LiHOjPgruIl0V_IdifjgzkwW0lihQuDy2lKqmxNEh-a-_FRJHHoy18rZxgHo3rTE8MvZl0uFof2VdUVsEAq9PMhmC9ZBRuNQ3xL5ZBBDxaRk2LmzVig274QdYdbP"/>
+<img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Powerful Mahindra tractor in a golden sunset field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8aPstg-9kV4PXknfBO-qOSkcyG7JAfRa3VhAam-Tpe4-Nf1DddIgB64mI66T79HrpdTgJwexYkRVqGCvP1A4z0nySQvwXfRxwpB5gaWL6EnppfR9l37aIPGHHdZR7YSOaSC0biV2jDSDZPuM8LiHOjPgruIl0V_IdifjgzkwW0lihQuDy2lKqmxNEh-a-_FRJHHoy18rZxgHo3rTE8MvZl0uFof2VdUVsEAq9PMhmC9ZBRuNQ3xL5ZBBDxaRk2LmzVig274QdYdbP"loading="lazy" decoding="async" />
 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-primary">₹750/hr</div>
 </div>
 <div className="p-6 space-y-3">
@@ -256,7 +256,7 @@ export default function EquipmentDetail() {
 {/*  Card 2  */}
 <div className="min-w-[320px] bg-white rounded-3xl border border-outline-variant/30 overflow-hidden group">
 <div className="h-48 overflow-hidden relative">
-<img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Kubota mini tractor suitable for orchards and tight spaces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzYbHMyx64YcSJD0yFY3h2oo9_8cVrZPGi3P7J8ektor0C-s3Yj3Kw6eMc7OkLtjvtX4rKhT39UJK7nGlccT0wJ2EDOx2fkrwot38DJOj6yOMYbRdr3-l6Pm77aeerwr1e42aF8qb3EeFe9R8QbmNjflFTdFclaWL5lb5YA9w3IsHlN8hsMV-auKKZYq0tVIJssocFFNeeuXM8IGYsRJMTm3POSOKFaAHLBRciptDoVVpDj7hu6FJ57sRwiwp6tWduSH_JUhO9NZ7b"/>
+<img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Kubota mini tractor suitable for orchards and tight spaces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzYbHMyx64YcSJD0yFY3h2oo9_8cVrZPGi3P7J8ektor0C-s3Yj3Kw6eMc7OkLtjvtX4rKhT39UJK7nGlccT0wJ2EDOx2fkrwot38DJOj6yOMYbRdr3-l6Pm77aeerwr1e42aF8qb3EeFe9R8QbmNjflFTdFclaWL5lb5YA9w3IsHlN8hsMV-auKKZYq0tVIJssocFFNeeuXM8IGYsRJMTm3POSOKFaAHLBRciptDoVVpDj7hu6FJ57sRwiwp6tWduSH_JUhO9NZ7b"loading="lazy" decoding="async" />
 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-primary">₹600/hr</div>
 </div>
 <div className="p-6 space-y-3">
@@ -273,7 +273,7 @@ export default function EquipmentDetail() {
 {/*  Card 3  */}
 <div className="min-w-[320px] bg-white rounded-3xl border border-outline-variant/30 overflow-hidden group">
 <div className="h-48 overflow-hidden relative">
-<img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Powerful Swaraj tractor with cultivator attached" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ8KKP9IQY6iTtx_mDUut7Zwgt7dulqWr4f78pfv_Mz3YyOpjsfX_VphS6KACpflaIrGIRarva1w5pPlKs_4VUgU2qVCFcTvg9SYSr9F3FIpI0js07bOjcZd-v-H3yn077dTU2kT9qyvpkkfmUyCeEYeEG_WEMcT8oLTZas2fYmpMdyH-UomWZ-hB6d1R7KTi-NO_-6p76avaQrsizhcKjwzFYiz87Lw0u4Fo6aEDZD2VEb2gsQ_7O5JBWt73xgQYAqynwQPkIinfp"/>
+<img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Powerful Swaraj tractor with cultivator attached" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ8KKP9IQY6iTtx_mDUut7Zwgt7dulqWr4f78pfv_Mz3YyOpjsfX_VphS6KACpflaIrGIRarva1w5pPlKs_4VUgU2qVCFcTvg9SYSr9F3FIpI0js07bOjcZd-v-H3yn077dTU2kT9qyvpkkfmUyCeEYeEG_WEMcT8oLTZas2fYmpMdyH-UomWZ-hB6d1R7KTi-NO_-6p76avaQrsizhcKjwzFYiz87Lw0u4Fo6aEDZD2VEb2gsQ_7O5JBWt73xgQYAqynwQPkIinfp"loading="lazy" decoding="async" />
 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-primary">₹800/hr</div>
 </div>
 <div className="p-6 space-y-3">

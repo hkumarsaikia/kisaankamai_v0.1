@@ -34,7 +34,7 @@ export default function Categories() {
             ].map(cat => (
               <Link key={cat.id} href={`/models?category=${cat.id}`} className="group relative h-[400px] overflow-hidden rounded-3xl shadow-xl cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={cat.name} src={cat.img} />
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={cat.name} src={cat.img} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-8 w-full">
                   <h3 className="text-3xl font-black text-white mb-2 tracking-wide">{langText(cat.name, cat.mrName)}</h3>

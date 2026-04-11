@@ -78,7 +78,7 @@ export default function NoResultsLoc() {
 </button>
 </div>
 <div className="md:w-1/3 min-h-[300px] rounded-3xl overflow-hidden shadow-inner relative">
-<img className="absolute inset-0 w-full h-full object-cover grayscale-[0.3] opacity-80" data-alt="Modern satellite map view of rural farm lands with green and brown patches in Satara district, Maharashtra" data-location="Satara, Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw9QSlLEJDDyXxXc6Xt33wVLcql4DHyciw4N-m_tENtHtefJQv9SiIlgddkcXKj5s1O9TrJpugEMKjbNg46As1hS_mTU6JQMRbAC4rbja5VHALdcBIqE3lukrrV_g3XpbJxNcBYrnAI2cBLTWH0NrMHegK80GS5qOmWru1k9CRlw_4xgVIU3xHgBM5n7qCCCYyz_A9s4537QZgiiFhNPc0pZ0dSLQXdE8reV_z_zLsgoXZxKXzR53vm88jcc9KRKNs269KM2BERwJu"/>
+<img className="absolute inset-0 w-full h-full object-cover grayscale-[0.3] opacity-80" data-alt="Modern satellite map view of rural farm lands with green and brown patches in Satara district, Maharashtra" data-location="Satara, Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCw9QSlLEJDDyXxXc6Xt33wVLcql4DHyciw4N-m_tENtHtefJQv9SiIlgddkcXKj5s1O9TrJpugEMKjbNg46As1hS_mTU6JQMRbAC4rbja5VHALdcBIqE3lukrrV_g3XpbJxNcBYrnAI2cBLTWH0NrMHegK80GS5qOmWru1k9CRlw_4xgVIU3xHgBM5n7qCCCYyz_A9s4537QZgiiFhNPc0pZ0dSLQXdE8reV_z_zLsgoXZxKXzR53vm88jcc9KRKNs269KM2BERwJu"loading="lazy" decoding="async" />
 <div className="absolute inset-0 flex items-center justify-center">
 <div className="relative">
 <div className="w-12 h-12 bg-primary/20 rounded-full animate-ping absolute -inset-0"></div>

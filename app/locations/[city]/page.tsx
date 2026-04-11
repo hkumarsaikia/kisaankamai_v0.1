@@ -21,7 +21,7 @@ export default function RegionalSearch() {
 <section className="px-8 max-w-screen-2xl mx-auto mb-12">
 <div className="relative overflow-hidden rounded-[2rem] bg-primary-container p-12 md:p-20 flex flex-col md:flex-row items-center justify-between gap-12 min-h-[400px]">
 <div className="absolute inset-0 opacity-20">
-<img alt="" className="w-full h-full object-cover" data-alt="Wide cinematic shot of a sunset over Maharashtra sugarcane fields with a modern tractor silhouette in the distance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtEf9o_wnLKEHbwRQgvA3IOVmNOb-y8G7zUOucxhMLbQbyH0Wks4x9AqRKw8VWVgvJoky1elE2CR1i6gri7YARrARIVGiiutAVr6bHZK1VvXwcyZqCXAJXWmOJS1u8rwWH4nbTGehQlvh6UPQ8nNU82rM7QZyScYU9Uk79GjpyUzgP1_-vu9S9EYOzIxFkZSeQqOSaYJUlEeayq-htDf4w-91BgjJKuF4tUSLZ3AZvZigN13o0-t4X0tVPFGU9bpQd8Nixg_g7GF45"/>
+<img alt="" className="w-full h-full object-cover" data-alt="Wide cinematic shot of a sunset over Maharashtra sugarcane fields with a modern tractor silhouette in the distance" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtEf9o_wnLKEHbwRQgvA3IOVmNOb-y8G7zUOucxhMLbQbyH0Wks4x9AqRKw8VWVgvJoky1elE2CR1i6gri7YARrARIVGiiutAVr6bHZK1VvXwcyZqCXAJXWmOJS1u8rwWH4nbTGehQlvh6UPQ8nNU82rM7QZyScYU9Uk79GjpyUzgP1_-vu9S9EYOzIxFkZSeQqOSaYJUlEeayq-htDf4w-91BgjJKuF4tUSLZ3AZvZigN13o0-t4X0tVPFGU9bpQd8Nixg_g7GF45"loading="lazy" decoding="async" />
 </div>
 <div className="relative z-10 max-w-2xl text-center md:text-left">
 <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tight">
@@ -177,7 +177,7 @@ export default function RegionalSearch() {
 {/*  Card 1  */}
 <div className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-surface-container border-t-0 flex flex-col group">
 <div className="relative h-64 overflow-hidden">
-<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up of a modern red Mahindra tractor standing in a clean rural barn setting with cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATOTXnZjVnSH_RilRqV_RT9rZXSZqOQbUklbiQjfcN3v337k8IezKXRpnH_M0wqX-yZsAGEiVPWxnTYWDCZMjrb2K-JMrO5hENXIaclV4KU98-cIc5wizU9wLKY-PzqMn8YzQ2m6uMpc6u1dRjxm16-YqMuQB-KvgfeLn5MCpLw4vzG263TxznFzCGikj1gB33G_j4zsQKjf2wCCHPmh86fLcCP9j-JVBoefeNsIdYB7UBED94zuHsMVyvJLBKl52DLAtFxezcLjB7"/>
+<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up of a modern red Mahindra tractor standing in a clean rural barn setting with cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuATOTXnZjVnSH_RilRqV_RT9rZXSZqOQbUklbiQjfcN3v337k8IezKXRpnH_M0wqX-yZsAGEiVPWxnTYWDCZMjrb2K-JMrO5hENXIaclV4KU98-cIc5wizU9wLKY-PzqMn8YzQ2m6uMpc6u1dRjxm16-YqMuQB-KvgfeLn5MCpLw4vzG263TxznFzCGikj1gB33G_j4zsQKjf2wCCHPmh86fLcCP9j-JVBoefeNsIdYB7UBED94zuHsMVyvJLBKl52DLAtFxezcLjB7"loading="lazy" decoding="async" />
 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur text-primary-container px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
 <span className="material-symbols-outlined text-sm" style={{'fontVariationSettings': '\'FILL\' 1'}}>star</span>
                                 4.9 (42 Rentals)
@@ -211,7 +211,7 @@ export default function RegionalSearch() {
 {/*  Card 2  */}
 <div className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-surface-container border-t-0 flex flex-col group">
 <div className="relative h-64 overflow-hidden">
-<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A John Deere harvester working in a golden wheat field in Satara during midday sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhl7CiHaLTGJHyIW0_4frRotyRzo80pDqPB34MBwr86szOMsqjxwMJz5R3_O1Pc_1n7fgeteEqyaFDKjJAGjvmv1Q6CQ9paZhI8Ah1l0J-fLh3L2l2IcOC5cat2BvQF9yppeqS_QxcHmFDQWFRtSUWsk7efpHCmhfsQXJa7LKcGtlzPs9Hfo32TPATP2YINi05WffJOi4-96_9_nfvLIo9zVv6ygrSm-OPfBG-sZr8CuIbZdT-c9wD5jj-W005ZaS2OTYcYvaHrrZa"/>
+<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A John Deere harvester working in a golden wheat field in Satara during midday sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhl7CiHaLTGJHyIW0_4frRotyRzo80pDqPB34MBwr86szOMsqjxwMJz5R3_O1Pc_1n7fgeteEqyaFDKjJAGjvmv1Q6CQ9paZhI8Ah1l0J-fLh3L2l2IcOC5cat2BvQF9yppeqS_QxcHmFDQWFRtSUWsk7efpHCmhfsQXJa7LKcGtlzPs9Hfo32TPATP2YINi05WffJOi4-96_9_nfvLIo9zVv6ygrSm-OPfBG-sZr8CuIbZdT-c9wD5jj-W005ZaS2OTYcYvaHrrZa"loading="lazy" decoding="async" />
 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur text-primary-container px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
 <span className="material-symbols-outlined text-sm" style={{'fontVariationSettings': '\'FILL\' 1'}}>star</span>
                                 4.7 (18 Rentals)
@@ -245,7 +245,7 @@ export default function RegionalSearch() {
 {/*  Card 3  */}
 <div className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-surface-container border-t-0 flex flex-col group">
 <div className="relative h-64 overflow-hidden">
-<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="High quality close up of a heavy duty agricultural rotavator implement attached to a tractor in a field in Kolhapur" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMsg0yYZQ64SOjWTXqfdITQT562klxrq-XjpEkGlbcqxndRueudpZ24FpM-tQUALC-_H792vJGeu5A3YXhRo3BbcuIJ4MI23Q1o9xx4O5qV4CzYbKL1ZoZNL3nqhmpAyIwcJbHZzR0Bi8jFOdaFdJjqKhRm3YnzAUETGW2fezmo8IhaNoyTAAfhwwPMTOaNbG-MC04vfybgHM5A9KIT0ZR6FK6ER1zjXJUdYmbiHNTxmQsdPs2fWNlHCJtZU7uVEf8KoJFHIHhS3r-"/>
+<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="High quality close up of a heavy duty agricultural rotavator implement attached to a tractor in a field in Kolhapur" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMsg0yYZQ64SOjWTXqfdITQT562klxrq-XjpEkGlbcqxndRueudpZ24FpM-tQUALC-_H792vJGeu5A3YXhRo3BbcuIJ4MI23Q1o9xx4O5qV4CzYbKL1ZoZNL3nqhmpAyIwcJbHZzR0Bi8jFOdaFdJjqKhRm3YnzAUETGW2fezmo8IhaNoyTAAfhwwPMTOaNbG-MC04vfybgHM5A9KIT0ZR6FK6ER1zjXJUdYmbiHNTxmQsdPs2fWNlHCJtZU7uVEf8KoJFHIHhS3r-"loading="lazy" decoding="async" />
 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur text-primary-container px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
 <span className="material-symbols-outlined text-sm" style={{'fontVariationSettings': '\'FILL\' 1'}}>star</span>
                                 4.8 (56 Rentals)
@@ -279,7 +279,7 @@ export default function RegionalSearch() {
 {/*  Card 4 (Showing more results)  */}
 <div className="bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-surface-container border-t-0 flex flex-col group">
 <div className="relative h-64 overflow-hidden">
-<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A blue New Holland tractor working in a lush green field in Sangli under a soft overcast morning sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw74rBAQ7JEBnHKfjQ0zZgCgW5WQAHAT2fnosa23iUYslm328GIanc1mQULYuIh4HPXpi1VWHlfer3f9laq_HwZezwVNZ8GKU-lhUqdL1jT6tWYlPJ_E4m2urTG-Wex3Q0RH1aRUHUrwgcGwcJC_uF4F4B0Utpzw96pQEMd-mZF6UcEsKRvpkEUNaFKLvTp2SMZKe1YBvWltCLANaVIwfpCp5QnqaQENzHO19ibo4WX0D0ON3tiXDUYLI5E2l-1IVodPpD0Gy7unEE"/>
+<img alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A blue New Holland tractor working in a lush green field in Sangli under a soft overcast morning sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw74rBAQ7JEBnHKfjQ0zZgCgW5WQAHAT2fnosa23iUYslm328GIanc1mQULYuIh4HPXpi1VWHlfer3f9laq_HwZezwVNZ8GKU-lhUqdL1jT6tWYlPJ_E4m2urTG-Wex3Q0RH1aRUHUrwgcGwcJC_uF4F4B0Utpzw96pQEMd-mZF6UcEsKRvpkEUNaFKLvTp2SMZKe1YBvWltCLANaVIwfpCp5QnqaQENzHO19ibo4WX0D0ON3tiXDUYLI5E2l-1IVodPpD0Gy7unEE"loading="lazy" decoding="async" />
 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur text-primary-container px-3 py-1 rounded-lg text-xs font-bold flex items-center gap-1">
 <span className="material-symbols-outlined text-sm" style={{'fontVariationSettings': '\'FILL\' 1'}}>star</span>
                                 4.9 (29 Rentals)
@@ -332,7 +332,7 @@ export default function RegionalSearch() {
 </div>
 </div>
 <div className="w-full md:w-1/3">
-<img alt="" className="rounded-[2rem] shadow-lg" data-alt="Friendly Indian customer service representative in a modern office, wearing a headset and smiling, representing professional support" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbfAJ6kXrXsfYOtuwzlLEzYttSYDFzql1_VDsDOe3WqHAyxQ_X7KJSCyt3j6UJ4b8PtM_gc9iLE8qvTGP7yr0vI7BEAXHL4coOKKnqtx7Cz5jOL43uvoxXl_Dv_MtCgFaI_FbdZc-WnCSSnUbhwz4myviANBufjLijMO1aUL3z5LDyr3UEFIxSZx4bI1lUNZElcvLQkuCvso8BKV7-OQBdhakZHVyYJeGzkmjpqGL1_OkRqVvRj0apNLGQ6N7bEJCwo2SImrGj8vnX"/>
+<img alt="" className="rounded-[2rem] shadow-lg" data-alt="Friendly Indian customer service representative in a modern office, wearing a headset and smiling, representing professional support" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbfAJ6kXrXsfYOtuwzlLEzYttSYDFzql1_VDsDOe3WqHAyxQ_X7KJSCyt3j6UJ4b8PtM_gc9iLE8qvTGP7yr0vI7BEAXHL4coOKKnqtx7Cz5jOL43uvoxXl_Dv_MtCgFaI_FbdZc-WnCSSnUbhwz4myviANBufjLijMO1aUL3z5LDyr3UEFIxSZx4bI1lUNZElcvLQkuCvso8BKV7-OQBdhakZHVyYJeGzkmjpqGL1_OkRqVvRj0apNLGQ6N7bEJCwo2SImrGj8vnX"loading="lazy" decoding="async" />
 </div>
 </div>
 </section>

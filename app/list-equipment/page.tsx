@@ -7,26 +7,26 @@ export default function ListEquipment() {
       <Header />
       <main className="flex-grow">
 
-{/*  TopNavBar Component  */}
+        {/*  TopNavBar Component  */}
 
-<main className="pt-20">
-{/*  Hero Section  */}
-<section className="relative min-h-[870px] flex items-center overflow-hidden">
+        <div className="pt-20">
+          {/*  Hero Section  */}
+          <section className="relative min-h-[500px] md:min-h-[70vh] py-16 flex items-center overflow-hidden">
 <div className="absolute inset-0 z-0">
 <div className="absolute inset-0 bg-gradient-to-r from-primary-container via-primary-container/80 to-transparent z-10"></div>
-<img alt="Owner with tractor" className="w-full h-full object-cover" data-alt="A smiling Indian farmer standing proudly next to his clean modern green tractor in a lush sugarcane field in Kolhapur at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpJNrHUhz2IVLOk8s20PA7GB7Td4tJa3tkVfqY2uvx4s3YdLgn1vqZX12LfmdgfhNIPSsL-yc67FdukLdGtl02Z8M_XgXPkHu5fN0MHfiib-OLwDso9DhjaNGZ85EJs484Lth2-XlFRgZ7D8Z7YwRujfWl6at-ANFRZ7JiNgI9_zqJOF9FThdiLwtaGJsEJxNTJw3kw9dTyquLXw2IL6PNz5OygaUfcoFoHdCDNRs4CqLnCQm0F9nbvG59y_VaMsoTZbnAUWgzUIM7"/>
+<img alt="Owner with tractor" className="w-full h-full object-cover" data-alt="A smiling Indian farmer standing proudly next to his clean modern green tractor in a lush sugarcane field in Kolhapur at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpJNrHUhz2IVLOk8s20PA7GB7Td4tJa3tkVfqY2uvx4s3YdLgn1vqZX12LfmdgfhNIPSsL-yc67FdukLdGtl02Z8M_XgXPkHu5fN0MHfiib-OLwDso9DhjaNGZ85EJs484Lth2-XlFRgZ7D8Z7YwRujfWl6at-ANFRZ7JiNgI9_zqJOF9FThdiLwtaGJsEJxNTJw3kw9dTyquLXw2IL6PNz5OygaUfcoFoHdCDNRs4CqLnCQm0F9nbvG59y_VaMsoTZbnAUWgzUIM7"loading="lazy" decoding="async" />
 </div>
 <div className="relative z-20 max-w-7xl mx-auto px-6 w-full">
 <div className="max-w-2xl">
-<span className="inline-flex items-center gap-2 px-3 py-1 bg-secondary-container/20 text-secondary-container rounded-full text-xs font-bold tracking-widest uppercase mb-6">
+<span className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md text-amber-200 rounded-full text-xs font-bold tracking-widest uppercase mb-6 shadow-sm">
 <span className="material-symbols-outlined text-sm" style={{'fontVariationSettings': '\'FILL\' 1'}}>stars</span>
                         Empowering Rural Owners
                     </span>
 <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6">
                         Your Equipment, <br/>
-<span className="text-on-tertiary-container">Your Extra Income.</span>
+<span className="text-secondary-container">Your Extra Income.</span>
 </h1>
-<p className="font-body text-xl text-on-primary-container/90 mb-10 leading-relaxed max-w-xl">
+<p className="font-body text-xl text-white/90 mb-10 leading-relaxed max-w-xl">
                         List your tractors, harvesters, and implements on Kisan Kamai. Reach verified farmers across Sangli, Satara, and Kolhapur.
                     </p>
 <div className="flex flex-col sm:flex-row gap-4">
@@ -129,7 +129,7 @@ export default function ListEquipment() {
 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 {/*  Tractor Card  */}
 <div className="relative group rounded-3xl overflow-hidden aspect-[4/5] shadow-lg">
-<img alt="Tractors" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Modern red and blue Indian tractors parked in a neat row in a sunny farm courtyard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBukZQoo5oJvbevO4qV7eu-5dby7ya1GJpkvTMIXTHsCIrNR6cgRzo54NK0074M6OhAGoPYJL7szxrJXEW3vAOYUh4e_pUxtCu3znzHcm7ShNPbxPIoP8acImacO4UjCMtLAGeP2mXB-JmZ78MhhwAzue44BgWw1EJwAMrFa3BWEYMmEMqYumO7OKgY92HBbto86xJyvIwUcgxhiqldIEd0n98NDTjiLHckPI4JRm7m_q_KXPMF5d_Qv7126uqqthXj-L1H8OJXQh4p"/>
+<img alt="Tractors" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Modern red and blue Indian tractors parked in a neat row in a sunny farm courtyard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBukZQoo5oJvbevO4qV7eu-5dby7ya1GJpkvTMIXTHsCIrNR6cgRzo54NK0074M6OhAGoPYJL7szxrJXEW3vAOYUh4e_pUxtCu3znzHcm7ShNPbxPIoP8acImacO4UjCMtLAGeP2mXB-JmZ78MhhwAzue44BgWw1EJwAMrFa3BWEYMmEMqYumO7OKgY92HBbto86xJyvIwUcgxhiqldIEd0n98NDTjiLHckPI4JRm7m_q_KXPMF5d_Qv7126uqqthXj-L1H8OJXQh4p"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
 <div className="absolute bottom-0 left-0 p-8 w-full">
 <h3 className="font-headline text-2xl font-bold text-white mb-2">Tractors</h3>
@@ -139,7 +139,7 @@ export default function ListEquipment() {
 </div>
 {/*  Harvester Card  */}
 <div className="relative group rounded-3xl overflow-hidden aspect-[4/5] shadow-lg">
-<img alt="Harvesters" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Combine harvester working in a golden wheat field in Maharashtra under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC07V_J8rC9ZxUmwsJkDMPLUHPrVlFCfmLY6NrCUUoob2MglR3lPKgWnIl1Tb16YvOvE9Wdt-Iqeo8dF97x5ZlbTyhSu_8ax0tIXeAbxif6c6zi1G8mIqdv4_z88AqrjDPNGgCFJFN2jEjJOn3KHawqmuKn0k7psO3qpSSz_9Q74gdoP5Cm2HnzmqYgbS8YeQwce_YUqbJ-6TYD5icCHJAHSx5KvD88HDqlQVc0n7I6xV7vtPYTdEAE6xa_EVGjcKmBt_EFnCrcVCbM"/>
+<img alt="Harvesters" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Combine harvester working in a golden wheat field in Maharashtra under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC07V_J8rC9ZxUmwsJkDMPLUHPrVlFCfmLY6NrCUUoob2MglR3lPKgWnIl1Tb16YvOvE9Wdt-Iqeo8dF97x5ZlbTyhSu_8ax0tIXeAbxif6c6zi1G8mIqdv4_z88AqrjDPNGgCFJFN2jEjJOn3KHawqmuKn0k7psO3qpSSz_9Q74gdoP5Cm2HnzmqYgbS8YeQwce_YUqbJ-6TYD5icCHJAHSx5KvD88HDqlQVc0n7I6xV7vtPYTdEAE6xa_EVGjcKmBt_EFnCrcVCbM"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
 <div className="absolute bottom-0 left-0 p-8 w-full">
 <h3 className="font-headline text-2xl font-bold text-white mb-2">Harvesters</h3>
@@ -149,7 +149,7 @@ export default function ListEquipment() {
 </div>
 {/*  Implements Card  */}
 <div className="relative group rounded-3xl overflow-hidden aspect-[4/5] shadow-lg">
-<img alt="Implements" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Close up of a heavy duty agricultural rotavator and seeder attachments in a rustic barn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWNILv7etn7BACAHYnqBIb4d8ktEUtzdDUp6alIpwc94MAjjKoI9hxCiggbV8_SsvJyYmq4pMBsLby8-7S6tdwZrLF8qMGRWduXvnORhMyuPWrracmAskfqO34CzCDw5zfkJG3qtLsPFMtisgo8rgOWaojAMva6bPQAwBdQFWtj6SOWHz9MgR_Xw0qwYb23vHe9MXWo2tUnWd46qkthXZN_gwFkn2u2M19IVTNFPNB5R52l-jj_1m8HT9OPCa9V9z-jSLXqR75jjIK"/>
+<img alt="Implements" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Close up of a heavy duty agricultural rotavator and seeder attachments in a rustic barn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWNILv7etn7BACAHYnqBIb4d8ktEUtzdDUp6alIpwc94MAjjKoI9hxCiggbV8_SsvJyYmq4pMBsLby8-7S6tdwZrLF8qMGRWduXvnORhMyuPWrracmAskfqO34CzCDw5zfkJG3qtLsPFMtisgo8rgOWaojAMva6bPQAwBdQFWtj6SOWHz9MgR_Xw0qwYb23vHe9MXWo2tUnWd46qkthXZN_gwFkn2u2M19IVTNFPNB5R52l-jj_1m8HT9OPCa9V9z-jSLXqR75jjIK"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
 <div className="absolute bottom-0 left-0 p-8 w-full">
 <h3 className="font-headline text-2xl font-bold text-white mb-2">Implements</h3>
@@ -196,8 +196,8 @@ export default function ListEquipment() {
 </div>
 </div>
 </section>
-</main>
-{/*  Footer Component  */}
+        </div>
+        {/*  Footer Component  */}
 
 
       </main>

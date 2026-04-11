@@ -1,26 +1,26 @@
+"use client";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { useLanguage } from "@/components/LanguageContext";
 
 export default function LegalCenter() {
+  const { langText } = useLanguage();
+
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow pt-28 pb-12 px-6 max-w-7xl mx-auto">
 
-{/*  TopNavBar  */}
-
-{/*  Header Section  */}
-
-<main className="max-w-7xl mx-auto px-6 py-12">
 <div className="flex flex-col lg:flex-row gap-12">
 {/*  Side Navigation / Tabs  */}
 <aside className="lg:w-1/4 space-y-4">
 <div className="sticky top-28 space-y-2">
-<h4 className="px-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">Documents</h4>
+<h4 className="px-4 text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-4">{langText("Documents", "दस्तऐवज")}</h4>
 <button className="w-full flex items-center justify-between p-4 rounded-xl transition-all duration-200 bg-primary-container text-on-primary">
 <div className="flex items-center gap-3">
 <span className="material-symbols-outlined">policy</span>
-<span className="font-semibold">Privacy Policy</span>
+<span className="font-semibold">{langText("Privacy Policy", "गोपनीयता धोरण")}</span>
 </div>
 <span className="material-symbols-outlined text-sm">chevron_right</span>
 </button>
@@ -166,10 +166,6 @@ export default function LegalCenter() {
 </div>
 </div>
 </div>
-</main>
-{/*  Footer  */}
-
-
       </main>
       <Footer />
     </div>

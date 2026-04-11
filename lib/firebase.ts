@@ -1,21 +1,15 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
 
-// TODO: Replace with your Firebase project's credentials
-// You can keep these as environment variables in a .env.local file
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "YOUR_API_KEY",
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "YOUR_AUTH_DOMAIN",
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "YOUR_PROJECT_ID",
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "YOUR_STORAGE_BUCKET",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "YOUR_MESSAGING_SENDER_ID",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "YOUR_APP_ID"
+  apiKey: "AIzaSyDjstec2LZmBGV_2CwhnrIJDOIGOl5Y-Cs",
+  authDomain: "kisan-kamai-otp-test.firebaseapp.com",
+  projectId: "kisan-kamai-otp-test",
+  storageBucket: "kisan-kamai-otp-test.firebasestorage.app",
+  messagingSenderId: "703663766582",
+  appId: "1:703663766582:web:76221dca9031159b0d2c97"
 };
 
-// Initialize Firebase for Client-side
-const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-export { auth, db, app };
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export default app;

@@ -4,6 +4,8 @@ import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
+import { PerformanceMonitor } from "@/components/PerformanceMonitor";
+import { Suspense } from "react";
 import "./globals.css";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
@@ -33,6 +35,9 @@ export default function RootLayout({
           <LanguageProvider>
             <AuthProvider>
               {children}
+              <Suspense fallback={null}>
+                <PerformanceMonitor />
+              </Suspense>
             </AuthProvider>
             <BackToTop />
           </LanguageProvider>

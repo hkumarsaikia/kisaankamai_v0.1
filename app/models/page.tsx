@@ -79,7 +79,7 @@ function ModelsInner() {
               <div key={item.name} className="bg-white dark:bg-slate-900/40 rounded-2xl overflow-hidden shadow-lg border border-outline-variant/20 dark:border-slate-800/50 hover:shadow-xl transition-all">
                 <div className="h-48 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.img} alt={item.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                  <img src={item.img} alt={item.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-primary dark:text-emerald-50">{item.name}</h3>

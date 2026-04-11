@@ -59,7 +59,7 @@ export default function FAQ() {
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
       <Header />
-      <main className="flex-grow pt-12 pb-24 px-6">
+      <main className="flex-grow pt-28 pb-24 px-6">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
           <div className="mb-16 text-center">

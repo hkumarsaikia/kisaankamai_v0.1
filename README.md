@@ -2,40 +2,52 @@
 
 Kisan Kamai is a modern, bilingual (English/Marathi) marketplace platform for agricultural equipment rental, primarily serving Southern Maharashtra (Sangli, Satara, Kolhapur).
 
+---
+
 ## ✨ Features
 
 - **21+ Fully Functional Pages**: Comprehensive routes including Home, Rent Equipment, List Equipment, Owner Dashboard, and more.
 - **Bilingual Interface**: Seamless switching between English and Marathi using a custom global provider.
-- **Dark Mode Support**: Sleek, modern aesthetics fully compatible with light and dark environments.
+- **Autonomous Performance Monitoring**: Integrated profiling agent (Puppeteer) and live metrics tracking (Web Vitals) with Appwrite backend.
 - **Dynamic Mapping**: Interactive Leaflet maps showing regional hubs and equipment locations.
-- **Responsive Design**: Optimized for desktops, tablets, and mobile devices.
+- **User Dashboard Pro**: Advanced renter and owner dashboards with hover-motion effects.
 
 ## 🛠️ Tech Stack
 
 - **Framework**: Next.js 14 (App Router)
-- **Styling**: Tailwind CSS
-- **Interactivity**: React, Lucide Icons, Leaflet
-- **Deployment**: GitHub Pages (via Static Export)
+- **Database/Storage**: Appwrite (Metrics, Traces, Logs)
+- **Auth/Realtime**: Firebase & Appwrite
+- **Styling**: Tailwind CSS & Framer Motion
+- **Monitoring**: Puppeteer (Agent), Web-vitals (Frontend)
 
-## 🚀 Local Development
+## 📁 Documentation
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/hkumarsaikia/kisaankamai_v0.1.git
-   cd kisaankamai_v0.1
-   ```
+Detailed documentation is available in the `docs/` directory:
 
-2. **Install dependencies**:
+- 🛠️ **[Setup Guide](docs/SETUP.md)**: Platform-specific installation (Windows, macOS, Ubuntu).
+- 🏗️ **[Architecture](docs/ARCHITECTURE.md)**: System design and flow diagrams.
+- 🚀 **[Development & Replication](docs/DEVELOPMENT.md)**: Version details and how to replicate the project.
+- 🗺️ **[Roadmap](docs/ROADMAP.md)**: Future vision and project phases.
+
+## 🚀 Quick Start
+
+1. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Run the development server**:
+2. **Run the development server**:
    ```bash
    npm run dev
    ```
    Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+3. **Run Performance Profiler**:
+   ```bash
+   node scripts/profiler_agent.mjs
+   ```
+
 ## 📄 License
 
 This project is created for demonstration and replication purposes. All rights reserved.
+

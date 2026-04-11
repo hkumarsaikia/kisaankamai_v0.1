@@ -117,7 +117,7 @@ export default function BookingFlow() {
 {/*  Equipment Card Preview  */}
 <div className="bg-white rounded-[32px] overflow-hidden shadow-sm border border-surface-variant">
 <div className="h-48 relative">
-<img className="w-full h-full object-cover" data-alt="Modern red Mahindra tractor parked in a lush green Indian field during golden hour with mountains in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnFJi0w34H16W-3vWg7CoKeBwmAqAqLAW-u1X0_JuEsrP68JXfkctxn2FSg6-2JXcqEZ8Rk2oXcqyY7HDgnHYL9zReL2O6ezhoKNCURyRpmZEFuPhAJNrRPP-iJ9vAXZ3Ml7czlpzrzjwYYu8uczAnE8SjfupprNjmaad1cEPDW6mI4T2G605wCqEsHdY2mWH1FDJElkFzMyLrmW_5_vN7wuK_FUr_IunV_aEOiA_eeiHhPwmyLdbWICS3t5_-49ehIJFDpeASTF12"/>
+<img className="w-full h-full object-cover" data-alt="Modern red Mahindra tractor parked in a lush green Indian field during golden hour with mountains in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnFJi0w34H16W-3vWg7CoKeBwmAqAqLAW-u1X0_JuEsrP68JXfkctxn2FSg6-2JXcqEZ8Rk2oXcqyY7HDgnHYL9zReL2O6ezhoKNCURyRpmZEFuPhAJNrRPP-iJ9vAXZ3Ml7czlpzrzjwYYu8uczAnE8SjfupprNjmaad1cEPDW6mI4T2G605wCqEsHdY2mWH1FDJElkFzMyLrmW_5_vN7wuK_FUr_IunV_aEOiA_eeiHhPwmyLdbWICS3t5_-49ehIJFDpeASTF12"loading="lazy" decoding="async" />
 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-primary flex items-center gap-1">
 <span className="material-symbols-outlined text-sm" style={{'fontVariationSettings': '\'FILL\' 1'}}>star</span>
                                 4.9 (120+ Bookings)

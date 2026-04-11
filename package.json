@@ -19,9 +19,12 @@
     "leaflet": "^1.9.4",
     "next": "^14.2.3",
     "next-themes": "^0.3.0",
+    "node-appwrite": "^23.1.0",
+    "puppeteer": "^24.40.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-leaflet": "^4.2.1"
+    "react-leaflet": "^4.2.1",
+    "web-vitals": "^5.2.0"
   },
   "devDependencies": {
     "@tailwindcss/container-queries": "^0.1.1",

@@ -142,7 +142,7 @@ function RentEquipmentInner() {
               <div key={eq.name} className="group bg-white dark:bg-slate-900/40 rounded-2xl overflow-hidden border border-outline-variant/20 dark:border-slate-800/50 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
                 <div className="relative h-56 overflow-hidden">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={eq.name} src={eq.img} />
+                  <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt={eq.name} src={eq.img} loading="lazy" decoding="async" />
                   <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1.5 shadow-sm">
                     <span className="material-symbols-outlined text-secondary text-sm" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
                     <span className="font-bold text-xs">{eq.rating}</span>
@@ -171,7 +171,7 @@ function RentEquipmentInner() {
                       <div className="w-8 h-8 rounded-full border-2 border-white dark:border-slate-800 bg-slate-200 dark:bg-slate-900/70 overflow-hidden flex items-center justify-center">
                         {eq.ownerImg ? (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img alt="Owner" className="w-full h-full object-cover" src={eq.ownerImg} />
+                          <img alt="Owner" className="w-full h-full object-cover" src={eq.ownerImg} loading="lazy" decoding="async" />
                         ) : (
                           <span className="material-symbols-outlined text-sm text-slate-400">person</span>
                         )}

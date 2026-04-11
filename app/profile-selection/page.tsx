@@ -48,11 +48,7 @@ export default function ProfileSelectionPage() {
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-surface text-on-surface">
       <div className="fixed inset-0 z-0">
-        <img
-          className="h-full w-full object-cover opacity-10 dark:opacity-20"
-          src={assetPath("/assets/generated/modern_farm_tech.png")}
-          alt="Maharashtra farm fields"
-        />
+        <img className="h-full w-full object-cover opacity-10 dark:opacity-20" src={assetPath("/assets/generated/modern_farm_tech.png")} alt="Maharashtra farm fields" loading="lazy" decoding="async" />
         <div className="absolute inset-0 bg-gradient-to-b from-surface/50 via-surface/80 to-surface dark:from-slate-950/60 dark:via-slate-950/85 dark:to-slate-950" />
       </div>
 

@@ -11,7 +11,7 @@ export default function Locations() {
 <main className="pt-20">
 <section className="relative h-[400px] flex items-center overflow-hidden">
 <div className="absolute inset-0 z-0">
-<img alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" className="w-full h-full object-cover" data-alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrSpZOMk74aBsSIese2JWI0cHKeiaZObCNMRdhtYhkXOrrPS9QzTvPz2EIGQpSNPJtnZDKU-JA8YEgSIrUPakgZ-KJTyWZ7xWSPn_Veki49pHC2NCiEVFBDSjKLvJbRXXov-hx9BUF1gYISDkDtFiDNHPDNZhV4xRd6yViNV5bNTUlybVsxBTolfJGEjFMhFq_EKr8YjUmhfS49tYOgQjELe3e5s_soLwqjfNHTo96lgGbkHo1J434kxWHKuqozZ_lB_Q6bWCdn2q6"/>
+<img alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" className="w-full h-full object-cover" data-alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrSpZOMk74aBsSIese2JWI0cHKeiaZObCNMRdhtYhkXOrrPS9QzTvPz2EIGQpSNPJtnZDKU-JA8YEgSIrUPakgZ-KJTyWZ7xWSPn_Veki49pHC2NCiEVFBDSjKLvJbRXXov-hx9BUF1gYISDkDtFiDNHPDNZhV4xRd6yViNV5bNTUlybVsxBTolfJGEjFMhFq_EKr8YjUmhfS49tYOgQjELe3e5s_soLwqjfNHTo96lgGbkHo1J434kxWHKuqozZ_lB_Q6bWCdn2q6"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-gradient-to-r from-primary-container/80 to-transparent"></div>
 </div>
 <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
@@ -32,7 +32,7 @@ export default function Locations() {
 <p className="text-sm text-slate-500 font-medium">Explore active clusters and equipment hubs.</p>
 </div>
 <div className="w-full h-full rounded-xl bg-slate-100 flex items-center justify-center relative overflow-hidden border border-slate-200">
-<img alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" className="w-full h-full object-cover opacity-40 grayscale" data-alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" data-location="Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQkwnPgFRNqcp_PJa-0Wr_hCpM8dLrifhN7RfvecRbIQj_la-63LKy9oaJ_Z5s5CSJyStD63GskB4ao0k26Q6yrLL4ydX7z9vIN5cgM90GHNNNolHMPA4ntTWWh_h3bWc8q6z4WXl3P1X1BtNW49XaAYCgY42JnVvzFDnVmF4nfE-kBSFfpRkGtI-D_2Ds1olQhGkXkTNsUlemRfrsT48GVVOQOQZ2P8OwSrXHZQW9L5H1-KQVL1q5cp7Q2XCxDofVctyd0f2srLwG"/>
+<img alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" className="w-full h-full object-cover opacity-40 grayscale" data-alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" data-location="Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQkwnPgFRNqcp_PJa-0Wr_hCpM8dLrifhN7RfvecRbIQj_la-63LKy9oaJ_Z5s5CSJyStD63GskB4ao0k26Q6yrLL4ydX7z9vIN5cgM90GHNNNolHMPA4ntTWWh_h3bWc8q6z4WXl3P1X1BtNW49XaAYCgY42JnVvzFDnVmF4nfE-kBSFfpRkGtI-D_2Ds1olQhGkXkTNsUlemRfrsT48GVVOQOQZ2P8OwSrXHZQW9L5H1-KQVL1q5cp7Q2XCxDofVctyd0f2srLwG"loading="lazy" decoding="async" />
 <div className="absolute inset-0 p-12">
 <div className="relative w-full h-full">
 <div className="absolute top-[30%] left-[40%] group">
@@ -175,7 +175,7 @@ export default function Locations() {
 </section>
 <section className="mb-24 px-6">
 <div className="max-w-7xl mx-auto rounded-[40px] h-[500px] overflow-hidden relative">
-<img alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" className="w-full h-full object-cover" data-alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKZC6B7aV2-8Ka9mee1ZzwnZknocKwMstNFKqdI5VdFgsEv7OEScTd_0nxSJ6PdwftGGGCIuUlukLZKyXDe8A3pLtMEOhRvRRujpMxR4-zjp_DRGqdtBZbo2ESf7qLwNOBZfFtHzOykNve4CfJiYPxHWKZayfNjEHubp01zEBp6tEb3AaIUhEboTWBBdBCzny9FFiQOPivIHi_i06-UZnOamQm8h4rNnAcrI34PRNhBIIeXWkPo5m0aTw3lBuijXENUoHQ-IiGYjb_"/>
+<img alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" className="w-full h-full object-cover" data-alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKZC6B7aV2-8Ka9mee1ZzwnZknocKwMstNFKqdI5VdFgsEv7OEScTd_0nxSJ6PdwftGGGCIuUlukLZKyXDe8A3pLtMEOhRvRRujpMxR4-zjp_DRGqdtBZbo2ESf7qLwNOBZfFtHzOykNve4CfJiYPxHWKZayfNjEHubp01zEBp6tEb3AaIUhEboTWBBdBCzny9FFiQOPivIHi_i06-UZnOamQm8h4rNnAcrI34PRNhBIIeXWkPo5m0aTw3lBuijXENUoHQ-IiGYjb_"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent flex flex-col justify-end p-12">
 <div className="max-w-2xl">
 <h2 className="text-4xl font-extrabold text-white mb-6">Rooted in Trust. <br/>Serving Indian Agriculture.</h2>

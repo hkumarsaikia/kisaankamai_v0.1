@@ -1,302 +1,243 @@
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+"use client";
 
-export default function OwnerDashboardBookings() {
+import Link from "next/link";
+
+export default function BookingsManagementPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
-      <Header />
-      <main className="flex-grow">
+    <>
+      {/* Page Header & Tab Segmented Control */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+        <div>
+          <h1 className="text-3xl font-extrabold text-on-surface mb-2 font-headline">Bookings Management</h1>
+          <p className="text-on-surface-variant flex items-center gap-2">
+            <span className="material-symbols-outlined text-sm">info</span>
+            बुक केलेल्या उपकरणांचे व्यवस्थापन करा | Manage your equipment bookings
+          </p>
+        </div>
+        <div className="inline-flex p-1 bg-surface-container dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+          <button className="px-6 py-2.5 rounded-lg bg-primary-container text-on-primary-container font-bold text-sm shadow-sm transition-all text-white">
+            Active (4)
+          </button>
+          <button className="px-6 py-2.5 rounded-lg text-on-surface-variant dark:text-slate-400 font-semibold text-sm hover:text-primary dark:hover:text-emerald-400 transition-all">
+            Upcoming (2)
+          </button>
+          <button className="px-6 py-2.5 rounded-lg text-on-surface-variant dark:text-slate-400 font-semibold text-sm hover:text-primary dark:hover:text-emerald-400 transition-all">
+            History
+          </button>
+        </div>
+      </div>
 
-{/*  SideNavBar (Shared Component)  */}
-<aside className="hidden lg:flex flex-col fixed left-0 top-0 h-full h-screen w-64 border-r border-surface-container-highest bg-white dark:bg-slate-950 z-40">
-<div className="px-6 py-8">
-<span className="text-xl font-bold text-primary">Kisan Kamai</span>
-</div>
-<div className="px-4 mb-6">
-<div className="flex items-center gap-3 p-3 rounded-xl bg-surface-container-low border border-surface-container-highest">
-<div className="w-10 h-10 rounded-full overflow-hidden bg-primary-container">
-<img className="w-full h-full object-cover" data-alt="portrait of a confident Indian farmer smiling wearing a traditional white kurta" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCExv3QOuibAX6OClfz_t075pUbPpJfzqx6sb25CiutKAmBrXyTH1QWiiPw-IW4p5WgJr3Dmm5g5mCx6isTHJzUsHMEW_vpFKttBYWOMjfGTCUxD3GX0E0jCk4LmKjk3uwBC42kquNUrTDYImmkeAjgiHZmhUCvsyaUAo-6qFhAGCwvj9j9M0yI2mPGM7qxvaED16FYQe-i4v3ins77rZpK6wLZFqza2K80SQHrw_rUlDaG0pHpssIDt2u1KfQiEk0X4VVCY3_OBKOq"/>
-</div>
-<div className="flex flex-col">
-<span className="text-sm font-bold text-primary leading-tight">Kisan Owner</span>
-<span className="text-[10px] font-medium text-on-surface-variant uppercase tracking-wider">Verified Partner</span>
-</div>
-</div>
-</div>
+      {/* Dashboard Grid */}
+      <div className="grid grid-cols-12 gap-8">
+        {/* Main Bookings Column */}
+        <div className="col-span-12 lg:col-span-8 flex flex-col gap-6">
+          {/* Booking Card 1: Pending Approval */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800 hover:border-emerald-200 dark:hover:border-emerald-700 transition-all relative overflow-hidden group">
+            <div className="absolute top-0 right-0 bg-secondary-container text-on-secondary-container px-4 py-1.5 rounded-bl-xl text-[10px] font-black uppercase tracking-widest text-slate-800">
+              Pending Approval
+            </div>
+            <div className="flex flex-col md:flex-row gap-6 mt-2">
+              <div className="w-full md:w-48 h-32 rounded-xl overflow-hidden shrink-0">
+                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Front view of a powerful modern red tractor working in a sunlit wheat field in India" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwC-t3Q4wKp7hBtuFYrZIHjQas-YqDQ6ZEmaqb8lZ_9HYCM00VAq-8AIiUuvRIzJts0MfQogIvLwzRpKF0Z8wwJQVqJqA4FcBxg3BUAcs4OAJDtXGswqEvvdlJGb49Lr7_rSt03I9YLKs6B4SvUCEOxY0E4r_6zs-7PImSP-gsb4NT1Hj4pSzLx8rCIO5gTIyMRdPq6eLHNU4Uhk-Dlqp5H7BVH-Vd_cQV5auaJbDTUNogRl0n9oschvtDf4P3tckWt3wg5yuQul1M"loading="lazy" decoding="async" />
+              </div>
+              <div className="flex-1">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-emerald-950 dark:text-emerald-50">Mahindra 575 DI XP Plus</h3>
+                    <p className="text-slate-500 text-sm flex items-center gap-1 mt-1">
+                      <span className="material-symbols-outlined text-xs">location_on</span>
+                      Sangli District, Maharashtra
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-black text-emerald-900 dark:text-emerald-400">₹4,200</div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Est. Total Earnings</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-50 dark:border-slate-800/50 mb-6">
+                  <div>
+                    <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider mb-1">Renter</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-primary-container text-[10px] text-white flex items-center justify-center font-bold">RK</div>
+                      <span className="text-sm font-bold text-on-surface dark:text-slate-200">Rajesh Kulkarni</span>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider mb-1">Dates</p>
+                    <span className="text-sm font-bold text-on-surface dark:text-slate-200">Oct 24 - Oct 26 (3 Days)</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button className="flex-1 bg-primary-container text-white py-2.5 rounded-lg font-bold text-sm hover:opacity-90 transition-all flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined text-sm">check_circle</span> Approve
+                  </button>
+                  <button className="flex-1 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 py-2.5 rounded-lg font-bold text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">Decline</button>
+                  <button className="p-2.5 border border-slate-200 dark:border-slate-700 rounded-lg text-emerald-700 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/30 transition-all flex items-center justify-center">
+                    <span className="material-symbols-outlined">chat</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
 
-<div className="p-4 space-y-2 border-t border-surface-container-highest">
-<button className="w-full flex items-center justify-center gap-2 bg-primary-container text-white py-3 px-4 rounded-xl font-bold text-sm hover:opacity-90 transition-opacity">
-<span className="material-symbols-outlined text-sm" data-icon="add">add</span>
-                Add New Listing
-            </button>
-<a className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-lg transition-all" href="#">
-<span className="material-symbols-outlined" data-icon="support_agent">support_agent</span>
-<span className="font-manrope text-sm font-medium">Support</span>
-</a>
-<a className="flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-slate-50 rounded-lg transition-all" href="#">
-<span className="material-symbols-outlined" data-icon="logout">logout</span>
-<span className="font-manrope text-sm font-medium">Sign Out</span>
-</a>
-</div>
-</aside>
-{/*  Main Content Canvas  */}
-<main className="main-content-offset min-h-screen pb-12">
-{/*  Top Sticky Header for Mobile/Context  */}
+          {/* Booking Card 2: Confirmed/Ongoing */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-emerald-100 dark:border-emerald-900/50 hover:border-emerald-200 dark:hover:border-emerald-700 transition-all relative overflow-hidden group">
+            <div className="absolute top-0 right-0 bg-primary-container text-white px-4 py-1.5 rounded-bl-xl text-[10px] font-black uppercase tracking-widest flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Ongoing
+            </div>
+            <div className="flex flex-col md:flex-row gap-6 mt-2">
+              <div className="w-full md:w-48 h-32 rounded-xl overflow-hidden shrink-0">
+                <img className="w-full h-full object-cover" alt="Close-up of a high-tech agricultural harvester machinery focusing on the mechanical blades with dust in the air" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANh8zccqtzvRJXpuUmCAiz_1k362JD_kn7pR4zhgHxCM39TSavsHzr8rmmqpwXbSzEDSnpOBzQy6uv0pEMBYLxKXkujzI2_5FPZbC7l_DQ_MXlRgeWgZe_ftsujjriztX5a6QwgKJsTFhvaUA7Afvsdw-3pki0KbXZVuEIBGMHj2NpG4UlqYutzGXzhc29tecjEgWXH-516XhP2Qr5LVsHG1z8nrg8HJjfDi9rCtSHxze3ea9sHm_wsqeCjCzwLeLevAfpE7rI0pwd"loading="lazy" decoding="async" />
+              </div>
+              <div className="flex-1">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-xl font-bold text-emerald-950 dark:text-emerald-50">Swaraj 744 FE Rotavator</h3>
+                    <p className="text-slate-500 text-sm flex items-center gap-1 mt-1">
+                      <span className="material-symbols-outlined text-xs">location_on</span>
+                      Satara, Maharashtra
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-black text-emerald-900 dark:text-emerald-400">₹2,850</div>
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">Current Earnings</div>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-50 dark:border-slate-800/50 mb-6">
+                  <div>
+                    <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider mb-1">Renter</p>
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 rounded-full bg-secondary-container text-slate-900 text-[10px] flex items-center justify-center font-bold">SM</div>
+                      <span className="text-sm font-bold text-on-surface dark:text-slate-200">Sunil Mane</span>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-black text-slate-400 tracking-wider mb-1">End Time</p>
+                    <span className="text-sm font-bold text-on-surface dark:text-slate-200">Today, 06:00 PM</span>
+                  </div>
+                </div>
+                <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 pb-2 md:pb-0">
+                    <span className="material-symbols-outlined text-[20px]">contact_phone</span>
+                    <span className="text-sm font-bold">+91 98765 43210</span>
+                  </div>
+                  <div className="flex w-full md:w-auto gap-2">
+                    <button className="flex-1 px-4 py-2 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Extend</button>
+                    <button className="flex-1 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg text-xs font-bold hover:bg-emerald-100 dark:hover:bg-emerald-800/50 transition-colors">End Session</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-<div className="max-w-6xl mx-auto px-6 pt-8">
-{/*  Header Section  */}
-<div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
-<div>
-<div className="flex items-center gap-2 text-on-surface-variant mb-1">
-<span className="text-xs font-bold tracking-widest uppercase">Owner Portal</span>
-<span className="w-1 h-1 rounded-full bg-outline-variant"></span>
-<span className="text-xs font-bold tracking-widest uppercase text-secondary">मराठी पोर्टल</span>
-</div>
-<h1 className="text-3xl font-extrabold text-primary tracking-tight">Booking Management</h1>
-<p className="text-on-surface-variant mt-1">Manage your incoming requests and schedule.</p>
-</div>
-<div className="flex items-center gap-3 bg-white p-1 rounded-xl shadow-sm border border-surface-container-highest">
-<button className="px-4 py-2 text-sm font-bold bg-primary text-white rounded-lg transition-all">Active</button>
-<button className="px-4 py-2 text-sm font-bold text-on-surface-variant hover:bg-surface-container rounded-lg transition-all">Upcoming</button>
-<button className="px-4 py-2 text-sm font-bold text-on-surface-variant hover:bg-surface-container rounded-lg transition-all">History</button>
-</div>
-</div>
-<div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-{/*  Left: New Requests Column (Bento Cards)  */}
-<div className="xl:col-span-2 space-y-6">
-<div className="flex items-center justify-between">
-<h2 className="text-lg font-bold text-primary flex items-center gap-2">
-                            New Requests <span className="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-xs">3</span>
-</h2>
-<a className="text-sm font-bold text-secondary hover:underline" href="#">मराठीत पहा</a>
-</div>
-{/*  Request Card 1  */}
-<div className="bg-white rounded-2xl p-5 border border-surface-container-highest shadow-sm hover:shadow-md transition-all group">
-<div className="flex flex-col md:flex-row gap-6">
-<div className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
-<img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="high-end John Deere tractor parked in a golden wheat field during sunrise with premium lens flare" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfu_AMK_TC8qMMVZ5e68Vj614f7M-Jvj39tLDf3BQJkq-OR0wlOV6NnKY023rSowbHNfyUR20P5q9Emgjo4e57yk4c-aACXJdZTlCLD205lUsSDSeqCy9E2TCpIP7z4Fvt3iHDiYNgRCVDnJB3NDcwl79hAdszGgm4yLyy0f7U7N9J_tB4bXx2XkjVYlAWGd5o9b53aF9pauVHDAIeeds_aa7VckpSTmbvjgEmlh9kYALpZ4nflwGb2cyeq4_Ih7RTZDPwgd3CIiRh"/>
-</div>
-<div className="flex-1 flex flex-col justify-between">
-<div className="flex justify-between items-start">
-<div>
-<h3 className="text-base font-bold text-primary">Mahindra Yuvo 575 DI</h3>
-<div className="flex items-center gap-2 mt-1">
-<div className="w-6 h-6 rounded-full overflow-hidden bg-surface-container-highest">
-<img className="w-full h-full object-cover" data-alt="Close up portrait of a young Indian man in a smart casual polo shirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDx5bzL6bDQVA0JxAp7j3KMGj422zWVggwjN1uLMEN6YpdhDTjMjWHLXb_0V3dVd0WMlENhvLzIn426BpV8FXdPS88eGjjWb2YK4IpWBgH4aXhxV3uwZNLfBgajOd9yQhswUz1ZVqFEhjLJG_FKW9E9sLeR697KlUCScCYRDLMDl-t9mf5xwsJQudvzRFyYPPSv5jPOhU5v_omPSVzIiCTDoNc4oXdWzTRporMg1YH3LoPQoWVSEz4abYKQ3jGGBPZYgL9aOVZnMFfe"/>
-</div>
-<span className="text-sm font-semibold text-on-surface">Rajesh Deshmukh <span className="text-on-surface-variant font-normal">from Satara</span></span>
-</div>
-</div>
-<div className="text-right">
-<span className="block text-lg font-extrabold text-primary">₹3,200</span>
-<span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Estimated Total</span>
-</div>
-</div>
-<div className="mt-4 flex flex-wrap items-center gap-4 py-3 border-y border-surface-container-highest">
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-secondary text-lg" data-icon="calendar_month">calendar_month</span>
-<span className="text-xs font-bold">24 Oct - 26 Oct</span>
-</div>
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-secondary text-lg" data-icon="history">history</span>
-<span className="text-xs font-bold">3 Days</span>
-</div>
-<div className="flex items-center gap-2 ml-auto">
-<span className="px-2 py-1 bg-amber-50 text-amber-700 text-[10px] font-black rounded uppercase">Urgent</span>
-</div>
-</div>
-<div className="mt-4 flex flex-wrap gap-3">
-<button className="flex-1 bg-primary text-white py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">Approve Request</button>
-<button className="px-6 py-2.5 border border-surface-container-highest text-on-surface py-2 rounded-lg text-sm font-bold hover:bg-surface-container transition-colors">Decline</button>
-<button className="w-10 h-10 flex items-center justify-center border border-surface-container-highest text-primary rounded-lg hover:bg-surface-container transition-colors">
-<span className="material-symbols-outlined" data-icon="chat">chat</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-{/*  Request Card 2 (Bento Variant)  */}
-<div className="bg-white rounded-2xl p-5 border border-surface-container-highest shadow-sm hover:shadow-md transition-all group">
-<div className="flex flex-col md:flex-row gap-6">
-<div className="w-full md:w-32 h-32 rounded-xl overflow-hidden bg-surface-container flex-shrink-0">
-<img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Heavy duty combine harvester operating in a lush green paddy field, cinematic low angle shot" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXeWgkAV1x1OgBpa0auyHmBacTvv1IBdSuN6HHZuMz0giFUEgslR8DNPtxyaEFW_qQfI-SY6jGv3V3EMDAQxI5mZ10393zRusmkv2bKJ0Eath72hCyYwYPCNfDHP8rV_I0LBL3I8go1bhHdl5ramzkl-_47sR06qnJvglu5XQAz32-c5aMpqHKCutM2wE6jkFcfqQOO-oqQE7EbYADTp3cVHtBZTe3hEvuMKsI-i5SRaRyWrydi81W7U1m7BGa2bUrV19hlxUPJC1m"/>
-</div>
-<div className="flex-1 flex flex-col justify-between">
-<div className="flex justify-between items-start">
-<div>
-<h3 className="text-base font-bold text-primary">Swaraj 744 FE</h3>
-<div className="flex items-center gap-2 mt-1">
-<div className="w-6 h-6 rounded-full overflow-hidden bg-surface-container-highest">
-<img className="w-full h-full object-cover" data-alt="Indian woman farmer in a vibrant yellow saree standing in a field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSq5F2cYUuHYvBmXAsvxfDZXj8e5KUW5MdWMRmUV_E7aVgcECHdB37efSooZU37aQMHE2uMlH5_qq8EXFprA_jz2AT0Bf8jhSMJYsvk5HDimpaD86TMoEyYlEhntgcyEt7YDAPS6Hbs2dKAGkjqWW5m5pgRzagnZ9MCEO2waJgg-VGJuzN5M3W_FDECvdn_c_mYGqSUvGZQpTe7vNh6Wq12hUw7sh2AryJuq-dWeNygpmLu3nl_7gSomHl4vsY_kHpoeLx5TgwK3fu"/>
-</div>
-<span className="text-sm font-semibold text-on-surface">Anjali Patil <span className="text-on-surface-variant font-normal">from Karad</span></span>
-</div>
-</div>
-<div className="text-right">
-<span className="block text-lg font-extrabold text-primary">₹1,850</span>
-<span className="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Estimated Total</span>
-</div>
-</div>
-<div className="mt-4 flex flex-wrap items-center gap-4 py-3 border-y border-surface-container-highest">
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-secondary text-lg" data-icon="calendar_month">calendar_month</span>
-<span className="text-xs font-bold">28 Oct - 29 Oct</span>
-</div>
-<div className="flex items-center gap-2">
-<span className="material-symbols-outlined text-secondary text-lg" data-icon="history">history</span>
-<span className="text-xs font-bold">2 Days</span>
-</div>
-</div>
-<div className="mt-4 flex flex-wrap gap-3">
-<button className="flex-1 bg-primary text-white py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">Approve Request</button>
-<button className="px-6 py-2.5 border border-surface-container-highest text-on-surface py-2 rounded-lg text-sm font-bold hover:bg-surface-container transition-colors">Decline</button>
-<button className="w-10 h-10 flex items-center justify-center border border-surface-container-highest text-primary rounded-lg hover:bg-surface-container transition-colors">
-<span className="material-symbols-outlined" data-icon="chat">chat</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-{/*  Right Column: Calendar & Stats  */}
-<div className="space-y-8">
-{/*  Calendar View Section  */}
-<div className="bg-white rounded-2xl p-6 border border-surface-container-highest shadow-sm">
-<div className="flex items-center justify-between mb-6">
-<h2 className="text-base font-bold text-primary">Schedule</h2>
-<div className="flex gap-1">
-<button className="p-1 rounded hover:bg-surface-container"><span className="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span></button>
-<button className="p-1 rounded hover:bg-surface-container"><span className="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span></button>
-</div>
-</div>
-<div className="grid grid-cols-7 gap-1 text-center mb-4">
-<span className="text-[10px] font-black text-on-surface-variant uppercase">M</span>
-<span className="text-[10px] font-black text-on-surface-variant uppercase">T</span>
-<span className="text-[10px] font-black text-on-surface-variant uppercase">W</span>
-<span className="text-[10px] font-black text-on-surface-variant uppercase">T</span>
-<span className="text-[10px] font-black text-on-surface-variant uppercase">F</span>
-<span className="text-[10px] font-black text-on-surface-variant uppercase">S</span>
-<span className="text-[10px] font-black text-on-surface-variant uppercase">S</span>
-</div>
-<div className="grid grid-cols-7 gap-2">
-{/*  Simple Calendar Days Mockup  */}
-<div className="h-8 flex items-center justify-center text-xs text-on-surface-variant opacity-40">20</div>
-<div className="h-8 flex items-center justify-center text-xs text-on-surface-variant opacity-40">21</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold text-on-surface">22</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold text-on-surface">23</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold bg-primary text-white rounded-lg shadow-sm">24</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold bg-primary-fixed text-primary rounded-lg">25</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold bg-primary-fixed text-primary rounded-lg">26</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold text-on-surface">27</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold bg-secondary-container text-on-secondary-container rounded-lg">28</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold bg-secondary-container text-on-secondary-container rounded-lg">29</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold text-on-surface">30</div>
-<div className="h-8 flex items-center justify-center text-xs font-bold text-on-surface">31</div>
-<div className="h-8 flex items-center justify-center text-xs text-on-surface-variant opacity-40">1</div>
-<div className="h-8 flex items-center justify-center text-xs text-on-surface-variant opacity-40">2</div>
-</div>
-<div className="mt-6 pt-4 border-t border-surface-container-highest space-y-3">
-<div className="flex items-center gap-3">
-<span className="w-2 h-2 rounded-full bg-primary"></span>
-<span className="text-xs font-semibold">Deshmukh - Tractor (Today)</span>
-</div>
-<div className="flex items-center gap-3">
-<span className="w-2 h-2 rounded-full bg-secondary-container"></span>
-<span className="text-xs font-semibold">Anjali - Swaraj (Upcoming)</span>
-</div>
-</div>
-</div>
-{/*  Earnings Summary  */}
-<div className="bg-primary-container rounded-2xl p-6 text-white shadow-lg overflow-hidden relative">
-<div className="relative z-10">
-<span className="text-[10px] font-black uppercase tracking-widest text-on-primary-container">Estimated Earnings</span>
-<div className="text-3xl font-extrabold mt-1">₹42,850</div>
-<div className="mt-4 flex items-center gap-2 text-xs font-medium text-on-primary-container">
-<span className="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
-                                12% higher than last month
-                            </div>
-</div>
-{/*  Abstract design element  */}
-<div className="absolute -right-4 -bottom-4 opacity-10">
-<span className="material-symbols-outlined text-[120px]" data-icon="payments">payments</span>
-</div>
-</div>
-{/*  Quick Support Card  */}
-<div className="bg-surface-container-low rounded-2xl p-6 border border-dashed border-outline-variant text-center">
-<h3 className="text-sm font-bold text-primary mb-2">Need help managing equipment?</h3>
-<p className="text-xs text-on-surface-variant mb-4 leading-relaxed">Our support team is available in Marathi &amp; English to help you list or manage bookings.</p>
-<button className="w-full py-2 bg-white text-primary border border-surface-container-highest rounded-lg text-xs font-bold hover:bg-surface transition-colors">Contact Support</button>
-</div>
-</div>
-</div>
-{/*  Empty State Concept (Visible if no requests) - Hidden by default  */}
-<div className="hidden mt-12 py-20 flex flex-col items-center text-center bg-white rounded-3xl border border-dashed border-outline-variant">
-<div className="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mb-6">
-<span className="material-symbols-outlined text-outline text-4xl" data-icon="inventory_2">inventory_2</span>
-</div>
-<h2 className="text-2xl font-bold text-primary">No new requests yet</h2>
-<p className="text-on-surface-variant max-w-sm mt-2">Update your pricing or add professional photos to attract more farmers to your equipment.</p>
-<div className="mt-8 flex gap-4">
-<button className="bg-primary text-white px-8 py-3 rounded-xl font-bold transition-all hover:shadow-lg">Add New Listing</button>
-<button className="bg-white text-primary border border-surface-container-highest px-8 py-3 rounded-xl font-bold hover:bg-surface transition-all">Optimize Current</button>
-</div>
-</div>
-{/*  Completed History Strip  */}
-<div className="mt-16">
-<div className="flex items-center justify-between mb-6">
-<h2 className="text-lg font-bold text-primary">Recently Completed</h2>
-<button className="text-sm font-bold text-on-surface-variant hover:text-primary transition-colors">View All History</button>
-</div>
-<div className="overflow-x-auto pb-4 scrollbar-hide">
-<div className="flex gap-4 min-w-max">
-{/*  History Item 1  */}
-<div className="w-80 bg-white p-4 rounded-xl border border-surface-container-highest flex gap-4 items-center">
-<div className="w-12 h-12 rounded-lg overflow-hidden bg-surface-container">
-<img className="w-full h-full object-cover" data-alt="close up of tractor wheel on dark soil with sunlight reflecting on the rim" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdqNOAoCPN8x0nsEZC8ySbNFRQhgNTr8XGeglYme_oheUE-k1yvgLhZtw5MZd2AnHdZBTUP9xgRxwNDjSjuqiAOcuSnP4MChkAFQSOkgcz-1_hGr-OJ2z1tDzf8sOQDTVJu296cAO1lslwFCoXrwyZpVsm9_gqgIrzYeHEFMt-F63fydM-fghS4V_bZ3tWF-zGPQyrV1SPq8Z5g7MRNMeFK1jcr99JJnCYiEAXJ-d_Egi_TGMI-UBGEi5auHaJpN3nUrA4eeHXZSJM"/>
-</div>
-<div className="flex-1">
-<span className="block text-xs font-black text-on-surface-variant uppercase tracking-tighter">Completed 12 Oct</span>
-<h4 className="text-sm font-bold text-primary">Rotavator Attachment</h4>
-<span className="text-xs font-medium text-secondary">₹1,200 Earned</span>
-</div>
-<span className="material-symbols-outlined text-emerald-600" data-icon="check_circle" style={{'fontVariationSettings': '\'FILL\' 1'}}>check_circle</span>
-</div>
-{/*  History Item 2  */}
-<div className="w-80 bg-white p-4 rounded-xl border border-surface-container-highest flex gap-4 items-center">
-<div className="w-12 h-12 rounded-lg overflow-hidden bg-surface-container">
-<img className="w-full h-full object-cover" data-alt="modern farming seeder implement detail in high contrast morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD7UN56-Z2_tDkc9fBsx1kXCYvgZSc6DtKZ-iIbjFzKKvMiNQE2_kpTFOJZoJ-82Rl4k669AmPzsKzGuPiXxOak6Vuxv0dB_GJ43522eiid2WvxFDwZlPR5TT_2cyO_fpq84se2YAe019WzFiJbgxenW7R1UEyPbtFk2TWOiosq0Rq0ibIK90moqEjMBqjhwkvB7Y8xTgAb4VIiP9m5kV09cXfp4gu4is9YrmHaBy1aNtTQKG1UP5PVwJ_D_QZFRZuk63-qQbjJXKG"/>
-</div>
-<div className="flex-1">
-<span className="block text-xs font-black text-on-surface-variant uppercase tracking-tighter">Completed 08 Oct</span>
-<h4 className="text-sm font-bold text-primary">Seed Drill - 9 Row</h4>
-<span className="text-xs font-medium text-secondary">₹2,450 Earned</span>
-</div>
-<span className="material-symbols-outlined text-emerald-600" data-icon="check_circle" style={{'fontVariationSettings': '\'FILL\' 1'}}>check_circle</span>
-</div>
-{/*  History Item 3  */}
-<div className="w-80 bg-white p-4 rounded-xl border border-surface-container-highest flex gap-4 items-center">
-<div className="w-12 h-12 rounded-lg overflow-hidden bg-surface-container">
-<img className="w-full h-full object-cover" data-alt="powerful tractor engine detailing with clean metallic surfaces" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDo30tOlVIugzS_7jgt7kuk4aZ7kUqq9s-awHCixPh5aJzriB9MdVMO_H8faueekx3BhnItbI7F9XHhH4zuKIaF9ytFaC1HBrDuwcwkJP2zNE4TjwSfJfRxCdGrJNjdWHI_XIy3QlKbJpKYN1BQc8PuvrbXd0eqpnzPL69L64J3Fh6MgVgqVIgV2AAqhlsNTDGhoevjEujKOzHb_9ZtXhCy7m6BQisG1w5zXAaKltdC4njE3nE7IBh2gKFoGN2BcjSYpCJ5H4xkb3yw"/>
-</div>
-<div className="flex-1">
-<span className="block text-xs font-black text-on-surface-variant uppercase tracking-tighter">Completed 02 Oct</span>
-<h4 className="text-sm font-bold text-primary">John Deere 5310</h4>
-<span className="text-xs font-medium text-secondary">₹3,800 Earned</span>
-</div>
-<span className="material-symbols-outlined text-emerald-600" data-icon="check_circle" style={{'fontVariationSettings': '\'FILL\' 1'}}>check_circle</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-{/*  Footer (Shared Component Lite)  */}
+          {/* Booking Card 3: Upcoming */}
+          <div className="bg-surface-container-lowest dark:bg-slate-900/50 rounded-2xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 border-dashed opacity-80 hover:opacity-100 transition-all">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="w-16 h-16 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                  <span className="material-symbols-outlined text-3xl">agriculture</span>
+                </div>
+                <div>
+                  <span className="text-[10px] font-black uppercase text-slate-500 tracking-widest">Upcoming Oct 28</span>
+                  <h4 className="font-bold text-emerald-950 dark:text-emerald-50">Kubota Seeder Attachment</h4>
+                  <p className="text-xs text-slate-500 font-medium">Customer: Amit Pawar • ₹1,200 total</p>
+                </div>
+              </div>
+              <button className="text-emerald-700 dark:text-emerald-400 text-xs font-black uppercase tracking-tighter hover:underline">View Readiness Notes</button>
+            </div>
+          </div>
+        </div>
 
-</main>
-{/*  Mobile Navigation Bar (Shared Component)  */}
+        {/* Right Sidebar: Widgets */}
+        <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
+          {/* Calendar Widget */}
+          <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 shadow-sm border border-slate-100 dark:border-slate-800">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-bold text-emerald-950 dark:text-emerald-50">Availability Calendar</h3>
+              <div className="flex gap-2">
+                <button className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors text-slate-500">
+                  <span className="material-symbols-outlined text-sm">chevron_left</span>
+                </button>
+                <button className="p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded transition-colors text-slate-500">
+                  <span className="material-symbols-outlined text-sm">chevron_right</span>
+                </button>
+              </div>
+            </div>
+            <div className="mb-4">
+              <p className="text-sm font-bold text-on-surface dark:text-white mb-4">October 2024</p>
+              <div className="grid grid-cols-7 gap-2 text-center text-[10px] font-black text-slate-400 uppercase mb-2">
+                <div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div><div>Su</div>
+              </div>
+              <div className="grid grid-cols-7 gap-2 text-center items-center">
+                <div className="p-2 text-slate-300 dark:text-slate-600 text-xs">20</div>
+                <div className="p-2 text-slate-300 dark:text-slate-600 text-xs">21</div>
+                <div className="p-2 text-slate-300 dark:text-slate-600 text-xs">22</div>
+                <div className="p-2 text-slate-800 dark:text-slate-200 text-xs font-medium">23</div>
+                <div className="p-2 bg-secondary-container text-on-secondary-container rounded-lg text-xs font-bold relative group cursor-pointer shadow-sm">
+                  24
+                  <div className="hidden group-hover:block absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-slate-800 text-white p-2 rounded text-[10px] w-24 z-10 scale-95 opacity-0 group-hover:opacity-100 group-hover:scale-100 transition-all origin-bottom">
+                     Tractor Booking
+                  </div>
+                </div>
+                <div className="p-2 bg-secondary-container text-on-secondary-container rounded-lg text-xs font-bold shadow-sm">25</div>
+                <div className="p-2 bg-secondary-container text-on-secondary-container rounded-lg text-xs font-bold shadow-sm">26</div>
+                <div className="p-2 text-slate-800 dark:text-slate-200 text-xs font-medium">27</div>
+                <div className="p-2 bg-primary-container text-white rounded-lg text-xs font-bold shadow-sm">28</div>
+                <div className="p-2 text-slate-800 dark:text-slate-200 text-xs font-medium">29</div>
+                <div className="p-2 text-slate-800 dark:text-slate-200 text-xs font-medium">30</div>
+                <div className="p-2 text-slate-800 dark:text-slate-200 text-xs font-medium">31</div>
+                <div className="p-2 text-slate-300 dark:text-slate-600 text-xs">1</div>
+                <div className="p-2 text-slate-300 dark:text-slate-600 text-xs">2</div>
+              </div>
+            </div>
+            <div className="pt-4 border-t border-slate-50 dark:border-slate-800 flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-xs">
+                <span className="w-3 h-3 rounded bg-secondary-container"></span>
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Pending Approvals</span>
+              </div>
+              <div className="flex items-center gap-2 text-xs">
+                <span className="w-3 h-3 rounded bg-primary-container"></span>
+                <span className="text-slate-600 dark:text-slate-400 font-medium">Confirmed / Ongoing</span>
+              </div>
+            </div>
+          </div>
 
+          {/* Quick Earnings Widget */}
+          <div className="bg-primary-container rounded-2xl p-6 text-white shadow-lg relative overflow-hidden">
+            <div className="relative z-10">
+              <p className="text-[10px] uppercase font-black text-emerald-400/80 tracking-widest mb-1">Weekly Potential</p>
+              <h3 className="text-3xl font-black mb-4">₹12,450</h3>
+              <div className="flex items-center gap-2 text-sm text-emerald-300 mb-6">
+                <span className="material-symbols-outlined text-[16px]">trending_up</span>
+                <span>+18% from last week</span>
+              </div>
+              <Link href="/owner-dashboard/revenue" className="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 border border-white/20">
+                <span className="material-symbols-outlined text-[18px]">account_balance_wallet</span> View Full Report
+              </Link>
+            </div>
+            <div className="absolute -right-4 -bottom-4 opacity-10">
+              <span className="material-symbols-outlined text-[120px]" style={{ fontVariationSettings: "'FILL' 1" }}>payments</span>
+            </div>
+          </div>
 
-      </main>
-      <Footer />
-    </div>
+          {/* History / Activity Sidebar */}
+          <div className="space-y-4">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400 px-1">Recently Completed</h4>
+            <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-100 dark:border-slate-800 shadow-sm flex items-center justify-between group cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-[20px]">receipt_long</span>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-on-surface dark:text-slate-200">John Deere 5050D</p>
+                  <p className="text-[10px] text-slate-500 mt-0.5">Earnings: ₹5,500 • Oct 18</p>
+                </div>
+              </div>
+              <span className="material-symbols-outlined text-slate-400 group-hover:text-emerald-600 transition-colors text-[18px]">arrow_forward_ios</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

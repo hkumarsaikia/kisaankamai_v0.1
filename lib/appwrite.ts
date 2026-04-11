@@ -1,4 +1,5 @@
-import { Client, Account, Databases, Storage } from 'appwrite';
+import { Client, Account, Databases, Storage, ID } from 'appwrite';
+export { ID };
 
 const client = new Client();
 
@@ -15,6 +16,9 @@ export const storage = new Storage(client);
 export const APPWRITE_CONFIG = {
     databaseId: process.env.NEXT_PUBLIC_APPWRITE_DATABASE_ID || 'kisan-kamai-db',
     userCollectionId: process.env.NEXT_PUBLIC_APPWRITE_USER_COLLECTION_ID || 'users',
+    performanceStorageBucketId: 'performance_traces',
+    performanceInsightsCollectionId: 'performance_insights',
+    liveLogsCollectionId: 'live_performance_logs',
 };
 
 export default client;

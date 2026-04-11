@@ -52,14 +52,7 @@ export default function Home() {
           <div className="absolute inset-0 z-0">
             {heroImages.map((src, index) => (
               // eslint-disable-next-line @next/next/no-img-element
-              <img
-                key={src}
-                className={`w-full h-full object-cover md:object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${
-                  index === currentSlide ? "opacity-100" : "opacity-0"
-                }`}
-                alt="Agricultural Equipment Imagery"
-                src={src}
-              />
+              <img key={src} className={`w-full h-full object-cover md:object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${ index === currentSlide ? "opacity-100" : "opacity-0" }`} alt="Agricultural Equipment Imagery" src={src} loading="lazy" decoding="async" />
             ))}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/60 to-black/30"></div>
             
@@ -221,7 +214,7 @@ export default function Home() {
               {/* Tractors */}
               <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="High-horsepower tractor parked in a vibrant green farm field" src={assetPath("/assets/generated/hero_tractor.png")} />
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="High-horsepower tractor parked in a vibrant green farm field" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{langText("Tractors", "ट्रॅक्टर्स")}</h3>
@@ -233,7 +226,7 @@ export default function Home() {
               {/* Harvesters */}
               <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Combine harvester working through a wheat field" src={assetPath("/assets/generated/harvester_action.png")} />
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Combine harvester working through a wheat field" src={assetPath("/assets/generated/harvester_action.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{langText("Harvesters", "हार्वेस्टर्स")}</h3>
@@ -245,7 +238,7 @@ export default function Home() {
               {/* Implements */}
               <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Agricultural implements including a rotavator and seed drill" src={assetPath("/assets/generated/implement_4k.png")} />
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Agricultural implements including a rotavator and seed drill" src={assetPath("/assets/generated/implement_4k.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{langText("Implements", "उपकरणे")}</h3>
@@ -257,7 +250,7 @@ export default function Home() {
               {/* Ploughs */}
               <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ploughing" src={assetPath("/assets/generated/plough_4k.png")} />
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ploughing" src={assetPath("/assets/generated/plough_4k.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{langText("Ploughs", "नांगर")}</h3>
@@ -269,7 +262,7 @@ export default function Home() {
               {/* Sprayers */}
               <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Sprayer" src={assetPath("/assets/generated/sprayer.png")} />
+                <img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Sprayer" src={assetPath("/assets/generated/sprayer.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{langText("Sprayers", "फवारणी यंत्रे")}</h3>
@@ -288,7 +281,7 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-20 items-center">
               <div className="relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="rounded-[2.5rem] shadow-2xl relative z-10" alt="Indian farmer leaning against a tractor with pride" src={assetPath("/assets/generated/hero_tractor.png")} />
+                <img className="rounded-[2.5rem] shadow-2xl relative z-10" alt="Indian farmer leaning against a tractor with pride" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-secondary/5 rounded-full -z-0"></div>
                 <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary/5 rounded-full -z-0"></div>
                 <div className="absolute top-1/2 -right-8 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl z-20 max-w-[200px] border border-slate-50 dark:border-slate-800/50">
@@ -394,7 +387,7 @@ export default function Home() {
                 <p className="text-slate-600 dark:text-slate-400 mb-8 italic leading-relaxed">&quot;Renting a harvester through Kisan Kamai saved me 4 days of labor costs during the last peak season. The process was seamless.&quot;</p>
                 <div className="flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="w-12 h-12 rounded-full object-cover" alt="Rajesh Deshmukh" src={assetPath("/assets/generated/farmer_portrait.png")} />
+                  <img className="w-12 h-12 rounded-full object-cover" alt="Rajesh Deshmukh" src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Rajesh Deshmukh</h5>
                     <p className="text-xs font-label text-slate-400">Kalwan Area</p>
@@ -412,7 +405,7 @@ export default function Home() {
                 <p className="text-slate-600 dark:text-slate-400 mb-8 italic leading-relaxed">&quot;As a tractor owner, I was worried about utilization. Kisan Kamai helped me find local farmers who needed my equipment exactly when it was idle.&quot;</p>
                 <div className="flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="w-12 h-12 rounded-full object-cover" alt="Sanjay Kulkarni" src={assetPath("/assets/generated/farmer_portrait.png")} />
+                  <img className="w-12 h-12 rounded-full object-cover" alt="Sanjay Kulkarni" src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Sanjay Kulkarni</h5>
                     <p className="text-xs font-label text-slate-400">Mukhed Area</p>
@@ -430,7 +423,7 @@ export default function Home() {
                 <p className="text-slate-600 dark:text-slate-400 mb-8 italic leading-relaxed">&quot;The verification process for equipment is what makes me trust this platform. I know I&apos;m getting high-quality machinery every time.&quot;</p>
                 <div className="flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img className="w-12 h-12 rounded-full object-cover" alt="Vikas More" src={assetPath("/assets/generated/farmer_portrait.png")} />
+                  <img className="w-12 h-12 rounded-full object-cover" alt="Vikas More" src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
                   <div>
                     <h5 className="font-bold text-primary dark:text-emerald-50">Vikas More</h5>
                     <p className="text-xs font-label text-slate-400">Kalwan Area</p>
@@ -482,7 +475,7 @@ export default function Home() {
         <section className="py-24 bg-primary text-white overflow-hidden relative">
           <div className="absolute inset-0 z-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="w-full h-full object-cover opacity-20 grayscale" alt="Tractors parked in a rural equipment yard at dusk" src={assetPath("/assets/generated/farm_yard.png")} />
+            <img className="w-full h-full object-cover opacity-20 grayscale" alt="Tractors parked in a rural equipment yard at dusk" src={assetPath("/assets/generated/farm_yard.png")} loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-primary/80"></div>
           </div>
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">

@@ -15,11 +15,7 @@ export default function OwnerBenefitsPage() {
         {/* Hero Section */}
         <section className="relative min-h-[716px] flex items-center overflow-hidden bg-primary-container dark:bg-slate-950">
           <div className="absolute inset-0 z-0">
-            <img
-              className="w-full h-full object-cover opacity-30 mix-blend-overlay"
-              alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra"
-              src={assetPath("/assets/generated/hero_tractor.png")}
-            />
+            <img className="w-full h-full object-cover opacity-30 mix-blend-overlay" alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-r from-primary-container dark:from-emerald-950 via-primary-container/80 dark:via-emerald-950/80 to-transparent"></div>
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -175,7 +171,7 @@ export default function OwnerBenefitsPage() {
               <div className="relative">
                 <div className="bg-white/80 dark:bg-slate-900/50 backdrop-blur-md border border-outline-variant/30 dark:border-slate-800/50 p-8 rounded-[2.5rem] relative z-10 shadow-xl">
                   <div className="flex items-center gap-4 mb-6">
-                    <img className="w-16 h-16 rounded-full object-cover border-2 border-primary/20" alt="Owner" src={assetPath("/assets/generated/farmer_portrait.png")} />
+                    <img className="w-16 h-16 rounded-full object-cover border-2 border-primary/20" alt="Owner" src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
                     <div>
                       <h5 className="font-bold text-primary dark:text-emerald-50">Sanjay Deshmukh</h5>
                       <p className="text-xs text-on-surface-variant dark:text-slate-400 font-medium">{langText("Tractor Owner • Karad, Satara", "ट्रॅक्टर मालक • कराड, सातारा")}</p>

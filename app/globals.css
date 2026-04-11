@@ -114,3 +114,54 @@ p, li {
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .hide-scrollbar::-webkit-scrollbar { display: none; }
 .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   GLOBAL MICRO-ANIMATIONS — hover, press, and touch feedback
+   Applied universally to all pages without individual edits.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* All buttons: subtle press-down on click/tap */
+button, [role="button"], a[class*="rounded"] {
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+button:active, [role="button"]:active {
+  transform: scale(0.97);
+}
+
+/* Cards and tiles: lift on hover */
+[class*="rounded-xl"][class*="border"],
+[class*="rounded-2xl"][class*="border"],
+[class*="rounded-3xl"][class*="border"],
+.kk-card, .kk-card-muted {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[class*="rounded-xl"][class*="border"]:hover,
+[class*="rounded-2xl"][class*="border"]:hover,
+[class*="rounded-3xl"][class*="border"]:hover,
+.kk-card:hover, .kk-card-muted:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px -8px rgba(0, 37, 26, 0.12), 0 4px 12px -4px rgba(0, 37, 26, 0.06);
+}
+
+/* Images inside cards: gentle zoom */
+[class*="rounded"][class*="overflow-hidden"] img {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[class*="rounded"][class*="overflow-hidden"]:hover img {
+  transform: scale(1.04);
+}
+
+/* Material icon buttons: glow on hover */
+.material-symbols-outlined[class*="cursor-pointer"]:hover,
+.material-symbols-outlined[class*="hover:"]:hover {
+  transform: scale(1.1);
+  transition: transform 0.15s ease;
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

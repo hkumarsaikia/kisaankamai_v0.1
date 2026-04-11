@@ -8,11 +8,11 @@ import { assetPath } from "@/lib/site";
 export default function PartnerPage() {
   const { langText } = useLanguage();
   return (
-    <main className="bg-surface dark:bg-slate-950 min-h-screen">
+    <div className="min-h-screen flex flex-col bg-surface dark:bg-slate-950">
       <Header />
-
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-24 lg:py-32 pt-32">
+      <main className="flex-grow pt-28 pb-12">
+        {/* Hero Section */}
+        <section className="relative overflow-hidden py-16 lg:py-24">
         <div className="absolute inset-0 bg-[radial-gradient(at_0%_0%,rgba(20,59,46,0.05)_0px,transparent_50%),radial-gradient(at_100%_100%,rgba(168,91,51,0.05)_0px,transparent_50%)]" />
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div>
@@ -33,7 +33,7 @@ export default function PartnerPage() {
           </div>
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
-              <img className="w-full h-full object-cover" alt="Farmer and agritech representative in wheat field" src={assetPath("/assets/generated/hero_tractor.png")} />
+              <img className="w-full h-full object-cover" alt="Farmer and agritech representative in wheat field" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
             </div>
             <div className="absolute -bottom-8 -left-8 bg-white dark:bg-slate-900/80 p-6 rounded-2xl card-shadow-xl hidden md:block max-w-[240px]">
               <div className="flex items-center gap-3 mb-2">
@@ -114,7 +114,7 @@ export default function PartnerPage() {
                 </div>
               </div>
               <div className="hidden lg:block w-1/3 aspect-video rounded-2xl overflow-hidden shadow-inner">
-                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Farm equipment facility" src={assetPath("/assets/generated/hero_tractor.png")} />
+                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Farm equipment facility" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
               </div>
             </div>
           </div>
@@ -147,7 +147,7 @@ export default function PartnerPage() {
             </div>
             <div className="relative grid grid-cols-2 gap-4">
               <div className="pt-12">
-                <img className="rounded-2xl shadow-lg mb-4 h-64 w-full object-cover" alt="Agricultural dealers" src={assetPath("/assets/generated/modern_farm_tech.png")} />
+                <img className="rounded-2xl shadow-lg mb-4 h-64 w-full object-cover" alt="Agricultural dealers" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
                 <div className="bg-primary-container p-6 rounded-2xl text-white">
                   <p className="text-3xl font-bold mb-1">98%</p>
                   <p className="text-sm opacity-80">Partner retention rate</p>
@@ -158,7 +158,7 @@ export default function PartnerPage() {
                   <p className="text-3xl font-bold mb-1">₹12Cr+</p>
                   <p className="text-sm opacity-80">Total partner earnings</p>
                 </div>
-                <img className="rounded-2xl shadow-lg h-80 w-full object-cover" alt="Entrepreneur with tablet" src={assetPath("/assets/generated/modern_farm_tech.png")} />
+                <img className="rounded-2xl shadow-lg h-80 w-full object-cover" alt="Entrepreneur with tablet" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
               </div>
             </div>
           </div>
@@ -240,8 +240,9 @@ export default function PartnerPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
-    </main>
+    </div>
   );
 }
 

@@ -1,26 +1,27 @@
+"use client";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { useLanguage } from "@/components/LanguageContext";
 
 export default function AboutUs() {
+  const { langText } = useLanguage();
+
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
       <Header />
-      <main className="flex-grow">
-
-{/*  TopNavBar  */}
-
-<main className="pt-20">
+      <main className="flex-grow pt-28 pb-12">
 {/*  Hero Section  */}
 <section className="relative h-[716px] flex items-center overflow-hidden">
 <div className="absolute inset-0 z-0">
-<img className="w-full h-full object-cover grayscale-[20%] brightness-75" data-alt="cinematic wide shot of a vast green wheat field in rural India during golden hour with soft sunlight hitting the crop tops" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs9DHbhafEzMseEdaelDTnmWi_AM75UJnKhuZ5uEb_Oo5T9xCFGuDliIwNAJgJvI8UuxdufdLDuoSQ_aGXygRlmZ7mA0KOjnVaOiS5esGUG0iphZM40IBy1uYWIcpG53285n1bxRUh9KVCwYLg1--MB7iZhnZtzGwMSNE0j_U_oSx28sxIzgqEXF6zLoT14leFsC9fTebuxK5VcOltWj2igypR5pwP8a-4X5XzvGQ80if9YW4sgzoixIsAqhhk9k71OqJSe4BNJD6u"/>
+<img className="w-full h-full object-cover grayscale-[20%] brightness-75" data-alt="cinematic wide shot of a vast green wheat field in rural India during golden hour with soft sunlight hitting the crop tops" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBs9DHbhafEzMseEdaelDTnmWi_AM75UJnKhuZ5uEb_Oo5T9xCFGuDliIwNAJgJvI8UuxdufdLDuoSQ_aGXygRlmZ7mA0KOjnVaOiS5esGUG0iphZM40IBy1uYWIcpG53285n1bxRUh9KVCwYLg1--MB7iZhnZtzGwMSNE0j_U_oSx28sxIzgqEXF6zLoT14leFsC9fTebuxK5VcOltWj2igypR5pwP8a-4X5XzvGQ80if9YW4sgzoixIsAqhhk9k71OqJSe4BNJD6u"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent"></div>
 </div>
 <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
 <div className="max-w-2xl">
-<span className="inline-block py-1 px-3 bg-secondary-container text-on-secondary-container text-xs font-bold tracking-widest uppercase rounded mb-6">Rooted in Trust</span>
-<h1 className="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">Empowering Indian Agriculture Through Shared Growth.</h1>
-<p className="text-xl text-emerald-50/90 font-medium max-w-lg">We are bridging the gap between equipment owners and farmers to create a more efficient, prosperous, and sustainable farming ecosystem.</p>
+<span className="inline-block py-1 px-3 bg-secondary-container text-on-secondary-container text-xs font-bold tracking-widest uppercase rounded mb-6">{langText("Rooted in Trust", "विश्वासात रुजलेले")}</span>
+<h1 className="text-5xl md:text-7xl font-extrabold text-white leading-[1.1] mb-6 tracking-tight">{langText("Empowering Indian Agriculture Through Shared Growth.", "सामायिक वाढीद्वारे भारतीय कृषी सक्षम करणे.")}</h1>
+<p className="text-xl text-emerald-50/90 font-medium max-w-lg">{langText("We are bridging the gap between equipment owners and farmers to create a more efficient, prosperous, and sustainable farming ecosystem.", "आम्ही उपकरणे मालक आणि शेतकरी यांच्यातील दरी सांधून अधिक कार्यक्षम, समृद्ध आणि शाश्वत शेती परिसंस्था तयार करत आहोत.")}</p>
 </div>
 </div>
 </section>
@@ -45,7 +46,7 @@ export default function AboutUs() {
 <p className="text-lg text-amber-100/80">To become the backbone of rural agricultural logistics, fostering a community where technology and tradition work hand in hand.</p>
 </div>
 <div className="md:col-span-4 h-80 rounded-3xl overflow-hidden group">
-<img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="close up of a modern tractor wheel moving through rich dark brown soil in a field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_pGYjPJ7B8vFifINeKfkwzeZx5es_azCql7EZnoTEvouyK-xVGXpBhuXv1r1Fa6loLatH8ImfF1x8A771EXN2m1fGN7FVtxLp27GRo58qSjq93zfszJgXcIOeupNCgPFraPV_MxThNaCDRj5fpdlYUvcafS0ae9izidP0eVxZDs8Bpmwntz5LlQkM3JwSLxnw4EcBEYROhWEmKU_hm2YFuE5bKkTSUTWHYX93L-nIUqeGyJb2pAwM5Rz0Hutps1e1ulvpcIS5nqxt"/>
+<img className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="close up of a modern tractor wheel moving through rich dark brown soil in a field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_pGYjPJ7B8vFifINeKfkwzeZx5es_azCql7EZnoTEvouyK-xVGXpBhuXv1r1Fa6loLatH8ImfF1x8A771EXN2m1fGN7FVtxLp27GRo58qSjq93zfszJgXcIOeupNCgPFraPV_MxThNaCDRj5fpdlYUvcafS0ae9izidP0eVxZDs8Bpmwntz5LlQkM3JwSLxnw4EcBEYROhWEmKU_hm2YFuE5bKkTSUTWHYX93L-nIUqeGyJb2pAwM5Rz0Hutps1e1ulvpcIS5nqxt"loading="lazy" decoding="async" />
 </div>
 <div className="md:col-span-8 p-12 bg-white rounded-3xl border border-emerald-100 flex flex-col justify-center relative overflow-hidden">
 <div className="relative z-10">
@@ -108,7 +109,7 @@ export default function AboutUs() {
 {/*  Team Member 1  */}
 <div className="group">
 <div className="aspect-[4/5] bg-surface-container-high rounded-2xl overflow-hidden mb-6 relative">
-<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="portrait of a professional indian man with a warm smile wearing a light linen shirt in an outdoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCe_c_b2e6P6Gt2rq03XlryiAkPp0ep6JPQaUKq2PuDdN5ahUHLhI4UPFVMi7C0Kfov35bXDpShSIOyA0bNDvnq11mTYPR81RNKRW8UXGvlzCI6WzzCwGHl157AqbAhH24EfQdsPP4Id-cY0wfNhhRw2V5-nTfdUjIdbqzY76tfeGeLeJx8cBHjQebC37vqdSMBehusOyPO7A7QEMJCc_IYu5QyTUPWyS3OJAPeg_xTQMzBzMh2mwh4XVbglSDwPcb4Wl8ZmhII9CG"/>
+<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="portrait of a professional indian man with a warm smile wearing a light linen shirt in an outdoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCe_c_b2e6P6Gt2rq03XlryiAkPp0ep6JPQaUKq2PuDdN5ahUHLhI4UPFVMi7C0Kfov35bXDpShSIOyA0bNDvnq11mTYPR81RNKRW8UXGvlzCI6WzzCwGHl157AqbAhH24EfQdsPP4Id-cY0wfNhhRw2V5-nTfdUjIdbqzY76tfeGeLeJx8cBHjQebC37vqdSMBehusOyPO7A7QEMJCc_IYu5QyTUPWyS3OJAPeg_xTQMzBzMh2mwh4XVbglSDwPcb4Wl8ZmhII9CG"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 </div>
 <h3 className="text-xl font-bold text-primary">Founder &amp; CEO</h3>
@@ -117,7 +118,7 @@ export default function AboutUs() {
 {/*  Team Member 2  */}
 <div className="group">
 <div className="aspect-[4/5] bg-surface-container-high rounded-2xl overflow-hidden mb-6 relative">
-<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="portrait of a confident indian woman in professional attire with soft natural lighting and a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN3gGR-eLxkHosTLDXSgvQrpN1bi0XCDhS4CN4S9VVIEBKr-yh_lC8JyBSY-LjC_SddKg2K_fInsxbXLuHO623nm4RRk2QOx2phiBUCqOfdqrz7ikO2uIzSyOLDny_yRMAyCZGv4_yUDooCY3FljDjbclPTKTaTcWmrnlDmH_byUzckoBVia7uInsU4EvFuGwPAg4PqE_HO5VpJt94cFtkEb_p3MGPfqtI8wbIZLEGFp73FjccLlfdQxUqVYzyL4AVdGd4bfY89XvZ"/>
+<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="portrait of a confident indian woman in professional attire with soft natural lighting and a clean background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDN3gGR-eLxkHosTLDXSgvQrpN1bi0XCDhS4CN4S9VVIEBKr-yh_lC8JyBSY-LjC_SddKg2K_fInsxbXLuHO623nm4RRk2QOx2phiBUCqOfdqrz7ikO2uIzSyOLDny_yRMAyCZGv4_yUDooCY3FljDjbclPTKTaTcWmrnlDmH_byUzckoBVia7uInsU4EvFuGwPAg4PqE_HO5VpJt94cFtkEb_p3MGPfqtI8wbIZLEGFp73FjccLlfdQxUqVYzyL4AVdGd4bfY89XvZ"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 </div>
 <h3 className="text-xl font-bold text-primary">Chief Technology Officer</h3>
@@ -126,7 +127,7 @@ export default function AboutUs() {
 {/*  Team Member 3  */}
 <div className="group">
 <div className="aspect-[4/5] bg-surface-container-high rounded-2xl overflow-hidden mb-6 relative">
-<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="professional portrait of a man in his late 30s with short hair in a bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfwWcP3qIBrAYLMHeeOfLNS6Qw4-YE6cVivNcjGygqUle0LvPSXnuitxUfj-ktBATiHHmNvv8Tc-sNjX5V3f-t6RPuUZZhPVewutgvG8Xg-pfE-gH2zKgN0MyKBxhL8RXaiW07k-5rB-ggASUqPIl20b8mPpnNqpTHToJ_q5Yw0_E6l25dEk4eivjP3dEEZzivsFYONxdQlntfKtOT_2AwL5g84OfmG5yvqvh3aQY0STjyMsRu3Wr7i40UHa9dNpZSBud3wpBgvvSI"/>
+<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="professional portrait of a man in his late 30s with short hair in a bright office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfwWcP3qIBrAYLMHeeOfLNS6Qw4-YE6cVivNcjGygqUle0LvPSXnuitxUfj-ktBATiHHmNvv8Tc-sNjX5V3f-t6RPuUZZhPVewutgvG8Xg-pfE-gH2zKgN0MyKBxhL8RXaiW07k-5rB-ggASUqPIl20b8mPpnNqpTHToJ_q5Yw0_E6l25dEk4eivjP3dEEZzivsFYONxdQlntfKtOT_2AwL5g84OfmG5yvqvh3aQY0STjyMsRu3Wr7i40UHa9dNpZSBud3wpBgvvSI"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 </div>
 <h3 className="text-xl font-bold text-primary">Head of Operations</h3>
@@ -135,7 +136,7 @@ export default function AboutUs() {
 {/*  Team Member 4  */}
 <div className="group">
 <div className="aspect-[4/5] bg-surface-container-high rounded-2xl overflow-hidden mb-6 relative">
-<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="portrait of a young indian woman with glasses smiling confidently in a modern studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs69P_i7hKz0kxKLA9x-khAnVs4cvsVtEdT0JD7lVtKrQKBG9895zhefQ2IierNATXm-G5DmDoOIyvC7X-xBZ9movIWI8-7cV2AKpUaFXUzpZK4CYTVEzh9DCdnMl7osiV8oH0bk24fmJ_zwocHAWB4upVYNq4hOLvrZzg-MKVMnnm4NMb0iap6ubmYUhHd4uGwl1nGw1ct3GDERoeaOTDf-nXKRHDJ4gRw-qunq-Wz8S_yvzdBseQsoYq4miL1QnAkjCxtyvnZriW"/>
+<img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="portrait of a young indian woman with glasses smiling confidently in a modern studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs69P_i7hKz0kxKLA9x-khAnVs4cvsVtEdT0JD7lVtKrQKBG9895zhefQ2IierNATXm-G5DmDoOIyvC7X-xBZ9movIWI8-7cV2AKpUaFXUzpZK4CYTVEzh9DCdnMl7osiV8oH0bk24fmJ_zwocHAWB4upVYNq4hOLvrZzg-MKVMnnm4NMb0iap6ubmYUhHd4uGwl1nGw1ct3GDERoeaOTDf-nXKRHDJ4gRw-qunq-Wz8S_yvzdBseQsoYq4miL1QnAkjCxtyvnZriW"loading="lazy" decoding="async" />
 <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 </div>
 <h3 className="text-xl font-bold text-primary">Lead Experience Designer</h3>
@@ -172,16 +173,12 @@ export default function AboutUs() {
 </div>
 <div className="relative z-10 w-full md:w-1/2">
 <div className="aspect-video bg-emerald-900 rounded-3xl overflow-hidden border border-emerald-800 shadow-2xl">
-<img className="w-full h-full object-cover" data-alt="overhead view of multiple combines harvesting a golden grain field in perfect parallel lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyBQM-eH0GwDzEc_yQrn2OC06qlNa4Oa5cPndIZHuNTHzK9V_yYQ7VC__OJFFYHB8e4LEen5CU5CAmNjOTl4rDM3-OAgxhUcB03l18ER8jDetAisXx8NVAAj1IzIcsLmiPgeTUfAW5VRIdV5kVSlb_Z_kTzUlm13Onag2QrgO5BS_-6d7YS1aXMNCSZkfBTE25QPFt_W6uz9RZFjkkpllmTKShWCiqG-Phs_XnUveMmo-_6Np_DPKiFfhQ4DD5AzcbJYw093TDPu49"/>
+<img className="w-full h-full object-cover" data-alt="overhead view of multiple combines harvesting a golden grain field in perfect parallel lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyBQM-eH0GwDzEc_yQrn2OC06qlNa4Oa5cPndIZHuNTHzK9V_yYQ7VC__OJFFYHB8e4LEen5CU5CAmNjOTl4rDM3-OAgxhUcB03l18ER8jDetAisXx8NVAAj1IzIcsLmiPgeTUfAW5VRIdV5kVSlb_Z_kTzUlm13Onag2QrgO5BS_-6d7YS1aXMNCSZkfBTE25QPFt_W6uz9RZFjkkpllmTKShWCiqG-Phs_XnUveMmo-_6Np_DPKiFfhQ4DD5AzcbJYw093TDPu49"loading="lazy" decoding="async" />
 </div>
 </div>
 </div>
 </div>
 </section>
-</main>
-{/*  Footer  */}
-
-
       </main>
       <Footer />
     </div>

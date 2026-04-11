@@ -85,7 +85,7 @@ export default function OwnerRegistration() {
 <span className="text-xs font-bold text-on-surface-variant">Add Cover</span>
 </div>
 <div className="relative group aspect-square rounded-xl overflow-hidden shadow-sm">
-<img className="w-full h-full object-cover" data-alt="Close-up of a modern green tractor parked in a vibrant wheat field at midday with sharp details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkU1MDeqjUKzld2Xll9nkvPbvF0gMqRaji9Gm7O3jaoKRJtWk3XHh63cCoKryTrkdH-hxl07dCiVnZzYhS2ZGgAQ_vxTq4Jl9PWQPPkr6QTtNMyT7uy-v7ry0HNPBRWnX0bz1IiJeGDQ84XeK7OWe9fEQXY3oHJfm1bhvzRkoV36Ge5w6fbxAzr8wmMjmdu6-nhXRNsSxP8l0BTo8e-5nNVLXK45smzYtLK57qRlrwZdtQzGlyvMWmmlx6V1Tgvd5bhzpXvXvppKmk"/>
+<img className="w-full h-full object-cover" data-alt="Close-up of a modern green tractor parked in a vibrant wheat field at midday with sharp details" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkU1MDeqjUKzld2Xll9nkvPbvF0gMqRaji9Gm7O3jaoKRJtWk3XHh63cCoKryTrkdH-hxl07dCiVnZzYhS2ZGgAQ_vxTq4Jl9PWQPPkr6QTtNMyT7uy-v7ry0HNPBRWnX0bz1IiJeGDQ84XeK7OWe9fEQXY3oHJfm1bhvzRkoV36Ge5w6fbxAzr8wmMjmdu6-nhXRNsSxP8l0BTo8e-5nNVLXK45smzYtLK57qRlrwZdtQzGlyvMWmmlx6V1Tgvd5bhzpXvXvppKmk"loading="lazy" decoding="async" />
 <button className="absolute top-2 right-2 bg-white/80 p-1.5 rounded-full hover:bg-white text-error">
 <span className="material-symbols-outlined text-sm" data-icon="close">close</span>
 </button>
@@ -155,7 +155,7 @@ export default function OwnerRegistration() {
 </div>
 </div>
 <div className="h-48 bg-surface-container-high rounded-xl overflow-hidden relative border border-outline-variant">
-<img className="w-full h-full object-cover grayscale opacity-50" data-alt="Stylized map showing Satara district topography with markers for agriculture hubs and clean vector lines" data-location="Satara, India" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE2XpOUK9ws4B1N6CsCWTe7S7UDqF8-gogrPFqOKFs_Lfe3KJhjTiiEr7JfQZsoWfGgMKUDSvQLDF533vqWJQrrctAM5ZqtLS_3nrqQVsB2AwwqagakQnPoPIWWlcf2h5qDg8UC3RWc6gqaPzlARv3Edd2a6a77ZL_rDbnQqjKiHD0d5e8591pumrwm_CEdlSy_OAHK-nduKvdRoDD9qBgCqRZhpWGCbIm0y3At9LEpOdDOiwUCKU8tPnYaLSJW_Ji3WHvJB_Mrl9G"/>
+<img className="w-full h-full object-cover grayscale opacity-50" data-alt="Stylized map showing Satara district topography with markers for agriculture hubs and clean vector lines" data-location="Satara, India" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBE2XpOUK9ws4B1N6CsCWTe7S7UDqF8-gogrPFqOKFs_Lfe3KJhjTiiEr7JfQZsoWfGgMKUDSvQLDF533vqWJQrrctAM5ZqtLS_3nrqQVsB2AwwqagakQnPoPIWWlcf2h5qDg8UC3RWc6gqaPzlARv3Edd2a6a77ZL_rDbnQqjKiHD0d5e8591pumrwm_CEdlSy_OAHK-nduKvdRoDD9qBgCqRZhpWGCbIm0y3At9LEpOdDOiwUCKU8tPnYaLSJW_Ji3WHvJB_Mrl9G"loading="lazy" decoding="async" />
 <div className="absolute inset-0 flex items-center justify-center">
 <div className="bg-primary/20 p-8 rounded-full border-2 border-primary animate-pulse"></div>
 <div className="absolute bg-white px-3 py-1.5 rounded-full shadow-lg border border-primary flex items-center gap-2">
@@ -181,7 +181,7 @@ export default function OwnerRegistration() {
 <div className="sticky top-28 space-y-6">
 <div className="bg-white rounded-2xl border border-surface-container-highest shadow-xl overflow-hidden">
 <div className="aspect-[4/3] relative">
-<img className="w-full h-full object-cover" data-alt="Powerful blue tractor with large tires parked in a lush green field under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEqtpz50nGqO5PXychK55yTwvYxHnpQvgY7YdcTK_wZJDASU4EzqAKbR_qU1-7K49zffPeSVaKRx51vhC2xAOLDAPxhBECAYCYwXuhLqq8feYZMidBF4zldokMW10bkfDS4AmZSYQaZwopI95ndz-ri-flHU9u0oUlCA7hzuFWDGAiIHsB9qRF1M_3o5Hl7gIBGneiGkMwoh-xF0Y40IaAEMh8td4aOpML_HiSUFoGTdyAiRDaQ7EPhBf1NLQ8EB5bcwlrgIImNmb7"/>
+<img className="w-full h-full object-cover" data-alt="Powerful blue tractor with large tires parked in a lush green field under a clear blue sky" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEqtpz50nGqO5PXychK55yTwvYxHnpQvgY7YdcTK_wZJDASU4EzqAKbR_qU1-7K49zffPeSVaKRx51vhC2xAOLDAPxhBECAYCYwXuhLqq8feYZMidBF4zldokMW10bkfDS4AmZSYQaZwopI95ndz-ri-flHU9u0oUlCA7hzuFWDGAiIHsB9qRF1M_3o5Hl7gIBGneiGkMwoh-xF0Y40IaAEMh8td4aOpML_HiSUFoGTdyAiRDaQ7EPhBf1NLQ8EB5bcwlrgIImNmb7"loading="lazy" decoding="async" />
 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider text-primary">Live Preview</div>
 </div>
 <div className="p-6">
@@ -202,7 +202,7 @@ export default function OwnerRegistration() {
 </div>
 <div className="flex items-center gap-3 pt-4 border-t border-surface-container-highest">
 <div className="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
-<img className="w-full h-full object-cover" data-alt="Portrait of a smiling Indian farmer in a white shirt with a green landscape in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwok2EnfZT5USD1LJz32y3_ABau9sOGvXTwhePspXxEe3zcfrni3xkR84C3zdglew-2ihRO7PPDItpBmfbGLG0LWHwAWKDR3wO5pQHVHesVviwnaxqqCKVFiv4rwhhGAdvzgyefqjT_uIOBdHUpZc6YU3ErXFOQtkAiztE-L4ZG1Ib4NV9Scl6muOQNqmWS6rVQDJJhoG9njf7MS-p4fTdEfnqT6fPiJm7XCk6Jlzaqb1hewhTCB8Th1vf4-NA7P8JdnxX3xW8Zr7s"/>
+<img className="w-full h-full object-cover" data-alt="Portrait of a smiling Indian farmer in a white shirt with a green landscape in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwok2EnfZT5USD1LJz32y3_ABau9sOGvXTwhePspXxEe3zcfrni3xkR84C3zdglew-2ihRO7PPDItpBmfbGLG0LWHwAWKDR3wO5pQHVHesVviwnaxqqCKVFiv4rwhhGAdvzgyefqjT_uIOBdHUpZc6YU3ErXFOQtkAiztE-L4ZG1Ib4NV9Scl6muOQNqmWS6rVQDJJhoG9njf7MS-p4fTdEfnqT6fPiJm7XCk6Jlzaqb1hewhTCB8Th1vf4-NA7P8JdnxX3xW8Zr7s"loading="lazy" decoding="async" />
 </div>
 <div>
 <p className="text-xs font-bold text-primary">Sunil Deshmukh</p>

@@ -74,14 +74,28 @@ export const Footer = () => {
             <li><Link href="/owner-experience" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Experience", "मालक अनुभव")}</Link></li>
             <li><Link href="/owner-dashboard" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Dashboard", "मालक डॅशबोर्ड")}</Link></li>
           </ul>
-          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6 mt-8">{langText("Company", "कंपनी")}</h5>
+          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6 mt-8">{langText("Trust & Company", "विश्वास आणि कंपनी")}</h5>
           <ul className="space-y-4">
-            <li><Link href="/about" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("About Us", "आमच्याबद्दल")}</Link></li>
-            <li><Link href="/partner" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Partner with Us", "आमच्यासोबत भागीदारी")}</Link></li>
+            <li>
+              <Link href="/about" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("About Us", "आमच्याबद्दल")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Trust in Agriculture", "कृषी मध्ये विश्वास")}</span>
+            </li>
+            <li>
+              <Link href="/partner" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("Partner with Us", "आमच्यासोबत भागीदारी")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Join our network", "आमच्या नेटवर्कमध्ये सामील व्हा")}</span>
+            </li>
+            <li>
+              <Link href="/trust-safety" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("Trust & Safety", "विश्वास आणि सुरक्षा")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Our guarantee", "आमची खात्री")}</span>
+            </li>
+            <li>
+              <Link href="/legal" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("Legal & Policies", "कायदेशीर आणि धोरणे")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Terms of service", "सेवा अटी")}</span>
+            </li>
+            <li><Link href="/faq" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("FAQ", "वारंवार विचारले जाणारे प्रश्न")}</Link></li>
             <li><Link href="/support" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Contact Support", "मदत संपर्क")}</Link></li>
             <li><Link href="/locations" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Locations", "स्थाने")}</Link></li>
             <li><Link href="/feedback" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Share Feedback", "अभिप्राय द्या")}</Link></li>
-            <li><Link href="/legal" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Legal & Policies", "कायदेशीर आणि धोरणे")}</Link></li>
           </ul>
         </div>
         <div>

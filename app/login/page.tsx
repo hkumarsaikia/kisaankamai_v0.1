@@ -57,7 +57,7 @@ export default function LoginPage() {
         } else {
           router.push("/profile-selection");
         }
-      } catch (err) {
+      } catch {
         // No profile found, probably need onboarding
         router.push("/profile-selection");
       }
@@ -85,11 +85,7 @@ export default function LoginPage() {
       <Header />
       <main className="relative overflow-hidden pt-24">
         <div className="absolute inset-0">
-          <img
-            src={assetPath("/assets/generated/farm_yard.png")}
-            alt="Farm equipment yard"
-            className="h-full w-full object-cover opacity-10 dark:opacity-15"
-          />
+          <img src={assetPath("/assets/generated/farm_yard.png")} alt="Farm equipment yard" className="h-full w-full object-cover opacity-10 dark:opacity-15" loading="lazy" decoding="async" />
           <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/95 to-background dark:from-slate-950/80 dark:via-slate-950/95 dark:to-slate-950" />
         </div>
 
@@ -147,7 +143,7 @@ export default function LoginPage() {
                   <label htmlFor="password" className="text-xs font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
                     {langText("Password", "पासवर्ड")}
                   </label>
-                  <button type="button" className="text-xs font-bold text-secondary hover:underline dark:text-amber-400">
+                  <button type="button" onClick={() => router.push('/forgot-password')} className="text-xs font-bold text-secondary hover:underline dark:text-amber-400">
                     {langText("Forgot password?", "पासवर्ड विसरलात?")}
                   </button>
                 </div>

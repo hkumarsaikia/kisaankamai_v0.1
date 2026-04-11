@@ -30,24 +30,20 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
             {/* Gallery */}
             <section className="space-y-4">
               <div className="aspect-[16/9] w-full rounded-3xl overflow-hidden bg-surface-variant dark:bg-slate-900/50 relative group">
-                <img
-                  className="w-full h-full object-cover"
-                  alt="Modern John Deere tractor in Indian sugarcane field at sunrise"
-                  src={assetPath("/assets/generated/hero_tractor.png")}
-                />
+                <img className="w-full h-full object-cover" alt="Modern John Deere tractor in Indian sugarcane field at sunrise" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-8">
                   <span className="text-white font-headline font-medium">Main Field View - Sangli, Maharashtra</span>
                 </div>
               </div>
               <div className="grid grid-cols-4 gap-4">
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50">
-                  <img className="w-full h-full object-cover" alt="Tractor engine close-up" src={assetPath("/assets/generated/hero_tractor.png")} />
+                  <img className="w-full h-full object-cover" alt="Tractor engine close-up" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
                 </div>
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50">
-                  <img className="w-full h-full object-cover" alt="Dashboard controls" src={assetPath("/assets/generated/hero_tractor.png")} />
+                  <img className="w-full h-full object-cover" alt="Dashboard controls" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
                 </div>
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50">
-                  <img className="w-full h-full object-cover" alt="Rear view with rotavator" src={assetPath("/assets/generated/rotavator.png")} />
+                  <img className="w-full h-full object-cover" alt="Rear view with rotavator" src={assetPath("/assets/generated/rotavator.png")} loading="lazy" decoding="async" />
                 </div>
                 <div className="aspect-square rounded-2xl overflow-hidden bg-surface-variant dark:bg-slate-900/50 relative flex items-center justify-center cursor-pointer group">
                   <div className="absolute inset-0 bg-primary-container/80 backdrop-blur-sm group-hover:bg-primary-container transition-colors" />
@@ -127,7 +123,7 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
                 <h2 className="text-2xl font-headline font-bold text-primary dark:text-emerald-50">{langText("Owner Details", "मालक माहिती")}</h2>
                 <div className="bg-surface-container-low dark:bg-slate-900/40 p-6 rounded-3xl flex items-center gap-5 border border-outline-variant/20 dark:border-slate-800/50 card-shadow">
                   <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-white dark:border-slate-800 shadow-lg">
-                    <img className="w-full h-full object-cover" alt="Owner Sanjay Patil" src={assetPath("/assets/generated/farmer_portrait.png")} />
+                    <img className="w-full h-full object-cover" alt="Owner Sanjay Patil" src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
                   </div>
                   <div>
                     <p className="text-xs font-label text-outline dark:text-slate-500 uppercase tracking-widest">Listing Owner</p>
@@ -228,7 +224,7 @@ export default function EquipmentDetailClient({ id }: { id: string }) {
             ].map((eq) => (
               <Link key={eq.name} href="/equipment/1" className="min-w-[320px] bg-white dark:bg-slate-900/40 rounded-3xl border border-outline-variant/30 dark:border-slate-800/50 overflow-hidden group card-shadow hover:card-shadow-lg transition-all">
                 <div className="h-48 overflow-hidden relative">
-                  <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={eq.name} src={eq.img} />
+                  <img className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt={eq.name} src={eq.img} loading="lazy" decoding="async" />
                   <div className="absolute top-4 right-4 bg-white/90 dark:bg-slate-950/90 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-primary dark:text-emerald-50">{eq.price}</div>
                 </div>
                 <div className="p-6 space-y-3">

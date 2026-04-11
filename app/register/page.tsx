@@ -4,10 +4,18 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
 import { ID, OAuthProvider } from "appwrite";
+import { auth } from "@/lib/firebase";
+import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
+
+declare global {
+  interface Window {
+    recaptchaVerifier: any;
+  }
+}
 
 export default function RegisterPage() {
   const { langText } = useLanguage();
@@ -35,6 +43,9 @@ export default function RegisterPage() {
   const [otpError, setOtpError] = useState("");
   const [isSendingOtp, setIsSendingOtp] = useState(false);
   const [isVerifyingOtp, setIsVerifyingOtp] = useState(false);
+  const [timer, setTimer] = useState(0);
+  const [isTimerActive, setIsTimerActive] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   // UI State
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -93,6 +104,29 @@ export default function RegisterPage() {
     }
   };
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isTimerActive && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    } else if (timer === 0) {
+      setIsTimerActive(false);
+    }
+    return () => clearInterval(interval);
+  }, [isTimerActive, timer]);
+
+  useEffect(() => {
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'invisible',
+        'callback': () => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        }
+      });
+    }
+  }, []);
+
   const selectPincodeLocation = (office: any) => {
     setPincode(office.Pincode);
     setShowSuggestions(false);
@@ -103,19 +137,37 @@ export default function RegisterPage() {
   };
 
   const sendOtp = async () => {
-    if (phone.length !== 10) {
-      setErrors(prev => ({ ...prev, phone: langText("Enter a valid 10-digit number.", "वैध १० अंकी नंबर टाका.") }));
+    // 1. Enforce full validation before sending OTP
+    const newErrors: Record<string, string> = {};
+    if (!formData.fullName.trim()) newErrors.fullName = langText("Enter your full name.", "तुमचे पूर्ण नाव प्रविष्ट करा.");
+    if (!formData.address.trim()) newErrors.address = langText("Enter your address.", "tumcha पत्ता प्रविष्ट करा.");
+    if (!formData.village.trim()) newErrors.village = langText("Enter city/village.", "शहर/गाव प्रविष्ट करा.");
+    if (pincode.length !== 6) newErrors.pincode = langText("Enter valid 6-digit pincode.", "वैध पिनकोड टाका.");
+    if (!formData.fieldArea || parseFloat(formData.fieldArea) <= 0) newErrors.fieldArea = langText("Enter field area.", "शेती क्षेत्र टाका.");
+    if (phone.length !== 10) newErrors.phone = langText("Enter 10-digit phone.", "१० अंकी फोन टाका.");
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      const firstErrorField = document.getElementById(Object.keys(newErrors)[0]);
+      if (firstErrorField) firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
+
+    if (isTimerActive) return;
+
     setIsSendingOtp(true);
     setOtpError("");
     try {
-      // Simulation delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      const appVerifier = window.recaptchaVerifier;
+      const confirmation = await signInWithPhoneNumber(auth, "+91" + phone, appVerifier);
+      setConfirmationResult(confirmation);
       setOtpSent(true);
-      console.log("Simulated OTP sent to:", phone);
-    } catch {
-      setOtpError("Failed to send OTP.");
+      setTimer(60);
+      setIsTimerActive(true);
+      console.log("OTP SMS dispatched from Firebase Auth");
+    } catch (err: any) {
+      console.error(err);
+      setOtpError(err.message || "Failed to send OTP. Please check your number.");
     } finally {
       setIsSendingOtp(false);
     }
@@ -128,16 +180,16 @@ export default function RegisterPage() {
     }
     setIsVerifyingOtp(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      // Acceptance logic
-      if (otpCode === "123456" || otpCode.length === 6) {
-        setOtpVerified(true);
-        setOtpError("");
+      if (confirmationResult) {
+         await confirmationResult.confirm(otpCode);
+         setOtpVerified(true);
+         setOtpError("");
       } else {
-        setOtpError("Invalid OTP.");
+         throw new Error("No active session. Please resend OTP.");
       }
-    } catch {
-      setOtpError("Error verifying OTP.");
+    } catch (err: any) {
+      console.error(err);
+      setOtpError(err.message || "Invalid OTP.");
     } finally {
       setIsVerifyingOtp(false);
     }
@@ -206,7 +258,7 @@ export default function RegisterPage() {
       <main className="flex-grow relative flex items-center justify-center pt-28 pb-12">
         <div className="fixed inset-0 z-0">
           <div className="absolute inset-0 bg-primary/60 z-10 mix-blend-multiply"></div>
-          <img alt="Farming background" className="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8i8TjLswgZrM-W8Hx2oyVVWIqQ6JW2cecAWf61lw9qYCLshtLmRIlAG2Xip2L_lyX4RXiOHxvusw0Uiy5191L6wOBfSBwk29Y2LGCmONpoJncEOlkuWp5vARqXzNDEsVxNTnddxJ70BAgihWTFwnAQ1b9BbLPId6Y1LDVxFN2srNNbSCGc0EBDw4UK7Yd7Q0ok1frvhuV4Pznx86kYPhhRbgNqiczhuydijYZa2FKiz3oWqmNjl2P57vS9HDDcUB_6j6-udVsWBuz"/>
+          <img alt="Farming background" className="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8i8TjLswgZrM-W8Hx2oyVVWIqQ6JW2cecAWf61lw9qYCLshtLmRIlAG2Xip2L_lyX4RXiOHxvusw0Uiy5191L6wOBfSBwk29Y2LGCmONpoJncEOlkuWp5vARqXzNDEsVxNTnddxJ70BAgihWTFwnAQ1b9BbLPId6Y1LDVxFN2srNNbSCGc0EBDw4UK7Yd7Q0ok1frvhuV4Pznx86kYPhhRbgNqiczhuydijYZa2FKiz3oWqmNjl2P57vS9HDDcUB_6j6-udVsWBuz"loading="lazy" decoding="async" />
         </div>
         
         <div className="relative z-20 w-full max-w-3xl mx-auto px-4 py-8">
@@ -278,8 +330,8 @@ export default function RegisterPage() {
                         <input className="flex-grow border-none px-4 py-3 outline-none focus:ring-0 font-bold tracking-widest" maxLength={10} placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} disabled={otpVerified}/>
                       </div>
                       {!otpVerified && (
-                        <button type="button" onClick={sendOtp} disabled={isSendingOtp || phone.length !== 10} className="px-5 bg-secondary text-white font-black rounded-xl hover:bg-orange-800 disabled:opacity-50 transition-all">
-                          {isSendingOtp ? "..." : otpSent ? langText("Resend", "पुन्हा") : langText("Send OTP", "OTP पाठवा")}
+                        <button type="button" onClick={sendOtp} disabled={isSendingOtp || phone.length !== 10 || isTimerActive} className="px-5 bg-secondary text-white font-black rounded-xl hover:bg-orange-800 disabled:opacity-50 transition-all min-w-[120px]">
+                          {isSendingOtp ? "..." : isTimerActive ? `${timer}s` : otpSent ? langText("Resend", "पुन्हा") : langText("Send OTP", "OTP पाठवा")}
                         </button>
                       )}
                       {otpVerified && (
@@ -292,16 +344,19 @@ export default function RegisterPage() {
                   </div>
 
                   {otpSent && !otpVerified && (
-                    <div className="p-4 bg-emerald-50/50 rounded-2xl border border-emerald-100 animate-in fade-in slide-in-from-top-1 mt-2">
-                      <label className="text-xs font-black uppercase text-emerald-800 mb-2 block tracking-widest">{langText("Apply OTP", "OTP लागू करा")}</label>
+                    <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
                       <div className="flex gap-2">
-                        <input className="kk-input flex-grow text-center tracking-[0.5em] font-black" placeholder="000000" maxLength={6} value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}/>
-                        <button type="button" onClick={verifyOtp} disabled={isVerifyingOtp} className="px-6 bg-emerald-700 text-white font-black rounded-xl hover:bg-emerald-800 whitespace-nowrap">
+                        <div className="flex flex-grow kk-input p-0 overflow-hidden items-center">
+                          <span className="px-3 border-r bg-emerald-50 text-emerald-800 font-bold flex items-center h-full">
+                            <span className="material-symbols-outlined text-lg">shield</span>
+                          </span>
+                          <input className="kk-input flex-grow border-none text-center tracking-[0.5em] font-black focus:ring-0" placeholder="000000" maxLength={6} value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}/>
+                        </div>
+                        <button type="button" onClick={verifyOtp} disabled={isVerifyingOtp} className="px-6 bg-emerald-700 text-white font-black rounded-xl hover:bg-emerald-800 whitespace-nowrap transition-all shadow-md active:scale-95">
                            {isVerifyingOtp ? "..." : langText("Verify OTP", "OTP सत्यापित")}
                         </button>
                       </div>
                       {otpError && <p className="text-red-500 text-[11px] font-bold mt-2 text-center">{otpError}</p>}
-                      <p className="text-[10px] text-emerald-600 font-bold mt-2 text-center uppercase tracking-tighter">Use any 6 digits for testing</p>
                     </div>
                   )}
                 </div>
@@ -323,9 +378,10 @@ export default function RegisterPage() {
                 </div>
 
                 <button type="button" onClick={handleGoogleRegister} className="w-full flex items-center justify-center gap-3 bg-white text-slate-900 font-bold py-4 rounded-xl border hover:bg-slate-50 transition-all shadow-sm">
-                  <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G"/>
+                  <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G"loading="lazy" decoding="async" />
                   <span>{langText("Sign up with Google", "Google सह नोंदणी करा")}</span>
                 </button>
+                <div id="recaptcha-container"></div>
               </form>
             </div>
             

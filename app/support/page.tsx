@@ -22,7 +22,7 @@ export default function Support() {
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
       <Header />
-      <main className="flex-grow pt-12 pb-20">
+      <main className="flex-grow pt-28 pb-20">
         {/* Hero */}
         <section className="max-w-7xl mx-auto px-6 mb-16">
           <div className="relative overflow-hidden rounded-xl bg-primary-container p-8 md:p-16 text-white shadow-2xl">
@@ -38,7 +38,7 @@ export default function Support() {
             </div>
             <div className="absolute right-0 top-0 w-1/3 h-full opacity-20 pointer-events-none hidden lg:block">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="Farmer with phone" className="object-cover h-full w-full" src={assetPath("/assets/generated/hero_tractor.png")} />
+              <img alt="Farmer with phone" className="object-cover h-full w-full" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
             </div>
           </div>
         </section>
