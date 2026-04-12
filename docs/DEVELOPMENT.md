@@ -39,9 +39,12 @@ cd kisaankamai_v0.1
 ### 2. Environment Configuration
 Create a `.env.local` file in the root directory:
 ```env
-NEXT_PUBLIC_APPWRITE_ENDPOINT=https://cloud.appwrite.io/v1
+NEXT_PUBLIC_APPWRITE_ENDPOINT=https://fra.cloud.appwrite.io/v1
 NEXT_PUBLIC_APPWRITE_PROJECT_ID=69d918770025e8d680f6
-APPWRITE_API_KEY=YOUR_SECRET_KEY
+NEXT_PUBLIC_DEMO_AUTH_MODE=true
+NEXT_PUBLIC_DEMO_PHONE=8761085453
+NEXT_PUBLIC_DEMO_EMAIL=test@example.com
+NEXT_PUBLIC_DEMO_PASSWORD=Test@12345
 ```
 
 ### 3. Database Initialization
@@ -67,6 +70,27 @@ If you encounter "Quota Exceeded" errors with Appwrite SMS, the project has been
 For testing, use the following real number:
 - **Phone Number**: `8761085453`
 - **Behavior**: An actual OTP will be sent to the user. You must request the OTP from the user (`hkumarsaikia`) via chat/scratchpad to complete the login process if you are in a testing or automated environment.
+
+### 4. Public Demo Mode
+For team review without Appwrite, OTP, or backend setup, enable demo mode and expose the dev server through the repo-managed Cloudflare Quick Tunnel helper.
+
+1. Add the `NEXT_PUBLIC_DEMO_*` values to `.env.local`.
+2. Run `npm run dev:public`.
+3. Run `npm run tunnel:public`.
+4. Copy the printed `https://*.trycloudflare.com` URL and share it with teammates.
+
+Teammates can sign in with either of the following and the same password:
+- **Phone Login**: `8761085453`
+- **Email Login**: `test@example.com`
+- **Password**: `Test@12345`
+
+In demo mode, `/login` accepts only those shared credentials and creates a browser-local demo session. `/register` also accepts that exact shared identity, skips OTP, and starts the same ready-made demo session without touching Appwrite.
+
+The helper prefers an existing `cloudflared` install. If it is not already on your machine, it downloads a portable `cloudflared` binary into `.cache/cloudflared/` and uses that automatically. No Cloudflare account login is required for this temporary Quick Tunnel flow.
+
+The public URL is temporary. It only works while both `npm run dev:public` and `npm run tunnel:public` are still running on your machine.
+
+`tunnel.log` is overwritten with the current live Cloudflare URL each time the helper starts. Old URLs should be treated as dead after the tunnel process stops or restarts.
 
 ---
 

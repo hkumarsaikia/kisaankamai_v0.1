@@ -2,13 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { account } from "@/lib/appwrite";
 import { useAuth } from "./AuthContext";
 import { useState } from "react";
 
 export const RenterSidebar = () => {
   const pathname = usePathname();
-  const { user, profile } = useAuth();
+  const { user, profile, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const userName = user?.name || profile?.fullName || "Renter";
@@ -16,7 +15,7 @@ export const RenterSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await account.deleteSession("current");
+      await logout();
       window.location.href = "/login";
     } catch {
       window.location.href = "/login";

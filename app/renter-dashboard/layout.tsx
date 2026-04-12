@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { account } from "@/lib/appwrite";
+import { useAuth } from "@/components/AuthContext";
 import { RenterSidebar } from "@/components/RenterSidebar";
 import { RenterTopBar } from "@/components/RenterTopBar";
 
@@ -13,20 +13,22 @@ export default function RenterDashboardLayout({
 }) {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const sessionUser = await account.get();
-        if (!sessionUser) throw new Error("Not logged in");
-        setLoading(false);
-      } catch (err) {
-        console.error("Auth check failed:", err);
+    if (authLoading) {
+      setLoading(true);
+      return;
+    }
+
+    if (!user) {
+      console.error("Auth check failed: Not logged in");
         router.push("/login");
-      }
-    };
-    checkAuth();
-  }, [router]);
+      return;
+    }
+
+    setLoading(false);
+  }, [authLoading, router, user]);
 
   if (loading) {
     return (

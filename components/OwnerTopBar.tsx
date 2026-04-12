@@ -1,16 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { account } from "@/lib/appwrite";
+import { useAuth } from "@/components/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const OwnerTopBar = () => {
-  const [userName, setUserName] = useState("Owner");
-
-  useEffect(() => {
-    account.get().then((u) => setUserName(u.name || "Owner")).catch(() => {});
-  }, []);
+  const { user, profile } = useAuth();
+  const userName = user?.name || profile?.fullName || "Owner";
 
   const initials = userName.substring(0, 1).toUpperCase();
 

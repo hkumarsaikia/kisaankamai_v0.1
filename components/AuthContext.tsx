@@ -3,18 +3,9 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
 import { Models } from "appwrite";
+import { DEMO_AUTH_CONFIG, DemoUserProfile, clearDemoSession, readDemoSession } from "@/lib/demoAuth";
 
-interface UserProfile {
-  fullName: string;
-  role: "owner" | "renter" | "both";
-  email?: string;
-  phone?: string;
-  village?: string;
-  address?: string;
-  pincode?: string;
-  fieldArea?: number;
-  aadhaar?: string;
-}
+type UserProfile = DemoUserProfile;
 
 interface AuthContextType {
   user: Models.User<Models.Preferences> | null;
@@ -56,6 +47,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const checkUser = async () => {
+    if (DEMO_AUTH_CONFIG.enabled) {
+      const demoSession = readDemoSession();
+      setUser(demoSession?.user || null);
+      setProfile(demoSession?.profile || null);
+      setLoading(false);
+      return;
+    }
+
     try {
       const currentUser = await account.get();
       setUser(currentUser);
@@ -74,6 +73,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const logout = async () => {
+    if (DEMO_AUTH_CONFIG.enabled) {
+      clearDemoSession();
+      setUser(null);
+      setProfile(null);
+      return;
+    }
+
     try {
       await account.deleteSession('current');
       setUser(null);

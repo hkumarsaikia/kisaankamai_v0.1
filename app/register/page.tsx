@@ -5,24 +5,24 @@ import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
+import { DEMO_AUTH_CONFIG, getDemoLoginNote, isDemoRegistrationCredentials, startDemoSession } from "@/lib/demoAuth";
 import { ID, OAuthProvider } from "appwrite";
 import { auth } from "@/lib/firebase";
+import { TEAM_REVIEW_CONFIG, isTeamReviewRegistration } from "@/lib/teamReview";
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
 
-declare global {
-  interface Window {
-    recaptchaVerifier: any;
-  }
-}
-
 export default function RegisterPage() {
+  const sendOtpButtonId = "register-send-otp-button";
   const { langText } = useLanguage();
   const { user, loading } = useAuth();
   const [showPopup, setShowPopup] = useState(false);
   const router = useRouter();
+  const recaptchaVerifierRef = useRef<RecaptchaVerifier | null>(null);
+  const [isLocalhostOtpMode, setIsLocalhostOtpMode] = useState(false);
+  const isDemoMode = DEMO_AUTH_CONFIG.enabled;
 
   useEffect(() => {
     if (!loading && user) {
@@ -60,6 +60,115 @@ export default function RegisterPage() {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isPincodeLoading, setIsPincodeLoading] = useState(false);
+
+  const isLocalOtpHost = () =>
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
+
+  const clearRecaptchaVerifier = () => {
+    if (!recaptchaVerifierRef.current) {
+      return;
+    }
+
+    try {
+      recaptchaVerifierRef.current.clear();
+    } catch {}
+
+    recaptchaVerifierRef.current = null;
+  };
+
+  const resetOtpFlow = ({ clearError = true }: { clearError?: boolean } = {}) => {
+    clearRecaptchaVerifier();
+    setConfirmationResult(null);
+    setOtpSent(false);
+    setOtpVerified(false);
+    setOtpCode("");
+    setTimer(0);
+    setIsTimerActive(false);
+
+    if (clearError) {
+      setOtpError("");
+    }
+  };
+
+  const getFirebaseOtpErrorMessage = (error: { code?: string; message?: string }) => {
+    const isLocalhostHost = isLocalOtpHost();
+
+    switch (error.code) {
+      case "auth/operation-not-allowed":
+        return langText(
+          "Phone OTP is not enabled in the gokisaan Firebase project.",
+          "gokisaan Firebase प्रोजेक्टमध्ये फोन OTP सक्षम केलेले नाही."
+        );
+      case "auth/unauthorized-domain":
+        return isLocalhostHost
+          ? langText(
+              "Localhost supports only Firebase test phone numbers. Use a test number configured in gokisaan Firebase Auth.",
+              "localhost वर फक्त Firebase test phone numbers चालतात. gokisaan Firebase Auth मध्ये सेट केलेला test number वापरा."
+            )
+          : langText(
+              "This domain is not authorized for Firebase phone OTP. Add it to the gokisaan Firebase Auth allowed domains.",
+              "हा domain Firebase phone OTP साठी authorized नाही. तो gokisaan Firebase Auth allowed domains मध्ये जोडा."
+            );
+      case "auth/invalid-phone-number":
+        return langText(
+          "Enter a valid 10-digit Indian mobile number.",
+          "वैध १०-अंकी भारतीय मोबाईल नंबर टाका."
+        );
+      case "auth/too-many-requests":
+        return langText(
+          "Too many OTP attempts. Please wait a little before trying again.",
+          "खूप OTP प्रयत्न झाले. कृपया थोडा वेळ थांबा आणि पुन्हा प्रयत्न करा."
+        );
+      case "auth/captcha-check-failed":
+        return langText(
+          "Phone verification could not be completed. Please resend the OTP.",
+          "फोन पडताळणी पूर्ण झाली नाही. कृपया OTP पुन्हा पाठवा."
+        );
+      case "auth/quota-exceeded":
+        return langText(
+          "Firebase OTP quota is currently exhausted. Please try again later.",
+          "Firebase OTP quota सध्या संपले आहे. कृपया नंतर पुन्हा प्रयत्न करा."
+        );
+      case "auth/invalid-app-credential":
+      case "auth/missing-app-credential":
+        return langText(
+          "App verification expired. Please send the OTP again.",
+          "App verification ची मुदत संपली. कृपया OTP पुन्हा पाठवा."
+        );
+      default:
+        return error.message || langText(
+          "Failed to send OTP. Please try again.",
+          "OTP पाठवण्यात अयशस्वी. कृपया पुन्हा प्रयत्न करा."
+        );
+    }
+  };
+
+  const createRecaptchaVerifier = () => {
+    const isLocalhostHost = isLocalOtpHost();
+
+    clearRecaptchaVerifier();
+    auth.settings.appVerificationDisabledForTesting = isLocalhostHost;
+
+    const verifier = new RecaptchaVerifier(auth, sendOtpButtonId, {
+      size: "invisible",
+      callback: () => {
+        setOtpError("");
+      },
+      "expired-callback": () => {
+        resetOtpFlow({ clearError: false });
+        setOtpError(
+          langText(
+            "Verification expired. Please send the OTP again.",
+            "पडताळणीची मुदत संपली. कृपया OTP पुन्हा पाठवा."
+          )
+        );
+      }
+    });
+
+    recaptchaVerifierRef.current = verifier;
+    return verifier;
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -113,6 +222,10 @@ export default function RegisterPage() {
   };
 
   useEffect(() => {
+    setIsLocalhostOtpMode(isLocalOtpHost());
+  }, []);
+
+  useEffect(() => {
     let interval: NodeJS.Timeout;
     if (isTimerActive && timer > 0) {
       interval = setInterval(() => {
@@ -125,14 +238,8 @@ export default function RegisterPage() {
   }, [isTimerActive, timer]);
 
   useEffect(() => {
-    // Cleanup stale recaptcha on unmount or fast-refresh
     return () => {
-      if (window.recaptchaVerifier) {
-        try {
-          window.recaptchaVerifier.clear();
-        } catch (e) {}
-        window.recaptchaVerifier = undefined;
-      }
+      clearRecaptchaVerifier();
     };
   }, []);
 
@@ -145,7 +252,39 @@ export default function RegisterPage() {
     }));
   };
 
+  const redirectAuthenticatedUser = async () => {
+    const authenticatedUser = await account.get();
+
+    try {
+      const profile = await databases.getDocument(
+        APPWRITE_CONFIG.databaseId,
+        APPWRITE_CONFIG.userCollectionId,
+        authenticatedUser.$id
+      );
+
+      if (profile.role === "owner") {
+        router.push("/owner-dashboard");
+      } else if (profile.role === "renter") {
+        router.push("/renter-dashboard");
+      } else {
+        router.push("/profile-selection");
+      }
+    } catch {
+      router.push("/profile-selection");
+    }
+  };
+
   const sendOtp = async () => {
+    if (isDemoMode) {
+      setOtpError(
+        langText(
+          "OTP is disabled in demo mode. Use the shared demo credentials and submit the form.",
+          "Demo mode मध्ये OTP बंद आहे. Shared demo credentials वापरून फॉर्म submit करा."
+        )
+      );
+      return;
+    }
+
     // 1. Enforce full validation before sending OTP
     const newErrors: Record<string, string> = {};
     if (!formData.fullName.trim()) newErrors.fullName = langText("Enter your full name.", "तुमचे पूर्ण नाव प्रविष्ट करा.");
@@ -165,14 +304,9 @@ export default function RegisterPage() {
     if (isTimerActive) return;
 
     setIsSendingOtp(true);
-    setOtpError("");
+    resetOtpFlow();
     try {
-      if (!window.recaptchaVerifier) {
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-          size: 'invisible'
-        });
-      }
-      const appVerifier = window.recaptchaVerifier;
+      const appVerifier = createRecaptchaVerifier();
       const confirmation = await signInWithPhoneNumber(auth, "+91" + phone, appVerifier);
       setConfirmationResult(confirmation);
       setOtpSent(true);
@@ -180,14 +314,25 @@ export default function RegisterPage() {
       setIsTimerActive(true);
       console.log("OTP SMS dispatched from Firebase Auth");
     } catch (err: any) {
-      console.error(err);
-      setOtpError(err.message || "Failed to send OTP. Please check your number.");
+      console.error("Firebase OTP Error:", err);
+      resetOtpFlow({ clearError: false });
+      setOtpError(getFirebaseOtpErrorMessage(err));
     } finally {
       setIsSendingOtp(false);
     }
   };
 
   const verifyOtp = async () => {
+    if (isDemoMode) {
+      setOtpError(
+        langText(
+          "OTP verification is disabled in demo mode.",
+          "Demo mode मध्ये OTP verification बंद आहे."
+        )
+      );
+      return;
+    }
+
     if (otpCode.length !== 6) {
       setOtpError(langText("Enter 6-digit code.", "६-अंकी कोड टाका."));
       return;
@@ -197,22 +342,69 @@ export default function RegisterPage() {
       if (confirmationResult) {
          await confirmationResult.confirm(otpCode);
          setOtpVerified(true);
+         setIsTimerActive(false);
+         setTimer(0);
          setOtpError("");
       } else {
          throw new Error("No active session. Please resend OTP.");
       }
     } catch (err: any) {
-      console.error(err);
-      setOtpError(err.message || "Invalid OTP.");
+      console.error("Firebase OTP Verify Error:", err);
+      if (err?.code === "auth/invalid-verification-code") {
+        setOtpError(langText("Invalid OTP. Please try again.", "अवैध OTP. कृपया पुन्हा प्रयत्न करा."));
+      } else {
+        resetOtpFlow({ clearError: false });
+        setOtpError(err.message || langText("OTP verification failed. Please resend OTP.", "OTP पडताळणी अयशस्वी. कृपया OTP पुन्हा पाठवा."));
+      }
     } finally {
       setIsVerifyingOtp(false);
     }
   };
 
+  const handlePhoneChange = (value: string) => {
+    const nextPhone = value.replace(/\D/g, "").slice(0, 10);
+
+    if (nextPhone !== phone && (otpSent || otpVerified || confirmationResult || otpCode)) {
+      resetOtpFlow();
+    }
+
+    setPhone(nextPhone);
+
+    if (errors.phone) {
+      setErrors(prev => {
+        const next = { ...prev };
+        delete next.phone;
+        return next;
+      });
+    }
+  };
+
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isDemoMode) {
+      if (!isDemoRegistrationCredentials({ phone, email: formData.email, password: formData.password })) {
+        setErrors({
+          submit: langText(
+            `Demo credentials only. Enter ${DEMO_AUTH_CONFIG.phone}, ${DEMO_AUTH_CONFIG.email}, and ${DEMO_AUTH_CONFIG.password}.`,
+            `फक्त demo credentials वापरा. ${DEMO_AUTH_CONFIG.phone}, ${DEMO_AUTH_CONFIG.email}, आणि ${DEMO_AUTH_CONFIG.password} टाका.`
+          )
+        });
+        return;
+      }
+
+      setErrors({});
+      startDemoSession();
+      window.location.href = "/profile-selection";
+      return;
+    }
     
     const newErrors: Record<string, string> = {};
+    const isSharedTeamReviewRegistration = isTeamReviewRegistration({
+      phone,
+      email: formData.email,
+      password: formData.password
+    });
 
     if (!formData.fullName.trim()) newErrors.fullName = langText("Enter your full name.", "तुमचे पूर्ण नाव प्रविष्ट करा.");
     if (!formData.address.trim()) newErrors.address = langText("Enter your address.", "tumcha पत्ता प्रविष्ट करा.");
@@ -220,7 +412,7 @@ export default function RegisterPage() {
     if (pincode.length !== 6) newErrors.pincode = langText("Enter valid 6-digit pincode.", "वैध पिनकोड टाका.");
     if (!formData.fieldArea || parseFloat(formData.fieldArea) <= 0) newErrors.fieldArea = langText("Enter field area.", "शेती क्षेत्र टाका.");
     if (phone.length !== 10) newErrors.phone = langText("Enter 10-digit phone.", "१० अंकी फोन टाका.");
-    if (!otpVerified) newErrors.phone = langText("Verify with OTP first.", "आधी OTP सत्यापित करा.");
+    if (!otpVerified && !isSharedTeamReviewRegistration) newErrors.phone = langText("Verify with OTP first.", "आधी OTP सत्यापित करा.");
     if (formData.password.length < 6) newErrors.password = langText("Min 6 characters.", "किमान ६ वर्ण.");
 
     setErrors(newErrors);
@@ -229,6 +421,32 @@ export default function RegisterPage() {
       const email = formData.email || `${phone}@kisankamai.com`;
       setIsPincodeLoading(true);
       try {
+        if (isSharedTeamReviewRegistration && TEAM_REVIEW_CONFIG.enabled) {
+          try {
+            await account.createEmailPasswordSession(TEAM_REVIEW_CONFIG.email, TEAM_REVIEW_CONFIG.password);
+          } catch (error: any) {
+            const maybeMissingSharedAccount =
+              error?.code === 401 ||
+              error?.code === 404 ||
+              /invalid credentials|user/i.test(error?.message || "");
+
+            if (maybeMissingSharedAccount) {
+              setErrors({
+                submit: langText(
+                  "Shared team review account is not ready yet. Add APPWRITE_API_KEY, run npm run bootstrap:test-user, then try again.",
+                  "Shared team review account अजून तयार नाही. APPWRITE_API_KEY जोडा, npm run bootstrap:test-user चालवा, आणि पुन्हा प्रयत्न करा."
+                )
+              });
+              return;
+            }
+
+            throw error;
+          }
+
+          await redirectAuthenticatedUser();
+          return;
+        }
+
         const user = await account.create(ID.unique(), email, formData.password, formData.fullName);
         await account.createEmailPasswordSession(email, formData.password);
         await databases.createDocument(
@@ -258,6 +476,16 @@ export default function RegisterPage() {
   };
 
   const handleGoogleRegister = () => {
+    if (isDemoMode) {
+      setErrors({
+        submit: langText(
+          "Google sign-up is disabled in demo mode. Use the shared demo credentials instead.",
+          "Demo mode मध्ये Google sign-up बंद आहे. त्याऐवजी shared demo credentials वापरा."
+        )
+      });
+      return;
+    }
+
     account.createOAuth2Session(
       OAuthProvider.Google,
       `${window.location.origin}/verify-contact`,
@@ -285,6 +513,14 @@ export default function RegisterPage() {
               <div className="mb-8 text-center sm:text-left">
                 <h1 className="font-headline font-bold text-2xl sm:text-3xl text-slate-900 mb-2 tracking-tight">{langText("Create account", "नवीन खाते तयार करा")}</h1>
                 <p className="font-body text-slate-600 text-base">{langText("Simplify your farming journey", "तुमचा शेती प्रवास सोपा करा")}</p>
+                {isDemoMode ? (
+                  <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-900">
+                    {langText(
+                      `Demo mode is active. Enter ${DEMO_AUTH_CONFIG.phone}, ${DEMO_AUTH_CONFIG.email}, and ${DEMO_AUTH_CONFIG.password}. Extra profile fields and OTP are ignored.`,
+                      `Demo mode सुरू आहे. ${DEMO_AUTH_CONFIG.phone}, ${DEMO_AUTH_CONFIG.email}, आणि ${DEMO_AUTH_CONFIG.password} टाका. बाकी profile fields आणि OTP दुर्लक्षित केले जातील.`
+                    )}
+                  </div>
+                ) : null}
               </div>
               
               <form className="space-y-6" onSubmit={handleRegister} noValidate>
@@ -329,10 +565,11 @@ export default function RegisterPage() {
                     )}
                   </div>
 
-                  <div className="space-y-2">
-                    <label className="font-label text-sm font-semibold text-slate-700">{langText("Acres", "एकर")}</label>
-                    <input className={`kk-input ${errors.fieldArea ? 'border-red-400' : ''}`} id="fieldArea" type="number" step="0.5" placeholder="0" value={formData.fieldArea} onChange={handleInputChange}/>
-                  </div>
+                <div className="space-y-2">
+                  <label className="font-label text-sm font-semibold text-slate-700">{langText("Acres", "एकर")}</label>
+                  <input className={`kk-input ${errors.fieldArea ? 'border-red-400' : ''}`} id="fieldArea" type="number" step="0.5" placeholder="0" value={formData.fieldArea} onChange={handleInputChange}/>
+                  {errors.fieldArea && <p className="text-red-500 text-xs font-bold">{errors.fieldArea}</p>}
+                </div>
                 </div>
 
                 <div className="space-y-4">
@@ -341,23 +578,41 @@ export default function RegisterPage() {
                     <div className="flex gap-2">
                       <div className={`flex flex-grow kk-input p-0 overflow-hidden items-center ${errors.phone ? 'border-red-400' : ''}`}>
                         <span className="px-3 border-r bg-slate-50 text-slate-500 font-bold">+91</span>
-                        <input className="flex-grow border-none px-4 py-3 outline-none focus:ring-0 font-bold tracking-widest" maxLength={10} placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} disabled={otpVerified}/>
+                        <input className="flex-grow border-none px-4 py-3 outline-none focus:ring-0 font-bold tracking-widest" maxLength={10} placeholder="10 digits" value={phone} onChange={(e) => handlePhoneChange(e.target.value)} disabled={otpVerified}/>
                       </div>
-                      {!otpVerified && (
-                        <button type="button" onClick={sendOtp} disabled={isSendingOtp || phone.length !== 10 || isTimerActive} className="px-5 bg-secondary text-white font-black rounded-xl hover:bg-orange-800 disabled:opacity-50 transition-all min-w-[120px]">
+                      {!isDemoMode && !otpVerified && (
+                        <button id={sendOtpButtonId} type="button" onClick={sendOtp} disabled={isSendingOtp || phone.length !== 10 || isTimerActive} className="px-5 bg-secondary text-white font-black rounded-xl hover:bg-orange-800 disabled:opacity-50 transition-all min-w-[120px]">
                           {isSendingOtp ? "..." : isTimerActive ? `${timer}s` : otpSent ? langText("Resend", "पुन्हा") : langText("Send OTP", "OTP पाठवा")}
                         </button>
                       )}
-                      {otpVerified && (
+                      {!isDemoMode && otpVerified && (
                         <div className="flex items-center gap-1 bg-emerald-100 text-emerald-700 px-4 rounded-xl font-bold border border-emerald-200">
                           <span className="material-symbols-outlined text-sm">verified</span> Verified
                         </div>
                       )}
+                      {isDemoMode && (
+                        <div className="flex items-center gap-1 bg-amber-100 text-amber-800 px-4 rounded-xl font-bold border border-amber-200 whitespace-nowrap">
+                          <span className="material-symbols-outlined text-sm">visibility</span> Demo
+                        </div>
+                      )}
                     </div>
                     {errors.phone && <p className="text-red-500 text-xs font-bold">{errors.phone}</p>}
+                    {isDemoMode ? (
+                      <p className="text-[11px] font-bold text-slate-500 max-w-md">
+                        {getDemoLoginNote()}
+                      </p>
+                    ) : isLocalhostOtpMode ? (
+                      <p className="text-[11px] font-bold text-slate-500 max-w-md">
+                        {langText(
+                          "Localhost uses Firebase test phone numbers only. Add the number and 6-digit code in gokisaan Firebase Auth before testing.",
+                          "localhost वर फक्त Firebase test phone numbers चालतात. test करण्यापूर्वी gokisaan Firebase Auth मध्ये नंबर आणि ६-अंकी code जोडा."
+                        )}
+                      </p>
+                    ) : null}
+                    {!isDemoMode && !otpSent && otpError && <p className="text-red-500 text-[11px] font-bold mt-1 max-w-sm">{otpError}</p>}
                   </div>
 
-                  {otpSent && !otpVerified && (
+                  {!isDemoMode && otpSent && !otpVerified && (
                     <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
                       <div className="flex gap-2">
                         <div className="flex flex-grow kk-input p-0 overflow-hidden items-center">
@@ -381,23 +636,33 @@ export default function RegisterPage() {
                   {errors.password && <p className="text-red-500 text-xs font-bold">{errors.password}</p>}
                 </div>
 
+                {errors.submit && (
+                  <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                    {errors.submit}
+                  </div>
+                )}
+
                 <button className="w-full py-4 bg-emerald-900 text-white text-base font-black rounded-xl shadow-lg hover:bg-emerald-950 transition-all uppercase tracking-widest" type="submit">
-                  {langText("Create Kisan Kamai Account", "खाते तयार करा")}
+                  {isDemoMode ? langText("Start Demo Session", "Demo Session सुरू करा") : langText("Create Kisan Kamai Account", "खाते तयार करा")}
                 </button>
 
-                <div className="relative flex items-center gap-4 py-2">
-                  <div className="flex-grow border-t"></div>
-                  <span className="text-xs font-bold text-slate-400">OR</span>
-                  <div className="flex-grow border-t"></div>
-                </div>
+                {!isDemoMode ? (
+                  <>
+                    <div className="relative flex items-center gap-4 py-2">
+                      <div className="flex-grow border-t"></div>
+                      <span className="text-xs font-bold text-slate-400">OR</span>
+                      <div className="flex-grow border-t"></div>
+                    </div>
 
-                <button type="button" onClick={handleGoogleRegister} className="w-full flex items-center justify-center gap-3 bg-white text-slate-900 font-bold py-4 rounded-xl border hover:bg-slate-50 transition-all shadow-sm">
-                  <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G"loading="lazy" decoding="async" />
-                  <span>{langText("Sign up with Google", "Google सह नोंदणी करा")}</span>
-                </button>
-                <div id="recaptcha-container"></div>
+                    <button type="button" onClick={handleGoogleRegister} className="w-full flex items-center justify-center gap-3 bg-white text-slate-900 font-bold py-4 rounded-xl border hover:bg-slate-50 transition-all shadow-sm">
+                      <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G"loading="lazy" decoding="async" />
+                      <span>{langText("Sign up with Google", "Google सह नोंदणी करा")}</span>
+                    </button>
+                  </>
+                ) : null}
               </form>
             </div>
+
             
             <div className="bg-slate-50 py-6 px-10 text-center border-t border-slate-200">
               <p className="font-body text-sm font-medium text-slate-600">

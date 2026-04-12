@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/components/LanguageContext";
 import { Footer } from "@/components/Footer";
+import { DEMO_AUTH_CONFIG } from "@/lib/demoAuth";
 import { account } from "@/lib/appwrite";
 import { ID } from "appwrite";
 
@@ -114,6 +115,34 @@ export default function ForgotPasswordPage() {
       setLoading(false);
     }
   };
+
+  if (DEMO_AUTH_CONFIG.enabled) {
+    return (
+      <div className="bg-background text-on-background min-h-screen flex flex-col font-body">
+        <main className="flex-grow flex items-center justify-center px-6 py-16">
+          <div className="w-full max-w-xl bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xl p-8 text-center">
+            <h1 className="text-3xl font-black text-primary dark:text-emerald-400 mb-4">
+              {langText("Password Reset Disabled in Demo Mode", "Demo mode मध्ये Password Reset बंद आहे")}
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
+              {langText(
+                "Use the shared demo credentials to access the app. Forgot password is unavailable while demo mode is active.",
+                "App मध्ये प्रवेशासाठी shared demo credentials वापरा. Demo mode सक्रिय असताना forgot password उपलब्ध नाही."
+              )}
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push("/login")}
+              className="w-full bg-primary text-white font-bold py-4 rounded-xl"
+            >
+              {langText("Back to Login", "लॉगिनकडे परत जा")}
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="bg-background text-on-background min-h-screen flex flex-col font-body">      

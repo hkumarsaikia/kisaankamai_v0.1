@@ -3,6 +3,7 @@
 import { useEffect, useRef } from 'react';
 import { onLCP, onINP, onCLS, onFCP, onTTFB } from 'web-vitals';
 import { ID, databases, APPWRITE_CONFIG } from '@/lib/appwrite';
+import { DEMO_AUTH_CONFIG } from '@/lib/demoAuth';
 import { usePathname, useSearchParams } from 'next/navigation';
 
 interface PerformanceEvent {
@@ -16,12 +17,17 @@ interface PerformanceEvent {
 export function PerformanceMonitor() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const isDemoMode = DEMO_AUTH_CONFIG.enabled;
   const isSimulation = searchParams.get('simulate') === 'true';
   const eventBuffer = useRef<PerformanceEvent[]>([]);
   const sessionId = useRef<string>(`session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const isBatching = useRef(false);
 
   useEffect(() => {
+    if (isDemoMode) {
+      return;
+    }
+
     // 1. Web Vitals
     const logVital = (metric: any) => {
       eventBuffer.current.push({
@@ -83,9 +89,10 @@ export function PerformanceMonitor() {
       sendBatch(true); // Final batch on unmount
       // eslint-disable-next-line react-hooks/exhaustive-deps
     };
-  }, [pathname, isSimulation]);
+  }, [isDemoMode, pathname, isSimulation]);
 
   const sendBatch = async (force = false) => {
+    if (isDemoMode) return;
     if (eventBuffer.current.length === 0 || isBatching.current) return;
     if (!force && eventBuffer.current.length < 5) return; // Wait for at least 5 events unless forced
 
