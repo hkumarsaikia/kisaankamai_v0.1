@@ -80,7 +80,7 @@ To replicate the backend performance monitoring system:
    - `performance_insights`: Attributes (`pageUrl`, `lcp`, `cls`, `loadTime`, `timestamp`).
    - `live_performance_logs`: Attributes (`sessionId`, `batchData`, `timestamp`).
 4. **Storage**: Create a bucket named `performance_traces` for trace storage.
-5. **API Key**: Generate an API key with `documents.write` and `files.write` scopes for the autonomous agent.
+5. **API Key**: Generate an API key with `users.read`, `users.write`, `databases.read`, `databases.write`, `documents.write`, and `files.write` scopes for the autonomous agent and the shared team-review bootstrap script.
 
 ---
 

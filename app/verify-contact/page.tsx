@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
+import { DEMO_AUTH_CONFIG, readDemoSession } from "@/lib/demoAuth";
 import { ID } from "appwrite";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -10,6 +11,7 @@ import { Footer } from "@/components/Footer";
 export default function VerifyContactPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const demoSession = DEMO_AUTH_CONFIG.enabled ? readDemoSession() : null;
   
   // User context
   const [userId, setUserId] = useState("");
@@ -41,6 +43,11 @@ export default function VerifyContactPage() {
   // Load account on mount
   useEffect(() => {
     async function loadAccount() {
+      if (DEMO_AUTH_CONFIG.enabled) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const user = await account.get();
         // Check if user document already exists
@@ -255,6 +262,32 @@ export default function VerifyContactPage() {
          </div>
        </div>
      );
+  }
+
+  if (DEMO_AUTH_CONFIG.enabled) {
+    return (
+      <div className="bg-surface min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-grow flex items-center justify-center px-6 pt-24 pb-12">
+          <div className="kk-glass w-full max-w-xl p-8 lg:p-10 text-center">
+            <h1 className="text-3xl font-black text-primary mb-4">Demo Contact Verification Disabled</h1>
+            <p className="text-slate-600 font-medium mb-8">
+              {demoSession
+                ? "Demo mode skips contact verification and OTP. Continue directly to profile selection."
+                : "Demo mode does not use Appwrite contact verification. Sign in with the shared demo credentials first."}
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push(demoSession ? "/profile-selection" : "/login")}
+              className="w-full bg-primary text-white font-black py-4 rounded-2xl"
+            >
+              {demoSession ? "Go to Profile Selection" : "Go to Login"}
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
   }
 
   return (

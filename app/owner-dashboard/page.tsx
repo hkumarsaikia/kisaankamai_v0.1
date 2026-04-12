@@ -1,15 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { account } from "@/lib/appwrite";
+import { useAuth } from "@/components/AuthContext";
 
 export default function OwnerDashboardPage() {
-  const [userName, setUserName] = useState("Owner");
-
-  useEffect(() => {
-    account.get().then((u) => setUserName(u.name || "Owner")).catch(() => {});
-  }, []);
+  const { user, profile } = useAuth();
+  const userName = user?.name || profile?.fullName || "Owner";
 
   return (
     <>

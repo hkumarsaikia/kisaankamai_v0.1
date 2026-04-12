@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "dev:public": "next dev --hostname 0.0.0.0 --port 3000",
+    "tunnel:public": "node scripts/public-tunnel.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
+    "bootstrap:test-user": "node scripts/bootstrap-test-user.mjs",
     "verify": "npm run lint && npm run typecheck && npm run build && node scripts/verify-export.mjs"
   },
   "dependencies": {

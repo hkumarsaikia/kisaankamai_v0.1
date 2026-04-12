@@ -1,20 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { account } from "@/lib/appwrite";
+import { useAuth } from "@/components/AuthContext";
 
 export default function SettingsDashboard() {
-  const [userName, setUserName] = useState("Owner");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  
-  useEffect(() => {
-    account.get().then((u) => {
-      setUserName(u.name || "Owner");
-      setEmail(u.email || "");
-      setPhone(u.phone || "");
-    }).catch(() => {});
-  }, []);
+  const { user, profile } = useAuth();
+  const userName = user?.name || profile?.fullName || "Owner";
+  const email = user?.email || profile?.email || "";
+  const phone = profile?.phone || "";
 
   return (
     <>

@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { account } from "@/lib/appwrite";
 import { useState } from "react";
+import { useAuth } from "@/components/AuthContext";
 
 export const OwnerSidebar = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     try {
-      await account.deleteSession("current");
+      await logout();
       window.location.href = "/login";
     } catch (err) {
       console.error("Logout failed:", err);

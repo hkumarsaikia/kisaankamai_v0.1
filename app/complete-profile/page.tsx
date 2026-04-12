@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
+import { DEMO_AUTH_CONFIG } from "@/lib/demoAuth";
 import { databases, APPWRITE_CONFIG } from "@/lib/appwrite";
 
 export default function CompleteProfile() {
@@ -75,6 +76,42 @@ export default function CompleteProfile() {
   };
 
   if (loading) return null;
+
+  if (DEMO_AUTH_CONFIG.enabled) {
+    return (
+      <div className="min-h-screen bg-background text-on-surface flex flex-col">
+        <Header />
+        <main className="flex-grow flex items-center justify-center pt-24 pb-12 px-6">
+          <div className="kk-glass w-full max-w-xl p-8 lg:p-10 text-center">
+            <h1 className="text-3xl font-black text-primary dark:text-emerald-50 mb-4">
+              {langText("Demo Profile Ready", "Demo प्रोफाइल तयार आहे")}
+            </h1>
+            <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
+              {user
+                ? langText(
+                    "Profile completion is skipped in demo mode. Continue to profile selection.",
+                    "Demo mode मध्ये profile completion वगळले आहे. Profile selection कडे जा."
+                  )
+                : langText(
+                    "Demo mode uses browser-local sessions. Sign in with the shared demo credentials first.",
+                    "Demo mode browser-local session वापरतो. आधी shared demo credentials ने sign in करा."
+                  )}
+            </p>
+            <button
+              type="button"
+              onClick={() => router.push(user ? "/profile-selection" : "/login")}
+              className="w-full bg-primary text-white font-black py-4 rounded-2xl"
+            >
+              {user
+                ? langText("Go to Profile Selection", "प्रोफाइल निवडीकडे जा")
+                : langText("Go to Login", "लॉगिनकडे जा")}
+            </button>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col">
