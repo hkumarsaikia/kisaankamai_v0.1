@@ -7,8 +7,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import { assetPath } from "@/lib/site";
-import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
-import { OAuthProvider } from "appwrite";
+import { auth, db } from "@/lib/firebase";
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,21 +36,15 @@ export default function LoginPage() {
 
     try {
       setError("");
-      // If identifier doesn't look like an email, assume it's a phone number and append domain
       const email = identifier.includes("@") ? identifier : `${identifier}@kisankamai.com`;
 
-      // 1. Create session with Appwrite
-      await account.createEmailPasswordSession(email, password);
+      // 1. Sign in with Firebase
+      const cred = await signInWithEmailAndPassword(auth, email, password);
 
-      // 2. Fetch user profile to determine redirect
-      const user = await account.get();
-      try {
-        const profile = await databases.getDocument(
-          APPWRITE_CONFIG.databaseId,
-          APPWRITE_CONFIG.userCollectionId,
-          user.$id
-        );
-
+      // 2. Fetch Firestore profile to determine redirect
+      const snap = await getDoc(doc(db, "users", cred.user.uid));
+      if (snap.exists()) {
+        const profile = snap.data();
         if (profile.role === "owner") {
           router.push("/owner-dashboard");
         } else if (profile.role === "renter") {
@@ -57,8 +52,7 @@ export default function LoginPage() {
         } else {
           router.push("/profile-selection");
         }
-      } catch {
-        // No profile found, probably need onboarding
+      } else {
         router.push("/profile-selection");
       }
     } catch (err: any) {
@@ -69,12 +63,17 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      // Appwrite handles the redirect. After redirect, AuthContext will catch the session.
-      account.createOAuth2Session(
-        OAuthProvider.Google,
-        `${window.location.origin}/verify-contact`, // Success redirect
-        `${window.location.origin}/login` // Failure redirect
-      );
+      const provider = new GoogleAuthProvider();
+      const cred = await signInWithPopup(auth, provider);
+      const snap = await getDoc(doc(db, "users", cred.user.uid));
+      if (snap.exists()) {
+        const profile = snap.data();
+        if (profile.role === "owner") router.push("/owner-dashboard");
+        else if (profile.role === "renter") router.push("/renter-dashboard");
+        else router.push("/profile-selection");
+      } else {
+        router.push("/profile-selection");
+      }
     } catch {
       setError(langText("Google sign-in failed.", "Google साइन-इन अयशस्वी झाले."));
     }

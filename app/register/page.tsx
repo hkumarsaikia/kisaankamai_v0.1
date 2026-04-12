@@ -6,9 +6,9 @@ import { useLanguage } from "@/components/LanguageContext";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
-import { ID, OAuthProvider } from "appwrite";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
 
 declare global {
@@ -116,15 +116,19 @@ export default function RegisterPage() {
     return () => clearInterval(interval);
   }, [isTimerActive, timer]);
 
+  // Initialize reCAPTCHA once on mount — the container div is rendered
+  // outside the form at the bottom of the page so React re-renders
+  // never unmount it.
   useEffect(() => {
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'invisible',
-        'callback': () => {
-          // reCAPTCHA solved, allow signInWithPhoneNumber.
-        }
-      });
+    if (typeof window === 'undefined') return;
+    if (window.recaptchaVerifier) {
+      try { window.recaptchaVerifier.clear(); } catch { }
+      window.recaptchaVerifier = undefined;
     }
+    window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+      size: 'invisible',
+      callback: () => {},
+    });
   }, []);
 
   const selectPincodeLocation = (office: any) => {
@@ -164,9 +168,16 @@ export default function RegisterPage() {
       setOtpSent(true);
       setTimer(60);
       setIsTimerActive(true);
-      console.log("OTP SMS dispatched from Firebase Auth");
     } catch (err: any) {
-      console.error(err);
+      // Reset verifier on failure so Resend gets a clean instance
+      if (window.recaptchaVerifier) {
+        try { window.recaptchaVerifier.clear(); } catch { }
+        window.recaptchaVerifier = undefined;
+      }
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        size: 'invisible',
+        callback: () => {},
+      });
       setOtpError(err.message || "Failed to send OTP. Please check your number.");
     } finally {
       setIsSendingOtp(false);
@@ -215,23 +226,22 @@ export default function RegisterPage() {
       const email = formData.email || `${phone}@kisankamai.com`;
       setIsPincodeLoading(true);
       try {
-        const user = await account.create(ID.unique(), email, formData.password, formData.fullName);
-        await account.createEmailPasswordSession(email, formData.password);
-        await databases.createDocument(
-          APPWRITE_CONFIG.databaseId,
-          APPWRITE_CONFIG.userCollectionId,
-          user.$id,
-          {
-            fullName: formData.fullName,
-            email: email,
-            phone: phone,
-            address: formData.address,
-            village: formData.village,
-            pincode: pincode,
-            fieldArea: parseFloat(formData.fieldArea),
-            role: role
-          }
-        );
+        // 1. Create Firebase Auth user
+        const cred = await createUserWithEmailAndPassword(auth, email, formData.password);
+        await updateProfile(cred.user, { displayName: formData.fullName });
+
+        // 2. Save profile to Firestore
+        await setDoc(doc(db, "users", cred.user.uid), {
+          fullName: formData.fullName,
+          email: email,
+          phone: phone,
+          address: formData.address,
+          village: formData.village,
+          pincode: pincode,
+          fieldArea: parseFloat(formData.fieldArea),
+          role: role,
+          createdAt: new Date().toISOString(),
+        });
         setShowPopup(true);
         setTimeout(() => router.push("/login"), 3000);
       } catch (error: any) {
@@ -243,12 +253,14 @@ export default function RegisterPage() {
     }
   };
 
-  const handleGoogleRegister = () => {
-    account.createOAuth2Session(
-      OAuthProvider.Google,
-      `${window.location.origin}/verify-contact`,
-      `${window.location.origin}/register`
-    );
+  const handleGoogleRegister = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      router.push("/profile-selection");
+    } catch {
+      setErrors({ submit: langText("Google sign-up failed.", "Google नोंदणी अयशस्वी.") });
+    }
   };
 
   return (
@@ -262,52 +274,52 @@ export default function RegisterPage() {
         </div>
         
         <div className="relative z-20 w-full max-w-3xl mx-auto px-4 py-8">
-          <div className="rounded-[2rem] shadow-2xl overflow-hidden flex flex-col border border-white/20 bg-white/95 backdrop-blur-xl">
-            <div className="flex items-center justify-between p-6 border-b border-slate-200 text-emerald-800">
+          <div className="rounded-[2rem] shadow-2xl overflow-hidden flex flex-col border border-white/20 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+            <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-slate-800 text-emerald-800 dark:text-emerald-400">
                <span className="font-headline font-black text-2xl tracking-tight">Kisan Kamai</span>
             </div>
             
             <div className="p-8 sm:p-10 flex-grow">
               <div className="mb-8 text-center sm:text-left">
-                <h1 className="font-headline font-bold text-2xl sm:text-3xl text-slate-900 mb-2 tracking-tight">{langText("Create account", "नवीन खाते तयार करा")}</h1>
-                <p className="font-body text-slate-600 text-base">{langText("Simplify your farming journey", "तुमचा शेती प्रवास सोपा करा")}</p>
+                <h1 className="font-headline font-bold text-2xl sm:text-3xl text-slate-900 dark:text-slate-50 mb-2 tracking-tight">{langText("Create account", "नवीन खाते तयार करा")}</h1>
+                <p className="font-body text-slate-600 dark:text-slate-400 text-base">{langText("Simplify your farming journey", "तुमचा शेती प्रवास सोपा करा")}</p>
               </div>
               
               <form className="space-y-6" onSubmit={handleRegister} noValidate>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <label className="font-label text-sm font-semibold text-slate-700" htmlFor="fullName">{langText("Full Name", "पूर्ण नाव")}<span className="text-red-500 ml-1">*</span></label>
-                    <input className={`kk-input ${errors.fullName ? 'border-red-400' : ''}`} id="fullName" placeholder="John Doe" type="text" value={formData.fullName} onChange={handleInputChange}/>
+                    <label className="font-label text-sm font-semibold text-slate-700 dark:text-slate-300" htmlFor="fullName">{langText("Full Name", "पूर्ण नाव")}<span className="text-red-500 ml-1">*</span></label>
+                    <input className={`kk-input ${errors.fullName ? 'border-red-400' : ''}`} id="fullName" name="name" autoComplete="name" placeholder="John Doe" type="text" value={formData.fullName} onChange={handleInputChange}/>
                     {errors.fullName && <p className="text-red-500 text-xs font-bold">{errors.fullName}</p>}
                   </div>
                   <div className="space-y-2">
-                    <label className="font-label text-sm font-semibold text-slate-700" htmlFor="email">{langText("Email (Optional)", "ईमेल (पर्यायी)")}</label>
-                    <input className="kk-input" id="email" placeholder="email@example.com" type="email" value={formData.email} onChange={handleInputChange}/>
+                    <label className="font-label text-sm font-semibold text-slate-700 dark:text-slate-300" htmlFor="email">{langText("Email (Optional)", "ईमेल (पर्यायी)")}</label>
+                    <input className="kk-input" id="email" name="email" autoComplete="email" placeholder="email@example.com" type="email" value={formData.email} onChange={handleInputChange}/>
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <label className="font-label text-sm font-semibold text-slate-700" htmlFor="address">{langText("Address", "पत्ता")}<span className="text-red-500 ml-1">*</span></label>
-                  <input className={`kk-input ${errors.address ? 'border-red-400' : ''}`} id="address" placeholder="Street name" value={formData.address} onChange={handleInputChange}/>
+                  <label className="font-label text-sm font-semibold text-slate-700 dark:text-slate-300" htmlFor="address">{langText("Address", "पत्ता")}<span className="text-red-500 ml-1">*</span></label>
+                  <input className={`kk-input ${errors.address ? 'border-red-400' : ''}`} id="address" name="street-address" autoComplete="street-address" placeholder="Street name" value={formData.address} onChange={handleInputChange}/>
                   {errors.address && <p className="text-red-500 text-xs font-bold">{errors.address}</p>}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                   <div className="space-y-2">
-                    <label className="font-label text-sm font-semibold text-slate-700">{langText("Village", "गाव")}<span className="text-red-500 ml-1">*</span></label>
-                    <input className={`kk-input ${errors.village ? 'border-red-400' : ''}`} id="village" placeholder="Village" value={formData.village} onChange={handleInputChange}/>
+                    <label className="font-label text-sm font-semibold text-slate-700 dark:text-slate-300" htmlFor="village">{langText("Village", "गाव")}<span className="text-red-500 ml-1">*</span></label>
+                    <input className={`kk-input ${errors.village ? 'border-red-400' : ''}`} id="village" name="address-level2" autoComplete="address-level2" placeholder="Village" value={formData.village} onChange={handleInputChange}/>
                     {errors.village && <p className="text-red-500 text-xs font-bold">{errors.village}</p>}
                   </div>
                   
                   <div className="space-y-2 relative">
-                    <label className="font-label text-sm font-semibold text-slate-700">{langText("Pin Code", "पिन कोड")}<span className="text-red-500 ml-1">*</span></label>
-                    <input className={`kk-input ${errors.pincode ? 'border-red-400' : ''}`} placeholder="6 digits" value={pincode} onChange={handlePincodeChange} maxLength={6}/>
+                    <label className="font-label text-sm font-semibold text-slate-700 dark:text-slate-300" htmlFor="pincode">{langText("Pin Code", "पिन कोड")}<span className="text-red-500 ml-1">*</span></label>
+                    <input className={`kk-input ${errors.pincode ? 'border-red-400' : ''}`} id="pincode" name="postal-code" autoComplete="postal-code" placeholder="6 digits" value={pincode} onChange={handlePincodeChange} maxLength={6}/>
                     {errors.pincode && <p className="text-red-500 text-xs font-bold">{errors.pincode}</p>}
                     
                     {!isPincodeLoading && showSuggestions && suggestions.length > 0 && (
-                      <div className="absolute top-[105%] left-0 w-full bg-white border rounded-xl shadow-lg z-50 max-h-40 overflow-y-auto">
+                      <div className="absolute top-[105%] left-0 w-full bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-xl shadow-lg z-50 max-h-40 overflow-y-auto">
                         {suggestions.map((o, i) => (
-                          <div key={i} onClick={() => selectPincodeLocation(o)} className="p-3 hover:bg-emerald-50 cursor-pointer text-sm border-b last:border-0">
+                          <div key={i} onClick={() => selectPincodeLocation(o)} className="p-3 hover:bg-emerald-50 dark:hover:bg-slate-700 cursor-pointer text-sm border-b dark:border-slate-700 last:border-0 dark:text-slate-200">
                             <strong>{o.Name}</strong>, {o.District}
                           </div>
                         ))}
@@ -316,18 +328,18 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="font-label text-sm font-semibold text-slate-700">{langText("Acres", "एकर")}</label>
-                    <input className={`kk-input ${errors.fieldArea ? 'border-red-400' : ''}`} id="fieldArea" type="number" step="0.5" placeholder="0" value={formData.fieldArea} onChange={handleInputChange}/>
+                    <label className="font-label text-sm font-semibold text-slate-700 dark:text-slate-300" htmlFor="fieldArea">{langText("Acres", "एकर")}</label>
+                    <input className={`kk-input ${errors.fieldArea ? 'border-red-400' : ''}`} id="fieldArea" name="fieldArea" autoComplete="off" type="number" step="0.5" placeholder="0" value={formData.fieldArea} onChange={handleInputChange}/>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <label className="font-label text-sm font-semibold text-slate-700">{langText("Phone Number", "फोन नंबर")}<span className="text-red-500 ml-1">*</span></label>
+                    <label className="font-label text-sm font-semibold text-slate-700 dark:text-slate-300" htmlFor="phone">{langText("Phone Number", "फोन नंबर")}<span className="text-red-500 ml-1">*</span></label>
                     <div className="flex gap-2">
                       <div className={`flex flex-grow kk-input p-0 overflow-hidden items-center ${errors.phone ? 'border-red-400' : ''}`}>
-                        <span className="px-3 border-r bg-slate-50 text-slate-500 font-bold">+91</span>
-                        <input className="flex-grow border-none px-4 py-3 outline-none focus:ring-0 font-bold tracking-widest" maxLength={10} placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} disabled={otpVerified}/>
+                        <span className="px-3 border-r dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold">+91</span>
+                        <input id="phone" name="tel" autoComplete="tel-national" className="flex-grow border-none px-4 py-3 outline-none focus:ring-0 font-bold tracking-widest bg-transparent dark:text-slate-100 dark:placeholder-slate-500" maxLength={10} placeholder="10 digits" value={phone} onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))} disabled={otpVerified}/>
                       </div>
                       {!otpVerified && (
                         <button type="button" onClick={sendOtp} disabled={isSendingOtp || phone.length !== 10 || isTimerActive} className="px-5 bg-secondary text-white font-black rounded-xl hover:bg-orange-800 disabled:opacity-50 transition-all min-w-[120px]">
@@ -335,7 +347,7 @@ export default function RegisterPage() {
                         </button>
                       )}
                       {otpVerified && (
-                        <div className="flex items-center gap-1 bg-emerald-100 text-emerald-700 px-4 rounded-xl font-bold border border-emerald-200">
+                        <div className="flex items-center gap-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400 px-4 rounded-xl font-bold border border-emerald-200 dark:border-emerald-800">
                           <span className="material-symbols-outlined text-sm">verified</span> Verified
                         </div>
                       )}
@@ -347,12 +359,12 @@ export default function RegisterPage() {
                     <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
                       <div className="flex gap-2">
                         <div className="flex flex-grow kk-input p-0 overflow-hidden items-center">
-                          <span className="px-3 border-r bg-emerald-50 text-emerald-800 font-bold flex items-center h-full">
+                          <span className="px-3 border-r dark:border-slate-700 bg-emerald-50 dark:bg-slate-800 text-emerald-800 dark:text-emerald-400 font-bold flex items-center h-full">
                             <span className="material-symbols-outlined text-lg">shield</span>
                           </span>
-                          <input className="kk-input flex-grow border-none text-center tracking-[0.5em] font-black focus:ring-0" placeholder="000000" maxLength={6} value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}/>
+                          <input id="otp" name="one-time-code" autoComplete="one-time-code" className="flex-grow w-full border-none bg-transparent dark:text-slate-100 dark:placeholder-slate-500 text-center tracking-[0.5em] font-black focus:ring-0" placeholder="000000" maxLength={6} value={otpCode} onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}/>
                         </div>
-                        <button type="button" onClick={verifyOtp} disabled={isVerifyingOtp} className="px-6 bg-emerald-700 text-white font-black rounded-xl hover:bg-emerald-800 whitespace-nowrap transition-all shadow-md active:scale-95">
+                        <button type="button" onClick={verifyOtp} disabled={isVerifyingOtp} className="px-6 bg-emerald-700 text-white font-black rounded-xl hover:bg-emerald-800 dark:hover:bg-emerald-600 whitespace-nowrap transition-all shadow-md active:scale-95">
                            {isVerifyingOtp ? "..." : langText("Verify OTP", "OTP सत्यापित")}
                         </button>
                       </div>
@@ -363,7 +375,7 @@ export default function RegisterPage() {
 
                 <div className="space-y-2">
                   <label className="font-label text-sm font-semibold text-slate-700" htmlFor="password">{langText("Password", "पासवर्ड")}<span className="text-red-500 ml-1">*</span></label>
-                  <input className={`kk-input ${errors.password ? 'border-red-400' : ''}`} id="password" type="password" placeholder="Create password" value={formData.password} onChange={handleInputChange}/>
+                  <input className={`kk-input ${errors.password ? 'border-red-400' : ''}`} id="password" name="new-password" autoComplete="new-password" type="password" placeholder="Create password" value={formData.password} onChange={handleInputChange}/>
                   {errors.password && <p className="text-red-500 text-xs font-bold">{errors.password}</p>}
                 </div>
 
@@ -372,23 +384,22 @@ export default function RegisterPage() {
                 </button>
 
                 <div className="relative flex items-center gap-4 py-2">
-                  <div className="flex-grow border-t"></div>
-                  <span className="text-xs font-bold text-slate-400">OR</span>
-                  <div className="flex-grow border-t"></div>
+                  <div className="flex-grow border-t dark:border-slate-700"></div>
+                  <span className="text-xs font-bold text-slate-400 dark:text-slate-500">OR</span>
+                  <div className="flex-grow border-t dark:border-slate-700"></div>
                 </div>
 
-                <button type="button" onClick={handleGoogleRegister} className="w-full flex items-center justify-center gap-3 bg-white text-slate-900 font-bold py-4 rounded-xl border hover:bg-slate-50 transition-all shadow-sm">
+                <button type="button" onClick={handleGoogleRegister} className="w-full flex items-center justify-center gap-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 font-bold py-4 rounded-xl border dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm">
                   <img src="https://www.google.com/favicon.ico" className="w-5 h-5" alt="G"loading="lazy" decoding="async" />
                   <span>{langText("Sign up with Google", "Google सह नोंदणी करा")}</span>
                 </button>
-                <div id="recaptcha-container"></div>
               </form>
             </div>
             
-            <div className="bg-slate-50 py-6 px-10 text-center border-t border-slate-200">
-              <p className="font-body text-sm font-medium text-slate-600">
+            <div className="bg-slate-50 dark:bg-slate-900/50 py-6 px-10 text-center border-t border-slate-200 dark:border-slate-800">
+              <p className="font-body text-sm font-medium text-slate-600 dark:text-slate-400">
                 {langText("Already have an account?", "आधीच खाते आहे?")}{" "}
-                <Link className="font-black text-secondary hover:text-orange-900 underline ml-1" href="/login">
+                <Link className="font-black text-secondary hover:text-emerald-500 underline ml-1" href="/login">
                   {langText("Login", "लॉगिन करा")}
                 </Link>
               </p>
@@ -399,13 +410,13 @@ export default function RegisterPage() {
 
       {showPopup && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm">
-          <div className="bg-white rounded-[2rem] p-8 max-w-sm w-full mx-4 shadow-2xl text-center animate-in zoom-in-95 duration-300">
-            <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <span className="material-symbols-outlined text-5xl text-emerald-600">check_circle</span>
+          <div className="bg-white dark:bg-slate-800 rounded-[2rem] p-8 max-w-sm w-full mx-4 shadow-2xl text-center animate-in zoom-in-95 duration-300">
+            <div className="w-20 h-20 bg-emerald-100 dark:bg-emerald-900/30 rounded-full flex items-center justify-center mx-auto mb-6">
+              <span className="material-symbols-outlined text-5xl text-emerald-600 dark:text-emerald-400">check_circle</span>
             </div>
-            <h3 className="text-2xl font-black text-slate-900 mb-2">{langText("Account Created!", "खाते तयार झाले!")}</h3>
-            <p className="text-slate-600 mb-8 font-medium">{langText("Your Kisan Kamai account created successfully. Please login.", "तुमचे खाते यशस्वीरित्या तयार झाले आहे. कृपया लॉगिन करा.")}</p>
-            <button onClick={() => router.push('/login')} className="w-full bg-emerald-900 text-white font-bold py-4 rounded-xl shadow-md">
+            <h3 className="text-2xl font-black text-slate-900 dark:text-slate-100 mb-2">{langText("Account Created!", "खाते तयार झाले!")}</h3>
+            <p className="text-slate-600 dark:text-slate-400 mb-8 font-medium">{langText("Your Kisan Kamai account created successfully. Please login.", "तुमचे खाते यशस्वीरित्या तयार झाले आहे. कृपया लॉगिन करा.")}</p>
+            <button onClick={() => router.push('/login')} className="w-full bg-emerald-900 dark:bg-emerald-700 text-white font-bold py-4 rounded-xl shadow-md">
                  {langText("Go to Login", "लॉगिनला जा")}
             </button>
           </div>
@@ -415,6 +426,9 @@ export default function RegisterPage() {
       <div className="relative z-20">
         <Footer />
       </div>
+
+      {/* reCAPTCHA container — must stay outside the form and never unmount */}
+      <div id="recaptcha-container" style={{ position: 'fixed', bottom: 0, zIndex: -1 }}></div>
     </div>
   );
 }

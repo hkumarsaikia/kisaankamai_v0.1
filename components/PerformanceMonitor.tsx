@@ -109,10 +109,17 @@ export function PerformanceMonitor() {
           })
         }
       );
-    } catch (error) {
-      console.error('Failed to send performance logs:', error);
-      // Re-add to buffer if failed? (careful with memory)
-      eventBuffer.current = [...batch, ...eventBuffer.current];
+    } catch (error: any) {
+      // Silently ignore 401 permission errors — configure Appwrite collection
+      // permissions to enable logging. Other errors shown in dev only.
+      const isPermissionError =
+        error?.code === 401 ||
+        error?.message?.includes('permissions') ||
+        error?.message?.includes('Unauthorized');
+      if (!isPermissionError && process.env.NODE_ENV === 'development') {
+        console.warn('[PerformanceMonitor] Failed to send batch:', error?.message);
+      }
+      // Do NOT re-buffer failed batches — prevents memory leak on repeated failures
     } finally {
       isBatching.current = false;
     }

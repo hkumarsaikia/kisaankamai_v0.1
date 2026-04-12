@@ -1,8 +1,10 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
-import { Models } from "appwrite";
+import { auth } from "@/lib/firebase";
+import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface UserProfile {
   fullName: string;
@@ -13,11 +15,10 @@ interface UserProfile {
   address?: string;
   pincode?: string;
   fieldArea?: number;
-  aadhaar?: string;
 }
 
 interface AuthContextType {
-  user: Models.User<Models.Preferences> | null;
+  user: User | null;
   profile: UserProfile | null;
   loading: boolean;
   isProfileComplete: boolean;
@@ -37,63 +38,50 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (uid: string) => {
     try {
-      const doc = await databases.getDocument(
-        APPWRITE_CONFIG.databaseId,
-        APPWRITE_CONFIG.userCollectionId,
-        userId
-      );
-      setProfile(doc as unknown as UserProfile);
+      const snap = await getDoc(doc(db, "users", uid));
+      if (snap.exists()) {
+        setProfile(snap.data() as UserProfile);
+      } else {
+        setProfile(null);
+      }
     } catch {
-      console.log("No profile found for user:", userId);
       setProfile(null);
-    }
-  };
-
-  const checkUser = async () => {
-    try {
-      const currentUser = await account.get();
-      setUser(currentUser);
-      await fetchProfile(currentUser.$id);
-    } catch {
-      setUser(null);
-      setProfile(null);
-    } finally {
-      setLoading(false);
     }
   };
 
   useEffect(() => {
-    checkUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      setUser(firebaseUser);
+      if (firebaseUser) {
+        await fetchProfile(firebaseUser.uid);
+      } else {
+        setProfile(null);
+      }
+      setLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
   const logout = async () => {
-    try {
-      await account.deleteSession('current');
-      setUser(null);
-      setProfile(null);
-    } catch (error) {
-      console.error("Error signing out:", error);
-    }
+    await signOut(auth);
+    setUser(null);
+    setProfile(null);
+  };
+
+  const refreshProfile = async () => {
+    if (user) await fetchProfile(user.uid);
   };
 
   const isProfileComplete = !!(profile?.phone && profile?.pincode);
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      profile, 
-      loading, 
-      isProfileComplete, 
-      logout,
-      refreshProfile: checkUser
-    }}>
+    <AuthContext.Provider value={{ user, profile, loading, isProfileComplete, logout, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   );

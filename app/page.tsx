@@ -90,10 +90,10 @@ export default function Home() {
                     value={searchLocation}
                     onChange={(e) => setSearchLocation(e.target.value)}
                   >
-                    <option value="" disabled>{langText("Select Location", "स्थान निवड")}</option>
-                    <option value="Kalwan">{langText("Kalwan", "कळवण")}</option>
-                    <option value="Mukhed">{langText("Mukhed", "मुखेड")}</option>
-                    <option value="More locations coming soon..." disabled>{langText("More locations coming soon...", "लवकरच अधिक स्थाने येत आहेत...")}</option>
+                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="" disabled>{langText("Select Location", "स्थान निवड")}</option>
+                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="Kalwan">{langText("Kalwan", "कळवण")}</option>
+                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="Mukhed">{langText("Mukhed", "मुखेड")}</option>
+                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="More locations coming soon..." disabled>{langText("More locations coming soon...", "लवकरच अधिक स्थाने येत आहेत...")}</option>
                   </select>
                 </div>
                 <div className="flex-1 flex items-center gap-3 px-4 py-3">

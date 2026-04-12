@@ -1,15 +1,17 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDjstec2LZmBGV_2CwhnrIJDOIGOl5Y-Cs",
-  authDomain: "kisan-kamai-otp-test.firebaseapp.com",
-  projectId: "kisan-kamai-otp-test",
-  storageBucket: "kisan-kamai-otp-test.firebasestorage.app",
-  messagingSenderId: "703663766582",
-  appId: "1:703663766582:web:76221dca9031159b0d2c97"
+  apiKey: "AIzaSyCeFikW5CPxlCA1KlgW1Pbz8K371xTpDTI",
+  authDomain: "gokisaan.firebaseapp.com",
+  projectId: "gokisaan",
+  storageBucket: "gokisaan.firebasestorage.app",
+  messagingSenderId: "385695590128",
+  appId: "1:385695590128:web:8ae3734344861e8b808435"
 };
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 export default app;
