@@ -58,7 +58,7 @@ export default function SavedEquipmentPage() {
           <h3 className="text-3xl font-bold text-white mb-2">Need something else?</h3>
           <p className="text-emerald-100/80 max-w-md">Browse our full catalog of 150+ machines available across Maharashtra.</p>
         </div>
-        <Link href="/renter-dashboard/browse" className="relative z-10 px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-emerald-50 transition-all shadow-lg">
+        <Link href="/renter-profile/browse" className="relative z-10 px-8 py-4 bg-white text-primary font-bold rounded-xl hover:bg-emerald-50 transition-all shadow-lg">
           Browse All Equipment
         </Link>
         <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none">

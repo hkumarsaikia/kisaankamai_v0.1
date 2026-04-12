@@ -18,7 +18,7 @@ export function PerformanceMonitor() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const isDemoMode = DEMO_AUTH_CONFIG.enabled;
-  const isSimulation = searchParams.get('simulate') === 'true';
+  const isSimulation = searchParams?.get('simulate') === 'true';
   const eventBuffer = useRef<PerformanceEvent[]>([]);
   const sessionId = useRef<string>(`session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const isBatching = useRef(false);

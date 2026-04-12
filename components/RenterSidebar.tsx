@@ -23,12 +23,12 @@ export const RenterSidebar = () => {
   };
 
   const navItems = [
-    { name: "Dashboard", icon: "dashboard", path: "/renter-dashboard" },
-    { name: "Browse Equipment", icon: "agriculture", path: "/renter-dashboard/browse" },
-    { name: "My Bookings", icon: "calendar_month", path: "/renter-dashboard/bookings" },
-    { name: "Saved Equipment", icon: "bookmark", path: "/renter-dashboard/saved" },
-    { name: "Payments", icon: "payments", path: "/renter-dashboard/payments" },
-    { name: "Settings", icon: "settings", path: "/renter-dashboard/settings" },
+    { name: "Profile", icon: "dashboard", path: "/renter-profile" },
+    { name: "Browse Equipment", icon: "agriculture", path: "/renter-profile/browse" },
+    { name: "My Bookings", icon: "calendar_month", path: "/renter-profile/bookings" },
+    { name: "Saved Equipment", icon: "bookmark", path: "/renter-profile/saved" },
+    { name: "Payments", icon: "payments", path: "/renter-profile/payments" },
+    { name: "Settings", icon: "settings", path: "/renter-profile/settings" },
   ];
 
   return (
@@ -94,7 +94,7 @@ export const RenterSidebar = () => {
         {/* Bottom Actions */}
         <div className="mt-auto border-t border-white/5 px-2 py-2">
           <Link
-            href="/renter-dashboard/switch-profile"
+            href="/renter-profile/switch-profile"
             onClick={() => setMobileMenuOpen(false)}
             className="flex items-center gap-3 px-4 py-4 text-emerald-200/60 hover:bg-emerald-800/30 hover:text-white text-sm font-semibold uppercase tracking-wider transition-all"
           >

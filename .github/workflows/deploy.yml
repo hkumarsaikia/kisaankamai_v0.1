@@ -42,6 +42,7 @@ jobs:
         run: npm install --legacy-peer-deps
       - name: Build with Next.js
         env:
+          BUILD_TARGET: "pages"
           NEXT_PUBLIC_DEMO_AUTH_MODE: "true"
           NEXT_PUBLIC_DEMO_PHONE: "8761085453"
           NEXT_PUBLIC_DEMO_EMAIL: "test@example.com"

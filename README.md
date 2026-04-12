@@ -6,11 +6,11 @@ Kisan Kamai is a modern, bilingual (English/Marathi) marketplace platform for ag
 
 ## ✨ Features
 
-- **21+ Fully Functional Pages**: Comprehensive routes including Home, Rent Equipment, List Equipment, Owner Dashboard, and more.
+- **21+ Fully Functional Pages**: Comprehensive routes including Home, Rent Equipment, List Equipment, Owner Profile, and more.
 - **Bilingual Interface**: Seamless switching between English and Marathi using a custom global provider.
 - **Autonomous Performance Monitoring**: Integrated profiling agent (Puppeteer) and live metrics tracking (Web Vitals) with Appwrite backend.
 - **Dynamic Mapping**: Interactive Leaflet maps showing regional hubs and equipment locations.
-- **User Dashboard Pro**: Advanced renter and owner dashboards with hover-motion effects.
+- **User Profile Pro**: Advanced renter and owner profiles with hover-motion effects.
 
 ## 🛠️ Tech Stack
 

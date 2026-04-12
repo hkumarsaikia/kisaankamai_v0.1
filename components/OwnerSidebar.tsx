@@ -22,11 +22,11 @@ export const OwnerSidebar = () => {
   };
 
   const navItems = [
-    { name: "Dashboard", icon: "dashboard", path: "/owner-dashboard" },
-    { name: "My Equipment", icon: "agriculture", path: "/owner-dashboard/equipment" },
-    { name: "Bookings", icon: "calendar_month", path: "/owner-dashboard/bookings" },
-    { name: "Earnings", icon: "payments", path: "/owner-dashboard/revenue" },
-    { name: "Settings", icon: "settings", path: "/owner-dashboard/settings" },
+    { name: "Profile", icon: "dashboard", path: "/owner-profile" },
+    { name: "My Equipment", icon: "agriculture", path: "/owner-profile/equipment" },
+    { name: "Bookings", icon: "calendar_month", path: "/owner-profile/bookings" },
+    { name: "Earnings", icon: "payments", path: "/owner-profile/revenue" },
+    { name: "Settings", icon: "settings", path: "/owner-profile/settings" },
   ];
 
   return (
@@ -53,7 +53,7 @@ export const OwnerSidebar = () => {
       <aside className={`h-screen w-64 fixed left-0 top-0 border-r border-emerald-900/50 bg-emerald-950 dark:bg-slate-950 flex flex-col p-4 gap-2 shadow-2xl z-50 transition-transform duration-300 lg:translate-x-0 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="mb-8 px-4 flex flex-col gap-1 mt-2">
           <h1 className="text-xl font-bold text-white tracking-tight">Kisan Kamai</h1>
-          <p className="text-xs text-emerald-400 font-medium tracking-wide">Owner Portal</p>
+          <p className="text-xs text-emerald-400 font-medium tracking-wide">Owner Profile</p>
         </div>
         
         <nav className="flex flex-col gap-1 flex-grow">
@@ -79,7 +79,7 @@ export const OwnerSidebar = () => {
         
         <div className="mt-auto flex flex-col gap-1 pb-4 lg:pb-0">
           <Link
-            href="/owner-dashboard/add-listing"
+            href="/owner-profile/add-listing"
             onClick={() => setMobileMenuOpen(false)}
             className="flex justify-center items-center gap-3 px-4 py-3 bg-emerald-500 text-emerald-950 rounded-lg font-bold text-sm mb-4 transition-transform hover:brightness-110 active:scale-95 duration-150 ease-in-out"
           >
@@ -87,7 +87,7 @@ export const OwnerSidebar = () => {
             <span>Add New Listing</span>
           </Link>
           <Link
-            href="/owner-dashboard/support"
+            href="/owner-profile/support"
             onClick={() => setMobileMenuOpen(false)}
             className="flex items-center gap-3 px-4 py-3 text-emerald-100/70 hover:bg-emerald-900/30 hover:text-white rounded-lg transition-colors font-manrope text-sm font-medium tracking-tight"
           >

@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import CatalogBookingForm from "./CatalogBookingForm";
 
 export function generateStaticParams() {
   return [
@@ -10,7 +11,7 @@ export function generateStaticParams() {
   ];
 }
 
-export default function EquipmentDetail() {
+export default function EquipmentDetail({ params }: { params: { slug: string } }) {
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
       <Header />
@@ -165,40 +166,7 @@ export default function EquipmentDetail() {
 <h3 className="text-2xl font-headline font-extrabold text-primary">Reserve this Equipment</h3>
 <p className="text-sm text-on-surface-variant">Check availability and get a precise quote for your specific field requirements.</p>
 </div>
-<form className="space-y-4">
-<div className="space-y-1.5">
-<label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Field Location (Sangli Region Only)</label>
-<div className="relative">
-<span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">location_on</span>
-<input className="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label" placeholder="Village / Taluka name" type="text"/>
-</div>
-</div>
-<div className="grid grid-cols-2 gap-4">
-<div className="space-y-1.5">
-<label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Work Type</label>
-<select className="w-full px-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label">
-<option>Plowing</option>
-<option>Sowing</option>
-<option>Transport</option>
-<option>Harrowing</option>
-</select>
-</div>
-<div className="space-y-1.5">
-<label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Approx Hours</label>
-<input className="w-full px-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label" placeholder="8" type="number"/>
-</div>
-</div>
-<div className="space-y-1.5">
-<label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Phone Number</label>
-<div className="relative">
-<span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">call</span>
-<input className="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label" placeholder="+91 00000 00000" type="tel"/>
-</div>
-</div>
-<button className="w-full bg-secondary text-on-secondary font-headline font-black py-4 rounded-xl shadow-lg shadow-secondary/20 hover:scale-[1.02] active:scale-95 transition-all">
-                                Request Booking Callback
-                            </button>
-</form>
+<CatalogBookingForm equipmentName="John Deere 5310 Performer" sourcePath={`/catalog/${params.slug}`}/>
 <div className="flex items-center gap-3 p-4 bg-tertiary-fixed rounded-2xl">
 <span className="material-symbols-outlined text-on-tertiary-fixed-variant">verified_user</span>
 <p className="text-xs font-label text-on-tertiary-fixed leading-tight">Your booking is protected by <span className="font-bold">Kisan Kamai Guarantee</span>. Payment is only released after work completion.</p>

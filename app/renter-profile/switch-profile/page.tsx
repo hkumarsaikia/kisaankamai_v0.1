@@ -43,7 +43,7 @@ export default function SwitchProfilePage() {
         </div>
 
         {/* Owner Profile */}
-        <Link href="/owner-dashboard" className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 flex flex-col items-center text-center hover:shadow-lg hover:border-amber-400 transition-all group">
+        <Link href="/owner-profile" className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 flex flex-col items-center text-center hover:shadow-lg hover:border-amber-400 transition-all group">
           <div className="w-20 h-20 bg-amber-50 dark:bg-amber-950/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-100 transition-colors">
             <span className="material-symbols-outlined text-4xl text-amber-600">dashboard</span>
           </div>

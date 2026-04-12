@@ -77,7 +77,7 @@ mappings = [
   {"file": 'pages (6).html', "dest": 'app/list-equipment/page.tsx', "wrapper": lambda c: wrap_page(c, 'ListEquipment')},
   {"file": 'pages (7).html', "dest": 'app/owner-experience/page.tsx', "wrapper": lambda c: wrap_page(c, 'OwnerExperience')},
   {"file": 'pages (8).html', "dest": 'app/owner-registration/page.tsx', "wrapper": lambda c: wrap_page(c, 'OwnerRegistration')},
-  {"file": 'pages (9).html', "dest": 'app/owner-dashboard/bookings/page.tsx', "wrapper": lambda c: wrap_page(c, 'OwnerDashboardBookings')},
+  {"file": 'pages (9).html', "dest": 'app/owner-profile/bookings/page.tsx', "wrapper": lambda c: wrap_page(c, 'OwnerDashboardBookings')},
   {"file": 'pages (10).html', "dest": 'app/locations/page.tsx', "wrapper": lambda c: wrap_page(c, 'Locations')},
   {"file": 'pages (11).html', "dest": 'app/about/page.tsx', "wrapper": lambda c: wrap_page(c, 'AboutUs')},
   {"file": 'pages (12).html', "dest": 'app/legal/page.tsx', "wrapper": lambda c: wrap_page(c, 'LegalCenter')},

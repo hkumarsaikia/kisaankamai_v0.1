@@ -3,9 +3,12 @@ export { ID };
 
 const client = new Client();
 
+export const APPWRITE_ENDPOINT = process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1';
+export const APPWRITE_PROJECT_ID = process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || '69d918770025e8d680f6';
+
 client
-    .setEndpoint('https://fra.cloud.appwrite.io/v1') 
-    .setProject('69d918770025e8d680f6'); 
+    .setEndpoint(APPWRITE_ENDPOINT) 
+    .setProject(APPWRITE_PROJECT_ID); 
 
 
 export const account = new Account(client);

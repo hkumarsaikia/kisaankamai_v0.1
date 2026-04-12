@@ -77,7 +77,8 @@ For team review without Appwrite, OTP, or backend setup, enable demo mode and ex
 1. Add the `NEXT_PUBLIC_DEMO_*` values to `.env.local`.
 2. Run `npm run dev:public`.
 3. Run `npm run tunnel:public`.
-4. Copy the printed `https://*.trycloudflare.com` URL and share it with teammates.
+4. Wait for the helper to print `Tunnel URL is live and ready to share`.
+5. Copy the printed `https://*.trycloudflare.com` URL and share it with teammates.
 
 Teammates can sign in with either of the following and the same password:
 - **Phone Login**: `8761085453`
@@ -88,9 +89,9 @@ In demo mode, `/login` accepts only those shared credentials and creates a brows
 
 The helper prefers an existing `cloudflared` install. If it is not already on your machine, it downloads a portable `cloudflared` binary into `.cache/cloudflared/` and uses that automatically. No Cloudflare account login is required for this temporary Quick Tunnel flow.
 
-The public URL is temporary. It only works while both `npm run dev:public` and `npm run tunnel:public` are still running on your machine.
+The public URL is temporary. It changes every time the tunnel restarts and only works while both `npm run dev:public` and `npm run tunnel:public` are still running on your machine.
 
-`tunnel.log` is overwritten with the current live Cloudflare URL each time the helper starts. Old URLs should be treated as dead after the tunnel process stops or restarts.
+Only the current value inside `tunnel.log` should be opened or shared. Old bookmarked `trycloudflare.com` URLs should be treated as dead after the tunnel process stops or restarts. The helper clears `tunnel.log` on shutdown so a stale URL is not left behind looking current.
 
 ---
 

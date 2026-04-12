@@ -9,7 +9,7 @@ import { localizedText } from "@/lib/i18n";
 
 const profileCards = [
   {
-    href: "/owner-registration",
+    href: "/owner-profile",
     icon: "agriculture",
     accent: "text-primary-container dark:text-emerald-400",
     surface: "bg-primary-container/10 dark:bg-emerald-500/10",
@@ -20,12 +20,12 @@ const profileCards = [
       "लिस्टिंग तयार करा, बुकिंग व्यवस्थापित करा, कमाई ट्रॅक करा आणि तुमचे मालक वर्कस्पेस चालवा."
     ),
     cta: localizedText(
-      "Go to Owner Setup / मालक सेटअपवर जा",
-      "मालक सेटअपवर जा / Go to Owner Setup"
+      "Go to Owner Profile / मालक प्रोफाइलवर जा",
+      "मालक प्रोफाइलवर जा / Go to Owner Profile"
     ),
   },
   {
-    href: "/renter-dashboard",
+    href: "/renter-profile",
     icon: "handshake",
     accent: "text-secondary dark:text-amber-500",
     surface: "bg-secondary/10 dark:bg-amber-500/10",

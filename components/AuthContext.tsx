@@ -1,32 +1,14 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-<<<<<<< HEAD
-import { auth } from "@/lib/firebase";
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-
-interface UserProfile {
-  fullName: string;
-  role: "owner" | "renter" | "both";
-  email?: string;
-  phone?: string;
-  village?: string;
-  address?: string;
-  pincode?: string;
-  fieldArea?: number;
-}
-=======
 import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
 import { Models } from "appwrite";
 import { DEMO_AUTH_CONFIG, DemoUserProfile, clearDemoSession, readDemoSession } from "@/lib/demoAuth";
 
 type UserProfile = DemoUserProfile;
->>>>>>> 30ed3e1d4c9aed32cc903a3a18066a3681038ae1
 
 interface AuthContextType {
-  user: User | null;
+  user: Models.User<Models.Preferences> | null;
   profile: UserProfile | null;
   loading: boolean;
   isProfileComplete: boolean;
@@ -46,25 +28,24 @@ const AuthContext = createContext<AuthContextType>({
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = async (uid: string) => {
+  const fetchProfile = async (userId: string) => {
     try {
-      const snap = await getDoc(doc(db, "users", uid));
-      if (snap.exists()) {
-        setProfile(snap.data() as UserProfile);
-      } else {
-        setProfile(null);
-      }
+      const doc = await databases.getDocument(
+        APPWRITE_CONFIG.databaseId,
+        APPWRITE_CONFIG.userCollectionId,
+        userId
+      );
+      setProfile(doc as unknown as UserProfile);
     } catch {
+      console.log("No profile found for user:", userId);
       setProfile(null);
     }
   };
 
-<<<<<<< HEAD
-=======
   const checkUser = async () => {
     if (DEMO_AUTH_CONFIG.enabled) {
       const demoSession = readDemoSession();
@@ -86,30 +67,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
->>>>>>> 30ed3e1d4c9aed32cc903a3a18066a3681038ae1
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-      if (firebaseUser) {
-        await fetchProfile(firebaseUser.uid);
-      } else {
-        setProfile(null);
-      }
-      setLoading(false);
-    });
-    return () => unsubscribe();
+    checkUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const logout = async () => {
-<<<<<<< HEAD
-    await signOut(auth);
-    setUser(null);
-    setProfile(null);
-  };
-
-  const refreshProfile = async () => {
-    if (user) await fetchProfile(user.uid);
-=======
     if (DEMO_AUTH_CONFIG.enabled) {
       clearDemoSession();
       setUser(null);
@@ -124,13 +87,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error) {
       console.error("Error signing out:", error);
     }
->>>>>>> 30ed3e1d4c9aed32cc903a3a18066a3681038ae1
   };
 
   const isProfileComplete = !!(profile?.phone && profile?.pincode);
 
   return (
-    <AuthContext.Provider value={{ user, profile, loading, isProfileComplete, logout, refreshProfile }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      profile, 
+      loading, 
+      isProfileComplete, 
+      logout,
+      refreshProfile: checkUser
+    }}>
       {children}
     </AuthContext.Provider>
   );

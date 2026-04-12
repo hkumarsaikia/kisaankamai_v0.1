@@ -6,6 +6,7 @@ import { useLanguage } from "@/components/LanguageContext";
 import { Footer } from "@/components/Footer";
 import { DEMO_AUTH_CONFIG } from "@/lib/demoAuth";
 import { account } from "@/lib/appwrite";
+import { forgotPasswordContactSchema } from "@/lib/validation/forms";
 import { ID } from "appwrite";
 
 export default function ForgotPasswordPage() {
@@ -40,9 +41,17 @@ export default function ForgotPasswordPage() {
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault();
+    const parsed = forgotPasswordContactSchema.safeParse({ contact });
     const phoneStripped = contact.replace(/\D/g, "");
-    if (!phoneStripped || phoneStripped.length < 10) {
-      setError(langText("Please enter a valid 10-digit mobile number.", "कृपया वैद्य १०-अंकी मोबाईल नंबर टाका."));
+
+    if (!parsed.success || !phoneStripped || phoneStripped.length < 10) {
+      setError(
+        parsed.success
+          ? langText("Please enter a valid 10-digit mobile number.", "कृपया वैद्य १०-अंकी मोबाईल नंबर टाका.")
+          : parsed.error.flatten().formErrors[0] ||
+              Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
+              langText("Please enter your mobile number or email.", "कृपया तुमचा मोबाईल नंबर किंवा ईमेल टाका.")
+      );
       return;
     }
     setLoading(true);

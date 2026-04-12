@@ -116,7 +116,7 @@ export default function OwnerExperience() {
 <img alt="Control" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="Modern high-tech control panel inside a tractor cab with GPS navigation display and ergonomic controls in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHJBC_Z8UxCrm3y2H7Jtrd4pPovGFUHy07oagxN71Bkbx5t4Mgkmk3CAAQphOzfD_ps3gGx0lM0qKPmkJsplV-i9uND8aCiC2A5EoLObg7sdgW5LEvNrorixV6CKnAaCTIg_VPkHtmwWc7-1VhEyuPQv1pObkagixXSEhfZKOZtgs87ErXmlCkcxRf7Z6yTSvvFi1oEP8-jGGJZrtpqhora9ROHTD2eSpWRNcXP2p8ZXq9KZeXmq9LetFk2SBrLG_f1RCebz2mdOXW"loading="lazy" decoding="async" />
 <div className="relative z-10">
 <h3 className="text-3xl font-black text-white mb-4">Total Control over Availability</h3>
-<p className="text-emerald-100 text-lg leading-relaxed">Decide exactly when your machines are available. Block dates for your own farm work with a single tap in the owner dashboard.</p>
+<p className="text-emerald-100 text-lg leading-relaxed">Decide exactly when your machines are available. Block dates for your own farm work with a single tap in the owner profile.</p>
 </div>
 </div>
 {/*  Secondary 1  */}

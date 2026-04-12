@@ -15,7 +15,7 @@ Focus on core marketplace navigation, bilingual support, and advanced performanc
 ## 🏗️ Phase 2: Engagement (v0.2)
 Enhancing user interaction and direct communication between owners and renters.
 - [ ] **Smart Messaging System**: Real-time chat via Firebase for inquiry handling.
-- [ ] **User Authentication**: Secure Login/Register flows for personalized dashboards.
+- [ ] **User Authentication**: Secure Login/Register flows for personalized profiles.
 - [ ] **Booking Request Logic**: Initial non-payment reservation system.
 - [ ] **Equipment Reviews**: Feedback system for service quality.
 

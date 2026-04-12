@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
 import { DEMO_AUTH_CONFIG, readDemoSession } from "@/lib/demoAuth";
+import { verifyContactInputSchema } from "@/lib/validation/forms";
 import { ID } from "appwrite";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -127,14 +128,27 @@ export default function VerifyContactPage() {
   };
 
   const handleRequestOtp = async () => {
-    const newErrors: Record<string, string> = {};
-    if (!name.trim()) newErrors.name = "Full Name is required";
-    if (pincode.length !== 6) newErrors.pincode = "6-digit Pin Code is required";
-    if (phone.length !== 10) newErrors.phone = "10-digit Phone Number is required";
-    
-    setErrors(newErrors);
+    const parsed = verifyContactInputSchema.safeParse({
+      name,
+      pincode,
+      phone,
+      village,
+    });
 
-    if (Object.keys(newErrors).length === 0) {
+    if (!parsed.success) {
+      const nextErrors: Record<string, string> = {};
+      const flat = parsed.error.flatten().fieldErrors;
+      if (flat.name?.[0]) nextErrors.name = flat.name[0];
+      if (flat.pincode?.[0]) nextErrors.pincode = flat.pincode[0];
+      if (flat.phone?.[0]) nextErrors.phone = flat.phone[0];
+      if (flat.village?.[0]) nextErrors.pincode = flat.village[0];
+      setErrors(nextErrors);
+      return;
+    }
+
+    setErrors({});
+
+    if (parsed.success) {
       setIsSendingOtp(true);
       try {
         // Warning: Appwrite strictly requires either server-side sync or logout-state to auth Phone Tokens.

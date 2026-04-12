@@ -6,8 +6,10 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
+import { postJson, SubmissionError } from "@/lib/client/forms";
+import { completeProfileSchema } from "@/lib/validation/forms";
 import { DEMO_AUTH_CONFIG } from "@/lib/demoAuth";
-import { databases, APPWRITE_CONFIG } from "@/lib/appwrite";
+import { account } from "@/lib/appwrite";
 
 export default function CompleteProfile() {
   const router = useRouter();
@@ -30,47 +32,42 @@ export default function CompleteProfile() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (phone.length !== 10 || pincode.length !== 6) {
-      setError(langText("Please enter valid phone and pincode.", "कृपया वैध फोन आणि पिनकोड प्रविष्ट करा."));
+    const parsed = completeProfileSchema.safeParse({
+      phone,
+      pincode,
+      village: "",
+      address: "",
+      role: profile?.role || "renter",
+    });
+
+    if (!parsed.success) {
+      setError(
+        parsed.error.flatten().formErrors[0] ||
+          parsed.error.flatten().fieldErrors.phone?.[0] ||
+          parsed.error.flatten().fieldErrors.pincode?.[0] ||
+          langText("Please enter valid phone and pincode.", "कृपया वैध फोन आणि पिनकोड प्रविष्ट करा.")
+      );
       return;
     }
+
     setIsVerifying(true);
     try {
-      // Check if document exists first
-      try {
-        await databases.getDocument(APPWRITE_CONFIG.databaseId, APPWRITE_CONFIG.userCollectionId, user!.$id);
-        // Update
-        await databases.updateDocument(
-          APPWRITE_CONFIG.databaseId, 
-          APPWRITE_CONFIG.userCollectionId, 
-          user!.$id, 
-          {
-            phone,
-            pincode,
-            role: profile?.role || "renter"
-          }
-        );
-      } catch {
-        // Create if not exists
-        await databases.createDocument(
-          APPWRITE_CONFIG.databaseId, 
-          APPWRITE_CONFIG.userCollectionId, 
-          user!.$id, 
-          {
-            phone,
-            pincode,
-            fullName: user!.name || "User",
-            email: user!.email || "",
-            role: "renter" // Default role
-          }
-        );
-      }
-      
+      const jwt = await account.createJWT();
+
+      await postJson("/api/profile/complete", {
+        ...parsed.data,
+        jwt: jwt.jwt,
+      });
+
       await refreshProfile();
       router.push("/profile-selection");
     } catch (err: any) {
       console.error("Profile save error:", err);
-      setError("Failed to save profile: " + err.message);
+      if (err instanceof SubmissionError) {
+        setError(err.message);
+      } else {
+        setError("Failed to save profile: " + err.message);
+      }
     }
     setIsVerifying(false);
   };

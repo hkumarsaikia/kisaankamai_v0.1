@@ -72,7 +72,7 @@ export const Footer = () => {
             <li><Link href="/owner-registration" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Register Equipment", "उपकरणे नोंदणी करा")}</Link></li>
             <li><Link href="/owner-benefits" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Benefits", "मालक फायदे")}</Link></li>
             <li><Link href="/owner-experience" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Experience", "मालक अनुभव")}</Link></li>
-            <li><Link href="/owner-dashboard" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Dashboard", "मालक डॅशबोर्ड")}</Link></li>
+            <li><Link href="/owner-profile" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Profile", "मालक प्रोफाइल")}</Link></li>
           </ul>
           <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6 mt-8">{langText("Trust & Company", "विश्वास आणि कंपनी")}</h5>
           <ul className="space-y-4">

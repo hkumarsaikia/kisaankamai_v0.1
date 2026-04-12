@@ -1,8 +1,59 @@
 "use client";
 
 import Link from "next/link";
+import { postJson, SubmissionError } from "@/lib/client/forms";
+import { IS_PAGES_BUILD } from "@/lib/runtime";
+import { supportRequestSchema } from "@/lib/validation/forms";
+import { FormEvent, useState } from "react";
 
 export default function SupportDashboard() {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const form = new FormData(event.currentTarget);
+    const parsed = supportRequestSchema.safeParse({
+      fullName: form.get("fullName"),
+      phone: form.get("phone"),
+      email: "",
+      category: form.get("category"),
+      message: form.get("message"),
+      sourcePath: "/owner-profile/support",
+    });
+
+    if (!parsed.success) {
+      setError(
+        parsed.error.flatten().formErrors[0] ||
+          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
+          "Please complete the support request form correctly."
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (!IS_PAGES_BUILD) {
+        await postJson("/api/forms/support-request", parsed.data);
+      }
+      setSuccess("Support ticket submitted. We will get back to you within 24 hours.");
+      event.currentTarget.reset();
+    } catch (submitError) {
+      if (submitError instanceof SubmissionError) {
+        setError(submitError.message);
+      } else {
+        setError("Could not submit your support ticket right now.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
       {/* Support Hero / Intro Section */}
@@ -68,20 +119,30 @@ export default function SupportDashboard() {
               <h3 className="text-2xl font-black text-primary dark:text-emerald-50 mb-2 relative z-10">Submit a Request | तक्रार दाखल करा</h3>
               <p className="text-on-surface-variant dark:text-slate-400 mb-8 font-medium relative z-10">Describe your issue and we&apos;ll get back to you within 24 hours.</p>
 
-              <form className="space-y-6 relative z-10" onSubmit={(e) => e.preventDefault()}>
+              <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
+                {error ? (
+                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                    {error}
+                  </div>
+                ) : null}
+                {success ? (
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                    {success}
+                  </div>
+                ) : null}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Full Name | पूर्ण नाव</label>
-                    <input className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" placeholder="Enter name" type="text" />
+                    <input className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" name="fullName" placeholder="Enter name" type="text" />
                   </div>
                   <div className="space-y-2">
                     <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Phone Number | फोन नंबर</label>
-                    <input className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" placeholder="+91" type="tel" />
+                    <input className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" name="phone" placeholder="+91" type="tel" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Category | प्रकार</label>
-                  <select className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all">
+                  <select className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" name="category">
                     <option className="dark:bg-slate-800">Select issue type</option>
                     <option className="dark:bg-slate-800">Payment Issue</option>
                     <option className="dark:bg-slate-800">Equipment Damage</option>
@@ -91,10 +152,10 @@ export default function SupportDashboard() {
                 </div>
                 <div className="space-y-2">
                   <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Message | संदेश</label>
-                  <textarea className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all resize-y" placeholder="Describe your issue in detail..." rows={4}></textarea>
+                  <textarea className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all resize-y" name="message" placeholder="Describe your issue in detail..." rows={4}></textarea>
                 </div>
-                <button className="bg-primary hover:bg-primary-container dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-bold py-4 px-8 rounded-xl transition-all flex items-center justify-center gap-3 w-full md:w-auto mt-4" type="submit">
-                  Send Ticket | तिकीट पाठवा
+                <button className="bg-primary hover:bg-primary-container dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-bold py-4 px-8 rounded-xl transition-all flex items-center justify-center gap-3 w-full md:w-auto mt-4 disabled:opacity-60" disabled={isSubmitting} type="submit">
+                  {isSubmitting ? "Sending..." : "Send Ticket | तिकीट पाठवा"}
                   <span className="material-symbols-outlined">send</span>
                 </button>
               </form>

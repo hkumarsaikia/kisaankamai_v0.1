@@ -211,7 +211,7 @@ export default function BookingsManagementPage() {
                 <span className="material-symbols-outlined text-[16px]">trending_up</span>
                 <span>+18% from last week</span>
               </div>
-              <Link href="/owner-dashboard/revenue" className="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 border border-white/20">
+              <Link href="/owner-profile/revenue" className="w-full bg-white/10 hover:bg-white/20 text-white font-bold py-3 rounded-xl transition-all flex items-center justify-center gap-2 border border-white/20">
                 <span className="material-symbols-outlined text-[18px]">account_balance_wallet</span> View Full Report
               </Link>
             </div>

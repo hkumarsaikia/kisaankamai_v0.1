@@ -1,17 +1,63 @@
 "use client";
 
+import { postJson, SubmissionError } from "@/lib/client/forms";
+import { IS_PAGES_BUILD } from "@/lib/runtime";
+import { feedbackSchema } from "@/lib/validation/forms";
 import { useLanguage } from "@/components/LanguageContext";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { useState } from "react";
 
 export default function FeedbackPage() {
   const { langText } = useLanguage();
   const router = useRouter();
+  const [rating, setRating] = useState<number | undefined>();
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    router.push('/feedback/success');
+    setError("");
+
+    const form = new FormData(e.currentTarget);
+    const parsed = feedbackSchema.safeParse({
+      fullName: form.get("fullName"),
+      mobileNumber: form.get("mobileNumber"),
+      email: form.get("email"),
+      role: form.get("role"),
+      category: form.get("category"),
+      subject: form.get("subject"),
+      message: form.get("message"),
+      rating,
+      contactMe: form.get("contactMe") === "on",
+    });
+
+    if (!parsed.success) {
+      setError(
+        parsed.error.flatten().formErrors[0] ||
+          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
+          langText("Please complete the feedback form correctly.", "कृपया feedback form योग्यरित्या भरा.")
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (!IS_PAGES_BUILD) {
+        await postJson("/api/forms/feedback", parsed.data);
+      }
+      router.push("/feedback/success");
+    } catch (submitError) {
+      if (submitError instanceof SubmissionError) {
+        setError(submitError.message);
+      } else {
+        setError(langText("Could not submit feedback right now.", "सध्या feedback submit करता आली नाही."));
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -46,6 +92,11 @@ export default function FeedbackPage() {
       <section className="w-full max-w-[800px] px-4 md:px-8">
         <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-variant p-6 md:p-10">
           <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+            {error ? (
+              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                {error}
+              </div>
+            ) : null}
             {/* Personal Info Group */}
             <fieldset className="flex flex-col gap-6">
               <legend className="sr-only">{langText("Personal Information", "वैयक्तिक माहिती")}</legend>
@@ -57,6 +108,7 @@ export default function FeedbackPage() {
                   <input
                     type="text"
                     id="fullName"
+                    name="fullName"
                     required
                     placeholder={langText("Enter your full name", "तुमचे पूर्ण नाव प्रविष्ट करा")}
                     className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
@@ -69,6 +121,7 @@ export default function FeedbackPage() {
                   <input
                     type="tel"
                     id="mobileNumber"
+                    name="mobileNumber"
                     required
                     placeholder={langText("Enter 10 digit number", "१० अंकी नंबर प्रविष्ट करा")}
                     className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
@@ -82,6 +135,7 @@ export default function FeedbackPage() {
                 <input
                   type="email"
                   id="email"
+                  name="email"
                   placeholder={langText("Enter your email address", "तुमचा ईमेल ॲड्रेस प्रविष्ट करा")}
                   className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
                 />
@@ -120,6 +174,7 @@ export default function FeedbackPage() {
                 <div className="relative">
                   <select
                     id="category"
+                    name="category"
                     required
                     className="form-select w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface appearance-none"
                     defaultValue=""
@@ -148,6 +203,7 @@ export default function FeedbackPage() {
                 <input
                   type="text"
                   id="subject"
+                  name="subject"
                   required
                   placeholder={langText("Brief subject of your feedback", "तुमच्या अभिप्रायाचा संक्षिप्त विषय")}
                   className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
@@ -160,6 +216,7 @@ export default function FeedbackPage() {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
                   required
                   rows={5}
                   placeholder={langText("Please describe your experience or suggestion in detail...", "कृपया तुमचा अनुभव किंवा सूचना सविस्तर सांगा...")}
@@ -176,7 +233,14 @@ export default function FeedbackPage() {
                 </label>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
-                    <button key={star} type="button" className="text-outline hover:text-tertiary-container transition-colors">
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      className={`transition-colors ${
+                        rating && star <= rating ? "text-tertiary-container" : "text-outline hover:text-tertiary-container"
+                      }`}
+                    >
                       <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                         star
                       </span>
@@ -190,6 +254,7 @@ export default function FeedbackPage() {
                   <input
                     type="checkbox"
                     id="contactMe"
+                    name="contactMe"
                     className="form-checkbox w-5 h-5 rounded border-outline text-primary focus:ring-primary bg-surface cursor-pointer"
                   />
                 </div>
@@ -209,9 +274,12 @@ export default function FeedbackPage() {
               </div>
               <button
                 type="submit"
-                className="w-full sm:w-auto px-8 py-3.5 bg-primary text-on-primary font-label font-bold rounded-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary whitespace-nowrap shadow-sm"
+                disabled={isSubmitting}
+                className="w-full sm:w-auto px-8 py-3.5 bg-primary text-on-primary font-label font-bold rounded-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary whitespace-nowrap shadow-sm disabled:opacity-60"
               >
-                {langText("Submit Feedback", "सबमिट करा")}
+                {isSubmitting
+                  ? langText("Submitting...", "सबमिट करत आहे...")
+                  : langText("Submit Feedback", "सबमिट करा")}
               </button>
             </div>
           </form>

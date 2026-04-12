@@ -7,7 +7,7 @@ export default function MyEquipmentPage() {
     <>
       <div className="flex justify-between items-center mb-8">
          <h1 className="text-2xl font-black text-emerald-950 dark:text-emerald-50 font-headline tracking-tight">My Equipment</h1>
-         <Link href="/owner-dashboard/add-listing" className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-md hover:brightness-110 transition-all flex items-center gap-2">
+         <Link href="/owner-profile/add-listing" className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold shadow-md hover:brightness-110 transition-all flex items-center gap-2">
             <span className="material-symbols-outlined text-sm">add</span> Add New
          </Link>
       </div>
@@ -86,7 +86,7 @@ export default function MyEquipmentPage() {
       {/* Equipment Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {/* Add New Listing Card (Empty State) */}
-        <Link href="/owner-dashboard/add-listing" className="border-2 border-dashed border-emerald-900/20 dark:border-emerald-500/20 rounded-2xl flex flex-col items-center justify-center p-8 text-center bg-emerald-50/30 dark:bg-emerald-950/10 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all group cursor-pointer h-full min-h-[380px]">
+        <Link href="/owner-profile/add-listing" className="border-2 border-dashed border-emerald-900/20 dark:border-emerald-500/20 rounded-2xl flex flex-col items-center justify-center p-8 text-center bg-emerald-50/30 dark:bg-emerald-950/10 hover:bg-emerald-50 dark:hover:bg-emerald-950/20 transition-all group cursor-pointer h-full min-h-[380px]">
           <div className="w-20 h-20 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center text-emerald-600 mb-6 group-hover:scale-110 transition-transform">
             <span className="material-symbols-outlined text-4xl">add</span>
           </div>

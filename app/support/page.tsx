@@ -3,10 +3,12 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
-import dynamic from "next/dynamic";
+import { LazyMap } from "@/components/LazyMap";
+import { postJson, SubmissionError } from "@/lib/client/forms";
+import { IS_PAGES_BUILD } from "@/lib/runtime";
 import { assetPath } from "@/lib/site";
-
-const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
+import { callbackRequestSchema, supportRequestSchema } from "@/lib/validation/forms";
+import { FormEvent, useRef, useState } from "react";
 
 const hubMarkers = [
   { lat: 16.8547, lng: 74.5643, label: "Sangli Hub", sublabel: "Market Yard Road, Sangli 416416", color: "#00251a" },
@@ -18,6 +20,94 @@ const hubMarkers = [
 
 export default function Support() {
   const { langText } = useLanguage();
+  const formRef = useRef<HTMLFormElement | null>(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSupportSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const form = new FormData(event.currentTarget);
+    const parsed = supportRequestSchema.safeParse({
+      fullName: form.get("fullName"),
+      phone: form.get("phone"),
+      email: form.get("email"),
+      category: form.get("category"),
+      message: form.get("message"),
+      sourcePath: "/support",
+    });
+
+    if (!parsed.success) {
+      setError(
+        parsed.error.flatten().formErrors[0] ||
+          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
+          langText("Please complete the support form correctly.", "कृपया support form योग्यरित्या भरा.")
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (!IS_PAGES_BUILD) {
+        await postJson("/api/forms/support-request", parsed.data);
+      }
+      setSuccess(langText("Support request submitted.", "Support विनंती सबमिट झाली."));
+      event.currentTarget.reset();
+    } catch (submitError) {
+      if (submitError instanceof SubmissionError) {
+        setError(submitError.message);
+      } else {
+        setError(langText("Could not submit your support request right now.", "सध्या support request submit करता आली नाही."));
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleCallbackRequest = async () => {
+    if (!formRef.current) {
+      return;
+    }
+
+    setError("");
+    setSuccess("");
+    const form = new FormData(formRef.current);
+    const parsed = callbackRequestSchema.safeParse({
+      fullName: form.get("fullName"),
+      phone: form.get("phone"),
+      equipmentNeeded: form.get("category") || "Support callback",
+      location: "",
+    });
+
+    if (!parsed.success) {
+      setError(
+        parsed.error.flatten().formErrors[0] ||
+          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
+          langText("Enter your name and phone to request a callback.", "Callback साठी नाव आणि फोन टाका.")
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      if (!IS_PAGES_BUILD) {
+        await postJson("/api/forms/callback-request", parsed.data);
+      }
+      setSuccess(langText("Callback request submitted.", "Callback विनंती सबमिट झाली."));
+    } catch (submitError) {
+      if (submitError instanceof SubmissionError) {
+        setError(submitError.message);
+      } else {
+        setError(langText("Could not request a callback right now.", "सध्या callback मागवता आली नाही."));
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
@@ -110,25 +200,35 @@ export default function Support() {
                 <h2 className="text-3xl font-extrabold font-headline text-emerald-900 dark:text-emerald-50 mb-2">{langText("Send a Message", "संदेश पाठवा")}</h2>
                 <p className="text-slate-500 dark:text-slate-400">{langText("Fill out the form below and our team will get back to you within 2-4 business hours.", "खालील फॉर्म भरा आणि आमची टीम 2-4 व्यावसायिक तासांत तुम्हाला प्रतिसाद देईल.")}</p>
               </div>
-              <form className="space-y-6">
+              <form className="space-y-6" ref={formRef} onSubmit={handleSupportSubmit}>
+                {error ? (
+                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                    {error}
+                  </div>
+                ) : null}
+                {success ? (
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                    {success}
+                  </div>
+                ) : null}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("FULL NAME / पूर्ण नाव", "पूर्ण नाव / FULL NAME")}</label>
-                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" placeholder={langText("Enter your name", "तुमचे नाव टाका")} type="text" />
+                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="fullName" placeholder={langText("Enter your name", "तुमचे नाव टाका")} type="text" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("PHONE NUMBER / फोन नंबर", "फोन नंबर / PHONE NUMBER")}</label>
-                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" placeholder="+91 00000 00000" type="tel" />
+                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="phone" placeholder="+91 00000 00000" type="tel" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("EMAIL ADDRESS (OPTIONAL)", "ईमेल पत्ता (ऐच्छिक)")}</label>
-                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" placeholder="email@example.com" type="email" />
+                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="email" placeholder="email@example.com" type="email" />
                   </div>
                   <div className="space-y-2">
                     <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("CATEGORY / श्रेणी", "श्रेणी / CATEGORY")}</label>
-                    <select className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none appearance-none">
+                    <select className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none appearance-none" name="category">
                       <option>{langText("I want to Rent (भाड्याने घेणे)", "मला भाड्याने घ्यायचे आहे")}</option>
                       <option>{langText("I want to List (उपकरणे जोडणे)", "मला सूचीबद्ध करायचे आहे")}</option>
                       <option>{langText("Payment Issue (पेमेंट समस्या)", "पेमेंट समस्या")}</option>
@@ -138,13 +238,13 @@ export default function Support() {
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("MESSAGE / संदेश", "संदेश / MESSAGE")}</label>
-                  <textarea className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" placeholder={langText("How can we help you today?", "आम्ही आज तुम्हाला कशी मदत करू शकतो?")} rows={5}></textarea>
+                  <textarea className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="message" placeholder={langText("How can we help you today?", "आम्ही आज तुम्हाला कशी मदत करू शकतो?")} rows={5}></textarea>
                 </div>
                 <div className="flex flex-col md:flex-row gap-4 pt-4">
-                  <button className="flex-1 bg-primary-container text-white py-4 rounded-lg font-bold text-lg hover:shadow-xl active:scale-[0.98] transition-all" type="submit">
-                    {langText("Send Message", "संदेश पाठवा")}
+                  <button className="flex-1 bg-primary-container text-white py-4 rounded-lg font-bold text-lg hover:shadow-xl active:scale-[0.98] transition-all disabled:opacity-60" disabled={isSubmitting} type="submit">
+                    {isSubmitting ? langText("Sending...", "पाठवत आहे...") : langText("Send Message", "संदेश पाठवा")}
                   </button>
-                  <button className="flex-1 bg-white dark:bg-transparent border-2 border-primary-container text-primary-container dark:text-emerald-400 py-4 rounded-lg font-bold text-lg hover:bg-emerald-50 dark:hover:bg-slate-900/50 active:scale-[0.98] transition-all flex items-center justify-center gap-2" type="button">
+                  <button className="flex-1 bg-white dark:bg-transparent border-2 border-primary-container text-primary-container dark:text-emerald-400 py-4 rounded-lg font-bold text-lg hover:bg-emerald-50 dark:hover:bg-slate-900/50 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60" disabled={isSubmitting} onClick={handleCallbackRequest} type="button">
                     <span className="material-symbols-outlined">phone_callback</span>
                     {langText("Request Callback", "कॉलबॅक विनंती")}
                   </button>
@@ -180,7 +280,7 @@ export default function Support() {
                 </div>
               </div>
               <div className="h-64 lg:h-auto min-h-[400px] relative">
-                <MapComponent
+                <LazyMap
                   center={[17.05, 74.40]}
                   zoom={9}
                   markers={hubMarkers}

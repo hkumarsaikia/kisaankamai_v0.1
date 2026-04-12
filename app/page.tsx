@@ -2,14 +2,13 @@
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { LazyMap } from "@/components/LazyMap";
 import { useLanguage } from "@/components/LanguageContext";
-import dynamic from "next/dynamic";
+import { ScrollReveal, ScrollRevealGroup, ScrollRevealItem } from "@/components/ScrollReveal";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { assetPath } from "@/lib/site";
-
-const MapComponent = dynamic(() => import("@/components/MapComponent"), { ssr: false });
 
 const homepageMarkers = [
   { lat: 20.48, lng: 73.80, label: "Kalwan Area", sublabel: "Active Hub", color: "#934a24" },
@@ -120,14 +119,14 @@ export default function Home() {
 
         {/* How it Works */}
         <section className="py-24 bg-surface-container-low dark:bg-slate-950/30">
-          <div className="max-w-7xl mx-auto px-6">
+          <ScrollReveal className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">{langText("The Kisan Kamai Way", "किसान कमाई पद्धत")}</h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">{langText("Whether you are looking to rent or listing your own fleet, our process is built on transparency and local trust.", "तुम्ही भाडे शोधत असाल किंवा तुमची स्वतःची यंत्रसामग्री सूचीबद्ध करत असाल, आमची प्रक्रिया पारदर्शकता आणि स्थानिक विश्वासावर आधारित आहे.")}</p>
             </div>
-            <div className="grid md:grid-cols-2 gap-12">
+            <ScrollRevealGroup className="grid md:grid-cols-2 gap-12">
               {/* Renter Path */}
-              <div className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800/50">
+              <ScrollRevealItem className="bg-white dark:bg-slate-900/40 p-10 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800/50">
                 <div className="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-[#00251a] mb-8">
                   <span className="material-symbols-outlined text-3xl">shopping_cart</span>
                 </div>
@@ -158,9 +157,9 @@ export default function Home() {
                 <Link href="/rent-equipment" className="block w-full mt-12 bg-[#00251a] text-white py-4 rounded-xl font-bold hover:bg-[#00251a]/90 transition-all text-center">
                   {langText("Start Renting Now", "आत्ताच भाडे सुरू करा")}
                 </Link>
-              </div>
+              </ScrollRevealItem>
               {/* Owner Path */}
-              <div className="bg-[#13322b] p-10 rounded-3xl shadow-sm text-white relative overflow-hidden flex flex-col justify-between">
+              <ScrollRevealItem className="bg-[#13322b] p-10 rounded-3xl shadow-sm text-white relative overflow-hidden flex flex-col justify-between">
                 <div className="relative z-10 w-full">
                   <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-8 border border-white/20">
                     <span className="material-symbols-outlined text-3xl">currency_rupee</span>
@@ -193,9 +192,9 @@ export default function Home() {
                     {langText("Register as Owner", "मालक म्हणून नोंदणी करा")}
                   </Link>
                 </div>
-              </div>
-            </div>
-          </div>
+              </ScrollRevealItem>
+            </ScrollRevealGroup>
+          </ScrollReveal>
         </section>
 
         {/* Featured Categories */}
@@ -336,7 +335,7 @@ export default function Home() {
 
         {/* Operating Area Map */}
         <section className="py-24 bg-surface-container-low dark:bg-slate-950/50">
-          <div className="max-w-7xl mx-auto px-6">
+          <ScrollReveal className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-12 gap-12 items-center">
               <div className="md:col-span-4">
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-6 tracking-tight">{langText("Expanding Across Maharashtra", "पश्चिम महाराष्ट्र्यात विस्तार होत आहे")}</h2>
@@ -356,7 +355,7 @@ export default function Home() {
               <div className="md:col-span-8">
                 <div className="bg-white dark:bg-slate-900/40 p-4 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50">
                   <div className="w-full h-[500px] rounded-[1.5rem] overflow-hidden">
-                    <MapComponent
+                    <LazyMap
                       center={[16.85, 74.27]}
                       zoom={9}
                       markers={homepageMarkers}
@@ -368,7 +367,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
         {/* Farmer Stories */}

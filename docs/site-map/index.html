@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kisan Kamai Site Map</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="site-map-shell">
+      <header class="masthead card">
+        <div class="masthead-copy">
+          <span class="eyebrow">Documentation Artifact</span>
+          <h1>Kisan Kamai Flow Atlas</h1>
+          <p>
+            Switch between the structural website map and journey-based goal flows. Inspect page
+            relationships, auth routing, listing funnels, booking funnels, and live target links
+            from one standalone viewer.
+          </p>
+        </div>
+
+        <div class="masthead-side">
+          <div class="segmented-block">
+            <span class="block-label">Theme</span>
+            <div class="segmented-control" id="theme-switcher">
+              <button type="button" data-theme-mode="system">System</button>
+              <button type="button" data-theme-mode="light">Light</button>
+              <button type="button" data-theme-mode="dark">Dark</button>
+            </div>
+          </div>
+
+          <div class="segmented-block">
+            <span class="block-label">Perspective</span>
+            <div class="segmented-control" id="perspective-switcher">
+              <button type="button" data-perspective="structure">Structure Map</button>
+              <button type="button" data-perspective="journey">Journey Lenses</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="control-strip card">
+        <div class="control-grid">
+          <div class="control-field">
+            <label for="search-input">Search</label>
+            <input id="search-input" type="search" placeholder="Search route, component, milestone, or source file" />
+          </div>
+
+          <div class="control-field">
+            <label for="base-url-input">Base URL for internal targets</label>
+            <input id="base-url-input" type="url" placeholder="http://localhost:3000" />
+          </div>
+
+          <div class="control-actions">
+            <button id="reset-view-button" type="button">Reset View</button>
+            <button id="fit-graph-button" type="button">Fit Graph</button>
+            <button id="clear-search-button" type="button">Clear Search</button>
+          </div>
+        </div>
+
+        <div class="lens-strip" id="lens-strip" hidden>
+          <div class="segmented-block lens-block">
+            <span class="block-label">Journey Lens</span>
+            <div class="segmented-control" id="lens-switcher"></div>
+          </div>
+          <div class="lens-summary" id="lens-summary"></div>
+        </div>
+      </section>
+
+      <section class="stats-row" id="stat-cards"></section>
+
+      <main class="workspace-grid">
+        <aside class="left-rail">
+          <section class="card rail-card">
+            <div class="rail-heading">
+              <h2>Current View</h2>
+              <p id="graph-mode-summary">Structural relationship network.</p>
+            </div>
+            <div class="graph-meta" id="graph-meta"></div>
+          </section>
+
+          <section class="card rail-card">
+            <div class="rail-heading">
+              <h2>Node Groups</h2>
+              <p>Toggle page families and supporting node types.</p>
+            </div>
+            <div id="group-filters" class="filter-list"></div>
+          </section>
+
+          <section class="card rail-card">
+            <div class="rail-heading">
+              <h2>Edge Types</h2>
+              <p>Filter structural, inferred, redirect, and journey edges.</p>
+            </div>
+            <div id="edge-filters" class="filter-list"></div>
+          </section>
+
+          <section class="card rail-card">
+            <div class="rail-heading">
+              <h2>Legend</h2>
+              <p>Visual encoding for the active graph.</p>
+            </div>
+            <ul class="legend-list" id="legend-list"></ul>
+          </section>
+        </aside>
+
+        <section class="graph-stage card">
+          <div class="graph-stage-header">
+            <div>
+              <span class="eyebrow eyebrow-inline" id="graph-mode-badge">Structure Map</span>
+              <h2 id="graph-title">Site Structure Map</h2>
+              <p id="graph-description">
+                Full relationship graph of pages, shared navigation surfaces, redirects, external
+                links, and inferred connections.
+              </p>
+            </div>
+          </div>
+
+          <div class="graph-canvas-wrap">
+            <svg id="graph-svg" viewBox="0 0 2800 1800" aria-label="Website relationship map">
+              <defs>
+                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z"></path>
+                </marker>
+              </defs>
+              <rect id="graph-background" x="0" y="0" width="2800" height="1800"></rect>
+              <g id="graph-viewport">
+                <g id="group-layer"></g>
+                <g id="edge-layer"></g>
+                <g id="node-layer"></g>
+              </g>
+            </svg>
+          </div>
+        </section>
+
+        <aside class="details-panel card" id="details-panel">
+          <div class="details-empty">
+            <span class="eyebrow eyebrow-inline">Inspector</span>
+            <h2>Select a node</h2>
+            <p>
+              Inspect routes, components, external destinations, missing targets, inferred logic
+              nodes, and journey milestones from here.
+            </p>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script src="./annotations.js"></script>
+    <script src="./map-data.js"></script>
+    <script src="./viewer.js"></script>
+  </body>
+</html>

@@ -14,7 +14,7 @@ export const OwnerTopBar = () => {
     <header className="fixed top-0 right-0 w-full lg:w-[calc(100%-16rem)] h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md flex justify-between items-center px-4 md:px-8 z-40 shadow-sm transition-all">
       <div className="flex items-center gap-4 lg:ml-0 ml-12">
         <span className="text-lg font-black text-emerald-900 dark:text-emerald-50 font-headline uppercase tracking-tight hidden sm:block">
-          Owner Portal
+          Owner Profile
         </span>
         {/* Back to Home button */}
         <Link
@@ -29,7 +29,7 @@ export const OwnerTopBar = () => {
       <div className="flex items-center gap-3 md:gap-4">
         <ThemeToggle />
         <Link
-          href="/renter-dashboard"
+          href="/renter-profile"
           className="hidden md:flex px-4 py-1.5 rounded-full border border-secondary text-secondary text-xs font-bold hover:bg-secondary hover:text-white transition-all items-center gap-1"
         >
           <span className="material-symbols-outlined text-[16px]">swap_horiz</span>

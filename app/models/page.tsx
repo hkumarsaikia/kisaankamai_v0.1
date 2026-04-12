@@ -49,7 +49,7 @@ function ModelsInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
-  const categoryParam = searchParams.get("category") || "tractors";
+  const categoryParam = searchParams?.get("category") || "tractors";
   const category = modelData[categoryParam] ? modelData[categoryParam] : modelData.tractors;
 
   return (

@@ -3,10 +3,62 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
+import { postJson, SubmissionError } from "@/lib/client/forms";
+import { IS_PAGES_BUILD } from "@/lib/runtime";
 import { assetPath } from "@/lib/site";
+import { partnerInquirySchema } from "@/lib/validation/forms";
+import { FormEvent, useState } from "react";
 
 export default function PartnerPage() {
   const { langText } = useLanguage();
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const form = new FormData(event.currentTarget);
+    const parsed = partnerInquirySchema.safeParse({
+      organizationName: form.get("organizationName"),
+      partnerType: form.get("partnerType"),
+      contactPerson: form.get("contactPerson"),
+      phone: form.get("phone"),
+      businessLocation: form.get("businessLocation"),
+      message: form.get("message"),
+    });
+
+    if (!parsed.success) {
+      setError(
+        parsed.error.flatten().formErrors[0] ||
+          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
+          "Please complete the inquiry form correctly."
+      );
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      if (!IS_PAGES_BUILD) {
+        await postJson("/api/forms/partner-inquiry", parsed.data);
+      }
+
+      setSuccess("Inquiry received. Our partnership team will contact you within 24 hours.");
+      event.currentTarget.reset();
+    } catch (submitError) {
+      if (submitError instanceof SubmissionError) {
+        setError(submitError.message);
+      } else {
+        setError("Could not submit your inquiry right now.");
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-surface dark:bg-slate-950">
       <Header />
@@ -173,15 +225,25 @@ export default function PartnerPage() {
               <h2 className="text-3xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-3">{langText("Partner Inquiry", "भागीदारी चौकशी")}</h2>
               <p className="text-on-surface-variant dark:text-slate-400">{langText("Tell us about your organization and we'll reach out within 24 hours.", "आम्हाला तुमच्या संस्थेबद्दल सांगा आणि आम्ही 24 तासांत तुम्हाला प्रतिसाद देउ.")}</p>
             </div>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {error ? (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+                  {error}
+                </div>
+              ) : null}
+              {success ? (
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                  {success}
+                </div>
+              ) : null}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Organization Name</label>
-                  <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary transition-all text-on-surface dark:text-white" placeholder="e.g. Mahalakshmi FPO" type="text" />
+                  <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary transition-all text-on-surface dark:text-white" name="organizationName" placeholder="e.g. Mahalakshmi FPO" type="text" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Type of Partner</label>
-                  <select className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white">
+                  <select className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="partnerType">
                     <option>FPO / Cooperative</option>
                     <option>Equipment Dealer</option>
                     <option>Financial Institution</option>
@@ -192,27 +254,27 @@ export default function PartnerPage() {
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Contact Person</label>
-                  <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" placeholder="Full Name" type="text" />
+                  <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="contactPerson" placeholder="Full Name" type="text" />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Phone Number</label>
                   <div className="flex">
                     <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-outline-variant/50 dark:border-slate-800/50 bg-surface-variant dark:bg-slate-900/50 text-on-surface-variant dark:text-slate-400 text-sm font-bold">+91</span>
-                    <input className="flex-1 bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-r-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" placeholder="98765 43210" type="tel" />
+                    <input className="flex-1 bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-r-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="phone" placeholder="98765 43210" type="tel" />
                   </div>
                 </div>
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Business Location</label>
-                <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" placeholder="District, State" type="text" />
+                <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="businessLocation" placeholder="District, State" type="text" />
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">How can we work together?</label>
-                <textarea className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" placeholder="Briefly describe your goals..." rows={4} />
+                <textarea className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="message" placeholder="Briefly describe your goals..." rows={4} />
               </div>
               <div className="pt-4">
-                <button type="button" className="w-full bg-primary-container text-white py-4 rounded-xl font-bold text-lg hover:bg-primary shadow-lg shadow-primary-container/20 transition-all flex items-center justify-center gap-2">
-                  {langText("Submit Inquiry", "चौकशी सबमिट करा")}
+                <button type="submit" disabled={isSubmitting} className="w-full bg-primary-container text-white py-4 rounded-xl font-bold text-lg hover:bg-primary shadow-lg shadow-primary-container/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
+                  {isSubmitting ? "Submitting..." : langText("Submit Inquiry", "चौकशी सबमिट करा")}
                   <span className="material-symbols-outlined">send</span>
                 </button>
               </div>

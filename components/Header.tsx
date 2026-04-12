@@ -24,7 +24,7 @@ const navLinks = [
     dropdown: [
       { href: "/owner-registration", label: "Register Equipment", labelMr: "उपकरणे नोंदणी करा", icon: "add_circle", desc: "List your machine" },
       { href: "/owner-benefits", label: "Owner Benefits", labelMr: "मालकांचे फायदे", icon: "workspace_premium", desc: "Why host with us" },
-      { href: "/owner-dashboard", label: "Owner Dashboard", labelMr: "मालक डॅशबोर्ड", icon: "dashboard", desc: "Manage your fleet" },
+      { href: "/owner-profile", label: "Owner Profile", labelMr: "मालक प्रोफाइल", icon: "dashboard", desc: "Manage your fleet" },
     ],
   },
   { href: "/support", label: "Support", labelMr: "मदत" },
@@ -88,7 +88,7 @@ export const Header = () => {
                         <div className="bg-white dark:bg-slate-900 border border-emerald-100 dark:border-slate-800 rounded-3xl shadow-[0_30px_60px_rgb(0,0,0,0.12)] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-200 flex overflow-hidden">
                           <div className="flex-1 grid grid-cols-2 gap-2 p-8">
                             {link.dropdown.map((sublink) => {
-                              if (sublink.href === "/owner-dashboard" && !user) return null;
+                              if (sublink.href === "/owner-profile" && !user) return null;
                               if (sublink.href === "/owner-registration" && !user) return null;
                               return (
                                 <Link
@@ -174,7 +174,7 @@ export const Header = () => {
                 <button
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all shadow-sm"
-                  title="My Dashboard"
+                  title="My Profile"
                 >
                   {/* Avatar */}
                   <div className="relative w-8 h-8 rounded-full bg-primary flex items-center justify-center border-2 border-emerald-500 shadow-sm flex-shrink-0">
@@ -182,7 +182,7 @@ export const Header = () => {
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white dark:border-slate-900 rounded-full" />
                   </div>
                   <span className="hidden sm:block text-[13px] font-bold text-emerald-900 dark:text-emerald-100">
-                    {langText("My Dashboard", "माझा डॅशबोर्ड")}
+                    {langText("My Profile", "माझी प्रोफाइल")}
                   </span>
                   <span className={`material-symbols-outlined text-[16px] text-emerald-600 dark:text-emerald-400 transition-transform hidden sm:block ${profileDropdownOpen ? "rotate-180" : ""}`}>
                     expand_more
@@ -200,9 +200,9 @@ export const Header = () => {
 
                     {/* Dashboard Links */}
                     <div className="py-2">
-                      <p className="px-5 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Dashboards</p>
+                      <p className="px-5 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Profiles</p>
                       <Link
-                        href="/owner-dashboard"
+                        href="/owner-profile"
                         onClick={() => setProfileDropdownOpen(false)}
                         className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
                       >
@@ -210,12 +210,12 @@ export const Header = () => {
                           <span className="material-symbols-outlined text-[18px]">dashboard</span>
                         </span>
                         <div>
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{langText("Owner Dashboard", "मालक डॅशबोर्ड")}</p>
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{langText("Owner Profile", "मालक प्रोफाइल")}</p>
                           <p className="text-[10px] text-slate-500">Manage your fleet</p>
                         </div>
                       </Link>
                       <Link
-                        href="/renter-dashboard"
+                        href="/renter-profile"
                         onClick={() => setProfileDropdownOpen(false)}
                         className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
                       >
@@ -223,7 +223,7 @@ export const Header = () => {
                           <span className="material-symbols-outlined text-[18px]">agriculture</span>
                         </span>
                         <div>
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{langText("Renter Dashboard", "भाडेकरू डॅशबोर्ड")}</p>
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{langText("Renter Profile", "भाडेकरी प्रोफाइल")}</p>
                           <p className="text-[10px] text-slate-500">Your bookings & equipment</p>
                         </div>
                       </Link>
@@ -233,7 +233,7 @@ export const Header = () => {
                     <div className="border-t border-slate-100 dark:border-slate-800 py-2">
                       <p className="px-5 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Account</p>
                       <Link
-                        href="/owner-dashboard/settings"
+                        href="/owner-profile/settings"
                         onClick={() => setProfileDropdownOpen(false)}
                         className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
                       >
@@ -301,13 +301,13 @@ export const Header = () => {
             {/* Mobile dashboard links if logged in */}
             {user && (
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1">
-                <Link href="/owner-dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-primary font-bold">
+                <Link href="/owner-profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-primary font-bold">
                   <span className="material-symbols-outlined text-[18px]">dashboard</span>
-                  {langText("Owner Dashboard", "मालक डॅशबोर्ड")}
+                  {langText("Owner Profile", "मालक प्रोफाइल")}
                 </Link>
-                <Link href="/renter-dashboard" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-700 font-bold">
+                <Link href="/renter-profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-700 font-bold">
                   <span className="material-symbols-outlined text-[18px]">agriculture</span>
-                  {langText("Renter Dashboard", "भाडेकरू डॅशबोर्ड")}
+                  {langText("Renter Profile", "भाडेकरी प्रोफाइल")}
                 </Link>
                 <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 font-bold">
                   <span className="material-symbols-outlined text-[18px]">logout</span>
