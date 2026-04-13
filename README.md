@@ -49,5 +49,7 @@ Detailed documentation is available in the `docs/` directory:
 
 ## 📄 License
 
+# Webhook Discord Testing
+
 This project is created for demonstration and replication purposes. All rights reserved.
 
