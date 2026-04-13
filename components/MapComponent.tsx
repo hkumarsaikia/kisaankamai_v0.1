@@ -1,7 +1,15 @@
 "use client";
 
-import { useState, useCallback, useMemo } from "react";
-import { GoogleMap, useJsApiLoader, Marker, Circle, InfoWindow } from "@react-google-maps/api";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Circle as GoogleCircle,
+  GoogleMap,
+  InfoWindow,
+  Marker as GoogleMarker,
+  useJsApiLoader,
+} from "@react-google-maps/api";
+import L from "leaflet";
+import { Circle as LeafletCircle, MapContainer, Marker as LeafletMarker, Popup, TileLayer, useMap } from "react-leaflet";
 
 interface MapMarker {
   lat: number;
@@ -28,59 +36,162 @@ interface MapComponentProps {
   showControls?: boolean;
 }
 
-export default function MapComponent({
-  center = [16.85, 74.55],
-  zoom = 10,
-  markers = [],
-  circles = [],
-  height = "500px",
-  className = "",
-  showControls = true,
-}: MapComponentProps) {
-  
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "", 
-    // We pass an empty string if undefined. Google maps standard behavior is to show "For development purposes only" if not provided/invalid.
+const OPEN_STREET_MAP_TILES = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+function createLeafletMarkerIcon(color = "#047857") {
+  return L.divIcon({
+    className: "kk-leaflet-marker",
+    html: `
+      <span style="
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        width:20px;
+        height:20px;
+        border-radius:999px;
+        background:${color};
+        border:3px solid #ffffff;
+        box-shadow:0 10px 24px rgba(15, 23, 42, 0.28);
+      "></span>
+    `,
+    iconSize: [20, 20],
+    iconAnchor: [10, 10],
+    popupAnchor: [0, -14],
   });
+}
 
+function FitLeafletBounds({
+  center,
+  markers,
+  zoom,
+}: {
+  center: [number, number];
+  markers: MapMarker[];
+  zoom: number;
+}) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (markers.length > 1) {
+      const bounds = L.latLngBounds(markers.map((marker) => [marker.lat, marker.lng] as [number, number]));
+      map.fitBounds(bounds, {
+        padding: [36, 36],
+        maxZoom: zoom,
+      });
+      return;
+    }
+
+    if (markers.length === 1) {
+      map.setView([markers[0].lat, markers[0].lng], zoom);
+      return;
+    }
+
+    map.setView(center, zoom);
+  }, [center, map, markers, zoom]);
+
+  return null;
+}
+
+function LeafletMapView({
+  center,
+  zoom,
+  markers,
+  circles,
+  height,
+  className,
+  showControls,
+}: Required<MapComponentProps>) {
+  const leafletIcons = useMemo(
+    () => markers.map((marker) => createLeafletMarkerIcon(marker.color)),
+    [markers]
+  );
+
+  return (
+    <div
+      className={`overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800 ${className}`}
+      style={{ height, width: "100%" }}
+    >
+      <MapContainer
+        center={center}
+        zoom={zoom}
+        scrollWheelZoom={showControls}
+        zoomControl={showControls}
+        className="h-full w-full"
+      >
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+          url={OPEN_STREET_MAP_TILES}
+        />
+        <FitLeafletBounds center={center} markers={markers} zoom={zoom} />
+
+        {circles.map((circle, index) => (
+          <LeafletCircle
+            key={`leaflet-circle-${index}`}
+            center={[circle.lat, circle.lng]}
+            radius={circle.radius}
+            pathOptions={{
+              color: circle.color || "#047857",
+              fillColor: circle.color || "#047857",
+              fillOpacity: 0.14,
+              weight: 2,
+            }}
+          />
+        ))}
+
+        {markers.map((marker, index) => (
+          <LeafletMarker
+            key={`leaflet-marker-${index}`}
+            position={[marker.lat, marker.lng]}
+            icon={leafletIcons[index]}
+          >
+            <Popup>
+              <div className="min-w-[160px] font-sans text-slate-900">
+                <strong className="block text-sm">{marker.label}</strong>
+                {marker.sublabel ? <p className="mt-1 text-xs text-slate-600">{marker.sublabel}</p> : null}
+              </div>
+            </Popup>
+          </LeafletMarker>
+        ))}
+      </MapContainer>
+    </div>
+  );
+}
+
+function GoogleMapView({
+  apiKey,
+  center,
+  zoom,
+  markers,
+  circles,
+  height,
+  className,
+  showControls,
+}: Required<MapComponentProps> & { apiKey: string }) {
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: apiKey,
+  });
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null);
-
   const centerObj = useMemo(() => ({ lat: center[0], lng: center[1] }), [center]);
 
-  const onLoad = useCallback(function callback(mapInstance: google.maps.Map) {
-    if (markers.length > 1) {
-      const bounds = new window.google.maps.LatLngBounds();
-      markers.forEach(m => bounds.extend({ lat: m.lat, lng: m.lng }));
-      mapInstance.fitBounds(bounds);
-      mapInstance.panToBounds(bounds);
-    }
-  }, [markers]);
-
-  const onUnmount = useCallback(function callback() {
-  }, []);
-
-  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  if (!apiKey || apiKey === "") {
-    const fallbackUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${center[1]-0.1},${center[0]-0.1},${center[1]+0.1},${center[0]+0.1}&layer=mapnik&marker=${center[0]},${center[1]}`;
+  if (loadError) {
     return (
-      <div className={`overflow-hidden rounded-3xl shadow-xl dark:border-slate-800 ${className}`} style={{ height, width: "100%", border: '1px solid #e2e8f0' }}>
-        <iframe 
-          width="100%" 
-          height="100%" 
-          frameBorder="0" 
-          scrolling="no" 
-          src={fallbackUrl}
-          style={{ border: 0 }}
-        ></iframe>
-      </div>
+      <LeafletMapView
+        center={center}
+        zoom={zoom}
+        markers={markers}
+        circles={circles}
+        height={height}
+        className={className}
+        showControls={showControls}
+      />
     );
   }
 
   if (!isLoaded) {
     return (
       <div
-        className={`animate-pulse bg-slate-100 dark:bg-slate-900/50 rounded-2xl ${className}`}
+        className={`animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-900/50 ${className}`}
         style={{ height }}
       />
     );
@@ -92,51 +203,99 @@ export default function MapComponent({
         mapContainerStyle={{ width: "100%", height: "100%" }}
         center={centerObj}
         zoom={zoom}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
+        onLoad={(mapInstance) => {
+          if (markers.length > 1) {
+            const bounds = new window.google.maps.LatLngBounds();
+            markers.forEach((marker) => bounds.extend({ lat: marker.lat, lng: marker.lng }));
+            mapInstance.fitBounds(bounds);
+          }
+        }}
         options={{
           mapTypeControl: showControls,
           zoomControl: showControls,
           streetViewControl: false,
           fullscreenControl: showControls,
-          mapTypeId: 'terrain' // Default to terrain/hybrid
+          mapTypeId: "terrain",
         }}
       >
-        {circles.map((c, idx) => (
-          <Circle
-            key={`circle-${idx}`}
-            center={{ lat: c.lat, lng: c.lng }}
-            radius={c.radius}
+        {circles.map((circle, index) => (
+          <GoogleCircle
+            key={`google-circle-${index}`}
+            center={{ lat: circle.lat, lng: circle.lng }}
+            radius={circle.radius}
             options={{
-              fillColor: c.color || "#047857",
+              fillColor: circle.color || "#047857",
               fillOpacity: 0.15,
-              strokeColor: c.color || "#047857",
+              strokeColor: circle.color || "#047857",
               strokeOpacity: 0.8,
               strokeWeight: 2,
             }}
           />
         ))}
 
-        {markers.map((m, idx) => (
-          <Marker
-            key={`marker-${idx}`}
-            position={{ lat: m.lat, lng: m.lng }}
-            onClick={() => setSelectedMarker(m)}
+        {markers.map((marker, index) => (
+          <GoogleMarker
+            key={`google-marker-${index}`}
+            position={{ lat: marker.lat, lng: marker.lng }}
+            onClick={() => setSelectedMarker(marker)}
           />
         ))}
 
-        {selectedMarker && selectedMarker.sublabel && (
+        {selectedMarker ? (
           <InfoWindow
             position={{ lat: selectedMarker.lat, lng: selectedMarker.lng }}
             onCloseClick={() => setSelectedMarker(null)}
           >
             <div style={{ fontFamily: "Manrope, sans-serif", padding: "2px", color: "#0f172a" }}>
               <strong style={{ fontSize: "14px", display: "block" }}>{selectedMarker.label}</strong>
-              <p style={{ fontSize: "12px", margin: "4px 0 0 0", color: "#475569" }}>{selectedMarker.sublabel}</p>
+              {selectedMarker.sublabel ? (
+                <p style={{ fontSize: "12px", margin: "4px 0 0 0", color: "#475569" }}>
+                  {selectedMarker.sublabel}
+                </p>
+              ) : null}
             </div>
           </InfoWindow>
-        )}
+        ) : null}
       </GoogleMap>
     </div>
+  );
+}
+
+export default function MapComponent({
+  center = [16.85, 74.55],
+  zoom = 10,
+  markers = [],
+  circles = [],
+  height = "500px",
+  className = "",
+  showControls = true,
+}: MapComponentProps) {
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY?.trim();
+
+  if (!apiKey) {
+    return (
+      <LeafletMapView
+        center={center}
+        zoom={zoom}
+        markers={markers}
+        circles={circles}
+        height={height}
+        className={className}
+        showControls={showControls}
+      />
+    );
+  }
+
+  return (
+    <GoogleMapView
+      apiKey={apiKey}
+      center={center}
+      zoom={zoom}
+      markers={markers}
+      circles={circles}
+      height={height}
+      className={className}
+      showControls={showControls}
+    />
   );
 }

@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { Suspense } from "react";
+import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });

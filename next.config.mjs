@@ -43,6 +43,7 @@ function buildCsp() {
       "blob:",
       "https://lh3.googleusercontent.com",
       "https://*.googleusercontent.com",
+      "https://*.tile.openstreetmap.org",
       "https://www.gstatic.com",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
