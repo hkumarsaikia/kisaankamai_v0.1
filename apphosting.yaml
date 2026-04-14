@@ -38,12 +38,6 @@ env:
     availability:
       - RUNTIME
   - variable: SENTRY_DSN
-    secret: sentryDsn
-    availability:
-      - BUILD
-      - RUNTIME
+    value: ""
   - variable: NEXT_PUBLIC_SENTRY_DSN
-    secret: nextPublicSentryDsn
-    availability:
-      - BUILD
-      - RUNTIME
+    value: ""
