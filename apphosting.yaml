@@ -30,7 +30,3 @@ env:
     secret: firebaseClientEmail
   - variable: FIREBASE_PRIVATE_KEY
     secret: firebasePrivateKey
-  - variable: SENTRY_DSN
-    value: ""
-  - variable: NEXT_PUBLIC_SENTRY_DSN
-    value: ""
