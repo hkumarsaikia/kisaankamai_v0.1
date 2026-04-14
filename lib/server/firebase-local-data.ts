@@ -19,6 +19,7 @@ import type {
   UserRole,
 } from "@/lib/local-data/types";
 import { getAdminAuth, getAdminDb } from "@/lib/server/firebase-admin";
+import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { captureServerException } from "@/lib/server/firebase-observability";
 import { deleteStorageObject } from "@/lib/server/firebase-storage";
 import type { RegisterInput } from "@/lib/validation/forms";
@@ -316,7 +317,7 @@ async function getProfileRecordById(userId: string) {
 async function listAllListings() {
   const snapshot = await listingsCollection().get();
   return snapshot.docs
-    .map((doc) => mapListingFromFirestore({ id: doc.id, ...(doc.data() as ListingRecord) }))
+    .map((doc) => mapListingFromFirestore(withFirestoreId(doc.id, doc.data() as ListingRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
@@ -561,14 +562,23 @@ export function listingToEquipmentRecord(listing: ListingRecord): EquipmentRecor
 
 export async function getPublicEquipmentList() {
   noStore();
-  const listings = (await listAllListings()).filter((listing) => listing.status === "active");
-  return listings.length ? listings.map(listingToEquipmentRecord) : getMockEquipmentList();
+  try {
+    const listings = (await listAllListings()).filter((listing) => listing.status === "active");
+    return listings.length ? listings.map(listingToEquipmentRecord) : getMockEquipmentList();
+  } catch (error) {
+    captureServerException(error, { subsystem: "getPublicEquipmentList" });
+    return getMockEquipmentList();
+  }
 }
 
 export async function getPublicEquipmentById(id: string) {
-  const listing = await getListingById(id);
-  if (listing && listing.status === "active") {
-    return listingToEquipmentRecord(listing);
+  try {
+    const listing = await getListingById(id);
+    if (listing && listing.status === "active") {
+      return listingToEquipmentRecord(listing);
+    }
+  } catch (error) {
+    captureServerException(error, { subsystem: "getPublicEquipmentById", listingId: id });
   }
 
   return getMockEquipmentById(id);
@@ -580,7 +590,7 @@ export async function getListingById(listingId: string) {
     return null;
   }
 
-  return mapListingFromFirestore({ id: snapshot.id, ...(snapshot.data() as ListingRecord) });
+  return mapListingFromFirestore(withFirestoreId(snapshot.id, snapshot.data() as ListingRecord));
 }
 
 export async function getListingBySlug(slug: string) {
@@ -590,13 +600,13 @@ export async function getListingBySlug(slug: string) {
   }
 
   const doc = snapshot.docs[0];
-  return mapListingFromFirestore({ id: doc.id, ...(doc.data() as ListingRecord) });
+  return mapListingFromFirestore(withFirestoreId(doc.id, doc.data() as ListingRecord));
 }
 
 export async function getOwnerListings(ownerUserId: string) {
   const snapshot = await listingsCollection().where("ownerUserId", "==", ownerUserId).get();
   return snapshot.docs
-    .map((doc) => mapListingFromFirestore({ id: doc.id, ...(doc.data() as ListingRecord) }))
+    .map((doc) => mapListingFromFirestore(withFirestoreId(doc.id, doc.data() as ListingRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
@@ -608,7 +618,7 @@ export async function getOwnerBookings(ownerUserId: string) {
   ]);
 
   return bookingsSnapshot.docs
-    .map((doc) => mapBookingFromFirestore({ id: doc.id, ...(doc.data() as BookingRecord) }))
+    .map((doc) => mapBookingFromFirestore(withFirestoreId(doc.id, doc.data() as BookingRecord)))
     .map((booking) => ({
       ...booking,
       listing: listings.find((entry) => entry.id === booking.listingId) || null,
@@ -625,7 +635,7 @@ export async function getRenterBookings(renterUserId: string) {
   ]);
 
   return bookingsSnapshot.docs
-    .map((doc) => mapBookingFromFirestore({ id: doc.id, ...(doc.data() as BookingRecord) }))
+    .map((doc) => mapBookingFromFirestore(withFirestoreId(doc.id, doc.data() as BookingRecord)))
     .map((booking) => ({
       ...booking,
       listing: listings.find((entry) => entry.id === booking.listingId) || null,
@@ -648,14 +658,14 @@ export async function getRenterSavedListings(renterUserId: string) {
 export async function getOwnerPayments(ownerUserId: string) {
   const snapshot = await paymentsCollection().where("ownerUserId", "==", ownerUserId).get();
   return snapshot.docs
-    .map((doc) => mapPaymentFromFirestore({ id: doc.id, ...(doc.data() as PaymentRecord) }))
+    .map((doc) => mapPaymentFromFirestore(withFirestoreId(doc.id, doc.data() as PaymentRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
 export async function getRenterPayments(renterUserId: string) {
   const snapshot = await paymentsCollection().where("renterUserId", "==", renterUserId).get();
   return snapshot.docs
-    .map((doc) => mapPaymentFromFirestore({ id: doc.id, ...(doc.data() as PaymentRecord) }))
+    .map((doc) => mapPaymentFromFirestore(withFirestoreId(doc.id, doc.data() as PaymentRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
@@ -818,7 +828,7 @@ export async function updateBookingStatus(
     throw new Error("Booking not found.");
   }
 
-  const booking = mapBookingFromFirestore({ id: snapshot.id, ...(snapshot.data() as BookingRecord) });
+  const booking = mapBookingFromFirestore(withFirestoreId(snapshot.id, snapshot.data() as BookingRecord));
   if (booking.ownerUserId !== ownerUserId) {
     throw new Error("Booking not found.");
   }
@@ -891,14 +901,14 @@ export async function createSubmissionRecord(input: {
 async function listAllBookings() {
   const snapshot = await bookingsCollection().get();
   return snapshot.docs
-    .map((doc) => mapBookingFromFirestore({ id: doc.id, ...(doc.data() as BookingRecord) }))
+    .map((doc) => mapBookingFromFirestore(withFirestoreId(doc.id, doc.data() as BookingRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 
 async function listAllPayments() {
   const snapshot = await paymentsCollection().get();
   return snapshot.docs
-    .map((doc) => mapPaymentFromFirestore({ id: doc.id, ...(doc.data() as PaymentRecord) }))
+    .map((doc) => mapPaymentFromFirestore(withFirestoreId(doc.id, doc.data() as PaymentRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
 }
 

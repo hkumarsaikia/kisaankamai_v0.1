@@ -7,7 +7,6 @@ import { ScrollReveal, ScrollRevealGroup, ScrollRevealItem } from "@/components/
 import { useLanguage } from "@/components/LanguageContext";
 import { postJson, SubmissionError } from "@/lib/client/forms";
 import { RENT_RESULTS_CIRCLES, RENT_RESULTS_MARKERS } from "@/lib/map-data";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
 import { callbackRequestSchema } from "@/lib/validation/forms";
 import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { FormEvent, ReactNode, useMemo, useState } from "react";
@@ -74,9 +73,7 @@ export default function RentEquipmentClient({
     setIsSubmittingCallback(true);
 
     try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/callback-request", parsed.data);
-      }
+      await postJson("/api/forms/callback-request", parsed.data);
       setCallbackSuccess(
         t("rent-equipment.RentEquipmentClient.callback_request_received_our_team_will_contact_you_shortly")
       );

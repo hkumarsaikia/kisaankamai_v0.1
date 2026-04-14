@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import {
   buildLocalSessionFromFirebase,
   normalizeFirebaseRolePreference,
+  withFirestoreId,
 } from "../lib/server/firebase-local-helpers.js";
 
 test("normalizeFirebaseRolePreference prefers owner and defaults renter otherwise", () => {
@@ -74,4 +75,21 @@ test("buildLocalSessionFromFirebase creates a usable placeholder profile when fi
   assert.equal(session.profile.fullName, "Rohan Jadhav");
   assert.equal(session.profile.phone, "9999888877");
   assert.equal(session.activeWorkspace, "renter");
+});
+
+test("withFirestoreId prefers the Firestore document id over any embedded record id", () => {
+  const source = {
+    id: "stale-id",
+    name: "Rotavator",
+    ownerUserId: "owner_1",
+  };
+
+  const record = withFirestoreId("doc-id", source);
+
+  assert.deepEqual(record, {
+    id: "doc-id",
+    name: "Rotavator",
+    ownerUserId: "owner_1",
+  });
+  assert.equal(source.id, "stale-id");
 });

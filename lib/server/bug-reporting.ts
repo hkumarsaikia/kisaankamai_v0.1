@@ -56,7 +56,7 @@ function nowIso() {
 }
 
 function buildTarget() {
-  return process.env.NEXT_PUBLIC_BUILD_TARGET || process.env.BUILD_TARGET || "server";
+  return "server";
 }
 
 function nodeEnv() {

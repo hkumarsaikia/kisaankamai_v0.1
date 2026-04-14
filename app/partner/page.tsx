@@ -7,7 +7,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import { postJson, SubmissionError } from "@/lib/client/forms";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
 import { assetPath } from "@/lib/site";
 import { partnerInquirySchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
@@ -45,10 +44,7 @@ export default function PartnerPage() {
     setIsSubmitting(true);
 
     try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/partner-inquiry", parsed.data);
-      }
-
+      await postJson("/api/forms/partner-inquiry", parsed.data);
       setSuccess("Inquiry received. Our partnership team will contact you within 24 hours.");
       event.currentTarget.reset();
     } catch (submitError) {

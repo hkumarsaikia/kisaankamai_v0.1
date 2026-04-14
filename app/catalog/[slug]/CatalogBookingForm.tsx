@@ -1,7 +1,6 @@
 "use client";
 
 import { postJson, SubmissionError } from "@/lib/client/forms";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
 import { bookingRequestSchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -49,9 +48,7 @@ export default function CatalogBookingForm({
     setIsSubmitting(true);
 
     try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/booking-request", parsed.data);
-      }
+      await postJson("/api/forms/booking-request", parsed.data);
       setSuccess("Booking callback request submitted.");
       event.currentTarget.reset();
     } catch (submitError) {

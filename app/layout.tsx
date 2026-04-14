@@ -7,7 +7,6 @@ import { BackToTop } from "@/components/BackToTop";
 import { NavigationTransitionProvider } from "@/components/NavigationTransitionProvider";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { getCurrentSession } from "@/lib/server/local-auth";
-import { IS_PAGES_BUILD, PAGES_BUILD_DYNAMIC } from "@/lib/server/pages-export";
 import { Suspense } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -21,14 +20,14 @@ export const metadata: Metadata = {
   description: "India's premier agritech marketplace. Rent high-quality agricultural equipment from trusted local owners. Smarter farming, powered by technology, rooted in trust.",
 };
 
-export const dynamic = PAGES_BUILD_DYNAMIC;
+export const dynamic = "force-dynamic";
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const initialSession = IS_PAGES_BUILD ? null : await getCurrentSession();
+  const initialSession = await getCurrentSession();
 
   return (
     <html lang="mr" data-language="mr" suppressHydrationWarning>

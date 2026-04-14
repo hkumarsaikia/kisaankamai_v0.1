@@ -1,5 +1,4 @@
 import { Suspense } from "react";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
 import RentEquipmentClient from "./RentEquipmentClient";
 import RentEquipmentResults from "./RentEquipmentResults";
 
@@ -8,8 +7,8 @@ export default function RentEquipmentPage({
 }: {
   searchParams?: { location?: string; query?: string };
 }) {
-  const location = IS_PAGES_BUILD ? "" : searchParams?.location || "";
-  const query = IS_PAGES_BUILD ? "" : searchParams?.query || "";
+  const location = searchParams?.location || "";
+  const query = searchParams?.query || "";
 
   return (
     <RentEquipmentClient initialLocation={location} initialQuery={query}>

@@ -1,9 +1,4 @@
-import path from "node:path";
-
-const buildTarget = process.env.BUILD_TARGET === "pages" ? "pages" : "server";
-const isPagesBuild = buildTarget === "pages";
 const isDev = process.env.NODE_ENV !== "production";
-const pagesBasePath = "/kisaankamai_v0.1";
 
 function asOrigin(value) {
   if (!value) {
@@ -99,7 +94,6 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
-  ...(isPagesBuild ? { output: "export" } : {}),
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -109,34 +103,14 @@ const nextConfig = {
       },
     ],
   },
-  env: {
-    NEXT_PUBLIC_BUILD_TARGET: buildTarget,
-    NEXT_PUBLIC_BASE_PATH: isPagesBuild ? pagesBasePath : "",
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+    ];
   },
-  basePath: isPagesBuild ? pagesBasePath : "",
-  assetPrefix: isPagesBuild ? `${pagesBasePath}/` : "",
-  webpack(config) {
-    if (isPagesBuild) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        "@/lib/actions/local-data": path.resolve("./lib/actions/local-data.pages.ts"),
-      };
-    }
-
-    return config;
-  },
-  ...(!isPagesBuild
-    ? {
-        async headers() {
-          return [
-            {
-              source: "/:path*",
-              headers: securityHeaders,
-            },
-          ];
-        },
-      }
-    : {}),
 };
 
 export default nextConfig;
