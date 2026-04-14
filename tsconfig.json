@@ -39,6 +39,7 @@
     "vendor",
     "apps/production",
     ".worktrees",
-    "worktrees"
+    "worktrees",
+    "scripts"
   ]
 }

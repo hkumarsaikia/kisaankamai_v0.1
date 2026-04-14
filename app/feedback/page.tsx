@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { submitFeedbackAction } from "@/lib/actions/firebase-data";
+import { submitFeedbackAction } from "@/lib/actions/local-data";
 import { ChoicePills, FormActions, FormField, FormGrid, FormNotice, FormSection, FormShell } from "@/components/forms/FormKit";
 import { useLanguage } from "@/components/LanguageContext";
 import { Header } from "@/components/Header";

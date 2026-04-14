@@ -34,11 +34,11 @@ if (!getApps().length) {
 const db = getFirestore();
 const auth = getAuth();
 
-async function readJson(filename) {
+async function readJson(filename: string) {
   try {
     const raw = await fs.readFile(path.join(process.cwd(), "data", filename), "utf8");
     return JSON.parse(raw);
-  } catch (e) {
+  } catch (e: any) {
     if (e.code === 'ENOENT') return [];
     console.warn(`Could not read ${filename}: ${e.message}`);
     return [];

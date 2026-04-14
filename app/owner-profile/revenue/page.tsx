@@ -1,4 +1,4 @@
-import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerPayments, getOwnerBookings } from "@/lib/server/firebase-data";
 
 export default async function EarningsDashboard() {

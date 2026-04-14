@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { RenterSidebar } from "@/components/RenterSidebar";
 import { RenterTopBar } from "@/components/RenterTopBar";
-import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getCurrentSession } from "@/lib/server/local-auth";
 
 export default async function RenterDashboardLayout({
   children,

@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { FormField, FormNotice, FormShell } from "@/components/forms/FormKit";
-import { resetPasswordAction } from "@/lib/actions/firebase-data";
+import { resetPasswordAction } from "@/lib/actions/local-data";
 
 export default function ForgotPasswordPage() {
   const { t } = useLanguage();

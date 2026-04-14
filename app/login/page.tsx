@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { FormField, FormNotice, FormShell } from "@/components/forms/FormKit";
-import { loginAction } from "@/lib/actions/firebase-data";
+import { loginAction } from "@/lib/actions/local-data";
 import { assetPath } from "@/lib/site";
 
 export default function LoginPage() {

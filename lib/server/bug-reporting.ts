@@ -1,4 +1,5 @@
 import "server-only";
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { createHash, randomUUID } from "node:crypto";
 import {

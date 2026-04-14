@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
-import { registerAction } from "@/lib/actions/firebase-data";
+import { registerAction } from "@/lib/actions/local-data";
 import { assetPath } from "@/lib/site";
 
 type RoleValue = "renter" | "owner";

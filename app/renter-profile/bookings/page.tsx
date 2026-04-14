@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getCurrentSession } from "@/lib/server/local-auth";
 import { getRenterBookings } from "@/lib/server/firebase-data";
 
 const statusConfig: Record<string, string> = {

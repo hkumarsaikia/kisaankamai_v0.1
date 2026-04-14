@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
-import { toggleSavedListingFormAction } from "@/lib/actions/firebase-data";
-import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { toggleSavedListingFormAction } from "@/lib/actions/local-data";
+import { getCurrentSession } from "@/lib/server/local-auth";
 import { getPublicEquipmentList, isListingSavedByUser } from "@/lib/server/firebase-data";
 
 export default async function BrowseEquipmentPage() {

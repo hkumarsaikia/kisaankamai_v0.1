@@ -6,7 +6,7 @@ import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
 import { NavigationTransitionProvider } from "@/components/NavigationTransitionProvider";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
-import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getCurrentSession } from "@/lib/server/local-auth";
 import { Suspense } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
