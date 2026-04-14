@@ -1,97 +1,65 @@
 import "server-only";
 
-import { createHmac } from "node:crypto";
 import { cookies } from "next/headers";
+import { getAdminAuth } from "@/lib/server/firebase-admin";
+import { captureServerException } from "@/lib/server/firebase-observability";
 import {
   getLocalSessionByUserId,
   loginWithIdentifier,
   normalizeRolePreference,
   registerLocalUser,
 } from "@/lib/server/local-data";
-import { IS_PAGES_BUILD } from "@/lib/server/pages-export";
 import type { LocalSession, UserRole } from "@/lib/local-data/types";
 import type { RegisterInput } from "@/lib/validation/forms";
 
 const SESSION_COOKIE_NAME = "kisan_kamai_session";
 const WORKSPACE_COOKIE_NAME = "kisan_kamai_workspace";
-const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
+const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 5;
 
-function getSessionSecret() {
-  return process.env.LOCAL_SESSION_SECRET || "kisan-kamai-local-session-secret";
+function normalizeWorkspaceCookie(value?: string | null): UserRole | null {
+  return value === "owner" || value === "renter" ? value : null;
 }
 
-function encodePayload(payload: Record<string, string>) {
-  const raw = Buffer.from(JSON.stringify(payload), "utf8").toString("base64url");
-  const signature = createHmac("sha256", getSessionSecret()).update(raw).digest("base64url");
-  return `${raw}.${signature}`;
-}
-
-function decodePayload(token: string) {
-  const [raw, signature] = token.split(".");
-  if (!raw || !signature) {
-    return null;
+export async function createSessionFromIdToken(
+  idToken: string,
+  options?: {
+    workspacePreference?: UserRole;
   }
-
-  const expected = createHmac("sha256", getSessionSecret()).update(raw).digest("base64url");
-  if (expected !== signature) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(Buffer.from(raw, "base64url").toString("utf8")) as {
-      userId: string;
-      issuedAt: string;
-    };
-  } catch {
-    return null;
-  }
-}
-
-export async function setSessionCookie(userId: string) {
-  if (IS_PAGES_BUILD) {
-    void userId;
-    return;
-  }
+) {
+  const auth = getAdminAuth();
+  const decoded = await auth.verifyIdToken(idToken, true);
+  const sessionCookie = await auth.createSessionCookie(idToken, {
+    expiresIn: SESSION_MAX_AGE_MS,
+  });
 
   const store = await cookies();
-  store.set(SESSION_COOKIE_NAME, encodePayload({ userId, issuedAt: new Date().toISOString() }), {
+  store.set(SESSION_COOKIE_NAME, sessionCookie, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: SESSION_MAX_AGE_SECONDS,
+    maxAge: SESSION_MAX_AGE_MS / 1000,
   });
-}
 
-function normalizeWorkspaceCookie(value?: string | null): UserRole | null {
-  if (value === "owner" || value === "renter") {
-    return value;
+  if (options?.workspacePreference) {
+    await setWorkspaceCookie(options.workspacePreference);
   }
 
-  return null;
+  return decoded.uid;
 }
 
 export async function setWorkspaceCookie(workspace: UserRole) {
-  if (IS_PAGES_BUILD) {
-    void workspace;
-    return;
-  }
-
   const store = await cookies();
   store.set(WORKSPACE_COOKIE_NAME, workspace, {
     httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
-    maxAge: SESSION_MAX_AGE_SECONDS,
+    maxAge: SESSION_MAX_AGE_MS / 1000,
   });
 }
 
 export async function clearSessionCookie() {
-  if (IS_PAGES_BUILD) {
-    return;
-  }
-
   const store = await cookies();
   store.set(SESSION_COOKIE_NAME, "", {
     httpOnly: true,
@@ -110,33 +78,29 @@ export async function clearSessionCookie() {
 }
 
 export async function getCurrentSession(): Promise<LocalSession | null> {
-  if (IS_PAGES_BUILD) {
-    return null;
-  }
-
   const store = await cookies();
-  const raw = store.get(SESSION_COOKIE_NAME)?.value;
-
-  if (!raw) {
+  const sessionCookie = store.get(SESSION_COOKIE_NAME)?.value;
+  if (!sessionCookie) {
     return null;
   }
 
-  const payload = decodePayload(raw);
-  if (!payload?.userId) {
+  try {
+    const decoded = await getAdminAuth().verifySessionCookie(sessionCookie, false);
+    const session = await getLocalSessionByUserId(decoded.uid);
+    if (!session) {
+      return null;
+    }
+
+    return {
+      ...session,
+      activeWorkspace:
+        normalizeWorkspaceCookie(store.get(WORKSPACE_COOKIE_NAME)?.value) ??
+        normalizeRolePreference(session.profile.rolePreference),
+    };
+  } catch (error) {
+    captureServerException(error, { subsystem: "getCurrentSession" });
     return null;
   }
-
-  const session = await getLocalSessionByUserId(payload.userId);
-  if (!session) {
-    return null;
-  }
-
-  return {
-    ...session,
-    activeWorkspace:
-      normalizeWorkspaceCookie(store.get(WORKSPACE_COOKIE_NAME)?.value) ??
-      normalizeRolePreference(session.profile.rolePreference),
-  };
 }
 
 export async function requireSession() {
@@ -144,27 +108,30 @@ export async function requireSession() {
   if (!session) {
     throw new Error("AUTH_REQUIRED");
   }
+
   return session;
 }
 
 export async function loginAndCreateSession(identifier: string, password: string) {
-  const session = await loginWithIdentifier(identifier, password);
-  if (!session) {
+  const result = await loginWithIdentifier(identifier, password);
+  if (!result?.idToken || !result.session) {
     return null;
   }
 
-  await setSessionCookie(session.user.id);
-  await setWorkspaceCookie(session.activeWorkspace);
-  return session;
+  await createSessionFromIdToken(result.idToken, {
+    workspacePreference: result.session.activeWorkspace,
+  });
+  return result.session;
 }
 
 export async function registerAndCreateSession(input: RegisterInput) {
-  const session = await registerLocalUser(input);
-  if (!session) {
+  const result = await registerLocalUser(input);
+  if (!result?.idToken || !result.session) {
     return null;
   }
 
-  await setSessionCookie(session.user.id);
-  await setWorkspaceCookie(session.activeWorkspace);
-  return session;
+  await createSessionFromIdToken(result.idToken, {
+    workspacePreference: result.session.activeWorkspace,
+  });
+  return result.session;
 }
