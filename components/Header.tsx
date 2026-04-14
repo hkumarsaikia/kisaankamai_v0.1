@@ -1,40 +1,73 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
+import { AppLink as Link } from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { useLanguage } from "./LanguageContext";
 import { useAuth } from "./AuthContext";
+import type { TranslationKey } from "@/lib/i18n";
 import { assetPath } from "@/lib/site";
 
-const navLinks = [
+type HeaderDropdownItem = {
+  href: string;
+  labelKey: TranslationKey;
+  icon: string;
+  descKey: TranslationKey;
+};
+
+type HeaderNavLink = {
+  href: string;
+  labelKey: TranslationKey;
+  featured?: {
+    img: string;
+    titleKey: TranslationKey;
+    altKey: TranslationKey;
+    url: string;
+  };
+  dropdown?: HeaderDropdownItem[];
+};
+
+const navLinks: HeaderNavLink[] = [
   {
-    href: "/rent-equipment", label: "Find Equipment", labelMr: "उपकरणे शोधा",
-    featured: { img: assetPath("/assets/generated/harvester_action.png"), title: "Harvesting Season Ready", titleMr: "कापणीचा हंगाम", label: "Book Heavy Machinery Now", url: "/models" },
+    href: "/rent-equipment",
+    labelKey: "header.nav.find_equipment",
+    featured: {
+      img: assetPath("/assets/generated/harvester_action.png"),
+      titleKey: "header.featured.harvesting_season_ready",
+      altKey: "header.alt.featured_harvesting",
+      url: "/models",
+    },
     dropdown: [
-      { href: "/categories", label: "All Categories", labelMr: "सर्व वर्गवारी", icon: "category", desc: "Browse by machine type" },
-      { href: "/models", label: "Browse Models", labelMr: "मॉडेल्स पहा", icon: "agriculture", desc: "Find specific tractors" },
-      { href: "/locations", label: "Locations", labelMr: "स्थाने", icon: "map", desc: "Find rentals near you" },
+      { href: "/categories", labelKey: "header.dropdown.all_categories", icon: "category", descKey: "header.desc.browse_by_machine_type" },
+      { href: "/models", labelKey: "header.dropdown.browse_models", icon: "agriculture", descKey: "header.desc.find_specific_tractors" },
+      { href: "/locations", labelKey: "header.dropdown.locations", icon: "map", descKey: "header.desc.find_rentals_near_you" },
     ],
   },
   {
-    href: "/list-equipment", label: "List Equipment", labelMr: "उपकरणे सूचीबद्ध करा",
-    featured: { img: assetPath("/assets/generated/hero_tractor.png"), title: "Earn With Your Fleet", titleMr: "पैसे कमवा", label: "See Owner Benefits", url: "/owner-benefits" },
+    href: "/list-equipment",
+    labelKey: "header.nav.list_equipment",
+    featured: {
+      img: assetPath("/assets/generated/hero_tractor.png"),
+      titleKey: "header.featured.earn_with_your_fleet",
+      altKey: "header.alt.featured_fleet",
+      url: "/owner-benefits",
+    },
     dropdown: [
-      { href: "/owner-registration", label: "Register Equipment", labelMr: "उपकरणे नोंदणी करा", icon: "add_circle", desc: "List your machine" },
-      { href: "/owner-benefits", label: "Owner Benefits", labelMr: "मालकांचे फायदे", icon: "workspace_premium", desc: "Why host with us" },
-      { href: "/owner-profile", label: "Owner Profile", labelMr: "मालक प्रोफाइल", icon: "dashboard", desc: "Manage your fleet" },
+      { href: "/owner-registration", labelKey: "header.dropdown.register_equipment", icon: "add_circle", descKey: "header.desc.list_your_machine" },
+      { href: "/owner-benefits", labelKey: "header.dropdown.owner_benefits", icon: "workspace_premium", descKey: "header.desc.why_host_with_us" },
+      { href: "/owner-profile", labelKey: "header.dropdown.owner_profile", icon: "dashboard", descKey: "header.desc.manage_your_fleet" },
     ],
   },
-  { href: "/support", label: "Support", labelMr: "मदत" },
+  { href: "/support", labelKey: "header.nav.support" },
 ];
 
 export const Header = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
-  const { language, setLanguage, langText } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const { user, profile, loading, logout } = useAuth();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -65,7 +98,7 @@ export const Header = () => {
           {/* Left: Logo + Nav */}
           <div className="flex items-center gap-8">
             <Link href="/" className="text-2xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50 font-headline">
-              Kisan Kamai
+              {t("common.brand")}
             </Link>
             <div className="hidden lg:flex items-center gap-6 ml-4">
               {navLinks.map((link) => {
@@ -80,7 +113,7 @@ export const Header = () => {
                           : "text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-primary-fixed font-medium"
                       }`}
                     >
-                      {langText(link.label, link.labelMr)}
+                      {t(link.labelKey)}
                       {link.dropdown && <span className="material-symbols-outlined text-[16px]">expand_more</span>}
                     </Link>
                     {link.dropdown && (
@@ -89,11 +122,14 @@ export const Header = () => {
                           <div className="flex-1 grid grid-cols-2 gap-2 p-8">
                             {link.dropdown.map((sublink) => {
                               if (sublink.href === "/owner-profile" && !user) return null;
-                              if (sublink.href === "/owner-registration" && !user) return null;
+                              const resolvedHref =
+                                sublink.href === "/owner-registration" && !user
+                                  ? "/profile-selection"
+                                  : sublink.href;
                               return (
                                 <Link
-                                  key={sublink.href}
-                                  href={sublink.href}
+                                  key={`${sublink.href}-${resolvedHref}`}
+                                  href={resolvedHref}
                                   className="group/item flex items-start gap-4 p-4 rounded-2xl hover:bg-surface-container-high dark:hover:bg-slate-800 transition-colors"
                                 >
                                   <div className="w-12 h-12 shrink-0 rounded-2xl bg-primary-container/10 dark:bg-primary-container/20 flex items-center justify-center text-primary dark:text-primary-fixed group-hover/item:bg-primary group-hover/item:text-on-primary transition-colors border border-primary/10 dark:border-primary-fixed/30">
@@ -101,9 +137,9 @@ export const Header = () => {
                                   </div>
                                   <div className="pt-0.5">
                                     <h4 className="text-[15px] font-bold text-slate-900 dark:text-slate-100 group-hover/item:text-primary dark:group-hover/item:text-primary-fixed transition-colors">
-                                      {langText(sublink.label, sublink.labelMr)}
+                                      {t(sublink.labelKey)}
                                     </h4>
-                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-snug">{sublink.desc}</p>
+                                    <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1 line-clamp-2 leading-snug">{t(sublink.descKey)}</p>
                                   </div>
                                 </Link>
                               );
@@ -111,21 +147,21 @@ export const Header = () => {
                           </div>
                           {link.featured && (
                             <div className="w-[320px] bg-slate-50 dark:bg-slate-950/50 p-8 border-l border-emerald-100 dark:border-slate-800 flex flex-col pt-10">
-                              <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-4">{langText("What's new?", "नवीन काय आहे?")}</h3>
+                              <h3 className="text-sm font-bold text-emerald-800 dark:text-emerald-400 mb-4">{t("Header.what_s_new")}</h3>
                               <Link href={link.featured.url} className="group/card block relative rounded-2xl overflow-hidden shadow-md flex-grow">
-                                <img
+                                <Image
                                   src={assetPath(link.featured.img)}
-                                  alt={link.featured.title}
+                                  alt={t(link.featured.altKey)}
                                   className="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-700 min-h-[160px]"
-                                  loading="lazy"
-                                  decoding="async"
+                                  width={320}
+                                  height={220}
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex flex-col justify-end p-5">
                                   <span className="inline-block px-2.5 py-1 bg-white/20 backdrop-blur-md rounded-md text-white text-[10px] font-bold uppercase tracking-wider mb-2 w-max shadow-sm">
-                                    {langText("Featured", "खास")}
+                                    {t("Header.featured")}
                                   </span>
                                   <h4 className="text-white font-bold text-lg leading-tight group-hover/card:text-emerald-300 transition-colors">
-                                    {langText(link.featured.title, link.featured.titleMr)}
+                                    {t(link.featured.titleKey)}
                                   </h4>
                                 </div>
                               </Link>
@@ -147,7 +183,7 @@ export const Header = () => {
               onClick={() => setLanguage(language === "en" ? "mr" : "en")}
               className="hidden md:flex items-center gap-1.5 text-primary dark:text-primary-fixed px-3 py-2 hover:bg-emerald-50 dark:hover:bg-slate-900/50 rounded-lg transition-all font-mukta text-sm font-semibold"
             >
-              {language === "en" ? "मराठी" : "English"}
+              {language === "en" ? t("language.marathi") : t("language.english")}
             </button>
 
             {/* Show Login + Register only if not logged in */}
@@ -157,13 +193,13 @@ export const Header = () => {
                   href="/login"
                   className="bg-transparent border-2 border-primary dark:border-primary-fixed text-primary dark:text-primary-fixed px-5 py-2 rounded-xl font-bold hover:bg-primary/5 dark:hover:bg-primary-fixed/10 active:scale-95 transition-all hidden sm:block"
                 >
-                  {langText("Login", "लॉगिन करा")}
+                  {t("Header.login")}
                 </Link>
                 <Link
                   href="/register"
                   className="bg-primary text-on-primary px-5 py-2.5 rounded-xl font-bold hover:opacity-90 active:scale-95 transition-all shadow-md shadow-primary/20 hidden sm:block"
                 >
-                  {langText("Register", "नोंदणी करा")}
+                  {t("Header.register")}
                 </Link>
               </>
             )}
@@ -174,7 +210,7 @@ export const Header = () => {
                 <button
                   onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
                   className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 transition-all shadow-sm"
-                  title="My Profile"
+                  title={t("header.aria.my_profile")}
                 >
                   {/* Avatar */}
                   <div className="relative w-8 h-8 rounded-full bg-primary flex items-center justify-center border-2 border-emerald-500 shadow-sm flex-shrink-0">
@@ -182,7 +218,7 @@ export const Header = () => {
                     <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 border-2 border-white dark:border-slate-900 rounded-full" />
                   </div>
                   <span className="hidden sm:block text-[13px] font-bold text-emerald-900 dark:text-emerald-100">
-                    {langText("My Profile", "माझी प्रोफाइल")}
+                    {t("Header.my_profile")}
                   </span>
                   <span className={`material-symbols-outlined text-[16px] text-emerald-600 dark:text-emerald-400 transition-transform hidden sm:block ${profileDropdownOpen ? "rotate-180" : ""}`}>
                     expand_more
@@ -200,7 +236,7 @@ export const Header = () => {
 
                     {/* Dashboard Links */}
                     <div className="py-2">
-                      <p className="px-5 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Profiles</p>
+                      <p className="px-5 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t("header.menu.profiles")}</p>
                       <Link
                         href="/owner-profile"
                         onClick={() => setProfileDropdownOpen(false)}
@@ -210,8 +246,8 @@ export const Header = () => {
                           <span className="material-symbols-outlined text-[18px]">dashboard</span>
                         </span>
                         <div>
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{langText("Owner Profile", "मालक प्रोफाइल")}</p>
-                          <p className="text-[10px] text-slate-500">Manage your fleet</p>
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t("Header.owner_profile")}</p>
+                          <p className="text-[10px] text-slate-500">{t("header.desc.manage_your_fleet")}</p>
                         </div>
                       </Link>
                       <Link
@@ -223,22 +259,22 @@ export const Header = () => {
                           <span className="material-symbols-outlined text-[18px]">agriculture</span>
                         </span>
                         <div>
-                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{langText("Renter Profile", "भाडेकरी प्रोफाइल")}</p>
-                          <p className="text-[10px] text-slate-500">Your bookings & equipment</p>
+                          <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{t("Header.renter_profile")}</p>
+                          <p className="text-[10px] text-slate-500">{t("header.desc.your_bookings_and_equipment")}</p>
                         </div>
                       </Link>
                     </div>
 
                     {/* Account links */}
                     <div className="border-t border-slate-100 dark:border-slate-800 py-2">
-                      <p className="px-5 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Account</p>
+                      <p className="px-5 py-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">{t("header.menu.account")}</p>
                       <Link
                         href="/owner-profile/settings"
                         onClick={() => setProfileDropdownOpen(false)}
                         className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[20px] text-slate-500">settings</span>
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Settings</span>
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("header.menu.settings")}</span>
                       </Link>
                       <Link
                         href="/support"
@@ -246,7 +282,7 @@ export const Header = () => {
                         className="flex items-center gap-3 px-5 py-3 hover:bg-emerald-50 dark:hover:bg-slate-800 transition-colors"
                       >
                         <span className="material-symbols-outlined text-[20px] text-slate-500">help</span>
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">Help & Support</span>
+                        <span className="text-sm font-medium text-slate-700 dark:text-slate-300">{t("header.menu.help_support")}</span>
                       </Link>
                     </div>
 
@@ -257,7 +293,7 @@ export const Header = () => {
                         className="w-full flex items-center gap-3 px-5 py-3 hover:bg-red-50 dark:hover:bg-red-950/20 transition-colors text-left"
                       >
                         <span className="material-symbols-outlined text-[20px] text-red-500">logout</span>
-                        <span className="text-sm font-bold text-red-600 dark:text-red-400">Sign Out</span>
+                        <span className="text-sm font-bold text-red-600 dark:text-red-400">{t("header.menu.sign_out")}</span>
                       </button>
                     </div>
                   </div>
@@ -294,7 +330,7 @@ export const Header = () => {
                       : "text-slate-700 dark:text-slate-300 hover:bg-surface-container hover:text-primary"
                   }`}
                 >
-                  {langText(link.label, link.labelMr)}
+                  {t(link.labelKey)}
                 </Link>
               );
             })}
@@ -303,24 +339,24 @@ export const Header = () => {
               <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1">
                 <Link href="/owner-profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 text-primary font-bold">
                   <span className="material-symbols-outlined text-[18px]">dashboard</span>
-                  {langText("Owner Profile", "मालक प्रोफाइल")}
+                  {t("Header.owner_profile")}
                 </Link>
                 <Link href="/renter-profile" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 px-4 py-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 text-amber-700 font-bold">
                   <span className="material-symbols-outlined text-[18px]">agriculture</span>
-                  {langText("Renter Profile", "भाडेकरी प्रोफाइल")}
+                  {t("Header.renter_profile")}
                 </Link>
                 <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 text-red-600 font-bold">
                   <span className="material-symbols-outlined text-[18px]">logout</span>
-                  Sign Out
+                  {t("header.menu.sign_out")}
                 </button>
               </div>
             )}
             <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex gap-3">
               <Link href="/partner" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-3 bg-secondary/10 text-secondary rounded-xl font-bold text-sm">
-                {langText("Partner With Us", "आमच्यासोबत भागीदारी")}
+                {t("Header.partner_with_us")}
               </Link>
               <Link href="/legal" onClick={() => setMobileOpen(false)} className="flex-1 text-center px-4 py-3 bg-slate-100 dark:bg-slate-900/50 text-slate-700 dark:text-slate-300 rounded-xl font-medium text-sm">
-                {langText("Legal", "कायदेशीर")}
+                {t("Header.legal")}
               </Link>
             </div>
           </div>

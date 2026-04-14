@@ -1,197 +1,175 @@
-import { Header } from "@/components/Header";
+"use client";
+
+import { FormEvent, useState, useTransition } from "react";
+import { submitCallbackRequestAction } from "@/lib/actions/local-data";
+import { AppLink } from "@/components/AppLink";
 import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { LazyMap } from "@/components/LazyMap";
+import { useLanguage } from "@/components/LanguageContext";
+import { FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions } from "@/components/forms/FormKit";
+import { LOCATIONS_OVERVIEW_CIRCLES, LOCATIONS_OVERVIEW_MARKERS, REGIONAL_HUBS } from "@/lib/map-data";
+import { callbackRequestSchema } from "@/lib/validation/forms";
 
-export default function Locations() {
+export default function LocationsPage() {
+  const { langText } = useLanguage();
+  const [step, setStep] = useState(1);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [formState, setFormState] = useState({
+    fullName: "",
+    phone: "",
+    location: "",
+    equipmentNeeded: "",
+  });
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setSuccess("");
+
+    const parsed = callbackRequestSchema.safeParse(formState);
+    if (!parsed.success) {
+      setError(
+        parsed.error.flatten().formErrors[0] ||
+          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
+          "Please complete the expansion request correctly."
+      );
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await submitCallbackRequestAction(parsed.data);
+      if (!result.ok) {
+        setError(result.error || "Could not submit the expansion request right now.");
+        return;
+      }
+      setSuccess("Expansion request saved locally. Our team can now review this cluster.");
+      setStep(1);
+      setFormState({ fullName: "", phone: "", location: "", equipmentNeeded: "" });
+    });
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
+    <div className="kk-page flex flex-col">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow pt-24 pb-16">
+        <section className="mx-auto max-w-7xl px-6">
+          <div className="rounded-[2rem] bg-primary px-8 py-12 text-white shadow-xl md:px-12">
+            <p className="text-xs font-black uppercase tracking-[0.22em] text-secondary-fixed">
+              {langText("Coverage and expansion", "सेवा क्षेत्र आणि विस्तार")}
+            </p>
+            <h1 className="mt-4 text-4xl font-black tracking-tight md:text-6xl">
+              {langText("Real service coverage across Maharashtra", "महाराष्ट्रभर खरे सेवा कव्हरेज")}
+            </h1>
+            <p className="mt-5 max-w-3xl text-lg font-medium text-white/82">
+              {langText(
+                "This page now uses the live website map stack instead of a decorative placeholder. Active hubs, emerging clusters, and expansion requests are all tied to the same shared map dataset.",
+                "ही पेज आता केवळ सजावटी प्रतिमेऐवजी प्रत्यक्ष वेबसाइट नकाशा स्टॅक वापरते. सक्रिय हब, वाढणारे क्लस्टर आणि विस्तार विनंत्या एकाच सामायिक नकाशा डेटाशी जोडल्या आहेत."
+              )}
+            </p>
+          </div>
+        </section>
 
+        <section className="mx-auto mt-10 grid max-w-7xl gap-8 px-6 lg:grid-cols-[minmax(0,1.2fr)_380px]">
+          <div className="kk-panel overflow-hidden p-4">
+            <div className="mb-4 flex items-end justify-between gap-4 px-2">
+              <div>
+                <h2 className="text-2xl font-black text-primary">
+                  {langText("Interactive service map", "इंटरॅक्टिव्ह सेवा नकाशा")}
+                </h2>
+                <p className="mt-2 text-sm font-medium text-on-surface-variant">
+                  {langText("Leaflet/OpenStreetMap is used automatically on localhost when Google Maps is unavailable.", "लोकलहोस्टवर Google Maps उपलब्ध नसल्यास Leaflet/OpenStreetMap आपोआप वापरले जाते.")}
+                </p>
+              </div>
+              <AppLink href="/support" className="kk-button-outline">
+                {langText("Need help?", "मदत हवी आहे?")}
+              </AppLink>
+            </div>
+            <LazyMap
+              center={[17.05, 74.4]}
+              zoom={8}
+              markers={LOCATIONS_OVERVIEW_MARKERS}
+              circles={LOCATIONS_OVERVIEW_CIRCLES}
+              height="560px"
+              className="rounded-[1.5rem]"
+              showControls
+            />
+          </div>
 
-<main className="pt-20">
-<section className="relative h-[400px] flex items-center overflow-hidden">
-<div className="absolute inset-0 z-0">
-<img alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" className="w-full h-full object-cover" data-alt="Expansive green sugarcane fields in Western Maharashtra during the early morning golden hour with soft mist" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrSpZOMk74aBsSIese2JWI0cHKeiaZObCNMRdhtYhkXOrrPS9QzTvPz2EIGQpSNPJtnZDKU-JA8YEgSIrUPakgZ-KJTyWZ7xWSPn_Veki49pHC2NCiEVFBDSjKLvJbRXXov-hx9BUF1gYISDkDtFiDNHPDNZhV4xRd6yViNV5bNTUlybVsxBTolfJGEjFMhFq_EKr8YjUmhfS49tYOgQjELe3e5s_soLwqjfNHTo96lgGbkHo1J434kxWHKuqozZ_lB_Q6bWCdn2q6"loading="lazy" decoding="async" />
-<div className="absolute inset-0 bg-gradient-to-r from-primary-container/80 to-transparent"></div>
-</div>
-<div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
-<div className="max-w-2xl">
-<span className="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase mb-4 inline-block">Western Maharashtra</span>
-<h1 className="text-5xl font-extrabold text-white tracking-tight mb-6 leading-tight">Serving the heart of Indian Agriculture.</h1>
-<p className="text-xl text-emerald-50/90 font-medium">Currently active across Sangli, Satara, and Kolhapur districts, bringing modern mechanization to every field.</p>
-</div>
-</div>
-</section>
-<section className="py-24 bg-surface-container-low">
-<div className="max-w-7xl mx-auto px-6">
-<div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-<div className="lg:col-span-8 space-y-8">
-<div className="bg-white rounded-2xl shadow-xl shadow-emerald-900/5 p-4 border border-emerald-100 h-[600px] relative overflow-hidden">
-<div className="absolute top-6 left-6 z-10 space-y-2">
-<h2 className="text-xl font-bold text-primary">Interactive Service Map</h2>
-<p className="text-sm text-slate-500 font-medium">Explore active clusters and equipment hubs.</p>
-</div>
-<div className="w-full h-full rounded-xl bg-slate-100 flex items-center justify-center relative overflow-hidden border border-slate-200">
-<img alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" className="w-full h-full object-cover opacity-40 grayscale" data-alt="Topographic detailed map of Maharashtra showing district boundaries and rural road networks in soft grey tones" data-location="Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQkwnPgFRNqcp_PJa-0Wr_hCpM8dLrifhN7RfvecRbIQj_la-63LKy9oaJ_Z5s5CSJyStD63GskB4ao0k26Q6yrLL4ydX7z9vIN5cgM90GHNNNolHMPA4ntTWWh_h3bWc8q6z4WXl3P1X1BtNW49XaAYCgY42JnVvzFDnVmF4nfE-kBSFfpRkGtI-D_2Ds1olQhGkXkTNsUlemRfrsT48GVVOQOQZ2P8OwSrXHZQW9L5H1-KQVL1q5cp7Q2XCxDofVctyd0f2srLwG"loading="lazy" decoding="async" />
-<div className="absolute inset-0 p-12">
-<div className="relative w-full h-full">
-<div className="absolute top-[30%] left-[40%] group">
-<div className="w-6 h-6 bg-secondary rounded-full animate-ping absolute opacity-50"></div>
-<div className="w-6 h-6 bg-secondary rounded-full relative flex items-center justify-center cursor-pointer">
-<span className="material-symbols-outlined text-[12px] text-white" style={{'fontVariationSettings': '\'FILL\' 1'}}>location_on</span>
-</div>
-<div className="absolute top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-lg shadow-lg border border-slate-100 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-<span className="text-sm font-bold block">Satara Hub</span>
-<span className="text-[10px] text-slate-500 uppercase tracking-widest">12 Active Harvesters</span>
-</div>
-</div>
-<div className="absolute top-[60%] left-[55%] group">
-<div className="w-6 h-6 bg-secondary rounded-full animate-ping absolute opacity-50"></div>
-<div className="w-6 h-6 bg-secondary rounded-full relative flex items-center justify-center cursor-pointer">
-<span className="material-symbols-outlined text-[12px] text-white" style={{'fontVariationSettings': '\'FILL\' 1'}}>location_on</span>
-</div>
-<div className="absolute top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-lg shadow-lg border border-slate-100 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-<span className="text-sm font-bold block">Sangli Cluster</span>
-<span className="text-[10px] text-slate-500 uppercase tracking-widest">24 Active Tractors</span>
-</div>
-</div>
-<div className="absolute top-[80%] left-[35%] group">
-<div className="w-6 h-6 bg-secondary rounded-full animate-ping absolute opacity-50"></div>
-<div className="w-6 h-6 bg-secondary rounded-full relative flex items-center justify-center cursor-pointer">
-<span className="material-symbols-outlined text-[12px] text-white" style={{'fontVariationSettings': '\'FILL\' 1'}}>location_on</span>
-</div>
-<div className="absolute top-8 left-1/2 -translate-x-1/2 bg-white px-4 py-2 rounded-lg shadow-lg border border-slate-100 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-<span className="text-sm font-bold block">Kolhapur Hub</span>
-<span className="text-[10px] text-slate-500 uppercase tracking-widest">8 Sugarcane Loaders</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-<div className="bg-white p-8 rounded-2xl border border-emerald-50 shadow-sm">
-<h3 className="text-3xl font-extrabold text-primary mb-1">Satara</h3>
-<p className="text-sm text-slate-500 mb-4 font-medium">District Coverage</p>
-<ul className="space-y-2 text-on-surface-variant font-medium">
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Karad Cluster</li>
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Phaltan Hub</li>
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Wai Region</li>
-</ul>
-</div>
-<div className="bg-white p-8 rounded-2xl border border-emerald-50 shadow-sm">
-<h3 className="text-3xl font-extrabold text-primary mb-1">Sangli</h3>
-<p className="text-sm text-slate-500 mb-4 font-medium">District Coverage</p>
-<ul className="space-y-2 text-on-surface-variant font-medium">
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Miraj Cluster</li>
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Tasgaon Hub</li>
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Walwa Region</li>
-</ul>
-</div>
-<div className="bg-white p-8 rounded-2xl border border-emerald-50 shadow-sm">
-<h3 className="text-3xl font-extrabold text-primary mb-1">Kolhapur</h3>
-<p className="text-sm text-slate-500 mb-4 font-medium">District Coverage</p>
-<ul className="space-y-2 text-on-surface-variant font-medium">
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Hatkanangale Hub</li>
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Shirol Cluster</li>
-<li className="flex items-center gap-2"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Panhala Region</li>
-</ul>
-</div>
-</div>
-</div>
-<div className="lg:col-span-4 sticky top-28">
-<div className="bg-primary-container text-white p-8 rounded-3xl shadow-2xl">
-<h2 className="text-2xl font-bold mb-2">Expanding Soon?</h2>
-<p className="text-emerald-50/70 text-sm mb-8">Not in your area yet? Submit a request and we'll prioritize your cluster for our next expansion phase.</p>
-<form className="space-y-4">
-<div>
-<label className="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">Full Name</label>
-<input className="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white placeholder-emerald-700 focus:ring-secondary focus:border-secondary" placeholder="Enter your name" type="text"/>
-</div>
-<div>
-<label className="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">WhatsApp Number</label>
-<input className="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white placeholder-emerald-700 focus:ring-secondary focus:border-secondary" placeholder="+91 00000 00000" type="tel"/>
-</div>
-<div>
-<label className="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">Your Village / Taluka</label>
-<input className="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white placeholder-emerald-700 focus:ring-secondary focus:border-secondary" placeholder="e.g. Vita, Khanapur" type="text"/>
-</div>
-<div>
-<label className="block text-xs font-bold uppercase tracking-widest text-emerald-300 mb-1.5">Primary Equipment Needed</label>
-<select className="w-full bg-emerald-900/50 border border-emerald-800 rounded-xl px-4 py-3 text-white focus:ring-secondary focus:border-secondary appearance-none">
-<option>Tractors &amp; Implements</option>
-<option>Sugarcane Harvesters</option>
-<option>Rotavators</option>
-<option>Drone Spraying</option>
-</select>
-</div>
-<button className="w-full bg-secondary text-white font-bold py-4 rounded-xl hover:bg-on-secondary-container transition-colors shadow-lg mt-4" type="submit">
-                                    Submit Request
-                                </button>
-</form>
-<p className="mt-6 text-[10px] text-emerald-50/50 text-center leading-relaxed">By submitting, you agree to receive updates about service availability in your area via WhatsApp/SMS.</p>
-</div>
-<div className="mt-8 bg-tertiary-container text-on-tertiary-container p-6 rounded-2xl flex items-center gap-4">
-<span className="material-symbols-outlined text-4xl text-on-tertiary-container">support_agent</span>
-<div>
-<h4 className="font-bold">Need Direct Help?</h4>
-<p className="text-sm opacity-90">Call our field support at +91 98765 43210</p>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section className="py-24 max-w-7xl mx-auto px-6">
-<div className="bg-white p-12 rounded-[40px] border border-emerald-50 shadow-sm">
-<div className="max-w-3xl mb-16">
-<h2 className="text-4xl font-extrabold text-primary tracking-tight mb-6">Empowering Maharashtra's Farmers through Modern Mechanisation.</h2>
-<p className="text-lg text-on-surface-variant leading-relaxed">At Kisan Kamai, we understand that timely access to the right equipment is the difference between a successful harvest and a lost season. By digitizing equipment rental across Sangli, Satara, and Kolhapur, we are reducing costs and increasing efficiency for thousands of local growers.</p>
-</div>
-<div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-<div className="space-y-4">
-<div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-<span className="material-symbols-outlined text-emerald-800" style={{'fontVariationSettings': '\'FILL\' 1'}}>precision_manufacturing</span>
-</div>
-<h3 className="text-xl font-bold text-primary">Advanced Implements</h3>
-<p className="text-on-surface-variant text-sm leading-relaxed">Access the latest laser levelers, power tillers, and specialized sugarcane harvesters that were previously unaffordable for individual farmers.</p>
-</div>
-<div className="space-y-4">
-<div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-<span className="material-symbols-outlined text-emerald-800" style={{'fontVariationSettings': '\'FILL\' 1'}}>speed</span>
-</div>
-<h3 className="text-xl font-bold text-primary">Timely Operations</h3>
-<p className="text-on-surface-variant text-sm leading-relaxed">Our local hub strategy ensures that equipment reaches your field exactly when the soil and weather conditions are optimal for sowing or harvest.</p>
-</div>
-<div className="space-y-4">
-<div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center">
-<span className="material-symbols-outlined text-emerald-800" style={{'fontVariationSettings': '\'FILL\' 1'}}>payments</span>
-</div>
-<h3 className="text-xl font-bold text-primary">Cost Efficiency</h3>
-<p className="text-on-surface-variant text-sm leading-relaxed">Pay only for what you use. Avoid heavy EMIs and maintenance costs of owning large machinery while benefiting from modern technology.</p>
-</div>
-</div>
-</div>
-</section>
-<section className="mb-24 px-6">
-<div className="max-w-7xl mx-auto rounded-[40px] h-[500px] overflow-hidden relative">
-<img alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" className="w-full h-full object-cover" data-alt="Close up of a large modern orange tractor tyre on dark moist agricultural soil in an Indian village field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKZC6B7aV2-8Ka9mee1ZzwnZknocKwMstNFKqdI5VdFgsEv7OEScTd_0nxSJ6PdwftGGGCIuUlukLZKyXDe8A3pLtMEOhRvRRujpMxR4-zjp_DRGqdtBZbo2ESf7qLwNOBZfFtHzOykNve4CfJiYPxHWKZayfNjEHubp01zEBp6tEb3AaIUhEboTWBBdBCzny9FFiQOPivIHi_i06-UZnOamQm8h4rNnAcrI34PRNhBIIeXWkPo5m0aTw3lBuijXENUoHQ-IiGYjb_"loading="lazy" decoding="async" />
-<div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent flex flex-col justify-end p-12">
-<div className="max-w-2xl">
-<h2 className="text-4xl font-extrabold text-white mb-6">Rooted in Trust. <br/>Serving Indian Agriculture.</h2>
-<div className="flex gap-4">
-<button className="bg-secondary text-white px-8 py-4 rounded-xl font-extrabold hover:opacity-90 transition-opacity">Find Equipment in My Area</button>
-<button className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-extrabold hover:bg-white/20 transition-all">Contact Us</button>
-</div>
-</div>
-</div>
-</div>
-</section>
-</main>
+          <FormShell
+            eyebrow={langText("Expansion request", "विस्तार विनंती")}
+            title={langText("Bring Kisan Kamai to your cluster", "तुमच्या क्लस्टरमध्ये किसान कमाई आणा")}
+            description={langText(
+              "This uses the same local callback request pipeline as the rest of the website. We kept the existing request details, but upgraded the experience into a guided flow.",
+              "हे वेबसाइटवरील इतर भागांसारखेच स्थानिक callback request pipeline वापरते. विद्यमान तपशील तसेच ठेवून अनुभव guided flow मध्ये उन्नत केला आहे."
+            )}
+            step={step}
+            totalSteps={2}
+            aside={
+              <div className="space-y-4">
+                <h3 className="text-lg font-black text-primary">{langText("Live regional hubs", "सक्रिय प्रादेशिक हब")}</h3>
+                <div className="space-y-3">
+                  {REGIONAL_HUBS.map((hub) => (
+                    <AppLink key={hub.slug} href={`/locations/${hub.slug}`} className="block rounded-2xl border border-outline-variant bg-surface-container-lowest p-4 transition-colors hover:border-primary">
+                      <p className="font-black text-on-surface">{hub.name}</p>
+                      <p className="mt-1 text-sm font-medium text-on-surface-variant">{hub.description}</p>
+                    </AppLink>
+                  ))}
+                </div>
+              </div>
+            }
+          >
+            <form onSubmit={handleSubmit}>
+              {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+              {success ? <FormNotice tone="success">{success}</FormNotice> : null}
 
-
+              {step === 1 ? (
+                <FormSection
+                  title={langText("Who should we contact?", "आम्ही कोणाशी संपर्क साधू?")}
+                  description={langText("We only need the same core details already collected elsewhere in the site.", "साइटवरील इतर ठिकाणी घेतले जाणारे तेच मूलभूत तपशील येथे आवश्यक आहेत.")}
+                >
+                  <FormGrid>
+                    <FormField label={langText("Full name", "पूर्ण नाव")} required>
+                      <input className="kk-input" value={formState.fullName} onChange={(event) => setFormState((current) => ({ ...current, fullName: event.target.value }))} />
+                    </FormField>
+                    <FormField label={langText("Phone", "फोन")} required>
+                      <input className="kk-input" value={formState.phone} onChange={(event) => setFormState((current) => ({ ...current, phone: event.target.value.replace(/\D/g, "").slice(0, 10) }))} />
+                    </FormField>
+                  </FormGrid>
+                  <FormField label={langText("Village / taluka / district", "गाव / तालुका / जिल्हा")} required>
+                    <input className="kk-input" value={formState.location} onChange={(event) => setFormState((current) => ({ ...current, location: event.target.value }))} />
+                  </FormField>
+                  <FormStepActions
+                    nextLabel={langText("Continue to equipment need", "पुढे: उपकरणाची गरज")}
+                    onNext={() => setStep(2)}
+                    disableNext={!formState.fullName || !formState.phone || !formState.location}
+                  />
+                </FormSection>
+              ) : (
+                <FormSection
+                  title={langText("What should launch first?", "सुरुवातीला काय सुरू व्हावे?")}
+                  description={langText("Tell us the main machine or service your area needs first.", "तुमच्या भागाला सर्वात आधी कोणते यंत्र किंवा सेवा हवी आहे ते सांगा.")}
+                >
+                  <FormField label={langText("Primary equipment needed", "मुख्य आवश्यक उपकरण")} required>
+                    <input className="kk-input" value={formState.equipmentNeeded} onChange={(event) => setFormState((current) => ({ ...current, equipmentNeeded: event.target.value }))} placeholder={langText("Tractors, sugarcane harvesters, drone spraying...", "ट्रॅक्टर, ऊस हार्वेस्टर, ड्रोन फवारणी...")} />
+                  </FormField>
+                  <FormStepActions
+                    backLabel={langText("Back", "मागे")}
+                    nextLabel={isPending ? langText("Submitting...", "सबमिट होत आहे...") : langText("Submit request", "विनंती पाठवा")}
+                    onBack={() => setStep(1)}
+                    submit
+                    disableNext={isPending || !formState.equipmentNeeded}
+                  />
+                </FormSection>
+              )}
+            </form>
+          </FormShell>
+        </section>
       </main>
       <Footer />
     </div>
   );
 }
+

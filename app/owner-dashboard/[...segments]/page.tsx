@@ -25,3 +25,4 @@ export default function OwnerDashboardLegacyCatchAllPage({
   const target = `/owner-profile/${params.segments.join("/")}`;
   return <LegacyRouteRedirect target={target} title="Owner Profile" />;
 }
+

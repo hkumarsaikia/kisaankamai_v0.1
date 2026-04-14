@@ -1,168 +1,120 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
-import { postJson, SubmissionError } from "@/lib/client/forms";
-import { completeProfileSchema } from "@/lib/validation/forms";
-import { DEMO_AUTH_CONFIG } from "@/lib/demoAuth";
-import { account } from "@/lib/appwrite";
+import { useLanguage } from "@/components/LanguageContext";
+import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
+import { completeProfileAction } from "@/lib/actions/local-data";
 
-export default function CompleteProfile() {
-  const router = useRouter();
-  const { langText } = useLanguage();
-  const { user, profile, loading, isProfileComplete, refreshProfile } = useAuth();
-  
-  const [phone, setPhone] = useState("");
-  const [pincode, setPincode] = useState("");
-  const [isVerifying, setIsVerifying] = useState(false);
+export default function CompleteProfilePage() {
+  const { user, profile, loading } = useAuth();
+  const { t } = useLanguage();
   const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({
+    phone: profile?.phone || "",
+    pincode: profile?.pincode || "",
+    village: profile?.village || "",
+    address: profile?.address || "",
+    role: (profile?.rolePreference || "renter") as "renter" | "owner",
+  });
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push("/login");
+      window.location.href = "/login";
     }
-    if (!loading && isProfileComplete) {
-      router.push("/profile-selection");
-    }
-  }, [user, loading, isProfileComplete, router]);
+  }, [loading, user]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = completeProfileSchema.safeParse({
-      phone,
-      pincode,
-      village: "",
-      address: "",
-      role: profile?.role || "renter",
-    });
-
-    if (!parsed.success) {
-      setError(
-        parsed.error.flatten().formErrors[0] ||
-          parsed.error.flatten().fieldErrors.phone?.[0] ||
-          parsed.error.flatten().fieldErrors.pincode?.[0] ||
-          langText("Please enter valid phone and pincode.", "कृपया वैध फोन आणि पिनकोड प्रविष्ट करा.")
-      );
-      return;
-    }
-
-    setIsVerifying(true);
-    try {
-      const jwt = await account.createJWT();
-
-      await postJson("/api/profile/complete", {
-        ...parsed.data,
-        jwt: jwt.jwt,
-      });
-
-      await refreshProfile();
-      router.push("/profile-selection");
-    } catch (err: any) {
-      console.error("Profile save error:", err);
-      if (err instanceof SubmissionError) {
-        setError(err.message);
-      } else {
-        setError("Failed to save profile: " + err.message);
-      }
-    }
-    setIsVerifying(false);
+  const updateField = (field: keyof typeof formData, value: string) => {
+    setFormData((current) => ({ ...current, [field]: value }));
   };
 
-  if (loading) return null;
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
 
-  if (DEMO_AUTH_CONFIG.enabled) {
-    return (
-      <div className="min-h-screen bg-background text-on-surface flex flex-col">
-        <Header />
-        <main className="flex-grow flex items-center justify-center pt-24 pb-12 px-6">
-          <div className="kk-glass w-full max-w-xl p-8 lg:p-10 text-center">
-            <h1 className="text-3xl font-black text-primary dark:text-emerald-50 mb-4">
-              {langText("Demo Profile Ready", "Demo प्रोफाइल तयार आहे")}
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 font-medium mb-8">
-              {user
-                ? langText(
-                    "Profile completion is skipped in demo mode. Continue to profile selection.",
-                    "Demo mode मध्ये profile completion वगळले आहे. Profile selection कडे जा."
-                  )
-                : langText(
-                    "Demo mode uses browser-local sessions. Sign in with the shared demo credentials first.",
-                    "Demo mode browser-local session वापरतो. आधी shared demo credentials ने sign in करा."
-                  )}
-            </p>
-            <button
-              type="button"
-              onClick={() => router.push(user ? "/profile-selection" : "/login")}
-              className="w-full bg-primary text-white font-black py-4 rounded-2xl"
-            >
-              {user
-                ? langText("Go to Profile Selection", "प्रोफाइल निवडीकडे जा")
-                : langText("Go to Login", "लॉगिनकडे जा")}
-            </button>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
+    startTransition(async () => {
+      const result = await completeProfileAction(formData);
+      if (!result.ok) {
+        setError(result.error || t("complete-profile.could_not_save_profile"));
+        return;
+      }
+
+      window.location.href = result.redirectTo || "/profile-selection";
+    });
+  };
+
+  if (loading || !user) {
+    return null;
   }
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col">
       <Header />
       <main className="flex-grow flex items-center justify-center pt-24 pb-12 px-6">
-        <div className="kk-glass w-full max-w-xl p-8 lg:p-10">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-black text-primary dark:text-emerald-50 mb-2">
-              {langText("Complete Your Profile", "तुमची प्रोफाइल पूर्ण करा")}
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 font-medium">
-              {langText("Just a few more details to get you started.", "सुरू करण्यासाठी फक्त काही अधिक तपशील.")}
-            </p>
-          </div>
-
+        <FormShell
+          eyebrow={t("complete-profile.complete_your_profile")}
+          title={t("complete-profile.complete_your_profile")}
+          description={t("complete-profile.update_your_core_contact_details_for_local_testing")}
+          step={step}
+          totalSteps={2}
+        >
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-500">
-                {langText("Phone Number", "फोन नंबर")}
-              </label>
-              <input
-                className="kk-input"
-                placeholder="10-digit mobile number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-              />
-            </div>
+            {error ? <FormNotice tone="error">{error}</FormNotice> : null}
 
-            <div className="space-y-2">
-              <label className="text-xs font-black uppercase tracking-widest text-slate-500">
-                {langText("Pin Code", "पिन कोड")}
-              </label>
-              <input
-                className="kk-input"
-                placeholder="6-digit pin code"
-                value={pincode}
-                onChange={(e) => setPincode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-              />
-            </div>
+            {step === 1 ? (
+              <FormSection title="Contact and location" description="These fields update the same local profile record already used across owner and renter flows.">
+                <FormGrid>
+                  <FormField label={t("complete-profile.phone_number")} required>
+                    <input className="kk-input" value={formData.phone} onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))} />
+                  </FormField>
+                  <FormField label={t("complete-profile.pin_code")} required>
+                    <input className="kk-input" value={formData.pincode} onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))} />
+                  </FormField>
+                  <FormField label={t("complete-profile.village_city")}>
+                    <input className="kk-input" value={formData.village} onChange={(event) => updateField("village", event.target.value)} />
+                  </FormField>
+                  <FormField label={t("complete-profile.address")}>
+                    <input className="kk-input" value={formData.address} onChange={(event) => updateField("address", event.target.value)} />
+                  </FormField>
+                </FormGrid>
+                <FormStepActions nextLabel="Review workspace" onNext={() => setStep(2)} disableNext={!formData.phone || !formData.pincode} />
+              </FormSection>
+            ) : null}
 
-            {error && <p className="text-red-500 text-sm font-bold">{error}</p>}
-
-            <button
-              type="submit"
-              disabled={isVerifying}
-              className="w-full bg-primary text-white font-black py-4 rounded-2xl flex items-center justify-center gap-2 hover:opacity-90 transition-all disabled:opacity-50"
-            >
-              {isVerifying ? <span className="material-symbols-outlined animate-spin">sync</span> : null}
-              {langText("Complete Profile", "प्रोफाइल पूर्ण करा")}
-            </button>
+            {step === 2 ? (
+              <FormSection title="Workspace preference and review" description="You can switch between owner and renter later. This just sets the initial preference.">
+                <FormField label={t("complete-profile.preferred_workspace")} required>
+                  <ChoicePills
+                    value={formData.role}
+                    onChange={(value) => updateField("role", value)}
+                    options={[
+                      { label: t("complete-profile.renter"), value: "renter" },
+                      { label: t("complete-profile.owner"), value: "owner" },
+                    ]}
+                  />
+                </FormField>
+                <ReviewList
+                  items={[
+                    { label: t("complete-profile.phone_number"), value: formData.phone },
+                    { label: t("complete-profile.pin_code"), value: formData.pincode },
+                    { label: t("complete-profile.village_city"), value: formData.village || "-" },
+                    { label: t("complete-profile.address"), value: formData.address || "-" },
+                    { label: t("complete-profile.preferred_workspace"), value: formData.role === "owner" ? t("complete-profile.owner") : t("complete-profile.renter") },
+                  ]}
+                />
+                <FormStepActions backLabel="Back" nextLabel={isPending ? t("complete-profile.saving") : t("complete-profile.complete_profile")} onBack={() => setStep(1)} submit disableNext={isPending} />
+              </FormSection>
+            ) : null}
           </form>
-        </div>
+        </FormShell>
       </main>
       <Footer />
     </div>
   );
 }
+
+

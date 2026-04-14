@@ -1,0 +1,62 @@
+[
+  {
+    "id": "BK-9442",
+    "listingId": "2",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-2",
+    "status": "upcoming",
+    "startDate": "2024-11-20",
+    "endDate": "2024-11-21",
+    "amount": 2400,
+    "createdAt": "2024-11-10T09:00:00.000Z",
+    "updatedAt": "2024-11-10T09:00:00.000Z"
+  },
+  {
+    "id": "BK-8915",
+    "listingId": "4",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-1",
+    "status": "completed",
+    "startDate": "2024-11-10",
+    "endDate": "2024-11-12",
+    "amount": 3400,
+    "createdAt": "2024-11-08T09:00:00.000Z",
+    "updatedAt": "2024-11-12T18:00:00.000Z"
+  },
+  {
+    "id": "BK-8800",
+    "listingId": "5",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-3",
+    "status": "completed",
+    "startDate": "2024-11-06",
+    "endDate": "2024-11-08",
+    "amount": 1800,
+    "createdAt": "2024-11-04T09:00:00.000Z",
+    "updatedAt": "2024-11-08T18:00:00.000Z"
+  },
+  {
+    "id": "BK-9054",
+    "listingId": "5",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-3",
+    "status": "pending",
+    "startDate": "2024-10-24",
+    "endDate": "2024-10-26",
+    "amount": 4200,
+    "createdAt": "2024-10-22T09:00:00.000Z",
+    "updatedAt": "2024-10-22T09:00:00.000Z"
+  },
+  {
+    "id": "BK-9108",
+    "listingId": "4",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-2",
+    "status": "confirmed",
+    "startDate": "2024-10-28",
+    "endDate": "2024-10-29",
+    "amount": 2850,
+    "createdAt": "2024-10-25T09:00:00.000Z",
+    "updatedAt": "2024-10-25T09:00:00.000Z"
+  }
+]

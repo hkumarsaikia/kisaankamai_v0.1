@@ -10,9 +10,11 @@
 # next.js
 /.next/
 /out/
+/apps/production/.next/
 
 # production
 /build
+/apps/production/node_modules/
 
 # misc
 .DS_Store
@@ -24,6 +26,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 tunnel.log
+logs/runtime/*.log
+logs/runtime/*.err.log
+logs/runtime/*.out.log
 
 # local env files
 .env*.local

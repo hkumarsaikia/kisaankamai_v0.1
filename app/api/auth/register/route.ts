@@ -1,63 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
+import { registerAndCreateSession } from "@/lib/server/local-auth";
 import { registerInputSchema } from "@/lib/validation/forms";
-import {
-  assertCollectionConfigured,
-  getAdminDatabases,
-  getAdminUsers,
-  ID,
-  SERVER_APPWRITE_CONFIG,
-} from "@/lib/server/appwrite-admin";
-import { assertMutationRequestAllowed, compactRecord, handleRouteError, parseJsonBody } from "@/lib/server/http";
+
+export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    const payload = await parseJsonBody(request, registerInputSchema);
-    assertMutationRequestAllowed();
-    const email = payload.email || `${payload.phone}@kisankamai.com`;
-    const userId = ID.unique();
+    const payload = registerInputSchema.parse(await request.json());
+    const session = await registerAndCreateSession(payload);
 
-    const user = await getAdminUsers().create(
-      userId,
-      email,
-      `+91${payload.phone}`,
-      payload.password,
-      payload.fullName
-    );
-
-    if (payload.email) {
-      await getAdminUsers().updateEmailVerification(user.$id, true);
+    if (!session) {
+      return NextResponse.json({ ok: false, error: "Registration failed." }, { status: 400 });
     }
-
-    if (payload.otpVerified) {
-      await getAdminUsers().updatePhoneVerification(user.$id, true);
-    }
-
-    await getAdminDatabases().createDocument(
-      SERVER_APPWRITE_CONFIG.databaseId!,
-      assertCollectionConfigured(
-        SERVER_APPWRITE_CONFIG.userCollectionId,
-        "user profile collection"
-      ),
-      user.$id,
-      compactRecord({
-        fullName: payload.fullName,
-        email,
-        phone: payload.phone,
-        address: payload.address,
-        village: payload.village,
-        pincode: payload.pincode,
-        fieldArea: payload.fieldArea,
-        role: payload.role,
-        createdAt: new Date().toISOString(),
-      })
-    );
 
     return NextResponse.json({
       ok: true,
-      userId: user.$id,
-      email,
+      userId: session.user.id,
+      email: session.user.email,
     });
   } catch (error) {
-    return handleRouteError(error);
+    const message = error instanceof Error ? error.message : "Registration failed.";
+    return NextResponse.json({ ok: false, error: message }, { status: 400 });
   }
 }

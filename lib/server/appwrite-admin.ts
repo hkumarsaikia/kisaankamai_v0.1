@@ -2,7 +2,6 @@ import "server-only";
 
 import { Account, Client, Databases, ID, Query, Users } from "node-appwrite";
 import { APPWRITE_ENDPOINT, APPWRITE_PROJECT_ID } from "@/lib/appwrite";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
 
 function requiredEnv(name: string) {
   return process.env[name]?.trim();
@@ -42,7 +41,7 @@ function createJwtClient(jwt: string) {
 }
 
 export function canUseServerAppwrite() {
-  return !IS_PAGES_BUILD && Boolean(
+  return Boolean(
     SERVER_APPWRITE_CONFIG.apiKey &&
       SERVER_APPWRITE_CONFIG.databaseId
   );
@@ -53,10 +52,6 @@ export function canUseServerEquipment() {
 }
 
 export function assertServerMutationsEnabled() {
-  if (IS_PAGES_BUILD) {
-    throw new Error("Server mutation APIs are unavailable in the Pages export build.");
-  }
-
   if (!canUseServerAppwrite()) {
     throw new Error("Server Appwrite configuration is missing. Add APPWRITE_API_KEY and APPWRITE_DATABASE_ID.");
   }

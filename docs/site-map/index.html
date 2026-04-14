@@ -3,151 +3,1916 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Kisan Kamai Site Map</title>
+    <title>Kisan Kamai Static Site Map</title>
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-    <div class="site-map-shell">
-      <header class="masthead card">
-        <div class="masthead-copy">
-          <span class="eyebrow">Documentation Artifact</span>
-          <h1>Kisan Kamai Flow Atlas</h1>
-          <p>
-            Switch between the structural website map and journey-based goal flows. Inspect page
-            relationships, auth routing, listing funnels, booking funnels, and live target links
-            from one standalone viewer.
-          </p>
-        </div>
-
-        <div class="masthead-side">
-          <div class="segmented-block">
-            <span class="block-label">Theme</span>
-            <div class="segmented-control" id="theme-switcher">
-              <button type="button" data-theme-mode="system">System</button>
-              <button type="button" data-theme-mode="light">Light</button>
-              <button type="button" data-theme-mode="dark">Dark</button>
-            </div>
-          </div>
-
-          <div class="segmented-block">
-            <span class="block-label">Perspective</span>
-            <div class="segmented-control" id="perspective-switcher">
-              <button type="button" data-perspective="structure">Structure Map</button>
-              <button type="button" data-perspective="journey">Journey Lenses</button>
-            </div>
-          </div>
-        </div>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Documentation Artifact</p>
+        <h1>Kisan Kamai Static Site Map</h1>
+        <p class="lede">Generated route inventory for the current codebase. This static document replaces the old graph viewer and keeps route groups, shared surfaces, unresolved internal references, and external destinations visible without any interactive graph tooling.</p>
+        <p class="timestamp">Generated: <code>2026-04-13T18:21:41.863Z</code></p>
       </header>
 
-      <section class="control-strip card">
-        <div class="control-grid">
-          <div class="control-field">
-            <label for="search-input">Search</label>
-            <input id="search-input" type="search" placeholder="Search route, component, milestone, or source file" />
-          </div>
+      <section class="summary-grid">
+        <article class="summary-card"><h2>Total Routes</h2><p>48</p></article>
+        <article class="summary-card"><h2>Shared Surfaces</h2><p>9</p></article>
+        <article class="summary-card"><h2>Unresolved Internal References</h2><p>5</p></article>
+        <article class="summary-card"><h2>External Destinations</h2><p>8</p></article>
+      </section>
 
-          <div class="control-field">
-            <label for="base-url-input">Base URL for internal targets</label>
-            <input id="base-url-input" type="url" placeholder="http://localhost:3000" />
-          </div>
-
-          <div class="control-actions">
-            <button id="reset-view-button" type="button">Reset View</button>
-            <button id="fit-graph-button" type="button">Fit Graph</button>
-            <button id="clear-search-button" type="button">Clear Search</button>
-          </div>
+      
+      <section class="section">
+        <div class="section-heading">
+          <h2>Public</h2>
+          <span class="badge badge-group">13 routes</span>
         </div>
+        <div class="route-grid">
+          
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/</code></h3>
+                      <p>Home</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span><span class="badge badge-surface">LazyMap</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/categories</code></li><li><code>/list-equipment</code></li><li><code>/models</code></li><li><code>/rent-equipment</code></li><li><code>/support</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/rent-equipment</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/about</code></h3>
+                      <p>About</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/about/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/faq</code></h3>
+                      <p>Faq</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/faq/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/legal</code></h3>
+                      <p>Legal</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/legal/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/list-equipment</code></h3>
+                      <p>List Equipment</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/list-equipment/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-benefits</code></h3>
+                      <p>Owner Benefits</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-benefits/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-dashboard</code></h3>
+                      <p>Owner Dashboard</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-dashboard/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-dashboard/[...segments]</code></h3>
+                      <p>Owner Dashboard / ...Segments</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-dashboard/[...segments]/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-experience</code></h3>
+                      <p>Owner Experience</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-experience/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/partner</code></h3>
+                      <p>Partner</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/partner/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><ul class="link-list"><li><code>mailto:partners@kisankamai.com</code></li></ul></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-dashboard</code></h3>
+                      <p>Renter Dashboard</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-dashboard/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-dashboard/[...segments]</code></h3>
+                      <p>Renter Dashboard / ...Segments</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-dashboard/[...segments]/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/trust-safety</code></h3>
+                      <p>Trust Safety</p>
+                    </div>
+                    <span class="badge badge-group">public</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/trust-safety/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><ul class="link-list"><li><code>mailto:Support@krishiseva.in</code></li><li><code>tel:+918001234567</code></li></ul></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+        </div>
+      </section>
+    
+      <section class="section">
+        <div class="section-heading">
+          <h2>Discovery</h2>
+          <span class="badge badge-group">11 routes</span>
+        </div>
+        <div class="route-grid">
+          
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/booking</code></h3>
+                      <p>Booking</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/booking/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/booking/[equipmentId]</code></h3>
+                      <p>Booking / EquipmentId</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/booking/[equipmentId]/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/catalog/[slug]</code></h3>
+                      <p>Catalog / Slug</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/catalog/[slug]/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/catalog/[slug]/gallery</code></h3>
+                      <p>Catalog / Slug / Gallery</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/catalog/[slug]/gallery/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/categories</code></h3>
+                      <p>Categories</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/categories/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/models</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/equipment/[id]</code></h3>
+                      <p>Equipment / Id</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/equipment/[id]/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/locations</code></h3>
+                      <p>Locations</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/locations/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span><span class="badge badge-surface">LazyMap</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/support</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><ul class="link-list"><li><code>/locations/${hub.slug}</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/locations/[city]</code></h3>
+                      <p>Locations / City</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/locations/[city]/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span><span class="badge badge-surface">LazyMap</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/locations</code></li><li><code>/rent-equipment</code></li><li><code>/support</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/locations/${params.city}/no-results</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><ul class="link-list"><li><code>/locations/${params.city}/no-results</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/locations/[city]/no-results</code></h3>
+                      <p>Locations / City / No Results</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/locations/[city]/no-results/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/models</code></h3>
+                      <p>Models</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/models/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/rent-equipment</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/rent-equipment</code></h3>
+                      <p>Rent Equipment</p>
+                    </div>
+                    <span class="badge badge-group">discovery</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/rent-equipment/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><p class="empty">No shared chrome detected</p></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+        </div>
+      </section>
+    
+      <section class="section">
+        <div class="section-heading">
+          <h2>Auth</h2>
+          <span class="badge badge-group">6 routes</span>
+        </div>
+        <div class="route-grid">
+          
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/complete-profile</code></h3>
+                      <p>Complete Profile</p>
+                    </div>
+                    <span class="badge badge-group">auth</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/complete-profile/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/login</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/login</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/forgot-password</code></h3>
+                      <p>Forgot Password</p>
+                    </div>
+                    <span class="badge badge-group">auth</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/forgot-password/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/login</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/login</code></h3>
+                      <p>Login</p>
+                    </div>
+                    <span class="badge badge-group">auth</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/login/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/forgot-password</code></li><li><code>/register</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/profile-selection</code></h3>
+                      <p>Profile Selection</p>
+                    </div>
+                    <span class="badge badge-group">auth</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/profile-selection/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">LanguageToggle</span><span class="badge badge-surface">ThemeToggle</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/</code></li><li><code>/login</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/login</code></li><li><code>/</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/register</code></h3>
+                      <p>Register</p>
+                    </div>
+                    <span class="badge badge-group">auth</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/register/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/login</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/verify-contact</code></h3>
+                      <p>Verify Contact</p>
+                    </div>
+                    <span class="badge badge-group">auth</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/verify-contact/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/complete-profile</code></li><li><code>/profile-selection</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+        </div>
+      </section>
+    
+      <section class="section">
+        <div class="section-heading">
+          <h2>Owner</h2>
+          <span class="badge badge-group">8 routes</span>
+        </div>
+        <div class="route-grid">
+          
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-profile</code></h3>
+                      <p>Owner Profile</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-profile/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/owner-profile/bookings</code></li><li><code>/owner-profile/revenue</code></li><li><code>/owner-profile/support</code></li><li><code>/owner-registration</code></li><li><code>/support</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-profile/add-listing</code></h3>
+                      <p>Owner Profile / Add Listing</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-profile/add-listing/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-profile/bookings</code></h3>
+                      <p>Owner Profile / Bookings</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-profile/bookings/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-profile/equipment</code></h3>
+                      <p>Owner Profile / Equipment</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-profile/equipment/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/owner-registration</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-profile/revenue</code></h3>
+                      <p>Owner Profile / Revenue</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-profile/revenue/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-profile/settings</code></h3>
+                      <p>Owner Profile / Settings</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-profile/settings/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-profile/support</code></h3>
+                      <p>Owner Profile / Support</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-profile/support/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/faq</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><ul class="link-list"><li><code>https://wa.me/#</code></li><li><code>mailto:support@kisankamai.in</code></li><li><code>tel:+</code></li></ul></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/owner-registration</code></h3>
+                      <p>Owner Registration</p>
+                    </div>
+                    <span class="badge badge-group">owner</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/owner-registration/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">OwnerSidebar</span><span class="badge badge-surface">OwnerTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/profile-selection</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/profile-selection</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+        </div>
+      </section>
+    
+      <section class="section">
+        <div class="section-heading">
+          <h2>Renter</h2>
+          <span class="badge badge-group">7 routes</span>
+        </div>
+        <div class="route-grid">
+          
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-profile</code></h3>
+                      <p>Renter Profile</p>
+                    </div>
+                    <span class="badge badge-group">renter</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-profile/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">RenterSidebar</span><span class="badge badge-surface">RenterTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/renter-profile/bookings</code></li><li><code>/renter-profile/browse</code></li><li><code>/support</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-profile/bookings</code></h3>
+                      <p>Renter Profile / Bookings</p>
+                    </div>
+                    <span class="badge badge-group">renter</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-profile/bookings/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">RenterSidebar</span><span class="badge badge-surface">RenterTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-profile/browse</code></h3>
+                      <p>Renter Profile / Browse</p>
+                    </div>
+                    <span class="badge badge-group">renter</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-profile/browse/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">RenterSidebar</span><span class="badge badge-surface">RenterTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><ul class="link-list"><li><code>/booking/${item.id}</code></li><li><code>/equipment/${item.id}</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-profile/payments</code></h3>
+                      <p>Renter Profile / Payments</p>
+                    </div>
+                    <span class="badge badge-group">renter</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-profile/payments/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">RenterSidebar</span><span class="badge badge-surface">RenterTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-profile/saved</code></h3>
+                      <p>Renter Profile / Saved</p>
+                    </div>
+                    <span class="badge badge-group">renter</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-profile/saved/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">RenterSidebar</span><span class="badge badge-surface">RenterTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/renter-profile/browse</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><ul class="link-list"><li><code>/booking/${item.id}</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-profile/settings</code></h3>
+                      <p>Renter Profile / Settings</p>
+                    </div>
+                    <span class="badge badge-group">renter</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-profile/settings/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">RenterSidebar</span><span class="badge badge-surface">RenterTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/renter-profile/switch-profile</code></h3>
+                      <p>Renter Profile / Switch Profile</p>
+                    </div>
+                    <span class="badge badge-group">renter</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/renter-profile/switch-profile/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">RenterSidebar</span><span class="badge badge-surface">RenterTopBar</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+        </div>
+      </section>
+    
+      <section class="section">
+        <div class="section-heading">
+          <h2>Support</h2>
+          <span class="badge badge-group">3 routes</span>
+        </div>
+        <div class="route-grid">
+          
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/feedback</code></h3>
+                      <p>Feedback</p>
+                    </div>
+                    <span class="badge badge-group">support</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/feedback/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><p class="empty">No internal destinations</p></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/feedback/success</code></h3>
+                      <p>Feedback / Success</p>
+                    </div>
+                    <span class="badge badge-group">support</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/feedback/success/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/</code></li><li><code>/rent-equipment</code></li><li><code>/support</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><p class="empty">No external destinations</p></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>/support</code></h3>
+                      <p>Support</p>
+                    </div>
+                    <span class="badge badge-group">support</span>
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>app/support/page.tsx</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd><div class="badge-row"><span class="badge badge-surface">Footer</span><span class="badge badge-surface">Header</span><span class="badge badge-surface">LazyMap</span></div></dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd><ul class="link-list"><li><code>/faq</code></li><li><code>/list-equipment</code></li></ul></dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd><p class="empty">No redirect/programmatic destinations inferred</p></dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd><p class="empty">No unresolved references</p></dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd><ul class="link-list"><li><code>mailto:support@kisankamai.com</code></li><li><code>tel:+9118005472652624</code></li></ul></dd>
+                    </div>
+                  </dl>
+                </article>
+              
+        </div>
+      </section>
+    
 
-        <div class="lens-strip" id="lens-strip" hidden>
-          <div class="segmented-block lens-block">
-            <span class="block-label">Journey Lens</span>
-            <div class="segmented-control" id="lens-switcher"></div>
-          </div>
-          <div class="lens-summary" id="lens-summary"></div>
+      <section class="section">
+        <div class="section-heading">
+          <h2>Shared Surfaces</h2>
+          <span class="badge badge-surface">9 surfaces</span>
+        </div>
+        <div class="route-grid">
+          
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>Footer</h3>
+                    <span class="badge badge-surface">24 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/</span><span class="badge badge-route">/about</span><span class="badge badge-route">/catalog/[slug]</span><span class="badge badge-route">/catalog/[slug]/gallery</span><span class="badge badge-route">/categories</span><span class="badge badge-route">/complete-profile</span><span class="badge badge-route">/faq</span><span class="badge badge-route">/feedback</span><span class="badge badge-route">/feedback/success</span><span class="badge badge-route">/forgot-password</span><span class="badge badge-route">/legal</span><span class="badge badge-route">/list-equipment</span><span class="badge badge-route">/locations</span><span class="badge badge-route">/locations/[city]</span><span class="badge badge-route">/locations/[city]/no-results</span><span class="badge badge-route">/login</span><span class="badge badge-route">/models</span><span class="badge badge-route">/owner-benefits</span><span class="badge badge-route">/owner-experience</span><span class="badge badge-route">/partner</span><span class="badge badge-route">/register</span><span class="badge badge-route">/support</span><span class="badge badge-route">/trust-safety</span><span class="badge badge-route">/verify-contact</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>Header</h3>
+                    <span class="badge badge-surface">24 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/</span><span class="badge badge-route">/about</span><span class="badge badge-route">/catalog/[slug]</span><span class="badge badge-route">/catalog/[slug]/gallery</span><span class="badge badge-route">/categories</span><span class="badge badge-route">/complete-profile</span><span class="badge badge-route">/faq</span><span class="badge badge-route">/feedback</span><span class="badge badge-route">/feedback/success</span><span class="badge badge-route">/forgot-password</span><span class="badge badge-route">/legal</span><span class="badge badge-route">/list-equipment</span><span class="badge badge-route">/locations</span><span class="badge badge-route">/locations/[city]</span><span class="badge badge-route">/locations/[city]/no-results</span><span class="badge badge-route">/login</span><span class="badge badge-route">/models</span><span class="badge badge-route">/owner-benefits</span><span class="badge badge-route">/owner-experience</span><span class="badge badge-route">/partner</span><span class="badge badge-route">/register</span><span class="badge badge-route">/support</span><span class="badge badge-route">/trust-safety</span><span class="badge badge-route">/verify-contact</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>LanguageToggle</h3>
+                    <span class="badge badge-surface">1 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/profile-selection</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>LazyMap</h3>
+                    <span class="badge badge-surface">4 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/</span><span class="badge badge-route">/locations</span><span class="badge badge-route">/locations/[city]</span><span class="badge badge-route">/support</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>OwnerSidebar</h3>
+                    <span class="badge badge-surface">8 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/owner-profile</span><span class="badge badge-route">/owner-profile/add-listing</span><span class="badge badge-route">/owner-profile/bookings</span><span class="badge badge-route">/owner-profile/equipment</span><span class="badge badge-route">/owner-profile/revenue</span><span class="badge badge-route">/owner-profile/settings</span><span class="badge badge-route">/owner-profile/support</span><span class="badge badge-route">/owner-registration</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>OwnerTopBar</h3>
+                    <span class="badge badge-surface">8 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/owner-profile</span><span class="badge badge-route">/owner-profile/add-listing</span><span class="badge badge-route">/owner-profile/bookings</span><span class="badge badge-route">/owner-profile/equipment</span><span class="badge badge-route">/owner-profile/revenue</span><span class="badge badge-route">/owner-profile/settings</span><span class="badge badge-route">/owner-profile/support</span><span class="badge badge-route">/owner-registration</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>RenterSidebar</h3>
+                    <span class="badge badge-surface">7 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/renter-profile</span><span class="badge badge-route">/renter-profile/bookings</span><span class="badge badge-route">/renter-profile/browse</span><span class="badge badge-route">/renter-profile/payments</span><span class="badge badge-route">/renter-profile/saved</span><span class="badge badge-route">/renter-profile/settings</span><span class="badge badge-route">/renter-profile/switch-profile</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>RenterTopBar</h3>
+                    <span class="badge badge-surface">7 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/renter-profile</span><span class="badge badge-route">/renter-profile/bookings</span><span class="badge badge-route">/renter-profile/browse</span><span class="badge badge-route">/renter-profile/payments</span><span class="badge badge-route">/renter-profile/saved</span><span class="badge badge-route">/renter-profile/settings</span><span class="badge badge-route">/renter-profile/switch-profile</span></div>
+                </article>
+              
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>ThemeToggle</h3>
+                    <span class="badge badge-surface">1 routes</span>
+                  </div>
+                  <div class="badge-row"><span class="badge badge-route">/profile-selection</span></div>
+                </article>
+              
         </div>
       </section>
 
-      <section class="stats-row" id="stat-cards"></section>
+      <section class="section">
+        <div class="section-heading">
+          <h2>Unresolved Internal References</h2>
+          <span class="badge badge-warning">5 unresolved</span>
+        </div>
+        <div class="table-card">
+          <table><thead><tr><th>From Route</th><th>Missing Path</th><th>Source File</th></tr></thead><tbody><tr><td><code>/locations</code></td><td><code>/locations/${hub.slug}</code></td><td><code>app/locations/page.tsx</code></td></tr><tr><td><code>/locations/[city]</code></td><td><code>/locations/${params.city}/no-results</code></td><td><code>app/locations/[city]/page.tsx</code></td></tr><tr><td><code>/renter-profile/browse</code></td><td><code>/booking/${item.id}</code></td><td><code>app/renter-profile/browse/page.tsx</code></td></tr><tr><td><code>/renter-profile/browse</code></td><td><code>/equipment/${item.id}</code></td><td><code>app/renter-profile/browse/page.tsx</code></td></tr><tr><td><code>/renter-profile/saved</code></td><td><code>/booking/${item.id}</code></td><td><code>app/renter-profile/saved/page.tsx</code></td></tr></tbody></table>
+        </div>
+      </section>
 
-      <main class="workspace-grid">
-        <aside class="left-rail">
-          <section class="card rail-card">
-            <div class="rail-heading">
-              <h2>Current View</h2>
-              <p id="graph-mode-summary">Structural relationship network.</p>
-            </div>
-            <div class="graph-meta" id="graph-meta"></div>
-          </section>
-
-          <section class="card rail-card">
-            <div class="rail-heading">
-              <h2>Node Groups</h2>
-              <p>Toggle page families and supporting node types.</p>
-            </div>
-            <div id="group-filters" class="filter-list"></div>
-          </section>
-
-          <section class="card rail-card">
-            <div class="rail-heading">
-              <h2>Edge Types</h2>
-              <p>Filter structural, inferred, redirect, and journey edges.</p>
-            </div>
-            <div id="edge-filters" class="filter-list"></div>
-          </section>
-
-          <section class="card rail-card">
-            <div class="rail-heading">
-              <h2>Legend</h2>
-              <p>Visual encoding for the active graph.</p>
-            </div>
-            <ul class="legend-list" id="legend-list"></ul>
-          </section>
-        </aside>
-
-        <section class="graph-stage card">
-          <div class="graph-stage-header">
-            <div>
-              <span class="eyebrow eyebrow-inline" id="graph-mode-badge">Structure Map</span>
-              <h2 id="graph-title">Site Structure Map</h2>
-              <p id="graph-description">
-                Full relationship graph of pages, shared navigation surfaces, redirects, external
-                links, and inferred connections.
-              </p>
-            </div>
-          </div>
-
-          <div class="graph-canvas-wrap">
-            <svg id="graph-svg" viewBox="0 0 2800 1800" aria-label="Website relationship map">
-              <defs>
-                <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-                  <path d="M0,0 L10,5 L0,10 z"></path>
-                </marker>
-              </defs>
-              <rect id="graph-background" x="0" y="0" width="2800" height="1800"></rect>
-              <g id="graph-viewport">
-                <g id="group-layer"></g>
-                <g id="edge-layer"></g>
-                <g id="node-layer"></g>
-              </g>
-            </svg>
-          </div>
-        </section>
-
-        <aside class="details-panel card" id="details-panel">
-          <div class="details-empty">
-            <span class="eyebrow eyebrow-inline">Inspector</span>
-            <h2>Select a node</h2>
-            <p>
-              Inspect routes, components, external destinations, missing targets, inferred logic
-              nodes, and journey milestones from here.
-            </p>
-          </div>
-        </aside>
-      </main>
-    </div>
-
-    <script src="./annotations.js"></script>
-    <script src="./map-data.js"></script>
-    <script src="./viewer.js"></script>
+      <section class="section">
+        <div class="section-heading">
+          <h2>External Destinations</h2>
+          <span class="badge badge-external">8 external links</span>
+        </div>
+        <div class="table-card">
+          <table><thead><tr><th>From Route</th><th>Destination</th><th>Host</th><th>Surface</th></tr></thead><tbody><tr><td><code>/owner-profile/support</code></td><td><code>https://wa.me/#</code></td><td>wa.me</td><td>custom-domain</td></tr><tr><td><code>/owner-profile/support</code></td><td><code>mailto:support@kisankamai.in</code></td><td>-</td><td>localhost</td></tr><tr><td><code>/owner-profile/support</code></td><td><code>tel:+</code></td><td>-</td><td>localhost</td></tr><tr><td><code>/partner</code></td><td><code>mailto:partners@kisankamai.com</code></td><td>-</td><td>localhost</td></tr><tr><td><code>/support</code></td><td><code>mailto:support@kisankamai.com</code></td><td>-</td><td>localhost</td></tr><tr><td><code>/support</code></td><td><code>tel:+9118005472652624</code></td><td>-</td><td>localhost</td></tr><tr><td><code>/trust-safety</code></td><td><code>mailto:Support@krishiseva.in</code></td><td>-</td><td>localhost</td></tr><tr><td><code>/trust-safety</code></td><td><code>tel:+918001234567</code></td><td>-</td><td>localhost</td></tr></tbody></table>
+        </div>
+      </section>
+    </main>
   </body>
 </html>

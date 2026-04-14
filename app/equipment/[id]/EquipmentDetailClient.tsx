@@ -1,17 +1,18 @@
 "use client";
 
+import Image from "next/image";
+import { FormEvent, useMemo, useState, useTransition } from "react";
+import { createBookingAction } from "@/lib/actions/local-data";
+import { AppLink as Link } from "@/components/AppLink";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { LazyMap } from "@/components/LazyMap";
 import { ScrollReveal, ScrollRevealGroup, ScrollRevealItem } from "@/components/ScrollReveal";
 import { useLanguage } from "@/components/LanguageContext";
-import { postJson, SubmissionError } from "@/lib/client/forms";
+import { Button } from "@/components/ui/button";
 import type { EquipmentRecord } from "@/lib/equipment";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
-import { assetPath } from "@/lib/site";
-import { bookingRequestSchema } from "@/lib/validation/forms";
-import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
+import { createListingMarker } from "@/lib/map-data";
 
 export default function EquipmentDetailClient({
   equipment,
@@ -20,10 +21,10 @@ export default function EquipmentDetailClient({
   equipment: EquipmentRecord;
   relatedEquipment: EquipmentRecord[];
 }) {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
+  const router = useSmoothRouter();
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [formState, setFormState] = useState({
     fieldLocation: "",
     workType: equipment.workTypes[0] || "Ploughing",
@@ -32,78 +33,44 @@ export default function EquipmentDetailClient({
   });
 
   const markers = useMemo(
-    () => [
-      {
-        lat: 16.86,
-        lng: 74.57,
-        label: equipment.name,
-        sublabel: `${equipment.location}, ${equipment.district}`,
-        color: "#693c00",
-      },
-    ],
+    () => createListingMarker(equipment.name, equipment.location, equipment.district),
     [equipment]
   );
 
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
-    setSuccess("");
 
-    const parsed = bookingRequestSchema.safeParse({
-      sourcePath: `/equipment/${equipment.id}`,
-      equipmentId: equipment.id,
-      equipmentName: equipment.name,
-      fieldLocation: formState.fieldLocation,
-      workType: formState.workType,
-      approxHours: formState.approxHours,
-      phone: formState.phone,
-      startDate: "",
-      duration: "",
-      task: formState.workType,
-      fieldSize: "",
-    });
-
-    if (!parsed.success) {
-      setError(
-        parsed.error.flatten().formErrors[0] ||
-          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          langText("Please complete the booking request form.", "कृपया booking request form पूर्ण करा.")
-      );
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/booking-request", parsed.data);
-      }
-      setSuccess(
-        langText(
-          "Booking request sent. Our team will confirm availability shortly.",
-          "Booking विनंती पाठवली. आमची टीम लवकरच उपलब्धता निश्चित करेल."
-        )
-      );
-      setFormState({
-        fieldLocation: "",
-        workType: equipment.workTypes[0] || "Ploughing",
-        approxHours: "",
-        phone: "",
+    startTransition(async () => {
+      const result = await createBookingAction({
+        sourcePath: `/equipment/${equipment.id}`,
+        equipmentId: equipment.id,
+        equipmentName: equipment.name,
+        fieldLocation: formState.fieldLocation,
+        workType: formState.workType,
+        approxHours: formState.approxHours,
+        phone: formState.phone,
+        startDate: "",
+        duration: "",
+        task: formState.workType,
+        fieldSize: "",
       });
-    } catch (submitError) {
-      if (submitError instanceof SubmissionError) {
-        setError(submitError.message);
-      } else {
+
+      if (!result.ok) {
+        if (result.error === "Renter access required." || result.error === "Login required.") {
+          router.push("/login");
+          return;
+        }
+
         setError(
-          langText(
-            "Could not submit the booking request right now.",
-            "सध्या booking request पाठवता आली नाही."
-          )
+          result.error ||
+            t("equipment.id.EquipmentDetailClient.could_not_submit_the_booking_request_right_now")
         );
+        return;
       }
-    } finally {
-      setIsSubmitting(false);
-    }
+
+      router.push(result.redirectTo || "/renter-profile/bookings");
+    });
   };
 
   return (
@@ -125,26 +92,24 @@ export default function EquipmentDetailClient({
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
           <div className="space-y-10 lg:col-span-8">
             <ScrollReveal className="space-y-4">
-              <div className="aspect-[16/9] w-full overflow-hidden rounded-3xl bg-surface-variant dark:bg-slate-900/50">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="h-full w-full object-cover"
+              <div className="relative aspect-[16/9] w-full overflow-hidden rounded-3xl bg-surface-variant dark:bg-slate-900/50">
+                <Image
+                  className="object-cover"
                   alt={equipment.name}
-                  src={assetPath(equipment.coverImage)}
-                  loading="lazy"
-                  decoding="async"
+                  src={equipment.coverImage}
+                  fill
+                  sizes="(min-width: 1280px) 900px, (min-width: 1024px) 66vw, 100vw"
                 />
               </div>
               <div className="grid grid-cols-3 gap-4 md:grid-cols-4">
                 {equipment.galleryImages.slice(0, 4).map((image, index) => (
-                  <div key={`${image}-${index}`} className="aspect-square overflow-hidden rounded-2xl bg-surface-variant dark:bg-slate-900/50">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      className="h-full w-full object-cover"
+                  <div key={`${image}-${index}`} className="relative aspect-square overflow-hidden rounded-2xl bg-surface-variant dark:bg-slate-900/50">
+                    <Image
+                      className="object-cover"
                       alt={`${equipment.name} gallery ${index + 1}`}
-                      src={assetPath(image)}
-                      loading="lazy"
-                      decoding="async"
+                      src={image}
+                      fill
+                      sizes="(min-width: 768px) 180px, 30vw"
                     />
                   </div>
                 ))}
@@ -175,7 +140,7 @@ export default function EquipmentDetailClient({
               </div>
               <div className="rounded-3xl border border-outline-variant/30 bg-surface-container p-6 dark:border-slate-800/50 dark:bg-slate-900/50">
                 <p className="text-sm font-bold uppercase tracking-widest text-outline dark:text-slate-500">
-                  {langText("Rental starting at", "भाडे सुरू")}
+                  {t("equipment.id.EquipmentDetailClient.rental_starting_at")}
                 </p>
                 <p className="mt-2 text-3xl font-black text-primary dark:text-emerald-50">
                   ₹{equipment.pricePerHour}{" "}
@@ -207,7 +172,7 @@ export default function EquipmentDetailClient({
               <ScrollRevealItem>
                 <div className="space-y-6">
                   <h2 className="text-2xl font-black text-primary dark:text-emerald-50">
-                    {langText("Features & Inclusions", "वैशिष्ट्ये आणि समावेश")}
+                    {t("equipment.id.EquipmentDetailClient.features_and_inclusions")}
                   </h2>
                   <ul className="space-y-4">
                     {equipment.tags.map((tag) => (
@@ -231,7 +196,7 @@ export default function EquipmentDetailClient({
               <ScrollRevealItem>
                 <div className="space-y-6">
                   <h2 className="text-2xl font-black text-primary dark:text-emerald-50">
-                    {langText("Owner Details", "मालक माहिती")}
+                    {t("equipment.id.EquipmentDetailClient.owner_details")}
                   </h2>
                   <div className="flex items-center gap-5 rounded-3xl border border-outline-variant/20 bg-surface-container-low p-6 dark:border-slate-800/50 dark:bg-slate-900/40">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-white bg-slate-200 text-slate-500 shadow-lg dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300">
@@ -239,7 +204,7 @@ export default function EquipmentDetailClient({
                     </div>
                     <div>
                       <p className="text-xs font-black uppercase tracking-widest text-outline dark:text-slate-500">
-                        {langText("Listing Owner", "लिस्टिंग मालक")}
+                        {t("equipment.id.EquipmentDetailClient.listing_owner")}
                       </p>
                       <p className="text-xl font-black text-primary dark:text-emerald-50">{equipment.ownerName}</p>
                       <p className="mt-1 text-sm text-on-surface-variant dark:text-slate-400">
@@ -262,23 +227,23 @@ export default function EquipmentDetailClient({
 
           <aside className="lg:col-span-4">
             <div className="sticky top-28 space-y-6">
-              <div className="rounded-3xl border border-emerald-100 bg-white p-8 shadow-xl shadow-emerald-900/5 dark:border-slate-800/50 dark:bg-slate-900/40">
+              <div className="kk-form-compact-card p-8">
                 <div className="space-y-2">
                   <h3 className="text-2xl font-black text-primary dark:text-emerald-50">
-                    {langText("Reserve this Equipment", "हे उपकरण आरक्षित करा")}
+                    {t("equipment.id.EquipmentDetailClient.reserve_this_equipment")}
                   </h3>
                   <p className="text-sm font-medium text-on-surface-variant dark:text-slate-400">
-                    {langText("Check availability and request a booking callback.", "उपलब्धता तपासा आणि booking callback मागवा.")}
+                    {t("equipment.id.EquipmentDetailClient.check_availability_and_request_a_booking_callback")}
                   </p>
                 </div>
 
                 <form className="mt-6 space-y-4" onSubmit={handleBookingRequest}>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-black uppercase tracking-widest text-outline dark:text-slate-500">
-                      {langText("Field Location", "शेताचे स्थान")}
+                    <label className="kk-form-label">
+                      {t("equipment.id.EquipmentDetailClient.field_location")}
                     </label>
                     <input
-                      className="w-full rounded-xl bg-surface-container px-4 py-3 text-sm font-semibold dark:bg-slate-950/50 dark:text-white"
+                      className="kk-input"
                       placeholder="Village / Taluka name"
                       value={formState.fieldLocation}
                       onChange={(event) =>
@@ -288,11 +253,11 @@ export default function EquipmentDetailClient({
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="text-xs font-black uppercase tracking-widest text-outline dark:text-slate-500">
-                        {langText("Work Type", "कामाचा प्रकार")}
+                      <label className="kk-form-label">
+                        {t("equipment.id.EquipmentDetailClient.work_type")}
                       </label>
                       <select
-                        className="w-full rounded-xl bg-surface-container px-4 py-3 text-sm font-semibold dark:bg-slate-950/50 dark:text-white"
+                        className="kk-input"
                         value={formState.workType}
                         onChange={(event) =>
                           setFormState((prev) => ({ ...prev, workType: event.target.value }))
@@ -304,11 +269,11 @@ export default function EquipmentDetailClient({
                       </select>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-xs font-black uppercase tracking-widest text-outline dark:text-slate-500">
-                        {langText("Approx Hours", "अंदाजे तास")}
+                      <label className="kk-form-label">
+                        {t("equipment.id.EquipmentDetailClient.approx_hours")}
                       </label>
                       <input
-                        className="w-full rounded-xl bg-surface-container px-4 py-3 text-sm font-semibold dark:bg-slate-950/50 dark:text-white"
+                        className="kk-input"
                         placeholder="8"
                         type="number"
                         value={formState.approxHours}
@@ -319,11 +284,11 @@ export default function EquipmentDetailClient({
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-black uppercase tracking-widest text-outline dark:text-slate-500">
-                      {langText("Phone Number", "फोन नंबर")}
+                    <label className="kk-form-label">
+                      {t("equipment.id.EquipmentDetailClient.phone_number")}
                     </label>
                     <input
-                      className="w-full rounded-xl bg-surface-container px-4 py-3 text-sm font-semibold dark:bg-slate-950/50 dark:text-white"
+                      className="kk-input"
                       placeholder="+91 00000 00000"
                       value={formState.phone}
                       onChange={(event) =>
@@ -336,26 +301,23 @@ export default function EquipmentDetailClient({
                   </div>
 
                   {error ? <p className="text-sm font-semibold text-red-600 dark:text-red-400">{error}</p> : null}
-                  {success ? (
-                    <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{success}</p>
-                  ) : null}
-
-                  <button
+                  <Button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-xl bg-secondary py-4 font-black text-white shadow-lg shadow-secondary/20 transition-transform hover:scale-[1.02] disabled:opacity-60"
+                    disabled={isPending}
+                    className="w-full"
+                    variant="secondary"
                   >
-                    {isSubmitting
-                      ? langText("Submitting...", "पाठवत आहे...")
-                      : langText("Request Booking Callback", "बुकिंग कॉलबॅक विनंती")}
-                  </button>
+                    {isPending
+                      ? t("equipment.id.EquipmentDetailClient.submitting")
+                      : t("equipment.id.EquipmentDetailClient.request_booking_callback")}
+                  </Button>
                 </form>
               </div>
 
               {relatedEquipment.length ? (
                 <div className="space-y-4">
                   <h2 className="text-2xl font-black text-primary dark:text-emerald-50">
-                    {langText("Similar Equipment", "समान उपकरणे")}
+                    {t("equipment.id.EquipmentDetailClient.similar_equipment")}
                   </h2>
                   {relatedEquipment.map((item) => (
                     <Link
@@ -363,14 +325,15 @@ export default function EquipmentDetailClient({
                       href={`/equipment/${item.id}`}
                       className="flex items-center gap-4 rounded-2xl border border-outline-variant/20 bg-white p-4 shadow-sm transition-colors hover:border-secondary dark:border-slate-800/50 dark:bg-slate-900/40"
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        alt={item.name}
-                        className="h-20 w-20 rounded-xl object-cover"
-                        src={assetPath(item.coverImage)}
-                        loading="lazy"
-                        decoding="async"
-                      />
+                      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl">
+                        <Image
+                          alt={item.name}
+                          className="object-cover"
+                          src={item.coverImage}
+                          fill
+                          sizes="80px"
+                        />
+                      </div>
                       <div>
                         <p className="font-black text-primary dark:text-emerald-50">{item.name}</p>
                         <p className="mt-1 text-sm font-medium text-on-surface-variant dark:text-slate-400">
@@ -389,3 +352,5 @@ export default function EquipmentDetailClient({
     </main>
   );
 }
+
+

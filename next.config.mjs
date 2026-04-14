@@ -1,7 +1,4 @@
-const buildTarget = process.env.BUILD_TARGET === "pages" ? "pages" : "server";
-const isPagesBuild = buildTarget === "pages";
 const isDev = process.env.NODE_ENV !== "production";
-const pagesBasePath = "/kisaankamai_v0.1";
 
 function asOrigin(value) {
   if (!value) {
@@ -44,6 +41,7 @@ function buildCsp() {
       "https://lh3.googleusercontent.com",
       "https://*.googleusercontent.com",
       "https://*.tile.openstreetmap.org",
+      "https://*.basemaps.cartocdn.com",
       "https://www.gstatic.com",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
@@ -96,7 +94,6 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
-  ...(isPagesBuild ? { output: "export" } : {}),
   images: {
     unoptimized: true,
     remotePatterns: [
@@ -106,25 +103,16 @@ const nextConfig = {
       },
     ],
   },
-  env: {
-    NEXT_PUBLIC_BUILD_TARGET: buildTarget,
-    NEXT_PUBLIC_BASE_PATH: isPagesBuild ? pagesBasePath : "",
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+    ];
   },
-  basePath: isPagesBuild ? pagesBasePath : "",
-  assetPrefix: isPagesBuild ? `${pagesBasePath}/` : "",
-  ...(!isPagesBuild
-    ? {
-        async headers() {
-          return [
-            {
-              source: "/:path*",
-              headers: securityHeaders,
-            },
-          ];
-        },
-      }
-    : {}),
 };
 
 export default nextConfig;
+
 

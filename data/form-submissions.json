@@ -1,0 +1,79 @@
+[
+  {
+    "id": "submission-6bff1eeb",
+    "type": "feedback",
+    "payload": {
+      "fullName": "Dev Feedback",
+      "mobileNumber": "9876543210",
+      "role": "visitor",
+      "category": "Bug",
+      "subject": "Dev feedback",
+      "message": "Feedback route writes to local JSON correctly.",
+      "rating": 5,
+      "contactMe": false
+    },
+    "createdAt": "2026-04-13T10:08:18.354Z"
+  },
+  {
+    "id": "submission-69918d80",
+    "type": "support-request",
+    "payload": {
+      "fullName": "Dev Support",
+      "phone": "9876543210",
+      "category": "general",
+      "message": "Support route writes to local JSON correctly.",
+      "sourcePath": "/support"
+    },
+    "createdAt": "2026-04-13T10:08:19.013Z"
+  },
+  {
+    "id": "submission-d9116a74",
+    "type": "callback-request",
+    "payload": {
+      "fullName": "Dev Callback",
+      "phone": "9876543210",
+      "equipmentNeeded": "Tractor",
+      "location": "Kalwan"
+    },
+    "createdAt": "2026-04-13T10:08:19.542Z"
+  },
+  {
+    "id": "submission-f8a352d5",
+    "type": "booking-request",
+    "payload": {
+      "sourcePath": "/equipment/1",
+      "equipmentId": "1",
+      "equipmentName": "Mahindra 575 DI XP Plus",
+      "fieldLocation": "Satara",
+      "workType": "Ploughing",
+      "approxHours": 6,
+      "phone": "9876543210",
+      "startDate": "2026-04-22",
+      "duration": "6 hours",
+      "task": "Authenticated booking verification",
+      "fieldSize": 3
+    },
+    "userId": "user-08f613a4",
+    "listingId": "1",
+    "createdAt": "2026-04-13T10:20:21.423Z"
+  },
+  {
+    "id": "submission-277c0617",
+    "type": "booking-request",
+    "payload": {
+      "sourcePath": "/booking/1",
+      "equipmentId": "1",
+      "equipmentName": "Mahindra Novo 575 DI",
+      "fieldLocation": "Wakad",
+      "workType": "Ploughing",
+      "phone": "9864502960",
+      "startDate": "2026-04-15",
+      "duration": "1 Day",
+      "task": "Ploughing",
+      "fieldSize": 20
+    },
+    "userId": "owner-1",
+    "listingId": "1",
+    "createdAt": "2026-04-13T12:36:06.601Z"
+  }
+]

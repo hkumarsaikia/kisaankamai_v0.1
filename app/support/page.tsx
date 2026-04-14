@@ -1,25 +1,22 @@
 "use client";
 
-import { Header } from "@/components/Header";
+import Image from "next/image";
+import { FormEvent, useRef, useState } from "react";
+import { AppLink } from "@/components/AppLink";
 import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
 import { useLanguage } from "@/components/LanguageContext";
 import { LazyMap } from "@/components/LazyMap";
-import { postJson, SubmissionError } from "@/lib/client/forms";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
-import { assetPath } from "@/lib/site";
+import { FormActions, FormField, FormGrid, FormNotice, FormSection, FormShell } from "@/components/forms/FormKit";
+import {
+  submitCallbackRequestAction,
+  submitSupportRequestAction,
+} from "@/lib/actions/local-data";
+import { SUPPORT_HUB_MARKERS } from "@/lib/map-data";
 import { callbackRequestSchema, supportRequestSchema } from "@/lib/validation/forms";
-import { FormEvent, useRef, useState } from "react";
-
-const hubMarkers = [
-  { lat: 16.8547, lng: 74.5643, label: "Sangli Hub", sublabel: "Market Yard Road, Sangli 416416", color: "#00251a" },
-  { lat: 17.6805, lng: 74.0183, label: "Satara Hub", sublabel: "Bombay Restaurant Chowk, Satara 415001", color: "#934a24" },
-  { lat: 16.7050, lng: 74.2433, label: "Kolhapur Hub", sublabel: "Shiroli Pulachi, Kolhapur 416122", color: "#693c00" },
-  { lat: 20.48, lng: 73.80, label: "Kalwan Area Hub", sublabel: "Active Hub - Nashik Region", color: "#934a24" },
-  { lat: 18.77, lng: 77.36, label: "Mukhed Area Hub", sublabel: "HQ • Primary Hub - Nanded Region", color: "#00251a" },
-];
 
 export default function Support() {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
   const formRef = useRef<HTMLFormElement | null>(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -44,7 +41,7 @@ export default function Support() {
       setError(
         parsed.error.flatten().formErrors[0] ||
           Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          langText("Please complete the support form correctly.", "कृपया support form योग्यरित्या भरा.")
+          t("support.please_complete_the_support_form_correctly")
       );
       return;
     }
@@ -52,17 +49,14 @@ export default function Support() {
     setIsSubmitting(true);
 
     try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/support-request", parsed.data);
+      const result = await submitSupportRequestAction(parsed.data);
+      if (!result.ok) {
+        setError(result.error || t("support.could_not_submit_your_support_request_right_now"));
+        return;
       }
-      setSuccess(langText("Support request submitted.", "Support विनंती सबमिट झाली."));
+
+      setSuccess(t("support.support_request_submitted"));
       event.currentTarget.reset();
-    } catch (submitError) {
-      if (submitError instanceof SubmissionError) {
-        setError(submitError.message);
-      } else {
-        setError(langText("Could not submit your support request right now.", "सध्या support request submit करता आली नाही."));
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -87,23 +81,20 @@ export default function Support() {
       setError(
         parsed.error.flatten().formErrors[0] ||
           Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          langText("Enter your name and phone to request a callback.", "Callback साठी नाव आणि फोन टाका.")
+          t("support.enter_your_name_and_phone_to_request_a_callback")
       );
       return;
     }
 
     setIsSubmitting(true);
     try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/callback-request", parsed.data);
+      const result = await submitCallbackRequestAction(parsed.data);
+      if (!result.ok) {
+        setError(result.error || t("support.could_not_request_a_callback_right_now"));
+        return;
       }
-      setSuccess(langText("Callback request submitted.", "Callback विनंती सबमिट झाली."));
-    } catch (submitError) {
-      if (submitError instanceof SubmissionError) {
-        setError(submitError.message);
-      } else {
-        setError(langText("Could not request a callback right now.", "सध्या callback मागवता आली नाही."));
-      }
+
+      setSuccess(t("support.callback_request_submitted"));
     } finally {
       setIsSubmitting(false);
     }
@@ -117,18 +108,23 @@ export default function Support() {
         <section className="max-w-7xl mx-auto px-6 mb-16">
           <div className="relative overflow-hidden rounded-xl bg-primary-container p-8 md:p-16 text-white shadow-2xl">
             <div className="relative z-10 max-w-2xl">
-              <span className="inline-block px-4 py-1.5 bg-on-tertiary-container/20 text-on-tertiary-container rounded-full text-sm font-bold tracking-wide uppercase mb-6">{langText("Contact Us", "आमच्याशी संपर्क साधा")}</span>
+              <span className="inline-block px-4 py-1.5 bg-on-tertiary-container/20 text-on-tertiary-container rounded-full text-sm font-bold tracking-wide uppercase mb-6">{t("support.contact_us")}</span>
               <h1 className="text-4xl md:text-6xl font-extrabold font-headline leading-tight mb-6 tracking-tight">
-                {langText("We are here to help.", "आम्ही मदतीसाठी येथे आहोत.")} <br />
-                <span className="text-on-primary-container font-mukta">{langText("आम्ही मदतीसाठी येथे आहोत.", "We are here to help.")}</span>
+                {t("support.we_are_here_to_help")} <br />
+                <span className="text-on-primary-container font-mukta">{t("support.text")}</span>
               </h1>
               <p className="text-lg md:text-xl text-on-primary-fixed-variant max-w-xl font-medium leading-relaxed opacity-90">
-                {langText("Reach out to our team in Sangli, Satara, or Kolhapur for any equipment rental or listing support.", "कोणत्याही उपकरण भाड्याने किंवा सूचीबद्ध करण्याच्या सहाय्यासाठी सांगली, सातारा किंवा कोल्हापुरातील आमच्या टीमशी संपर्क साधा.")}
+                {t("support.reach_out_to_our_team_in_sangli_satara_or_kolhapur_for_any_equipment_rental_or_listing_support")}
               </p>
             </div>
             <div className="absolute right-0 top-0 w-1/3 h-full opacity-20 pointer-events-none hidden lg:block">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img alt="Farmer with phone" className="object-cover h-full w-full" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
+              <Image
+                alt="Farmer with phone"
+                className="object-cover"
+                src="/assets/generated/hero_tractor.png"
+                fill
+                sizes="33vw"
+              />
             </div>
           </div>
         </section>
@@ -138,16 +134,16 @@ export default function Support() {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
             <div className="bg-white dark:bg-slate-900/40 p-8 rounded-xl shadow-sm border border-emerald-50 dark:border-slate-800/50">
-              <h2 className="text-xl font-bold font-headline mb-6 text-emerald-900 dark:text-emerald-50">{langText("Direct Support Channels", "थेट सपोर्ट चॅनेल")}</h2>
+              <h2 className="text-xl font-bold font-headline mb-6 text-emerald-900 dark:text-emerald-50">{t("support.direct_support_channels")}</h2>
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-lg bg-emerald-50 dark:bg-emerald-800/30 flex items-center justify-center text-emerald-900 dark:text-emerald-400 shrink-0">
                     <span className="material-symbols-outlined">call</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{langText("Call Us", "कॉल करा")}</p>
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{t("support.call_us")}</p>
                     <a className="text-lg font-bold text-emerald-900 dark:text-emerald-50 hover:text-secondary transition-colors" href="tel:+9118005472652624">+91 1800-KISAN-KAMAI</a>
-                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{langText("Free for all Indian networks", "सर्व भारतीय नेटवर्कसाठी विनामूल्य")}</p>
+                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{t("support.free_for_all_indian_networks")}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -155,9 +151,9 @@ export default function Support() {
                     <span className="material-symbols-outlined">chat</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{langText("WhatsApp", "व्हॉट्सअ‍ॅप")}</p>
-                    <a className="text-lg font-bold text-emerald-900 dark:text-emerald-50 hover:text-secondary transition-colors" href="mailto:support@kisankamai.com">{langText("Chat with Support", "सपोर्टशी चॅट करा")}</a>
-                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{langText("Average response: 15 mins", "सरासरी प्रतिसाद: 15 मिनिटे")}</p>
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{t("support.whatsapp")}</p>
+                    <a className="text-lg font-bold text-emerald-900 dark:text-emerald-50 hover:text-secondary transition-colors" href="mailto:support@kisankamai.com">{t("support.chat_with_support")}</a>
+                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{t("support.average_response_15_mins")}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -165,9 +161,9 @@ export default function Support() {
                     <span className="material-symbols-outlined">mail</span>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{langText("Email", "ईमेल")}</p>
+                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{t("support.email")}</p>
                     <a className="text-lg font-bold text-emerald-900 dark:text-emerald-50 hover:text-secondary transition-colors" href="mailto:support@kisankamai.com">support@kisankamai.com</a>
-                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{langText("Official correspondence", "अधिकृत पत्रव्यवहार")}</p>
+                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{t("support.official_correspondence")}</p>
                   </div>
                 </div>
               </div>
@@ -175,82 +171,89 @@ export default function Support() {
             <div className="bg-surface-container-low dark:bg-slate-900/50 p-8 rounded-xl border border-surface-container-highest dark:border-slate-800/50">
               <h3 className="font-bold text-lg mb-4 flex items-center gap-2 text-on-surface dark:text-emerald-50">
                 <span className="material-symbols-outlined text-secondary">schedule</span>
-                {langText("Service Hours", "सेवा वेळ")}
+                {t("support.service_hours")}
               </h3>
-              <p className="text-on-surface-variant dark:text-slate-300 font-medium">{langText("Daily: 8 AM to 8 PM", "दररोज: सकाळी ८ ते रात्री ८")}</p>
+              <p className="text-on-surface-variant dark:text-slate-300 font-medium">{t("support.daily_8_am_to_8_pm")}</p>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <a className="bg-white dark:bg-slate-900/40 p-6 rounded-xl border border-emerald-100 dark:border-slate-800/50 hover:border-emerald-500 hover:shadow-md transition-all" href="/faq">
+              <AppLink className="bg-white dark:bg-slate-900/40 p-6 rounded-xl border border-emerald-100 dark:border-slate-800/50 hover:border-emerald-500 hover:shadow-md transition-all" href="/faq">
                 <span className="material-symbols-outlined text-secondary mb-3 block">menu_book</span>
-                <span className="font-bold block text-emerald-900 dark:text-emerald-50">{langText("How to Rent", "कसे भाड्याने घ्यावे")}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tighter">{langText("Guide", "मार्गदर्शक")}</span>
-              </a>
-              <a className="bg-white dark:bg-slate-900/40 p-6 rounded-xl border border-emerald-100 dark:border-slate-800/50 hover:border-emerald-500 hover:shadow-md transition-all" href="/list-equipment">
+                <span className="font-bold block text-emerald-900 dark:text-emerald-50">{t("support.how_to_rent")}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tighter">{t("support.guide")}</span>
+              </AppLink>
+              <AppLink className="bg-white dark:bg-slate-900/40 p-6 rounded-xl border border-emerald-100 dark:border-slate-800/50 hover:border-emerald-500 hover:shadow-md transition-all" href="/list-equipment">
                 <span className="material-symbols-outlined text-secondary mb-3 block">handyman</span>
-                <span className="font-bold block text-emerald-900 dark:text-emerald-50">{langText("Owner Guide", "मालक मार्गदर्शक")}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tighter">{langText("Help", "मदत")}</span>
-              </a>
+                <span className="font-bold block text-emerald-900 dark:text-emerald-50">{t("support.owner_guide")}</span>
+                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tighter">{t("support.help")}</span>
+              </AppLink>
             </div>
           </div>
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="bg-white dark:bg-slate-900/40 p-8 md:p-12 rounded-xl shadow-sm border border-emerald-50 dark:border-slate-800/50">
-              <div className="mb-8">
-                <h2 className="text-3xl font-extrabold font-headline text-emerald-900 dark:text-emerald-50 mb-2">{langText("Send a Message", "संदेश पाठवा")}</h2>
-                <p className="text-slate-500 dark:text-slate-400">{langText("Fill out the form below and our team will get back to you within 2-4 business hours.", "खालील फॉर्म भरा आणि आमची टीम 2-4 व्यावसायिक तासांत तुम्हाला प्रतिसाद देईल.")}</p>
-              </div>
+            <FormShell
+              eyebrow={t("support.contact_us")}
+              title={t("support.send_a_message")}
+              description={t("support.fill_out_the_form_below_and_our_team_will_get_back_to_you_within_2_4_business_hours")}
+              aside={
+                <div className="space-y-4">
+                  <h3 className="text-lg font-black text-primary">{t("support.service_hours")}</h3>
+                  <p className="text-sm font-medium text-on-surface-variant">{t("support.daily_8_am_to_8_pm")}</p>
+                  <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-5">
+                    <p className="text-sm font-black uppercase tracking-[0.18em] text-secondary">{t("support.direct_support_channels")}</p>
+                    <div className="mt-4 space-y-3 text-sm font-medium text-on-surface-variant">
+                      <p>{t("support.call_us")}: +91 1800-KISAN-KAMAI</p>
+                      <p>{t("support.whatsapp")}: {t("support.chat_with_support")}</p>
+                      <p>{t("support.email")}: support@kisankamai.com</p>
+                    </div>
+                  </div>
+                </div>
+              }
+            >
               <form className="space-y-6" ref={formRef} onSubmit={handleSupportSubmit}>
-                {error ? (
-                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-                    {error}
-                  </div>
-                ) : null}
-                {success ? (
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
-                    {success}
-                  </div>
-                ) : null}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("FULL NAME / पूर्ण नाव", "पूर्ण नाव / FULL NAME")}</label>
-                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="fullName" placeholder={langText("Enter your name", "तुमचे नाव टाका")} type="text" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("PHONE NUMBER / फोन नंबर", "फोन नंबर / PHONE NUMBER")}</label>
-                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="phone" placeholder="+91 00000 00000" type="tel" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("EMAIL ADDRESS (OPTIONAL)", "ईमेल पत्ता (ऐच्छिक)")}</label>
-                    <input className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="email" placeholder="email@example.com" type="email" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("CATEGORY / श्रेणी", "श्रेणी / CATEGORY")}</label>
-                    <select className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none appearance-none" name="category">
-                      <option>{langText("I want to Rent (भाड्याने घेणे)", "मला भाड्याने घ्यायचे आहे")}</option>
-                      <option>{langText("I want to List (उपकरणे जोडणे)", "मला सूचीबद्ध करायचे आहे")}</option>
-                      <option>{langText("Payment Issue (पेमेंट समस्या)", "पेमेंट समस्या")}</option>
-                      <option>{langText("General Support (सामान्य मदत)", "सामान्य मदत")}</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-emerald-900 dark:text-emerald-200 tracking-wide">{langText("MESSAGE / संदेश", "संदेश / MESSAGE")}</label>
-                  <textarea className="w-full bg-surface-container-lowest dark:bg-slate-900/50 dark:text-white border-outline-variant dark:border-slate-700 rounded-lg p-4 focus:ring-2 focus:ring-secondary/20 focus:border-secondary transition-all outline-none" name="message" placeholder={langText("How can we help you today?", "आम्ही आज तुम्हाला कशी मदत करू शकतो?")} rows={5}></textarea>
-                </div>
-                <div className="flex flex-col md:flex-row gap-4 pt-4">
-                  <button className="flex-1 bg-primary-container text-white py-4 rounded-lg font-bold text-lg hover:shadow-xl active:scale-[0.98] transition-all disabled:opacity-60" disabled={isSubmitting} type="submit">
-                    {isSubmitting ? langText("Sending...", "पाठवत आहे...") : langText("Send Message", "संदेश पाठवा")}
+                {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+                {success ? <FormNotice tone="success">{success}</FormNotice> : null}
+
+                <FormSection
+                  title={t("support.contact_us")}
+                  description={t("support.reach_out_to_our_team_in_sangli_satara_or_kolhapur_for_any_equipment_rental_or_listing_support")}
+                >
+                  <FormGrid>
+                    <FormField label={t("support.full_name")} required>
+                      <input className="kk-input" name="fullName" placeholder={t("support.enter_your_name")} type="text" />
+                    </FormField>
+                    <FormField label={t("support.phone_number")} required>
+                      <input className="kk-input" name="phone" placeholder="+91 00000 00000" type="tel" />
+                    </FormField>
+                  </FormGrid>
+                  <FormGrid>
+                    <FormField label={t("support.email_address_optional")}>
+                      <input className="kk-input" name="email" placeholder="email@example.com" type="email" />
+                    </FormField>
+                    <FormField label={t("support.category")} required>
+                      <select className="kk-input" defaultValue={t("support.i_want_to_rent")} name="category">
+                        <option>{t("support.i_want_to_rent")}</option>
+                        <option>{t("support.i_want_to_list")}</option>
+                        <option>{t("support.payment_issue")}</option>
+                        <option>{t("support.general_support")}</option>
+                      </select>
+                    </FormField>
+                  </FormGrid>
+                  <FormField label={t("support.message")} required>
+                    <textarea className="kk-input min-h-[160px]" name="message" placeholder={t("support.how_can_we_help_you_today")} rows={5} />
+                  </FormField>
+                </FormSection>
+
+                <FormActions>
+                  <button className="kk-button-outline" disabled={isSubmitting} onClick={handleCallbackRequest} type="button">
+                    {t("support.request_callback")}
                   </button>
-                  <button className="flex-1 bg-white dark:bg-transparent border-2 border-primary-container text-primary-container dark:text-emerald-400 py-4 rounded-lg font-bold text-lg hover:bg-emerald-50 dark:hover:bg-slate-900/50 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-60" disabled={isSubmitting} onClick={handleCallbackRequest} type="button">
-                    <span className="material-symbols-outlined">phone_callback</span>
-                    {langText("Request Callback", "कॉलबॅक विनंती")}
+                  <button className="kk-form-primary-button" disabled={isSubmitting} type="submit">
+                    {isSubmitting ? t("support.sending") : t("support.send_message")}
                   </button>
-                </div>
+                </FormActions>
               </form>
-            </div>
+            </FormShell>
           </div>
         </section>
 
@@ -259,15 +262,15 @@ export default function Support() {
           <div className="bg-white dark:bg-slate-900/40 rounded-xl shadow-sm border border-emerald-50 dark:border-slate-800/50 overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-2">
               <div className="p-8 md:p-12">
-                <h2 className="text-2xl font-bold font-headline text-emerald-900 dark:text-emerald-50 mb-4">{langText("Visit our Regional Hubs", "आमच्या प्रादेशिक हबला भेट द्या")}</h2>
-                <p className="text-slate-600 dark:text-slate-400 mb-8">{langText("Direct support is available at our partner centers across Southern Maharashtra.", "दक्षिण महाराष्ट्रातील आमच्या भागीदार केंद्रांवर थेट सहाय्य उपलब्ध आहे.")}</p>
+                <h2 className="text-2xl font-bold font-headline text-emerald-900 dark:text-emerald-50 mb-4">{t("support.visit_our_regional_hubs")}</h2>
+                <p className="text-slate-600 dark:text-slate-400 mb-8">{t("support.direct_support_is_available_at_our_partner_centers_across_southern_maharashtra")}</p>
                 <div className="space-y-6">
                   {[
-                    { name: langText("Sangli District Hub", "सांगली जिल्हा हब"), addr: "Market Yard Road, Sangli, Maharashtra 416416" },
-                    { name: langText("Satara District Hub", "सातारा जिल्हा हब"), addr: "Bombay Restaurant Chowk, Satara, Maharashtra 415001" },
-                    { name: langText("Kolhapur Regional Hub", "कोल्हापूर प्रादेशिक हब"), addr: "Shiroli Pulachi, Kolhapur, Maharashtra 416122" },
-                    { name: langText("Kalwan Area Hub", "कळवण परिसर हब"), addr: "Nashik Region, Maharashtra 423501" },
-                    { name: langText("Mukhed Area Hub", "मुखेड परिसर हब"), addr: "Nanded Region, Maharashtra 431715" },
+                    { name: t("support.sangli_district_hub"), addr: "Market Yard Road, Sangli, Maharashtra 416416" },
+                    { name: t("support.satara_district_hub"), addr: "Bombay Restaurant Chowk, Satara, Maharashtra 415001" },
+                    { name: t("support.kolhapur_regional_hub"), addr: "Shiroli Pulachi, Kolhapur, Maharashtra 416122" },
+                    { name: t("support.kalwan_area_hub"), addr: "Nashik Region, Maharashtra 423501" },
+                    { name: t("support.mukhed_area_hub"), addr: "Nanded Region, Maharashtra 431715" },
                   ].map((hub) => (
                     <div key={hub.name} className="flex items-start gap-4">
                       <span className="material-symbols-outlined text-secondary">location_on</span>
@@ -283,7 +286,7 @@ export default function Support() {
                 <LazyMap
                   center={[17.05, 74.40]}
                   zoom={9}
-                  markers={hubMarkers}
+                  markers={SUPPORT_HUB_MARKERS}
                   height="100%"
                   showControls={false}
                   className="rounded-none"
@@ -297,4 +300,6 @@ export default function Support() {
     </div>
   );
 }
+
+
 

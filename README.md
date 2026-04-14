@@ -1,53 +1,49 @@
-# Kisan Kamai (v0.1) 🚜
+# Kisan Kamai
 
-Kisan Kamai is a modern, bilingual (English/Marathi) marketplace platform for agricultural equipment rental, primarily serving Southern Maharashtra (Sangli, Satara, Kolhapur).
+Kisan Kamai now uses the root Next.js app as the only public frontend for `https://www.kisankamai.com`.
 
----
+- Live app: repo root, deployed with Firebase App Hosting
+- Canonical domain: `https://www.kisankamai.com`
+- Staging/reference app: `apps/production`
 
-## ✨ Features
+## Root App
 
-- **21+ Fully Functional Pages**: Comprehensive routes including Home, Rent Equipment, List Equipment, Owner Profile, and more.
-- **Bilingual Interface**: Seamless switching between English and Marathi using a custom global provider.
-- **Autonomous Performance Monitoring**: Integrated profiling agent (Puppeteer) and live metrics tracking (Web Vitals) with Appwrite backend.
-- **Dynamic Mapping**: Interactive Leaflet maps showing regional hubs and equipment locations.
-- **User Profile Pro**: Advanced renter and owner profiles with hover-motion effects.
+The root app is the production-facing application. It owns:
 
-## 🛠️ Tech Stack
+- Firebase Auth session-cookie auth
+- Firestore-backed listings, bookings, payments, submissions, and saved items
+- Cloud Storage-backed uploads
+- public routes, owner flows, and renter flows
 
-- **Framework**: Next.js 14 (App Router)
-- **Database/Storage**: Appwrite (Metrics, Traces, Logs)
-- **Auth/Realtime**: Firebase & Appwrite
-- **Styling**: Tailwind CSS & Framer Motion
-- **Monitoring**: Puppeteer (Agent), Web-vitals (Frontend)
+Useful commands:
 
-## 📁 Documentation
+```bash
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+npm run verify
+```
 
-Detailed documentation is available in the `docs/` directory:
+Runtime logs captured with the helper scripts are stored under `logs/runtime/`.
 
-- 🛠️ **[Setup Guide](docs/SETUP.md)**: Platform-specific installation (Windows, macOS, Ubuntu).
-- 🏗️ **[Architecture](docs/ARCHITECTURE.md)**: System design and flow diagrams.
-- 🚀 **[Development & Replication](docs/DEVELOPMENT.md)**: Version details and how to replicate the project.
-- 🗺️ **[Roadmap](docs/ROADMAP.md)**: Future vision and project phases.
+## Firebase App Hosting
 
-## 🚀 Quick Start
+The root deployment contract lives in `apphosting.yaml`.
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+Required runtime configuration includes:
 
-2. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+- Firebase web config (`NEXT_PUBLIC_FIREBASE_*`)
+- Firebase Admin credentials (`FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PRIVATE_KEY`)
+- optional Sentry DSNs
+- optional Google Maps key
 
-3. **Run Performance Profiler**:
-   ```bash
-   node scripts/profiler_agent.mjs
-   ```
+## Internal Staging App
 
-## 📄 License
+`apps/production` remains in the repo as an internal staging/reference app. It is no longer the canonical live frontend and should not be treated as the public site.
 
-This project is created for demonstration and replication purposes. All rights reserved.
+## Repository Notes
 
+- `main` is the only long-term branch target.
+- Vendored repositories in `vendor/` are reference-only and are not runtime dependencies.

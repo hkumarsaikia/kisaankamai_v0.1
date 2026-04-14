@@ -1,0 +1,86 @@
+[
+  {
+    "userId": "owner-1",
+    "fullName": "Himesh",
+    "village": "Kalwan",
+    "address": "Market Road, Kalwan",
+    "pincode": "423501",
+    "fieldArea": 12,
+    "rolePreference": "renter",
+    "phone": "9000000001"
+  },
+  {
+    "userId": "owner-2",
+    "fullName": "Sanjay Patil",
+    "village": "Sangli",
+    "address": "Miraj Road, Sangli",
+    "pincode": "416416",
+    "fieldArea": 18,
+    "rolePreference": "owner",
+    "email": "sanjay.owner@kisankamai.local",
+    "phone": "9000000002"
+  },
+  {
+    "userId": "renter-1",
+    "fullName": "Rajesh Kulkarni",
+    "village": "Satara",
+    "address": "Ajinkyatara Road, Satara",
+    "pincode": "415001",
+    "fieldArea": 9,
+    "rolePreference": "renter",
+    "email": "rajesh.renter@kisankamai.local",
+    "phone": "9000000003"
+  },
+  {
+    "userId": "renter-2",
+    "fullName": "Sunil Mane",
+    "village": "Pune",
+    "address": "Hadapsar, Pune",
+    "pincode": "411028",
+    "fieldArea": 6.5,
+    "rolePreference": "renter",
+    "email": "sunil.renter@kisankamai.local",
+    "phone": "9000000004"
+  },
+  {
+    "userId": "renter-3",
+    "fullName": "Amit Pawar",
+    "village": "Nashik",
+    "address": "CIDCO, Nashik",
+    "pincode": "422009",
+    "fieldArea": 11,
+    "rolePreference": "renter",
+    "email": "amit.renter@kisankamai.local",
+    "phone": "9000000005"
+  },
+  {
+    "userId": "user-59d04ce6",
+    "fullName": "Local Email Test User",
+    "village": "Nashik",
+    "address": "Dev Address 1",
+    "pincode": "422001",
+    "fieldArea": 2,
+    "rolePreference": "renter",
+    "email": "local.email.test@kisankamai.local"
+  },
+  {
+    "userId": "user-5664ae2a",
+    "fullName": "Local Phone Test User",
+    "village": "Kolhapur",
+    "address": "Dev Address 2",
+    "pincode": "416101",
+    "fieldArea": 4,
+    "rolePreference": "owner",
+    "phone": "9123456789"
+  },
+  {
+    "userId": "user-08f613a4",
+    "fullName": "Booking Flow Test User",
+    "village": "Satara",
+    "address": "Dev Address 3",
+    "pincode": "415001",
+    "fieldArea": 3,
+    "rolePreference": "renter",
+    "email": "booking.flow.test@kisankamai.local"
+  }
+]

@@ -4,7 +4,9 @@ import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
+import { NavigationTransitionProvider } from "@/components/NavigationTransitionProvider";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
+import { getCurrentSession } from "@/lib/server/local-auth";
 import { Suspense } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -18,24 +20,29 @@ export const metadata: Metadata = {
   description: "India's premier agritech marketplace. Rent high-quality agricultural equipment from trusted local owners. Smarter farming, powered by technology, rooted in trust.",
 };
 
-export default function RootLayout({
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialSession = await getCurrentSession();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="mr" data-language="mr" suppressHydrationWarning>
       <head>
+        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
       </head>
       <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <LanguageProvider>
-            <AuthProvider>
-              {children}
+            <AuthProvider initialSession={initialSession}>
+              <NavigationTransitionProvider>{children}</NavigationTransitionProvider>
               <Suspense fallback={null}>
                 <PerformanceMonitor />
               </Suspense>
@@ -47,3 +54,4 @@ export default function RootLayout({
     </html>
   );
 }
+

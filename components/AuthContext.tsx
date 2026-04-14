@@ -1,106 +1,95 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { account, databases, APPWRITE_CONFIG } from "@/lib/appwrite";
-import { Models } from "appwrite";
-import { DEMO_AUTH_CONFIG, DemoUserProfile, clearDemoSession, readDemoSession } from "@/lib/demoAuth";
-
-type UserProfile = DemoUserProfile;
+import React, { createContext, useContext, useMemo, useState } from "react";
+import type { LocalSession, ProfileRecord } from "@/lib/local-data/types";
 
 interface AuthContextType {
-  user: Models.User<Models.Preferences> | null;
-  profile: UserProfile | null;
+  user: LocalSession["user"] | null;
+  profile: ProfileRecord | null;
+  activeWorkspace: LocalSession["activeWorkspace"] | null;
   loading: boolean;
   isProfileComplete: boolean;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  setSession: (session: LocalSession | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   profile: null,
-  loading: true,
+  activeWorkspace: null,
+  loading: false,
   isProfileComplete: false,
   logout: async () => {},
   refreshProfile: async () => {},
+  setSession: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<Models.User<Models.Preferences> | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+async function fetchCurrentSession() {
+  const response = await fetch("/api/auth/session", {
+    credentials: "include",
+    cache: "no-store",
+  });
 
-  const fetchProfile = async (userId: string) => {
-    try {
-      const doc = await databases.getDocument(
-        APPWRITE_CONFIG.databaseId,
-        APPWRITE_CONFIG.userCollectionId,
-        userId
-      );
-      setProfile(doc as unknown as UserProfile);
-    } catch {
-      console.log("No profile found for user:", userId);
-      setProfile(null);
-    }
+  if (!response.ok) {
+    throw new Error("Failed to load session.");
+  }
+
+  const payload = (await response.json()) as { session: LocalSession | null };
+  return payload.session;
+}
+
+export function AuthProvider({
+  children,
+  initialSession,
+}: {
+  children: React.ReactNode;
+  initialSession: LocalSession | null;
+}) {
+  const [session, setSessionState] = useState<LocalSession | null>(initialSession);
+  const [loading, setLoading] = useState(false);
+
+  const setSession = (nextSession: LocalSession | null) => {
+    setSessionState(nextSession);
   };
 
-  const checkUser = async () => {
-    if (DEMO_AUTH_CONFIG.enabled) {
-      const demoSession = readDemoSession();
-      setUser(demoSession?.user || null);
-      setProfile(demoSession?.profile || null);
-      setLoading(false);
-      return;
-    }
-
+  const refreshProfile = async () => {
+    setLoading(true);
     try {
-      const currentUser = await account.get();
-      setUser(currentUser);
-      await fetchProfile(currentUser.$id);
-    } catch {
-      setUser(null);
-      setProfile(null);
+      setSessionState(await fetchCurrentSession());
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    checkUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const logout = async () => {
-    if (DEMO_AUTH_CONFIG.enabled) {
-      clearDemoSession();
-      setUser(null);
-      setProfile(null);
-      return;
-    }
-
+    setLoading(true);
     try {
-      await account.deleteSession('current');
-      setUser(null);
-      setProfile(null);
-    } catch (error) {
-      console.error("Error signing out:", error);
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      setSessionState(null);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const isProfileComplete = !!(profile?.phone && profile?.pincode);
-
-  return (
-    <AuthContext.Provider value={{ 
-      user, 
-      profile, 
-      loading, 
-      isProfileComplete, 
+  const value = useMemo<AuthContextType>(
+    () => ({
+      user: session?.user || null,
+      profile: session?.profile || null,
+      activeWorkspace: session?.activeWorkspace || null,
+      loading,
+      isProfileComplete: Boolean(session?.profile?.phone && session.profile?.pincode),
       logout,
-      refreshProfile: checkUser
-    }}>
-      {children}
-    </AuthContext.Provider>
+      refreshProfile,
+      setSession,
+    }),
+    [loading, session]
   );
-};
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}

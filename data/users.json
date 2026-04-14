@@ -1,0 +1,98 @@
+[
+  {
+    "id": "owner-1",
+    "email": "rahul.owner@kisankamai.local",
+    "phone": "9000000001",
+    "passwordHash": "scrypt$edbbe1cec184f472875f44416c241fef$85e5ea9b98b7284bb3a09f50b1337df22832f24559889f4ab47556fa7e05cf2310114c6166e34d7b3c587a28fed8f3e9c991d2ea6acf3d2863e561d7b508e43f",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2024-11-01T09:00:00.000Z",
+    "updatedAt": "2026-04-13T18:40:01.968Z"
+  },
+  {
+    "id": "owner-2",
+    "email": "sanjay.owner@kisankamai.local",
+    "phone": "9000000002",
+    "passwordHash": "scrypt$2e2e67cd76be8a14497f0a39b5a2d357$32e475068aa72071a2b236afdf4466e29b6f97fb1db154ea1b775330768a8019d570de57feb6f399f5e8d487a97994bf0d25b7e205ca9226fbfbc5e4f8a1d85d",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2024-11-01T09:05:00.000Z",
+    "updatedAt": "2026-04-13T11:13:14.321Z"
+  },
+  {
+    "id": "renter-1",
+    "email": "rajesh.renter@kisankamai.local",
+    "phone": "9000000003",
+    "passwordHash": "scrypt$8705fbd8854af7894a420d638a832539$b65a65f263debdddccd11dbe6355309533cb82f63d98150557903b96c5a1f3787cdb4467ec3e08aa0171554025ddcabebd643fb55420974a489e4706d15f95ac",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2024-11-01T09:10:00.000Z",
+    "updatedAt": "2026-04-13T11:13:14.321Z"
+  },
+  {
+    "id": "renter-2",
+    "email": "sunil.renter@kisankamai.local",
+    "phone": "9000000004",
+    "passwordHash": "scrypt$e6a59bbdb4d6e9656ffad4c86dbfba01$c9d37f85aafd48d963818c265debdf6a8c14555f3401e1f02a962278bbf05d243ab42b8606aafc2e2c3b9fd7bc04e804deb5930518d432fcfee503462bd95a72",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2024-11-01T09:15:00.000Z",
+    "updatedAt": "2026-04-13T11:13:14.321Z"
+  },
+  {
+    "id": "renter-3",
+    "email": "amit.renter@kisankamai.local",
+    "phone": "9000000005",
+    "passwordHash": "scrypt$1d27bddbe0a705acf63ba46fce0bdfc5$19e997257ab3ad336ac07870a3f090e897d1c1d1fee98436e15cec58013b906b39a3054c223a06cd749bd3cb54a3d7f3c12a8695cac43fc3bd6d7fec847d6cff",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2024-11-01T09:20:00.000Z",
+    "updatedAt": "2026-04-13T11:13:14.321Z"
+  },
+  {
+    "id": "user-59d04ce6",
+    "email": "local.email.test@kisankamai.local",
+    "phone": "",
+    "passwordHash": "scrypt$458272b80241c0ddac1cac2228e009e8$50a0269f3496e96b3a7d09803351f427581608516d0035eec157c564de757ef914d985b87ed5a80a06fbe6f23056cf842542647661a4829040a8cfad992a3e62",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2026-04-13T10:18:54.419Z",
+    "updatedAt": "2026-04-13T11:13:14.321Z"
+  },
+  {
+    "id": "user-5664ae2a",
+    "email": "user-5664ae2a@kisankamai.local",
+    "phone": "9123456789",
+    "passwordHash": "scrypt$b645f7c2b28713f07b57c94157e94c8f$e8ad7e0b0787df2ef3deb5704572232a55ade93907dd8f930d4d9debc5d090a233589e2c917853f87b9919c6fc6881644c03a116b9f8302280388538239ccbb4",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2026-04-13T10:18:54.869Z",
+    "updatedAt": "2026-04-13T11:13:14.321Z"
+  },
+  {
+    "id": "user-08f613a4",
+    "email": "booking.flow.test@kisankamai.local",
+    "phone": "",
+    "passwordHash": "scrypt$5f71e45ddaf7686876282ea9dc117a44$67dfe7be6e09aca5d8374a373966d6702d5088719e3d0a4f1b759b39bcada1e1bd20db8427f3e616e32f558657b4e9268bc883ddb842cdf8769db7e55612498d",
+    "roles": [
+      "owner",
+      "renter"
+    ],
+    "createdAt": "2026-04-13T10:20:20.745Z",
+    "updatedAt": "2026-04-13T11:13:14.321Z"
+  }
+]

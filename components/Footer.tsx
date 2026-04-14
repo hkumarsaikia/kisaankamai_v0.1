@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 
 export const Footer = () => {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <footer className="bg-slate-900 dark:bg-black w-full py-16 border-t border-slate-800">
@@ -38,10 +38,7 @@ export const Footer = () => {
             </svg>
           </Link>
           <p className="text-slate-400 leading-relaxed mb-6">
-            {langText(
-              "Empowering Indian farmers through shared technology and machinery access. Rooted in Trust.",
-              "सामायिक तंत्रज्ञान आणि यंत्रसामग्रीच्या प्रवेशाद्वारे भारतीय शेतकऱ्यांना सक्षम करणे. विश्वासात रुजलेले."
-            )}
+            {t("Footer.empowering_indian_farmers_through_shared_technology_and_machinery_access_rooted_in_trust")}
           </p>
           <div className="flex gap-4">
             <a href="https://x.com/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
@@ -56,55 +53,55 @@ export const Footer = () => {
           </div>
         </div>
         <div>
-          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{langText("Marketplace", "बाजारपेठ")}</h5>
+          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.marketplace")}</h5>
           <ul className="space-y-4">
-            <li><Link href="/rent-equipment" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Find Equipment", "उपकरणे शोधा")}</Link></li>
-            <li><Link href="/list-equipment" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("List Equipment", "उपकरणे सूचीबद्ध करा")}</Link></li>
-            <li><Link href="/renter-journey" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Renter Journey", "भाडेकरू प्रवास")}</Link></li>
-            <li><Link href="/booking" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Booking", "बुकिंग")}</Link></li>
-            <li><Link href="/trust-safety" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Trust & Safety", "विश्वास आणि सुरक्षा")}</Link></li>
-            <li><Link href="/faq" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("How it Works", "कसे कार्य करते")}</Link></li>
+            <li><Link href="/rent-equipment" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.find_equipment")}</Link></li>
+            <li><Link href="/list-equipment" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.list_equipment")}</Link></li>
+            <li><Link href="/renter-journey" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.renter_journey")}</Link></li>
+            <li><Link href="/booking" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.booking")}</Link></li>
+            <li><Link href="/trust-safety" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.trust_and_safety")}</Link></li>
+            <li><Link href="/faq" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.how_it_works")}</Link></li>
           </ul>
         </div>
         <div>
-          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{langText("For Owners", "मालकांसाठी")}</h5>
+          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.for_owners")}</h5>
           <ul className="space-y-4">
-            <li><Link href="/owner-registration" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Register Equipment", "उपकरणे नोंदणी करा")}</Link></li>
-            <li><Link href="/owner-benefits" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Benefits", "मालक फायदे")}</Link></li>
-            <li><Link href="/owner-experience" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Experience", "मालक अनुभव")}</Link></li>
-            <li><Link href="/owner-profile" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Owner Profile", "मालक प्रोफाइल")}</Link></li>
+            <li><Link href="/profile-selection" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.register_equipment")}</Link></li>
+            <li><Link href="/owner-benefits" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.owner_benefits")}</Link></li>
+            <li><Link href="/owner-experience" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.owner_experience")}</Link></li>
+            <li><Link href="/owner-profile" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.owner_profile")}</Link></li>
           </ul>
-          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6 mt-8">{langText("Trust & Company", "विश्वास आणि कंपनी")}</h5>
+          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6 mt-8">{t("Footer.trust_and_company")}</h5>
           <ul className="space-y-4">
             <li>
-              <Link href="/about" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("About Us", "आमच्याबद्दल")}</Link>
-              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Trust in Agriculture", "कृषी मध्ये विश्वास")}</span>
+              <Link href="/about" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{t("Footer.about_us")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{t("Footer.trust_in_agriculture")}</span>
             </li>
             <li>
-              <Link href="/partner" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("Partner with Us", "आमच्यासोबत भागीदारी")}</Link>
-              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Join our network", "आमच्या नेटवर्कमध्ये सामील व्हा")}</span>
+              <Link href="/partner" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{t("Footer.partner_with_us")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{t("Footer.join_our_network")}</span>
             </li>
             <li>
-              <Link href="/trust-safety" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("Trust & Safety", "विश्वास आणि सुरक्षा")}</Link>
-              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Our guarantee", "आमची खात्री")}</span>
+              <Link href="/trust-safety" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{t("Footer.trust_and_safety")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{t("Footer.our_guarantee")}</span>
             </li>
             <li>
-              <Link href="/legal" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{langText("Legal & Policies", "कायदेशीर आणि धोरणे")}</Link>
-              <span className="text-[10px] text-slate-500 block -mt-1">{langText("Terms of service", "सेवा अटी")}</span>
+              <Link href="/legal" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300 block font-bold">{t("Footer.legal_and_policies")}</Link>
+              <span className="text-[10px] text-slate-500 block -mt-1">{t("Footer.terms_of_service")}</span>
             </li>
-            <li><Link href="/faq" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("FAQ", "वारंवार विचारले जाणारे प्रश्न")}</Link></li>
-            <li><Link href="/support" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Contact Support", "मदत संपर्क")}</Link></li>
-            <li><Link href="/locations" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Locations", "स्थाने")}</Link></li>
-            <li><Link href="/feedback" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{langText("Share Feedback", "अभिप्राय द्या")}</Link></li>
+            <li><Link href="/faq" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.faq")}</Link></li>
+            <li><Link href="/support" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.contact_support")}</Link></li>
+            <li><Link href="/locations" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.locations")}</Link></li>
+            <li><Link href="/feedback" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.share_feedback")}</Link></li>
           </ul>
         </div>
         <div>
-          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{langText("Newsletter", "वृत्तपत्र")}</h5>
-          <p className="text-slate-400 mb-4">{langText("Stay updated on agricultural trends and new equipment listings.", "कृषी ट्रेंड आणि नवीन उपकरण सूचींवर अद्ययावत रहा.")}</p>
+          <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.newsletter")}</h5>
+          <p className="text-slate-400 mb-4">{t("Footer.stay_updated_on_agricultural_trends_and_new_equipment_listings")}</p>
           <div className="flex gap-2">
             <input
               className="bg-slate-800 border-none rounded-lg px-4 py-2 text-white w-full focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-500"
-              placeholder={langText("Email", "ईमेल")}
+              placeholder={t("Footer.email")}
               type="email"
             />
             <button className="bg-emerald-600 text-white p-2 rounded-lg hover:bg-emerald-500 transition-colors">
@@ -112,17 +109,17 @@ export const Footer = () => {
             </button>
           </div>
           <div className="mt-6">
-            <p className="text-slate-500 text-xs">{langText("Operating in:", "कार्यरत:")}</p>
+            <p className="text-slate-500 text-xs">{t("Footer.operating_in")}</p>
             <p className="text-white font-medium text-sm flex items-center gap-1 mt-1">
               <span className="material-symbols-outlined text-emerald-400 text-sm">location_on</span>
-              {langText("Maharashtra, India", "महाराष्ट्र, भारत")}
+              {t("Footer.maharashtra_india")}
             </p>
           </div>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
-        <p className="text-slate-400 text-sm">{langText("© 2026 Kisan Kamai. Rooted in Trust. Serving Indian Agriculture.", "© 2026 किसान कमाई. विश्वासात रुजलेले. भारतीय शेतीची सेवा.")}</p>
-        <p className="text-slate-500 italic text-sm">{langText("Built for the hard-working farmers of India.", "भारताच्या कष्टकरी शेतकऱ्यांसाठी बनवलेले.")}</p>
+        <p className="text-slate-400 text-sm">{t("Footer.2026_kisan_kamai_rooted_in_trust_serving_indian_agriculture")}</p>
+        <p className="text-slate-500 italic text-sm">{t("Footer.built_for_the_hard_working_farmers_of_india")}</p>
       </div>
     </footer>
   );

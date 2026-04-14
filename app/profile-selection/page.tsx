@@ -1,54 +1,53 @@
 "use client";
 
-import Link from "next/link";
+import Image from "next/image";
+import { useEffect, useTransition } from "react";
+import { AppLink as Link } from "@/components/AppLink";
+import { selectWorkspaceAction } from "@/lib/actions/local-data";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageContext";
+import { useAuth } from "@/components/AuthContext";
 import { assetPath } from "@/lib/site";
-import { localizedText } from "@/lib/i18n";
-
-const profileCards = [
-  {
-    href: "/owner-profile",
-    icon: "agriculture",
-    accent: "text-primary-container dark:text-emerald-400",
-    surface: "bg-primary-container/10 dark:bg-emerald-500/10",
-    button: "bg-primary-container text-white dark:bg-emerald-700",
-    title: localizedText("Owner Profile / मालक प्रोफाइल", "मालक प्रोफाइल / Owner Profile"),
-    description: localizedText(
-      "Set up listings, manage bookings, track earnings, and run your owner workspace.",
-      "लिस्टिंग तयार करा, बुकिंग व्यवस्थापित करा, कमाई ट्रॅक करा आणि तुमचे मालक वर्कस्पेस चालवा."
-    ),
-    cta: localizedText(
-      "Go to Owner Profile / मालक प्रोफाइलवर जा",
-      "मालक प्रोफाइलवर जा / Go to Owner Profile"
-    ),
-  },
-  {
-    href: "/renter-profile",
-    icon: "handshake",
-    accent: "text-secondary dark:text-amber-500",
-    surface: "bg-secondary/10 dark:bg-amber-500/10",
-    button: "bg-secondary text-white dark:bg-amber-500",
-    title: localizedText("Renter Profile / भाडेकरी प्रोफाइल", "भाडेकरी प्रोफाइल / Renter Profile"),
-    description: localizedText(
-      "Track rentals, browse equipment, view bookings, and get support.",
-      "भाड्याने घेतलेली अवजारे, बुकिंग ट्रॅक करा आणि सपोर्ट मिळवा."
-    ),
-    cta: localizedText(
-      "Go to Renter Profile / भाडेकरी प्रोफाइलवर जा",
-      "भाडेकरी प्रोफाइलवर जा / Go to Renter Profile"
-    ),
-  },
-];
 
 export default function ProfileSelectionPage() {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
+  const { user, logout, loading, activeWorkspace } = useAuth();
+  const [isPending, startTransition] = useTransition();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      window.location.href = "/login";
+    }
+  }, [loading, user]);
+
+  if (loading || !user) {
+    return null;
+  }
+
+  const handleWorkspaceSelect = (workspace: "owner" | "renter") => {
+    startTransition(async () => {
+      const result = await selectWorkspaceAction(workspace);
+      if (!result.ok) {
+        window.location.href = result.redirectTo || "/login";
+        return;
+      }
+
+      window.location.href =
+        result.redirectTo || (workspace === "owner" ? "/owner-profile" : "/renter-profile");
+    });
+  };
 
   return (
     <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-surface text-on-surface">
       <div className="fixed inset-0 z-0">
-        <img className="h-full w-full object-cover opacity-10 dark:opacity-20" src={assetPath("/assets/generated/modern_farm_tech.png")} alt="Maharashtra farm fields" loading="lazy" decoding="async" />
+        <Image
+          className="object-cover opacity-10 dark:opacity-20"
+          src={assetPath("/assets/generated/modern_farm_tech.png")}
+          alt="Farm fields"
+          fill
+          sizes="100vw"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-surface/50 via-surface/80 to-surface dark:from-slate-950/60 dark:via-slate-950/85 dark:to-slate-950" />
       </div>
 
@@ -60,9 +59,16 @@ export default function ProfileSelectionPage() {
           <div className="flex items-center gap-3">
             <ThemeToggle />
             <LanguageToggle compact />
-            <Link href="/" className="hidden text-sm font-semibold tracking-tight text-slate-600 transition-colors hover:text-secondary dark:text-slate-400 dark:hover:text-amber-500 sm:inline">
-              {langText("Sign Out", "साइन आउट")}
-            </Link>
+            <button
+              type="button"
+              onClick={async () => {
+                await logout();
+                window.location.href = "/";
+              }}
+              className="hidden text-sm font-semibold tracking-tight text-slate-600 transition-colors hover:text-secondary dark:text-slate-400 dark:hover:text-amber-500 sm:inline"
+            >
+              {t("profile-selection.sign_out")}
+            </button>
           </div>
         </nav>
       </header>
@@ -70,94 +76,79 @@ export default function ProfileSelectionPage() {
       <main className="relative z-10 container mx-auto flex-grow px-6 pb-20 pt-32 lg:px-12">
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h1 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-primary dark:text-emerald-400 md:text-5xl">
-            {langText("Choose your profile / तुमची प्रोफाइल निवडा", "तुमची प्रोफाइल निवडा / Choose your profile")}
+            {t("profile-selection.choose_your_workspace")}
           </h1>
           <p className="text-lg font-medium text-on-surface-variant">
-            {langText(
-              "Select the workspace you want to enter for this session.",
-              "या सत्रासाठी तुम्हाला प्रवेश करायचा असलेला वर्कस्पेस निवडा."
-            )}
+            {t("profile-selection.open_the_owner_or_renter_profile_attached_to_this_local_account")}
           </p>
         </div>
 
         <div className="mx-auto mb-16 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
-          {profileCards.map((card) => (
-            <div
-              key={card.href}
-              className="group relative rounded-3xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-xl shadow-surface-container-high/50 transition-all duration-300 hover:-translate-y-1 hover:border-primary-container/40 dark:bg-slate-900/40 dark:shadow-black/20"
-            >
-              <div className="flex h-full flex-col">
-                <div className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl ${card.surface}`}>
-                  <span className={`material-symbols-outlined text-4xl ${card.accent}`} style={{ fontVariationSettings: "'FILL' 1" }}>
-                    {card.icon}
-                  </span>
-                </div>
-                <div className="mb-8">
-                  <h2 className={`mb-3 text-2xl font-bold font-headline ${card.accent}`}>{langText(card.title)}</h2>
-                  <p className="leading-relaxed text-on-surface-variant">{langText(card.description)}</p>
-                </div>
-                <Link
-                  href={card.href}
-                  className={`mt-auto flex w-full items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold tracking-tight transition-all group-hover:shadow-lg ${card.button}`}
+          <div className="group relative rounded-3xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-xl shadow-surface-container-high/50 dark:bg-slate-900/40 dark:shadow-black/20">
+            <div className="flex h-full flex-col">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-container/10 dark:bg-emerald-500/10">
+                <span className="material-symbols-outlined text-4xl text-primary-container dark:text-emerald-400">agriculture</span>
+              </div>
+              <div className="mb-8">
+                <h2 className="mb-3 text-2xl font-bold font-headline text-primary-container dark:text-emerald-400">
+                  {t("profile-selection.owner_profile")}
+                </h2>
+                <p className="leading-relaxed text-on-surface-variant">
+                  {t("profile-selection.manage_listings_bookings_and_local_earnings_data")}
+                </p>
+              </div>
+              <div className="mt-auto space-y-3">
+                {activeWorkspace === "owner" ? (
+                  <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/80 px-4 py-2 text-center text-xs font-black uppercase tracking-[0.16em] text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300">
+                    {t("profile-selection.last_used_workspace")}
+                  </div>
+                ) : null}
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleWorkspaceSelect("owner")}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-6 py-4 font-bold tracking-tight text-white disabled:opacity-60"
                 >
-                  {langText(card.cta)}
-                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
-                </Link>
+                  {t("profile-selection.open_owner_profile")}
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="mx-auto max-w-4xl space-y-10">
-          <div className="mx-auto flex w-fit items-center justify-center gap-3 rounded-full border border-outline-variant/20 bg-surface-container/50 px-6 py-3 text-sm font-medium text-on-surface-variant/80">
-            <span className="material-symbols-outlined text-lg">info</span>
-            <p>
-              {langText(
-                "Your access may depend on the role selected during registration.",
-                "तुमचा प्रवेश नोंदणीदरम्यान निवडलेल्या भूमिकेवर अवलंबून असू शकतो."
-              )}
-            </p>
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-6 rounded-3xl bg-primary-container p-6 text-on-primary shadow-lg md:flex-row">
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/10">
-                <span className="material-symbols-outlined text-white">support_agent</span>
+          <div className="group relative rounded-3xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-xl shadow-surface-container-high/50 dark:bg-slate-900/40 dark:shadow-black/20">
+            <div className="flex h-full flex-col">
+              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/10 dark:bg-amber-500/10">
+                <span className="material-symbols-outlined text-4xl text-secondary dark:text-amber-500">handshake</span>
               </div>
-              <div>
-                <p className="text-lg font-bold leading-tight">
-                  {langText("Need help choosing the right profile?", "योग्य प्रोफाइल निवडण्यात मदत हवी आहे?")}
+              <div className="mb-8">
+                <h2 className="mb-3 text-2xl font-bold font-headline text-secondary dark:text-amber-500">
+                  {t("profile-selection.renter_profile")}
+                </h2>
+                <p className="leading-relaxed text-on-surface-variant">
+                  {t("profile-selection.browse_equipment_save_listings_and_manage_bookings")}
                 </p>
-                <p className="text-sm text-on-primary-container">
-                  {langText("Contact support in Marathi or English.", "मराठी किंवा इंग्रजीमध्ये सपोर्टशी संपर्क साधा.")}
-                </p>
+              </div>
+              <div className="mt-auto space-y-3">
+                {activeWorkspace === "renter" ? (
+                  <div className="rounded-xl border border-amber-200/70 bg-amber-50/80 px-4 py-2 text-center text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300">
+                    {t("profile-selection.last_used_workspace")}
+                  </div>
+                ) : null}
+                <button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => handleWorkspaceSelect("renter")}
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-4 font-bold tracking-tight text-white disabled:opacity-60 dark:bg-amber-500"
+                >
+                  {t("profile-selection.open_renter_profile")}
+                </button>
               </div>
             </div>
-            <Link href="/support" className="rounded-xl bg-white px-6 py-3 text-sm font-bold text-primary-container transition-colors hover:bg-surface-bright">
-              {langText("Contact Support", "सपोर्टशी संपर्क साधा")}
-            </Link>
           </div>
         </div>
       </main>
-
-      <footer className="relative z-10 w-full border-t border-slate-200 bg-[#23272D] px-6 py-8 dark:border-slate-800 dark:bg-black lg:px-12">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 md:flex-row">
-          <div className="text-xs font-normal uppercase tracking-widest text-slate-500">
-            {langText("© 2026 Kisan Kamai. Sustainable Agriculture for India.", "© 2026 किसान कमाई. भारतीय शेतीसाठी शाश्वत उपाय.")}
-          </div>
-          <div className="flex gap-8">
-            <Link href="/legal" className="text-xs font-normal uppercase tracking-widest text-slate-500 transition-colors hover:text-white">
-              {langText("Privacy Policy", "गोपनीयता धोरण")}
-            </Link>
-            <Link href="/legal" className="text-xs font-normal uppercase tracking-widest text-slate-500 transition-colors hover:text-white">
-              {langText("Terms of Service", "सेवा अटी")}
-            </Link>
-            <Link href="/support" className="text-xs font-normal uppercase tracking-widest text-slate-500 transition-colors hover:text-white">
-              {langText("Contact Support", "सपोर्ट")}
-            </Link>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }
+
+

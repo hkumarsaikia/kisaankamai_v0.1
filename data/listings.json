@@ -1,0 +1,135 @@
+[
+  {
+    "id": "2",
+    "ownerUserId": "owner-2",
+    "slug": "john-deere-w70-combine",
+    "name": "John Deere W70 Combine",
+    "category": "harvester",
+    "categoryLabel": "Harvester • John Deere",
+    "location": "Mukhed Area",
+    "district": "Nanded",
+    "state": "Maharashtra",
+    "description": "A high-capacity combine harvester ideal for peak harvest windows where fast turnaround matters.",
+    "pricePerHour": 2500,
+    "unitLabel": "per hour",
+    "rating": 4.7,
+    "hp": "100 HP",
+    "distanceKm": 8.5,
+    "ownerName": "Sangli Agri-Hub",
+    "ownerLocation": "Mukhed, Nanded",
+    "ownerVerified": true,
+    "coverImage": "/assets/generated/maha_harvester.png",
+    "galleryImages": [
+      "/assets/generated/maha_harvester.png",
+      "/assets/generated/harvester_action.png",
+      "/assets/generated/farm_yard.png"
+    ],
+    "imagePaths": [
+      "/assets/generated/maha_harvester.png",
+      "/assets/generated/harvester_action.png",
+      "/assets/generated/farm_yard.png"
+    ],
+    "tags": [
+      "Popular Choice",
+      "Operator Included",
+      "High Capacity"
+    ],
+    "workTypes": [
+      "Harvesting"
+    ],
+    "operatorIncluded": true,
+    "status": "active",
+    "createdAt": "2024-10-16T10:00:00.000Z",
+    "updatedAt": "2024-10-16T10:00:00.000Z"
+  },
+  {
+    "id": "4",
+    "ownerUserId": "owner-2",
+    "slug": "swaraj-744-fe",
+    "name": "Swaraj 744 FE",
+    "category": "tractor",
+    "categoryLabel": "Tractor • Swaraj",
+    "location": "Mukhed Area",
+    "district": "Nanded",
+    "state": "Maharashtra",
+    "description": "A dependable tractor for daily field work with good fuel efficiency and strong pulling power.",
+    "pricePerHour": 750,
+    "unitLabel": "per hour",
+    "rating": 4.8,
+    "hp": "48 HP",
+    "distanceKm": 2.1,
+    "ownerName": "Suresh Jadhav",
+    "ownerLocation": "Mukhed, Nanded",
+    "ownerVerified": true,
+    "coverImage": "/assets/generated/hero_tractor.png",
+    "galleryImages": [
+      "/assets/generated/hero_tractor.png",
+      "/assets/generated/farm_yard.png",
+      "/assets/generated/modern_farm_tech.png"
+    ],
+    "imagePaths": [
+      "/assets/generated/hero_tractor.png",
+      "/assets/generated/farm_yard.png",
+      "/assets/generated/modern_farm_tech.png"
+    ],
+    "tags": [
+      "Verified",
+      "Fuel Efficient"
+    ],
+    "workTypes": [
+      "Ploughing",
+      "Transport",
+      "Sowing"
+    ],
+    "operatorIncluded": true,
+    "status": "active",
+    "createdAt": "2024-10-18T10:00:00.000Z",
+    "updatedAt": "2024-10-18T10:00:00.000Z"
+  },
+  {
+    "id": "5",
+    "ownerUserId": "owner-2",
+    "slug": "john-deere-5310-performer",
+    "name": "John Deere 5310 Performer",
+    "category": "tractor",
+    "categoryLabel": "Tractor • John Deere",
+    "location": "Kavathe Mahankal",
+    "district": "Sangli",
+    "state": "Maharashtra",
+    "description": "A premium tractor listing with verified operator support, strong PTO output, and regional owner coverage.",
+    "pricePerHour": 850,
+    "unitLabel": "per hour",
+    "rating": 4.9,
+    "hp": "55 HP",
+    "distanceKm": 15,
+    "ownerName": "Sanjay Patil",
+    "ownerLocation": "Sangli",
+    "ownerVerified": true,
+    "coverImage": "/assets/generated/hero_tractor.png",
+    "galleryImages": [
+      "/assets/generated/hero_tractor.png",
+      "/assets/generated/rotavator.png",
+      "/assets/generated/seed_drill.png"
+    ],
+    "imagePaths": [
+      "/assets/generated/hero_tractor.png",
+      "/assets/generated/rotavator.png",
+      "/assets/generated/seed_drill.png"
+    ],
+    "tags": [
+      "Premium Listing",
+      "Operator Included",
+      "Verified"
+    ],
+    "workTypes": [
+      "Ploughing",
+      "Sowing",
+      "Transport",
+      "Harrowing"
+    ],
+    "operatorIncluded": true,
+    "status": "active",
+    "createdAt": "2024-10-19T10:00:00.000Z",
+    "updatedAt": "2024-10-19T10:00:00.000Z"
+  }
+]

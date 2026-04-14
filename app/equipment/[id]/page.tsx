@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import EquipmentDetailClient from "./EquipmentDetailClient";
-import { getEquipmentById, getEquipmentList, getEquipmentStaticParams } from "@/lib/server/equipment";
-import { getSiteUrl, IS_PAGES_BUILD } from "@/lib/runtime";
+import { getEquipmentById, getEquipmentList } from "@/lib/server/equipment";
+import { getSiteUrl } from "@/lib/runtime";
 
 export const dynamicParams = true;
-
-export async function generateStaticParams() {
-  return IS_PAGES_BUILD ? getEquipmentStaticParams() : [];
-}
 
 export async function generateMetadata({
   params,
@@ -72,3 +68,4 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return <EquipmentDetailClient equipment={equipment} relatedEquipment={relatedEquipment} />;
 }
+

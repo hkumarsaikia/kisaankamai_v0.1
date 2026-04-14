@@ -1,41 +1,200 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
-import { onLCP, onINP, onCLS, onFCP, onTTFB } from 'web-vitals';
-import { ID, databases, APPWRITE_CONFIG } from '@/lib/appwrite';
-import { DEMO_AUTH_CONFIG } from '@/lib/demoAuth';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect } from "react";
+import { onCLS, onFCP, onINP, onLCP, onTTFB } from "web-vitals";
+import {
+  BUG_REPORT_ENDPOINT,
+  currentPathMetadata,
+  isInternalBugRoute,
+  normalizeConsoleArgs,
+  previewRequestBody,
+  previewResponse,
+  reportClientBug,
+  resolveFetchUrl,
+} from "@/lib/client/bug-reporting";
 
-interface PerformanceEvent {
-  type: string;
-  name?: string;
-  value?: number;
-  timestamp: number;
-  metadata?: any;
+const VITAL_THRESHOLDS = {
+  CLS: 0.25,
+  FCP: 3_000,
+  INP: 500,
+  LCP: 4_000,
+  TTFB: 1_800,
+} as const;
+
+declare global {
+  interface Window {
+    __KK_BUG_MONITOR_INSTALLED__?: boolean;
+  }
 }
 
 export function PerformanceMonitor() {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const isDemoMode = DEMO_AUTH_CONFIG.enabled;
-  const isSimulation = searchParams?.get('simulate') === 'true';
-  const eventBuffer = useRef<PerformanceEvent[]>([]);
-  const sessionId = useRef<string>(`session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
-  const isBatching = useRef(false);
-
   useEffect(() => {
-    if (isDemoMode) {
+    if (typeof window === "undefined" || window.__KK_BUG_MONITOR_INSTALLED__) {
       return;
     }
 
-    // 1. Web Vitals
-    const logVital = (metric: any) => {
-      eventBuffer.current.push({
-        type: 'web-vital',
-        name: metric.name,
-        value: metric.value,
-        timestamp: Date.now(),
-        metadata: { id: metric.id, rating: metric.rating }
+    window.__KK_BUG_MONITOR_INSTALLED__ = true;
+
+    const originalConsoleError = window.console.error.bind(window.console);
+    const originalConsoleWarn = window.console.warn.bind(window.console);
+    const originalFetch = window.fetch.bind(window);
+
+    const handleWindowError = (event: ErrorEvent) => {
+      reportClientBug({
+        ...currentPathMetadata(),
+        source: "window-error",
+        severity: "error",
+        handled: false,
+        error: {
+          name: event.error?.name || "Error",
+          message: event.message,
+          stack: event.error?.stack,
+        },
+        metadata: {
+          filename: event.filename,
+          lineno: event.lineno,
+          colno: event.colno,
+        },
+      });
+    };
+
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      const reason =
+        event.reason instanceof Error
+          ? {
+              name: event.reason.name,
+              message: event.reason.message,
+              stack: event.reason.stack,
+            }
+          : {
+              name: "UnhandledRejection",
+              message: String(event.reason),
+            };
+
+      reportClientBug({
+        ...currentPathMetadata(),
+        source: "unhandledrejection",
+        severity: "error",
+        handled: false,
+        error: reason,
+        metadata: {
+          rawReason: event.reason,
+        },
+      });
+    };
+
+    window.console.error = (...args: Parameters<typeof console.error>) => {
+      originalConsoleError(...args);
+      reportClientBug({
+        ...currentPathMetadata(),
+        source: "console-error",
+        severity: "warning",
+        handled: true,
+        rawConsoleArgs: normalizeConsoleArgs(args),
+      });
+    };
+
+    window.console.warn = (...args: Parameters<typeof console.warn>) => {
+      originalConsoleWarn(...args);
+      reportClientBug({
+        ...currentPathMetadata(),
+        source: "console-warn",
+        severity: "info",
+        handled: true,
+        rawConsoleArgs: normalizeConsoleArgs(args),
+      });
+    };
+
+    const wrappedFetch: typeof window.fetch = async (input, init) => {
+      const targetUrl = resolveFetchUrl(input);
+
+      if (!targetUrl || isInternalBugRoute(targetUrl) || targetUrl.pathname === BUG_REPORT_ENDPOINT) {
+        return originalFetch(input, init);
+      }
+
+      const requestBody =
+        input instanceof Request ? undefined : previewRequestBody(init?.body);
+
+      try {
+        const response = await originalFetch(input, init);
+
+        if (!response.ok) {
+          reportClientBug({
+            ...currentPathMetadata(),
+            source: "fetch-response",
+            severity: response.status >= 500 ? "error" : "warning",
+            handled: true,
+            method: init?.method || (input instanceof Request ? input.method : "GET"),
+            statusCode: response.status,
+            url: targetUrl.href,
+            pathname: targetUrl.pathname,
+            search: targetUrl.search,
+            rawBody: requestBody,
+            rawResponsePreview: await previewResponse(response),
+            metadata: {
+              statusText: response.statusText,
+            },
+          });
+        }
+
+        return response;
+      } catch (error) {
+        reportClientBug({
+          ...currentPathMetadata(),
+          source: "fetch-exception",
+          severity: "error",
+          handled: false,
+          method: init?.method || (input instanceof Request ? input.method : "GET"),
+          url: targetUrl.href,
+          pathname: targetUrl.pathname,
+          search: targetUrl.search,
+          rawBody: requestBody,
+          error:
+            error instanceof Error
+              ? {
+                  name: error.name,
+                  message: error.message,
+                  stack: error.stack,
+                }
+              : {
+                  name: "FetchError",
+                  message: String(error),
+                },
+        });
+        throw error;
+      }
+    };
+
+    window.fetch = wrappedFetch;
+    window.addEventListener("error", handleWindowError);
+    window.addEventListener("unhandledrejection", handleUnhandledRejection);
+
+    const logVital = (metric: {
+      name: keyof typeof VITAL_THRESHOLDS;
+      value: number;
+      rating: "good" | "needs-improvement" | "poor";
+      id: string;
+      navigationType?: string;
+    }) => {
+      if (metric.rating === "good") {
+        return;
+      }
+
+      reportClientBug({
+        ...currentPathMetadata(),
+        source: "web-vital",
+        severity: metric.rating === "poor" ? "warning" : "info",
+        handled: true,
+        performance: {
+          metricName: metric.name,
+          metricValue: metric.value,
+          rating: metric.rating,
+          threshold: VITAL_THRESHOLDS[metric.name],
+          navigationType: metric.navigationType,
+        },
+        metadata: {
+          metricId: metric.id,
+        },
       });
     };
 
@@ -45,106 +204,15 @@ export function PerformanceMonitor() {
     onFCP(logVital);
     onTTFB(logVital);
 
-    // 2. Interaction Listeners
-    const handleInteraction = (e: MouseEvent | TouchEvent) => {
-      const target = e.target as HTMLElement;
-      eventBuffer.current.push({
-        type: 'interaction',
-        name: e.type,
-        timestamp: Date.now(),
-        metadata: {
-          tagName: target.tagName,
-          id: target.id,
-          className: target.className,
-          text: target.innerText?.substring(0, 50)
-        }
-      });
-    };
-
-    window.addEventListener('click', handleInteraction);
-    window.addEventListener('touchstart', handleInteraction);
-
-    // 3. Batching Timer
-    const interval = setInterval(() => {
-      sendBatch();
-    }, 5000);
-
-    // 4. Simulation Mode
-    if (isSimulation) {
-      const simInterval = setInterval(() => {
-        simulateUserAction();
-      }, 2000);
-      return () => {
-        clearInterval(interval);
-        clearInterval(simInterval);
-        window.removeEventListener('click', handleInteraction);
-        window.removeEventListener('touchstart', handleInteraction);
-      };
-    }
-
     return () => {
-      clearInterval(interval);
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
-      sendBatch(true); // Final batch on unmount
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      window.console.error = originalConsoleError;
+      window.console.warn = originalConsoleWarn;
+      window.fetch = originalFetch;
+      window.removeEventListener("error", handleWindowError);
+      window.removeEventListener("unhandledrejection", handleUnhandledRejection);
+      window.__KK_BUG_MONITOR_INSTALLED__ = false;
     };
-  }, [isDemoMode, pathname, isSimulation]);
+  }, []);
 
-  const sendBatch = async (force = false) => {
-    if (isDemoMode) return;
-    if (eventBuffer.current.length === 0 || isBatching.current) return;
-    if (!force && eventBuffer.current.length < 5) return; // Wait for at least 5 events unless forced
-
-    const batch = [...eventBuffer.current];
-    eventBuffer.current = [];
-    isBatching.current = true;
-
-    try {
-      await databases.createDocument(
-        APPWRITE_CONFIG.databaseId,
-        APPWRITE_CONFIG.liveLogsCollectionId,
-        ID.unique(),
-        {
-          sessionId: sessionId.current,
-          batchData: JSON.stringify(batch),
-          timestamp: new Date().toISOString(),
-          deviceInfo: JSON.stringify({
-            userAgent: navigator.userAgent,
-            screen: `${window.innerWidth}x${window.innerHeight}`,
-            pathname
-          })
-        }
-      );
-    } catch (error: any) {
-      // Silently ignore 401 permission errors — configure Appwrite collection
-      // permissions to enable logging. Other errors shown in dev only.
-      const isPermissionError =
-        error?.code === 401 ||
-        error?.message?.includes('permissions') ||
-        error?.message?.includes('Unauthorized');
-      if (!isPermissionError && process.env.NODE_ENV === 'development') {
-        console.warn('[PerformanceMonitor] Failed to send batch:', error?.message);
-      }
-      // Do NOT re-buffer failed batches — prevents memory leak on repeated failures
-    } finally {
-      isBatching.current = false;
-    }
-  };
-
-  const simulateUserAction = () => {
-    const actions = [
-      () => window.scrollTo({ top: Math.random() * document.body.scrollHeight, behavior: 'smooth' }),
-      () => {
-        const buttons = document.querySelectorAll('button, a');
-        if (buttons.length > 0) {
-          const btn = buttons[Math.floor(Math.random() * buttons.length)] as HTMLElement;
-          btn.click();
-        }
-      }
-    ];
-    actions[Math.floor(Math.random() * actions.length)]();
-  };
-
-  return null; // Invisible component
+  return null;
 }
