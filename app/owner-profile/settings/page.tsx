@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useAuth } from "@/components/AuthContext";
-import { updateProfileSettingsAction } from "@/lib/actions/local-data";
+import { updateProfileSettingsAction } from "@/lib/actions/firebase-data";
 import { FormActions, FormField, FormGrid, FormNotice, FormSection } from "@/components/forms/FormKit";
 import { Button } from "@/components/ui/button";
 

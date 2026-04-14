@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
-import { submitSupportRequestAction } from "@/lib/actions/local-data";
+import { submitSupportRequestAction } from "@/lib/actions/firebase-data";
 import { FormField, FormNotice, FormSection } from "@/components/forms/FormKit";
 import { Button } from "@/components/ui/button";
 import { supportRequestSchema } from "@/lib/validation/forms";

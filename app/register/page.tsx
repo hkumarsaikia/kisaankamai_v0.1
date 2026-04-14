@@ -7,7 +7,7 @@ import { Footer } from "@/components/Footer";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
-import { registerAction } from "@/lib/actions/local-data";
+import { registerAction } from "@/lib/actions/firebase-data";
 import { assetPath } from "@/lib/site";
 
 type RoleValue = "renter" | "owner";
@@ -122,7 +122,7 @@ export default function RegisterPage() {
               ) : null}
 
               {step === 2 ? (
-                <FormSection title="Location and farm profile" description="These fields map directly to the existing profile and local-data schema.">
+                <FormSection title="Location and farm profile" description="These fields map directly to the existing profile and firebase-data schema.">
                   <FormGrid>
                     <FormField label={t("register.village_city")} required>
                       <input className="kk-input" value={formData.village} onChange={(event) => updateField("village", event.target.value)} />

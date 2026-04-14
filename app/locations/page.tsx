@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState, useTransition } from "react";
-import { submitCallbackRequestAction } from "@/lib/actions/local-data";
+import { submitCallbackRequestAction } from "@/lib/actions/firebase-data";
 import { AppLink } from "@/components/AppLink";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";

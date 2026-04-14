@@ -1,5 +1,5 @@
-import { getCurrentSession } from "@/lib/server/local-auth";
-import { getRenterPayments } from "@/lib/server/local-data";
+import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getRenterPayments } from "@/lib/server/firebase-data";
 
 export default async function PaymentsPage() {
   const session = await getCurrentSession();

@@ -3,9 +3,9 @@ import { AppLink as Link } from "@/components/AppLink";
 import {
   deleteListingFormAction,
   toggleListingStatusFormAction,
-} from "@/lib/actions/local-data";
-import { getCurrentSession } from "@/lib/server/local-auth";
-import { getOwnerBookings, getOwnerListings } from "@/lib/server/local-data";
+} from "@/lib/actions/firebase-data";
+import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getOwnerBookings, getOwnerListings } from "@/lib/server/firebase-data";
 
 export default async function MyEquipmentPage() {
   const session = await getCurrentSession();

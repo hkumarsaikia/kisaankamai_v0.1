@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { createSessionFromIdToken, getCurrentSession } from "@/lib/server/local-auth";
-import { normalizeRolePreference, updateLocalProfile } from "@/lib/server/local-data";
+import { createSessionFromIdToken, getCurrentSession } from "@/lib/server/firebase-auth";
+import { normalizeRolePreference, updateLocalProfile } from "@/lib/server/firebase-data";
 
 const sessionRequestSchema = z.object({
   idToken: z.string().min(1),

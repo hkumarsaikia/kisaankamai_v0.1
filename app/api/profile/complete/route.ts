@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCurrentSession, setWorkspaceCookie } from "@/lib/server/local-auth";
+import { getCurrentSession, setWorkspaceCookie } from "@/lib/server/firebase-auth";
 import { withLoggedRoute } from "@/lib/server/bug-reporting";
-import { normalizeRolePreference, updateLocalProfile } from "@/lib/server/local-data";
+import { normalizeRolePreference, updateLocalProfile } from "@/lib/server/firebase-data";
 import { parseJsonBody } from "@/lib/server/http";
 import { completeProfileSchema } from "@/lib/validation/forms";
 

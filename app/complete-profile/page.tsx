@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
-import { completeProfileAction } from "@/lib/actions/local-data";
+import { completeProfileAction } from "@/lib/actions/firebase-data";
 
 export default function CompleteProfilePage() {
   const { user, profile, loading } = useAuth();

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { registerAndCreateSession } from "@/lib/server/local-auth";
+import { registerAndCreateSession } from "@/lib/server/firebase-auth";
 import { registerInputSchema } from "@/lib/validation/forms";
 
 export const dynamic = "force-dynamic";

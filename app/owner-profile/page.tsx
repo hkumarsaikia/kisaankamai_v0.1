@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
-import { getCurrentSession } from "@/lib/server/local-auth";
-import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
+import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/firebase-data";
 
 export default async function OwnerDashboardPage() {
   const session = await getCurrentSession();

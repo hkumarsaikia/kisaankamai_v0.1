@@ -8,7 +8,7 @@ import { Header } from "@/components/Header";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { Button } from "@/components/ui/button";
-import { createBookingAction } from "@/lib/actions/local-data";
+import { createBookingAction } from "@/lib/actions/firebase-data";
 import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 
 export default function BookingRequestClient({

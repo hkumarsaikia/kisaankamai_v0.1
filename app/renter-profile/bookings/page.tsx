@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { getCurrentSession } from "@/lib/server/local-auth";
-import { getRenterBookings } from "@/lib/server/local-data";
+import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getRenterBookings } from "@/lib/server/firebase-data";
 
 const statusConfig: Record<string, string> = {
   active: "bg-amber-100 text-amber-800",

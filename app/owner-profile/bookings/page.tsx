@@ -1,6 +1,6 @@
-import { updateBookingStatusFormAction } from "@/lib/actions/local-data";
-import { getCurrentSession } from "@/lib/server/local-auth";
-import { getOwnerBookings } from "@/lib/server/local-data";
+import { updateBookingStatusFormAction } from "@/lib/actions/firebase-data";
+import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getOwnerBookings } from "@/lib/server/firebase-data";
 
 export default async function BookingsManagementPage() {
   const session = await getCurrentSession();

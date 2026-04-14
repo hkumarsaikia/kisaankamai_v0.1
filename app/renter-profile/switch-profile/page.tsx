@@ -1,7 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
-import { selectWorkspaceAction } from "@/lib/actions/local-data";
+import { selectWorkspaceAction } from "@/lib/actions/firebase-data";
 import { useAuth } from "@/components/AuthContext";
 
 export default function SwitchProfilePage() {

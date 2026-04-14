@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { clearSessionCookie } from "@/lib/server/local-auth";
+import { clearSessionCookie } from "@/lib/server/firebase-auth";
 
 export const dynamic = "force-dynamic";
 

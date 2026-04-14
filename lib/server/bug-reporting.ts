@@ -599,14 +599,16 @@ export async function appendBugReport(record: BugReportRecord) {
     return { skipped: true, id: normalized.id };
   }
 
-  const filePath = getDailyFilePath(normalized.occurredAt);
-
   bugGlobals.__kkBugReportQueue = bugGlobals.__kkBugReportQueue!
     .catch(() => undefined)
     .then(async () => {
-      await ensureBugReportsDir();
-      const existing = await readExistingReports(filePath);
-      await writeReports(filePath, [...existing, normalized]);
+      try {
+        const { getAdminDb } = await import("./firebase-admin");
+        const db = getAdminDb();
+        await db.collection("bug_reports").doc(normalized.id).set(normalized);
+      } catch (err) {
+        console.error("Failed to commit bug report to Firestore:", err);
+      }
     });
 
   await bugGlobals.__kkBugReportQueue;
@@ -620,10 +622,13 @@ export function appendBugReportSync(record: BugReportRecord) {
     return { skipped: true, id: normalized.id };
   }
 
-  ensureBugReportsDirSync();
-  const filePath = getDailyFilePath(normalized.occurredAt);
-  const existing = readExistingReportsSync(filePath);
-  writeReportsSync(filePath, [...existing, normalized]);
+  // Fire-and-forget for synchronous contexts (e.g. process uncaught)
+  import("./firebase-admin").then(({ getAdminDb }) => {
+    try {
+      getAdminDb().collection("bug_reports").doc(normalized.id).set(normalized);
+    } catch(e) {}
+  });
+
   return { skipped: false, id: normalized.id };
 }
 
@@ -859,7 +864,18 @@ export async function readClientEnvelopeFromRequest<T extends ZodTypeAny>(
   return schema.parse(json);
 }
 
-export function bugReportsExistForToday() {
-  const filePath = getDailyFilePath(nowIso());
-  return existsSync(filePath);
+export async function bugReportsExistForToday() {
+  try {
+    const { getAdminDb } = await import("./firebase-admin");
+    const today = nowIso().slice(0, 10);
+    // Rough check for any bug report today
+    const reports = await getAdminDb()
+      .collection("bug_reports")
+      .where("occurredAt", ">=", today)
+      .limit(1)
+      .get();
+    return !reports.empty;
+  } catch(e) {
+    return false;
+  }
 }

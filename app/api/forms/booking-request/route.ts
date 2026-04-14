@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bookingRequestSchema } from "@/lib/validation/forms";
 import { withLoggedRoute } from "@/lib/server/bug-reporting";
-import { getCurrentSession } from "@/lib/server/local-auth";
+import { getCurrentSession } from "@/lib/server/firebase-auth";
 import {
   createBookingRecord,
   createSubmissionRecord,
   getListingById,
-} from "@/lib/server/local-data";
+} from "@/lib/server/firebase-data";
 import { parseJsonBody } from "@/lib/server/http";
 
 export const dynamic = "force-dynamic";

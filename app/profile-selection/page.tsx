@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useTransition } from "react";
 import { AppLink as Link } from "@/components/AppLink";
-import { selectWorkspaceAction } from "@/lib/actions/local-data";
+import { selectWorkspaceAction } from "@/lib/actions/firebase-data";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageContext";

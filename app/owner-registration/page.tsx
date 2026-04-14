@@ -2,8 +2,8 @@ import { redirect } from "next/navigation";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { OwnerTopBar } from "@/components/OwnerTopBar";
 import { OwnerListingWizard } from "@/components/forms/OwnerListingWizard";
-import { getCurrentSession } from "@/lib/server/local-auth";
-import { getListingById } from "@/lib/server/local-data";
+import { getCurrentSession } from "@/lib/server/firebase-auth";
+import { getListingById } from "@/lib/server/firebase-data";
 
 export default async function OwnerRegistrationPage({
   searchParams,
