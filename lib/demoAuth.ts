@@ -1,4 +1,5 @@
 import { Models } from "appwrite";
+import type { LocalSession, ProfileRecord, UserRole } from "@/lib/local-data/types";
 
 const getEnvValue = (value: string | undefined, fallback: string) => {
   const trimmed = value?.trim();
@@ -29,6 +30,7 @@ export const DEMO_AUTH_CONFIG = {
   password: getEnvValue(process.env.NEXT_PUBLIC_DEMO_PASSWORD, "Test@12345"),
   storageKey: "kisan-kamai-demo-session"
 };
+const DEMO_WORKSPACE_STORAGE_KEY = "kisan-kamai-demo-workspace";
 
 const DEMO_FULL_NAME = "Kisan Kamai Demo User";
 
@@ -128,5 +130,92 @@ export const startDemoSession = () => {
 export const clearDemoSession = () => {
   if (canUseLocalStorage()) {
     window.localStorage.removeItem(DEMO_AUTH_CONFIG.storageKey);
+    window.localStorage.removeItem(DEMO_WORKSPACE_STORAGE_KEY);
   }
+};
+
+function getDemoWorkspace(): UserRole {
+  if (!canUseLocalStorage()) {
+    return "renter";
+  }
+
+  const rawWorkspace = window.localStorage.getItem(DEMO_WORKSPACE_STORAGE_KEY);
+  return rawWorkspace === "owner" ? "owner" : "renter";
+}
+
+function setStoredDemoWorkspace(workspace: UserRole) {
+  if (canUseLocalStorage()) {
+    window.localStorage.setItem(DEMO_WORKSPACE_STORAGE_KEY, workspace);
+  }
+}
+
+function toLocalProfile(profile: DemoUserProfile): ProfileRecord {
+  return {
+    userId: "demo-user",
+    fullName: profile.fullName || DEMO_FULL_NAME,
+    village: profile.village || "Sangli Demo Hub",
+    address: profile.address || "Demo Farm Road, Sangli",
+    pincode: profile.pincode || "416416",
+    fieldArea: profile.fieldArea || 12.5,
+    rolePreference: "both",
+    email: profile.email,
+    phone: profile.phone,
+  };
+}
+
+function toLocalSession(session: DemoSession, workspace: UserRole): LocalSession {
+  return {
+    user: {
+      id: "demo-user",
+      name: session.profile.fullName || session.user.name || DEMO_FULL_NAME,
+      email: session.profile.email || DEMO_AUTH_CONFIG.email,
+      phone: session.profile.phone || DEMO_AUTH_CONFIG.phone,
+      roles: ["owner", "renter"],
+    },
+    profile: toLocalProfile(session.profile),
+    activeWorkspace: workspace,
+  };
+}
+
+export const readDemoLocalSession = (): LocalSession | null => {
+  const session = readDemoSession();
+  if (!session) {
+    return null;
+  }
+
+  return toLocalSession(session, getDemoWorkspace());
+};
+
+export const startDemoLocalSession = (workspace: UserRole = "renter") => {
+  const session = startDemoSession();
+  setStoredDemoWorkspace(workspace);
+  return toLocalSession(session, workspace);
+};
+
+export const setDemoWorkspace = (workspace: UserRole): LocalSession | null => {
+  const session = readDemoSession();
+  if (!session) {
+    return null;
+  }
+
+  setStoredDemoWorkspace(workspace);
+  return toLocalSession(session, workspace);
+};
+
+export const updateDemoProfile = (patch: Partial<DemoUserProfile>): LocalSession | null => {
+  const session = readDemoSession();
+  if (!session || !canUseLocalStorage()) {
+    return null;
+  }
+
+  const nextSession: DemoSession = {
+    ...session,
+    profile: {
+      ...session.profile,
+      ...patch,
+    },
+  };
+
+  window.localStorage.setItem(DEMO_AUTH_CONFIG.storageKey, JSON.stringify(nextSession));
+  return toLocalSession(nextSession, getDemoWorkspace());
 };

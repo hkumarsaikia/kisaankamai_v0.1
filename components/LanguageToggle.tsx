@@ -8,14 +8,14 @@ type LanguageToggleProps = {
 };
 
 export function LanguageToggle({ className = "", compact = false }: LanguageToggleProps) {
-  const { language, setLanguage } = useLanguage();
+  const { language, setLanguage, t } = useLanguage();
   const buttonPadding = compact ? "px-3 py-1.5 text-xs" : "px-4 py-2 text-sm";
 
   return (
     <div
-      className={`inline-flex items-center rounded-full border border-emerald-100 bg-white/85 p-1 text-primary shadow-sm backdrop-blur dark:border-slate-800 dark:bg-slate-950/80 dark:text-emerald-100 ${className}`}
+      className={`inline-flex items-center rounded-full border border-outline-variant bg-surface-container-lowest p-1 text-on-surface shadow-sm backdrop-blur ${className}`}
       role="group"
-      aria-label="Language selection"
+      aria-label={t("header.menu.profiles")}
     >
       <button
         type="button"
@@ -26,7 +26,7 @@ export function LanguageToggle({ className = "", compact = false }: LanguageTogg
             : "text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-emerald-200"
         }`}
       >
-        English
+        {t("language.english")}
       </button>
       <button
         type="button"
@@ -37,7 +37,7 @@ export function LanguageToggle({ className = "", compact = false }: LanguageTogg
             : "text-slate-600 hover:text-primary dark:text-slate-300 dark:hover:text-emerald-200"
         }`}
       >
-        मराठी
+        {t("language.marathi")}
       </button>
     </div>
   );

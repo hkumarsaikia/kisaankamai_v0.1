@@ -1,6 +1,7 @@
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { getEquipmentList } from "@/lib/server/equipment";
 import { assetPath } from "@/lib/site";
+import { ContentImage } from "@/components/ContentImage";
 
 function matchesLocation(candidate: string, location: string) {
   if (!location) {
@@ -59,8 +60,7 @@ export default async function RentEquipmentResults({
           className="group overflow-hidden rounded-2xl border border-outline-variant/20 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800/50 dark:bg-slate-900/40"
         >
           <div className="relative h-56 overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <ContentImage
               className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               alt={item.name}
               src={assetPath(item.coverImage)}
@@ -122,3 +122,5 @@ export default async function RentEquipmentResults({
     </div>
   );
 }
+
+

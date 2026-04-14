@@ -1,8 +1,10 @@
 "use client";
 
-import Link from "next/link";
-import { postJson, SubmissionError } from "@/lib/client/forms";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
+import Image from "next/image";
+import { AppLink as Link } from "@/components/AppLink";
+import { submitSupportRequestAction } from "@/lib/actions/local-data";
+import { FormField, FormNotice, FormSection } from "@/components/forms/FormKit";
+import { Button } from "@/components/ui/button";
 import { supportRequestSchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
 
@@ -38,17 +40,14 @@ export default function SupportDashboard() {
     setIsSubmitting(true);
 
     try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/support-request", parsed.data);
+      const result = await submitSupportRequestAction(parsed.data);
+      if (!result.ok) {
+        setError(result.error || "Could not submit your support ticket right now.");
+        return;
       }
+
       setSuccess("Support ticket submitted. We will get back to you within 24 hours.");
       event.currentTarget.reset();
-    } catch (submitError) {
-      if (submitError instanceof SubmissionError) {
-        setError(submitError.message);
-      } else {
-        setError("Could not submit your support ticket right now.");
-      }
     } finally {
       setIsSubmitting(false);
     }
@@ -120,44 +119,36 @@ export default function SupportDashboard() {
               <p className="text-on-surface-variant dark:text-slate-400 mb-8 font-medium relative z-10">Describe your issue and we&apos;ll get back to you within 24 hours.</p>
 
               <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
-                {error ? (
-                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-                    {error}
+                {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+                {success ? <FormNotice tone="success">{success}</FormNotice> : null}
+                <FormSection title="Submit a Request | तक्रार दाखल करा" description="Describe the issue and we will get back to you within 24 hours.">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <FormField label="Full Name | पूर्ण नाव">
+                      <input className="kk-input" name="fullName" placeholder="Enter name" type="text" />
+                    </FormField>
+                    <FormField label="Phone Number | फोन नंबर">
+                      <input className="kk-input" name="phone" placeholder="+91" type="tel" />
+                    </FormField>
                   </div>
-                ) : null}
-                {success ? (
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
-                    {success}
+                  <div className="mt-6 space-y-6">
+                    <FormField label="Category | प्रकार">
+                      <select className="kk-input" name="category">
+                        <option className="dark:bg-slate-800">Select issue type</option>
+                        <option className="dark:bg-slate-800">Payment Issue</option>
+                        <option className="dark:bg-slate-800">Equipment Damage</option>
+                        <option className="dark:bg-slate-800">App Error</option>
+                        <option className="dark:bg-slate-800">Profile Update</option>
+                      </select>
+                    </FormField>
+                    <FormField label="Message | संदेश">
+                      <textarea className="kk-input resize-y" name="message" placeholder="Describe your issue in detail..." rows={4}></textarea>
+                    </FormField>
+                    <Button className="mt-2 w-full md:w-auto" disabled={isSubmitting} type="submit">
+                      {isSubmitting ? "Sending..." : "Send Ticket | तिकीट पाठवा"}
+                      <span className="material-symbols-outlined">send</span>
+                    </Button>
                   </div>
-                ) : null}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Full Name | पूर्ण नाव</label>
-                    <input className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" name="fullName" placeholder="Enter name" type="text" />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Phone Number | फोन नंबर</label>
-                    <input className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" name="phone" placeholder="+91" type="tel" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Category | प्रकार</label>
-                  <select className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all" name="category">
-                    <option className="dark:bg-slate-800">Select issue type</option>
-                    <option className="dark:bg-slate-800">Payment Issue</option>
-                    <option className="dark:bg-slate-800">Equipment Damage</option>
-                    <option className="dark:bg-slate-800">App Error</option>
-                    <option className="dark:bg-slate-800">Profile Update</option>
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="font-label text-sm font-bold text-primary dark:text-emerald-400 px-1">Message | संदेश</label>
-                  <textarea className="w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 focus:border-emerald-500 focus:ring-emerald-500 py-3 px-4 dark:text-white outline-none transition-all resize-y" name="message" placeholder="Describe your issue in detail..." rows={4}></textarea>
-                </div>
-                <button className="bg-primary hover:bg-primary-container dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white font-bold py-4 px-8 rounded-xl transition-all flex items-center justify-center gap-3 w-full md:w-auto mt-4 disabled:opacity-60" disabled={isSubmitting} type="submit">
-                  {isSubmitting ? "Sending..." : "Send Ticket | तिकीट पाठवा"}
-                  <span className="material-symbols-outlined">send</span>
-                </button>
+                </FormSection>
               </form>
             </div>
 
@@ -197,7 +188,15 @@ export default function SupportDashboard() {
           <div className="space-y-8">
             {/* Trust & Reassurance Card */}
             <div className="bg-primary-container dark:bg-emerald-900/80 p-6 rounded-3xl text-white shadow-sm overflow-hidden relative">
-              <img alt="Agriculture Scene" className="w-full h-32 object-cover rounded-xl mb-6 grayscale opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFt3CXXerkBJIc6-_qQumYHHFQV8eciEbcTGHyMl78up8HHSHKYUxEdmwVsOjtK4yUl-XEhlzFjpUgK3_VHiBYELNIjJfNZgI3SE63pgp93VapX21zJC5mbtioXpCj_j4KVdEmg5hetUAfeGZzcbRXn0uZFEtK9GhLDhDECoE-MFMNfHqQfAL2JnpMi3tUQjcipZPt7uY63npTXGN8W7jRfKS-4TERA9DRQwX0H4JR7q9f-4HBDa8BJkn_maqERQxT7tiON-niC-Ua" loading="lazy" decoding="async" />
+              <div className="relative mb-6 h-32 overflow-hidden rounded-xl">
+                <Image
+                  alt="Agriculture Scene"
+                  className="object-cover grayscale opacity-60"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDFt3CXXerkBJIc6-_qQumYHHFQV8eciEbcTGHyMl78up8HHSHKYUxEdmwVsOjtK4yUl-XEhlzFjpUgK3_VHiBYELNIjJfNZgI3SE63pgp93VapX21zJC5mbtioXpCj_j4KVdEmg5hetUAfeGZzcbRXn0uZFEtK9GhLDhDECoE-MFMNfHqQfAL2JnpMi3tUQjcipZPt7uY63npTXGN8W7jRfKS-4TERA9DRQwX0H4JR7q9f-4HBDa8BJkn_maqERQxT7tiON-niC-Ua"
+                  fill
+                  sizes="(min-width: 1024px) 360px, 100vw"
+                />
+              </div>
               <div className="relative z-10">
                 <h4 className="text-xl font-black mb-2">We&apos;ve got your back.</h4>
                 <p className="text-on-primary-container dark:text-emerald-100/80 text-sm leading-relaxed mb-4">
@@ -257,3 +256,5 @@ export default function SupportDashboard() {
     </>
   );
 }
+
+

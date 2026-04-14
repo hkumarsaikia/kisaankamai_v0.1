@@ -7,7 +7,7 @@ import { getSiteUrl, IS_PAGES_BUILD } from "@/lib/runtime";
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  return IS_PAGES_BUILD ? getEquipmentStaticParams() : [];
+  return IS_PAGES_BUILD ? await getEquipmentStaticParams() : [];
 }
 
 export async function generateMetadata({
@@ -72,3 +72,4 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return <EquipmentDetailClient equipment={equipment} relatedEquipment={relatedEquipment} />;
 }
+

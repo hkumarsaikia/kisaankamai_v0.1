@@ -25,3 +25,4 @@ export default function RenterDashboardLegacyCatchAllPage({
   const target = `/renter-profile/${params.segments.join("/")}`;
   return <LegacyRouteRedirect target={target} title="Renter Profile" />;
 }
+

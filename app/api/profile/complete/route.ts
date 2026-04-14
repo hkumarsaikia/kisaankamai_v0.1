@@ -1,57 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { completeProfileSchema } from "@/lib/validation/forms";
+import { getCurrentSession, setWorkspaceCookie } from "@/lib/server/local-auth";
+import { withLoggedRoute } from "@/lib/server/bug-reporting";
+import { normalizeRolePreference, updateLocalProfile } from "@/lib/server/local-data";
+import { parseJsonBody } from "@/lib/server/http";
 import {
-  assertCollectionConfigured,
-  getAccountFromJwt,
-  getAdminDatabases,
-  SERVER_APPWRITE_CONFIG,
-} from "@/lib/server/appwrite-admin";
-import { assertMutationRequestAllowed, compactRecord, handleRouteError, parseJsonBody } from "@/lib/server/http";
+  IS_PAGES_BUILD,
+  PAGES_BUILD_DYNAMIC,
+  PAGES_DEMO_ROUTE_ERROR,
+  pagesDemoJson,
+} from "@/lib/server/pages-export";
+import { completeProfileSchema } from "@/lib/validation/forms";
 
 const completeProfileRequestSchema = completeProfileSchema.extend({
-  jwt: z.string().min(10, "Session token is required."),
+  jwt: z.string().optional(),
 });
 
-export async function POST(request: NextRequest) {
-  try {
-    const payload = await parseJsonBody(request, completeProfileRequestSchema);
-    assertMutationRequestAllowed();
-    const account = getAccountFromJwt(payload.jwt);
-    const user = await account.get();
-    const collectionId = assertCollectionConfigured(
-      SERVER_APPWRITE_CONFIG.userCollectionId,
-      "user profile collection"
-    );
-    const data = compactRecord({
-      phone: payload.phone,
-      pincode: payload.pincode,
-      village: payload.village,
-      address: payload.address || payload.village,
-      role: payload.role,
-      email: user.email || "",
-      fullName: user.name || "User",
-      updatedAt: new Date().toISOString(),
+export const dynamic = PAGES_BUILD_DYNAMIC;
+
+export const POST = IS_PAGES_BUILD
+  ? async () => pagesDemoJson({ ok: false, error: PAGES_DEMO_ROUTE_ERROR }, { status: 400 })
+  : withLoggedRoute("profile-complete", async (request: NextRequest) => {
+      const payload = await parseJsonBody(request, completeProfileRequestSchema);
+      const session = await getCurrentSession();
+
+      if (!session) {
+        return NextResponse.json({ ok: false, error: "Login required." }, { status: 401 });
+      }
+
+      const preferredWorkspace = normalizeRolePreference(payload.role);
+
+      await updateLocalProfile(session.user.id, {
+        phone: payload.phone,
+        pincode: payload.pincode,
+        village: payload.village || session.profile.village,
+        address: payload.address || session.profile.address,
+        rolePreference: preferredWorkspace,
+      });
+      await setWorkspaceCookie(preferredWorkspace);
+
+      return NextResponse.json({ ok: true, userId: session.user.id });
     });
-
-    try {
-      await getAdminDatabases().updateDocument(
-        SERVER_APPWRITE_CONFIG.databaseId!,
-        collectionId,
-        user.$id,
-        data
-      );
-    } catch {
-      await getAdminDatabases().createDocument(
-        SERVER_APPWRITE_CONFIG.databaseId!,
-        collectionId,
-        user.$id,
-        data
-      );
-    }
-
-    return NextResponse.json({ ok: true, userId: user.$id });
-  } catch (error) {
-    return handleRouteError(error);
-  }
-}

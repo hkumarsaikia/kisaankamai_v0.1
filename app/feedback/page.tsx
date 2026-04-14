@@ -1,18 +1,19 @@
 "use client";
 
-import { postJson, SubmissionError } from "@/lib/client/forms";
-import { IS_PAGES_BUILD } from "@/lib/runtime";
-import { feedbackSchema } from "@/lib/validation/forms";
+import { useState } from "react";
+import { submitFeedbackAction } from "@/lib/actions/local-data";
+import { ChoicePills, FormActions, FormField, FormGrid, FormNotice, FormSection, FormShell } from "@/components/forms/FormKit";
 import { useLanguage } from "@/components/LanguageContext";
-import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { useState } from "react";
+import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
+import { feedbackSchema } from "@/lib/validation/forms";
 
 export default function FeedbackPage() {
-  const { langText } = useLanguage();
-  const router = useRouter();
+  const { t, langText } = useLanguage();
+  const router = useSmoothRouter();
   const [rating, setRating] = useState<number | undefined>();
+  const [role, setRole] = useState<"farmer" | "owner" | "partner" | "visitor">("visitor");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,7 +26,7 @@ export default function FeedbackPage() {
       fullName: form.get("fullName"),
       mobileNumber: form.get("mobileNumber"),
       email: form.get("email"),
-      role: form.get("role"),
+      role,
       category: form.get("category"),
       subject: form.get("subject"),
       message: form.get("message"),
@@ -37,7 +38,7 @@ export default function FeedbackPage() {
       setError(
         parsed.error.flatten().formErrors[0] ||
           Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          langText("Please complete the feedback form correctly.", "कृपया feedback form योग्यरित्या भरा.")
+          t("feedback.please_complete_the_feedback_form_correctly")
       );
       return;
     }
@@ -45,16 +46,13 @@ export default function FeedbackPage() {
     setIsSubmitting(true);
 
     try {
-      if (!IS_PAGES_BUILD) {
-        await postJson("/api/forms/feedback", parsed.data);
+      const result = await submitFeedbackAction(parsed.data);
+      if (!result.ok) {
+        setError(result.error || t("feedback.could_not_submit_feedback_right_now"));
+        return;
       }
-      router.push("/feedback/success");
-    } catch (submitError) {
-      if (submitError instanceof SubmissionError) {
-        setError(submitError.message);
-      } else {
-        setError(langText("Could not submit feedback right now.", "सध्या feedback submit करता आली नाही."));
-      }
+
+      router.push(result.redirectTo || "/feedback/success");
     } finally {
       setIsSubmitting(false);
     }
@@ -69,13 +67,10 @@ export default function FeedbackPage() {
         <div className="relative w-full rounded-2xl overflow-hidden bg-surface-container shadow-sm border border-surface-variant flex flex-col md:flex-row min-h-[300px]">
           <div className="flex-1 p-8 md:p-12 flex flex-col justify-center bg-primary-container z-10">
             <h1 className="text-on-primary font-headline text-3xl md:text-5xl font-bold leading-tight mb-4">
-              {langText("Share Your Feedback", "तुमचे अभिप्राय कळवा")}
+              {t("feedback.share_your_feedback")}
             </h1>
             <p className="text-on-primary-container font-body text-base md:text-lg max-w-md">
-              {langText(
-                "Help us improve Kisan Kamai for every farmer and equipment owner.",
-                "प्रत्येक शेतकरी आणि उपकरण मालकासाठी किसान कमाई सुधारण्यास आम्हाला मदत करा."
-              )}
+              {t("feedback.help_us_improve_kisan_kamai_for_every_farmer_and_equipment_owner")}
             </p>
           </div>
           <div
@@ -90,203 +85,169 @@ export default function FeedbackPage() {
 
       {/* Main Form Section */}
       <section className="w-full max-w-[800px] px-4 md:px-8">
-        <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-surface-variant p-6 md:p-10">
-          <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-            {error ? (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-                {error}
+        <FormShell
+          eyebrow={t("feedback.share_your_feedback")}
+          title={t("feedback.share_your_feedback")}
+          description={t("feedback.help_us_improve_kisan_kamai_for_every_farmer_and_equipment_owner")}
+          aside={
+            <div className="space-y-4">
+              <h3 className="text-lg font-black text-primary">{t("feedback.overall_satisfaction")}</h3>
+              <p className="text-sm font-medium text-on-surface-variant">
+                {t("feedback.your_feedback_is_handled_securely")}
+              </p>
+              <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-5">
+                <p className="text-sm font-black uppercase tracking-[0.18em] text-secondary">
+                  {t("feedback.feedback_category")}
+                </p>
+                <ul className="mt-4 space-y-2 text-sm font-medium text-on-surface-variant">
+                  <li>{t("feedback.website_experience")}</li>
+                  <li>{t("feedback.booking_experience")}</li>
+                  <li>{t("feedback.support_experience")}</li>
+                  <li>{t("feedback.payment_and_pricing")}</li>
+                </ul>
               </div>
-            ) : null}
-            {/* Personal Info Group */}
-            <fieldset className="flex flex-col gap-6">
-              <legend className="sr-only">{langText("Personal Information", "वैयक्तिक माहिती")}</legend>
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="flex-1 flex flex-col gap-2">
-                  <label htmlFor="fullName" className="font-headline font-semibold text-on-surface text-base">
-                    {langText("Full Name", "पूर्ण नाव")} <span className="text-error">*</span>
-                  </label>
+            </div>
+          }
+        >
+          <form className="space-y-8" onSubmit={handleSubmit}>
+            {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+
+            <FormSection title={t("feedback.personal_information")}>
+              <FormGrid>
+                <FormField label={t("feedback.full_name")} required>
                   <input
                     type="text"
-                    id="fullName"
                     name="fullName"
                     required
-                    placeholder={langText("Enter your full name", "तुमचे पूर्ण नाव प्रविष्ट करा")}
-                    className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
+                    placeholder={t("feedback.enter_your_full_name")}
+                    className="kk-input"
                   />
-                </div>
-                <div className="flex-1 flex flex-col gap-2">
-                  <label htmlFor="mobileNumber" className="font-headline font-semibold text-on-surface text-base">
-                    {langText("Mobile Number", "मोबाईल नंबर")} <span className="text-error">*</span>
-                  </label>
+                </FormField>
+                <FormField label={t("feedback.mobile_number")} required>
                   <input
                     type="tel"
-                    id="mobileNumber"
                     name="mobileNumber"
                     required
-                    placeholder={langText("Enter 10 digit number", "१० अंकी नंबर प्रविष्ट करा")}
-                    className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
+                    placeholder={t("feedback.enter_10_digit_number")}
+                    className="kk-input"
                   />
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label htmlFor="email" className="font-headline font-semibold text-on-surface text-base">
-                  {langText("Email", "ईमेल")} <span className="text-on-surface-variant font-normal text-sm">({langText("Optional", "पर्यायी")})</span>
-                </label>
+                </FormField>
+              </FormGrid>
+              <FormField label={`${t("feedback.email")} (${t("feedback.optional")})`}>
                 <input
                   type="email"
-                  id="email"
                   name="email"
-                  placeholder={langText("Enter your email address", "तुमचा ईमेल ॲड्रेस प्रविष्ट करा")}
-                  className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
+                  placeholder={t("feedback.enter_your_email_address")}
+                  className="kk-input"
                 />
-              </div>
-            </fieldset>
+              </FormField>
+            </FormSection>
 
-            <hr className="border-surface-variant" />
+            <FormSection title={t("feedback.feedback_category")}>
+              <FormField label={t("feedback.i_am_a")} required>
+                <ChoicePills
+                  options={[
+                    { value: "farmer", label: langText("Farmer", "शेतकरी") },
+                    { value: "owner", label: langText("Equipment Owner", "मालक") },
+                    { value: "partner", label: langText("Partner", "भागीदार") },
+                    { value: "visitor", label: langText("Visitor", "अभ्यागत") },
+                  ]}
+                  value={role}
+                  onChange={setRole}
+                />
+                <input type="hidden" name="role" value={role} />
+              </FormField>
 
-            {/* Feedback Details Group */}
-            <fieldset className="flex flex-col gap-6">
-              <div className="flex flex-col gap-3">
-                <label className="font-headline font-semibold text-on-surface text-base">
-                  {langText("I am a...", "मी एक...")} <span className="text-error">*</span>
-                </label>
-                <div className="flex flex-wrap gap-3">
-                  {[
-                    { val: "farmer", en: "Farmer", mr: "शेतकरी" },
-                    { val: "owner", en: "Equipment Owner", mr: "मालक" },
-                    { val: "partner", en: "Partner", mr: "भागीदार" },
-                    { val: "visitor", en: "Visitor", mr: "अभ्यागत", def: true },
-                  ].map((role) => (
-                    <label key={role.val} className="cursor-pointer group">
-                      <input type="radio" name="role" value={role.val} defaultChecked={role.def} className="peer sr-only" />
-                      <div className="px-5 py-2.5 rounded-full border border-outline bg-surface text-on-surface font-label text-sm font-medium transition-all peer-checked:bg-primary-container peer-checked:text-on-primary-container peer-checked:border-primary-container hover:bg-surface-container-high">
-                        {langText(role.en, role.mr)}
-                      </div>
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label htmlFor="category" className="font-headline font-semibold text-on-surface text-base">
-                  {langText("Feedback Category", "अभिप्रायाची श्रेणी")} <span className="text-error">*</span>
-                </label>
-                <div className="relative">
+              <FormGrid>
+                <FormField label={t("feedback.feedback_category")} required>
                   <select
-                    id="category"
                     name="category"
                     required
-                    className="form-select w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface appearance-none"
+                    className="kk-input"
                     defaultValue=""
                   >
                     <option value="" disabled>
-                      {langText("Select a category...", "एक श्रेणी निवडा...")}
+                      {t("feedback.select_a_category")}
                     </option>
-                    <option value="website">{langText("Website Experience", "वेबसाईट अनुभव")}</option>
-                    <option value="booking">{langText("Booking Experience", "बुकिंग अनुभव")}</option>
-                    <option value="listing">{langText("Listing Experience", "लिस्टिंग अनुभव")}</option>
-                    <option value="support">{langText("Support Experience", "सपोर्ट अनुभव")}</option>
-                    <option value="payment">{langText("Payment & Pricing", "पेमेंट आणि किंमत")}</option>
-                    <option value="suggestion">{langText("Suggestion", "सूचना")}</option>
-                    <option value="issue">{langText("Report an Issue", "समस्येची तक्रार करा")}</option>
+                    <option value="website">{t("feedback.website_experience")}</option>
+                    <option value="booking">{t("feedback.booking_experience")}</option>
+                    <option value="listing">{t("feedback.listing_experience")}</option>
+                    <option value="support">{t("feedback.support_experience")}</option>
+                    <option value="payment">{t("feedback.payment_and_pricing")}</option>
+                    <option value="suggestion">{t("feedback.suggestion")}</option>
+                    <option value="issue">{t("feedback.report_an_issue")}</option>
                   </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-on-surface-variant">
-                    <span className="material-symbols-outlined text-xl">expand_more</span>
-                  </div>
-                </div>
-              </div>
+                </FormField>
+                <FormField label={t("feedback.subject")} required>
+                  <input
+                    type="text"
+                    name="subject"
+                    required
+                    placeholder={t("feedback.brief_subject_of_your_feedback")}
+                    className="kk-input"
+                  />
+                </FormField>
+              </FormGrid>
 
-              <div className="flex flex-col gap-2">
-                <label htmlFor="subject" className="font-headline font-semibold text-on-surface text-base">
-                  {langText("Subject", "विषय")} <span className="text-error">*</span>
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  required
-                  placeholder={langText("Brief subject of your feedback", "तुमच्या अभिप्रायाचा संक्षिप्त विषय")}
-                  className="form-input w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary h-12 px-4 font-body text-on-surface"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2">
-                <label htmlFor="message" className="font-headline font-semibold text-on-surface text-base">
-                  {langText("Feedback Message", "संदेश")} <span className="text-error">*</span>
-                </label>
+              <FormField label={t("feedback.feedback_message")} required>
                 <textarea
-                  id="message"
                   name="message"
                   required
                   rows={5}
-                  placeholder={langText("Please describe your experience or suggestion in detail...", "कृपया तुमचा अनुभव किंवा सूचना सविस्तर सांगा...")}
-                  className="form-textarea w-full rounded-lg border border-outline bg-surface focus:border-primary focus:ring-1 focus:ring-primary p-4 font-body text-on-surface resize-y"
-                ></textarea>
-              </div>
-            </fieldset>
+                  placeholder={t("feedback.please_describe_your_experience_or_suggestion_in_detail")}
+                  className="kk-input min-h-[160px]"
+                />
+              </FormField>
+            </FormSection>
 
-            {/* Rating & Final Options */}
-            <fieldset className="flex flex-col gap-6">
-              <div className="flex flex-col gap-3">
-                <label className="font-headline font-semibold text-on-surface text-base">
-                  {langText("Overall Satisfaction", "एकूण समाधान")}
-                </label>
-                <div className="flex gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      onClick={() => setRating(star)}
-                      className={`transition-colors ${
-                        rating && star <= rating ? "text-tertiary-container" : "text-outline hover:text-tertiary-container"
-                      }`}
-                    >
-                      <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        star
-                      </span>
-                    </button>
-                  ))}
-                </div>
+            <FormSection title={t("feedback.overall_satisfaction")}>
+              <div className="flex gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => setRating(star)}
+                    className={`transition-colors ${
+                      rating && star <= rating ? "text-tertiary-container" : "text-outline hover:text-tertiary-container"
+                    }`}
+                  >
+                    <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      star
+                    </span>
+                  </button>
+                ))}
               </div>
 
-              <div className="flex items-start gap-3 mt-2">
-                <div className="flex items-center h-6">
-                  <input
-                    type="checkbox"
-                    id="contactMe"
-                    name="contactMe"
-                    className="form-checkbox w-5 h-5 rounded border-outline text-primary focus:ring-primary bg-surface cursor-pointer"
-                  />
-                </div>
-                <label htmlFor="contactMe" className="font-body text-on-surface text-sm cursor-pointer">
-                  {langText("Contact me about this feedback", "या अभिप्रायाबाबत माझ्याशी संपर्क साधा")}
-                </label>
-              </div>
-            </fieldset>
+              <label className="mt-4 flex items-start gap-3 text-sm font-medium text-on-surface">
+                <input
+                  type="checkbox"
+                  name="contactMe"
+                  className="mt-1 h-5 w-5 rounded border-outline text-primary focus:ring-primary"
+                />
+                <span>{t("feedback.contact_me_about_this_feedback")}</span>
+              </label>
+            </FormSection>
 
-            {/* Submit Area */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-4 border-t border-surface-variant">
-              <div className="flex items-center gap-2 text-on-surface-variant">
+            <FormActions>
+              <div className="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
                 <span className="material-symbols-outlined text-xl">lock</span>
-                <span className="font-body text-sm">
-                  {langText("Your feedback is handled securely.", "तुमचा अभिप्राय सुरक्षितपणे हाताळला जातो.")}
-                </span>
+                <span>{t("feedback.your_feedback_is_handled_securely")}</span>
               </div>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full sm:w-auto px-8 py-3.5 bg-primary text-on-primary font-label font-bold rounded-lg hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary whitespace-nowrap shadow-sm disabled:opacity-60"
+                className="kk-form-primary-button"
               >
-                {isSubmitting
-                  ? langText("Submitting...", "सबमिट करत आहे...")
-                  : langText("Submit Feedback", "सबमिट करा")}
+                {isSubmitting ? t("feedback.submitting") : t("feedback.submit_feedback")}
               </button>
-            </div>
+            </FormActions>
           </form>
-        </div>
+        </FormShell>
       </section>
     </main>
     <Footer />
   </div>
   );
 }
+
+

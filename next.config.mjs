@@ -1,3 +1,5 @@
+import path from "node:path";
+
 const buildTarget = process.env.BUILD_TARGET === "pages" ? "pages" : "server";
 const isPagesBuild = buildTarget === "pages";
 const isDev = process.env.NODE_ENV !== "production";
@@ -44,6 +46,7 @@ function buildCsp() {
       "https://lh3.googleusercontent.com",
       "https://*.googleusercontent.com",
       "https://*.tile.openstreetmap.org",
+      "https://*.basemaps.cartocdn.com",
       "https://www.gstatic.com",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
@@ -112,6 +115,16 @@ const nextConfig = {
   },
   basePath: isPagesBuild ? pagesBasePath : "",
   assetPrefix: isPagesBuild ? `${pagesBasePath}/` : "",
+  webpack(config) {
+    if (isPagesBuild) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "@/lib/actions/local-data": path.resolve("./lib/actions/local-data.pages.ts"),
+      };
+    }
+
+    return config;
+  },
   ...(!isPagesBuild
     ? {
         async headers() {
@@ -127,4 +140,5 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
 

@@ -1,9 +1,11 @@
 "use client";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { useLanguage } from "@/components/LanguageContext";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
+  const { t } = useLanguage();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -20,8 +22,8 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className="p-2 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center text-on-surface"
-      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      className="kk-icon-button"
+      aria-label={isDark ? t("theme.switch_to_light_mode") : t("theme.switch_to_dark_mode")}
     >
       <span className="material-symbols-outlined text-[20px]">
         {isDark ? "light_mode" : "dark_mode"}

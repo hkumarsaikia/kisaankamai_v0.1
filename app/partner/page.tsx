@@ -1,5 +1,8 @@
 "use client";
 
+import { ContentImage } from "@/components/ContentImage";
+import { FormActions, FormField, FormGrid, FormNotice, FormSection, FormShell } from "@/components/forms/FormKit";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
@@ -10,7 +13,7 @@ import { partnerInquirySchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
 
 export default function PartnerPage() {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,24 +71,24 @@ export default function PartnerPage() {
         <div className="absolute inset-0 bg-[radial-gradient(at_0%_0%,rgba(20,59,46,0.05)_0px,transparent_50%),radial-gradient(at_100%_100%,rgba(168,91,51,0.05)_0px,transparent_50%)]" />
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div>
-            <span className="inline-block py-1 px-3 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-sm font-bold tracking-wider mb-6">{langText("OPPORTUNITY FOR GROWTH", "वाढीसाठी संधी")}</span>
+            <span className="inline-block py-1 px-3 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-sm font-bold tracking-wider mb-6">{t("partner.opportunity_for_growth")}</span>
             <h1 className="text-5xl lg:text-7xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-6 leading-tight tracking-tighter">
-              {langText("Empowering Rural Entrepreneurs.", "ग्रामीण उद्योजकांना सक्षम करणे.")}
+              {t("partner.empowering_rural_entrepreneurs")}
             </h1>
             <p className="text-xl text-on-surface-variant dark:text-slate-400 leading-relaxed mb-4 max-w-xl">
-              {langText("Join India's fastest-growing agritech marketplace. Partner with Kisan Kamai to transform agricultural logistics.", "भारतातील सर्वात वेगाने वाढणाऱ्या कृषी तंत्रज्ञान बाजारपेठेत सामील व्हा. कृषी लॉजिस्टिक्स बदलण्यासाठी किसान कमाईसोबत भागीदारी करा.")}
+              {t("partner.join_india_s_fastest_growing_agritech_marketplace_partner_with_kisan_kamai_to_transform_agricultural_logistics")}
             </p>
             <p className="text-base text-secondary dark:text-amber-400 font-bold mb-10 font-mukta">
               भारतातील सर्वात वेगाने वाढणाऱ्या कृषी तंत्रज्ञान बाजारपेठेत सामील व्हा.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <a className="bg-primary-container text-white text-center px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl transition-all" href="#inquiry">{langText("Become a Partner", "भागीदार व्हा")}</a>
-              <a className="border-2 border-primary-container dark:border-emerald-600 text-primary-container dark:text-emerald-400 text-center px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-container/5 transition-all" href="#models">{langText("Explore Models", "मॉडेल्स शोधा")}</a>
+              <a className="bg-primary-container text-white text-center px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl transition-all" href="#inquiry">{t("partner.become_a_partner")}</a>
+              <a className="border-2 border-primary-container dark:border-emerald-600 text-primary-container dark:text-emerald-400 text-center px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-container/5 transition-all" href="#models">{t("partner.explore_models")}</a>
             </div>
           </div>
           <div className="relative">
             <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
-              <img className="w-full h-full object-cover" alt="Farmer and agritech representative in wheat field" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
+              <ContentImage className="w-full h-full object-cover" alt="Farmer and agritech representative in wheat field" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
             </div>
             <div className="absolute -bottom-8 -left-8 bg-white dark:bg-slate-900/80 p-6 rounded-2xl card-shadow-xl hidden md:block max-w-[240px]">
               <div className="flex items-center gap-3 mb-2">
@@ -102,8 +105,8 @@ export default function PartnerPage() {
       <section className="py-24 bg-white dark:bg-slate-950/50" id="models">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-5xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-4 tracking-tight">{langText("Tailored Partnership Models", "अनुकूलित भागीदारी मॉडेल्स")}</h2>
-            <p className="text-lg text-on-surface-variant dark:text-slate-400 max-w-2xl mx-auto">{langText("We offer flexible collaboration frameworks designed for FPOs, local dealers, and financial innovators.", "आम्ही FPOs, स्थानिक डीलर्स आणि आर्थिक नवोपक्रमकारांसाठी लवचिक सहकार्य रचना ऑफर करतो.")}</p>
+            <h2 className="text-3xl lg:text-5xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-4 tracking-tight">{t("partner.tailored_partnership_models")}</h2>
+            <p className="text-lg text-on-surface-variant dark:text-slate-400 max-w-2xl mx-auto">{t("partner.we_offer_flexible_collaboration_frameworks_designed_for_fpos_local_dealers_and_financial_innovators")}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
             {/* Listing Partner */}
@@ -166,7 +169,7 @@ export default function PartnerPage() {
                 </div>
               </div>
               <div className="hidden lg:block w-1/3 aspect-video rounded-2xl overflow-hidden shadow-inner">
-                <img className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Farm equipment facility" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
+                <ContentImage className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Farm equipment facility" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
               </div>
             </div>
           </div>
@@ -178,12 +181,12 @@ export default function PartnerPage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-4xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-8 tracking-tight">{langText("Why Partner with Kisan Kamai?", "किसान कमाईसोबत भागीदारी का?")}</h2>
+              <h2 className="text-4xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-8 tracking-tight">{t("partner.why_partner_with_kisan_kamai")}</h2>
               <div className="space-y-8">
                 {[
-                  { icon: "payments", title: langText("Sustainable Revenue Streams", "शाश्वत महसूल प्रवाह"), desc: langText("Maximize ROI on expensive assets by keeping them utilized throughout the season.", "हंगामभर वापरून महागड्या मालमत्तेवरील ROI जास्तीत जास्त वाढवा.") },
-                  { icon: "analytics", title: langText("Data-Driven Insights", "डेटा-आधारित अंतर्दृष्टी"), desc: langText("Access detailed reports on demand patterns, machine health, and operator efficiency.", "मागणी नमुने, मशीन आरोग्य, आणि ऑपरेटर कार्यक्षमतेचे तपशीलवार अहवाल मिळवा.") },
-                  { icon: "verified_user", title: langText("Risk Mitigation", "जोखीम कमी"), desc: langText("Every rental is backed by verified users and digital contracts.", "प्रत्येक भाडे सत्यापित वापरकर्त्यांनी आणि डिजिटल करारांद्वारे समर्थित.") },
+                  { icon: "payments", title: t("partner.sustainable_revenue_streams"), desc: t("partner.maximize_roi_on_expensive_assets_by_keeping_them_utilized_throughout_the_season") },
+                  { icon: "analytics", title: t("partner.data_driven_insights"), desc: t("partner.access_detailed_reports_on_demand_patterns_machine_health_and_operator_efficiency") },
+                  { icon: "verified_user", title: t("partner.risk_mitigation"), desc: t("partner.every_rental_is_backed_by_verified_users_and_digital_contracts") },
                 ].map((b) => (
                   <div key={b.title} className="flex gap-6">
                     <div className="shrink-0 w-12 h-12 rounded-full bg-emerald-100 dark:bg-slate-900/60 flex items-center justify-center text-emerald-800 dark:text-emerald-400">
@@ -199,7 +202,7 @@ export default function PartnerPage() {
             </div>
             <div className="relative grid grid-cols-2 gap-4">
               <div className="pt-12">
-                <img className="rounded-2xl shadow-lg mb-4 h-64 w-full object-cover" alt="Agricultural dealers" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
+                <ContentImage className="rounded-2xl shadow-lg mb-4 h-64 w-full object-cover" alt="Agricultural dealers" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
                 <div className="bg-primary-container p-6 rounded-2xl text-white">
                   <p className="text-3xl font-bold mb-1">98%</p>
                   <p className="text-sm opacity-80">Partner retention rate</p>
@@ -210,7 +213,7 @@ export default function PartnerPage() {
                   <p className="text-3xl font-bold mb-1">₹12Cr+</p>
                   <p className="text-sm opacity-80">Total partner earnings</p>
                 </div>
-                <img className="rounded-2xl shadow-lg h-80 w-full object-cover" alt="Entrepreneur with tablet" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
+                <ContentImage className="rounded-2xl shadow-lg h-80 w-full object-cover" alt="Entrepreneur with tablet" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
               </div>
             </div>
           </div>
@@ -220,66 +223,68 @@ export default function PartnerPage() {
       {/* Inquiry Form */}
       <section className="py-24 bg-white dark:bg-slate-950/30 relative" id="inquiry">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="bg-surface-container dark:bg-slate-900/40 rounded-3xl p-8 md:p-12 card-shadow border border-outline-variant/30 dark:border-slate-800/50">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-3">{langText("Partner Inquiry", "भागीदारी चौकशी")}</h2>
-              <p className="text-on-surface-variant dark:text-slate-400">{langText("Tell us about your organization and we'll reach out within 24 hours.", "आम्हाला तुमच्या संस्थेबद्दल सांगा आणि आम्ही 24 तासांत तुम्हाला प्रतिसाद देउ.")}</p>
-            </div>
+          <FormShell
+            eyebrow={t("partner.opportunity_for_growth")}
+            title={t("partner.partner_inquiry")}
+            description={t("partner.tell_us_about_your_organization_and_we_ll_reach_out_within_24_hours")}
+            aside={
+              <div className="space-y-4">
+                <h3 className="text-lg font-black text-primary">Reference partner types</h3>
+                <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-5">
+                  <ul className="space-y-2 text-sm font-medium text-on-surface-variant">
+                    <li>FPO / Cooperative</li>
+                    <li>Equipment Dealer</li>
+                    <li>Financial Institution</li>
+                    <li>Logistics / Tech Partner</li>
+                  </ul>
+                </div>
+              </div>
+            }
+          >
             <form className="space-y-6" onSubmit={handleSubmit}>
-              {error ? (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-                  {error}
-                </div>
-              ) : null}
-              {success ? (
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
-                  {success}
-                </div>
-              ) : null}
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Organization Name</label>
-                  <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary transition-all text-on-surface dark:text-white" name="organizationName" placeholder="e.g. Mahalakshmi FPO" type="text" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Type of Partner</label>
-                  <select className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="partnerType">
-                    <option>FPO / Cooperative</option>
-                    <option>Equipment Dealer</option>
-                    <option>Financial Institution</option>
-                    <option>Logistics / Tech Partner</option>
-                  </select>
-                </div>
-              </div>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Contact Person</label>
-                  <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="contactPerson" placeholder="Full Name" type="text" />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Phone Number</label>
-                  <div className="flex">
-                    <span className="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-outline-variant/50 dark:border-slate-800/50 bg-surface-variant dark:bg-slate-900/50 text-on-surface-variant dark:text-slate-400 text-sm font-bold">+91</span>
-                    <input className="flex-1 bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-r-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="phone" placeholder="98765 43210" type="tel" />
-                  </div>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">Business Location</label>
-                <input className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="businessLocation" placeholder="District, State" type="text" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-bold text-primary-container dark:text-emerald-400 ml-1">How can we work together?</label>
-                <textarea className="w-full bg-white dark:bg-slate-950/50 border-outline-variant/50 dark:border-slate-800/50 rounded-xl px-4 py-3 focus:ring-primary dark:focus:ring-emerald-500 focus:border-primary text-on-surface dark:text-white" name="message" placeholder="Briefly describe your goals..." rows={4} />
-              </div>
-              <div className="pt-4">
-                <button type="submit" disabled={isSubmitting} className="w-full bg-primary-container text-white py-4 rounded-xl font-bold text-lg hover:bg-primary shadow-lg shadow-primary-container/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60">
-                  {isSubmitting ? "Submitting..." : langText("Submit Inquiry", "चौकशी सबमिट करा")}
-                  <span className="material-symbols-outlined">send</span>
+              {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+              {success ? <FormNotice tone="success">{success}</FormNotice> : null}
+
+              <FormSection title="Organization details">
+                <FormGrid>
+                  <FormField label="Organization Name" required>
+                    <input className="kk-input" name="organizationName" placeholder="e.g. Mahalakshmi FPO" type="text" />
+                  </FormField>
+                  <FormField label="Type of Partner" required>
+                    <select className="kk-input" defaultValue="FPO / Cooperative" name="partnerType">
+                      <option>FPO / Cooperative</option>
+                      <option>Equipment Dealer</option>
+                      <option>Financial Institution</option>
+                      <option>Logistics / Tech Partner</option>
+                    </select>
+                  </FormField>
+                </FormGrid>
+                <FormGrid>
+                  <FormField label="Contact Person" required>
+                    <input className="kk-input" name="contactPerson" placeholder="Full Name" type="text" />
+                  </FormField>
+                  <FormField label="Phone Number" required>
+                    <input className="kk-input" name="phone" placeholder="98765 43210" type="tel" />
+                  </FormField>
+                </FormGrid>
+                <FormField label="Business Location" required>
+                  <input className="kk-input" name="businessLocation" placeholder="District, State" type="text" />
+                </FormField>
+                <FormField label="How can we work together?" required>
+                  <textarea className="kk-input min-h-[160px]" name="message" placeholder="Briefly describe your goals..." rows={4} />
+                </FormField>
+              </FormSection>
+
+              <FormActions>
+                <span className="text-sm font-medium text-on-surface-variant">
+                  This inquiry keeps the existing local submission pipeline and business fields.
+                </span>
+                <button type="submit" disabled={isSubmitting} className="kk-form-primary-button">
+                  {isSubmitting ? "Submitting..." : t("partner.submit_inquiry")}
                 </button>
-              </div>
+              </FormActions>
             </form>
-          </div>
+          </FormShell>
         </div>
       </section>
 
@@ -290,8 +295,8 @@ export default function PartnerPage() {
             <span className="material-symbols-outlined text-[300px] leading-none" style={{ fontVariationSettings: "'FILL' 1" }}>handshake</span>
           </div>
           <div className="max-w-2xl text-center md:text-left relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">{langText("Rooted in Trust. Serving Indian Agriculture.", "विश्वासात रुजलेले. भारतीय शेतीची सेवा.")}</h2>
-            <p className="text-lg opacity-90">{langText("Let's build the future of farming together.", "चला एकत्र शेतीचे भविष्य घडवू.")}</p>
+            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">{t("partner.rooted_in_trust_serving_indian_agriculture")}</h2>
+            <p className="text-lg opacity-90">{t("partner.let_s_build_the_future_of_farming_together")}</p>
           </div>
           <div className="shrink-0 relative z-10">
             <a className="inline-flex items-center gap-3 bg-white text-secondary-container px-8 py-4 rounded-full font-bold shadow-xl hover:scale-105 transition-transform" href="mailto:partners@kisankamai.com">
@@ -307,4 +312,7 @@ export default function PartnerPage() {
     </div>
   );
 }
+
+
+
 

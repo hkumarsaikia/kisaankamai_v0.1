@@ -1,102 +1,138 @@
-# Development & Replication Guide
+# Development Guide
 
-This document contains low-level technical details required for developers to replicate the exact environment of Kisan Kamai v0.1.
+This repo now has two independently validated app surfaces.
 
-## 📦 Package Management
+## Surfaces
 
-We use `npm` as the primary package manager. Ensure your current working directory contains `package.json` before running these commands.
+### Root app
 
-### Key Dependencies Breakdown
+- Role: legacy/demo surface
+- Deployment: GitHub Pages
+- Demo URL: `https://hkumarsaikia.github.io/kisaankamai_v0.1`
+- Build mode: `BUILD_TARGET=pages`
 
-```json
-{
-  "dependencies": {
-    "next": "^14.2.3",
-    "appwrite": "^24.1.1",
-    "node-appwrite": "^23.1.0",
-    "puppeteer": "^24.40.0",
-    "framer-motion": "^12.38.0",
-    "web-vitals": "^5.2.0"
-  }
-}
-```
+### `apps/production`
 
-### Full Clean Install
-If you experience environment drift, perform a full node_modules purge:
-- **Windows**: `rimraf node_modules && npm install`
-- **macOS/Ubuntu**: `rm -rf node_modules package-lock.json && npm install`
+- Role: canonical Firebase production app
+- Deployment: Firebase App Hosting
+- Target domain: `https://www.kisankamai.com`
+- Redirect source: `https://kisankamai.com`
 
----
+## Root App Commands
 
-## 🛠️ Replication Steps in Detail
+Run from the repo root:
 
-### 1. Codebase Acquisition
 ```bash
-git clone https://github.com/hkumarsaikia/kisaankamai_v0.1.git
-cd kisaankamai_v0.1
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+BUILD_TARGET=pages npm run build
 ```
 
-### 2. Environment Configuration
-Create a `.env.local` file in the root directory:
+Additional helpers:
+
+```bash
+npm run dev:logged
+npm run start:logged
+npm run dev:public
+npm run tunnel:public
+```
+
+Notes:
+
+- `npm run build` validates the normal server build of the root app.
+- `BUILD_TARGET=pages npm run build` validates the GitHub Pages demo export.
+- If you run the Pages export and then want to use `next start`, run `npm run build` again first so `.next` is restored to the server build output.
+- Local runtime/debug logs belong in `logs/runtime/`.
+
+## Production App Commands
+
+Run from `apps/production`:
+
+```bash
+npm install
+npm run dev
+npm run lint
+npm run typecheck
+npm run build
+```
+
+The production workspace is intentionally independent. Root validation must not compile `apps/production`, and `apps/production` must validate from its own `tsconfig.json`.
+
+## Environment Contracts
+
+### Root demo app
+
+Typical local `.env.local` values:
+
 ```env
-NEXT_PUBLIC_APPWRITE_ENDPOINT=https://fra.cloud.appwrite.io/v1
-NEXT_PUBLIC_APPWRITE_PROJECT_ID=69d918770025e8d680f6
 NEXT_PUBLIC_DEMO_AUTH_MODE=true
 NEXT_PUBLIC_DEMO_PHONE=8761085453
 NEXT_PUBLIC_DEMO_EMAIL=test@example.com
 NEXT_PUBLIC_DEMO_PASSWORD=Test@12345
 ```
 
-### 3. Database Initialization
-Manual setup is required in the Appwrite Console until migration scripts are finalized:
-1.  **Buckets**: Name must be `performance_traces`.
-2.  **Collections**: Set the Permissions to `Any` (or `Users`) for the `live_performance_logs` to allow client-side ingestion.
+These values are for the GitHub Pages demo and local review flows only. They are not production credentials.
 
----
+### Production app
 
-## 🚀 Execution Commands
+See:
 
-| Task | Command | Description |
-| :--- | :--- | :--- |
-| **Development** | `npm run dev` | Standard hot-reloading Next.js environment. |
-| **Production Build** | `npm run build` | Generates the `.next` optimized bundle. |
-| **Profiling agent** | `node scripts/profiler_agent.mjs` | Runs the Puppeteer profiler. |
-| **Linting** | `npm run lint` | Runs ESLint for code quality checks. |
-| **Type Checking** | `npm run typecheck` | Validates TypeScript types across the project. |
+- [`apps/production/.env.example`](../apps/production/.env.example)
+- [`apps/production/apphosting.yaml`](../apps/production/apphosting.yaml)
 
+Production expects Firebase-managed configuration for:
 
-### 3. OTP Authentication Testing
-If you encounter "Quota Exceeded" errors with Appwrite SMS, the project has been updated to use Firebase for OTP.
-For testing, use the following real number:
-- **Phone Number**: `8761085453`
-- **Behavior**: An actual OTP will be sent to the user. You must request the OTP from the user (`hkumarsaikia`) via chat/scratchpad to complete the login process if you are in a testing or automated environment.
+- Firebase web config
+- Firebase Admin credentials
+- canonical public app URL
+- optional Sentry DSN
 
-### 4. Public Demo Mode
-For team review without Appwrite, OTP, or backend setup, enable demo mode and expose the dev server through the repo-managed Cloudflare Quick Tunnel helper.
+## Deployment Ownership
 
-1. Add the `NEXT_PUBLIC_DEMO_*` values to `.env.local`.
-2. Run `npm run dev:public`.
-3. Run `npm run tunnel:public`.
-4. Wait for the helper to print `Tunnel URL is live and ready to share`.
-5. Copy the printed `https://*.trycloudflare.com` URL and share it with teammates.
+### GitHub Pages
 
-Teammates can sign in with either of the following and the same password:
-- **Phone Login**: `8761085453`
-- **Email Login**: `test@example.com`
-- **Password**: `Test@12345`
+- Workflow: [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)
+- Scope: root app only
+- Output: static export from `./out`
+- This workflow is a demo deployment, not the production deployment
 
-In demo mode, `/login` accepts only those shared credentials and creates a browser-local demo session. `/register` also accepts that exact shared identity, skips OTP, and starts the same ready-made demo session without touching Appwrite.
+### Firebase App Hosting
 
-The helper prefers an existing `cloudflared` install. If it is not already on your machine, it downloads a portable `cloudflared` binary into `.cache/cloudflared/` and uses that automatically. No Cloudflare account login is required for this temporary Quick Tunnel flow.
+- App root directory: `apps/production`
+- Firebase project: `gokisaan`
+- Canonical domain: `www.kisankamai.com`
+- DNS should be managed from GoDaddy using only the records Firebase generates
 
-The public URL is temporary. It changes every time the tunnel restarts and only works while both `npm run dev:public` and `npm run tunnel:public` are still running on your machine.
+## Verification Matrix
 
-Only the current value inside `tunnel.log` should be opened or shared. Old bookmarked `trycloudflare.com` URLs should be treated as dead after the tunnel process stops or restarts. The helper clears `tunnel.log` on shutdown so a stale URL is not left behind looking current.
+### Root app
 
----
+Required before claiming stabilization:
 
-## 🧪 System Verification
+```bash
+npm run lint
+npm run typecheck
+npm run build
+BUILD_TARGET=pages npm run build
+```
 
-To verify a successful replication:
-1.  **Frontend**: Browse to `http://localhost:3000`. Open DevTools Console. You should see "Performance Tracking Started" after 5 seconds of interaction.
-2.  **Backend**: Run `node scripts/profiler_agent.mjs`. Check Appwrite Storage -> `performance_traces`. A new `.json` file should appear.
+### Production app
+
+Required before claiming stabilization:
+
+```bash
+cd apps/production
+npm run lint
+npm run typecheck
+npm run build
+```
+
+## Operational Boundaries
+
+- Do not treat the root app as the market production runtime.
+- Do not import production runtime code from `apps/production` into the root app.
+- Do not make the GitHub Pages workflow responsible for `www.kisankamai.com`.
+- Do not use root local JSON, local uploads, or demo auth as production infrastructure.

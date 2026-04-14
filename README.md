@@ -1,53 +1,103 @@
-# Kisan Kamai (v0.1) 🚜
+# Kisan Kamai
 
-Kisan Kamai is a modern, bilingual (English/Marathi) marketplace platform for agricultural equipment rental, primarily serving Southern Maharashtra (Sangli, Satara, Kolhapur).
+Kisan Kamai now runs as a dual-surface repo:
 
----
+- Demo / legacy surface: the root Next.js app, exported to GitHub Pages at `https://hkumarsaikia.github.io/kisaankamai_v0.1`
+- Production surface: the Firebase-only app in `apps/production`, intended for `https://www.kisankamai.com`
 
-## ✨ Features
+The repo stays single-repo. The distinction is deployment ownership, not separate code hosting.
 
-- **21+ Fully Functional Pages**: Comprehensive routes including Home, Rent Equipment, List Equipment, Owner Profile, and more.
-- **Bilingual Interface**: Seamless switching between English and Marathi using a custom global provider.
-- **Autonomous Performance Monitoring**: Integrated profiling agent (Puppeteer) and live metrics tracking (Web Vitals) with Appwrite backend.
-- **Dynamic Mapping**: Interactive Leaflet maps showing regional hubs and equipment locations.
-- **User Profile Pro**: Advanced renter and owner profiles with hover-motion effects.
+## Deployment Model
 
-## 🛠️ Tech Stack
+### Root app
 
-- **Framework**: Next.js 14 (App Router)
-- **Database/Storage**: Appwrite (Metrics, Traces, Logs)
-- **Auth/Realtime**: Firebase & Appwrite
-- **Styling**: Tailwind CSS & Framer Motion
-- **Monitoring**: Puppeteer (Agent), Web-vitals (Frontend)
+- Purpose: public demo / legacy surface
+- Build mode: `BUILD_TARGET=pages`
+- Deployment: GitHub Pages
+- Base path: `/kisaankamai_v0.1`
+- Runtime contract: static export with demo-safe auth and mutation shims
 
-## 📁 Documentation
+### `apps/production`
 
-Detailed documentation is available in the `docs/` directory:
+- Purpose: canonical Firebase production app
+- Deployment: Firebase App Hosting
+- Canonical domain: `https://www.kisankamai.com`
+- Apex redirect source: `https://kisankamai.com`
+- Backend target: Firebase Auth, Firestore, Cloud Storage, Firebase-managed runtime logs, optional Sentry
 
-- 🛠️ **[Setup Guide](docs/SETUP.md)**: Platform-specific installation (Windows, macOS, Ubuntu).
-- 🏗️ **[Architecture](docs/ARCHITECTURE.md)**: System design and flow diagrams.
-- 🚀 **[Development & Replication](docs/DEVELOPMENT.md)**: Version details and how to replicate the project.
-- 🗺️ **[Roadmap](docs/ROADMAP.md)**: Future vision and project phases.
+## Local Development
 
-## 🚀 Quick Start
+### Root demo app
 
-1. **Install dependencies**:
-   ```bash
-   npm install
-   ```
+```bash
+npm install
+npm run dev
+```
 
-2. **Run the development server**:
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000) in your browser.
+Useful root commands:
 
-3. **Run Performance Profiler**:
-   ```bash
-   node scripts/profiler_agent.mjs
-   ```
+```bash
+npm run lint
+npm run typecheck
+npm run build
+BUILD_TARGET=pages npm run build
+```
 
-## 📄 License
+If you want captured server logs in the repo-managed log folder:
 
-This project is created for demonstration and replication purposes. All rights reserved.
+```bash
+npm run dev:logged
+npm run start:logged
+```
 
+Generated runtime logs belong in `logs/runtime/`.
+
+### Firebase production app
+
+```bash
+cd apps/production
+npm install
+npm run dev
+```
+
+Useful production commands:
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+```
+
+## Current Stack
+
+### Root demo app
+
+- Next.js 14 App Router
+- Tailwind CSS
+- Framer Motion
+- Leaflet / optional Google Maps path
+- Local JSON and demo/browser-local auth only for non-production flows
+
+### Firebase production app
+
+- Next.js 14 App Router
+- Firebase App Hosting
+- Firebase Auth
+- Cloud Firestore
+- Cloud Storage
+- Optional Sentry
+
+## Documentation
+
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md): current dual-surface architecture
+- [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md): commands, validation, and deployment ownership
+- [docs/ROADMAP.md](docs/ROADMAP.md): product roadmap
+- [docs/VENDORED-REPOS.md](docs/VENDORED-REPOS.md): how `openform`, `superpowers`, and `rn-interface-kit` are used
+- [docs/IMPLEMENTATION-REPORT.md](docs/IMPLEMENTATION-REPORT.md): recent implementation notes
+
+## Important Boundaries
+
+- The root app is not the market production runtime.
+- `apps/production` is the only production target for `www.kisankamai.com`.
+- GitHub Pages remains a demo surface only.
+- Vendored repos under `vendor/` are reference material, not runtime dependencies.

@@ -1,14 +1,22 @@
 import BookingRequestClient from "../BookingRequestClient";
-import { getEquipmentStaticParams } from "@/lib/server/equipment";
+import { notFound } from "next/navigation";
+import { getEquipmentById, getEquipmentStaticParams } from "@/lib/server/equipment";
 
-export function generateStaticParams() {
-  return getEquipmentStaticParams().map(({ id }) => ({ equipmentId: id }));
+export async function generateStaticParams() {
+  return (await getEquipmentStaticParams()).map(({ id }) => ({ equipmentId: id }));
 }
 
-export default function BookingFlow({
+export default async function BookingFlow({
   params,
 }: {
   params: { equipmentId: string };
 }) {
-  return <BookingRequestClient equipmentId={params.equipmentId} />;
+  const equipment = await getEquipmentById(params.equipmentId);
+
+  if (!equipment) {
+    notFound();
+  }
+
+  return <BookingRequestClient equipment={equipment} />;
 }
+

@@ -40,6 +40,7 @@ export function LazyMap({
 }: LazyMapProps) {
   const [shouldRender, setShouldRender] = useState(!deferUntilVisible);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const effectiveHeight = height || "500px";
 
   useEffect(() => {
     if (!deferUntilVisible || shouldRender || !containerRef.current) {
@@ -65,11 +66,11 @@ export function LazyMap({
   }, [deferUntilVisible, shouldRender]);
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} className="w-full" style={{ height: effectiveHeight, width: "100%" }}>
       {shouldRender ? (
-        <DynamicMap {...props} className={className} height={height} />
+        <DynamicMap {...props} className={className} height="100%" />
       ) : (
-        <MapSkeleton className={className} height={height} />
+        <MapSkeleton className={className} height="100%" />
       )}
     </div>
   );

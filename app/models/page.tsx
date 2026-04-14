@@ -1,11 +1,14 @@
 "use client";
 
+import { ContentImage } from "@/components/ContentImage";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
+import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { assetPath } from "@/lib/site";
 
 const modelData: Record<string, { en: string, mr: string, items: { name: string, hp: string, img: string }[] }> = {
@@ -45,12 +48,20 @@ const modelData: Record<string, { en: string, mr: string, items: { name: string,
 };
 
 function ModelsInner() {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
-  const router = useRouter();
+  const router = useSmoothRouter();
   
   const categoryParam = searchParams?.get("category") || "tractors";
   const category = modelData[categoryParam] ? modelData[categoryParam] : modelData.tractors;
+  const categoryTitleKeys: Record<string, "models.tractors" | "models.harvesters" | "models.ploughs" | "models.sprayers" | "models.implements"> = {
+    tractors: "models.tractors",
+    harvesters: "models.harvesters",
+    ploughs: "models.ploughs",
+    sprayers: "models.sprayers",
+    implements: "models.implements",
+  };
+  const titleKey = categoryTitleKeys[categoryParam] || "models.tractors";
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
@@ -62,15 +73,15 @@ function ModelsInner() {
             className="flex items-center gap-2 text-secondary font-bold mb-8 hover:opacity-80 transition-opacity"
           >
             <span className="material-symbols-outlined">arrow_back</span>
-            {langText("Back to Categories", "श्रेणींवर परत जा")}
+            {t("models.back_to_categories")}
           </button>
           
           <div className="mb-12">
             <h1 className="text-4xl font-black text-primary dark:text-emerald-50 mb-2">
-              {langText(`${category.en} Models`, `${category.mr} मॉडेल्स`)}
+              {`${t(titleKey)} ${t("models.title_suffix")}`}
             </h1>
             <p className="text-slate-600 dark:text-slate-400">
-              {langText(`Select a model to view available listings and start renting.`, `उपलब्ध सूची पाहण्यासाठी आणि भाड्याने देण्यासाठी मॉडेल निवडा.`)}
+              {t("models.select_model_intro")}
             </p>
           </div>
 
@@ -78,8 +89,7 @@ function ModelsInner() {
             {category.items.map((item) => (
               <div key={item.name} className="bg-white dark:bg-slate-900/40 rounded-2xl overflow-hidden shadow-lg border border-outline-variant/20 dark:border-slate-800/50 hover:shadow-xl transition-all">
                 <div className="h-48 overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={item.img} alt={item.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                  <ContentImage src={item.img} alt={item.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-primary dark:text-emerald-50">{item.name}</h3>
@@ -87,7 +97,7 @@ function ModelsInner() {
                     {item.hp}
                   </div>
                   <Link href={`/rent-equipment?query=${encodeURIComponent(item.name)}`} className="block w-full text-center bg-secondary text-white py-3 rounded-lg font-bold hover:bg-secondary/90 transition-colors">
-                    {langText("View Listings", "सूची पहा")}
+                    {t("models.view_listings")}
                   </Link>
                 </div>
               </div>
@@ -107,4 +117,7 @@ export default function Models() {
     </Suspense>
   );
 }
+
+
+
 

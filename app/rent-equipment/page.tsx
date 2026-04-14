@@ -38,3 +38,4 @@ function ResultsSkeleton() {
     </div>
   );
 }
+

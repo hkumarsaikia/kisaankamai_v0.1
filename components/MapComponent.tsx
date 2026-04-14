@@ -36,7 +36,22 @@ interface MapComponentProps {
   showControls?: boolean;
 }
 
-const OPEN_STREET_MAP_TILES = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const LEAFLET_TILE_SOURCES = [
+  {
+    name: "OpenStreetMap",
+    url: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
+  },
+  {
+    name: "CARTO",
+    url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions" target="_blank" rel="noreferrer">CARTO</a>',
+  },
+] as const;
+
+const TILE_ERROR_THRESHOLD = 6;
 
 function createLeafletMarkerIcon(color = "#047857") {
   return L.divIcon({
@@ -92,6 +107,39 @@ function FitLeafletBounds({
   return null;
 }
 
+function SyncLeafletSize() {
+  const map = useMap();
+
+  useEffect(() => {
+    const refresh = () => {
+      map.invalidateSize({
+        pan: false,
+        debounceMoveend: true,
+      });
+    };
+
+    const timeout = window.setTimeout(refresh, 120);
+    window.addEventListener("resize", refresh);
+
+    const observer =
+      typeof ResizeObserver !== "undefined"
+        ? new ResizeObserver(refresh)
+        : null;
+
+    if (observer) {
+      observer.observe(map.getContainer());
+    }
+
+    return () => {
+      window.clearTimeout(timeout);
+      observer?.disconnect();
+      window.removeEventListener("resize", refresh);
+    };
+  }, [map]);
+
+  return null;
+}
+
 function LeafletMapView({
   center,
   zoom,
@@ -101,16 +149,71 @@ function LeafletMapView({
   className,
   showControls,
 }: Required<MapComponentProps>) {
+  const [providerIndex, setProviderIndex] = useState(0);
+  const [tileErrors, setTileErrors] = useState(0);
+  const [providerLoaded, setProviderLoaded] = useState(false);
+  const [showFallbackState, setShowFallbackState] = useState(false);
   const leafletIcons = useMemo(
     () => markers.map((marker) => createLeafletMarkerIcon(marker.color)),
     [markers]
   );
+  const activeProvider = LEAFLET_TILE_SOURCES[providerIndex];
+
+  useEffect(() => {
+    setProviderLoaded(false);
+    setTileErrors(0);
+    setShowFallbackState(false);
+  }, [providerIndex]);
+
+  useEffect(() => {
+    if (providerLoaded || tileErrors < TILE_ERROR_THRESHOLD) {
+      return;
+    }
+
+    if (providerIndex < LEAFLET_TILE_SOURCES.length - 1) {
+      setProviderIndex((current) => current + 1);
+      return;
+    }
+
+    setShowFallbackState(true);
+  }, [providerIndex, providerLoaded, tileErrors]);
 
   return (
     <div
-      className={`overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800 ${className}`}
+      className={`relative overflow-hidden rounded-3xl border border-slate-200 shadow-xl dark:border-slate-800 ${className}`}
       style={{ height, width: "100%" }}
     >
+      {!providerLoaded && !showFallbackState ? (
+        <div className="pointer-events-none absolute inset-0 z-[400] flex items-start justify-between bg-gradient-to-br from-white/70 via-white/30 to-transparent p-5 text-slate-700 dark:from-slate-950/55 dark:via-slate-950/20 dark:text-slate-200">
+          <div className="rounded-2xl border border-white/80 bg-white/85 px-4 py-3 text-sm font-semibold shadow-lg dark:border-slate-800/70 dark:bg-slate-950/85">
+            Loading map tiles...
+          </div>
+          <div className="rounded-2xl border border-white/80 bg-white/85 px-3 py-2 text-xs font-bold uppercase tracking-[0.18em] shadow-lg dark:border-slate-800/70 dark:bg-slate-950/85">
+            {activeProvider.name}
+          </div>
+        </div>
+      ) : null}
+      {showFallbackState ? (
+        <div className="absolute inset-0 z-[500] flex items-center justify-center bg-surface-container-lowest/92 p-6 backdrop-blur-sm dark:bg-surface-container-lowest/90">
+          <div className="max-w-md rounded-[1.75rem] border border-outline-variant bg-surface-container-lowest p-6 text-center shadow-xl">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">Map temporarily unavailable</p>
+            <h3 className="mt-3 text-2xl font-black text-primary">Service regions are still active</h3>
+            <p className="mt-3 text-sm font-medium leading-6 text-on-surface-variant">
+              We could not load the live tile provider right now. The current operating areas shown in this section are listed below.
+            </p>
+            <div className="mt-5 flex flex-wrap justify-center gap-3">
+              {markers.map((marker) => (
+                <span
+                  key={`${marker.label}-${marker.lat}-${marker.lng}`}
+                  className="rounded-full border border-outline-variant bg-surface-container-low px-4 py-2 text-sm font-bold text-on-surface"
+                >
+                  {marker.label}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
       <MapContainer
         center={center}
         zoom={zoom}
@@ -118,9 +221,21 @@ function LeafletMapView({
         zoomControl={showControls}
         className="h-full w-full"
       >
+        <SyncLeafletSize />
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
-          url={OPEN_STREET_MAP_TILES}
+          key={activeProvider.url}
+          attribution={activeProvider.attribution}
+          url={activeProvider.url}
+          eventHandlers={{
+            load: () => {
+              setProviderLoaded(true);
+              setTileErrors(0);
+              setShowFallbackState(false);
+            },
+            tileerror: () => {
+              setTileErrors((current) => current + 1);
+            },
+          }}
         />
         <FitLeafletBounds center={center} markers={markers} zoom={zoom} />
 
@@ -191,9 +306,13 @@ function GoogleMapView({
   if (!isLoaded) {
     return (
       <div
-        className={`animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-900/50 ${className}`}
+        className={`relative animate-pulse rounded-3xl bg-slate-100 dark:bg-slate-900/50 ${className}`}
         style={{ height }}
-      />
+      >
+        <div className="absolute left-5 top-5 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 text-sm font-semibold text-slate-700 shadow-lg dark:border-slate-800/60 dark:bg-slate-950/85 dark:text-slate-200">
+          Loading Google Maps...
+        </div>
+      </div>
     );
   }
 

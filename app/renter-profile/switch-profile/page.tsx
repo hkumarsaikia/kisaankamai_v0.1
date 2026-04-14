@@ -1,11 +1,21 @@
 "use client";
 
-import Link from "next/link";
+import { useTransition } from "react";
+import { selectWorkspaceAction } from "@/lib/actions/local-data";
 import { useAuth } from "@/components/AuthContext";
 
 export default function SwitchProfilePage() {
   const { user, profile } = useAuth();
   const userName = user?.name || profile?.fullName || "Farmer";
+  const [isPending, startTransition] = useTransition();
+
+  const handleSwitch = (workspace: "owner" | "renter") => {
+    startTransition(async () => {
+      const result = await selectWorkspaceAction(workspace);
+      window.location.href =
+        result.redirectTo || (workspace === "owner" ? "/owner-profile" : "/renter-profile");
+    });
+  };
 
   return (
     <div className="max-w-3xl mx-auto py-8">
@@ -43,24 +53,31 @@ export default function SwitchProfilePage() {
         </div>
 
         {/* Owner Profile */}
-        <Link href="/owner-profile" className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 flex flex-col items-center text-center hover:shadow-lg hover:border-amber-400 transition-all group">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm p-8 flex flex-col items-center text-center hover:shadow-lg hover:border-amber-400 transition-all group">
           <div className="w-20 h-20 bg-amber-50 dark:bg-amber-950/20 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-amber-100 transition-colors">
             <span className="material-symbols-outlined text-4xl text-amber-600">dashboard</span>
           </div>
           <h3 className="text-2xl font-bold text-amber-800 dark:text-amber-200 mb-2">Owner Profile</h3>
           <p className="text-slate-500 text-sm mb-6">List your equipment and earn income from your agricultural fleet.</p>
           <div className="space-y-2 text-left w-full mb-6">
-            {["List your machines", "Manage bookings & revenue", "Track earnings", "Add new equipment"].map(f => (
+            {["List your machines", "Manage bookings & revenue", "Track earnings", "Add new equipment"].map((f) => (
               <div key={f} className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                 <span className="material-symbols-outlined text-amber-500 text-[16px]">check_circle</span>{f}
               </div>
             ))}
           </div>
-          <span className="w-full py-3 bg-amber-500 text-white rounded-xl font-bold text-center group-hover:bg-amber-600 transition-colors">
-            Switch to Owner →
-          </span>
-        </Link>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => handleSwitch("owner")}
+            className="w-full py-3 bg-amber-500 text-white rounded-xl font-bold text-center transition-colors hover:bg-amber-600 disabled:opacity-60"
+          >
+            Switch to Owner
+          </button>
+        </div>
       </div>
     </div>
   );
 }
+
+

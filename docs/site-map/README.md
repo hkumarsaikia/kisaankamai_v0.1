@@ -1,48 +1,31 @@
-# Site Map Viewer
+# Static Site Map
 
-This folder contains a fully isolated manual-open documentation viewer for the current Kisan Kamai codebase.
+This folder now contains a generated, standalone documentation sitemap for the Kisan Kamai codebase.
 
-## What it shows
+## Outputs
 
-- App routes found in `app/**/page.tsx`
-- Shared navigation components such as header, footer, sidebars, and top bars
-- Internal links, redirects, external links, placeholder links, and inferred flows
-- Missing or unresolved routes referenced in code
-- Source attribution so you can see where a link comes from
-
-## How to regenerate
-
-Run this from the repo root:
+Run from the repo root:
 
 ```powershell
 node docs/site-map/generate-site-map.mjs
 ```
 
-This rewrites:
-
-- `docs/site-map/map-data.js`
-
-The generator also reads `tunnel.log` when available and uses the current public-tunnel URL as the default base URL in the viewer.
-
-## How to open it manually
-
-Open this file directly in your browser:
+This generates:
 
 - `docs/site-map/index.html`
+- `docs/site-map/site-map-data.json`
 
-You can:
+## What it documents
 
-- pan and zoom the graph
-- search routes, components, files, or destinations
-- filter node groups and edge types
-- switch between `Structure Map` and `Journey Lenses`
-- switch theme with `System`, `Light`, and `Dark`
-- inspect incoming and outgoing relationships
-- open resolvable route and external targets in a new browser tab using the base URL field
-- explore curated goal flows for `Renter Booking`, `Owner Listing`, and `Auth & Profile Setup`
+- current `app/**/page.tsx` routes
+- grouped route families: `public`, `discovery`, `auth`, `owner`, `renter`, `support`
+- shared surfaces inferred from pages and layouts
+- internal destinations and programmatic redirects
+- unresolved internal references
+- external destinations
 
-## Notes
+## What changed
 
-- `surface` edges mean a page or layout renders a shared component, such as `Header`, `Footer`, or a profile sidebar.
-- `placeholder` edges mark incomplete or non-final destinations such as `#`, `tel:+`, or other unfinished targets.
-- `missing-route` nodes are links referenced in code that do not currently have a matching `app/**/page.tsx`.
+The old graph viewer has been retired. There is no longer any graph canvas, inspector, filters, journey lens model, `viewer.js`, `annotations.js`, or generated `map-data.js`.
+
+Open `docs/site-map/index.html` directly in a browser to inspect the static sitemap.

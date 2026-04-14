@@ -1,73 +1,100 @@
 # Project Architecture
 
-Kisan Kamai is built on a modern serverless stack focused on extreme performance and scalability. This document outlines the system components and data flows.
+Kisan Kamai is now organized as a single repo with two application surfaces.
 
-## 🏗️ High-Level System Architecture
+## Surface Split
 
-The following diagram illustrates how the Next.js frontend interacts with the serverless backend services.
+### 1. Root app
 
-```mermaid
-graph TD
-    User((User))
-    NextJS[Next.js App Router]
-    Appwrite[(Appwrite Cloud)]
-    Firebase[(Firebase Auth/DB)]
-    ProfilerAgent[Profiler Agent - Puppeteer]
-    
-    User <--> NextJS
-    NextJS <--> Firebase
-    NextJS -- Metrics Batching --> Appwrite
-    ProfilerAgent -- Programmatic Crawling --> NextJS
-    ProfilerAgent -- Raw Trace Storage --> Appwrite
-    ProfilerAgent -- Structured Insights --> Appwrite
-```
+- Location: repo root
+- Framework: Next.js 14 App Router
+- Role: legacy/demo surface
+- Deployment target: GitHub Pages
+- Public demo URL: `https://hkumarsaikia.github.io/kisaankamai_v0.1`
 
----
+The root app keeps the broad marketing, discovery, and legacy dashboard surface alive for review and demo purposes. For the Pages build, it uses static-export-safe behavior:
 
-## ⚡ Performance Monitoring Blocks
+- demo-safe auth/session fallbacks
+- demo mutation shims
+- static API compatibility responses where needed
+- base-path aware routing for the GitHub Pages repo path
 
-The performance system consists of two distinct data pipelines to ensure real-time visibility and deep-dive profiling.
+### 2. Production app
 
-### 1. Live Monitoring (Client-Side)
-Captures real-world user data from the browser.
-- **Trigger**: Page View / Interaction.
-- **Provider**: `PerformanceMonitor.tsx`.
-- **Logic**: Batches Core Web Vitals (LCP, INP, CLS) every 5 seconds.
-- **Destination**: Appwrite `live_performance_logs`.
+- Location: `apps/production`
+- Framework: Next.js 14 App Router
+- Role: canonical production runtime
+- Deployment target: Firebase App Hosting
+- Canonical domain: `https://www.kisankamai.com`
 
-### 2. Autonomous Profiler (Server-Side)
-Simulates deep profiling using automated headless browsers.
-- **Trigger**: Scheduled script execution.
-- **Tool**: Puppeteer + Chrome DevTools Protocol.
-- **Output**: Full Network/CPU JSON Traces.
-- **Destination**: Appwrite Storage (`performance_traces`).
+This app is the path to market. It is intentionally isolated from the root runtime and is expected to own:
 
----
+- Firebase Auth
+- Firestore-backed business data
+- Cloud Storage-backed media
+- Firebase / Google Cloud operational runtime
+- optional Sentry instrumentation
 
-## 🛠️ Software Stack Details
+## Current Data and Auth Boundaries
 
-| Component | Software/Service | Version Details |
-| :--- | :--- | :--- |
-| **Frontend Framework** | Next.js | v14.2.3 (App Router) |
-| **Styling Engine** | Tailwind CSS | v3.4.3 |
-| **UI Animations** | Framer Motion | v12.38.0 |
-| **Primary Backend** | Appwrite | SDK v24.1.1 |
-| **Auth/Legacy Storage**| Firebase | v12.12.0 |
-| **Automation Engine** | Puppeteer | v24.40.0 |
-| **Metrics Standard** | Web Vitals | v5.2.0 |
+### Root demo app
 
----
+The root app still contains development-era local systems:
 
-## 🔌 Data Schema Blocks
+- local JSON persistence
+- local/server cookie session handling
+- GitHub Pages demo/browser-local auth shims
+- local debug/reporting utilities
 
-### Performance Insights Collection
-The structured data stored in Appwrite for analytics.
+Those systems are valid for development and demo use only. They are not the market deployment architecture.
 
-| Field | Type | Description |
-| :--- | :--- | :--- |
-| `pageUrl` | String | URL being profiled |
-| `lcp` | Float | Largest Contentful Paint (ms) |
-| `cls` | Float | Cumulative Layout Shift |
-| `ttfb` | Float | Time to First Byte (ms) |
-| `traceFileId` | String | Link to raw JSON file in Storage |
-| `timestamp` | DateTime | When the profile was captured |
+### Production app
+
+`apps/production` is where the Firebase-only runtime is being built. The intended production contracts are:
+
+- Firebase Auth identity
+- server-verified Firebase session cookies
+- Firestore collections for users, listings, bookings, payments, saved items, and submissions
+- Cloud Storage for listing media
+
+## Deployment Ownership
+
+### GitHub Pages
+
+- Workflow: [`.github/workflows/deploy.yml`](../.github/workflows/deploy.yml)
+- Scope: root app only
+- Output mode: static export
+- Purpose: demo/legacy surface only
+
+### Firebase App Hosting
+
+- Config entrypoint: [`apps/production/apphosting.yaml`](../apps/production/apphosting.yaml)
+- Repo layout: monorepo-style deployment with `apps/production` as app root
+- Custom domains:
+  - `www.kisankamai.com` as canonical
+  - `kisankamai.com` as redirect-only
+
+## Validation Boundaries
+
+Validation is intentionally split:
+
+- Root app:
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run build`
+  - `BUILD_TARGET=pages npm run build`
+- Production app:
+  - `cd apps/production`
+  - `npm run lint`
+  - `npm run typecheck`
+  - `npm run build`
+
+The root TypeScript configuration must not compile `apps/production`, and the production app must keep its own alias and workspace boundaries.
+
+## Shared Platform Principles
+
+- One GitHub repo
+- Two deployment surfaces
+- No runtime imports from `vendor/`
+- No production dependency on the root app’s local JSON or demo auth
+- No GitHub Pages responsibility for `www.kisankamai.com`

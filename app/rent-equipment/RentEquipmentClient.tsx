@@ -6,16 +6,11 @@ import { LazyMap } from "@/components/LazyMap";
 import { ScrollReveal, ScrollRevealGroup, ScrollRevealItem } from "@/components/ScrollReveal";
 import { useLanguage } from "@/components/LanguageContext";
 import { postJson, SubmissionError } from "@/lib/client/forms";
+import { RENT_RESULTS_CIRCLES, RENT_RESULTS_MARKERS } from "@/lib/map-data";
 import { IS_PAGES_BUILD } from "@/lib/runtime";
 import { callbackRequestSchema } from "@/lib/validation/forms";
-import { useRouter } from "next/navigation";
+import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { FormEvent, ReactNode, useMemo, useState } from "react";
-
-const nearbyMarkers = [
-  { lat: 16.86, lng: 74.57, label: "Mahindra 575 DI", sublabel: "₹800/hr • 4.2 km away", color: "#00251a" },
-  { lat: 16.84, lng: 74.52, label: "John Deere W70", sublabel: "₹2,500/hr • 8.5 km away", color: "#934a24" },
-  { lat: 16.87, lng: 74.55, label: "Shaktiman Rotavator", sublabel: "₹350/hr • 1.2 km away", color: "#693c00" },
-];
 
 export default function RentEquipmentClient({
   initialLocation,
@@ -26,8 +21,8 @@ export default function RentEquipmentClient({
   initialQuery: string;
   children: ReactNode;
 }) {
-  const { langText } = useLanguage();
-  const router = useRouter();
+  const { t } = useLanguage();
+  const router = useSmoothRouter();
   const [location, setLocation] = useState(initialLocation);
   const [query, setQuery] = useState(initialQuery);
   const [callbackError, setCallbackError] = useState("");
@@ -54,10 +49,7 @@ export default function RentEquipmentClient({
 
     if (/^\d{6}$/.test(normalizedLocation) && normalizedLocation !== "423501" && normalizedLocation !== "431715") {
       setSuggestionMsg(
-        langText(
-          "Location not found in our system. Showing nearby available hubs.",
-          "आमच्या सिस्टममध्ये स्थान आढळले नाही. जवळील उपलब्ध हब दाखवत आहोत."
-        )
+        t("rent-equipment.RentEquipmentClient.location_not_found_in_our_system_showing_nearby_available_hubs")
       );
     } else {
       setSuggestionMsg("");
@@ -74,7 +66,7 @@ export default function RentEquipmentClient({
       const fieldError =
         parsed.error.flatten().formErrors[0] ||
         Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-        langText("Please fill the callback form correctly.", "कृपया callback फॉर्म योग्यरित्या भरा.");
+        t("rent-equipment.RentEquipmentClient.please_fill_the_callback_form_correctly");
       setCallbackError(fieldError);
       return;
     }
@@ -86,10 +78,7 @@ export default function RentEquipmentClient({
         await postJson("/api/forms/callback-request", parsed.data);
       }
       setCallbackSuccess(
-        langText(
-          "Callback request received. Our team will contact you shortly.",
-          "Callback विनंती मिळाली. आमची टीम लवकरच तुमच्याशी संपर्क करेल."
-        )
+        t("rent-equipment.RentEquipmentClient.callback_request_received_our_team_will_contact_you_shortly")
       );
       setCallbackForm({
         fullName: "",
@@ -102,10 +91,7 @@ export default function RentEquipmentClient({
         setCallbackError(error.message);
       } else {
         setCallbackError(
-          langText(
-            "Could not submit your callback request right now.",
-            "सध्या तुमची callback विनंती पाठवता आली नाही."
-          )
+          t("rent-equipment.RentEquipmentClient.could_not_submit_your_callback_request_right_now")
         );
       }
     } finally {
@@ -125,8 +111,8 @@ export default function RentEquipmentClient({
                   location_on
                 </span>
                 <input
-                  className="w-full rounded-xl border-none bg-surface-container-low py-3 pl-12 pr-4 font-medium focus:ring-2 focus:ring-primary-container dark:bg-slate-900/50 dark:text-white"
-                  placeholder={langText("Enter location or pincode", "स्थान किंवा पिनकोड टाका")}
+                  className="kk-form-search-input"
+                  placeholder={t("rent-equipment.RentEquipmentClient.enter_location_or_pincode")}
                   value={location}
                   onChange={(event) => setLocation(event.target.value)}
                   onBlur={applySearch}
@@ -138,8 +124,8 @@ export default function RentEquipmentClient({
                   search
                 </span>
                 <input
-                  className="w-full rounded-xl border-none bg-surface-container-low py-3 pl-12 pr-4 font-medium focus:ring-2 focus:ring-primary-container dark:bg-slate-900/50 dark:text-white"
-                  placeholder={langText("Search tractors, harvesters...", "ट्रॅक्टर, हार्वेस्टर शोधा...")}
+                  className="kk-form-search-input"
+                  placeholder={t("rent-equipment.RentEquipmentClient.search_tractors_harvesters")}
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   onKeyDown={(event) => event.key === "Enter" && applySearch()}
@@ -148,14 +134,14 @@ export default function RentEquipmentClient({
               <button
                 type="button"
                 onClick={applySearch}
-                className="rounded-xl bg-primary-container px-6 py-3 font-black text-white transition-colors hover:bg-primary dark:bg-emerald-700 dark:hover:bg-emerald-600"
+                className="kk-form-primary-button"
               >
-                {langText("Refresh Results", "निकाल अद्यतनित करा")}
+                {t("rent-equipment.RentEquipmentClient.refresh_results")}
               </button>
             </div>
 
             {suggestionMsg ? (
-              <div className="rounded-lg border border-amber-200 bg-amber-100 px-4 py-3 text-sm font-semibold text-amber-800 dark:border-amber-800 dark:bg-amber-900/30 dark:text-amber-200">
+              <div className="kk-form-muted-banner">
                 {suggestionMsg}
               </div>
             ) : null}
@@ -167,13 +153,10 @@ export default function RentEquipmentClient({
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
               <div>
                 <h1 className="text-3xl font-black text-primary dark:text-emerald-50">
-                  {langText("Available Equipment", "उपलब्ध उपकरणे")}
+                  {t("rent-equipment.RentEquipmentClient.available_equipment")}
                 </h1>
                 <p className="mt-2 max-w-2xl font-medium text-on-surface-variant dark:text-slate-400">
-                  {langText(
-                    "Browse cached listings from trusted owners. Results revalidate in the background while the shell stays interactive.",
-                    "विश्वसनीय मालकांकडील cached listings पाहा. page shell interactive राहते आणि results background मध्ये अद्ययावत होतात."
-                  )}
+                  {t("rent-equipment.RentEquipmentClient.browse_cached_listings_from_trusted_owners_results_revalidate_in_the_background_while_the_shell_stays_interactive")}
                 </p>
               </div>
             </div>
@@ -186,35 +169,32 @@ export default function RentEquipmentClient({
               <div className="flex flex-col justify-between gap-8 rounded-[22px] bg-white/70 p-8 backdrop-blur-xl md:flex-row md:p-12 dark:bg-slate-950/60">
                 <div className="max-w-xl">
                   <h2 className="text-3xl font-black text-primary dark:text-emerald-50">
-                    {langText("Need help finding the right machine?", "योग्य मशीन शोधण्यासाठी मदत हवी आहे?")}
+                    {t("rent-equipment.RentEquipmentClient.need_help_finding_the_right_machine")}
                   </h2>
                   <p className="mt-4 text-lg font-medium text-on-surface-variant dark:text-slate-400">
-                    {langText(
-                      "Share your requirement and our team will help you match with a nearby owner.",
-                      "तुमची गरज सांगा आणि आमची टीम तुम्हाला जवळच्या मालकाशी जोडेल."
-                    )}
+                    {t("rent-equipment.RentEquipmentClient.share_your_requirement_and_our_team_will_help_you_match_with_a_nearby_owner")}
                   </p>
                 </div>
 
                 <form
-                  className="w-full rounded-2xl border border-outline-variant/20 bg-white p-6 shadow-xl md:w-96 dark:border-slate-800/50 dark:bg-slate-900/50"
+                  className="kk-form-compact-card w-full md:w-96"
                   onSubmit={handleCallbackSubmit}
                 >
                   <h3 className="mb-5 text-lg font-black text-primary dark:text-emerald-50">
-                    {langText("Request Callback", "कॉलबॅक विनंती")}
+                    {t("rent-equipment.RentEquipmentClient.request_callback")}
                   </h3>
                   <div className="space-y-4">
                     <input
-                      className="w-full rounded-xl bg-surface-container-low px-4 py-3 font-medium dark:bg-slate-900/60 dark:text-white"
-                      placeholder={langText("Full name", "पूर्ण नाव")}
+                      className="kk-input"
+                      placeholder={t("rent-equipment.RentEquipmentClient.full_name")}
                       value={callbackForm.fullName}
                       onChange={(event) =>
                         setCallbackForm((prev) => ({ ...prev, fullName: event.target.value }))
                       }
                     />
                     <input
-                      className="w-full rounded-xl bg-surface-container-low px-4 py-3 font-medium dark:bg-slate-900/60 dark:text-white"
-                      placeholder={langText("10-digit phone number", "१० अंकी फोन नंबर")}
+                      className="kk-input"
+                      placeholder={t("rent-equipment.RentEquipmentClient.10_digit_phone_number")}
                       value={callbackForm.phone}
                       onChange={(event) =>
                         setCallbackForm((prev) => ({
@@ -224,16 +204,16 @@ export default function RentEquipmentClient({
                       }
                     />
                     <input
-                      className="w-full rounded-xl bg-surface-container-low px-4 py-3 font-medium dark:bg-slate-900/60 dark:text-white"
-                      placeholder={langText("Equipment needed", "आवश्यक उपकरण")}
+                      className="kk-input"
+                      placeholder={t("rent-equipment.RentEquipmentClient.equipment_needed")}
                       value={callbackForm.equipmentNeeded}
                       onChange={(event) =>
                         setCallbackForm((prev) => ({ ...prev, equipmentNeeded: event.target.value }))
                       }
                     />
                     <input
-                      className="w-full rounded-xl bg-surface-container-low px-4 py-3 font-medium dark:bg-slate-900/60 dark:text-white"
-                      placeholder={langText("Village / location", "गाव / स्थान")}
+                      className="kk-input"
+                      placeholder={t("rent-equipment.RentEquipmentClient.village_location")}
                       value={callbackForm.location}
                       onChange={(event) =>
                         setCallbackForm((prev) => ({ ...prev, location: event.target.value }))
@@ -251,11 +231,11 @@ export default function RentEquipmentClient({
                   <button
                     type="submit"
                     disabled={isSubmittingCallback}
-                    className="mt-5 w-full rounded-xl bg-secondary py-4 font-black uppercase tracking-wide text-white transition-transform hover:scale-[0.99] disabled:opacity-60"
+                    className="kk-form-primary-button mt-5 w-full"
                   >
                     {isSubmittingCallback
-                      ? langText("Submitting...", "पाठवत आहे...")
-                      : langText("Get Free Callback", "विनामूल्य कॉलबॅक मिळवा")}
+                      ? t("rent-equipment.RentEquipmentClient.submitting")
+                      : t("rent-equipment.RentEquipmentClient.get_free_callback")}
                   </button>
                 </form>
               </div>
@@ -267,8 +247,8 @@ export default function RentEquipmentClient({
               <LazyMap
                 center={[16.855, 74.56]}
                 zoom={12}
-                markers={nearbyMarkers}
-                circles={[{ lat: 16.855, lng: 74.56, radius: 4000, color: "#10b981" }]}
+                markers={RENT_RESULTS_MARKERS}
+                circles={RENT_RESULTS_CIRCLES}
                 height="400px"
                 className="rounded-3xl border-4 border-white shadow-2xl dark:border-slate-800"
                 showControls
@@ -277,16 +257,16 @@ export default function RentEquipmentClient({
             <ScrollRevealItem>
               <div>
                 <span className="text-xs font-black uppercase tracking-[0.2em] text-secondary dark:text-amber-400">
-                  {langText("Trust & Safety", "विश्वास व सुरक्षा")}
+                  {t("rent-equipment.RentEquipmentClient.trust_and_safety")}
                 </span>
                 <h2 className="mt-4 text-4xl font-black text-primary dark:text-emerald-50">
-                  {langText("Every listing is reviewed before it goes live.", "प्रत्येक listing live होण्यापूर्वी तपासली जाते.")}
+                  {t("rent-equipment.RentEquipmentClient.every_listing_is_reviewed_before_it_goes_live")}
                 </h2>
                 <div className="mt-8 space-y-6">
                   {[
-                    langText("Mechanical inspections for listed machinery.", "सूचीबद्ध मशीनची यांत्रिक तपासणी."),
-                    langText("Transparent pricing with verified owners.", "सत्यापित मालकांसह पारदर्शक किंमत."),
-                    langText("Local support for delivery and coordination.", "डिलिव्हरी आणि समन्वयासाठी स्थानिक सपोर्ट."),
+                    t("rent-equipment.RentEquipmentClient.mechanical_inspections_for_listed_machinery"),
+                    t("rent-equipment.RentEquipmentClient.transparent_pricing_with_verified_owners"),
+                    t("rent-equipment.RentEquipmentClient.local_support_for_delivery_and_coordination"),
                   ].map((item) => (
                     <div key={item} className="flex gap-4">
                       <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-900 dark:bg-slate-900/50 dark:text-emerald-400">
@@ -305,3 +285,4 @@ export default function RentEquipmentClient({
     </div>
   );
 }
+

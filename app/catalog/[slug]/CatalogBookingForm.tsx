@@ -4,6 +4,7 @@ import { postJson, SubmissionError } from "@/lib/client/forms";
 import { IS_PAGES_BUILD } from "@/lib/runtime";
 import { bookingRequestSchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function CatalogBookingForm({
   sourcePath,
@@ -55,6 +56,10 @@ export default function CatalogBookingForm({
       event.currentTarget.reset();
     } catch (submitError) {
       if (submitError instanceof SubmissionError) {
+        if (submitError.status === 401) {
+          window.location.href = "/login";
+          return;
+        }
         setError(submitError.message);
       } else {
         setError("Could not submit the booking callback right now.");
@@ -67,16 +72,16 @@ export default function CatalogBookingForm({
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="space-y-1.5">
-        <label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Field Location (Sangli Region Only)</label>
+        <label className="kk-form-label">Field Location (Sangli Region Only)</label>
         <div className="relative">
           <span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">location_on</span>
-          <input className="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label" name="fieldLocation" placeholder="Village / Taluka name" type="text" />
+          <input className="kk-input pl-10" name="fieldLocation" placeholder="Village / Taluka name" type="text" />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Work Type</label>
-          <select className="w-full px-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label" name="workType">
+          <label className="kk-form-label">Work Type</label>
+          <select className="kk-input" name="workType">
             <option>Plowing</option>
             <option>Sowing</option>
             <option>Transport</option>
@@ -84,22 +89,23 @@ export default function CatalogBookingForm({
           </select>
         </div>
         <div className="space-y-1.5">
-          <label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Approx Hours</label>
-          <input className="w-full px-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label" name="approxHours" placeholder="8" type="number" />
+          <label className="kk-form-label">Approx Hours</label>
+          <input className="kk-input" name="approxHours" placeholder="8" type="number" />
         </div>
       </div>
       <div className="space-y-1.5">
-        <label className="text-xs font-label font-bold text-outline uppercase tracking-wider">Phone Number</label>
+        <label className="kk-form-label">Phone Number</label>
         <div className="relative">
           <span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">call</span>
-          <input className="w-full pl-10 pr-4 py-3 bg-surface-container rounded-xl border-none focus:ring-2 focus:ring-primary text-sm font-label" name="phone" placeholder="+91 00000 00000" type="tel" />
+          <input className="kk-input pl-10" name="phone" placeholder="+91 00000 00000" type="tel" />
         </div>
       </div>
       {error ? <p className="text-sm font-semibold text-red-600">{error}</p> : null}
       {success ? <p className="text-sm font-semibold text-emerald-700">{success}</p> : null}
-      <button className="w-full bg-secondary text-on-secondary font-headline font-black py-4 rounded-xl shadow-lg shadow-secondary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-60" disabled={isSubmitting} type="submit">
+      <Button className="w-full" disabled={isSubmitting} type="submit" variant="secondary">
         {isSubmitting ? "Submitting..." : "Request Booking Callback"}
-      </button>
+      </Button>
     </form>
   );
 }
+

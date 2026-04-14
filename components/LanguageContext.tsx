@@ -1,55 +1,76 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { Language, LocalizedText, pickLocalizedText } from "@/lib/i18n";
+import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  Language,
+  LocalizedText,
+  TranslationKey,
+  TranslationParams,
+  pickLocalizedText,
+  translate,
+} from "@/lib/i18n";
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
+  t: (key: TranslationKey, params?: TranslationParams) => string;
   langText: {
-    (enText: string, mrText?: string): string;
     (value: LocalizedText): string;
+    (enText: string, mrText?: string): string;
   };
 }
 
+const STORAGE_KEY = "kk_language";
+
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+function applyLanguageToDocument(language: Language) {
+  document.documentElement.lang = language;
+  document.documentElement.dataset.language = language;
+  document.documentElement.classList.toggle("lang-mr", language === "mr");
+  document.documentElement.classList.toggle("lang-en", language === "en");
+}
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("mr");
 
-  // Load saved preference
   useEffect(() => {
-    const saved = localStorage.getItem("kk_language") as Language;
+    const saved = localStorage.getItem(STORAGE_KEY);
     if (saved === "en" || saved === "mr") {
       setLanguage(saved);
+      applyLanguageToDocument(saved);
+      return;
     }
+
+    applyLanguageToDocument("mr");
   }, []);
 
   useEffect(() => {
-    document.documentElement.lang = language;
-    document.documentElement.dataset.language = language;
+    applyLanguageToDocument(language);
   }, [language]);
 
-  const handleSetLanguage = (lang: Language) => {
-    setLanguage(lang);
-    localStorage.setItem("kk_language", lang);
+  const handleSetLanguage = (nextLanguage: Language) => {
+    setLanguage(nextLanguage);
+    localStorage.setItem(STORAGE_KEY, nextLanguage);
   };
 
-  const langText: LanguageContextType["langText"] = (value: string | LocalizedText, mrText?: string) => {
-    if (typeof value === "object") {
-      return pickLocalizedText(value, language);
-    }
+  const value = useMemo<LanguageContextType>(
+    () => ({
+      language,
+      setLanguage: handleSetLanguage,
+      t: (key, params) => translate(language, key, params),
+      langText: (valueOrEnText: LocalizedText | string, mrText?: string) => {
+        if (typeof valueOrEnText === "object") {
+          return pickLocalizedText(valueOrEnText, language);
+        }
 
-    return language === "mr" ? mrText || value : value;
-  };
-
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, langText }}>
-      {children}
-      {/* Optional global body class toggle for specific css rules */}
-      {language === "mr" && <style>{`body { font-family: var(--font-mukta), sans-serif; }`}</style>}
-    </LanguageContext.Provider>
+        return language === "mr" ? mrText || valueOrEnText : valueOrEnText;
+      },
+    }),
+    [language]
   );
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }
 
 export function useLanguage() {
@@ -57,5 +78,6 @@ export function useLanguage() {
   if (context === undefined) {
     throw new Error("useLanguage must be used within a LanguageProvider");
   }
+
   return context;
 }

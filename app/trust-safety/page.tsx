@@ -1,11 +1,13 @@
 "use client";
 
+import { ContentImage } from "@/components/ContentImage";
+
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 
 export default function TrustSafety() {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
@@ -15,7 +17,7 @@ export default function TrustSafety() {
 {/*  Trust Partners Section  */}
 <section className="py-16 bg-surface-container-low overflow-hidden">
 <div className="max-w-screen-2xl mx-auto px-8">
-<h2 className="text-center font-headline font-bold text-outline uppercase tracking-[0.2em] text-sm mb-12">{langText("Building Rural Prosperity with Strategic Partners", "धोरणात्मक भागीदारांसह ग्रामीण समृद्धी निर्माण करणे")}</h2>
+<h2 className="text-center font-headline font-bold text-outline uppercase tracking-[0.2em] text-sm mb-12">{t("trust-safety.building_rural_prosperity_with_strategic_partners")}</h2>
 <div className="flex flex-wrap justify-center items-center gap-12 md:gap-24 opacity-60 grayscale hover:grayscale-0 transition-all duration-700">
 <div className="flex items-center gap-3">
 <span className="material-symbols-outlined text-4xl text-primary" style={{'fontVariationSettings': '\'FILL\' 1'}}>agriculture</span>
@@ -52,7 +54,7 @@ export default function TrustSafety() {
 </ul>
 </div>
 <div className="flex-1 min-h-[300px] bg-surface-container rounded-2xl relative overflow-hidden">
-<img className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-50" data-alt="topographic map style illustration of rural landscape with vibrant green agricultural plots and winding irrigation canals" data-location="Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKSv9oUVtbcX6EHwd7fYs4gCnORb4b2Eg46816kdbheQtfd8rHpChEBbHyCUqXUSldaX4xf8mbNXLNWUbeVnNrzMz2ZL2OGniLh-dIjWMmZ5j95F1RZWvYjVGp0LvskANO5WfqDPVB7js6ipwriAL1gYu6DGWVkqMqHQc0P2lqGQnq00WBwbqjnM1u8uar8tDBoZ517mePHJFByMxZCI830BYC_1OXdOzd21JdrqbevTgatFQ-bfQJ_7_VaeqosSFXf0ETmSRoOLNC"loading="lazy" decoding="async" />
+<ContentImage className="absolute inset-0 w-full h-full object-cover mix-blend-multiply opacity-50" alt="topographic map style illustration of rural landscape with vibrant green agricultural plots and winding irrigation canals" data-location="Maharashtra" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKSv9oUVtbcX6EHwd7fYs4gCnORb4b2Eg46816kdbheQtfd8rHpChEBbHyCUqXUSldaX4xf8mbNXLNWUbeVnNrzMz2ZL2OGniLh-dIjWMmZ5j95F1RZWvYjVGp0LvskANO5WfqDPVB7js6ipwriAL1gYu6DGWVkqMqHQc0P2lqGQnq00WBwbqjnM1u8uar8tDBoZ517mePHJFByMxZCI830BYC_1OXdOzd21JdrqbevTgatFQ-bfQJ_7_VaeqosSFXf0ETmSRoOLNC"loading="lazy" decoding="async" />
 <div className="absolute inset-0 flex items-center justify-center">
 <div className="relative">
 <div className="absolute -inset-4 bg-orange-500/20 rounded-full animate-ping"></div>
@@ -111,3 +113,6 @@ export default function TrustSafety() {
     </div>
   );
 }
+
+
+

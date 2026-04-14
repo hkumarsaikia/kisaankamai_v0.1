@@ -1,0 +1,195 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(238, 251, 245, 0.95), transparent 32%),
+    linear-gradient(180deg, #f8fafc, #eef5f0);
+}
+
+.dark body {
+  background:
+    radial-gradient(circle at top left, rgba(27, 100, 71, 0.24), transparent 30%),
+    linear-gradient(180deg, #020617, #0f172a);
+}
+
+.kk-button-primary {
+  @apply inline-flex items-center justify-center rounded-full bg-brand-700 px-5 py-3 text-sm font-black text-white transition-all hover:bg-brand-600 disabled:pointer-events-none disabled:opacity-60;
+}
+
+.kk-button-secondary {
+  @apply inline-flex items-center justify-center rounded-full border border-slate-300 px-5 py-3 text-sm font-black text-slate-700 transition-all hover:border-soil-400 hover:text-soil-700 dark:border-slate-700 dark:text-slate-200 dark:hover:border-soil-500 dark:hover:text-soil-300;
+}
+
+.kk-card {
+  @apply rounded-[2rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900;
+}
+
+.kk-input {
+  @apply block min-h-12 w-full rounded-[1.15rem] border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-900 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] transition-[border-color,box-shadow,background-color] placeholder:text-slate-400 focus:border-soil-400 focus:ring-2 focus:ring-soil-300 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500 disabled:cursor-not-allowed disabled:opacity-60 file:mr-4 file:rounded-full file:border-0 file:bg-brand-700 file:px-4 file:py-2 file:font-bold file:text-white;
+}
+
+.kk-label {
+  @apply block space-y-2 text-sm font-bold text-slate-700 dark:text-slate-200;
+}
+
+.kk-pill {
+  @apply rounded-full border border-slate-300 px-4 py-2 text-sm font-bold text-slate-700 transition dark:border-slate-700 dark:text-slate-200;
+}
+
+.kk-pill-active {
+  @apply border-brand-700 bg-brand-700 text-white dark:border-brand-300 dark:bg-brand-300 dark:text-slate-950;
+}
+
+.kk-form-shell {
+  @apply grid gap-6 lg:grid-cols-[minmax(0,1fr)_300px];
+}
+
+.kk-form-main-card {
+  background:
+    radial-gradient(circle at top left, rgba(253, 186, 116, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,247,250,0.98));
+}
+
+.dark .kk-form-main-card {
+  background:
+    radial-gradient(circle at top left, rgba(251, 146, 60, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(15,23,42,0.96), rgba(2,6,23,0.98));
+}
+
+.kk-form-header {
+  @apply space-y-4;
+}
+
+.kk-form-title {
+  @apply text-3xl font-black tracking-tight text-slate-950 dark:text-slate-50 md:text-[2.35rem];
+}
+
+.kk-form-description {
+  @apply max-w-2xl text-sm font-medium leading-6 text-slate-600 dark:text-slate-300;
+}
+
+.kk-form-step-pill {
+  @apply inline-flex items-center rounded-full border border-soil-200 bg-soil-50 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-soil-700 dark:border-soil-900 dark:bg-soil-900 dark:text-soil-300;
+}
+
+.kk-form-progress {
+  @apply rounded-[1.4rem] border border-slate-200 bg-slate-50 px-4 py-4 dark:border-slate-800 dark:bg-slate-950;
+}
+
+.kk-form-progress-meta {
+  @apply mb-3 flex items-center justify-between text-xs font-black uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400;
+}
+
+.kk-form-section {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.88), rgba(248,250,252,0.96)),
+    radial-gradient(circle at top right, rgba(43,157,109,0.08), transparent 32%);
+}
+
+.dark .kk-form-section {
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.82), rgba(2,6,23,0.96)),
+    radial-gradient(circle at top right, rgba(43,157,109,0.12), transparent 32%);
+}
+
+.kk-form-section-heading {
+  @apply mb-5 space-y-2;
+}
+
+.kk-form-grid {
+  @apply grid gap-5;
+}
+
+.kk-form-grid-1 {
+  @apply grid-cols-1;
+}
+
+.kk-form-grid-2 {
+  @apply grid-cols-1 md:grid-cols-2;
+}
+
+.kk-form-grid-3 {
+  @apply grid-cols-1 md:grid-cols-3;
+}
+
+.kk-form-field {
+  @apply space-y-2.5;
+}
+
+.kk-form-label {
+  @apply flex items-center gap-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-slate-500 dark:text-slate-400;
+}
+
+.kk-form-required {
+  @apply text-soil-600 dark:text-soil-400;
+}
+
+.kk-form-hint {
+  @apply text-xs font-medium leading-5 text-slate-500 dark:text-slate-400;
+}
+
+.kk-form-error {
+  @apply text-xs font-semibold leading-5 text-red-600 dark:text-red-300;
+}
+
+.kk-form-actions {
+  @apply flex flex-col-reverse gap-3 md:flex-row md:items-center md:justify-between;
+}
+
+.kk-choice-pills {
+  @apply flex flex-wrap gap-3;
+}
+
+.kk-choice-pill {
+  @apply rounded-full px-4 py-2 text-sm font-black;
+}
+
+.kk-choice-pill.is-active {
+  @apply text-white;
+}
+
+.kk-form-aside {
+  @apply rounded-[1.9rem] border border-slate-200 bg-white px-6 py-6 text-slate-900 shadow-soft dark:border-slate-800 dark:bg-slate-900 dark:text-slate-50 lg:sticky lg:top-28;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.92), rgba(248,250,252,0.98)),
+    radial-gradient(circle at top right, rgba(253,186,116,0.15), transparent 34%);
+}
+
+.dark .kk-form-aside {
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.92), rgba(2,6,23,0.98)),
+    radial-gradient(circle at top right, rgba(251,146,60,0.14), transparent 34%);
+}
+
+.kk-form-surface {
+  @apply rounded-[1.6rem] border border-slate-200 bg-white p-6 shadow-soft dark:border-slate-800 dark:bg-slate-900;
+}
+
+.kk-form-subtle {
+  @apply rounded-[1.3rem] border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-950;
+}
+
+.kk-form-search-input {
+  @apply w-full rounded-[1.15rem] border border-slate-200 bg-white py-3 pl-12 pr-4 text-sm font-semibold text-slate-900 shadow-soft outline-none transition-all placeholder:text-slate-400 focus:border-soil-400 focus:ring-2 focus:ring-soil-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-50 dark:placeholder:text-slate-500;
+}
+
+.kk-form-banner {
+  @apply rounded-[1.2rem] border border-soil-200 bg-soil-50 px-4 py-3 text-sm font-semibold text-soil-800 dark:border-soil-900 dark:bg-soil-900 dark:text-soil-200;
+}
+
+.leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #f8fafc;
+}

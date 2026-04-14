@@ -1,23 +1,20 @@
 #!/usr/bin/env node
 
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
-import { createRequire } from "module";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const require = createRequire(import.meta.url);
-
-const annotations = require(path.join(__dirname, "annotations.js"));
-
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
 const APP_DIR = path.join(ROOT_DIR, "app");
 const COMPONENTS_DIR = path.join(ROOT_DIR, "components");
-const LIB_DIR = path.join(ROOT_DIR, "lib");
-const OUTPUT_FILE = path.join(__dirname, "map-data.js");
-const TUNNEL_LOG_FILE = path.join(ROOT_DIR, "tunnel.log");
-const RELEVANT_COMPONENTS = new Set([
+
+const HTML_OUTPUT = path.join(__dirname, "index.html");
+const JSON_OUTPUT = path.join(__dirname, "site-map-data.json");
+const CSS_OUTPUT = "./styles.css";
+
+const SHARED_COMPONENTS = [
   "Header",
   "Footer",
   "OwnerSidebar",
@@ -26,76 +23,50 @@ const RELEVANT_COMPONENTS = new Set([
   "RenterTopBar",
   "LanguageToggle",
   "ThemeToggle",
-  "MapComponent"
-]);
-const SKIP_INTERNAL_PREFIXES = ["/assets/", "/stitch-assets/"];
-const SKIP_INTERNAL_SUFFIXES = [".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".ico", ".css", ".js", ".json"];
-const LEGACY_ROUTE_PREFIXES = ["owner-dashboard", "renter-dashboard"];
+  "MapComponent",
+  "LazyMap",
+];
 
-function toPosix(targetPath) {
-  return targetPath.split(path.sep).join("/");
+function toPosix(value) {
+  return value.split(path.sep).join("/");
 }
 
-function walk(dirPath) {
-  if (!fs.existsSync(dirPath)) {
-    return [];
-  }
-
-  const output = [];
-
-  for (const entry of fs.readdirSync(dirPath, { withFileTypes: true })) {
-    const fullPath = path.join(dirPath, entry.name);
-
-    if (entry.isDirectory()) {
-      output.push(...walk(fullPath));
-      continue;
-    }
-
-    output.push(fullPath);
-  }
-
-  return output;
-}
-
-function readFile(filePath) {
+function read(filePath) {
   return fs.readFileSync(filePath, "utf8");
 }
 
-function isLegacyRouteFile(filePath) {
-  const relativePath = toPosix(path.relative(APP_DIR, filePath));
-  return LEGACY_ROUTE_PREFIXES.some(
-    (prefix) => relativePath === `${prefix}/page.tsx` || relativePath.startsWith(`${prefix}/`)
-  );
+function walk(dirPath) {
+  if (!fs.existsSync(dirPath)) return [];
+  const results = [];
+
+  for (const entry of fs.readdirSync(dirPath, { withFileTypes: true })) {
+    const fullPath = path.join(dirPath, entry.name);
+    if (entry.isDirectory()) {
+      results.push(...walk(fullPath));
+    } else {
+      results.push(fullPath);
+    }
+  }
+
+  return results;
 }
 
 function normalizeRoute(route) {
-  if (!route || route === "/") {
-    return "/";
-  }
-
-  const withoutHash = route.split("#")[0];
-  const withoutQuery = withoutHash.split("?")[0];
-  const withoutTrailingSlash = withoutQuery.replace(/\/+$/, "");
-
-  return withoutTrailingSlash || "/";
+  if (!route || route === "/") return "/";
+  const clean = route.split("#")[0].split("?")[0].replace(/\/+$/, "");
+  return clean || "/";
 }
 
 function routeFromPageFile(filePath) {
-  const relativePath = toPosix(path.relative(APP_DIR, filePath));
-  if (relativePath === "page.tsx") {
-    return "/";
-  }
-
-  return normalizeRoute(`/${relativePath.replace(/\/page\.tsx$/, "")}`);
+  const relative = toPosix(path.relative(APP_DIR, filePath));
+  if (relative === "page.tsx") return "/";
+  return normalizeRoute(`/${relative.replace(/\/page\.tsx$/, "")}`);
 }
 
 function scopeFromLayoutFile(filePath) {
-  const relativePath = toPosix(path.relative(APP_DIR, filePath));
-  if (relativePath === "layout.tsx") {
-    return "/";
-  }
-
-  return normalizeRoute(`/${relativePath.replace(/\/layout\.tsx$/, "")}`);
+  const relative = toPosix(path.relative(APP_DIR, filePath));
+  if (relative === "layout.tsx") return "/";
+  return normalizeRoute(`/${relative.replace(/\/layout\.tsx$/, "")}`);
 }
 
 function titleCase(segment) {
@@ -106,10 +77,7 @@ function titleCase(segment) {
 }
 
 function labelFromRoute(route) {
-  if (route === "/") {
-    return "Home";
-  }
-
+  if (route === "/") return "Home";
   return route
     .split("/")
     .filter(Boolean)
@@ -118,7 +86,17 @@ function labelFromRoute(route) {
 }
 
 function routeGroup(route) {
-  if (route === "/" || route === "/about" || route === "/partner" || route === "/owner-benefits" || route === "/owner-experience" || route === "/list-equipment") {
+  if (
+    route === "/" ||
+    route === "/about" ||
+    route === "/partner" ||
+    route === "/owner-benefits" ||
+    route === "/owner-experience" ||
+    route === "/list-equipment" ||
+    route === "/legal" ||
+    route === "/trust-safety" ||
+    route === "/faq"
+  ) {
     return "public";
   }
 
@@ -153,514 +131,375 @@ function routeGroup(route) {
     return "renter";
   }
 
-  if (route.startsWith("/support") || route.startsWith("/faq") || route.startsWith("/legal") || route.startsWith("/trust-safety") || route.startsWith("/feedback")) {
+  if (route.startsWith("/support") || route.startsWith("/feedback")) {
     return "support";
   }
 
   return "public";
 }
 
-function componentIdFromName(name) {
-  return `component:${name}`;
-}
-
-function addOrMergeNode(nodeMap, node) {
-  const existing = nodeMap.get(node.id);
-  if (!existing) {
-    nodeMap.set(node.id, {
-      ...node,
-      files: node.files ? [...node.files] : [],
-      notes: node.notes ? [...node.notes] : []
-    });
-    return;
-  }
-
-  const files = new Set([...(existing.files || []), ...(node.files || [])]);
-  const notes = new Set([...(existing.notes || []), ...(node.notes || [])]);
-
-  nodeMap.set(node.id, {
-    ...existing,
-    ...node,
-    files: [...files],
-    notes: [...notes]
-  });
-}
-
-function addOrMergeEdge(edgeMap, edge) {
-  const edgeKey = `${edge.source}|${edge.target}|${edge.type}|${edge.label || ""}`;
-  const existing = edgeMap.get(edgeKey);
-  if (!existing) {
-    edgeMap.set(edgeKey, {
-      ...edge,
-      origins: edge.origins ? [...edge.origins] : []
-    });
-    return;
-  }
-
-  const originKey = (origin) => `${origin.file}:${origin.line}:${origin.raw}`;
-  const mergedOrigins = [...(existing.origins || [])];
-  const seenOriginKeys = new Set(mergedOrigins.map(originKey));
-
-  for (const origin of edge.origins || []) {
-    const key = originKey(origin);
-    if (!seenOriginKeys.has(key)) {
-      mergedOrigins.push(origin);
-      seenOriginKeys.add(key);
+function extractSharedComponents(text) {
+  const found = new Set();
+  for (const component of SHARED_COMPONENTS) {
+    const regex = new RegExp(`(?:<${component}\\b|from\\s+["']@\\/components\\/(?:[^"']*\\/)?${component}["'])`);
+    if (regex.test(text)) {
+      found.add(component);
     }
   }
-
-  edgeMap.set(edgeKey, {
-    ...existing,
-    description: existing.description || edge.description || "",
-    origins: mergedOrigins
-  });
+  return [...found].sort();
 }
 
-function lineNumberFromIndex(text, index) {
+function isAssetLike(target) {
+  return (
+    target.startsWith("/assets/") ||
+    target.startsWith("/uploads/") ||
+    /\.(png|jpe?g|webp|gif|svg|ico|css|js|json)$/i.test(target)
+  );
+}
+
+function lineNumber(text, index) {
   return text.slice(0, index).split("\n").length;
 }
 
-function isAssetLikePath(target) {
-  return SKIP_INTERNAL_PREFIXES.some((prefix) => target.startsWith(prefix)) ||
-    SKIP_INTERNAL_SUFFIXES.some((suffix) => target.toLowerCase().endsWith(suffix));
+function classifySurface(host) {
+  if (!host || host === "localhost" || host === "127.0.0.1" || host === "[::1]") {
+    return "localhost";
+  }
+  if (host.includes("trycloudflare.com")) return "public-tunnel";
+  if (/^\d+\.\d+\.\d+\.\d+(?::\d+)?$/.test(host)) return "lan";
+  return "custom-domain";
 }
 
-function sanitizeTemplateValue(rawValue) {
-  return rawValue
-    .replace(/\$\{window\.location\.origin\}/g, "")
-    .replace(/\$\{window\.location\.protocol\}/g, "")
-    .replace(/\$\{window\.location\.host\}/g, "")
-    .replace(/\$\{window\.location\.hostname\}/g, "")
-    .replace(/\$\{[^}]+\}/g, "{dynamic}")
-    .trim();
-}
+function extractDestinations(text, existingRoutes, filePath) {
+  const internal = new Map();
+  const external = new Map();
+  const unresolved = new Map();
+  const redirects = [];
 
-function classifyTarget(rawValue, routeSet) {
-  if (!rawValue) {
-    return null;
-  }
+  const patterns = [
+    { regex: /href\s*=\s*["'`]([^"'`]+)["'`]/g, context: "href" },
+    { regex: /href\s*=\s*\{\s*["'`]([^"'`]+)["'`]\s*\}/g, context: "href" },
+    { regex: /router\.(?:push|replace)\(\s*["'`]([^"'`]+)["'`]/g, context: "router" },
+    { regex: /redirect\(\s*["'`]([^"'`]+)["'`]/g, context: "redirect" },
+    { regex: /window\.location(?:\.href)?\s*=\s*["'`]([^"'`]+)["'`]/g, context: "window" },
+  ];
 
-  const trimmed = sanitizeTemplateValue(rawValue);
+  for (const { regex, context } of patterns) {
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      const raw = match[1].trim();
+      if (!raw || raw === "#" || isAssetLike(raw)) continue;
+      const origin = {
+        file: toPosix(path.relative(ROOT_DIR, filePath)),
+        line: lineNumber(text, match.index),
+        raw,
+        context,
+      };
 
-  if (!trimmed) {
-    return null;
-  }
-
-  if (trimmed === "#") {
-    return {
-      type: "placeholder",
-      node: {
-        id: "missing:#",
-        label: "Placeholder Target (#)",
-        type: "missing-route",
-        group: "missing",
-        status: "placeholder",
-        target: "#"
-      },
-      targetId: "missing:#",
-      targetLabel: "#"
-    };
-  }
-
-  if (trimmed.startsWith("mailto:") || trimmed.startsWith("tel:") || trimmed.startsWith("https://") || trimmed.startsWith("http://")) {
-    const isPlaceholderExternal =
-      trimmed === "tel:+" ||
-      trimmed === "mailto:" ||
-      trimmed.endsWith("/#") ||
-      trimmed.endsWith(":#");
-
-    return {
-      type: isPlaceholderExternal ? "placeholder" : "external-link",
-      node: {
-        id: `external:${trimmed}`,
-        label: trimmed.replace(/^mailto:/, "Email: ").replace(/^tel:/, "Call: "),
-        type: "external-destination",
-        group: "external",
-        status: isPlaceholderExternal ? "placeholder" : "external",
-        target: trimmed
-      },
-      targetId: `external:${trimmed}`,
-      targetLabel: trimmed
-    };
-  }
-
-  if (!trimmed.startsWith("/")) {
-    return null;
-  }
-
-  if (isAssetLikePath(trimmed)) {
-    return null;
-  }
-
-  const normalizedPath = normalizeRoute(trimmed);
-  const isMissing = !routeSet.has(normalizedPath);
-
-  return {
-    type: "internal-link",
-    node: isMissing
-      ? {
-          id: `missing:${normalizedPath}`,
-          label: labelFromRoute(normalizedPath),
-          type: "missing-route",
-          group: "missing",
-          status: "missing",
-          route: normalizedPath
+      if (/^(mailto:|tel:|https?:\/\/)/i.test(raw)) {
+        if (!external.has(raw)) {
+          let host = "";
+          try {
+            host = new URL(raw).host;
+          } catch {
+            host = raw.startsWith("mailto:") ? "mailto" : raw.startsWith("tel:") ? "tel" : "";
+          }
+          external.set(raw, {
+            href: raw,
+            host,
+            accessSurface: classifySurface(host),
+            origins: [origin],
+          });
+        } else {
+          external.get(raw).origins.push(origin);
         }
-      : null,
-    targetId: isMissing ? `missing:${normalizedPath}` : `route:${normalizedPath}`,
-    targetLabel: normalizedPath
-  };
-}
+        continue;
+      }
 
-function originRecord(filePath, line, rawValue, context) {
-  return {
-    file: toPosix(path.relative(ROOT_DIR, filePath)),
-    line,
-    raw: rawValue,
-    context
-  };
-}
+      if (!raw.startsWith("/")) continue;
+      const normalized = normalizeRoute(raw);
 
-function extractRouteCandidates(text) {
-  const candidates = [];
-  const linePatterns = [
-    { regex: /\b(?:href|path|url)\s*:\s*"([^"]+)"/g, context: "object-property" },
-    { regex: /\b(?:href|path|url)\s*:\s*'([^']+)'/g, context: "object-property" },
-    { regex: /\b(?:href|path|url)\s*:\s*`([^`]+)`/g, context: "object-property" },
-    { regex: /href\s*=\s*"([^"]+)"/g, context: "href-attribute" },
-    { regex: /href\s*=\s*'([^']+)'/g, context: "href-attribute" },
-    { regex: /href\s*=\s*\{\s*`([^`]+)`\s*\}/g, context: "href-attribute" },
-    { regex: /(router\.(?:push|replace))\(\s*"([^"]+)"/g, context: "router-navigation" },
-    { regex: /(router\.(?:push|replace))\(\s*'([^']+)'/g, context: "router-navigation" },
-    { regex: /(router\.(?:push|replace))\(\s*`([^`]+)`/g, context: "router-navigation" },
-    { regex: /window\.location\.href\s*=\s*"([^"]+)"/g, context: "window-location" },
-    { regex: /window\.location\.href\s*=\s*'([^']+)'/g, context: "window-location" },
-    { regex: /window\.location\.href\s*=\s*`([^`]+)`/g, context: "window-location" }
-  ];
+      if (context !== "href") {
+        redirects.push({ target: normalized, context, origin });
+      }
 
-  for (const pattern of linePatterns) {
-    let match;
-    while ((match = pattern.regex.exec(text)) !== null) {
-      const rawValue = match[2] || match[1];
-      candidates.push({
-        rawValue,
-        line: lineNumberFromIndex(text, match.index),
-        context: pattern.context
-      });
-    }
-  }
-
-  const navContexts = [
-    { regex: /createOAuth2Session\(([\s\S]{0,300}?)\)/g, context: "oauth-return" },
-    { regex: /router\.(?:push|replace)\(([\s\S]{0,180}?)\)/g, context: "router-navigation" },
-    { regex: /window\.location\.href\s*=\s*([\s\S]{0,120}?)[;\n]/g, context: "window-location" }
-  ];
-
-  for (const navContext of navContexts) {
-    let match;
-    while ((match = navContext.regex.exec(text)) !== null) {
-      const block = match[1] || "";
-      const blockLine = lineNumberFromIndex(text, match.index);
-      const quoteRegex = /["'`]([^"'`]+)["'`]/g;
-      let quoteMatch;
-      while ((quoteMatch = quoteRegex.exec(block)) !== null) {
-        const rawValue = quoteMatch[1];
-        candidates.push({
-          rawValue,
-          line: blockLine,
-          context: navContext.context
-        });
+      if (existingRoutes.has(normalized)) {
+        if (!internal.has(normalized)) internal.set(normalized, { path: normalized, origins: [origin] });
+        else internal.get(normalized).origins.push(origin);
+      } else {
+        if (!unresolved.has(normalized)) unresolved.set(normalized, { path: normalized, origins: [origin] });
+        else unresolved.get(normalized).origins.push(origin);
       }
     }
   }
 
-  const unique = new Map();
-  for (const candidate of candidates) {
-    const key = `${candidate.rawValue}|${candidate.line}|${candidate.context}`;
-    unique.set(key, candidate);
-  }
-
-  return [...unique.values()];
+  return {
+    internalDestinations: [...internal.values()].sort((a, b) => a.path.localeCompare(b.path)),
+    externalDestinations: [...external.values()].sort((a, b) => a.href.localeCompare(b.href)),
+    unresolvedDestinations: [...unresolved.values()].sort((a, b) => a.path.localeCompare(b.path)),
+    redirects,
+  };
 }
 
-function componentImportsFromFile(text) {
-  const imports = new Set();
-  const importRegex = /from\s+["']@\/components\/([^"']+)["']/g;
-  let match;
-
-  while ((match = importRegex.exec(text)) !== null) {
-    const target = match[1].split("/").pop()?.replace(/\.(tsx|ts|jsx|js)$/, "");
-    if (target && RELEVANT_COMPONENTS.has(target)) {
-      imports.add(target);
-    }
-  }
-
-  return [...imports];
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
 }
 
-function defaultBaseUrl() {
-  if (fs.existsSync(TUNNEL_LOG_FILE)) {
-    const content = readFile(TUNNEL_LOG_FILE).trim();
-    const urlMatch = content.match(/https:\/\/[^\s]+/);
-    if (urlMatch) {
-      return urlMatch[0];
-    }
-  }
-
-  return "http://localhost:3000";
+function badge(text, kind = "default") {
+  return `<span class="badge badge-${kind}">${escapeHtml(text)}</span>`;
 }
 
-const pageFiles = walk(APP_DIR).filter((filePath) => {
-  const isPageFile = toPosix(filePath).endsWith("/page.tsx") || toPosix(path.relative(ROOT_DIR, filePath)) === "app/page.tsx";
-  return isPageFile && !isLegacyRouteFile(filePath);
-});
-const layoutFiles = walk(APP_DIR).filter((filePath) => {
-  const isLayoutFile = toPosix(filePath).endsWith("/layout.tsx") || toPosix(path.relative(ROOT_DIR, filePath)) === "app/layout.tsx";
-  return isLayoutFile && !isLegacyRouteFile(filePath);
-});
-const scanFiles = [...walk(APP_DIR), ...walk(COMPONENTS_DIR), ...walk(LIB_DIR)].filter(
-  (filePath) => /\.(ts|tsx|js|jsx)$/.test(filePath) && (!filePath.startsWith(APP_DIR) || !isLegacyRouteFile(filePath))
-);
-const routeSet = new Set(pageFiles.map(routeFromPageFile));
-
-const nodes = new Map();
-const edges = new Map();
-
-for (const pageFile of pageFiles) {
-  const route = routeFromPageFile(pageFile);
-  addOrMergeNode(nodes, {
-    id: `route:${route}`,
-    type: "page",
-    group: routeGroup(route),
-    label: labelFromRoute(route),
-    route,
-    status: "implemented",
-    files: [toPosix(path.relative(ROOT_DIR, pageFile))]
-  });
+function renderList(values, kind = "default", empty = "None") {
+  if (!values.length) return `<p class="empty">${escapeHtml(empty)}</p>`;
+  return `<div class="badge-row">${values.map((value) => badge(value, kind)).join("")}</div>`;
 }
 
-for (const annotationNode of annotations.extraNodes || []) {
-  addOrMergeNode(nodes, annotationNode);
+function renderLinkList(values, keyName, empty = "None") {
+  if (!values.length) return `<p class="empty">${escapeHtml(empty)}</p>`;
+  return `<ul class="link-list">${values
+    .map((value) => `<li><code>${escapeHtml(value[keyName])}</code></li>`)
+    .join("")}</ul>`;
 }
+
+const pageFiles = walk(APP_DIR).filter((filePath) => toPosix(filePath).endsWith("/page.tsx") || toPosix(path.relative(ROOT_DIR, filePath)) === "app/page.tsx");
+const layoutFiles = walk(APP_DIR).filter((filePath) => toPosix(filePath).endsWith("/layout.tsx") || toPosix(path.relative(ROOT_DIR, filePath)) === "app/layout.tsx");
+
+const existingRoutes = new Set(pageFiles.map(routeFromPageFile));
+const layoutSurfaces = new Map();
 
 for (const layoutFile of layoutFiles) {
-  const scopeRoute = scopeFromLayoutFile(layoutFile);
-  if (scopeRoute === "/") {
-    continue;
-  }
-
-  addOrMergeNode(nodes, {
-    id: `layout:${scopeRoute}`,
-    type: "flow-node",
-    group: routeGroup(scopeRoute),
-    label: `${labelFromRoute(scopeRoute)} Layout`,
-    route: scopeRoute,
-    status: "inferred",
-    files: [toPosix(path.relative(ROOT_DIR, layoutFile))]
-  });
+  const scope = scopeFromLayoutFile(layoutFile);
+  layoutSurfaces.set(scope, extractSharedComponents(read(layoutFile)));
 }
 
-for (const filePath of scanFiles) {
-  const relativeFile = toPosix(path.relative(ROOT_DIR, filePath));
-  const text = readFile(filePath);
-  const isPageFile = (relativeFile.startsWith("app/") && relativeFile.endsWith("/page.tsx")) || relativeFile === "app/page.tsx";
-  const isLayoutFile = (relativeFile.startsWith("app/") && relativeFile.endsWith("/layout.tsx")) || relativeFile === "app/layout.tsx";
-  const isComponentFile = relativeFile.startsWith("components/");
+const routes = pageFiles
+  .map((pageFile) => {
+    const route = routeFromPageFile(pageFile);
+    const text = read(pageFile);
+    const ownSurfaces = extractSharedComponents(text);
+    const inherited = [...layoutSurfaces.entries()]
+      .filter(([scope]) => scope !== "/" && (route === scope || route.startsWith(`${scope}/`)))
+      .flatMap(([, surfaces]) => surfaces);
+    const rootLayoutSurfaces = layoutSurfaces.get("/") || [];
+    const surfaces = [...new Set([...rootLayoutSurfaces, ...inherited, ...ownSurfaces])].sort();
+    const destinations = extractDestinations(text, existingRoutes, pageFile);
 
-  let sourceNodeId = null;
-  let sourceNodeType = null;
+    return {
+      path: route,
+      label: labelFromRoute(route),
+      group: routeGroup(route),
+      sourceFile: toPosix(path.relative(ROOT_DIR, pageFile)),
+      sharedSurfaces: surfaces,
+      internalDestinations: destinations.internalDestinations,
+      unresolvedDestinations: destinations.unresolvedDestinations,
+      externalDestinations: destinations.externalDestinations,
+      redirects: destinations.redirects,
+    };
+  })
+  .sort((a, b) => a.path.localeCompare(b.path));
 
-  if (isPageFile) {
-    const route = routeFromPageFile(filePath);
-    sourceNodeId = `route:${route}`;
-    sourceNodeType = "page";
-  } else if (isLayoutFile) {
-    const scopeRoute = scopeFromLayoutFile(filePath);
-    if (scopeRoute !== "/") {
-      sourceNodeId = `layout:${scopeRoute}`;
-      sourceNodeType = "flow-node";
-    }
-  } else if (isComponentFile) {
-    const componentName = path.basename(filePath).replace(/\.(tsx|ts|jsx|js)$/, "");
-    sourceNodeId = componentIdFromName(componentName);
-    sourceNodeType = "shared-component";
-    addOrMergeNode(nodes, {
-      id: sourceNodeId,
-      type: "shared-component",
-      group: "components",
-      label: componentName,
-      status: "shared",
-      files: [relativeFile]
-    });
-  }
+const routeGroups = ["public", "discovery", "auth", "owner", "renter", "support"];
+const groupedRoutes = Object.fromEntries(routeGroups.map((group) => [group, routes.filter((route) => route.group === group)]));
 
-  if (!sourceNodeId) {
-    continue;
-  }
-
-  const componentImports = componentImportsFromFile(text);
-
-  if (sourceNodeType === "page") {
-    for (const componentName of componentImports) {
-      const componentId = componentIdFromName(componentName);
-      addOrMergeNode(nodes, {
-        id: componentId,
-        type: "shared-component",
-        group: "components",
-        label: componentName,
-        status: "shared",
-        files: [`components/${componentName}.tsx`]
-      });
-      addOrMergeEdge(edges, {
-        source: sourceNodeId,
-        target: componentId,
-        type: "surface",
-        label: "renders",
-        origins: [originRecord(filePath, 1, componentName, "component-import")]
-      });
-    }
-  }
-
-  if (sourceNodeType === "flow-node" && sourceNodeId.startsWith("layout:")) {
-    for (const componentName of componentImports) {
-      const componentId = componentIdFromName(componentName);
-      addOrMergeNode(nodes, {
-        id: componentId,
-        type: "shared-component",
-        group: "components",
-        label: componentName,
-        status: "shared",
-        files: [`components/${componentName}.tsx`]
-      });
-      addOrMergeEdge(edges, {
-        source: sourceNodeId,
-        target: componentId,
-        type: "surface",
-        label: "composes",
-        origins: [originRecord(filePath, 1, componentName, "layout-import")]
-      });
-    }
-
-    const scopeRoute = sourceNodeId.replace(/^layout:/, "");
-    const affectedRoutes = [...routeSet].filter((route) => route === scopeRoute || route.startsWith(`${scopeRoute}/`));
-
-    for (const route of affectedRoutes) {
-      addOrMergeEdge(edges, {
-        source: `route:${route}`,
-        target: sourceNodeId,
-        type: "surface",
-        label: "wrapped by layout",
-        origins: [originRecord(filePath, 1, scopeRoute, "layout-scope")]
-      });
-    }
-  }
-
-  const candidates = extractRouteCandidates(text);
-
-  for (const candidate of candidates) {
-    const classified = classifyTarget(candidate.rawValue, routeSet);
-
-    if (!classified) {
-      continue;
-    }
-
-    if (classified.node) {
-      addOrMergeNode(nodes, classified.node);
-    }
-
-    if (annotations.nodeNotes && annotations.nodeNotes[classified.targetId]) {
-      addOrMergeNode(nodes, {
-        id: classified.targetId,
-        notes: [annotations.nodeNotes[classified.targetId]]
-      });
-    }
-
-    let edgeType = classified.type;
-    if (candidate.context === "router-navigation" || candidate.context === "window-location" || candidate.context === "oauth-return") {
-      edgeType = edgeType === "placeholder" ? "placeholder" : "redirect";
-    }
-
-    addOrMergeEdge(edges, {
-      source: sourceNodeId,
-      target: classified.targetId,
-      type: edgeType,
-      label: classified.targetLabel,
-      origins: [originRecord(filePath, candidate.line, candidate.rawValue, candidate.context)]
-    });
+const sharedSurfaceIndex = new Map();
+for (const route of routes) {
+  for (const surface of route.sharedSurfaces) {
+    if (!sharedSurfaceIndex.has(surface)) sharedSurfaceIndex.set(surface, new Set());
+    sharedSurfaceIndex.get(surface).add(route.path);
   }
 }
 
-for (const extraEdge of annotations.extraEdges || []) {
-  addOrMergeEdge(edges, {
-    ...extraEdge,
-    origins: [
-      {
-        file: "docs/site-map/annotations.js",
-        line: 1,
-        raw: extraEdge.label || extraEdge.target,
-        context: "annotation"
-      }
-    ]
-  });
-}
-
-for (const [nodeId, note] of Object.entries(annotations.nodeNotes || {})) {
-  if (nodes.has(nodeId)) {
-    addOrMergeNode(nodes, {
-      id: nodeId,
-      notes: [note]
-    });
-  }
-}
-
-const nodeList = [...nodes.values()]
-  .map((node) => ({
-    ...node,
-    files: [...new Set(node.files || [])].sort(),
-    notes: [...new Set(node.notes || [])].sort()
+const sharedSurfaces = [...sharedSurfaceIndex.entries()]
+  .map(([surface, routePaths]) => ({
+    surface,
+    routePaths: [...routePaths].sort(),
   }))
-  .sort((left, right) => left.label.localeCompare(right.label));
+  .sort((a, b) => a.surface.localeCompare(b.surface));
 
-const edgeList = [...edges.values()]
-  .map((edge, index) => ({
-    id: `edge-${index + 1}`,
-    ...edge,
-    origins: edge.origins.sort((left, right) => {
-      if (left.file === right.file) {
-        return left.line - right.line;
-      }
-      return left.file.localeCompare(right.file);
-    })
+const unresolvedReferences = routes.flatMap((route) =>
+  route.unresolvedDestinations.map((item) => ({
+    route: route.path,
+    path: item.path,
+    sourceFile: route.sourceFile,
   }))
-  .sort((left, right) => {
-    if (left.source === right.source) {
-      return left.target.localeCompare(right.target);
-    }
-    return left.source.localeCompare(right.source);
-  });
+);
+
+const externalDestinations = routes.flatMap((route) =>
+  route.externalDestinations.map((item) => ({
+    route: route.path,
+    href: item.href,
+    host: item.host,
+    accessSurface: item.accessSurface,
+  }))
+);
 
 const data = {
   generatedAt: new Date().toISOString(),
-  rootDir: toPosix(ROOT_DIR),
-  defaultBaseUrl: defaultBaseUrl(),
-  stats: {
-    pages: nodeList.filter((node) => node.type === "page").length,
-    components: nodeList.filter((node) => node.type === "shared-component").length,
-    flowNodes: nodeList.filter((node) => node.type === "flow-node").length,
-    missingRoutes: nodeList.filter((node) => node.type === "missing-route").length,
-    externalDestinations: nodeList.filter((node) => node.type === "external-destination").length,
-    edges: edgeList.length
+  summary: {
+    totalRoutes: routes.length,
+    sharedSurfaces: sharedSurfaces.length,
+    unresolvedInternalReferences: unresolvedReferences.length,
+    externalDestinations: externalDestinations.length,
   },
-  nodes: nodeList,
-  edges: edgeList
+  groupedRoutes,
+  sharedSurfaces,
+  unresolvedReferences,
+  externalDestinations,
 };
 
-const serialized = JSON.stringify(data, null, 2);
-const output = `(function (root) {\n  const data = ${serialized};\n\n  if (typeof module === "object" && module.exports) {\n    module.exports = data;\n  }\n\n  root.SITE_MAP_DATA = data;\n})(typeof globalThis !== "undefined" ? globalThis : this);\n`;
+const sections = routeGroups
+  .map((group) => {
+    const items = groupedRoutes[group];
+    return `
+      <section class="section">
+        <div class="section-heading">
+          <h2>${escapeHtml(titleCase(group))}</h2>
+          ${badge(`${items.length} routes`, "group")}
+        </div>
+        <div class="route-grid">
+          ${items
+            .map(
+              (route) => `
+                <article class="route-card">
+                  <div class="route-header">
+                    <div>
+                      <h3><code>${escapeHtml(route.path)}</code></h3>
+                      <p>${escapeHtml(route.label)}</p>
+                    </div>
+                    ${badge(group, "group")}
+                  </div>
+                  <dl class="meta-grid">
+                    <div>
+                      <dt>Source</dt>
+                      <dd><code>${escapeHtml(route.sourceFile)}</code></dd>
+                    </div>
+                    <div>
+                      <dt>Shared Surfaces</dt>
+                      <dd>${renderList(route.sharedSurfaces, "surface", "No shared chrome detected")}</dd>
+                    </div>
+                    <div>
+                      <dt>Internal Destinations</dt>
+                      <dd>${renderLinkList(route.internalDestinations, "path", "No internal destinations")}</dd>
+                    </div>
+                    <div>
+                      <dt>Programmatic Destinations</dt>
+                      <dd>${renderLinkList(route.redirects, "target", "No redirect/programmatic destinations inferred")}</dd>
+                    </div>
+                    <div>
+                      <dt>Unresolved References</dt>
+                      <dd>${renderLinkList(route.unresolvedDestinations, "path", "No unresolved references")}</dd>
+                    </div>
+                    <div>
+                      <dt>External Destinations</dt>
+                      <dd>${renderLinkList(route.externalDestinations, "href", "No external destinations")}</dd>
+                    </div>
+                  </dl>
+                </article>
+              `
+            )
+            .join("")}
+        </div>
+      </section>
+    `;
+  })
+  .join("");
 
-fs.writeFileSync(OUTPUT_FILE, output, "utf8");
+const html = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kisan Kamai Static Site Map</title>
+    <link rel="stylesheet" href="${CSS_OUTPUT}" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">Documentation Artifact</p>
+        <h1>Kisan Kamai Static Site Map</h1>
+        <p class="lede">Generated route inventory for the current codebase. This static document replaces the old graph viewer and keeps route groups, shared surfaces, unresolved internal references, and external destinations visible without any interactive graph tooling.</p>
+        <p class="timestamp">Generated: <code>${escapeHtml(data.generatedAt)}</code></p>
+      </header>
 
-console.log(`Generated site map data at ${toPosix(path.relative(ROOT_DIR, OUTPUT_FILE))}`);
-console.log(
-  `Pages: ${data.stats.pages} | Components: ${data.stats.components} | Flow nodes: ${data.stats.flowNodes} | Missing routes: ${data.stats.missingRoutes} | External: ${data.stats.externalDestinations} | Edges: ${data.stats.edges}`
-);
+      <section class="summary-grid">
+        <article class="summary-card"><h2>Total Routes</h2><p>${data.summary.totalRoutes}</p></article>
+        <article class="summary-card"><h2>Shared Surfaces</h2><p>${data.summary.sharedSurfaces}</p></article>
+        <article class="summary-card"><h2>Unresolved Internal References</h2><p>${data.summary.unresolvedInternalReferences}</p></article>
+        <article class="summary-card"><h2>External Destinations</h2><p>${data.summary.externalDestinations}</p></article>
+      </section>
+
+      ${sections}
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>Shared Surfaces</h2>
+          ${badge(`${sharedSurfaces.length} surfaces`, "surface")}
+        </div>
+        <div class="route-grid">
+          ${sharedSurfaces
+            .map(
+              (item) => `
+                <article class="route-card">
+                  <div class="route-header">
+                    <h3>${escapeHtml(item.surface)}</h3>
+                    ${badge(`${item.routePaths.length} routes`, "surface")}
+                  </div>
+                  ${renderList(item.routePaths, "route", "No routes")}
+                </article>
+              `
+            )
+            .join("")}
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>Unresolved Internal References</h2>
+          ${badge(`${unresolvedReferences.length} unresolved`, "warning")}
+        </div>
+        <div class="table-card">
+          ${
+            unresolvedReferences.length
+              ? `<table><thead><tr><th>From Route</th><th>Missing Path</th><th>Source File</th></tr></thead><tbody>${unresolvedReferences
+                  .map(
+                    (item) =>
+                      `<tr><td><code>${escapeHtml(item.route)}</code></td><td><code>${escapeHtml(item.path)}</code></td><td><code>${escapeHtml(item.sourceFile)}</code></td></tr>`
+                  )
+                  .join("")}</tbody></table>`
+              : `<p class="empty">No unresolved internal references detected.</p>`
+          }
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-heading">
+          <h2>External Destinations</h2>
+          ${badge(`${externalDestinations.length} external links`, "external")}
+        </div>
+        <div class="table-card">
+          ${
+            externalDestinations.length
+              ? `<table><thead><tr><th>From Route</th><th>Destination</th><th>Host</th><th>Surface</th></tr></thead><tbody>${externalDestinations
+                  .map(
+                    (item) =>
+                      `<tr><td><code>${escapeHtml(item.route)}</code></td><td><code>${escapeHtml(item.href)}</code></td><td>${escapeHtml(item.host || "-")}</td><td>${escapeHtml(item.accessSurface)}</td></tr>`
+                  )
+                  .join("")}</tbody></table>`
+              : `<p class="empty">No external destinations detected.</p>`
+          }
+        </div>
+      </section>
+    </main>
+  </body>
+</html>`;
+
+fs.writeFileSync(JSON_OUTPUT, `${JSON.stringify(data, null, 2)}\n`, "utf8");
+fs.writeFileSync(HTML_OUTPUT, html, "utf8");
+
+console.log(`Generated ${toPosix(path.relative(ROOT_DIR, JSON_OUTPUT))}`);
+console.log(`Generated ${toPosix(path.relative(ROOT_DIR, HTML_OUTPUT))}`);

@@ -1,63 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
-import { registerInputSchema } from "@/lib/validation/forms";
+import { registerAndCreateSession } from "@/lib/server/local-auth";
+import { withLoggedRoute } from "@/lib/server/bug-reporting";
+import { parseJsonBody } from "@/lib/server/http";
 import {
-  assertCollectionConfigured,
-  getAdminDatabases,
-  getAdminUsers,
-  ID,
-  SERVER_APPWRITE_CONFIG,
-} from "@/lib/server/appwrite-admin";
-import { assertMutationRequestAllowed, compactRecord, handleRouteError, parseJsonBody } from "@/lib/server/http";
+  IS_PAGES_BUILD,
+  PAGES_BUILD_DYNAMIC,
+  PAGES_DEMO_ROUTE_ERROR,
+  pagesDemoJson,
+} from "@/lib/server/pages-export";
+import { registerInputSchema } from "@/lib/validation/forms";
 
-export async function POST(request: NextRequest) {
-  try {
-    const payload = await parseJsonBody(request, registerInputSchema);
-    assertMutationRequestAllowed();
-    const email = payload.email || `${payload.phone}@kisankamai.com`;
-    const userId = ID.unique();
+export const dynamic = PAGES_BUILD_DYNAMIC;
 
-    const user = await getAdminUsers().create(
-      userId,
-      email,
-      `+91${payload.phone}`,
-      payload.password,
-      payload.fullName
-    );
+export const POST = IS_PAGES_BUILD
+  ? async () => pagesDemoJson({ ok: false, error: PAGES_DEMO_ROUTE_ERROR }, { status: 400 })
+  : withLoggedRoute("auth-register", async (request: NextRequest) => {
+      const payload = await parseJsonBody(request, registerInputSchema);
+      const session = await registerAndCreateSession(payload);
 
-    if (payload.email) {
-      await getAdminUsers().updateEmailVerification(user.$id, true);
-    }
+      if (!session) {
+        return NextResponse.json({ ok: false, error: "Registration failed." }, { status: 400 });
+      }
 
-    if (payload.otpVerified) {
-      await getAdminUsers().updatePhoneVerification(user.$id, true);
-    }
-
-    await getAdminDatabases().createDocument(
-      SERVER_APPWRITE_CONFIG.databaseId!,
-      assertCollectionConfigured(
-        SERVER_APPWRITE_CONFIG.userCollectionId,
-        "user profile collection"
-      ),
-      user.$id,
-      compactRecord({
-        fullName: payload.fullName,
-        email,
-        phone: payload.phone,
-        address: payload.address,
-        village: payload.village,
-        pincode: payload.pincode,
-        fieldArea: payload.fieldArea,
-        role: payload.role,
-        createdAt: new Date().toISOString(),
-      })
-    );
-
-    return NextResponse.json({
-      ok: true,
-      userId: user.$id,
-      email,
+      return NextResponse.json({
+        ok: true,
+        userId: session.user.id,
+        email: session.user.email,
+      });
     });
-  } catch (error) {
-    return handleRouteError(error);
-  }
-}

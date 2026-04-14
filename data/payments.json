@@ -1,0 +1,72 @@
+[
+  {
+    "id": "TXN-4012",
+    "bookingId": "BK-9021",
+    "ownerUserId": "owner-1",
+    "renterUserId": "renter-1",
+    "amount": 9600,
+    "status": "paid",
+    "method": "UPI",
+    "createdAt": "2024-11-14T12:00:00.000Z"
+  },
+  {
+    "id": "TXN-3998",
+    "bookingId": "BK-9442",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-2",
+    "amount": 2400,
+    "status": "processing",
+    "method": "Bank Transfer",
+    "createdAt": "2024-11-10T12:00:00.000Z"
+  },
+  {
+    "id": "TXN-3945",
+    "bookingId": "BK-8915",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-1",
+    "amount": 3400,
+    "status": "paid",
+    "method": "UPI",
+    "createdAt": "2024-11-12T12:00:00.000Z"
+  },
+  {
+    "id": "TXN-3901",
+    "bookingId": "BK-8800",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-3",
+    "amount": 1800,
+    "status": "refunded",
+    "method": "UPI",
+    "createdAt": "2024-11-08T12:00:00.000Z"
+  },
+  {
+    "id": "TXN-3855",
+    "bookingId": "BK-9108",
+    "ownerUserId": "owner-2",
+    "renterUserId": "renter-2",
+    "amount": 2850,
+    "status": "processing",
+    "method": "Cash",
+    "createdAt": "2024-10-28T12:00:00.000Z"
+  },
+  {
+    "id": "pay-f36bfc74",
+    "bookingId": "BK-f1531494",
+    "ownerUserId": "owner-1",
+    "renterUserId": "user-08f613a4",
+    "amount": 4800,
+    "status": "processing",
+    "method": "Local Test Payment",
+    "createdAt": "2026-04-13T10:20:21.412Z"
+  },
+  {
+    "id": "pay-ce0b2bcf",
+    "bookingId": "BK-9e4f6600",
+    "ownerUserId": "owner-1",
+    "renterUserId": "owner-1",
+    "amount": 6400,
+    "status": "processing",
+    "method": "Local Test Payment",
+    "createdAt": "2026-04-13T12:36:06.570Z"
+  }
+]

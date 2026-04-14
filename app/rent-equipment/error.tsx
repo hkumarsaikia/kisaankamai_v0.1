@@ -1,5 +1,8 @@
 "use client";
 
+import { useEffect } from "react";
+import { reportClientError } from "@/lib/client/bug-reporting";
+
 export default function Error({
   error,
   reset,
@@ -7,6 +10,17 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  useEffect(() => {
+    reportClientError(error, {
+      source: "route-error",
+      severity: "error",
+      handled: true,
+      metadata: {
+        route: "/rent-equipment",
+      },
+    });
+  }, [error]);
+
   return (
     <div className="min-h-screen bg-background px-6 py-32 dark:bg-slate-950">
       <div className="mx-auto max-w-3xl rounded-3xl border border-red-200 bg-white p-10 shadow-sm dark:border-red-900/40 dark:bg-slate-900">
@@ -23,3 +37,4 @@ export default function Error({
     </div>
   );
 }
+

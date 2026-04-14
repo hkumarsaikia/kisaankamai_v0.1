@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
 export default function FeedbackSuccessPage() {
-  const { langText } = useLanguage();
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950 text-on-surface">
@@ -29,14 +29,11 @@ export default function FeedbackSuccessPage() {
           </div>
 
           <h1 className="text-on-surface font-headline text-3xl md:text-4xl font-bold leading-tight mb-4">
-            {langText("Thank You for Your Feedback", "तुमच्या अभिप्रायासाठी धन्यवाद")}
+            {t("feedback.success.thank_you_for_your_feedback")}
           </h1>
           
           <p className="text-on-surface-variant text-base md:text-lg font-normal leading-relaxed max-w-2xl mb-10">
-            {langText(
-              "We've received your feedback. Our team reviews every suggestion to build a better Kisan Kamai for you.",
-              "आम्हाला तुमचा अभिप्राय मिळाला आहे. तुमच्यासाठी उत्तम किसान कमाई तयार करण्यासाठी आमची टीम प्रत्येक सूचनेचे पुनरावलोकन करते."
-            )}
+            {t("feedback.success.we_ve_received_your_feedback_our_team_reviews_every_suggestion_to_build_a_better_kisan_kamai_for_you")}
           </p>
 
           {/* Actions */}
@@ -45,21 +42,21 @@ export default function FeedbackSuccessPage() {
               href="/"
               className="flex items-center justify-center rounded-lg h-12 px-6 bg-primary-container text-on-primary-container hover:bg-primary transition-colors text-base font-label font-semibold w-full sm:w-auto shadow-sm"
             >
-              <span className="truncate">{langText("Back to Home", "मुख्यपृष्ठावर जा")}</span>
+              <span className="truncate">{t("feedback.success.back_to_home")}</span>
             </Link>
             
             <Link 
               href="/rent-equipment"
               className="flex items-center justify-center rounded-lg h-12 px-6 bg-surface-container-high text-on-surface hover:bg-surface-dim transition-colors text-base font-label font-semibold w-full sm:w-auto"
             >
-              <span className="truncate">{langText("Browse Equipment", "अवजारे शोधा")}</span>
+              <span className="truncate">{t("feedback.success.browse_equipment")}</span>
             </Link>
             
             <Link 
               href="/support"
               className="flex items-center justify-center rounded-lg h-12 px-6 bg-transparent border border-outline text-on-surface hover:bg-surface-container transition-colors text-base font-label font-semibold w-full sm:w-auto"
             >
-              <span className="truncate">{langText("Contact Support", "सपोर्ट संपर्क")}</span>
+              <span className="truncate">{t("feedback.success.contact_support")}</span>
             </Link>
           </div>
         </div>
@@ -69,3 +66,4 @@ export default function FeedbackSuccessPage() {
   </div>
   );
 }
+

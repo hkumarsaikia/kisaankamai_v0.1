@@ -2,13 +2,14 @@
 
 The vision for Kisan Kamai is to become the premier agricultural equipment marketplace in Western India. This roadmap outlines the development phases from MVP to at-scale platform.
 
-## 📍 Current Phase: Foundation (v0.1) - [IN PROGRESS]
-Focus on core marketplace navigation, bilingual support, and advanced performance infrastructure.
+## 📍 Current Phase: Dual-Surface Stabilization (v0.1) - [IN PROGRESS]
+Focus on stabilizing the repo into a clear split between the GitHub Pages demo surface and the Firebase-only production surface.
 - [x] Bilingual Support (English/Marathi).
-- [x] 21+ Fully Functional Static Pages.
-- [x] Dark Mode / Glassmorphism Design.
-- [x] Autonomous Performance Monitoring & Profiling.
+- [x] Root demo surface exports to GitHub Pages.
+- [x] Firebase-only production app exists under `apps/production`.
+- [x] Dynamic map surfaces are standardized on the shared map stack.
 - [x] Dynamic Region Maps (Leaflet).
+- [ ] Complete parity migration of market-critical flows into `apps/production`.
 
 ---
 
@@ -41,11 +42,9 @@ Leveraging data to provide value-added services to the agricultural community.
 
 ## 🗺️ Roadmap Diagram
 
-```mermaid
-timeline
-    title Kisan Kamai Evolution
-    Phase 1 : Core Marketplace : Bilingual UI : Performance Monitoring : Dynamic Maps
-    Phase 2 : Communication : Real-time Chat : Auth : Reviews
-    Phase 3 : Business : Payments : KYC : PWA Support
-    Phase 4 : Analytics : Demand Forecasting : AI Integration : Community
-```
+The roadmap progresses in four major layers:
+
+- **Phase 1** establishes the split runtime model: GitHub Pages demo at the root and Firebase production in `apps/production`, while keeping the shared product language coherent.
+- **Phase 2** adds engagement systems such as messaging, stronger user identity, booking flows, and reviews.
+- **Phase 3** formalizes transactions through payments, KYC, pricing logic, and stronger mobile support.
+- **Phase 4** extends the platform with intelligence features such as demand forecasting, weather-linked availability, maintenance reminders, and community tooling.

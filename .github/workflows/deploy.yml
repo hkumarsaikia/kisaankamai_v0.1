@@ -1,8 +1,6 @@
-# Sample workflow for building and deploying a Next.js site to GitHub Pages
-#
-# To get started with Next.js see: https://nextjs.org/docs/getting-started
-#
-name: Deploy Next.js site to Pages
+# GitHub Pages deploy for the legacy/demo surface only.
+# Canonical production lives in Firebase App Hosting under apps/production.
+name: Deploy demo site to GitHub Pages
 
 on:
   # Runs on pushes targeting the default branch
@@ -18,14 +16,13 @@ permissions:
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# Allow only one concurrent demo deployment, skipping queued runs between the in-progress and latest queued run.
 concurrency:
-  group: "pages"
+  group: "pages-demo"
   cancel-in-progress: false
 
 jobs:
-  # Build job
+  # Demo build job for the root GitHub Pages surface
   build:
     runs-on: ubuntu-latest
     steps:
@@ -36,11 +33,11 @@ jobs:
         with:
           node-version: "20"
           cache: "npm"
-      - name: Setup Pages
+      - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
       - name: Install dependencies
         run: npm install --legacy-peer-deps
-      - name: Build with Next.js
+      - name: Build root demo app for Pages export
         env:
           BUILD_TARGET: "pages"
           NEXT_PUBLIC_DEMO_AUTH_MODE: "true"
@@ -48,13 +45,13 @@ jobs:
           NEXT_PUBLIC_DEMO_EMAIL: "test@example.com"
           NEXT_PUBLIC_DEMO_PASSWORD: "Test@12345"
         run: npm run build
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./out
 
 
-  # Deployment job
+  # Demo deployment job
   deploy:
     environment:
       name: github-pages

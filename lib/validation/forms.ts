@@ -5,6 +5,10 @@ const tenDigitPhone = z
   .trim()
   .regex(/^\d{10}$/, "Enter a valid 10-digit mobile number.");
 
+const optionalPhone = z
+  .union([z.literal(""), tenDigitPhone])
+  .transform((value) => value || undefined);
+
 const sixDigitPincode = z
   .string()
   .trim()
@@ -33,11 +37,15 @@ export const registerInputSchema = z
     address: z.string().trim().min(3, "Enter your address.").max(200),
     village: z.string().trim().min(2, "Enter your city or village.").max(120),
     pincode: sixDigitPincode,
-    phone: tenDigitPhone,
+    phone: optionalPhone,
     fieldArea: positiveNumberString,
     password: z.string().min(6, "Password must be at least 6 characters.").max(128),
     role: z.enum(["renter", "owner", "both"]).default("renter"),
     otpVerified: z.boolean().optional().default(false),
+  })
+  .refine((value) => Boolean(value.email || value.phone), {
+    message: "Enter at least one contact method: email or phone.",
+    path: ["email"],
   })
   .strict();
 
@@ -163,3 +171,4 @@ export const bookingRequestSchema = z
   .strict();
 
 export type RegisterInput = z.infer<typeof registerInputSchema>;
+export type RegisterInputPayload = z.input<typeof registerInputSchema>;
