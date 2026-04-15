@@ -13,6 +13,7 @@ The root app is the production-facing application. It owns:
 - Firebase Auth session-cookie auth
 - Firestore-backed listings, bookings, payments, submissions, and saved items
 - Cloud Storage-backed uploads
+- Google Sheets mirroring for admin/reporting visibility only
 - public routes, owner flows, and renter flows
 
 Useful commands:
@@ -41,9 +42,15 @@ Required runtime configuration includes:
 
 ## Alternate App Surface
 
-`apps/production` remains in the repo as a fully maintained alternate app surface. It shares the Firebase-only backend story, receives the same redesign and QA work, and is kept aligned with the root app for verification and operational parity.
+`apps/production` remains in the repo as a fully maintained alternate app surface. It shares the same backend contract as the root app: Firebase Auth, Firestore, and Storage are the primary runtime systems, while Google Sheets is kept as a best-effort mirror for admin/reporting visibility only.
 
 The root app is still the canonical live frontend for `https://www.kisankamai.com`.
+
+## Backend Contract
+
+- Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
+- Google Sheets is a secondary mirror for admin/reporting workflows only.
+- Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
 
 ## Repository Notes
 

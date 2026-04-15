@@ -365,6 +365,8 @@ export async function appendSheetRowsSafe(
   rows: Array<{ sheet: SheetKey; values: unknown[] }>,
   audit?: { entityType: string; entityId: string; note?: string }
 ) {
+  // Sheets is an operational mirror only. Firebase remains the write of record,
+  // so mirroring failures must never block a successful primary write path.
   if (!isSheetsEnabled() || !rows.length) {
     return;
   }
