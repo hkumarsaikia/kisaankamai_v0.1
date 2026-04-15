@@ -289,14 +289,14 @@
         "unresolvedDestinations": [],
         "externalDestinations": [
           {
-            "href": "mailto:Support@krishiseva.in",
+            "href": "mailto:support@kisankamai.com",
             "host": "",
             "accessSurface": "localhost",
             "origins": [
               {
                 "file": "app/trust-safety/page.tsx",
                 "line": 100,
-                "raw": "mailto:Support@krishiseva.in",
+                "raw": "mailto:support@kisankamai.com",
                 "context": "href"
               }
             ]
@@ -1018,40 +1018,40 @@
         "unresolvedDestinations": [],
         "externalDestinations": [
           {
-            "href": "https://wa.me/#",
+            "href": "https://wa.me/918001234567",
             "host": "wa.me",
             "accessSurface": "custom-domain",
             "origins": [
               {
                 "file": "app/owner-profile/support/page.tsx",
                 "line": 221,
-                "raw": "https://wa.me/#",
+                "raw": "https://wa.me/918001234567",
                 "context": "href"
               }
             ]
           },
           {
-            "href": "mailto:support@kisankamai.in",
+            "href": "mailto:support@kisankamai.com",
             "host": "",
             "accessSurface": "localhost",
             "origins": [
               {
                 "file": "app/owner-profile/support/page.tsx",
                 "line": 239,
-                "raw": "mailto:support@kisankamai.in",
+                "raw": "mailto:support@kisankamai.com",
                 "context": "href"
               }
             ]
           },
           {
-            "href": "tel:+",
+            "href": "tel:+918001234567",
             "host": "",
             "accessSurface": "localhost",
             "origins": [
               {
                 "file": "app/owner-profile/support/page.tsx",
                 "line": 230,
-                "raw": "tel:+",
+                "raw": "tel:+918001234567",
                 "context": "href"
               }
             ]
@@ -1397,14 +1397,14 @@
             ]
           },
           {
-            "href": "tel:+9118005472652624",
+            "href": "tel:+918001234567",
             "host": "",
             "accessSurface": "localhost",
             "origins": [
               {
                 "file": "app/support/page.tsx",
                 "line": 145,
-                "raw": "tel:+9118005472652624",
+                "raw": "tel:+918001234567",
                 "context": "href"
               }
             ]
@@ -1575,19 +1575,19 @@
   "externalDestinations": [
     {
       "route": "/owner-profile/support",
-      "href": "https://wa.me/#",
+      "href": "https://wa.me/918001234567",
       "host": "wa.me",
       "accessSurface": "custom-domain"
     },
     {
       "route": "/owner-profile/support",
-      "href": "mailto:support@kisankamai.in",
+      "href": "mailto:support@kisankamai.com",
       "host": "",
       "accessSurface": "localhost"
     },
     {
       "route": "/owner-profile/support",
-      "href": "tel:+",
+      "href": "tel:+918001234567",
       "host": "",
       "accessSurface": "localhost"
     },
@@ -1605,13 +1605,13 @@
     },
     {
       "route": "/support",
-      "href": "tel:+9118005472652624",
+      "href": "tel:+918001234567",
       "host": "",
       "accessSurface": "localhost"
     },
     {
       "route": "/trust-safety",
-      "href": "mailto:Support@krishiseva.in",
+      "href": "mailto:support@kisankamai.com",
       "host": "",
       "accessSurface": "localhost"
     },

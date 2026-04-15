@@ -34,18 +34,24 @@ if (!getApps().length) {
 const db = getFirestore();
 const auth = getAuth();
 
-async function readJson(filename: string) {
+async function readJson<T extends Record<string, unknown>>(filename: string): Promise<T[]> {
   try {
     const raw = await fs.readFile(path.join(process.cwd(), "data", filename), "utf8");
-    return JSON.parse(raw);
-  } catch (e: any) {
-    if (e.code === 'ENOENT') return [];
-    console.warn(`Could not read ${filename}: ${e.message}`);
+    return JSON.parse(raw) as T[];
+  } catch (error: unknown) {
+    if (typeof error === "object" && error && "code" in error && error.code === "ENOENT") {
+      return [];
+    }
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(`Could not read ${filename}: ${message}`);
     return [];
   }
 }
 
-async function migrateCollection(collectionName, dataArray) {
+async function migrateCollection(
+  collectionName: string,
+  dataArray: Array<Record<string, unknown>>
+) {
   if (!dataArray || dataArray.length === 0) {
     console.log(`No data for ${collectionName}, skipping.`);
     return;
@@ -74,7 +80,13 @@ async function migrateCollection(collectionName, dataArray) {
   console.log(`Finished migrating ${collectionName}.`);
 }
 
-async function migrateUsers(usersArray) {
+type UserSeedRecord = {
+  id: string;
+  email: string;
+  phone?: string;
+};
+
+async function migrateUsers(usersArray: UserSeedRecord[]) {
   if (!usersArray || usersArray.length === 0) return;
   
   console.log(`Migrating ${usersArray.length} users to Firebase Auth + Firestore...`);
@@ -84,8 +96,13 @@ async function migrateUsers(usersArray) {
       let authUser;
       try {
         authUser = await auth.getUserByEmail(u.email);
-      } catch (err) {
-        if (err.code === "auth/user-not-found") {
+      } catch (err: unknown) {
+        if (
+          typeof err === "object" &&
+          err &&
+          "code" in err &&
+          err.code === "auth/user-not-found"
+        ) {
            // Create in Auth
            authUser = await auth.createUser({
              uid: u.id,
@@ -102,34 +119,35 @@ async function migrateUsers(usersArray) {
       // 2. Add to users collection
       const ref = db.collection("users").doc(u.id);
       await ref.set(u, { merge: true });
-    } catch (e) {
-      console.warn(`Failed to migrate user ${u.email}: ${e.message}`);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(`Failed to migrate user ${u.email}: ${message}`);
     }
   }
 }
 
 async function run() {
   try {
-    const users = await readJson("users.json");
+    const users = await readJson<UserSeedRecord>("users.json");
     await migrateUsers(users);
 
-    const profiles = await readJson("profiles.json");
+    const profiles = await readJson<Record<string, unknown>>("profiles.json");
     await migrateCollection("profiles", profiles);
 
-    const listings = await readJson("listings.json");
+    const listings = await readJson<Record<string, unknown>>("listings.json");
     await migrateCollection("listings", listings);
 
-    const bookings = await readJson("bookings.json");
+    const bookings = await readJson<Record<string, unknown>>("bookings.json");
     await migrateCollection("bookings", bookings);
 
-    const payments = await readJson("payments.json");
+    const payments = await readJson<Record<string, unknown>>("payments.json");
     await migrateCollection("payments", payments);
 
-    const forms = await readJson("form-submissions.json");
-    await migrateCollection("form_submissions", forms);
+    const forms = await readJson<Record<string, unknown>>("form-submissions.json");
+    await migrateCollection("form-submissions", forms);
 
-    const saved = await readJson("saved-items.json");
-    await migrateCollection("saved_items", saved);
+    const saved = await readJson<Record<string, unknown>>("saved-items.json");
+    await migrateCollection("saved-items", saved);
 
     console.log("Migration sequence completed successfully!");
     process.exit(0);

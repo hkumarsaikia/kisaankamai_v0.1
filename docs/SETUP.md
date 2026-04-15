@@ -70,23 +70,23 @@ sudo apt install -y \
 
 ---
 
-## ☁️ Appwrite Infrastructure Replication
+## ☁️ Firebase Production Runtime
 
-To replicate the backend performance monitoring system:
+The public site now runs from the repo root on Firebase App Hosting.
 
-1. **Project ID**: Create a project in Appwrite with ID `69d918770025e8d680f6`.
-2. **Database**: Create a database named `kisan-kamai-db`.
-3. **Collections**:
-   - `performance_insights`: Attributes (`pageUrl`, `lcp`, `cls`, `loadTime`, `timestamp`).
-   - `live_performance_logs`: Attributes (`sessionId`, `batchData`, `timestamp`).
-4. **Storage**: Create a bucket named `performance_traces` for trace storage.
-5. **API Key**: Generate an API key with `users.read`, `users.write`, `databases.read`, `databases.write`, `documents.write`, and `files.write` scopes for the autonomous agent and the shared team-review bootstrap script.
+Required services:
+
+1. **Firebase App Hosting** targeting the repo root.
+2. **Firebase Authentication** for session-cookie backed sign-in.
+3. **Cloud Firestore** for users, profiles, listings, bookings, payments, saved items, and submissions.
+4. **Cloud Storage** for listing media uploads.
+5. Optional **Sentry** or Google Cloud logging for production observability.
 
 ---
 
 ## 🛠️ Replication Checklist
 
 - [ ] `npm install` completed without errors.
-- [ ] Environment variables for Firebase and Appwrite are set.
+- [ ] Firebase environment variables and Admin credentials are set.
 - [ ] `npm run dev` starts the server on port 3000.
-- [ ] `node scripts/profiler_agent.mjs` successfully captures a trace (requires the system dependencies listed above).
+- [ ] `npm run verify` passes.

@@ -1,7 +1,6 @@
 "use server";
 
-import { mkdir, writeFile } from "node:fs/promises";
-import path from "node:path";
+import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -19,6 +18,7 @@ import {
   updateLocalProfile,
 } from "@/lib/server/local-data";
 import { withLoggedAction } from "@/lib/server/bug-reporting";
+import { uploadListingImage } from "@/lib/server/firebase-storage";
 import {
   clearSessionCookie,
   getCurrentSession,
@@ -26,6 +26,7 @@ import {
   registerAndCreateSession,
   setWorkspaceCookie,
 } from "@/lib/server/local-auth";
+import { mirrorAuthEvent } from "@/lib/server/sheets-mirror";
 import {
   bookingRequestSchema,
   callbackRequestSchema,
@@ -80,24 +81,14 @@ async function runLoggedAction<T>(
   return wrapped();
 }
 
-async function saveListingImages(files: File[]) {
+async function saveListingImages(ownerUserId: string, listingId: string, files: File[]) {
   const validFiles = files.filter((file) => file.size > 0);
   if (!validFiles.length) {
-    return [] as string[];
+    return [] as Array<{ objectPath: string; publicUrl: string }>;
   }
 
-  const uploadsDir = path.join(process.cwd(), "public", "uploads", "listings");
-  await mkdir(uploadsDir, { recursive: true });
-
   const storedPaths = await Promise.all(
-    validFiles.map(async (file) => {
-      const extension = path.extname(file.name || "") || ".jpg";
-      const filename = `listing-${Date.now()}-${Math.random().toString(36).slice(2, 8)}${extension}`;
-      const absolutePath = path.join(uploadsDir, filename);
-      const buffer = Buffer.from(await file.arrayBuffer());
-      await writeFile(absolutePath, buffer);
-      return `/uploads/listings/${filename}`;
-    })
+    validFiles.map((file) => uploadListingImage(ownerUserId, listingId, file))
   );
 
   return storedPaths;
@@ -115,6 +106,14 @@ export async function loginAction(input: { identifier: string; password: string 
       if (!session) {
         return { ok: false, error: "Invalid email/phone or password." };
       }
+
+      await mirrorAuthEvent({
+        eventType: "login",
+        session,
+        identifier: parsed.data.identifier,
+        outcome: "success",
+        path: "/login",
+      });
 
       return { ok: true, redirectTo: "/profile-selection" };
     } catch (error) {
@@ -142,6 +141,15 @@ export async function registerAction(input: RegisterInputPayload): Promise<Actio
         return { ok: false, error: "Registration failed." };
       }
 
+      await mirrorAuthEvent({
+        eventType: "register",
+        session,
+        identifier: parsed.data.email || parsed.data.phone,
+        outcome: "success",
+        path: "/register",
+        workspace: parsed.data.role,
+      });
+
       revalidateCommonPaths();
       return { ok: true, redirectTo: "/profile-selection" };
     } catch (error) {
@@ -152,7 +160,14 @@ export async function registerAction(input: RegisterInputPayload): Promise<Actio
 
 export async function logoutAction(): Promise<ActionResult> {
   return runLoggedAction("logoutAction", [], async () => {
+    const session = await getCurrentSession();
     await clearSessionCookie();
+    await mirrorAuthEvent({
+      eventType: "logout",
+      session,
+      outcome: "success",
+      path: "/logout",
+    });
     return { ok: true, redirectTo: "/" };
   });
 }
@@ -341,7 +356,10 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
     }
 
     try {
-      const images = await saveListingImages(
+      const listingId = `listing-${randomUUID().slice(0, 8)}`;
+      const uploads = await saveListingImages(
+        session.user.id,
+        listingId,
         formData
           .getAll("images")
           .filter((value): value is File => value instanceof File)
@@ -368,9 +386,10 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
       }
 
       const categoryLabel = `${category.charAt(0).toUpperCase()}${category.slice(1)} • ${name.split(" ")[0]}`;
-      const coverImage = images[0] || "/assets/generated/hero_tractor.png";
+      const coverImage = uploads[0]?.publicUrl || "/assets/generated/hero_tractor.png";
 
       const listing = await createListingRecord({
+        listingId,
         ownerUserId: session.user.id,
         name,
         category,
@@ -388,8 +407,8 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         ownerLocation: `${location}, ${district}`,
         ownerVerified: true,
         coverImage,
-        galleryImages: images.length ? images : [coverImage],
-        imagePaths: images.length ? images : [coverImage],
+        galleryImages: uploads.length ? uploads.map((upload) => upload.publicUrl) : [coverImage],
+        imagePaths: uploads.length ? uploads.map((upload) => upload.objectPath) : [],
         tags: tags.length ? tags : ["Verified"],
         workTypes,
         operatorIncluded: formData.get("operatorIncluded") === "on",
@@ -428,11 +447,19 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
 
     try {
       const uploadedImages = await saveListingImages(
+        session.user.id,
+        listingId,
         formData
           .getAll("images")
           .filter((value): value is File => value instanceof File)
       );
-      const imagePaths = uploadedImages.length ? uploadedImages : existing.imagePaths;
+      const imagePaths = uploadedImages.length
+        ? uploadedImages.map((upload) => upload.objectPath)
+        : existing.imagePaths;
+      const galleryImages = uploadedImages.length
+        ? uploadedImages.map((upload) => upload.publicUrl)
+        : existing.galleryImages;
+      const coverImage = uploadedImages[0]?.publicUrl || existing.coverImage;
 
       await updateListingRecord(listingId, session.user.id, {
         name: String(formData.get("name") || existing.name).trim(),
@@ -447,8 +474,8 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
         unitLabel: String(formData.get("unitLabel") || existing.unitLabel).trim(),
         hp: String(formData.get("hp") || existing.hp).trim(),
         imagePaths,
-        galleryImages: imagePaths,
-        coverImage: imagePaths[0] || existing.coverImage,
+        galleryImages,
+        coverImage,
         status: formData.get("status") === "paused" ? "paused" : "active",
         tags: String(formData.get("tags") || existing.tags.join(","))
           .split(",")

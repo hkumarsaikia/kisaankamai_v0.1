@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, Mukta } from "next/font/google";
+import Script from "next/script";
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { AuthProvider } from "@/components/AuthContext";
@@ -14,6 +15,21 @@ import "./globals.css";
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mukta = Mukta({ weight: ["200", "300", "400", "500", "600", "700", "800"], subsets: ["latin", "devanagari"], variable: "--font-mukta" });
+const languageBootScript = `
+(() => {
+  try {
+    const saved = window.localStorage.getItem("kk_language");
+    const language = saved === "en" || saved === "mr" ? saved : "mr";
+    const root = document.documentElement;
+    root.lang = language;
+    root.dataset.language = language;
+    root.classList.toggle("lang-mr", language === "mr");
+    root.classList.toggle("lang-en", language === "en");
+  } catch (_error) {
+    // Ignore language boot errors and let hydration recover.
+  }
+})();
+`;
 
 export const metadata: Metadata = {
   title: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
@@ -30,13 +46,16 @@ export default async function RootLayout({
   const initialSession = await getCurrentSession();
 
   return (
-    <html lang="mr" data-language="mr" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         {/* eslint-disable-next-line @next/next/no-page-custom-font */}
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
+        <Script id="kk-language-boot" strategy="beforeInteractive">
+          {languageBootScript}
+        </Script>
       </head>
       <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

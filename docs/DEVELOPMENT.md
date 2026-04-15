@@ -28,9 +28,9 @@ Local work that exercises the Firebase-backed root runtime may require:
 
 If Firebase Admin credentials are missing, some authenticated/data-backed runtime flows will not function outside mocked/static fallbacks.
 
-## Internal Staging App
+## Alternate App Surface
 
-`apps/production` is retained as an internal staging/reference app.
+`apps/production` is retained as a fully maintained alternate app surface for QA, browser checks, and parallel product validation. It is not the canonical public domain target, but it should stay aligned with the root app's Firebase-only runtime, redesign, and operational behavior.
 
 ```bash
 cd apps/production

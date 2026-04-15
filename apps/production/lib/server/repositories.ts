@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { getAdminDb } from "@/lib/server/firebase-admin";
 import { listingSchema } from "@/lib/server/forms";
 import { captureServerException } from "@/lib/server/observability";
+import { mirrorBookingAndPayment, mirrorListing, mirrorProfile, mirrorSavedItem, mirrorSubmission } from "@/lib/server/sheets-mirror";
 import { uploadListingImage } from "@/lib/server/storage";
 import type {
   BookingInput,
@@ -11,7 +12,9 @@ import type {
   ListingFormInput,
   ListingRecord,
   PaymentRecord,
+  SavedItemRecord,
   SubmissionRecord,
+  UserRecord,
   UserProfile,
   Workspace,
 } from "@/lib/types";
@@ -22,6 +25,10 @@ function nowIso() {
 
 function usersCollection() {
   return getAdminDb().collection("users");
+}
+
+function profilesCollection() {
+  return getAdminDb().collection("profiles");
 }
 
 function listingsCollection() {
@@ -37,11 +44,15 @@ function paymentsCollection() {
 }
 
 function submissionsCollection() {
-  return getAdminDb().collection("submissions");
+  return getAdminDb().collection("form-submissions");
 }
 
-function savedCollection(uid: string) {
-  return usersCollection().doc(uid).collection("saved");
+function savedItemsCollection() {
+  return getAdminDb().collection("saved-items");
+}
+
+function savedItemId(uid: string, listingId: string) {
+  return `${uid}__${listingId}`;
 }
 
 function cleanNumber(value: FormDataEntryValue | null, fallback = 0) {
@@ -88,8 +99,40 @@ function fallbackListings(): ListingRecord[] {
 }
 
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
-  const snapshot = await usersCollection().doc(uid).get();
+  const snapshot = await profilesCollection().doc(uid).get();
   return snapshot.exists ? (snapshot.data() as UserProfile) : null;
+}
+
+export async function getUserRecord(uid: string): Promise<UserRecord | null> {
+  const snapshot = await usersCollection().doc(uid).get();
+  return snapshot.exists ? (snapshot.data() as UserRecord) : null;
+}
+
+export async function upsertUserRecord(
+  uid: string,
+  input: {
+    fullName?: string;
+    phone?: string;
+    email?: string;
+    workspacePreference: Workspace;
+    lastLoginAt?: string;
+  }
+) {
+  const existing = await getUserRecord(uid);
+  const timestamp = nowIso();
+  const payload: UserRecord = {
+    uid,
+    fullName: input.fullName?.trim() || existing?.fullName,
+    phone: input.phone?.trim() || existing?.phone,
+    email: input.email?.trim().toLowerCase() || existing?.email,
+    workspacePreference: input.workspacePreference,
+    createdAt: existing?.createdAt || timestamp,
+    updatedAt: timestamp,
+    lastLoginAt: input.lastLoginAt || timestamp,
+  };
+
+  await usersCollection().doc(uid).set(payload, { merge: true });
+  return payload;
 }
 
 export async function upsertUserProfile(
@@ -121,18 +164,24 @@ export async function upsertUserProfile(
     updatedAt: timestamp,
   };
 
-  await usersCollection().doc(uid).set(payload, { merge: true });
+  await profilesCollection().doc(uid).set(payload, { merge: true });
+  await upsertUserRecord(uid, {
+    fullName: payload.fullName,
+    phone: payload.phone,
+    email: payload.email,
+    workspacePreference: payload.workspacePreference,
+    lastLoginAt: timestamp,
+  });
+  await mirrorProfile(payload, "profile-upsert");
   return payload;
 }
 
 export async function updateWorkspacePreference(uid: string, workspacePreference: Workspace) {
-  await usersCollection().doc(uid).set(
-    {
-      workspacePreference,
-      updatedAt: nowIso(),
-    },
-    { merge: true }
-  );
+  const timestamp = nowIso();
+  await Promise.all([
+    usersCollection().doc(uid).set({ workspacePreference, updatedAt: timestamp }, { merge: true }),
+    profilesCollection().doc(uid).set({ workspacePreference, updatedAt: timestamp }, { merge: true }),
+  ]);
 }
 
 export async function listPublicListings() {
@@ -181,6 +230,7 @@ export async function createListing(ownerUid: string, input: ListingFormInput, f
   };
 
   await listingsCollection().doc(listingId).set(payload);
+  await mirrorListing(payload, "create");
   return payload;
 }
 
@@ -197,6 +247,29 @@ export async function createListingFromFormData(ownerUid: string, formData: Form
   });
 
   return createListing(ownerUid, parsed, files);
+}
+
+export async function updateListing(
+  listingId: string,
+  ownerUid: string,
+  input: Partial<
+    Pick<ListingRecord, "name" | "category" | "description" | "district" | "location" | "pricePerHour" | "operatorIncluded" | "status" | "coverImage" | "imagePaths">
+  >
+) {
+  const current = await getListingById(listingId);
+  if (!current || current.ownerUid !== ownerUid) {
+    throw new Error("Listing not found.");
+  }
+
+  const payload: ListingRecord = {
+    ...current,
+    ...input,
+    updatedAt: nowIso(),
+  };
+
+  await listingsCollection().doc(listingId).set(payload, { merge: true });
+  await mirrorListing(payload, "update");
+  return payload;
 }
 
 export async function createBooking(renterUid: string, renterName: string, input: BookingInput) {
@@ -237,6 +310,7 @@ export async function createBooking(renterUid: string, renterName: string, input
   batch.set(bookingsCollection().doc(bookingId), booking);
   batch.set(paymentsCollection().doc(paymentId), payment);
   await batch.commit();
+  await mirrorBookingAndPayment(booking, payment);
 
   return booking;
 }
@@ -262,28 +336,33 @@ export async function listRenterPayments(uid: string) {
 }
 
 export async function isListingSaved(uid: string, listingId: string) {
-  const snapshot = await savedCollection(uid).doc(listingId).get();
+  const snapshot = await savedItemsCollection().doc(savedItemId(uid, listingId)).get();
   return snapshot.exists;
 }
 
 export async function toggleSavedListing(uid: string, listingId: string) {
-  const ref = savedCollection(uid).doc(listingId);
+  const ref = savedItemsCollection().doc(savedItemId(uid, listingId));
   const snapshot = await ref.get();
   if (snapshot.exists) {
     await ref.delete();
+    await mirrorSavedItem({ id: ref.id, userUid: uid, listingId, createdAt: nowIso() }, "unsaved");
     return false;
   }
 
-  await ref.set({
+  const record: SavedItemRecord = {
+    id: ref.id,
+    userUid: uid,
     listingId,
     createdAt: nowIso(),
-  });
+  };
+  await ref.set(record);
+  await mirrorSavedItem(record, "saved");
   return true;
 }
 
 export async function listSavedListings(uid: string) {
-  const savedSnapshot = await savedCollection(uid).get();
-  const ids = savedSnapshot.docs.map((doc) => doc.id);
+  const savedSnapshot = await savedItemsCollection().where("userUid", "==", uid).get();
+  const ids = savedSnapshot.docs.map((doc) => (doc.data() as SavedItemRecord).listingId);
   if (!ids.length) {
     return [] as ListingRecord[];
   }
@@ -302,5 +381,6 @@ export async function createSubmission(type: SubmissionRecord["type"], payload: 
   };
 
   await submissionsCollection().doc(record.id).set(record);
+  await mirrorSubmission(record);
   return record;
 }

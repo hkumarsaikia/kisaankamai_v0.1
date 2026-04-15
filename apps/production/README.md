@@ -1,6 +1,6 @@
-# Kisan Kamai Production App
+# Kisan Kamai Alternate App Surface
 
-This app is the Firebase-only production build for `www.kisankamai.com`.
+This app is a fully maintained alternate surface for the Firebase-only Kisan Kamai platform. It shares the redesign language, Firebase backend model, and operational flows used by the root app.
 
 ## Local development
 
@@ -14,8 +14,8 @@ npm run dev
 
 - Reuse Firebase project: `gokisaan`
 - App root directory: `apps/production`
-- Canonical domain: `www.kisankamai.com`
-- Apex redirect source: `kisankamai.com`
+- Canonical public domain remains the repo root app at `www.kisankamai.com`
+- Use this app surface for aligned QA, alternate validation, or future deployment policy changes
 
 ## Required production services
 

@@ -15,7 +15,7 @@ The `vendor/` folder contains full upstream git clones kept inside this repo as 
 ### `vendor/openform`
 
 - Source: `https://github.com/dabit3/openform`
-- Intended role here: borrow polished form UX patterns while keeping Kisan Kamai's own validation, server actions, and local/Appwrite-ready data flow.
+- Intended role here: borrow polished form UX patterns while keeping Kisan Kamai's own validation, server actions, and Firebase-backed data flow.
 - Already reflected in the codebase through:
   - `components/forms/FormKit.tsx`
   - `components/forms/OwnerListingWizard.tsx`

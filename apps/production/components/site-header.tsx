@@ -23,6 +23,9 @@ export function SiteHeader({ locale, session }: { locale: Locale; session: Sessi
           <AppLink href="/support" className="hover:text-brand-700 dark:hover:text-brand-300">
             {copy.support}
           </AppLink>
+          <AppLink href="/feedback" className="hover:text-brand-700 dark:hover:text-brand-300">
+            {copy.feedback}
+          </AppLink>
         </nav>
         <div className="flex items-center gap-3">
           <LanguageToggle locale={locale} />

@@ -29,9 +29,11 @@ import {
   type ClientBugEnvelope,
 } from "@/lib/bug-reporting/types";
 import { getCurrentSession } from "@/lib/server/local-auth";
+import { mirrorBugReport } from "@/lib/server/sheets-mirror";
 import { handleRouteError } from "@/lib/server/http";
 
 const BUG_REPORTS_DIR = path.join(process.cwd(), "data", "bug-reports");
+const BUG_REPORTS_COLLECTION = "bug-reports";
 const MAX_STRING_LENGTH = 4_000;
 const MAX_ARRAY_ITEMS = 50;
 const MAX_OBJECT_KEYS = 100;
@@ -163,6 +165,56 @@ function sanitizeUndefined<T>(value: T) {
   return Object.fromEntries(
     Object.entries((value || {}) as Record<string, unknown>).filter(([, entry]) => entry !== undefined)
   ) as T;
+}
+
+function redactEmail(value?: string | null) {
+  if (!value || !value.includes("@")) {
+    return undefined;
+  }
+
+  const [local, domain] = value.split("@");
+  if (!domain) {
+    return undefined;
+  }
+
+  return `${local.slice(0, 2)}***@${domain}`;
+}
+
+function redactPhone(value?: string | null) {
+  const digits = (value || "").replace(/\D/g, "");
+  if (!digits) {
+    return undefined;
+  }
+
+  return `${"*".repeat(Math.max(0, digits.length - 4))}${digits.slice(-4)}`;
+}
+
+function sanitizeHeaders(value: unknown) {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const headers = value as Record<string, unknown>;
+  const allowedKeys = ["user-agent", "accept-language", "origin", "referer", "x-forwarded-host", "host"];
+  return Object.fromEntries(
+    Object.entries(headers)
+      .filter(([key]) => allowedKeys.includes(key.toLowerCase()))
+      .map(([key, entry]) => [key, String(entry)])
+  );
+}
+
+function sanitizeRequestPayload(value: unknown) {
+  if (!value || typeof value !== "object") {
+    return undefined;
+  }
+
+  const blockedKeys = ["password", "token", "cookie", "authorization", "otp", "idToken", "refreshToken"];
+  const payload = value as Record<string, unknown>;
+  return Object.fromEntries(
+    Object.entries(payload)
+      .filter(([key]) => !blockedKeys.includes(key))
+      .map(([key, entry]) => [key, typeof entry === "string" ? entry.slice(0, 200) : entry])
+  );
 }
 
 function isFileLike(value: unknown): value is {
@@ -569,12 +621,12 @@ async function buildBaseRecord(input: {
     requestId: input.requestId || createRequestId(),
     clientSessionId: input.clientSessionId,
     userId: session?.user.id,
-    userEmail: session?.user.email,
-    userPhone: session?.user.phone,
+    userEmail: redactEmail(session?.user.email),
+    userPhone: redactPhone(session?.user.phone),
     activeWorkspace: session?.activeWorkspace,
     rawQuery,
-    rawBody: requestBody,
-    rawHeaders,
+    rawBody: sanitizeRequestPayload(requestBody),
+    rawHeaders: sanitizeHeaders(rawHeaders),
     rawResponsePreview: input.rawResponsePreview,
     rawConsoleArgs: input.rawConsoleArgs,
     error: input.error ? (toJsonCompatible(input.error) as BugReportRecord["error"]) : undefined,
@@ -606,7 +658,8 @@ export async function appendBugReport(record: BugReportRecord) {
       try {
         const { getAdminDb } = await import("./firebase-admin");
         const db = getAdminDb();
-        await db.collection("bug_reports").doc(normalized.id).set(normalized);
+        await db.collection(BUG_REPORTS_COLLECTION).doc(normalized.id).set(normalized);
+        await mirrorBugReport(normalized);
       } catch (err) {
         console.error("Failed to commit bug report to Firestore:", err);
       }
@@ -626,7 +679,8 @@ export function appendBugReportSync(record: BugReportRecord) {
   // Fire-and-forget for synchronous contexts (e.g. process uncaught)
   import("./firebase-admin").then(({ getAdminDb }) => {
     try {
-      getAdminDb().collection("bug_reports").doc(normalized.id).set(normalized);
+      getAdminDb().collection(BUG_REPORTS_COLLECTION).doc(normalized.id).set(normalized);
+      void mirrorBugReport(normalized);
     } catch(e) {}
   });
 
@@ -871,7 +925,7 @@ export async function bugReportsExistForToday() {
     const today = nowIso().slice(0, 10);
     // Rough check for any bug report today
     const reports = await getAdminDb()
-      .collection("bug_reports")
+      .collection(BUG_REPORTS_COLLECTION)
       .where("occurredAt", ">=", today)
       .limit(1)
       .get();

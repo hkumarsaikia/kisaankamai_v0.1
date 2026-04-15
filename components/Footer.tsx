@@ -57,7 +57,7 @@ export const Footer = () => {
           <ul className="space-y-4">
             <li><Link href="/rent-equipment" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.find_equipment")}</Link></li>
             <li><Link href="/list-equipment" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.list_equipment")}</Link></li>
-            <li><Link href="/renter-journey" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.renter_journey")}</Link></li>
+            <li><Link href="/renter-profile" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.renter_journey")}</Link></li>
             <li><Link href="/booking" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.booking")}</Link></li>
             <li><Link href="/trust-safety" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.trust_and_safety")}</Link></li>
             <li><Link href="/faq" className="text-slate-400 hover:text-emerald-400 hover:underline underline-offset-4 transition-all duration-300">{t("Footer.how_it_works")}</Link></li>

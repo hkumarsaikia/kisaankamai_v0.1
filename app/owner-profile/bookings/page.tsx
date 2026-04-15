@@ -17,7 +17,7 @@ export default async function BookingsManagementPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
         <div>
           <h1 className="text-3xl font-extrabold text-on-surface mb-2 font-headline">Bookings Management</h1>
-          <p className="text-on-surface-variant">Manage your local test bookings and request approvals.</p>
+          <p className="text-on-surface-variant">Manage bookings and request approvals.</p>
         </div>
         <div className="inline-flex p-1 bg-surface-container dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
           <div className="px-6 py-2.5 rounded-lg bg-primary-container text-white font-bold text-sm shadow-sm transition-all">Active ({active.length})</div>

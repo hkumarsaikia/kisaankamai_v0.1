@@ -5,6 +5,7 @@ import { ContentImage } from "@/components/ContentImage";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
+import { supportContact } from "@/lib/support-contact";
 
 export default function TrustSafety() {
   const { t } = useLanguage();
@@ -93,17 +94,17 @@ export default function TrustSafety() {
 </div>
 <div>
 <h4 className="text-xl font-headline font-extrabold text-primary">Need assistance?</h4>
-<p className="text-on-surface-variant">Our support team is available from 8 AM to 8 PM.</p>
+<p className="text-on-surface-variant">Our support team is available from {supportContact.serviceHours}.</p>
 </div>
 </div>
 <div className="flex flex-wrap gap-4 justify-center">
-<a className="px-6 py-4 bg-surface-container-lowest rounded-2xl flex items-center gap-3 font-bold border border-outline-variant/10 shadow-sm hover:shadow-md transition-all" href="mailto:Support@krishiseva.in">
+<a className="px-6 py-4 bg-surface-container-lowest rounded-2xl flex items-center gap-3 font-bold border border-outline-variant/10 shadow-sm hover:shadow-md transition-all" href={supportContact.emailHref}>
 <span className="material-symbols-outlined text-secondary">mail</span>
-                        Support@krishiseva.in
+                        {supportContact.email}
                     </a>
-<a className="px-6 py-4 bg-surface-container-lowest rounded-2xl flex items-center gap-3 font-bold border border-outline-variant/10 shadow-sm hover:shadow-md transition-all" href="tel:+918001234567">
+<a className="px-6 py-4 bg-surface-container-lowest rounded-2xl flex items-center gap-3 font-bold border border-outline-variant/10 shadow-sm hover:shadow-md transition-all" href={supportContact.phoneHref}>
 <span className="material-symbols-outlined text-secondary">call</span>
-                        +91 800 123 4567
+                        {supportContact.phoneDisplay}
                     </a>
 </div>
 </div>

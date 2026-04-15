@@ -16,7 +16,7 @@ export default async function HomePage() {
         <div className="relative mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-24">
           <div>
             <span className="inline-flex rounded-full border border-brand-200 bg-brand-50 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-brand-800 dark:border-brand-900/60 dark:bg-brand-950/40 dark:text-brand-200">
-              Firebase production build
+              Kisan Kamai
             </span>
             <h1 className="mt-6 max-w-3xl text-4xl font-black leading-tight tracking-tight text-slate-950 dark:text-white md:text-6xl">
               {copy.heroTitle}
@@ -52,7 +52,7 @@ export default async function HomePage() {
           <div>
             <h2 className="text-3xl font-black text-slate-950 dark:text-white">{copy.areasTitle}</h2>
             <p className="mt-4 max-w-xl text-base leading-7 text-slate-600 dark:text-slate-300">
-              The production rollout starts with live support coverage across the current operating hubs and is designed to expand district by district without breaking the booking or owner onboarding flows.
+              Live support coverage starts across the current operating hubs and is designed to expand district by district without breaking booking or owner onboarding flows.
             </p>
           </div>
           <LazyMap center={[17.1, 74.28]} zoom={7} markers={homepageMarkers} circles={homepageCircles} height="440px" />

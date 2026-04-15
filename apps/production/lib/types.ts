@@ -28,6 +28,17 @@ export interface SessionRecord {
   profile: UserProfile | null;
 }
 
+export interface UserRecord {
+  uid: string;
+  email?: string;
+  phone?: string;
+  fullName?: string;
+  workspacePreference: Workspace;
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt?: string;
+}
+
 export interface ListingRecord {
   id: string;
   ownerUid: string;
@@ -75,9 +86,16 @@ export interface PaymentRecord {
 
 export interface SubmissionRecord {
   id: string;
-  type: "support" | "feedback" | "partner";
+  type: "support" | "feedback";
   userUid?: string;
   payload: Record<string, unknown>;
+  createdAt: string;
+}
+
+export interface SavedItemRecord {
+  id: string;
+  userUid: string;
+  listingId: string;
   createdAt: string;
 }
 

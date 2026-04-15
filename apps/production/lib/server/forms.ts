@@ -37,3 +37,13 @@ export const supportSchema = z.object({
   category: z.string().trim().min(2),
   message: z.string().trim().min(10),
 });
+
+export const feedbackSchema = z.object({
+  fullName: z.string().trim().min(2),
+  contact: z.string().trim().min(3),
+  topic: z.string().trim().min(2),
+  subject: z.string().trim().min(2),
+  message: z.string().trim().min(10),
+  rating: z.coerce.number().int().min(1).max(5),
+  followUp: z.boolean(),
+});

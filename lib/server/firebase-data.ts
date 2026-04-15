@@ -22,6 +22,7 @@ import { getAdminAuth, getAdminDb } from "@/lib/server/firebase-admin";
 import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { captureServerException } from "@/lib/server/firebase-observability";
 import { deleteStorageObject } from "@/lib/server/firebase-storage";
+import { mirrorBookingAndPayment, mirrorListing, mirrorProfile, mirrorSubmission } from "@/lib/server/sheets-mirror";
 import type { RegisterInput } from "@/lib/validation/forms";
 
 const USERS_COLLECTION = "users";
@@ -447,6 +448,12 @@ export async function registerLocalUser(input: RegisterInput) {
     profilesCollection().doc(authUser.uid).set(profileRecord),
   ]);
 
+  await mirrorProfile({
+    userId: authUser.uid,
+    profile: profileRecord,
+    source: "register",
+  });
+
   const customToken = await getAdminAuth().createCustomToken(authUser.uid);
   const idToken = await exchangeCustomToken(customToken);
 
@@ -513,6 +520,12 @@ export async function updateLocalProfile(
   if (Object.keys(authUpdates).length) {
     await getAdminAuth().updateUser(userId, authUpdates);
   }
+
+  await mirrorProfile({
+    userId,
+    profile: updatedProfile,
+    source: "profile-update",
+  });
 
   return getLocalSessionByUserId(userId);
 }
@@ -670,7 +683,9 @@ export async function getRenterPayments(renterUserId: string) {
 }
 
 export async function createListingRecord(
-  input: Omit<ListingRecord, "id" | "slug" | "createdAt" | "updatedAt">
+  input: Omit<ListingRecord, "id" | "slug" | "createdAt" | "updatedAt"> & {
+    listingId?: string;
+  }
 ) {
   const timestamp = nowIso();
   const slugBase = input.name
@@ -678,7 +693,7 @@ export async function createListingRecord(
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 
-  const listingId = createId("listing");
+  const listingId = input.listingId || createId("listing");
   const nextListing: ListingRecord = mapListingFromFirestore({
     ...input,
     id: listingId,
@@ -688,6 +703,7 @@ export async function createListingRecord(
   });
 
   await listingsCollection().doc(nextListing.id).set(nextListing);
+  await mirrorListing(nextListing, "create");
   return nextListing;
 }
 
@@ -712,6 +728,7 @@ export async function updateListingRecord(
   });
 
   await listingsCollection().doc(listingId).set(updated, { merge: true });
+  await mirrorListing(updated, "update");
   return updated;
 }
 
@@ -803,6 +820,8 @@ export async function createBookingRecord(input: {
   batch.set(paymentsCollection().doc(nextPayment.id), nextPayment);
   await batch.commit();
 
+  await mirrorBookingAndPayment(nextBooking, nextPayment);
+
   return nextBooking;
 }
 
@@ -853,6 +872,9 @@ export async function updateBookingStatus(
     )
   );
 
+  const refreshedPayment = paymentSnapshot.docs[0]?.data() as PaymentRecord | undefined;
+  await mirrorBookingAndPayment(updated, refreshedPayment ? { ...refreshedPayment, status: paymentStatusForBookingStatus(status) } : undefined);
+
   return updated;
 }
 
@@ -895,6 +917,7 @@ export async function createSubmissionRecord(input: {
   };
 
   await submissionsCollection().doc(record.id).set(record);
+  await mirrorSubmission(record);
   return record;
 }
 

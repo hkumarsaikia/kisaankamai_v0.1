@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
+import type { Locale } from "@/lib/types";
 
 export function FormShell({
   eyebrow,
@@ -14,6 +15,7 @@ export function FormShell({
   description,
   step,
   totalSteps,
+  locale = "en",
   aside,
   children,
 }: {
@@ -22,6 +24,7 @@ export function FormShell({
   description?: string;
   step?: number;
   totalSteps?: number;
+  locale?: Locale;
   aside?: ReactNode;
   children: ReactNode;
 }) {
@@ -31,13 +34,17 @@ export function FormShell({
         <CardHeader className="kk-form-header">
           <div className="flex flex-wrap items-center gap-3">
             {eyebrow ? <Badge variant="accent">{eyebrow}</Badge> : null}
-            {step && totalSteps ? <span className="kk-form-step-pill">Step {step} of {totalSteps}</span> : null}
+            {step && totalSteps ? (
+              <span className="kk-form-step-pill">
+                {locale === "mr" ? `पायरी ${step} / ${totalSteps}` : `Step ${step} of ${totalSteps}`}
+              </span>
+            ) : null}
           </div>
           <div className="space-y-3">
             <CardTitle className="kk-form-title">{title}</CardTitle>
             {description ? <CardDescription className="kk-form-description">{description}</CardDescription> : null}
           </div>
-          {step && totalSteps ? <FormProgress currentStep={step} totalSteps={totalSteps} /> : null}
+          {step && totalSteps ? <FormProgress currentStep={step} totalSteps={totalSteps} locale={locale} /> : null}
         </CardHeader>
         <CardContent className="pt-0">{children}</CardContent>
       </Card>
@@ -49,15 +56,17 @@ export function FormShell({
 export function FormProgress({
   currentStep,
   totalSteps,
+  locale = "en",
 }: {
   currentStep: number;
   totalSteps: number;
+  locale?: Locale;
 }) {
   const value = Math.max(0, Math.min(100, (currentStep / totalSteps) * 100));
   return (
     <div className="kk-form-progress">
       <div className="kk-form-progress-meta">
-        <span>Progress</span>
+        <span>{locale === "mr" ? "प्रगती" : "Progress"}</span>
         <span>{Math.round(value)}%</span>
       </div>
       <Progress value={value} />

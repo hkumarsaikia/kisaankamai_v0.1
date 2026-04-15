@@ -12,12 +12,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { FormActions, FormChoicePills, FormField, FormGrid, FormNotice, FormSection } from "@/components/forms/FormKit";
 import { getFirebaseAuthClient } from "@/lib/firebase-client";
+import type { Locale } from "@/lib/types";
 
 interface RegisterClientProps {
+  locale: Locale;
   workspaceOptions: Array<{ value: "owner" | "renter"; label: string }>;
+  copy: {
+    fullName: string;
+    phone: string;
+    email: string;
+    password: string;
+    address: string;
+    village: string;
+    pincode: string;
+    fieldArea: string;
+    workspacePreference: string;
+    otp: string;
+    verifyStatus: string;
+    verifiedStatus: string;
+    sendOtp: string;
+    verifyOtp: string;
+  };
 }
 
-export function RegisterClient({ workspaceOptions }: RegisterClientProps) {
+export function RegisterClient({ locale, workspaceOptions, copy }: RegisterClientProps) {
   const auth = useMemo(() => getFirebaseAuthClient(), []);
   const [form, setForm] = useState({
     fullName: "",
@@ -61,7 +79,7 @@ export function RegisterClient({ workspaceOptions }: RegisterClientProps) {
       const confirmation = await signInWithPhoneNumber(auth, form.phone, verifier);
       setConfirmationId(confirmation.verificationId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not send OTP.");
+      setError(locale === "mr" ? "OTP पाठवता आला नाही." : err instanceof Error ? err.message : "Could not send OTP.");
     } finally {
       setBusy(false);
     }
@@ -107,7 +125,7 @@ export function RegisterClient({ workspaceOptions }: RegisterClientProps) {
       await auth.signOut();
       window.location.href = "/profile-selection";
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Could not complete registration.");
+      setError(locale === "mr" ? "नोंदणी पूर्ण करता आली नाही." : err instanceof Error ? err.message : "Could not complete registration.");
     } finally {
       setBusy(false);
     }
@@ -116,51 +134,67 @@ export function RegisterClient({ workspaceOptions }: RegisterClientProps) {
   return (
     <div className="space-y-6">
       <FormSection
-        title="Identity and contact"
-        description="Production onboarding is phone-first. Optional email and password are linked to the same account after phone verification."
+        title={locale === "mr" ? "ओळख आणि संपर्क" : "Identity and contact"}
+        description={
+          locale === "mr"
+            ? "उत्पादन नोंदणी फोन-प्रथम आहे. फोन पडताळणीनंतर ईमेल आणि पासवर्ड त्याच खात्याशी जोडले जातात."
+            : "Onboarding is phone-first. Optional email and password are linked to the same account after phone verification."
+        }
       >
         <FormGrid>
-          <FormField label="Full name" required>
+          <FormField label={copy.fullName} required>
             <input className="kk-input" value={form.fullName} onChange={(event) => updateField("fullName", event.target.value)} />
           </FormField>
-          <FormField label="Phone" required>
+          <FormField label={copy.phone} required>
             <input className="kk-input" value={form.phone} onChange={(event) => updateField("phone", event.target.value)} placeholder="+91XXXXXXXXXX" />
           </FormField>
-          <FormField label="Email (optional)">
+          <FormField label={copy.email}>
             <input className="kk-input" type="email" value={form.email} onChange={(event) => updateField("email", event.target.value)} />
           </FormField>
-          <FormField label="Password (optional)">
+          <FormField label={copy.password}>
             <input className="kk-input" type="password" value={form.password} onChange={(event) => updateField("password", event.target.value)} />
           </FormField>
         </FormGrid>
       </FormSection>
 
       <FormSection
-        title="Location and profile"
-        description="These fields map directly to the production Firestore user profile that will be created after verification."
+        title={locale === "mr" ? "स्थान आणि प्रोफाइल" : "Location and profile"}
+        description={
+          locale === "mr"
+            ? "ही माहिती पडताळणीनंतर तयार होणाऱ्या प्रोफाइलशी थेट जुळते."
+            : "These fields map directly to the profile that will be created after verification."
+        }
       >
         <FormGrid>
-          <FormField label="Address" required>
+          <FormField label={copy.address} required>
             <input className="kk-input" value={form.address} onChange={(event) => updateField("address", event.target.value)} />
           </FormField>
-          <FormField label="Village / City" required>
+          <FormField label={copy.village} required>
             <input className="kk-input" value={form.village} onChange={(event) => updateField("village", event.target.value)} />
           </FormField>
-          <FormField label="Pincode" required>
+          <FormField label={copy.pincode} required>
             <input className="kk-input" value={form.pincode} onChange={(event) => updateField("pincode", event.target.value)} />
           </FormField>
-          <FormField label="Field area (acres)" required>
+          <FormField label={copy.fieldArea} required>
             <input className="kk-input" value={form.fieldArea} onChange={(event) => updateField("fieldArea", event.target.value)} />
           </FormField>
         </FormGrid>
       </FormSection>
 
       <FormSection
-        title="Workspace and verification"
-        description={confirmationId ? "Enter the OTP to verify the number and create the server session." : "Choose your starting workspace before we send the OTP."}
+        title={locale === "mr" ? "कार्यक्षेत्र आणि पडताळणी" : "Workspace and verification"}
+        description={
+          confirmationId
+            ? locale === "mr"
+              ? "नंबर पडताळण्यासाठी आणि सर्व्हर सत्र तयार करण्यासाठी OTP टाका."
+              : "Enter the OTP to verify the number and create the server session."
+            : locale === "mr"
+              ? "OTP पाठवण्यापूर्वी सुरू करण्यासाठी कार्यक्षेत्र निवडा."
+              : "Choose your starting workspace before we send the OTP."
+        }
       >
         <div className="space-y-4">
-          <FormField label="Preferred workspace" required>
+          <FormField label={copy.workspacePreference} required>
             <FormChoicePills
               value={form.workspacePreference}
               onChange={(value) => updateField("workspacePreference", value)}
@@ -168,7 +202,7 @@ export function RegisterClient({ workspaceOptions }: RegisterClientProps) {
             />
           </FormField>
           {confirmationId ? (
-            <FormField label="OTP" required>
+            <FormField label={copy.otp} required>
               <input className="kk-input" value={otp} onChange={(event) => setOtp(event.target.value)} />
             </FormField>
           ) : null}
@@ -178,10 +212,10 @@ export function RegisterClient({ workspaceOptions }: RegisterClientProps) {
           {error ? <FormNotice tone="error">{error}</FormNotice> : null}
           <FormActions>
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-              {confirmationId ? "Phone verified next" : "Phone verification required"}
+              {confirmationId ? copy.verifiedStatus : copy.verifyStatus}
             </span>
             <Button type="button" disabled={busy} className="w-full md:w-auto" onClick={confirmationId ? completeRegistration : startVerification}>
-              {confirmationId ? "Verify OTP and create account" : "Send OTP"}
+              {confirmationId ? copy.verifyOtp : copy.sendOtp}
             </Button>
           </FormActions>
         </div>

@@ -17,8 +17,6 @@ function joinSources(values) {
 }
 
 function buildCsp() {
-  const appwriteOrigin = asOrigin(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || "https://fra.cloud.appwrite.io/v1");
-
   return [
     "default-src 'self'",
     `script-src ${joinSources([
@@ -54,11 +52,12 @@ function buildCsp() {
     ])}`,
     `connect-src ${joinSources([
       "'self'",
-      appwriteOrigin,
       "https://identitytoolkit.googleapis.com",
       "https://securetoken.googleapis.com",
       "https://firebase.googleapis.com",
       "https://www.googleapis.com",
+      "https://firebasestorage.googleapis.com",
+      "https://storage.googleapis.com",
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
       "https://www.google.com",
@@ -95,11 +94,18 @@ const securityHeaders = [
 const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "firebasestorage.googleapis.com",
+      },
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com",
       },
     ],
   },

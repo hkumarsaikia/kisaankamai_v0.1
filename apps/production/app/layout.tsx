@@ -7,8 +7,8 @@ import { getCurrentSession } from "@/lib/server/auth";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Kisan Kamai Production",
-  description: "Firebase-hosted production build for www.kisankamai.com",
+  title: "Kisan Kamai",
+  description: "Kisan Kamai marketplace for www.kisankamai.com",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

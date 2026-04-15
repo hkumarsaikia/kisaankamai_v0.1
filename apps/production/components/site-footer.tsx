@@ -13,17 +13,18 @@ export function SiteFooter({ locale }: { locale: Locale }) {
           <p className="mt-4 max-w-xl text-sm leading-7 text-slate-400">{copy.footer}</p>
         </div>
         <div>
-          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-brand-300">Navigate</h3>
+          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-brand-300">{copy.footerNavLabel}</h3>
           <div className="mt-4 flex flex-col gap-3 text-sm">
             <AppLink href="/rent-equipment" className="hover:text-white">{copy.browse}</AppLink>
             <AppLink href="/list-equipment" className="hover:text-white">{copy.list}</AppLink>
             <AppLink href="/support" className="hover:text-white">{copy.support}</AppLink>
+            <AppLink href="/feedback" className="hover:text-white">{copy.feedback}</AppLink>
           </div>
         </div>
         <div>
-          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-brand-300">Domain</h3>
+          <h3 className="text-xs font-black uppercase tracking-[0.2em] text-brand-300">{copy.footerDomainLabel}</h3>
           <p className="mt-4 text-sm leading-7 text-slate-400">
-            Canonical production URL: <span className="font-semibold text-white">www.kisankamai.com</span>
+            {copy.footerCanonicalLabel}: <span className="font-semibold text-white">{copy.footerCanonicalValue}</span>
           </p>
         </div>
       </div>

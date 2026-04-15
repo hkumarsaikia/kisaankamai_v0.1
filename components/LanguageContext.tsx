@@ -32,7 +32,16 @@ function applyLanguageToDocument(language: Language) {
 }
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguage] = useState<Language>("mr");
+  const [language, setLanguage] = useState<Language>(() => {
+    if (typeof document !== "undefined") {
+      const bootLanguage = document.documentElement.dataset.language;
+      if (bootLanguage === "en" || bootLanguage === "mr") {
+        return bootLanguage;
+      }
+    }
+
+    return "mr";
+  });
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -42,8 +51,8 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    applyLanguageToDocument("mr");
-  }, []);
+    applyLanguageToDocument(language);
+  }, [language]);
 
   useEffect(() => {
     applyLanguageToDocument(language);

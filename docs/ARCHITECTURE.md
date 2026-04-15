@@ -10,7 +10,7 @@ The root app is the only public runtime.
 - Uploads: Firebase Cloud Storage
 - Diagnostics: local runtime logging for development, Firebase/Sentry-oriented hooks for hosted environments
 
-`apps/production` remains in-repo only as a staging/reference surface.
+`apps/production` remains in-repo as a maintained alternate surface that shares the same Firebase-only backend story and design language, but it is not the canonical public domain target.
 
 ## Root App Boundaries
 

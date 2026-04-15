@@ -25,6 +25,7 @@ export function ensureSameOrigin(request: NextRequest) {
   const allowedOrigins = [
     request.nextUrl.origin,
     process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.NEXT_PUBLIC_APP_URL,
   ].filter(Boolean);
 
   if (!allowedOrigins.includes(origin)) {

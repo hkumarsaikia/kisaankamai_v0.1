@@ -1,19 +1,20 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useTransition } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
+import { ChoicePills, FormField, FormGrid, FormNotice, ReviewList } from "@/components/forms/FormKit";
 import { registerAction } from "@/lib/actions/local-data";
 import { assetPath } from "@/lib/site";
 
 type RoleValue = "renter" | "owner";
 
+const totalSteps = 3;
+
 export default function RegisterPage() {
-  const { t } = useLanguage();
+  const { t, langText } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [step, setStep] = useState(1);
@@ -54,135 +55,181 @@ export default function RegisterPage() {
     });
   };
 
+  const progressValue = Math.round((step / totalSteps) * 100);
+
   return (
     <div className="min-h-screen bg-background text-on-surface">
       <Header />
-      <main className="relative overflow-hidden pt-24">
+      <main className="relative overflow-hidden pt-20">
         <div className="absolute inset-0">
-          <Image
-            src={assetPath("/assets/generated/modern_farm_tech.png")}
-            alt="Farm technology"
-            className="object-cover opacity-10 dark:opacity-15"
-            fill
-            sizes="100vw"
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-container/25 via-background/40 to-secondary/10 dark:from-primary-container/20 dark:via-slate-950/60 dark:to-secondary/10" />
+          <div
+            className="h-full w-full bg-cover bg-center opacity-20 dark:opacity-15"
+            style={{ backgroundImage: `url('${assetPath("/assets/generated/modern_farm_tech.png")}')` }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/95 to-background dark:from-slate-950/80 dark:via-slate-950/95 dark:to-slate-950" />
         </div>
 
-        <div className="relative mx-auto max-w-5xl px-6 py-16">
+        <div className="relative mx-auto max-w-6xl px-6 py-12">
           <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-secondary backdrop-blur dark:border-slate-800 dark:bg-slate-950/70 dark:text-amber-400">
+            <span className="inline-flex items-center gap-2 rounded-full border border-outline-variant bg-surface-container-lowest px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-secondary backdrop-blur">
               <span className="material-symbols-outlined text-base">person_add</span>
-              {t("register.local_registration")}
+              {langText("Create your Kisan Kamai account", "तुमचे किसान कमाई खाते तयार करा")}
             </span>
             <h1 className="mt-6 text-4xl font-black tracking-tight text-primary dark:text-emerald-50 md:text-6xl">
-              {t("register.create_your_kisan_kamai_account")}
+              {langText("Join the marketplace with the same original registration form.", "मूळ नोंदणी फॉर्मसह बाजारपेठेत सामील व्हा.")}
             </h1>
-            <p className="mt-5 text-lg font-medium text-slate-600 dark:text-slate-400">
-              {t("register.use_email_or_phone_plus_password_otp_and_external_verification_are_disabled_in_this_local_phase")}
+            <p className="mt-5 text-lg font-medium leading-8 text-on-surface-variant">
+              {langText(
+                "The layout now follows the imported onboarding design more closely, while keeping your existing fields and submit contract intact.",
+                "लेआउट आता आयात केलेल्या ऑनबोर्डिंग डिझाइनशी अधिक जुळते, पण तुमची विद्यमान फील्ड आणि सबमिट करार तसाच ठेवते."
+              )}
             </p>
           </div>
 
-          <FormShell
-            eyebrow={t("register.local_registration")}
-            title={t("register.create_your_kisan_kamai_account")}
-            description={t("register.use_email_or_phone_plus_password_otp_and_external_verification_are_disabled_in_this_local_phase")}
-            step={step}
-            totalSteps={3}
-            aside={
-              <div className="space-y-4">
-                <h3 className="text-lg font-black text-primary dark:text-emerald-50">{t("register.preferred_workspace")}</h3>
-                <p className="text-sm font-medium text-on-surface-variant">
-                  New users still choose a preferred starting workspace, but every account can switch between owner and renter after sign-in.
+          <div className="mx-auto mt-12 max-w-4xl overflow-hidden rounded-[2.4rem] border border-white/35 bg-white/85 shadow-[0_28px_120px_-24px_rgba(0,0,0,0.25)] backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90">
+            <div className="bg-primary-container p-8 text-white md:p-10">
+              <h2 className="text-3xl font-black tracking-tight">
+                {langText("Create your account", "तुमचे खाते तयार करा")}
+              </h2>
+              <p className="mt-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary-fixed-dim">
+                {langText(`Step ${step} of ${totalSteps}`, `पायरी ${step} / ${totalSteps}`)}
+              </p>
+              <div className="mt-6 space-y-3">
+                <div className="flex gap-2">
+                  {Array.from({ length: totalSteps }).map((_, index) => (
+                    <span
+                      key={index}
+                      className={`h-1.5 flex-1 rounded-full ${index < step ? "bg-white" : "bg-white/20"}`}
+                    />
+                  ))}
+                </div>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-white/70">
+                  {langText(`Progress ${progressValue}%`, `प्रगती ${progressValue}%`)}
                 </p>
               </div>
-            }
-          >
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            </div>
+
+            <form className="space-y-8 p-8 md:p-10" onSubmit={handleSubmit}>
               {error ? <FormNotice tone="error">{error}</FormNotice> : null}
 
               {step === 1 ? (
-                <FormSection title="Account basics" description="Start with the same identity and password fields already used by the local registration flow.">
+                <section className="space-y-6">
+                  <SectionHeading
+                    icon="account_circle"
+                    title={langText("Account details", "खाते तपशील")}
+                    description={langText("Start with identity, contact, and password fields.", "ओळख, संपर्क आणि पासवर्ड फील्डपासून सुरुवात करा.")}
+                  />
                   <FormGrid>
-                    <FormField label={t("register.full_name")} required>
-                      <input className="kk-input" value={formData.fullName} onChange={(event) => updateField("fullName", event.target.value)} />
+                    <FormField label={langText("Full name", "पूर्ण नाव")} required htmlFor="fullName">
+                      <input id="fullName" className="kk-input" value={formData.fullName} onChange={(event) => updateField("fullName", event.target.value)} />
                     </FormField>
-                    <FormField label={t("register.email")}>
-                      <input className="kk-input" type="email" value={formData.email} onChange={(event) => updateField("email", event.target.value)} />
+                    <FormField label={langText("Mobile number", "मोबाईल नंबर")} required htmlFor="phone">
+                      <input
+                        id="phone"
+                        className="kk-input"
+                        value={formData.phone}
+                        onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))}
+                        placeholder="9876543210"
+                      />
                     </FormField>
-                    <FormField label={t("register.phone")}>
-                      <input className="kk-input" value={formData.phone} onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))} />
+                    <FormField label={langText("Email address", "ईमेल पत्ता")} htmlFor="email">
+                      <input id="email" type="email" className="kk-input" value={formData.email} onChange={(event) => updateField("email", event.target.value)} />
                     </FormField>
-                    <FormField label={t("register.password")} required>
-                      <input className="kk-input" type="password" value={formData.password} onChange={(event) => updateField("password", event.target.value)} />
+                    <FormField label={langText("Password", "पासवर्ड")} required htmlFor="password">
+                      <input id="password" type="password" className="kk-input" value={formData.password} onChange={(event) => updateField("password", event.target.value)} />
                     </FormField>
                   </FormGrid>
-                  <FormStepActions nextLabel="Continue to location" onNext={() => setStep(2)} disableNext={!formData.fullName || !formData.password || (!formData.email && !formData.phone)} />
-                </FormSection>
+                  <StepActions
+                    nextLabel={langText("Continue", "पुढे")}
+                    onNext={() => setStep(2)}
+                    disableNext={!formData.fullName || !formData.password || (!formData.email && !formData.phone)}
+                  />
+                </section>
               ) : null}
 
               {step === 2 ? (
-                <FormSection title="Location and farm profile" description="These fields map directly to the existing profile and firebase-data schema.">
+                <section className="space-y-6">
+                  <SectionHeading
+                    icon="location_on"
+                    title={langText("Basic profile", "मूलभूत प्रोफाइल")}
+                    description={langText("Add the same location and farming details already stored today.", "आज जतन होणारे तेच स्थान आणि शेती तपशील जोडा.")}
+                  />
                   <FormGrid>
-                    <FormField label={t("register.village_city")} required>
-                      <input className="kk-input" value={formData.village} onChange={(event) => updateField("village", event.target.value)} />
+                    <FormField label={langText("Village / town", "गाव / शहर")} required htmlFor="village">
+                      <input id="village" className="kk-input" value={formData.village} onChange={(event) => updateField("village", event.target.value)} />
                     </FormField>
-                    <FormField label={t("register.pincode")} required>
-                      <input className="kk-input" value={formData.pincode} onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))} />
+                    <FormField label={langText("Pincode", "पिनकोड")} required htmlFor="pincode">
+                      <input
+                        id="pincode"
+                        className="kk-input"
+                        value={formData.pincode}
+                        onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
+                      />
                     </FormField>
-                    <FormField label={t("register.field_area")} required>
-                      <input className="kk-input" value={formData.fieldArea} onChange={(event) => updateField("fieldArea", event.target.value)} />
+                    <FormField label={langText("Field area", "शेती क्षेत्र")} required htmlFor="fieldArea">
+                      <input id="fieldArea" className="kk-input" value={formData.fieldArea} onChange={(event) => updateField("fieldArea", event.target.value)} />
                     </FormField>
                   </FormGrid>
-                  <FormField label={t("register.address")} required>
-                    <input className="kk-input" value={formData.address} onChange={(event) => updateField("address", event.target.value)} />
+                  <FormField label={langText("Address", "पत्ता")} required htmlFor="address">
+                    <input id="address" className="kk-input" value={formData.address} onChange={(event) => updateField("address", event.target.value)} />
                   </FormField>
-                  <FormStepActions backLabel="Back" nextLabel="Continue to workspace" onBack={() => setStep(1)} onNext={() => setStep(3)} disableNext={!formData.village || !formData.pincode || !formData.address || !formData.fieldArea} />
-                </FormSection>
+                  <StepActions
+                    backLabel={langText("Back", "मागे")}
+                    nextLabel={langText("Continue", "पुढे")}
+                    onBack={() => setStep(1)}
+                    onNext={() => setStep(3)}
+                    disableNext={!formData.village || !formData.pincode || !formData.address || !formData.fieldArea}
+                  />
+                </section>
               ) : null}
 
               {step === 3 ? (
-                <FormSection title="Workspace and review" description="Choose your initial workspace and confirm the data before the account is created.">
-                  <FormField label={t("register.preferred_workspace")} required>
+                <section className="space-y-6">
+                  <SectionHeading
+                    icon="diversity_3"
+                    title={langText("Role and review", "भूमिका आणि पुनरावलोकन")}
+                    description={langText("Choose the starting workspace, then confirm the details before creating the account.", "प्रारंभिक वर्कस्पेस निवडा आणि खाते तयार करण्यापूर्वी तपशील तपासा.")}
+                  />
+                  <FormField label={langText("Preferred workspace", "प्राधान्य वर्कस्पेस")} required>
                     <ChoicePills
                       value={formData.role}
                       onChange={(value) => updateField("role", value)}
                       options={[
-                        { label: t("register.renter"), value: "renter" },
-                        { label: t("register.owner"), value: "owner" },
+                        { label: langText("Renter workspace", "भाडेकरी वर्कस्पेस"), value: "renter" },
+                        { label: langText("Owner workspace", "मालक वर्कस्पेस"), value: "owner" },
                       ]}
                     />
                   </FormField>
                   <ReviewList
                     items={[
-                      { label: t("register.full_name"), value: formData.fullName },
-                      { label: t("register.email"), value: formData.email || "-" },
-                      { label: t("register.phone"), value: formData.phone || "-" },
-                      { label: t("register.village_city"), value: formData.village },
-                      { label: t("register.pincode"), value: formData.pincode },
-                      { label: t("register.field_area"), value: formData.fieldArea },
-                      { label: t("register.address"), value: formData.address },
-                      { label: t("register.preferred_workspace"), value: formData.role === "owner" ? t("register.owner") : t("register.renter") },
+                      { label: langText("Full name", "पूर्ण नाव"), value: formData.fullName },
+                      { label: langText("Mobile number", "मोबाईल नंबर"), value: formData.phone || "-" },
+                      { label: langText("Email", "ईमेल"), value: formData.email || "-" },
+                      { label: langText("Village / town", "गाव / शहर"), value: formData.village },
+                      { label: langText("Pincode", "पिनकोड"), value: formData.pincode },
+                      { label: langText("Field area", "शेती क्षेत्र"), value: formData.fieldArea },
+                      { label: langText("Address", "पत्ता"), value: formData.address },
+                      { label: langText("Preferred workspace", "प्राधान्य वर्कस्पेस"), value: formData.role === "owner" ? langText("Owner", "मालक") : langText("Renter", "भाडेकरी") },
                     ]}
                   />
-                  <FormStepActions
-                    backLabel="Back"
-                    nextLabel={isPending ? t("register.creating_account") : t("register.create_account")}
+                  <StepActions
+                    backLabel={langText("Back", "मागे")}
+                    nextLabel={isPending ? t("register.creating_account") : langText("Create account", "खाते तयार करा")}
                     onBack={() => setStep(2)}
                     submit
                     disableNext={isPending}
                   />
-                </FormSection>
+                </section>
               ) : null}
             </form>
+          </div>
 
-            <p className="mt-6 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
-              {t("register.already_have_an_account")}{" "}
-              <Link href="/login" className="font-black text-secondary hover:underline dark:text-amber-400">
-                {t("register.login")}
-              </Link>
-            </p>
-          </FormShell>
+          <p className="mt-8 text-center text-sm font-medium text-on-surface-variant">
+            {t("register.already_have_an_account")}{" "}
+            <Link href="/login" className="font-black text-primary hover:underline dark:text-emerald-300">
+              {t("register.login")}
+            </Link>
+          </p>
         </div>
       </main>
       <Footer />
@@ -190,4 +237,58 @@ export default function RegisterPage() {
   );
 }
 
+function SectionHeading({
+  icon,
+  title,
+  description,
+}: {
+  icon: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-3">
+        <span className="material-symbols-outlined text-primary">{icon}</span>
+        <h2 className="text-xl font-black text-primary">{title}</h2>
+      </div>
+      <p className="text-sm font-medium leading-7 text-on-surface-variant">{description}</p>
+    </div>
+  );
+}
 
+function StepActions({
+  backLabel = "Back",
+  nextLabel = "Continue",
+  onBack,
+  onNext,
+  disableNext,
+  submit,
+}: {
+  backLabel?: string;
+  nextLabel?: string;
+  onBack?: () => void;
+  onNext?: () => void;
+  disableNext?: boolean;
+  submit?: boolean;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 border-t border-outline-variant pt-6">
+      {onBack ? (
+        <button type="button" onClick={onBack} className="rounded-xl border border-outline-variant px-5 py-3 text-sm font-black text-on-surface transition-colors hover:bg-surface-container-low">
+          {backLabel}
+        </button>
+      ) : (
+        <span />
+      )}
+      <button
+        type={submit ? "submit" : "button"}
+        onClick={submit ? undefined : onNext}
+        disabled={disableNext}
+        className="rounded-2xl bg-primary px-6 py-3 text-sm font-black text-white shadow-[0_14px_28px_-12px_rgba(20,59,46,0.55)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {nextLabel}
+      </button>
+    </div>
+  );
+}

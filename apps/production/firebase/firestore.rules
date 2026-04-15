@@ -12,10 +12,10 @@ service cloud.firestore {
 
     match /users/{uid} {
       allow read, write: if ownsUser(uid);
+    }
 
-      match /saved/{listingId} {
-        allow read, write: if ownsUser(uid);
-      }
+    match /profiles/{uid} {
+      allow read, write: if ownsUser(uid);
     }
 
     match /listings/{listingId} {
@@ -41,7 +41,20 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    match /submissions/{submissionId} {
+    match /saved-items/{savedItemId} {
+      allow read: if signedIn() && resource.data.userUid == request.auth.uid;
+      allow create: if signedIn() && request.resource.data.userUid == request.auth.uid;
+      allow update: if signedIn() && resource.data.userUid == request.auth.uid && request.resource.data.userUid == request.auth.uid;
+      allow delete: if signedIn() && resource.data.userUid == request.auth.uid;
+    }
+
+    match /form-submissions/{submissionId} {
+      allow read: if false;
+      allow create: if signedIn();
+      allow update, delete: if false;
+    }
+
+    match /bug-reports/{bugReportId} {
       allow read: if false;
       allow create: if signedIn();
       allow update, delete: if false;

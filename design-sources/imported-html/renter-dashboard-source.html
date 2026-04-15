@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Renter Dashboard - Kisan Kamai</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-variant": "#dfe2ea",
+                        "on-secondary-container": "#783610",
+                        "on-primary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#181c22",
+                        "outline-variant": "#c1c8c3",
+                        "secondary-fixed": "#ffdbcc",
+                        "surface-dim": "#d7dae2",
+                        "primary": "#00251a",
+                        "inverse-surface": "#2d3137",
+                        "on-tertiary-container": "#da8b31",
+                        "inverse-primary": "#a6cfbd",
+                        "on-background": "#181c22",
+                        "surface-container-high": "#e5e8f0",
+                        "secondary-fixed-dim": "#ffb693",
+                        "secondary-container": "#ffa274",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed": "#2c1600",
+                        "surface-container": "#ebeef6",
+                        "primary-container": "#143b2e",
+                        "on-secondary": "#ffffff",
+                        "tertiary": "#321900",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#c2ecd9",
+                        "on-error-container": "#93000a",
+                        "secondary": "#934a24",
+                        "on-secondary-fixed-variant": "#75340e",
+                        "on-primary-fixed-variant": "#284e40",
+                        "tertiary-fixed-dim": "#ffb870",
+                        "surface-tint": "#406657",
+                        "inverse-on-surface": "#eef1f9",
+                        "tertiary-container": "#4f2c00",
+                        "on-tertiary-fixed-variant": "#693c00",
+                        "outline": "#717974",
+                        "error-container": "#ffdad6",
+                        "on-secondary-fixed": "#351000",
+                        "primary-fixed-dim": "#a6cfbd",
+                        "on-surface-variant": "#414844",
+                        "surface-container-low": "#f1f3fc",
+                        "surface-bright": "#f8f9ff",
+                        "surface": "#f8f9ff",
+                        "surface-container-highest": "#dfe2ea",
+                        "on-primary-fixed": "#002117",
+                        "tertiary-fixed": "#ffdcbe",
+                        "background": "#f8f9ff",
+                        "on-primary-container": "#7ea594",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Manrope"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased flex">
+<!-- Fixed Left Sidebar -->
+<aside class="h-screen w-72 border-r border-outline-variant fixed left-0 top-0 bg-white flex flex-col z-50">
+<!-- Brand Logo -->
+<div class="text-xl font-extrabold text-primary-container px-6 py-8 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container text-3xl">agriculture</span>
+            Kisan Kamai
+        </div>
+<!-- Renter Profile Card -->
+<div class="px-6 pb-6">
+<div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30">
+<div class="flex items-center gap-3">
+<img alt="Namdev Patil" class="w-12 h-12 rounded-full object-cover" data-alt="portrait of a confident middle-aged Indian farmer smiling in a rural setting, warm sunlight, professional bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCypyV6vB27-5Ov9O_ybFC-9gBMqaj3f9_xbNmzqzVylXlYvQ-XaaXofIh5yHi9IttHfsDt4oMBL2VvHG7PA3TwEHQ4n-riP_kq87RVVir_aH2Cc4eQBdk8rfgF536Y04CDVfGiGKw6in9wgPvw6L2NpClYozhmFDsSuJCmFELPlYaMT2CTwI7aGObjxAp7jpUHBEBmjIc-vJq9Lvkc5Js_xQ6ReiaF3A7toq9qJH0krHUFs44rhRVGP7ylmHcScrpzm9_84jHTrAlp"/>
+<div class="overflow-hidden">
+<p class="text-sm font-bold text-on-surface truncate">Namdev Patil</p>
+<p class="text-xs text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Satara, MH
+                        </p>
+</div>
+</div>
+<div class="mt-3 flex items-center justify-between">
+<span class="text-[10px] font-bold uppercase tracking-wider bg-primary-fixed text-on-primary-fixed-variant px-2 py-0.5 rounded">Trusted Renter</span>
+<span class="text-[10px] font-medium text-on-surface-variant italic">ID: KK-9281</span>
+</div>
+</div>
+</div>
+<!-- Navigation Items -->
+<nav class="flex-1 px-4 space-y-1">
+<!-- Active State: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-primary-container font-bold bg-surface-container-high border-r-4 border-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">explore</span>
+                Browse Equipment
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">calendar_month</span>
+                My Bookings
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">bookmark</span>
+                Saved Equipment
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+                Payments
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:bg-surface-container transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</nav>
+<!-- Footer Actions -->
+<div class="px-4 py-6 border-t border-outline-variant/30 space-y-1">
+<button class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">translate</span> Marathi / English
+            </button>
+<button class="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-error hover:bg-error-container/20 rounded-lg transition-colors">
+<span class="material-symbols-outlined">logout</span> Logout
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 flex-1 flex flex-col min-h-screen">
+<!-- Top Navigation / Header area -->
+<header class="h-20 bg-white/80 backdrop-blur-md sticky top-0 px-10 flex items-center justify-between border-b border-outline-variant/20 z-40">
+<div>
+<h1 class="text-2xl font-extrabold text-on-surface leading-tight">Renter Dashboard / <span class="font-bold">शेतकरी डॅशबोर्ड</span></h1>
+<p class="text-xs text-on-surface-variant font-medium">Welcome back, Namdev. You have 2 active bookings.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex bg-surface-container-low p-1 rounded-full border border-outline-variant/30">
+<button class="px-5 py-1.5 text-xs font-bold rounded-full bg-primary-container text-white shadow-sm">Current</button>
+<button class="px-5 py-1.5 text-xs font-medium rounded-full text-on-surface-variant hover:text-on-surface transition-colors">Upcoming</button>
+<button class="px-5 py-1.5 text-xs font-medium rounded-full text-on-surface-variant hover:text-on-surface transition-colors">History</button>
+</div>
+<div class="w-10 h-10 rounded-full border border-outline-variant/30 flex items-center justify-center text-on-surface-variant cursor-pointer hover:bg-surface-container transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2.5 w-2 h-2 bg-error rounded-full"></span>
+</div>
+</div>
+</header>
+<div class="p-10 flex gap-8">
+<!-- Left Grid (Sections A, B, C) -->
+<div class="flex-1 space-y-10">
+<!-- Section A: Active Booking Cards -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-bold text-on-surface flex items-center gap-2">
+                            Active Bookings <span class="text-on-surface-variant font-normal">/ सक्रिय बुकिंग्ज</span>
+</h2>
+<a class="text-primary-container text-sm font-bold hover:underline" href="#">View All</a>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<!-- Card 1 -->
+<div class="bg-white border border-outline-variant/50 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-primary-container/5 transition-all group">
+<div class="h-40 relative">
+<img alt="John Deere 5050D" class="w-full h-full object-cover" data-alt="high-end John Deere tractor working in a green agricultural field in Maharashtra, cinematic sunlight, detailed machinery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsrECKKQV6KB_aVIhfGHU3NZwr5wbps7eMTfSgp3Dc4-876XTdR4DbxF7YBY-ycJ8Kw4oUtSmp9b5hxUytx7Or0jc1nJbrDTCxJdTpGvrJDYkSdVNLWAD0KZ7A-fGGn9JnlvTy5z91YaL6NtvxvQSjJfAsKW8m6AHUBYuW89y4QU0I5AsCVanqidLzR3PsorIuvhrpegJHEG7jDlqWzZqbpvcVxrXhLB3FFIKT-DPLWWEAgHOMgfFt9mj58vuZgAT-7dvbWJCj0BuM"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-primary-container text-white text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                                    Confirmed
+                                </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-on-surface text-lg">John Deere 5050D</h3>
+<p class="text-primary font-extrabold">₹3,500 <span class="text-xs text-on-surface-variant font-normal">/ day</span></p>
+</div>
+<div class="space-y-2 mb-5">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">event</span> 12 Oct - 15 Oct (3 Days)
+                                    </div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">person</span> Owner: Amol Shinde
+                                    </div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 text-xs font-bold bg-primary-container text-white rounded-lg hover:opacity-90 transition-opacity">Track Order</button>
+<button class="p-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-xl">chat</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-white border border-outline-variant/50 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-primary-container/5 transition-all group">
+<div class="h-40 relative">
+<img alt="Mahindra Rotavator" class="w-full h-full object-cover" data-alt="Modern red Mahindra rotavator implement attached to a tractor in a ploughed field, realistic rural landscape background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB15SM3BX-16G88tZAvSYZYdz0_bLrzpiV9cAgBeo-OK3eHbVR5j6gboV7V8rAx_T07weF70XbDfjHxGn1EGdex1lVzhXvOi6Zf0qLlX1y0xsiz6lEWSqHxbmHlb_p-mS3-Ny3dRWd2egnv5bip0dF5bgG-_46ii0CZE68yWICuUUl4ZlYviYvHMgJDv8f7v0Ci_If4I0FSQ5iqLn_z6NWuyojonf3gSUoQA3-dt-48MkyBJ0lEYYKla4vfHLUlX21X6WVWOJ-sfGRv"/>
+<div class="absolute top-3 left-3 px-3 py-1 bg-secondary-container text-on-secondary-fixed text-[10px] font-bold rounded-full uppercase tracking-tighter">
+                                    Pending Approval
+                                </div>
+</div>
+<div class="p-5">
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-bold text-on-surface text-lg">Mahindra Rotavator</h3>
+<p class="text-primary font-extrabold">₹1,200 <span class="text-xs text-on-surface-variant font-normal">/ day</span></p>
+</div>
+<div class="space-y-2 mb-5">
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">event</span> 18 Oct - 19 Oct (1 Day)
+                                    </div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-sm">person</span> Owner: Ravi Gaikwad
+                                    </div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 py-2 text-xs font-bold border border-primary-container text-primary-container rounded-lg hover:bg-primary-fixed/30 transition-colors">Edit Request</button>
+<button class="p-2 border border-outline-variant rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-xl">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section B: Recommended Equipment -->
+<section>
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-lg font-bold text-on-surface">Recommended for You <span class="text-on-surface-variant font-normal">/ तुमच्यासाठी शिफारस</span></h2>
+<div class="flex gap-2">
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+<div class="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
+<!-- Recommendation 1 -->
+<div class="flex-none w-64 bg-white rounded-xl border border-outline-variant/30 p-3 hover:border-primary-container transition-colors cursor-pointer">
+<img class="w-full h-32 object-cover rounded-lg mb-3" data-alt="modern agricultural seed drill machine in a farm field at sunrise, high technology farming tools" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_HLz7VSN4J3FBfsFFmZMKP4-xNIgoaxhDdfeqzHQZfKVyV73fRjbpeZeqP1ql7nti2m5bFQaASrmR-ceTBMG-sXQmb7KojMkosbcfVw9sfRcglt9NMORgVWh_TG1vj0vU79-bHjDXLQAnjb8MXmh7x1CpRggdmBZHzu4-j1zm6G9wS0KWRJ89qebLOd8lCSRYn80aV9fvhL29ivtXEIe7RIv0fksRbBqBTBMXheRrz0XRX7YEXdNiOZAW_FcdLf79sWVi9PT1HTCd"/>
+<p class="text-xs font-medium text-tertiary mb-1">Seed Drills</p>
+<h4 class="font-bold text-on-surface text-sm mb-2">Multicrop Seed Drill</h4>
+<p class="text-primary-container font-extrabold text-sm">₹800 <span class="text-[10px] text-on-surface-variant font-normal">/ acre</span></p>
+</div>
+<!-- Recommendation 2 -->
+<div class="flex-none w-64 bg-white rounded-xl border border-outline-variant/30 p-3 hover:border-primary-container transition-colors cursor-pointer">
+<img class="w-full h-32 object-cover rounded-lg mb-3" data-alt="industrial harvester machine in a vast golden wheat field, cinematic aerial perspective, harvest season in India" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSZX-mOsMuIEggPZWypkGDd9h8d-B5TiXfMslfVJg8xO8-NMTQWUAU0wFieneSJ0vgQbuMk9dmVIZFRzvBLNJck-88KEX5KOa7hXLa5F9llVguI5jJDDCsbfaO9Qv5qpd9pL1H21tFTLPvOl3H-toiOZfYcqLjJGTD76fk12FItJG37moN9W438EuNOnu50V3AQzr8ibacy46ACpocN4WVp1ic7jXUUvL2EgcTbzjF_YZDDE8UEqN8B50rd4wf7gvFDrjyYJiAJSHL"/>
+<p class="text-xs font-medium text-tertiary mb-1">Harvesters</p>
+<h4 class="font-bold text-on-surface text-sm mb-2">Kubota Harvester DC-68G</h4>
+<p class="text-primary-container font-extrabold text-sm">₹2,200 <span class="text-[10px] text-on-surface-variant font-normal">/ hr</span></p>
+</div>
+<!-- Recommendation 3 -->
+<div class="flex-none w-64 bg-white rounded-xl border border-outline-variant/30 p-3 hover:border-primary-container transition-colors cursor-pointer">
+<img class="w-full h-32 object-cover rounded-lg mb-3" data-alt="modern agricultural drone sprayer flying over a lush green sugarcane field, precision farming technology" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHBC3Q5y_ORwgMVwxwsCHq2-7TzwpuPoDFAjxMPd08EvK2lGpoUMgu0y72siAvWjIEY-PnYvF3uBI8k5hm6c9QGwDeqYUK1hVKO5rHPbQsn0qQWU7XIgFdQm97MHJq4TbX7jJf59B_TzcFUZFe3Hx4fRxSmUm_vafNMETiI5PQSfxCzw2z9cC4UgCOsiUPYEYBmgI2NZMnW4_BTz581yRN4GQkCczyESEYDjWkszzUdWohSDtNFzPORVE65rsxwkXi2NVQKbpD4-G4"/>
+<p class="text-xs font-medium text-tertiary mb-1">Sprayers</p>
+<h4 class="font-bold text-on-surface text-sm mb-2">DJI Agras Drone T30</h4>
+<p class="text-primary-container font-extrabold text-sm">₹450 <span class="text-[10px] text-on-surface-variant font-normal">/ acre</span></p>
+</div>
+</div>
+</section>
+<!-- Section C: Recently Completed Rentals -->
+<section>
+<h2 class="text-lg font-bold text-on-surface mb-6">Recent History <span class="text-on-surface-variant font-normal">/ अलीकडील व्यवहार</span></h2>
+<div class="bg-white border border-outline-variant/30 rounded-2xl overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface-container-low border-b border-outline-variant/30">
+<tr>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Equipment</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Dates</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Total Amount</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-xs font-bold text-on-surface-variant uppercase tracking-wider">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/20">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container overflow-hidden">
+<img alt="Swafaj 744" class="w-full h-full object-cover" data-alt="small tractor side view agricultural machinery" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjKfTw_ch-hOlHGSR1zqO98qtRnuDaIrP0Un4I5m2wCBJ6sQcdwJC_VQAklPmJCaVm3MO5zM4eO-tMzONCrxyWTHoKABAk77naPbJhUg2o_Nw6DNF7gODR0V8k54D3xuo6WQJBqO5mbfNbTIevAmrADki54BJhE50zKHVt-mRqvjCrwkveb2eFTdTOBWjbM3MnXdiY6e06yy91xAHHhw2f2VvcllDWrkPM5obRWbyq8n69KoMmTjil9-4VSPMEo9v6d63DrptAny0Y"/>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">Swaraj 744 FE</p>
+<p class="text-[10px] text-on-surface-variant">Owner: Kiran Patil</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">22 Sep - 24 Sep</td>
+<td class="px-6 py-4 text-sm font-bold text-on-surface">₹7,200</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 bg-on-primary-container/10 text-primary-container text-[10px] font-bold rounded-full">Completed</span>
+</td>
+<td class="px-6 py-4">
+<button class="text-xs font-bold text-primary-container hover:underline">Re-book</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container overflow-hidden">
+<img alt="Disc Plough" class="w-full h-full object-cover" data-alt="agricultural disc plough implement" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2kWK-2_mZ4G0Qu0bvYbbtdfmPggSIGWS2K2IjMA2PsCZUgKeMYrJFaDDs3ohwVFCGdSZQ-X_cZPVdvpDL80MfYpF5GVhdYkvnTjkgUFUav-N9xcQqlKMAsLLphzAiV2htfwUe-8NJPJ6TYTQFiAaGv1U-EDKyfgRN26oPuUzRUJnVM8uzT9giH_wKcupyEWJuPGZcF4XzbkJCM1yhTfR6vS2Mwn9_fl9ASQoC_rZe4ubIrHD8A47ZIjBlyfFaMLDP7FpZVb9h7D6x"/>
+</div>
+<div>
+<p class="text-sm font-bold text-on-surface">3-Bottom Disc Plough</p>
+<p class="text-[10px] text-on-surface-variant">Owner: Sandeep Mane</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">10 Sep - 11 Sep</td>
+<td class="px-6 py-4 text-sm font-bold text-on-surface">₹1,800</td>
+<td class="px-6 py-4">
+<span class="px-2 py-0.5 bg-on-primary-container/10 text-primary-container text-[10px] font-bold rounded-full">Completed</span>
+</td>
+<td class="px-6 py-4">
+<button class="text-xs font-bold text-primary-container hover:underline">Re-book</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Right Column (Widgets) -->
+<aside class="w-80 space-y-6">
+<!-- Widget 1: Schedule Calendar -->
+<div class="bg-white border border-outline-variant/30 rounded-2xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-on-surface">Booking Schedule</h3>
+<span class="material-symbols-outlined text-on-surface-variant">calendar_today</span>
+</div>
+<div class="grid grid-cols-7 gap-1 text-center mb-4">
+<div class="text-[10px] font-bold text-on-surface-variant">M</div>
+<div class="text-[10px] font-bold text-on-surface-variant">T</div>
+<div class="text-[10px] font-bold text-on-surface-variant">W</div>
+<div class="text-[10px] font-bold text-on-surface-variant">T</div>
+<div class="text-[10px] font-bold text-on-surface-variant">F</div>
+<div class="text-[10px] font-bold text-on-surface-variant">S</div>
+<div class="text-[10px] font-bold text-on-surface-variant text-error">S</div>
+<!-- Mini Calendar View -->
+<div class="text-xs py-2 text-on-surface-variant/40">10</div>
+<div class="text-xs py-2 text-on-surface-variant/40">11</div>
+<div class="text-xs py-2 bg-primary-container text-white rounded-full font-bold">12</div>
+<div class="text-xs py-2 bg-primary-container text-white rounded-full font-bold">13</div>
+<div class="text-xs py-2 bg-primary-container text-white rounded-full font-bold">14</div>
+<div class="text-xs py-2 bg-primary-container text-white rounded-full font-bold">15</div>
+<div class="text-xs py-2 text-on-surface-variant/40">16</div>
+<div class="text-xs py-2 text-on-surface-variant">17</div>
+<div class="text-xs py-2 bg-secondary-container text-on-secondary-fixed rounded-full font-bold">18</div>
+<div class="text-xs py-2 bg-secondary-container text-on-secondary-fixed rounded-full font-bold">19</div>
+<div class="text-xs py-2">20</div>
+<div class="text-xs py-2">21</div>
+<div class="text-xs py-2">22</div>
+<div class="text-xs py-2">23</div>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3 p-2 bg-surface-container-low rounded-lg border-l-4 border-primary-container">
+<div class="text-[10px] font-bold text-on-surface-variant leading-tight">12<br/>Oct</div>
+<div class="text-xs font-bold text-on-surface truncate">John Deere 5050D Delivery</div>
+</div>
+<div class="flex items-center gap-3 p-2 bg-surface-container-low rounded-lg border-l-4 border-secondary-container">
+<div class="text-[10px] font-bold text-on-surface-variant leading-tight">18<br/>Oct</div>
+<div class="text-xs font-bold text-on-surface truncate">Rotavator Booking Pending</div>
+</div>
+</div>
+</div>
+<!-- Widget 2: Spending Summary -->
+<div class="bg-white border border-outline-variant/30 rounded-2xl p-6 shadow-sm">
+<h3 class="font-bold text-on-surface mb-1">Spending Summary</h3>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-bold mb-4">October 2023</p>
+<div class="mb-4">
+<p class="text-3xl font-extrabold text-primary-container">₹12,400</p>
+<p class="text-xs text-on-surface-variant font-medium">Estimated spend this month</p>
+</div>
+<div class="space-y-3">
+<div>
+<div class="flex justify-between text-[10px] font-bold text-on-surface-variant mb-1 uppercase">
+<span>Paid</span>
+<span>₹9,000</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary-container h-full w-[72%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[10px] font-bold text-on-surface-variant mb-1 uppercase">
+<span>Upcoming</span>
+<span>₹3,400</span>
+</div>
+<div class="w-full bg-surface-container h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary-container h-full w-[28%]"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2.5 text-xs font-bold border border-outline-variant rounded-xl hover:bg-surface-container transition-colors">Download Invoice</button>
+</div>
+<!-- Widget 3: Support Card -->
+<div class="bg-tertiary-container rounded-2xl p-6 relative overflow-hidden group">
+<!-- Decorative element -->
+<div class="absolute -right-4 -bottom-4 opacity-10 rotate-12 transition-transform group-hover:scale-110">
+<span class="material-symbols-outlined text-9xl text-white">support_agent</span>
+</div>
+<div class="relative z-10">
+<h3 class="font-bold text-white text-lg mb-2 leading-tight">Need help with your booking?</h3>
+<p class="text-on-primary-container text-xs mb-6 opacity-90">Our field support team is available from 8 AM to 8 PM in Satara.</p>
+<button class="bg-white text-tertiary-container font-extrabold px-6 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-tertiary-container/40 hover:-translate-y-0.5 transition-transform">
+<span class="material-symbols-outlined text-sm">call</span>
+                            Contact Support
+                        </button>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- FAB for quick search/request - suppressed as per mandate but here's a subtle localized help trigger if needed -->
+<div class="fixed bottom-8 right-8 z-50">
+<button class="bg-primary-container text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+</div>
+</body></html>
