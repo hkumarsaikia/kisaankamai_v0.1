@@ -53,7 +53,7 @@ sudo apt-get install -y nodejs
 
 ### 2. Install Puppeteer System Dependencies
 > [!IMPORTANT]
-> Failure to install these libraries will cause the `profiler_agent.mjs` script to crash when attempting to launch Chromium.
+> Failure to install these libraries will cause Chromium-based browser checks to fail when launching in headless mode on Ubuntu.
 
 Run the following command for Ubuntu 22.04 and 24.04:
 ```bash

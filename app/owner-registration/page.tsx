@@ -1,10 +1,9 @@
 import { redirect } from "next/navigation";
 import { OwnerSidebar } from "@/components/OwnerSidebar";
 import { OwnerTopBar } from "@/components/OwnerTopBar";
-import { OwnerRegistrationHeader } from "@/components/workspace/OwnerRegistrationHeader";
 import { OwnerListingWizard } from "@/components/forms/OwnerListingWizard";
 import { getCurrentSession } from "@/lib/server/local-auth";
-import { getListingById } from "@/lib/server/firebase-data";
+import { getListingById } from "@/lib/server/local-data";
 
 export default async function OwnerRegistrationPage({
   searchParams,
@@ -26,7 +25,17 @@ export default async function OwnerRegistrationPage({
       <OwnerTopBar />
       <main className="mt-16 flex min-h-[calc(100vh-4rem)] flex-col gap-8 p-6 md:p-8 lg:ml-64">
         <div className="mx-auto w-full max-w-7xl">
-          <OwnerRegistrationHeader isEditing={isEditing} />
+          <div className="mb-8">
+            <h1 className="mb-2 text-3xl font-extrabold tracking-tight text-primary dark:text-emerald-50">
+              {isEditing ? "Edit Equipment Listing" : "Register Equipment"}
+            </h1>
+            <p className="font-medium text-on-surface-variant dark:text-slate-400">
+              {isEditing
+                ? "Update your listing details, images, pricing, and availability."
+                : "Create a live owner listing for your local marketplace inventory."}
+            </p>
+          </div>
+
           <OwnerListingWizard listing={isEditing ? editing : null} defaultVillage={session.profile.village} />
         </div>
       </main>

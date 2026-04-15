@@ -15,9 +15,9 @@ export default async function RentEquipmentPage({
   return (
     <main className="mx-auto max-w-7xl px-6 py-16">
       <div className="max-w-3xl">
-        <h1 className="text-4xl font-black tracking-tight">Browse equipment listings</h1>
+        <h1 className="text-4xl font-black tracking-tight">Browse production listings</h1>
         <p className="mt-4 text-base leading-7 text-slate-600 dark:text-slate-300">
-          Listings in this app are pulled from Firestore and kept in sync with the owner dashboard.
+          Listings in this app are pulled from Firestore and no longer depend on the local JSON files used by the legacy app.
         </p>
       </div>
       {params?.message ? (

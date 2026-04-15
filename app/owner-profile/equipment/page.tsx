@@ -5,7 +5,7 @@ import {
   toggleListingStatusFormAction,
 } from "@/lib/actions/local-data";
 import { getCurrentSession } from "@/lib/server/local-auth";
-import { getOwnerBookings, getOwnerListings } from "@/lib/server/firebase-data";
+import { getOwnerBookings, getOwnerListings } from "@/lib/server/local-data";
 
 export default async function MyEquipmentPage() {
   const session = await getCurrentSession();
@@ -34,7 +34,7 @@ export default async function MyEquipmentPage() {
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Listings</p>
           <h3 className="text-3xl font-black text-slate-900 dark:text-white mt-1">{listings.length}</h3>
-          <p className="text-xs text-emerald-600 font-bold mt-1">Firebase-backed inventory</p>
+          <p className="text-xs text-emerald-600 font-bold mt-1">Local JSON inventory</p>
         </div>
         <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800">
           <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Active</p>
@@ -54,7 +54,7 @@ export default async function MyEquipmentPage() {
             <span className="material-symbols-outlined text-4xl">add</span>
           </div>
           <h4 className="text-xl font-bold text-emerald-900 dark:text-emerald-100 mb-2">New Equipment?</h4>
-          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-[240px] mb-6">List your tractor, harvester, or attachment and publish it to the live owner workflow.</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-[240px] mb-6">List your tractor, harvester, or attachment and start testing real owner flows.</p>
           <span className="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl">Add Listing</span>
         </Link>
 

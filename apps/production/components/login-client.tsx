@@ -11,10 +11,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { FormActions, FormChoicePills, FormField, FormNotice, FormSection } from "@/components/forms/FormKit";
 import { getFirebaseAuthClient } from "@/lib/firebase-client";
-import type { Locale } from "@/lib/types";
 
 interface LoginClientProps {
-  locale: Locale;
   copy: {
     phoneLabel: string;
     otpLabel: string;
@@ -27,7 +25,7 @@ interface LoginClientProps {
   };
 }
 
-export function LoginClient({ locale, copy }: LoginClientProps) {
+export function LoginClient({ copy }: LoginClientProps) {
   const auth = useMemo(() => getFirebaseAuthClient(), []);
   const [mode, setMode] = useState<"phone" | "email">("phone");
   const [phone, setPhone] = useState("");
@@ -82,7 +80,7 @@ export function LoginClient({ locale, copy }: LoginClientProps) {
       const confirmation = await signInWithPhoneNumber(auth, phone, verifier);
       setConfirmationId(confirmation.verificationId);
     } catch (err) {
-      setError(locale === "mr" ? "OTP पाठवता आला नाही." : err instanceof Error ? err.message : "Could not send OTP.");
+      setError(err instanceof Error ? err.message : "Could not send OTP.");
     } finally {
       setBusy(false);
     }
@@ -97,7 +95,7 @@ export function LoginClient({ locale, copy }: LoginClientProps) {
       await signInWithCredential(auth, credential);
       await createServerSession();
     } catch (err) {
-      setError(locale === "mr" ? "OTP पडताळणी झाली नाही." : err instanceof Error ? err.message : "Could not verify OTP.");
+      setError(err instanceof Error ? err.message : "Could not verify OTP.");
     } finally {
       setBusy(false);
     }
@@ -111,7 +109,7 @@ export function LoginClient({ locale, copy }: LoginClientProps) {
       await signInWithEmailAndPassword(auth, email, password);
       await createServerSession();
     } catch (err) {
-      setError(locale === "mr" ? "साइन इन करता आले नाही." : err instanceof Error ? err.message : "Could not sign in.");
+      setError(err instanceof Error ? err.message : "Could not sign in.");
     } finally {
       setBusy(false);
     }
@@ -120,12 +118,8 @@ export function LoginClient({ locale, copy }: LoginClientProps) {
   return (
     <div className="space-y-6">
       <FormSection
-        title={locale === "mr" ? "साइन-इन पद्धत निवडा" : "Choose a sign-in method"}
-        description={
-          locale === "mr"
-            ? "फोन OTP आणि लिंक केलेले ईमेल/पासवर्ड दोन्ही एकाच खात्यावर जातात."
-            : "Phone OTP and linked email/password both resolve to the same account."
-        }
+        title="Choose a sign-in method"
+        description="Phone OTP and linked email/password both resolve to the same production account."
       >
         <FormChoicePills
           value={mode}
@@ -138,19 +132,13 @@ export function LoginClient({ locale, copy }: LoginClientProps) {
       </FormSection>
 
       <FormSection
-        title={mode === "phone" ? (locale === "mr" ? "फोन पडताळणी" : "Phone authentication") : locale === "mr" ? "ईमेल पडताळणी" : "Email authentication"}
+        title={mode === "phone" ? "Phone authentication" : "Email authentication"}
         description={
           mode === "phone"
             ? confirmationId
-              ? locale === "mr"
-                ? "सर्व्हर सत्र तयार करण्यासाठी एकदाच आलेला पासवर्ड पडताळा."
-                : "Verify the one-time password to complete server session creation."
-              : locale === "mr"
-                ? "समान Firebase-आधारित खात्यासह पुढे जाण्यासाठी OTP पाठवा."
-                : "Send a one-time password to continue with the same account."
-            : locale === "mr"
-              ? "फोन-प्रथम खात्याशी जोडलेला ईमेल आणि पासवर्ड वापरा."
-              : "Use the email and password linked to your phone-first account."
+              ? "Verify the one-time password to complete server session creation."
+              : "Send a one-time password to continue with the same Firebase-backed account."
+            : "Use the email and password linked to your phone-first production account."
         }
       >
         <div className="space-y-4">
@@ -164,17 +152,17 @@ export function LoginClient({ locale, copy }: LoginClientProps) {
                   <input className="kk-input" value={otp} onChange={(event) => setOtp(event.target.value)} />
                 </FormField>
               ) : null}
-                <div className="kk-form-subtle">
-                  <div id="kk-recaptcha" className="min-h-[78px]" />
-                </div>
-                <FormActions>
-                  <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                  {locale === "mr" ? "सुरक्षित पडताळणी" : "Secure verification"}
-                  </span>
-                  <Button type="button" disabled={busy} className="w-full md:w-auto" onClick={confirmationId ? finishPhoneLogin : startPhoneLogin}>
-                    {confirmationId ? copy.verifyOtp : copy.submit}
-                  </Button>
-                </FormActions>
+              <div className="kk-form-subtle">
+                <div id="kk-recaptcha" className="min-h-[78px]" />
+              </div>
+              <FormActions>
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  Secure verification
+                </span>
+                <Button type="button" disabled={busy} className="w-full md:w-auto" onClick={confirmationId ? finishPhoneLogin : startPhoneLogin}>
+                  {confirmationId ? copy.verifyOtp : copy.submit}
+                </Button>
+              </FormActions>
             </>
           ) : (
             <>
@@ -184,14 +172,14 @@ export function LoginClient({ locale, copy }: LoginClientProps) {
               <FormField label={copy.passwordLabel} required>
                 <input className="kk-input" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
               </FormField>
-                <FormActions>
-                  <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                  {locale === "mr" ? "जोडलेल्या खात्याने साइन-इन" : "Linked credential sign-in"}
-                  </span>
-                  <Button type="button" disabled={busy} className="w-full md:w-auto" onClick={loginWithEmail}>
-                    {copy.submit}
-                  </Button>
-                </FormActions>
+              <FormActions>
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  Linked credential sign-in
+                </span>
+                <Button type="button" disabled={busy} className="w-full md:w-auto" onClick={loginWithEmail}>
+                  {copy.submit}
+                </Button>
+              </FormActions>
             </>
           )}
           {error ? <FormNotice tone="error">{error}</FormNotice> : null}

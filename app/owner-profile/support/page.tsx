@@ -2,81 +2,17 @@
 
 import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
-import { useLanguage } from "@/components/LanguageContext";
 import { submitSupportRequestAction } from "@/lib/actions/local-data";
 import { FormField, FormNotice, FormSection } from "@/components/forms/FormKit";
-import { supportContact } from "@/lib/support-contact";
 import { Button } from "@/components/ui/button";
+import { supportContact } from "@/lib/support-contact";
 import { supportRequestSchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
 
 export default function SupportDashboard() {
-  const { langText } = useLanguage();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const copy = {
-    invalidForm: langText("Please complete the support request form correctly.", "कृपया सपोर्ट विनंती फॉर्म योग्यरित्या पूर्ण करा."),
-    submitFailed: langText("Could not submit your support ticket right now.", "सध्या तुमचे सपोर्ट तिकीट पाठवता आले नाही."),
-    submitSuccess: langText("Support ticket submitted. We will get back to you within 24 hours.", "सपोर्ट तिकीट पाठवले गेले आहे. आम्ही 24 तासांच्या आत तुमच्याशी संपर्क करू."),
-    heroTitle: langText("Help Center", "मदत केंद्र"),
-    heroBody: langText(
-      "Welcome to the Kisan Kamai owner support portal. We are here to keep your equipment business running smoothly.",
-      "किसान कमाई मालक मदत पोर्टलवर आपले स्वागत आहे. तुमचा उपकरण व्यवसाय सुरळीत चालू राहावा यासाठी आम्ही येथे आहोत."
-    ),
-    searchPlaceholder: langText("Search for help...", "मदत शोधा..."),
-    supportCards: [
-      {
-        title: langText("Listings", "सूचीकरण"),
-        body: langText("How to list equipment, upload photos, and set prices.", "उपकरणे कशी सूचीबद्ध करायची, फोटो कसे अपलोड करायचे आणि दर कसे ठरवायचे."),
-      },
-      {
-        title: langText("Bookings", "बुकिंग"),
-        body: langText("Managing requests, confirmations, and scheduling.", "विनंत्या, पुष्टीकरणे आणि वेळापत्रक व्यवस्थापित करा."),
-      },
-      {
-        title: langText("Payments", "देयके"),
-        body: langText("Payout cycles, bank details, and commission rates.", "पेआउट सायकल, बँक तपशील आणि कमिशन दर."),
-      },
-      {
-        title: langText("Technical", "तांत्रिक"),
-        body: langText("App usage, account settings, and notification issues.", "अॅप वापर, खाते सेटिंग्ज आणि सूचना-संबंधित अडचणी."),
-      },
-    ],
-    requestTitle: langText("Submit a request", "विनंती पाठवा"),
-    requestBody: langText("Describe your issue and we will get back to you within 24 hours.", "तुमची अडचण सांगा आणि आम्ही 24 तासांच्या आत प्रतिसाद देऊ."),
-    fullName: langText("Full Name", "पूर्ण नाव"),
-    phone: langText("Phone Number", "फोन नंबर"),
-    category: langText("Category", "प्रकार"),
-    message: langText("Message", "संदेश"),
-    enterName: langText("Enter name", "नाव टाका"),
-    selectIssueType: langText("Select issue type", "अडचणीचा प्रकार निवडा"),
-    paymentIssue: langText("Payment Issue", "पेमेंट समस्या"),
-    equipmentDamage: langText("Equipment Damage", "उपकरणाचे नुकसान"),
-    appError: langText("App Error", "अॅप त्रुटी"),
-    profileUpdate: langText("Profile Update", "प्रोफाइल अपडेट"),
-    describeIssue: langText("Describe your issue in detail...", "तुमची अडचण तपशीलवार सांगा..."),
-    sending: langText("Sending...", "पाठवत आहे..."),
-    sendTicket: langText("Send Ticket", "तिकीट पाठवा"),
-    recentTickets: langText("Your Recent Tickets", "तुमची अलीकडील विनंत्या"),
-    paymentTicket: langText("Payment for Booking #2441", "बुकिंग #2441 साठी पेमेंट"),
-    resolvedAgo: langText("Resolved 2 days ago", "2 दिवसांपूर्वी निकाली काढले"),
-    resolved: langText("Resolved", "निकाली"),
-    listingApproval: langText("Listing Photo Approval", "लिस्टिंग फोटो मंजुरी"),
-    updatedAgo: langText("Updated 4 hours ago", "4 तासांपूर्वी अद्यतनित"),
-    inProgress: langText("In Progress", "प्रगतीत"),
-    reassuranceTitle: langText("We have your back.", "आम्ही तुमच्यासोबत आहोत."),
-    reassuranceBody: langText(
-      "Kisan Kamai protects every owner with verification, safer payouts, and a responsive support team.",
-      "किसान कमाई प्रत्येक मालकासाठी पडताळणी, सुरक्षित पेआउट आणि तत्पर सपोर्ट टीमसह संरक्षण देते."
-    ),
-    trustedOwners: langText("Trusted by 10,000+ owners", "10,000+ मालकांचा विश्वास"),
-    contactUs: langText("Contact us directly", "आमच्याशी थेट संपर्क साधा"),
-    callSupport: langText("Call Support", "सपोर्टला कॉल करा"),
-    quickAnswers: langText("Quick answers for everyone", "सर्वांसाठी जलद उत्तरे"),
-    browseLibrary: langText("Browse Help Library", "मदत संग्रह पहा"),
-  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,7 +33,7 @@ export default function SupportDashboard() {
       setError(
         parsed.error.flatten().formErrors[0] ||
           Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          copy.invalidForm
+          "Please complete the support request form correctly."
       );
       return;
     }
@@ -107,11 +43,11 @@ export default function SupportDashboard() {
     try {
       const result = await submitSupportRequestAction(parsed.data);
       if (!result.ok) {
-        setError(result.error || copy.submitFailed);
+        setError(result.error || "Could not submit your support ticket right now.");
         return;
       }
 
-      setSuccess(copy.submitSuccess);
+      setSuccess("Support ticket submitted. We will get back to you within 24 hours.");
       event.currentTarget.reset();
     } finally {
       setIsSubmitting(false);
@@ -124,13 +60,13 @@ export default function SupportDashboard() {
       <section className="max-w-7xl mx-auto mb-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <div className="space-y-2">
-            <h2 className="text-4xl font-black text-primary dark:text-emerald-50 tracking-tight leading-tight">{copy.heroTitle}</h2>
+            <h2 className="text-4xl font-black text-primary dark:text-emerald-50 tracking-tight leading-tight">Help Center</h2>
             <p className="text-on-surface-variant dark:text-slate-400 max-w-2xl font-medium leading-relaxed mt-2">
-              {copy.heroBody}
+              Welcome to the Kisan Kamai owner support portal. We&apos;re here to keep your equipment rental business running smoothly.
             </p>
           </div>
           <div className="relative w-full md:w-96">
-            <input className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-slate-900 dark:text-white" placeholder={copy.searchPlaceholder} type="text" />
+            <input className="w-full pl-12 pr-4 py-4 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm focus:ring-2 focus:ring-emerald-500 bg-white dark:bg-slate-900 dark:text-white" placeholder="Search for help..." type="text" />
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
           </div>
         </div>
@@ -142,32 +78,32 @@ export default function SupportDashboard() {
             <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-colors text-emerald-700 dark:text-emerald-400">
               <span className="material-symbols-outlined text-3xl">post_add</span>
             </div>
-            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">{copy.supportCards[0].title}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{copy.supportCards[0].body}</p>
+            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">Listings | सूचीकरण</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">How to list equipment, upload photos, and set prices.</p>
           </div>
           {/* Bookings Help */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md transition-all hover:border-orange-200 dark:hover:border-amber-700 group cursor-pointer">
             <div className="w-12 h-12 bg-orange-50 dark:bg-amber-900/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 dark:group-hover:bg-amber-600 group-hover:text-white transition-colors text-orange-700 dark:text-amber-500">
               <span className="material-symbols-outlined text-3xl">event_available</span>
             </div>
-            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">{copy.supportCards[1].title}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{copy.supportCards[1].body}</p>
+            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">Bookings | बुकिंग</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Managing requests, confirmations, and scheduling.</p>
           </div>
           {/* Payments Help */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md transition-all hover:border-emerald-200 dark:hover:border-emerald-700 group cursor-pointer">
             <div className="w-12 h-12 bg-emerald-50 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-colors text-emerald-700 dark:text-emerald-400">
               <span className="material-symbols-outlined text-3xl">account_balance_wallet</span>
             </div>
-            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">{copy.supportCards[2].title}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{copy.supportCards[2].body}</p>
+            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">Payments | देयके</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Payout cycles, bank details, and commission rates.</p>
           </div>
           {/* Technical Help */}
           <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 hover:shadow-md transition-all hover:border-slate-300 dark:hover:border-slate-600 group cursor-pointer">
             <div className="w-12 h-12 bg-slate-50 dark:bg-slate-800 rounded-xl flex items-center justify-center mb-6 group-hover:bg-slate-500 group-hover:text-white transition-colors text-slate-700 dark:text-slate-400">
               <span className="material-symbols-outlined text-3xl">phonelink_setup</span>
             </div>
-            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">{copy.supportCards[3].title}</h3>
-            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{copy.supportCards[3].body}</p>
+            <h3 className="font-headline font-bold text-lg mb-1 dark:text-emerald-50">Technical | तांत्रिक</h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">App usage, account settings, and notification issues.</p>
           </div>
         </div>
 
@@ -178,36 +114,36 @@ export default function SupportDashboard() {
               <div className="absolute top-0 right-0 p-8 opacity-5">
                 <span className="material-symbols-outlined text-9xl">support_agent</span>
               </div>
-              <h3 className="text-2xl font-black text-primary dark:text-emerald-50 mb-2 relative z-10">{copy.requestTitle}</h3>
-              <p className="text-on-surface-variant dark:text-slate-400 mb-8 font-medium relative z-10">{copy.requestBody}</p>
+              <h3 className="text-2xl font-black text-primary dark:text-emerald-50 mb-2 relative z-10">Submit a Request</h3>
+              <p className="text-on-surface-variant dark:text-slate-400 mb-8 font-medium relative z-10">Describe your issue and we&apos;ll get back to you within 24 hours.</p>
 
               <form className="space-y-6 relative z-10" onSubmit={handleSubmit}>
                 {error ? <FormNotice tone="error">{error}</FormNotice> : null}
                 {success ? <FormNotice tone="success">{success}</FormNotice> : null}
-                <FormSection title={copy.requestTitle} description={copy.requestBody}>
+                  <FormSection title="Submit a Request" description="Describe the issue and we will get back to you within 24 hours.">
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <FormField label={copy.fullName}>
-                      <input className="kk-input" name="fullName" placeholder={copy.enterName} type="text" />
+                    <FormField label="Full Name">
+                      <input className="kk-input" name="fullName" placeholder="Enter name" type="text" />
                     </FormField>
-                    <FormField label={copy.phone}>
+                    <FormField label="Phone Number">
                       <input className="kk-input" name="phone" placeholder="+91" type="tel" />
                     </FormField>
                   </div>
                   <div className="mt-6 space-y-6">
-                    <FormField label={copy.category}>
+                    <FormField label="Category">
                       <select className="kk-input" name="category">
-                        <option className="dark:bg-slate-800">{copy.selectIssueType}</option>
-                        <option className="dark:bg-slate-800">{copy.paymentIssue}</option>
-                        <option className="dark:bg-slate-800">{copy.equipmentDamage}</option>
-                        <option className="dark:bg-slate-800">{copy.appError}</option>
-                        <option className="dark:bg-slate-800">{copy.profileUpdate}</option>
+                        <option className="dark:bg-slate-800">Select issue type</option>
+                        <option className="dark:bg-slate-800">Payment Issue</option>
+                        <option className="dark:bg-slate-800">Equipment Damage</option>
+                        <option className="dark:bg-slate-800">App Error</option>
+                        <option className="dark:bg-slate-800">Profile Update</option>
                       </select>
                     </FormField>
-                    <FormField label={copy.message}>
-                      <textarea className="kk-input resize-y" name="message" placeholder={copy.describeIssue} rows={4}></textarea>
+                    <FormField label="Message">
+                      <textarea className="kk-input resize-y" name="message" placeholder="Describe your issue in detail..." rows={4}></textarea>
                     </FormField>
                     <Button className="mt-2 w-full md:w-auto" disabled={isSubmitting} type="submit">
-                      {isSubmitting ? copy.sending : copy.sendTicket}
+                      {isSubmitting ? "Sending..." : "Send Ticket"}
                       <span className="material-symbols-outlined">send</span>
                     </Button>
                   </div>
@@ -217,7 +153,7 @@ export default function SupportDashboard() {
 
             {/* Recent Help Requests */}
             <div className="space-y-4">
-              <h3 className="text-xl font-black text-primary dark:text-emerald-50 px-2">{copy.recentTickets}</h3>
+              <h3 className="text-xl font-black text-primary dark:text-emerald-50 px-2">Your Recent Tickets | अलीकडील विनंत्या</h3>
               <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800/50 shadow-sm">
                 <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <div className="flex items-center gap-4">
@@ -225,11 +161,11 @@ export default function SupportDashboard() {
                       <span className="material-symbols-outlined text-xl" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                     </div>
                     <div>
-                      <p className="font-bold text-sm text-primary dark:text-emerald-50">{copy.paymentTicket}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{copy.resolvedAgo}</p>
+                      <p className="font-bold text-sm text-primary dark:text-emerald-50">Payment for Booking #2441</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Resolved 2 days ago</p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg whitespace-nowrap">{copy.resolved}</span>
+                  <span className="text-[10px] font-bold px-2 py-1 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg whitespace-nowrap">RESOLVED</span>
                 </div>
                 <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                   <div className="flex items-center gap-4">
@@ -237,11 +173,11 @@ export default function SupportDashboard() {
                       <span className="material-symbols-outlined text-xl">schedule</span>
                     </div>
                     <div>
-                      <p className="font-bold text-sm text-primary dark:text-emerald-50">{copy.listingApproval}</p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{copy.updatedAgo}</p>
+                      <p className="font-bold text-sm text-primary dark:text-emerald-50">Listing Photo Approval</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Updated 4 hours ago</p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-bold px-2 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-500 rounded-lg whitespace-nowrap">{copy.inProgress}</span>
+                  <span className="text-[10px] font-bold px-2 py-1 bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-500 rounded-lg whitespace-nowrap">IN PROGRESS</span>
                 </div>
               </div>
             </div>
@@ -261,20 +197,20 @@ export default function SupportDashboard() {
                 />
               </div>
               <div className="relative z-10">
-                <h4 className="text-xl font-black mb-2">{copy.reassuranceTitle}</h4>
+                <h4 className="text-xl font-black mb-2">We&apos;ve got your back.</h4>
                 <p className="text-on-primary-container dark:text-emerald-100/80 text-sm leading-relaxed mb-4">
-                  {copy.reassuranceBody}
+                  Kisan Kamai ensures every owner is protected. From verification to safe payments, we build the trust so you can focus on farming.
                 </p>
                 <div className="flex items-center gap-2 text-on-tertiary-container dark:text-emerald-300 font-bold text-xs uppercase tracking-widest mt-6">
                   <span className="material-symbols-outlined text-[16px]">verified_user</span>
-                  {copy.trustedOwners}
+                  Trusted by 10,000+ Owners
                 </div>
               </div>
             </div>
 
             {/* Direct Contact Options */}
             <div className="space-y-4">
-              <h4 className="font-headline font-bold text-lg px-2 dark:text-emerald-50">{copy.contactUs}</h4>
+              <h4 className="font-headline font-bold text-lg px-2 dark:text-emerald-50">Contact Us Directly</h4>
               <a className="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-emerald-500 dark:hover:border-emerald-600 transition-all group" href={supportContact.whatsappHref}>
                 <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors text-emerald-600 dark:text-emerald-400 shrink-0">
                   <span className="material-symbols-outlined text-[24px]">chat</span>
@@ -289,7 +225,7 @@ export default function SupportDashboard() {
                   <span className="material-symbols-outlined text-[24px]">call</span>
                 </div>
                 <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{copy.callSupport}</p>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">Call Support</p>
                   <p className="font-bold text-primary dark:text-emerald-50 text-sm">{supportContact.phoneDisplay}</p>
                 </div>
               </a>
@@ -306,10 +242,10 @@ export default function SupportDashboard() {
 
             {/* FAQ Sidebar Link */}
             <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 text-center shadow-sm">
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4">{copy.quickAnswers}</p>
+              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-4">Quick answers for everyone</p>
               <Link href="/faq">
                 <button className="w-full py-3 border-2 border-emerald-900 dark:border-emerald-700 text-emerald-900 dark:text-emerald-400 font-bold rounded-xl hover:bg-emerald-900 hover:text-white dark:hover:bg-emerald-800 transition-all">
-                  {copy.browseLibrary}
+                  Browse Help Library
                 </button>
               </Link>
             </div>

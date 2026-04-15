@@ -2,7 +2,7 @@ import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { toggleSavedListingFormAction } from "@/lib/actions/local-data";
 import { getCurrentSession } from "@/lib/server/local-auth";
-import { getPublicEquipmentList, isListingSavedByUser } from "@/lib/server/firebase-data";
+import { getPublicEquipmentList, isListingSavedByUser } from "@/lib/server/local-data";
 
 export default async function BrowseEquipmentPage() {
   const session = await getCurrentSession();
@@ -20,7 +20,7 @@ export default async function BrowseEquipmentPage() {
     <>
       <div>
         <h1 className="text-3xl font-extrabold text-primary tracking-tight">Browse Equipment</h1>
-        <p className="text-slate-500 mt-1">Live equipment cards from the current listing store.</p>
+        <p className="text-slate-500 mt-1">Browse the live equipment catalog available to renters.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">

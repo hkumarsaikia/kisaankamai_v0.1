@@ -3,9 +3,9 @@
   "version": "1.0.0-rc.1",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node scripts/run-next-with-shared-env.mjs dev",
+    "build": "node scripts/run-next-with-shared-env.mjs build",
+    "start": "node scripts/run-next-with-shared-env.mjs start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit --incremental false -p tsconfig.typecheck.json"
   },

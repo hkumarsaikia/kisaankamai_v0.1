@@ -66,7 +66,7 @@ export default function CompleteProfilePage() {
             {error ? <FormNotice tone="error">{error}</FormNotice> : null}
 
             {step === 1 ? (
-              <FormSection title="Contact and location" description="These fields update the same local profile record already used across owner and renter flows.">
+              <FormSection title="Contact and location" description="These fields update the same shared profile record already used across owner and renter flows.">
                 <FormGrid>
                   <FormField label={t("complete-profile.phone_number")} required>
                     <input className="kk-input" value={formData.phone} onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))} />
