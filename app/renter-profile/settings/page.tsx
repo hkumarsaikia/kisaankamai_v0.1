@@ -1,7 +1,14 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
-import { OwnerProfileSettingsContent } from "@/components/owner-profile/OwnerProfileViews";
+import { ProfileSettingsForm } from "@/components/profile/ProfileSettingsForm";
+import { getCurrentSession } from "@/lib/server/local-auth";
 
-export default function RenterProfileSettingsPage() {
+export default async function RenterProfileSettingsPage() {
+  const session = await getCurrentSession();
+
+  if (!session) {
+    return null;
+  }
+
   return (
     <OwnerProfileWorkspaceShell
       family="renter-profile"
@@ -9,7 +16,7 @@ export default function RenterProfileSettingsPage() {
       title="Settings / सेटिंग्ज"
       subtitle="Manage your account and preferences"
     >
-      <OwnerProfileSettingsContent />
+      <ProfileSettingsForm family="renter-profile" session={session} />
     </OwnerProfileWorkspaceShell>
   );
 }

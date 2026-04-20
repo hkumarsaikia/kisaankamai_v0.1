@@ -26,7 +26,7 @@ const dashboardBookings = [
     statusClass: "bg-amber-100 text-amber-800",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB15SM3BX-16G88tZAvSYZYdz0_bLrzpiV9cAgBeo-OK3eHbVR5j6gboV7V8rAx_T07weF70XbDfjHxGn1EGdex1lVzhXvOi6Zf0qLlX1y0xsiz6lEWSqHxbmHlb_p-mS3-Ny3dRWd2egnv5bip0dF5bgG-_46ii0CZE68yWICuUUl4ZlYviYvHMgJDv8f7v0Ci_If4I0FSQ5iqLn_z6NWuyojonf3gSUoQA3-dt-48MkyBJ0lEYYKla4vfHLUlX21X6WVWOJ-sfGRv",
-    primaryAction: "Edit Request",
+    primaryAction: "Track Order",
     primaryClass: "border border-primary-container text-primary-container hover:bg-emerald-50",
   },
 ];
@@ -246,7 +246,10 @@ export function OwnerProfileDashboardContent() {
                     type="button"
                     className="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-bold text-slate-600 transition hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
                   >
-                    Message
+                    <span className="inline-flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[18px]">call</span>
+                      Call
+                    </span>
                   </button>
                 </div>
               </div>
@@ -636,7 +639,7 @@ export function OwnerProfileSettingsContent() {
         <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <h3 className="text-xl font-bold text-primary">Notification Preferences / सूचना प्राधान्ये</h3>
           <div className="mt-5 space-y-3">
-            {["Booking updates", "Owner messages", "Saved equipment alerts"].map((item, index) => (
+            {["Booking updates", "Owner call alerts", "Saved equipment alerts"].map((item, index) => (
               <label key={item} className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 dark:bg-slate-950">
                 <span className="text-sm font-medium text-on-surface dark:text-slate-100">{item}</span>
                 <input defaultChecked={index !== 1} type="checkbox" className="h-5 w-5 accent-primary" />
@@ -725,7 +728,7 @@ export function OwnerProfileSupportContent() {
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Message</span>
+              <span className="text-sm font-semibold text-on-surface">Issue Details</span>
               <textarea
                 className="min-h-[180px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
                 placeholder="Provide details about your issue..."

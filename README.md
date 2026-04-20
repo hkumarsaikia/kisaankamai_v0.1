@@ -16,6 +16,16 @@ The root app is the production-facing application. It owns:
 - Google Sheets mirroring for admin/reporting visibility only
 - public routes, owner flows, and renter flows
 
+Current workspace behavior to know while validating `npm run dev`:
+
+- `/owner-profile/*` is the owner-side workspace family.
+- `/renter-profile/*` is the renter-side workspace family.
+- `/owner-profile/earnings` is the live owner earnings route.
+- `/list-equipment` supports create mode and edit mode via `?listingId=<id>`.
+- successful booking submissions redirect back into `/renter-profile`.
+- owner listing edit buttons route into `/list-equipment?listingId=<id>`.
+- support and report are separate public flows: `/support` for help requests and `/report` for issue escalation.
+
 Useful commands:
 
 ```bash

@@ -1,15 +1,18 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
-import { OwnerProfileBrowseContent } from "@/components/owner-profile/OwnerProfileViews";
+import { RenterEquipmentBrowser } from "@/components/renter-profile/RenterEquipmentBrowser";
+import { getEquipmentList } from "@/lib/server/equipment";
 
-export default function RenterProfileBrowsePage() {
+export default async function RenterProfileBrowsePage() {
+  const equipment = await getEquipmentList();
+
   return (
     <OwnerProfileWorkspaceShell
       family="renter-profile"
       activeTab="browse"
       title="Browse Equipment"
-      subtitle="Explore nearby machines matched to your work type and booking window"
+      subtitle="Explore nearby machines and sort the catalog by HP or distance before opening details."
     >
-      <OwnerProfileBrowseContent />
+      <RenterEquipmentBrowser equipment={equipment} />
     </OwnerProfileWorkspaceShell>
   );
 }

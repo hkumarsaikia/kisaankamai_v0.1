@@ -14,36 +14,26 @@ test("owner-profile workspace shell exposes owner-style navigation with earnings
   assert.match(source, /href: "\/owner-profile\/bookings", label: localizedText\("Bookings", "बुकिंग"\), icon: "event_note"/);
   assert.match(source, /supportHref: "\/owner-profile\/support"/);
   assert.match(source, /addListingHref: "\/list-equipment"/);
-  assert.match(source, /footerMode: "links-left"/);
+  assert.match(source, /footerMode: "text-left"/);
   assert.doesNotMatch(source, /href: "\/owner-profile\/saved", label: "Saved Equipment"/);
 });
 
-test("owner-profile routes are wired to the owner-style view family and expose the earnings page", async () => {
-  const [root, bookings, browse, earnings, settings, support, feedback, success, saved] = await Promise.all([
+test("owner-profile routes use the new owner dashboard, equipment browser, and earnings views", async () => {
+  const [root, browse, earnings] = await Promise.all([
     readFile(new URL("../app/owner-profile/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/owner-profile/bookings/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/browse/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/earnings/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/owner-profile/settings/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/owner-profile/support/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/owner-profile/feedback/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/owner-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/owner-profile/saved/page.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(root, /RenterProfileDashboardContent/);
   assert.match(root, /title="Owner Profile"/);
-  assert.match(bookings, /RenterProfileBookingsContent/);
-  assert.match(bookings, /Manage incoming rental requests and recently completed jobs\./);
-  assert.match(browse, /RenterProfileBrowseContent/);
+  assert.match(root, /getOwnerListings/);
+  assert.match(root, /getOwnerBookings/);
+  assert.match(root, /getOwnerPayments/);
+  assert.match(browse, /OwnerEquipmentBrowser/);
   assert.match(browse, /title="My Equipment"/);
-  assert.match(earnings, /RenterProfileEarningsContent/);
+  assert.match(earnings, /Pricing & Earnings/);
+  assert.match(earnings, /getOwnerPayments/);
   assert.match(earnings, /activeTab="earnings"/);
-  assert.match(settings, /RenterProfileSettingsContent/);
-  assert.match(support, /RenterProfileSupportContent/);
-  assert.match(feedback, /RenterProfileFeedbackContent/);
-  assert.match(success, /RenterProfileFeedbackSuccessContent/);
-  assert.match(saved, /redirect\("\/renter-profile\/saved"\)/);
 });
 
 test("owner earnings content uses the revenue panel and owner-family links", async () => {

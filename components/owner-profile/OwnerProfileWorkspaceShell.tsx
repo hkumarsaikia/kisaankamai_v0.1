@@ -60,7 +60,7 @@ const WORKSPACE_CONFIG = {
       "Kisan Kamai © 2026 Kisan Kamai. Rooted in Trust",
       "Kisan Kamai © 2026 Kisan Kamai. विश्वासावर आधारलेले"
     ),
-    footerMode: "links-left",
+    footerMode: "text-left",
     mobileItems: [
       { key: "dashboard", href: "/owner-profile", label: localizedText("Home", "मुख्यपृष्ठ"), icon: "dashboard" },
       { key: "bookings", href: "/owner-profile/bookings", label: localizedText("Bookings", "बुकिंग"), icon: "event_note" },

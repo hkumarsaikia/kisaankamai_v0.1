@@ -50,6 +50,7 @@ export interface ListingRecord {
   tags: string[];
   workTypes: string[];
   operatorIncluded: boolean;
+  availableFrom?: string;
   status: ListingStatus;
   createdAt: string;
   updatedAt: string;

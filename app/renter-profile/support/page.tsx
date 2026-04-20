@@ -1,7 +1,14 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
-import { OwnerProfileSupportContent } from "@/components/owner-profile/OwnerProfileViews";
+import { ProfileSupportWorkspace } from "@/components/profile/ProfileSupportWorkspace";
+import { getCurrentSession } from "@/lib/server/local-auth";
 
-export default function RenterProfileSupportPage() {
+export default async function RenterProfileSupportPage() {
+  const session = await getCurrentSession();
+
+  if (!session) {
+    return null;
+  }
+
   return (
     <OwnerProfileWorkspaceShell
       family="renter-profile"
@@ -9,7 +16,7 @@ export default function RenterProfileSupportPage() {
       title="Support / मदत"
       subtitle="Get booking help, owner support, and ticket updates in one place."
     >
-      <OwnerProfileSupportContent />
+      <ProfileSupportWorkspace family="renter-profile" session={session} />
     </OwnerProfileWorkspaceShell>
   );
 }

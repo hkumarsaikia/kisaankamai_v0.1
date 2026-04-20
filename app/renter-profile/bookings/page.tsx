@@ -1,15 +1,20 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
-import { OwnerProfileBookingsContent } from "@/components/owner-profile/OwnerProfileViews";
+import { RenterBookingsBoard } from "@/components/renter-profile/RenterBookingsBoard";
+import { getCurrentSession } from "@/lib/server/local-auth";
+import { getRenterBookings } from "@/lib/server/local-data";
 
-export default function RenterProfileBookingsPage() {
+export default async function RenterProfileBookingsPage() {
+  const session = await getCurrentSession();
+  const bookings = session ? await getRenterBookings(session.user.id) : [];
+
   return (
     <OwnerProfileWorkspaceShell
       family="renter-profile"
       activeTab="bookings"
       title="My Bookings"
-      subtitle="Manage your equipment rentals and schedules"
+      subtitle="Manage active, pending, completed, and cancelled rentals with inline tracking."
     >
-      <OwnerProfileBookingsContent />
+      <RenterBookingsBoard bookings={bookings} variant="page" />
     </OwnerProfileWorkspaceShell>
   );
 }

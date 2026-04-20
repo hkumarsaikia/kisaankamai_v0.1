@@ -18,29 +18,18 @@ test("renter-profile workspace shell exposes renter-style navigation with saved 
   assert.doesNotMatch(source, /href: "\/renter-profile\/earnings", label: "Earnings"/);
 });
 
-test("renter-profile routes are wired to the renter-style view family and keep compatibility redirects", async () => {
-  const [root, bookings, browse, saved, settings, support, feedback, success, earnings] = await Promise.all([
+test("renter-profile routes use the new renter booking board while preserving compatibility redirects", async () => {
+  const [root, bookings, earnings] = await Promise.all([
     readFile(new URL("../app/renter-profile/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/renter-profile/bookings/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/renter-profile/browse/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/renter-profile/saved/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/renter-profile/settings/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/renter-profile/support/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/renter-profile/feedback/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/renter-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/renter-profile/earnings/page.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(root, /OwnerProfileDashboardContent/);
   assert.match(root, /title="Renter Profile"/);
-  assert.match(bookings, /OwnerProfileBookingsContent/);
-  assert.match(browse, /OwnerProfileBrowseContent/);
-  assert.match(saved, /OwnerProfileSavedContent/);
-  assert.match(saved, /activeTab="saved"/);
-  assert.match(settings, /OwnerProfileSettingsContent/);
-  assert.match(support, /OwnerProfileSupportContent/);
-  assert.match(feedback, /OwnerProfileFeedbackContent/);
-  assert.match(success, /OwnerProfileFeedbackSuccessContent/);
+  assert.match(root, /RenterBookingsBoard/);
+  assert.match(root, /variant="dashboard"/);
+  assert.match(bookings, /RenterBookingsBoard/);
+  assert.match(bookings, /variant="page"/);
   assert.match(earnings, /redirect\("\/owner-profile\/earnings"\)/);
 });
 

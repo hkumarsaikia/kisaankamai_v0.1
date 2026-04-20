@@ -117,7 +117,9 @@ export const HOMEPAGE_MARKERS: SiteMapMarker[] = REGIONAL_HUBS.filter((hub) =>
   color: hub.markerColor,
 }));
 
-export const SUPPORT_HUB_MARKERS: SiteMapMarker[] = REGIONAL_HUBS.map((hub) => ({
+export const SUPPORT_HUB_MARKERS: SiteMapMarker[] = REGIONAL_HUBS.filter((hub) =>
+  ["kalwan", "mukhed"].includes(hub.slug)
+).map((hub) => ({
   lat: hub.center[0],
   lng: hub.center[1],
   label: hub.name,

@@ -91,7 +91,7 @@ export default function OwnerBenefitsPage() {
               </div>
 
               {/* Earnings Display */}
-              <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="lg:col-span-2 grid grid-cols-1 gap-6">
                 <div className="md:col-span-2 bg-primary-container text-white p-10 rounded-3xl flex flex-col justify-between relative overflow-hidden">
                   <div className="relative z-10">
                     <span className="text-on-primary-container dark:text-emerald-300 text-sm font-bold uppercase tracking-widest">{t("owner-benefits.estimated_monthly_earnings")}</span>
@@ -112,24 +112,10 @@ export default function OwnerBenefitsPage() {
                   </div>
                   <span className="material-symbols-outlined absolute -right-8 -bottom-8 text-[200px] opacity-5 text-white">payments</span>
                 </div>
-                <div className="bg-secondary/5 border border-secondary/10 dark:border-slate-800/50 p-8 rounded-3xl flex flex-col justify-center">
-                  <h4 className="text-secondary dark:text-amber-500 font-extrabold text-2xl mb-2">{t("owner-benefits.platform_fee")}</h4>
-                  <p className="text-on-surface-variant dark:text-slate-400 text-sm font-medium">
-                    {t("owner-benefits.transparent_10_commission_only_when_you_earn_no_hidden_listing_charges")}
-                  </p>
-                </div>
-                <div className="bg-tertiary/5 border border-tertiary/10 dark:border-slate-800/50 p-8 rounded-3xl flex flex-col justify-center">
-                  <h4 className="text-tertiary dark:text-emerald-500 font-extrabold text-2xl mb-2">{t("owner-benefits.payout_speed")}</h4>
-                  <p className="text-on-surface-variant dark:text-slate-400 text-sm font-medium">
-                    {t("owner-benefits.earnings_are_transferred_directly_to_your_bank_account_within_48_hours_of_job_completion")}
-                  </p>
-                </div>
               </div>
             </div>
           </div>
         </section>
-
-        {/* Section 4: Owner Stories (Removed per request) */}
       </div>
     </div>
   );

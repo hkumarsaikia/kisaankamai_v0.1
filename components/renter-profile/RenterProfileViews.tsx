@@ -53,12 +53,12 @@ const completedItems = [
 
 const dashboardTasks = [
   {
-    title: "Add Equipment Photos",
+    title: "Review Equipment Gallery",
     icon: "add_a_photo",
     href: "/list-equipment",
   },
   {
-    title: "Update Availability",
+    title: "Review Availability",
     icon: "edit_calendar",
     href: "/owner-profile/bookings",
   },
@@ -68,21 +68,21 @@ const equipmentCards = [
   {
     name: "Mahindra 575 DI",
     meta: "Tractor • 45 HP",
-    status: "Live Listing",
+    status: "Active",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuBEqtpz50nGqO5PXychK55yTwvYxHnpQvgY7YdcTK_wZJDASU4EzqAKbR_qU1-7K49zffPeSVaKRx51vhC2xAOLDAPxhBECAYCYwXuhLqq8feYZMidBF4zldokMW10bkfDS4AmZSYQaZwopI95ndz-ri-flHU9u0oUlCA7hzuFWDGAiIHsB9qRF1M_3o5Hl7gIBGneiGkMwoh-xF0Y40IaAEMh8td4aOpML_HiSUFoGTdyAiRDaQ7EPhBf1NLQ8EB5bcwlrgIImNmb7",
   },
   {
     name: "John Deere 5310",
     meta: "Tractor • 55 HP",
-    status: "Booked This Week",
+    status: "High Demand",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuDo30tOlVIugzS_7jgt7kuk4aZ7kUqq9s-awHCixPh5aJzriB9MdVMO_H8faueekx3BhnItbI7F9XHhH4zuKIaF9ytFaC1HBrDuwcwkJP2zNE4TjwSfJfRxCdGrJNjdWHI_XIy3QlKbJpKYN1BQc8PuvrbXd0eqpnzPL69L64J3Fh6MgVgqVIgV2AAqhlsNTDGhoevjEujKOzHb_9ZtXhCy7m6BQisG1w5zXAaKltdC4njE3nE7IBh2gKFoGN2BcjSYpCJ5H4xkb3yw",
   },
   {
     name: "Rotavator 6 ft",
     meta: "Implement • PTO Ready",
-    status: "Needs Availability Update",
+    status: "Paused",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB15SM3BX-16G88tZAvSYZYdz0_bLrzpiV9cAgBeo-OK3eHbVR5j6gboV7V8rAx_T07weF70XbDfjHxGn1EGdex1lVzhXvOi6Zf0qLlX1y0xsiz6lEWSqHxbmHlb_p-mS3-Ny3dRWd2egnv5bip0dF5bgG-_46ii0CZE68yWICuUUl4ZlYviYvHMgJDv8f7v0Ci_If4I0FSQ5iqLn_z6NWuyojonf3gSUoQA3-dt-48MkyBJ0lEYYKla4vfHLUlX21X6WVWOJ-sfGRv",
   },
@@ -231,9 +231,9 @@ export function RenterProfileBookingsContent() {
             New Requests
             <span className="rounded-full bg-secondary-container px-2 py-0.5 text-xs text-on-secondary-container">3</span>
           </h2>
-          <a className="text-sm font-bold text-secondary hover:underline" href="#">
+          <button type="button" className="text-sm font-bold text-secondary hover:underline">
             मराठीत पहा
-          </a>
+          </button>
         </div>
 
         <div className="overflow-x-auto pb-3">
@@ -528,7 +528,7 @@ export function RenterProfileSupportContent() {
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Message</span>
+              <span className="text-sm font-semibold text-on-surface">Issue Details</span>
               <textarea
                 className="min-h-[180px] w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
                 placeholder="Please provide details, booking IDs, or any relevant context..."

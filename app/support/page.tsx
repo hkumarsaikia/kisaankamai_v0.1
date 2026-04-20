@@ -1,5 +1,9 @@
+"use client";
+
 import { LazyMap } from "@/components/LazyMap";
+import { postJson } from "@/lib/client/forms";
 import { SUPPORT_HUB_MARKERS } from "@/lib/map-data";
+import { useState, useTransition } from "react";
 
 const supportCategories = [
   ["key", "Rent", "भाड्याने घेणे"],
@@ -10,40 +14,62 @@ const supportCategories = [
   ["help", "General", "सामान्य प्रश्न"],
 ] as const;
 
-const faqItems = [
-  {
-    question: "How is the equipment condition verified?",
-    answer:
-      "Every machine on Kisan Kamai undergoes a 20-point quality check by local hub managers before being listed.",
-  },
-  {
-    question: "What happens if a breakdown occurs?",
-    answer:
-      "Contact our emergency helpline immediately. We dispatch a technician or arrange a replacement machine quickly based on local availability.",
-  },
-  {
-    question: "Are there any hidden service charges?",
-    answer:
-      "No. The price you see includes clearly listed fees. Diesel and operator costs are shown before booking.",
-  },
-  {
-    question: "How do I cancel a booking?",
-    answer:
-      "Cancellations made before the slot follow the booking terms shown during checkout. Our team can help review time-sensitive cases.",
-  },
-  {
-    question: "How do I list multiple machines?",
-    answer:
-      "Owners can list multiple machines and manage them from the equipment workspace with listing and booking support.",
-  },
-];
+const regionalHubs = [
+  ["Kalwan", "Northern Maharashtra service hub"],
+  ["Mukhed", "Nanded-region support headquarters"],
+] as const;
 
 export default function SupportPage() {
+  const [isPending, startTransition] = useTransition();
+  const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
+  const [error, setError] = useState("");
+  const [formState, setFormState] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    category: "Rental Inquiry",
+    message: "",
+  });
+
+  const submitLabel =
+    submitState === "pending"
+      ? "Submitting..."
+      : submitState === "success"
+        ? "Submitted"
+        : "Submit Request";
+
+  const updateField = (field: keyof typeof formState, value: string) => {
+    setFormState((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError("");
+    setSubmitState("pending");
+
+    startTransition(async () => {
+      try {
+        await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
+          fullName: formState.fullName,
+          phone: formState.phone,
+          email: formState.email || undefined,
+          category: formState.category,
+          message: formState.message,
+          sourcePath: "/support",
+        });
+        setSubmitState("success");
+      } catch (submitError) {
+        setSubmitState("error");
+        setError(submitError instanceof Error ? submitError.message : "Support request failed.");
+      }
+    });
+  };
+
   return (
-    <div className="bg-background text-on-background font-body min-h-screen">
+    <div className="min-h-screen bg-background font-body text-on-background">
       <main className="pt-20">
         <section className="relative flex h-[420px] items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-primary-container/40 z-10" />
+          <div className="absolute inset-0 z-10 bg-primary-container/40" />
           <img
             className="absolute inset-0 h-full w-full object-cover"
             alt="Panoramic sugarcane field in Maharashtra at sunrise"
@@ -53,7 +79,7 @@ export default function SupportPage() {
             <h1 className="font-headline text-4xl font-extrabold text-white md:text-6xl">
               We&apos;re here to help
               <br />
-              <span className="font-semibold text-3xl md:text-5xl">आम्ही मदतीसाठी येथे आहोत</span>
+              <span className="text-3xl font-semibold md:text-5xl">आम्ही मदतीसाठी येथे आहोत</span>
             </h1>
           </div>
         </section>
@@ -81,39 +107,85 @@ export default function SupportPage() {
             <p className="mb-8 mt-2 text-on-surface-variant">
               आम्हाला संदेश पाठवा - आमची टीम लवकरच संपर्क साधेल.
             </p>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid gap-6 md:grid-cols-2">
                 <label className="space-y-2">
                   <span className="text-sm font-semibold text-primary">Full Name / पूर्ण नाव</span>
-                  <input className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary" placeholder="Rahul Patil" type="text" />
+                  <input
+                    value={formState.fullName}
+                    onChange={(event) => updateField("fullName", event.target.value)}
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="Rahul Patil"
+                    type="text"
+                  />
                 </label>
                 <label className="space-y-2">
                   <span className="text-sm font-semibold text-primary">Phone / फोन नंबर</span>
-                  <input className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary" placeholder="+91 00000 00000" type="tel" />
+                  <input
+                    value={formState.phone}
+                    onChange={(event) => updateField("phone", event.target.value)}
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="9876543210"
+                    type="tel"
+                  />
+                </label>
+              </div>
+              <div className="grid gap-6 md:grid-cols-2">
+                <label className="space-y-2">
+                  <span className="text-sm font-semibold text-primary">Email / ईमेल</span>
+                  <input
+                    value={formState.email}
+                    onChange={(event) => updateField("email", event.target.value)}
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                    placeholder="name@example.com"
+                    type="email"
+                  />
+                </label>
+                <label className="space-y-2">
+                  <span className="text-sm font-semibold text-primary">Category / वर्गवारी</span>
+                  <select
+                    value={formState.category}
+                    onChange={(event) => updateField("category", event.target.value)}
+                    className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                  >
+                    <option>Rental Inquiry</option>
+                    <option>Equipment Listing</option>
+                    <option>Payment Issue</option>
+                    <option>Technical Support</option>
+                  </select>
                 </label>
               </div>
               <label className="space-y-2">
-                <span className="text-sm font-semibold text-primary">Category / वर्गवारी</span>
-                <select className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary">
-                  <option>Rental Inquiry</option>
-                  <option>Equipment Listing</option>
-                  <option>Payment Issue</option>
-                  <option>Technical Support</option>
-                </select>
-              </label>
-              <label className="space-y-2">
                 <span className="text-sm font-semibold text-primary">Message / संदेश</span>
-                <textarea className="min-h-[150px] w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary" placeholder="Tell us how we can help..." />
+                <textarea
+                  value={formState.message}
+                  onChange={(event) => updateField("message", event.target.value)}
+                  className="min-h-[150px] w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                  placeholder="Tell us how we can help..."
+                />
               </label>
-              <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container py-4 text-lg font-bold text-white" type="button">
-                Submit Request / विनंती सबमिट करा
-                <span className="material-symbols-outlined">send</span>
+              {error ? (
+                <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
+                  {error}
+                </div>
+              ) : null}
+              <button
+                className={`flex w-full items-center justify-center gap-2 rounded-xl py-4 text-lg font-bold text-white ${
+                  submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
+                }`}
+                type="submit"
+                disabled={isPending}
+              >
+                {submitLabel}
+                <span className="material-symbols-outlined">
+                  {submitState === "success" ? "task_alt" : "send"}
+                </span>
               </button>
             </form>
           </div>
 
           <div className="space-y-6 lg:col-span-2">
-            <div className="rounded-3xl bg-primary-container p-8 text-white">
+            <div id="direct-channels" className="rounded-3xl bg-primary-container p-8 text-white">
               <h3 className="text-2xl font-bold">Direct Channels</h3>
               <div className="mt-6 space-y-8">
                 <div className="flex items-start gap-4">
@@ -152,7 +224,7 @@ export default function SupportPage() {
             <div className="rounded-3xl bg-tertiary-container p-8 text-white">
               <div className="mb-4 flex items-center gap-3">
                 <span className="material-symbols-outlined text-tertiary-fixed">verified_user</span>
-                <h4 className="font-bold text-lg">Owner Support Priority</h4>
+                <h4 className="text-lg font-bold">Owner Support Priority</h4>
               </div>
               <p className="text-sm leading-relaxed text-white/80">
                 Are you an equipment owner? Use our specialized helpline for machine maintenance and deployment coordination.
@@ -166,14 +238,10 @@ export default function SupportPage() {
             <div className="flex-1">
               <h2 className="text-4xl font-extrabold text-primary">Regional Support Hubs</h2>
               <p className="mt-6 text-lg leading-relaxed text-on-surface-variant">
-                We understand rural India. Our physical hubs in Southern Maharashtra ensure that help is never too far away from your village.
+                Our current public support coverage is focused on Kalwan and Mukhed so help is never too far away.
               </p>
               <div className="mt-8 space-y-4">
-                {[
-                  ["Sangli", "Central Distribution & Support Hub"],
-                  ["Satara", "Equipment Inspection Center"],
-                  ["Kolhapur", "Owner Onboarding & Training"],
-                ].map(([city, detail]) => (
+                {regionalHubs.map(([city, detail]) => (
                   <div key={city} className="flex items-center justify-between rounded-2xl border border-outline-variant bg-white p-6">
                     <div>
                       <p className="text-xl font-bold text-primary">{city}</p>
@@ -187,8 +255,8 @@ export default function SupportPage() {
             <div className="flex-1">
               <div className="overflow-hidden rounded-[2.5rem] border-8 border-white shadow-2xl">
                 <LazyMap
-                  center={[16.82, 74.57]}
-                  zoom={8}
+                  center={[19.62, 75.58]}
+                  zoom={6}
                   markers={SUPPORT_HUB_MARKERS}
                   height="400px"
                   className="rounded-none"
@@ -196,49 +264,6 @@ export default function SupportPage() {
                   deferUntilVisible={false}
                 />
               </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-4xl px-6 py-24">
-          <h2 className="mb-12 text-center text-4xl font-extrabold text-primary">
-            Frequently Asked Questions
-          </h2>
-          <div className="space-y-4">
-            {faqItems.map((item, index) => (
-              <details
-                key={item.question}
-                className="overflow-hidden rounded-2xl border border-outline-variant bg-white"
-                open={index === 0}
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between p-6">
-                  <span className="text-lg font-bold text-primary">{item.question}</span>
-                  <span className="material-symbols-outlined">expand_more</span>
-                </summary>
-                <div className="border-t border-outline-variant/50 px-6 pb-6 pt-4 text-on-surface-variant">
-                  {item.answer}
-                </div>
-              </details>
-            ))}
-          </div>
-        </section>
-
-        <section className="mx-auto mb-16 max-w-7xl px-6">
-          <div className="rounded-[40px] border border-white bg-surface-container-high p-12 text-center">
-            <h3 className="mb-12 text-3xl font-extrabold text-primary">Rooted in trust, driven by support</h3>
-            <div className="flex flex-wrap items-center justify-center gap-12 opacity-60">
-              {[
-                ["verified", "Verified Owners"],
-                ["gavel", "Legal Protection"],
-                ["handshake", "Fair Pricing"],
-              ].map(([icon, label]) => (
-                <div key={label} className="flex flex-col items-center gap-2">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm">
-                    <span className="material-symbols-outlined text-3xl text-primary">{icon}</span>
-                  </div>
-                  <p className="text-xs font-bold uppercase tracking-widest text-primary">{label}</p>
-                </div>
-              ))}
             </div>
           </div>
         </section>
@@ -256,13 +281,19 @@ export default function SupportPage() {
               <p className="mt-2 text-xl text-primary-fixed-dim">त्वरीत मदतीची आवश्यकता आहे? आम्हाला कॉल करा.</p>
             </div>
             <div className="flex flex-wrap gap-4">
-              <button className="flex items-center gap-2 rounded-2xl bg-secondary px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-on-secondary-fixed-variant" type="button">
+              <a
+                href="#direct-channels"
+                className="flex items-center gap-2 rounded-2xl bg-secondary px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-on-secondary-fixed-variant"
+              >
                 <span className="material-symbols-outlined">call</span>
                 Call Support
-              </button>
-              <button className="rounded-2xl bg-[#1f9d57] px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-[#178045]" type="button">
+              </a>
+              <a
+                href="https://wa.me/9118005550123"
+                className="rounded-2xl bg-[#1f9d57] px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-[#178045]"
+              >
                 WhatsApp
-              </button>
+              </a>
             </div>
           </div>
         </section>

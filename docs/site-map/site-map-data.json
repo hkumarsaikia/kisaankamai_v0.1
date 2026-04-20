@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-04-13T18:21:41.863Z",
+  "generatedAt": "2026-04-20T15:31:32.549Z",
   "summary": {
-    "totalRoutes": 48,
-    "sharedSurfaces": 9,
-    "unresolvedInternalReferences": 5,
-    "externalDestinations": 8
+    "totalRoutes": 54,
+    "sharedSurfaces": 4,
+    "unresolvedInternalReferences": 2,
+    "externalDestinations": 4
   },
   "groupedRoutes": {
     "public": [
@@ -14,8 +14,6 @@
         "group": "public",
         "sourceFile": "app/page.tsx",
         "sharedSurfaces": [
-          "Footer",
-          "Header",
           "LazyMap"
         ],
         "internalDestinations": [
@@ -31,63 +29,47 @@
             ]
           },
           {
-            "path": "/list-equipment",
-            "origins": [
-              {
-                "file": "app/page.tsx",
-                "line": 391,
-                "raw": "/list-equipment",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/models",
+            "path": "/rent-equipment",
             "origins": [
               {
                 "file": "app/page.tsx",
                 "line": 128,
-                "raw": "/models",
+                "raw": "/rent-equipment?query=tractors",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
                 "line": 139,
-                "raw": "/models",
+                "raw": "/rent-equipment?query=harvesters",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
                 "line": 150,
-                "raw": "/models",
+                "raw": "/rent-equipment?query=implements",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
                 "line": 161,
-                "raw": "/models",
+                "raw": "/rent-equipment?query=ploughs",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
                 "line": 172,
-                "raw": "/models",
+                "raw": "/rent-equipment?query=sprayers",
                 "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/rent-equipment",
-            "origins": [
+              },
               {
                 "file": "app/page.tsx",
-                "line": 388,
+                "line": 380,
                 "raw": "/rent-equipment",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 40,
+                "line": 38,
                 "raw": "/rent-equipment?location=${encodeURIComponent(searchLocation)}&query=${encodeURIComponent(searchQuery)}",
                 "context": "router"
               }
@@ -98,7 +80,7 @@
             "origins": [
               {
                 "file": "app/page.tsx",
-                "line": 260,
+                "line": 249,
                 "raw": "/support",
                 "context": "href"
               }
@@ -113,7 +95,7 @@
             "context": "router",
             "origin": {
               "file": "app/page.tsx",
-              "line": 40,
+              "line": 38,
               "raw": "/rent-equipment?location=${encodeURIComponent(searchLocation)}&query=${encodeURIComponent(searchQuery)}",
               "context": "router"
             }
@@ -125,13 +107,50 @@
         "label": "About",
         "group": "public",
         "sourceFile": "app/about/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/coming-soon",
+        "label": "Coming Soon",
+        "group": "public",
+        "sourceFile": "app/coming-soon/page.tsx",
+        "sharedSurfaces": [
+          "LazyMap"
+        ],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [
+          {
+            "href": "mailto:Support@krishiseva.in",
+            "host": "",
+            "accessSurface": "localhost",
+            "origins": [
+              {
+                "file": "app/coming-soon/page.tsx",
+                "line": 184,
+                "raw": "mailto:Support@krishiseva.in",
+                "context": "href"
+              }
+            ]
+          },
+          {
+            "href": "tel:+918001234567",
+            "host": "",
+            "accessSurface": "localhost",
+            "origins": [
+              {
+                "file": "app/coming-soon/page.tsx",
+                "line": 191,
+                "raw": "tel:+918001234567",
+                "context": "href"
+              }
+            ]
+          }
+        ],
         "redirects": []
       },
       {
@@ -139,11 +158,53 @@
         "label": "Faq",
         "group": "public",
         "sourceFile": "app/faq/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/feature-request",
+        "label": "Feature Request",
+        "group": "public",
+        "sourceFile": "app/feature-request/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/how-it-works",
+        "label": "How It Works",
+        "group": "public",
+        "sourceFile": "app/how-it-works/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/owner-benefits",
+            "origins": [
+              {
+                "file": "app/how-it-works/page.tsx",
+                "line": 194,
+                "raw": "/owner-benefits",
+                "context": "href"
+              }
+            ]
+          },
+          {
+            "path": "/rent-equipment",
+            "origins": [
+              {
+                "file": "app/how-it-works/page.tsx",
+                "line": 190,
+                "raw": "/rent-equipment",
+                "context": "href"
+              }
+            ]
+          }
+        ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
@@ -153,38 +214,92 @@
         "label": "Legal",
         "group": "public",
         "sourceFile": "app/legal/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/terms",
+            "origins": [
+              {
+                "file": "app/legal/page.tsx",
+                "line": 4,
+                "raw": "/terms",
+                "context": "redirect"
+              }
+            ]
+          }
         ],
-        "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": []
+        "redirects": [
+          {
+            "target": "/terms",
+            "context": "redirect",
+            "origin": {
+              "file": "app/legal/page.tsx",
+              "line": 4,
+              "raw": "/terms",
+              "context": "redirect"
+            }
+          }
+        ]
       },
       {
         "path": "/list-equipment",
         "label": "List Equipment",
         "group": "public",
         "sourceFile": "app/list-equipment/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
       },
       {
+        "path": "/logout",
+        "label": "Logout",
+        "group": "public",
+        "sourceFile": "app/logout/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/",
+            "origins": [
+              {
+                "file": "app/logout/page.tsx",
+                "line": 43,
+                "raw": "/",
+                "context": "href"
+              },
+              {
+                "file": "app/logout/page.tsx",
+                "line": 43,
+                "raw": "/",
+                "context": "window"
+              }
+            ]
+          }
+        ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/",
+            "context": "window",
+            "origin": {
+              "file": "app/logout/page.tsx",
+              "line": 43,
+              "raw": "/",
+              "context": "window"
+            }
+          }
+        ]
+      },
+      {
         "path": "/owner-benefits",
         "label": "Owner Benefits",
         "group": "public",
         "sourceFile": "app/owner-benefits/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -196,31 +311,40 @@
         "group": "public",
         "sourceFile": "app/owner-dashboard/page.tsx",
         "sharedSurfaces": [],
-        "internalDestinations": [],
+        "internalDestinations": [
+          {
+            "path": "/owner-profile",
+            "origins": [
+              {
+                "file": "app/owner-dashboard/page.tsx",
+                "line": 4,
+                "raw": "/owner-profile",
+                "context": "redirect"
+              }
+            ]
+          }
+        ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": []
-      },
-      {
-        "path": "/owner-dashboard/[...segments]",
-        "label": "Owner Dashboard / ...Segments",
-        "group": "public",
-        "sourceFile": "app/owner-dashboard/[...segments]/page.tsx",
-        "sharedSurfaces": [],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
+        "redirects": [
+          {
+            "target": "/owner-profile",
+            "context": "redirect",
+            "origin": {
+              "file": "app/owner-dashboard/page.tsx",
+              "line": 4,
+              "raw": "/owner-profile",
+              "context": "redirect"
+            }
+          }
+        ]
       },
       {
         "path": "/owner-experience",
         "label": "Owner Experience",
         "group": "public",
         "sourceFile": "app/owner-experience/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -231,22 +355,31 @@
         "label": "Partner",
         "group": "public",
         "sourceFile": "app/partner/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/how-it-works",
+            "origins": [
+              {
+                "file": "app/partner/page.tsx",
+                "line": 151,
+                "raw": "/how-it-works",
+                "context": "href"
+              }
+            ]
+          }
         ],
-        "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [
           {
-            "href": "mailto:partners@kisankamai.com",
+            "href": "mailto:partners@kisankamai.in",
             "host": "",
             "accessSurface": "localhost",
             "origins": [
               {
                 "file": "app/partner/page.tsx",
-                "line": 302,
-                "raw": "mailto:partners@kisankamai.com",
+                "line": 375,
+                "raw": "mailto:partners@kisankamai.in",
                 "context": "href"
               }
             ]
@@ -260,18 +393,64 @@
         "group": "public",
         "sourceFile": "app/renter-dashboard/page.tsx",
         "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/renter-profile",
+            "origins": [
+              {
+                "file": "app/renter-dashboard/page.tsx",
+                "line": 4,
+                "raw": "/renter-profile",
+                "context": "redirect"
+              }
+            ]
+          }
+        ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/renter-profile",
+            "context": "redirect",
+            "origin": {
+              "file": "app/renter-dashboard/page.tsx",
+              "line": 4,
+              "raw": "/renter-profile",
+              "context": "redirect"
+            }
+          }
+        ]
+      },
+      {
+        "path": "/report",
+        "label": "Report",
+        "group": "public",
+        "sourceFile": "app/report/page.tsx",
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
       },
       {
-        "path": "/renter-dashboard/[...segments]",
-        "label": "Renter Dashboard / ...Segments",
+        "path": "/terms",
+        "label": "Terms",
         "group": "public",
-        "sourceFile": "app/renter-dashboard/[...segments]/page.tsx",
+        "sourceFile": "app/terms/page.tsx",
         "sharedSurfaces": [],
-        "internalDestinations": [],
+        "internalDestinations": [
+          {
+            "path": "/support",
+            "origins": [
+              {
+                "file": "app/terms/page.tsx",
+                "line": 192,
+                "raw": "/support",
+                "context": "href"
+              }
+            ]
+          }
+        ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
@@ -281,75 +460,43 @@
         "label": "Trust Safety",
         "group": "public",
         "sourceFile": "app/trust-safety/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [
+        "sharedSurfaces": [],
+        "internalDestinations": [
           {
-            "href": "mailto:support@kisankamai.com",
-            "host": "",
-            "accessSurface": "localhost",
+            "path": "/terms",
             "origins": [
               {
                 "file": "app/trust-safety/page.tsx",
-                "line": 100,
-                "raw": "mailto:support@kisankamai.com",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "href": "tel:+918001234567",
-            "host": "",
-            "accessSurface": "localhost",
-            "origins": [
-              {
-                "file": "app/trust-safety/page.tsx",
-                "line": 104,
-                "raw": "tel:+918001234567",
-                "context": "href"
+                "line": 4,
+                "raw": "/terms",
+                "context": "redirect"
               }
             ]
           }
         ],
-        "redirects": []
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/terms",
+            "context": "redirect",
+            "origin": {
+              "file": "app/trust-safety/page.tsx",
+              "line": 4,
+              "raw": "/terms",
+              "context": "redirect"
+            }
+          }
+        ]
       }
     ],
     "discovery": [
-      {
-        "path": "/booking",
-        "label": "Booking",
-        "group": "discovery",
-        "sourceFile": "app/booking/page.tsx",
-        "sharedSurfaces": [],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
-      },
-      {
-        "path": "/booking/[equipmentId]",
-        "label": "Booking / EquipmentId",
-        "group": "discovery",
-        "sourceFile": "app/booking/[equipmentId]/page.tsx",
-        "sharedSurfaces": [],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
-      },
       {
         "path": "/catalog/[slug]",
         "label": "Catalog / Slug",
         "group": "discovery",
         "sourceFile": "app/catalog/[slug]/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -360,11 +507,20 @@
         "label": "Catalog / Slug / Gallery",
         "group": "discovery",
         "sourceFile": "app/catalog/[slug]/gallery/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/rent-equipment",
+            "origins": [
+              {
+                "file": "app/catalog/[slug]/gallery/page.tsx",
+                "line": 201,
+                "raw": "/rent-equipment?query=tractor",
+                "context": "href"
+              }
+            ]
+          }
         ],
-        "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
@@ -374,18 +530,15 @@
         "label": "Categories",
         "group": "discovery",
         "sourceFile": "app/categories/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
-            "path": "/models",
+            "path": "/rent-equipment",
             "origins": [
               {
                 "file": "app/categories/page.tsx",
-                "line": 39,
-                "raw": "/models?category=${cat.id}",
+                "line": 35,
+                "raw": "/rent-equipment?query=${cat.id}",
                 "context": "href"
               }
             ]
@@ -402,157 +555,6 @@
         "sourceFile": "app/equipment/[id]/page.tsx",
         "sharedSurfaces": [],
         "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
-      },
-      {
-        "path": "/locations",
-        "label": "Locations",
-        "group": "discovery",
-        "sourceFile": "app/locations/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header",
-          "LazyMap"
-        ],
-        "internalDestinations": [
-          {
-            "path": "/support",
-            "origins": [
-              {
-                "file": "app/locations/page.tsx",
-                "line": 86,
-                "raw": "/support",
-                "context": "href"
-              }
-            ]
-          }
-        ],
-        "unresolvedDestinations": [
-          {
-            "path": "/locations/${hub.slug}",
-            "origins": [
-              {
-                "file": "app/locations/page.tsx",
-                "line": 115,
-                "raw": "/locations/${hub.slug}",
-                "context": "href"
-              }
-            ]
-          }
-        ],
-        "externalDestinations": [],
-        "redirects": []
-      },
-      {
-        "path": "/locations/[city]",
-        "label": "Locations / City",
-        "group": "discovery",
-        "sourceFile": "app/locations/[city]/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header",
-          "LazyMap"
-        ],
-        "internalDestinations": [
-          {
-            "path": "/locations",
-            "origins": [
-              {
-                "file": "app/locations/[city]/page.tsx",
-                "line": 75,
-                "raw": "/locations",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/rent-equipment",
-            "origins": [
-              {
-                "file": "app/locations/[city]/page.tsx",
-                "line": 69,
-                "raw": "/rent-equipment",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/support",
-            "origins": [
-              {
-                "file": "app/locations/[city]/page.tsx",
-                "line": 72,
-                "raw": "/support",
-                "context": "href"
-              }
-            ]
-          }
-        ],
-        "unresolvedDestinations": [
-          {
-            "path": "/locations/${params.city}/no-results",
-            "origins": [
-              {
-                "file": "app/locations/[city]/page.tsx",
-                "line": 15,
-                "raw": "/locations/${params.city}/no-results",
-                "context": "redirect"
-              }
-            ]
-          }
-        ],
-        "externalDestinations": [],
-        "redirects": [
-          {
-            "target": "/locations/${params.city}/no-results",
-            "context": "redirect",
-            "origin": {
-              "file": "app/locations/[city]/page.tsx",
-              "line": 15,
-              "raw": "/locations/${params.city}/no-results",
-              "context": "redirect"
-            }
-          }
-        ]
-      },
-      {
-        "path": "/locations/[city]/no-results",
-        "label": "Locations / City / No Results",
-        "group": "discovery",
-        "sourceFile": "app/locations/[city]/no-results/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
-      },
-      {
-        "path": "/models",
-        "label": "Models",
-        "group": "discovery",
-        "sourceFile": "app/models/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
-        "internalDestinations": [
-          {
-            "path": "/rent-equipment",
-            "origins": [
-              {
-                "file": "app/models/page.tsx",
-                "line": 99,
-                "raw": "/rent-equipment?query=${encodeURIComponent(item.name)}",
-                "context": "href"
-              }
-            ]
-          }
-        ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
@@ -575,23 +577,20 @@
         "label": "Complete Profile",
         "group": "auth",
         "sourceFile": "app/complete-profile/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
             "path": "/login",
             "origins": [
               {
                 "file": "app/complete-profile/page.tsx",
-                "line": 27,
+                "line": 25,
                 "raw": "/login",
                 "context": "href"
               },
               {
                 "file": "app/complete-profile/page.tsx",
-                "line": 27,
+                "line": 25,
                 "raw": "/login",
                 "context": "window"
               }
@@ -606,7 +605,7 @@
             "context": "window",
             "origin": {
               "file": "app/complete-profile/page.tsx",
-              "line": 27,
+              "line": 25,
               "raw": "/login",
               "context": "window"
             }
@@ -618,17 +617,146 @@
         "label": "Forgot Password",
         "group": "auth",
         "sourceFile": "app/forgot-password/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
+          {
+            "path": "/forgot-password/verify-otp",
+            "origins": [
+              {
+                "file": "app/forgot-password/page.tsx",
+                "line": 44,
+                "raw": "/forgot-password/verify-otp",
+                "context": "router"
+              }
+            ]
+          },
           {
             "path": "/login",
             "origins": [
               {
                 "file": "app/forgot-password/page.tsx",
-                "line": 72,
+                "line": 133,
+                "raw": "/login",
+                "context": "href"
+              }
+            ]
+          }
+        ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/forgot-password/verify-otp",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/page.tsx",
+              "line": 44,
+              "raw": "/forgot-password/verify-otp",
+              "context": "router"
+            }
+          }
+        ]
+      },
+      {
+        "path": "/forgot-password/new-password",
+        "label": "Forgot Password / New Password",
+        "group": "auth",
+        "sourceFile": "app/forgot-password/new-password/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/forgot-password",
+            "origins": [
+              {
+                "file": "app/forgot-password/new-password/page.tsx",
+                "line": 32,
+                "raw": "/forgot-password",
+                "context": "router"
+              }
+            ]
+          },
+          {
+            "path": "/forgot-password/success",
+            "origins": [
+              {
+                "file": "app/forgot-password/new-password/page.tsx",
+                "line": 71,
+                "raw": "/forgot-password/success",
+                "context": "router"
+              }
+            ]
+          },
+          {
+            "path": "/forgot-password/verify-otp",
+            "origins": [
+              {
+                "file": "app/forgot-password/new-password/page.tsx",
+                "line": 37,
+                "raw": "/forgot-password/verify-otp",
+                "context": "router"
+              }
+            ]
+          },
+          {
+            "path": "/login",
+            "origins": [
+              {
+                "file": "app/forgot-password/new-password/page.tsx",
+                "line": 193,
+                "raw": "/login",
+                "context": "href"
+              }
+            ]
+          }
+        ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/forgot-password",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/new-password/page.tsx",
+              "line": 32,
+              "raw": "/forgot-password",
+              "context": "router"
+            }
+          },
+          {
+            "target": "/forgot-password/verify-otp",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/new-password/page.tsx",
+              "line": 37,
+              "raw": "/forgot-password/verify-otp",
+              "context": "router"
+            }
+          },
+          {
+            "target": "/forgot-password/success",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/new-password/page.tsx",
+              "line": 71,
+              "raw": "/forgot-password/success",
+              "context": "router"
+            }
+          }
+        ]
+      },
+      {
+        "path": "/forgot-password/success",
+        "label": "Forgot Password / Success",
+        "group": "auth",
+        "sourceFile": "app/forgot-password/success/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/login",
+            "origins": [
+              {
+                "file": "app/forgot-password/success/page.tsx",
+                "line": 39,
                 "raw": "/login",
                 "context": "href"
               }
@@ -640,21 +768,79 @@
         "redirects": []
       },
       {
+        "path": "/forgot-password/verify-otp",
+        "label": "Forgot Password / Verify Otp",
+        "group": "auth",
+        "sourceFile": "app/forgot-password/verify-otp/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/forgot-password",
+            "origins": [
+              {
+                "file": "app/forgot-password/verify-otp/page.tsx",
+                "line": 107,
+                "raw": "/forgot-password",
+                "context": "href"
+              },
+              {
+                "file": "app/forgot-password/verify-otp/page.tsx",
+                "line": 31,
+                "raw": "/forgot-password",
+                "context": "router"
+              }
+            ]
+          },
+          {
+            "path": "/forgot-password/new-password",
+            "origins": [
+              {
+                "file": "app/forgot-password/verify-otp/page.tsx",
+                "line": 77,
+                "raw": "/forgot-password/new-password",
+                "context": "router"
+              }
+            ]
+          }
+        ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/forgot-password",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/verify-otp/page.tsx",
+              "line": 31,
+              "raw": "/forgot-password",
+              "context": "router"
+            }
+          },
+          {
+            "target": "/forgot-password/new-password",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/verify-otp/page.tsx",
+              "line": 77,
+              "raw": "/forgot-password/new-password",
+              "context": "router"
+            }
+          }
+        ]
+      },
+      {
         "path": "/login",
         "label": "Login",
         "group": "auth",
         "sourceFile": "app/login/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
             "path": "/forgot-password",
             "origins": [
               {
                 "file": "app/login/page.tsx",
-                "line": 93,
+                "line": 127,
                 "raw": "/forgot-password",
                 "context": "href"
               }
@@ -665,13 +851,7 @@
             "origins": [
               {
                 "file": "app/login/page.tsx",
-                "line": 74,
-                "raw": "/register",
-                "context": "href"
-              },
-              {
-                "file": "app/login/page.tsx",
-                "line": 120,
+                "line": 174,
                 "raw": "/register",
                 "context": "href"
               }
@@ -688,6 +868,7 @@
         "group": "auth",
         "sourceFile": "app/profile-selection/page.tsx",
         "sharedSurfaces": [
+          "Footer",
           "LanguageToggle",
           "ThemeToggle"
         ],
@@ -700,18 +881,6 @@
                 "line": 56,
                 "raw": "/",
                 "context": "href"
-              },
-              {
-                "file": "app/profile-selection/page.tsx",
-                "line": 66,
-                "raw": "/",
-                "context": "href"
-              },
-              {
-                "file": "app/profile-selection/page.tsx",
-                "line": 66,
-                "raw": "/",
-                "context": "window"
               }
             ]
           },
@@ -720,15 +889,26 @@
             "origins": [
               {
                 "file": "app/profile-selection/page.tsx",
-                "line": 20,
+                "line": 21,
                 "raw": "/login",
                 "context": "href"
               },
               {
                 "file": "app/profile-selection/page.tsx",
-                "line": 20,
+                "line": 21,
                 "raw": "/login",
                 "context": "window"
+              }
+            ]
+          },
+          {
+            "path": "/logout",
+            "origins": [
+              {
+                "file": "app/profile-selection/page.tsx",
+                "line": 63,
+                "raw": "/logout",
+                "context": "href"
               }
             ]
           }
@@ -741,18 +921,8 @@
             "context": "window",
             "origin": {
               "file": "app/profile-selection/page.tsx",
-              "line": 20,
+              "line": 21,
               "raw": "/login",
-              "context": "window"
-            }
-          },
-          {
-            "target": "/",
-            "context": "window",
-            "origin": {
-              "file": "app/profile-selection/page.tsx",
-              "line": 66,
-              "raw": "/",
               "context": "window"
             }
           }
@@ -763,17 +933,48 @@
         "label": "Register",
         "group": "auth",
         "sourceFile": "app/register/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
             "path": "/login",
             "origins": [
               {
                 "file": "app/register/page.tsx",
-                "line": 181,
+                "line": 366,
+                "raw": "/login",
+                "context": "href"
+              }
+            ]
+          }
+        ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/register/success",
+        "label": "Register / Success",
+        "group": "auth",
+        "sourceFile": "app/register/success/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/",
+            "origins": [
+              {
+                "file": "app/register/success/page.tsx",
+                "line": 47,
+                "raw": "/",
+                "context": "href"
+              }
+            ]
+          },
+          {
+            "path": "/login",
+            "origins": [
+              {
+                "file": "app/register/success/page.tsx",
+                "line": 41,
                 "raw": "/login",
                 "context": "href"
               }
@@ -789,17 +990,14 @@
         "label": "Verify Contact",
         "group": "auth",
         "sourceFile": "app/verify-contact/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
             "path": "/complete-profile",
             "origins": [
               {
                 "file": "app/verify-contact/page.tsx",
-                "line": 29,
+                "line": 26,
                 "raw": "/complete-profile",
                 "context": "href"
               }
@@ -810,7 +1008,7 @@
             "origins": [
               {
                 "file": "app/verify-contact/page.tsx",
-                "line": 26,
+                "line": 23,
                 "raw": "/profile-selection",
                 "context": "href"
               }
@@ -828,88 +1026,55 @@
         "label": "Owner Profile",
         "group": "owner",
         "sourceFile": "app/owner-profile/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
-            "path": "/owner-profile/bookings",
+            "path": "/list-equipment",
             "origins": [
               {
                 "file": "app/owner-profile/page.tsx",
-                "line": 41,
-                "raw": "/owner-profile/bookings",
-                "context": "href"
-              },
-              {
-                "file": "app/owner-profile/page.tsx",
-                "line": 77,
-                "raw": "/owner-profile/bookings",
+                "line": 135,
+                "raw": "/list-equipment?listingId=${listing.id}",
                 "context": "href"
               }
             ]
           },
           {
-            "path": "/owner-profile/revenue",
+            "path": "/owner-profile/browse",
             "origins": [
               {
                 "file": "app/owner-profile/page.tsx",
-                "line": 45,
-                "raw": "/owner-profile/revenue",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/owner-profile/support",
-            "origins": [
-              {
-                "file": "app/owner-profile/page.tsx",
-                "line": 167,
-                "raw": "/owner-profile/support",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/owner-registration",
-            "origins": [
-              {
-                "file": "app/owner-profile/page.tsx",
-                "line": 37,
-                "raw": "/owner-registration",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/support",
-            "origins": [
-              {
-                "file": "app/owner-profile/page.tsx",
-                "line": 170,
-                "raw": "/support",
+                "line": 115,
+                "raw": "/owner-profile/browse",
                 "context": "href"
               }
             ]
           }
         ],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
-      },
-      {
-        "path": "/owner-profile/add-listing",
-        "label": "Owner Profile / Add Listing",
-        "group": "owner",
-        "sourceFile": "app/owner-profile/add-listing/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
+        "unresolvedDestinations": [
+          {
+            "path": "/equipment/${booking.listing",
+            "origins": [
+              {
+                "file": "app/owner-profile/page.tsx",
+                "line": 94,
+                "raw": "/equipment/${booking.listing?.id || booking.listingId}",
+                "context": "href"
+              }
+            ]
+          },
+          {
+            "path": "/equipment/${listing.id}",
+            "origins": [
+              {
+                "file": "app/owner-profile/page.tsx",
+                "line": 141,
+                "raw": "/equipment/${listing.id}",
+                "context": "href"
+              }
+            ]
+          }
         ],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
       },
@@ -918,76 +1083,96 @@
         "label": "Owner Profile / Bookings",
         "group": "owner",
         "sourceFile": "app/owner-profile/bookings/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
       },
       {
-        "path": "/owner-profile/equipment",
-        "label": "Owner Profile / Equipment",
+        "path": "/owner-profile/browse",
+        "label": "Owner Profile / Browse",
         "group": "owner",
-        "sourceFile": "app/owner-profile/equipment/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
-        ],
+        "sourceFile": "app/owner-profile/browse/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/owner-profile/earnings",
+        "label": "Owner Profile / Earnings",
+        "group": "owner",
+        "sourceFile": "app/owner-profile/earnings/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/owner-profile/feedback",
+        "label": "Owner Profile / Feedback",
+        "group": "owner",
+        "sourceFile": "app/owner-profile/feedback/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/owner-profile/feedback/success",
+        "label": "Owner Profile / Feedback / Success",
+        "group": "owner",
+        "sourceFile": "app/owner-profile/feedback/success/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/owner-profile/saved",
+        "label": "Owner Profile / Saved",
+        "group": "owner",
+        "sourceFile": "app/owner-profile/saved/page.tsx",
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
-            "path": "/owner-registration",
+            "path": "/renter-profile/saved",
             "origins": [
               {
-                "file": "app/owner-profile/equipment/page.tsx",
-                "line": 28,
-                "raw": "/owner-registration",
-                "context": "href"
-              },
-              {
-                "file": "app/owner-profile/equipment/page.tsx",
-                "line": 52,
-                "raw": "/owner-registration",
-                "context": "href"
-              },
-              {
-                "file": "app/owner-profile/equipment/page.tsx",
-                "line": 118,
-                "raw": "/owner-registration?listingId=${listing.id}",
-                "context": "href"
+                "file": "app/owner-profile/saved/page.tsx",
+                "line": 4,
+                "raw": "/renter-profile/saved",
+                "context": "redirect"
               }
             ]
           }
         ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": []
-      },
-      {
-        "path": "/owner-profile/revenue",
-        "label": "Owner Profile / Revenue",
-        "group": "owner",
-        "sourceFile": "app/owner-profile/revenue/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
-        ],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
+        "redirects": [
+          {
+            "target": "/renter-profile/saved",
+            "context": "redirect",
+            "origin": {
+              "file": "app/owner-profile/saved/page.tsx",
+              "line": 4,
+              "raw": "/renter-profile/saved",
+              "context": "redirect"
+            }
+          }
+        ]
       },
       {
         "path": "/owner-profile/settings",
         "label": "Owner Profile / Settings",
         "group": "owner",
         "sourceFile": "app/owner-profile/settings/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -998,65 +1183,10 @@
         "label": "Owner Profile / Support",
         "group": "owner",
         "sourceFile": "app/owner-profile/support/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
-        ],
-        "internalDestinations": [
-          {
-            "path": "/faq",
-            "origins": [
-              {
-                "file": "app/owner-profile/support/page.tsx",
-                "line": 253,
-                "raw": "/faq",
-                "context": "href"
-              }
-            ]
-          }
-        ],
+        "sharedSurfaces": [],
+        "internalDestinations": [],
         "unresolvedDestinations": [],
-        "externalDestinations": [
-          {
-            "href": "https://wa.me/918001234567",
-            "host": "wa.me",
-            "accessSurface": "custom-domain",
-            "origins": [
-              {
-                "file": "app/owner-profile/support/page.tsx",
-                "line": 221,
-                "raw": "https://wa.me/918001234567",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "href": "mailto:support@kisankamai.com",
-            "host": "",
-            "accessSurface": "localhost",
-            "origins": [
-              {
-                "file": "app/owner-profile/support/page.tsx",
-                "line": 239,
-                "raw": "mailto:support@kisankamai.com",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "href": "tel:+918001234567",
-            "host": "",
-            "accessSurface": "localhost",
-            "origins": [
-              {
-                "file": "app/owner-profile/support/page.tsx",
-                "line": 230,
-                "raw": "tel:+918001234567",
-                "context": "href"
-              }
-            ]
-          }
-        ],
+        "externalDestinations": [],
         "redirects": []
       },
       {
@@ -1064,17 +1194,14 @@
         "label": "Owner Registration",
         "group": "owner",
         "sourceFile": "app/owner-registration/page.tsx",
-        "sharedSurfaces": [
-          "OwnerSidebar",
-          "OwnerTopBar"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
             "path": "/profile-selection",
             "origins": [
               {
                 "file": "app/owner-registration/page.tsx",
-                "line": 15,
+                "line": 20,
                 "raw": "/profile-selection",
                 "context": "redirect"
               }
@@ -1089,7 +1216,7 @@
             "context": "redirect",
             "origin": {
               "file": "app/owner-registration/page.tsx",
-              "line": 15,
+              "line": 20,
               "raw": "/profile-selection",
               "context": "redirect"
             }
@@ -1103,45 +1230,8 @@
         "label": "Renter Profile",
         "group": "renter",
         "sourceFile": "app/renter-profile/page.tsx",
-        "sharedSurfaces": [
-          "RenterSidebar",
-          "RenterTopBar"
-        ],
-        "internalDestinations": [
-          {
-            "path": "/renter-profile/bookings",
-            "origins": [
-              {
-                "file": "app/renter-profile/page.tsx",
-                "line": 55,
-                "raw": "/renter-profile/bookings",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/renter-profile/browse",
-            "origins": [
-              {
-                "file": "app/renter-profile/page.tsx",
-                "line": 148,
-                "raw": "/renter-profile/browse",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/support",
-            "origins": [
-              {
-                "file": "app/renter-profile/page.tsx",
-                "line": 145,
-                "raw": "/support",
-                "context": "href"
-              }
-            ]
-          }
-        ],
+        "sharedSurfaces": [],
+        "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
@@ -1151,10 +1241,7 @@
         "label": "Renter Profile / Bookings",
         "group": "renter",
         "sourceFile": "app/renter-profile/bookings/page.tsx",
-        "sharedSurfaces": [
-          "RenterSidebar",
-          "RenterTopBar"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -1165,47 +1252,63 @@
         "label": "Renter Profile / Browse",
         "group": "renter",
         "sourceFile": "app/renter-profile/browse/page.tsx",
-        "sharedSurfaces": [
-          "RenterSidebar",
-          "RenterTopBar"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
-        "unresolvedDestinations": [
-          {
-            "path": "/booking/${item.id}",
-            "origins": [
-              {
-                "file": "app/renter-profile/browse/page.tsx",
-                "line": 55,
-                "raw": "/booking/${item.id}",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/equipment/${item.id}",
-            "origins": [
-              {
-                "file": "app/renter-profile/browse/page.tsx",
-                "line": 52,
-                "raw": "/equipment/${item.id}",
-                "context": "href"
-              }
-            ]
-          }
-        ],
+        "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
       },
       {
-        "path": "/renter-profile/payments",
-        "label": "Renter Profile / Payments",
+        "path": "/renter-profile/earnings",
+        "label": "Renter Profile / Earnings",
         "group": "renter",
-        "sourceFile": "app/renter-profile/payments/page.tsx",
-        "sharedSurfaces": [
-          "RenterSidebar",
-          "RenterTopBar"
+        "sourceFile": "app/renter-profile/earnings/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/owner-profile/earnings",
+            "origins": [
+              {
+                "file": "app/renter-profile/earnings/page.tsx",
+                "line": 4,
+                "raw": "/owner-profile/earnings",
+                "context": "redirect"
+              }
+            ]
+          }
         ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/owner-profile/earnings",
+            "context": "redirect",
+            "origin": {
+              "file": "app/renter-profile/earnings/page.tsx",
+              "line": 4,
+              "raw": "/owner-profile/earnings",
+              "context": "redirect"
+            }
+          }
+        ]
+      },
+      {
+        "path": "/renter-profile/feedback",
+        "label": "Renter Profile / Feedback",
+        "group": "renter",
+        "sourceFile": "app/renter-profile/feedback/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": []
+      },
+      {
+        "path": "/renter-profile/feedback/success",
+        "label": "Renter Profile / Feedback / Success",
+        "group": "renter",
+        "sourceFile": "app/renter-profile/feedback/success/page.tsx",
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -1216,36 +1319,9 @@
         "label": "Renter Profile / Saved",
         "group": "renter",
         "sourceFile": "app/renter-profile/saved/page.tsx",
-        "sharedSurfaces": [
-          "RenterSidebar",
-          "RenterTopBar"
-        ],
-        "internalDestinations": [
-          {
-            "path": "/renter-profile/browse",
-            "origins": [
-              {
-                "file": "app/renter-profile/saved/page.tsx",
-                "line": 59,
-                "raw": "/renter-profile/browse",
-                "context": "href"
-              }
-            ]
-          }
-        ],
-        "unresolvedDestinations": [
-          {
-            "path": "/booking/${item.id}",
-            "origins": [
-              {
-                "file": "app/renter-profile/saved/page.tsx",
-                "line": 44,
-                "raw": "/booking/${item.id}",
-                "context": "href"
-              }
-            ]
-          }
-        ],
+        "sharedSurfaces": [],
+        "internalDestinations": [],
+        "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
       },
@@ -1254,24 +1330,18 @@
         "label": "Renter Profile / Settings",
         "group": "renter",
         "sourceFile": "app/renter-profile/settings/page.tsx",
-        "sharedSurfaces": [
-          "RenterSidebar",
-          "RenterTopBar"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
         "redirects": []
       },
       {
-        "path": "/renter-profile/switch-profile",
-        "label": "Renter Profile / Switch Profile",
+        "path": "/renter-profile/support",
+        "label": "Renter Profile / Support",
         "group": "renter",
-        "sourceFile": "app/renter-profile/switch-profile/page.tsx",
-        "sharedSurfaces": [
-          "RenterSidebar",
-          "RenterTopBar"
-        ],
+        "sourceFile": "app/renter-profile/support/page.tsx",
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -1284,10 +1354,7 @@
         "label": "Feedback",
         "group": "support",
         "sourceFile": "app/feedback/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [],
@@ -1298,17 +1365,14 @@
         "label": "Feedback / Success",
         "group": "support",
         "sourceFile": "app/feedback/success/page.tsx",
-        "sharedSurfaces": [
-          "Footer",
-          "Header"
-        ],
+        "sharedSurfaces": [],
         "internalDestinations": [
           {
             "path": "/",
             "origins": [
               {
                 "file": "app/feedback/success/page.tsx",
-                "line": 42,
+                "line": 36,
                 "raw": "/",
                 "context": "href"
               }
@@ -1319,7 +1383,7 @@
             "origins": [
               {
                 "file": "app/feedback/success/page.tsx",
-                "line": 49,
+                "line": 43,
                 "raw": "/rent-equipment",
                 "context": "href"
               }
@@ -1330,7 +1394,7 @@
             "origins": [
               {
                 "file": "app/feedback/success/page.tsx",
-                "line": 56,
+                "line": 50,
                 "raw": "/support",
                 "context": "href"
               }
@@ -1347,64 +1411,20 @@
         "group": "support",
         "sourceFile": "app/support/page.tsx",
         "sharedSurfaces": [
-          "Footer",
-          "Header",
           "LazyMap"
         ],
-        "internalDestinations": [
-          {
-            "path": "/faq",
-            "origins": [
-              {
-                "file": "app/support/page.tsx",
-                "line": 179,
-                "raw": "/faq",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "path": "/list-equipment",
-            "origins": [
-              {
-                "file": "app/support/page.tsx",
-                "line": 184,
-                "raw": "/list-equipment",
-                "context": "href"
-              }
-            ]
-          }
-        ],
+        "internalDestinations": [],
         "unresolvedDestinations": [],
         "externalDestinations": [
           {
-            "href": "mailto:support@kisankamai.com",
-            "host": "",
-            "accessSurface": "localhost",
+            "href": "https://wa.me/9118005550123",
+            "host": "wa.me",
+            "accessSurface": "custom-domain",
             "origins": [
               {
                 "file": "app/support/page.tsx",
-                "line": 155,
-                "raw": "mailto:support@kisankamai.com",
-                "context": "href"
-              },
-              {
-                "file": "app/support/page.tsx",
-                "line": 165,
-                "raw": "mailto:support@kisankamai.com",
-                "context": "href"
-              }
-            ]
-          },
-          {
-            "href": "tel:+918001234567",
-            "host": "",
-            "accessSurface": "localhost",
-            "origins": [
-              {
-                "file": "app/support/page.tsx",
-                "line": 145,
-                "raw": "tel:+918001234567",
+                "line": 292,
+                "raw": "https://wa.me/9118005550123",
                 "context": "href"
               }
             ]
@@ -1418,59 +1438,7 @@
     {
       "surface": "Footer",
       "routePaths": [
-        "/",
-        "/about",
-        "/catalog/[slug]",
-        "/catalog/[slug]/gallery",
-        "/categories",
-        "/complete-profile",
-        "/faq",
-        "/feedback",
-        "/feedback/success",
-        "/forgot-password",
-        "/legal",
-        "/list-equipment",
-        "/locations",
-        "/locations/[city]",
-        "/locations/[city]/no-results",
-        "/login",
-        "/models",
-        "/owner-benefits",
-        "/owner-experience",
-        "/partner",
-        "/register",
-        "/support",
-        "/trust-safety",
-        "/verify-contact"
-      ]
-    },
-    {
-      "surface": "Header",
-      "routePaths": [
-        "/",
-        "/about",
-        "/catalog/[slug]",
-        "/catalog/[slug]/gallery",
-        "/categories",
-        "/complete-profile",
-        "/faq",
-        "/feedback",
-        "/feedback/success",
-        "/forgot-password",
-        "/legal",
-        "/list-equipment",
-        "/locations",
-        "/locations/[city]",
-        "/locations/[city]/no-results",
-        "/login",
-        "/models",
-        "/owner-benefits",
-        "/owner-experience",
-        "/partner",
-        "/register",
-        "/support",
-        "/trust-safety",
-        "/verify-contact"
+        "/profile-selection"
       ]
     },
     {
@@ -1483,59 +1451,8 @@
       "surface": "LazyMap",
       "routePaths": [
         "/",
-        "/locations",
-        "/locations/[city]",
+        "/coming-soon",
         "/support"
-      ]
-    },
-    {
-      "surface": "OwnerSidebar",
-      "routePaths": [
-        "/owner-profile",
-        "/owner-profile/add-listing",
-        "/owner-profile/bookings",
-        "/owner-profile/equipment",
-        "/owner-profile/revenue",
-        "/owner-profile/settings",
-        "/owner-profile/support",
-        "/owner-registration"
-      ]
-    },
-    {
-      "surface": "OwnerTopBar",
-      "routePaths": [
-        "/owner-profile",
-        "/owner-profile/add-listing",
-        "/owner-profile/bookings",
-        "/owner-profile/equipment",
-        "/owner-profile/revenue",
-        "/owner-profile/settings",
-        "/owner-profile/support",
-        "/owner-registration"
-      ]
-    },
-    {
-      "surface": "RenterSidebar",
-      "routePaths": [
-        "/renter-profile",
-        "/renter-profile/bookings",
-        "/renter-profile/browse",
-        "/renter-profile/payments",
-        "/renter-profile/saved",
-        "/renter-profile/settings",
-        "/renter-profile/switch-profile"
-      ]
-    },
-    {
-      "surface": "RenterTopBar",
-      "routePaths": [
-        "/renter-profile",
-        "/renter-profile/bookings",
-        "/renter-profile/browse",
-        "/renter-profile/payments",
-        "/renter-profile/saved",
-        "/renter-profile/settings",
-        "/renter-profile/switch-profile"
       ]
     },
     {
@@ -1547,79 +1464,40 @@
   ],
   "unresolvedReferences": [
     {
-      "route": "/locations",
-      "path": "/locations/${hub.slug}",
-      "sourceFile": "app/locations/page.tsx"
+      "route": "/owner-profile",
+      "path": "/equipment/${booking.listing",
+      "sourceFile": "app/owner-profile/page.tsx"
     },
     {
-      "route": "/locations/[city]",
-      "path": "/locations/${params.city}/no-results",
-      "sourceFile": "app/locations/[city]/page.tsx"
-    },
-    {
-      "route": "/renter-profile/browse",
-      "path": "/booking/${item.id}",
-      "sourceFile": "app/renter-profile/browse/page.tsx"
-    },
-    {
-      "route": "/renter-profile/browse",
-      "path": "/equipment/${item.id}",
-      "sourceFile": "app/renter-profile/browse/page.tsx"
-    },
-    {
-      "route": "/renter-profile/saved",
-      "path": "/booking/${item.id}",
-      "sourceFile": "app/renter-profile/saved/page.tsx"
+      "route": "/owner-profile",
+      "path": "/equipment/${listing.id}",
+      "sourceFile": "app/owner-profile/page.tsx"
     }
   ],
   "externalDestinations": [
     {
-      "route": "/owner-profile/support",
-      "href": "https://wa.me/918001234567",
-      "host": "wa.me",
-      "accessSurface": "custom-domain"
-    },
-    {
-      "route": "/owner-profile/support",
-      "href": "mailto:support@kisankamai.com",
+      "route": "/coming-soon",
+      "href": "mailto:Support@krishiseva.in",
       "host": "",
       "accessSurface": "localhost"
     },
     {
-      "route": "/owner-profile/support",
+      "route": "/coming-soon",
       "href": "tel:+918001234567",
       "host": "",
       "accessSurface": "localhost"
     },
     {
       "route": "/partner",
-      "href": "mailto:partners@kisankamai.com",
+      "href": "mailto:partners@kisankamai.in",
       "host": "",
       "accessSurface": "localhost"
     },
     {
       "route": "/support",
-      "href": "mailto:support@kisankamai.com",
-      "host": "",
-      "accessSurface": "localhost"
-    },
-    {
-      "route": "/support",
-      "href": "tel:+918001234567",
-      "host": "",
-      "accessSurface": "localhost"
-    },
-    {
-      "route": "/trust-safety",
-      "href": "mailto:support@kisankamai.com",
-      "host": "",
-      "accessSurface": "localhost"
-    },
-    {
-      "route": "/trust-safety",
-      "href": "tel:+918001234567",
-      "host": "",
-      "accessSurface": "localhost"
+      "href": "https://wa.me/9118005550123",
+      "host": "wa.me",
+      "accessSurface": "custom-domain"
     }
   ]
 }

@@ -224,6 +224,7 @@ function mapListingFromFirestore(data: Partial<ListingRecord> & { id?: string })
     tags: data.tags?.length ? data.tags : ["Verified"],
     workTypes: data.workTypes?.length ? data.workTypes : [],
     operatorIncluded: Boolean(data.operatorIncluded),
+    availableFrom: data.availableFrom || undefined,
     status: data.status === "paused" ? "paused" : "active",
     createdAt: data.createdAt || nowIso(),
     updatedAt: data.updatedAt || nowIso(),
@@ -846,7 +847,7 @@ function paymentStatusForBookingStatus(status: BookingRecord["status"]): Payment
 
 export async function updateBookingStatus(
   bookingId: string,
-  ownerUserId: string,
+  actorUserId: string,
   status: BookingRecord["status"]
 ) {
   const snapshot = await bookingsCollection().doc(bookingId).get();
@@ -855,7 +856,10 @@ export async function updateBookingStatus(
   }
 
   const booking = mapBookingFromFirestore(withFirestoreId(snapshot.id, snapshot.data() as BookingRecord));
-  if (booking.ownerUserId !== ownerUserId) {
+  const ownerCanUpdate = booking.ownerUserId === actorUserId;
+  const renterCanCancel = booking.renterUserId === actorUserId && status === "cancelled";
+
+  if (!ownerCanUpdate && !renterCanCancel) {
     throw new Error("Booking not found.");
   }
 

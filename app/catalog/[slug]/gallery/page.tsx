@@ -198,7 +198,9 @@ export default function EquipmentDetailVariant() {
         <section className="mt-20">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-black text-primary tracking-tight font-headline">Similar Tractors Nearby</h2>
-            <a className="text-secondary font-bold hover:underline" href="#">View All</a>
+            <a className="text-secondary font-bold hover:underline" href="/rent-equipment?query=tractor">
+              View All
+            </a>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/*  Card 1  */}

@@ -1,7 +1,12 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
-import { RenterProfileBookingsContent } from "@/components/renter-profile/RenterProfileViews";
+import { OwnerBookingsBoard } from "@/components/profile/OwnerBookingsBoard";
+import { getOwnerBookings } from "@/lib/server/firebase-data";
+import { getCurrentSession } from "@/lib/server/local-auth";
 
-export default function OwnerProfileBookingsPage() {
+export default async function OwnerProfileBookingsPage() {
+  const session = await getCurrentSession();
+  const bookings = session ? await getOwnerBookings(session.user.id) : [];
+
   return (
     <OwnerProfileWorkspaceShell
       family="owner-profile"
@@ -9,7 +14,7 @@ export default function OwnerProfileBookingsPage() {
       title="Bookings"
       subtitle="Manage incoming rental requests and recently completed jobs."
     >
-      <RenterProfileBookingsContent />
+      <OwnerBookingsBoard bookings={bookings} />
     </OwnerProfileWorkspaceShell>
   );
 }

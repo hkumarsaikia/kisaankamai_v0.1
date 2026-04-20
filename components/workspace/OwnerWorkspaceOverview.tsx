@@ -310,9 +310,12 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
             <Link href="/owner-profile" className="rounded-lg border border-surface-container-highest px-6 py-2.5 text-center text-sm font-bold text-on-surface transition-colors hover:bg-surface-container">
               Schedule
             </Link>
-            <Link href="/support" className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-container-highest text-primary transition-colors hover:bg-surface-container">
-              <span className="material-symbols-outlined">chat</span>
-            </Link>
+            <a
+              href="tel:+9118005550123"
+              className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-container-highest text-primary transition-colors hover:bg-surface-container"
+            >
+              <span className="material-symbols-outlined">call</span>
+            </a>
           </div>
         </div>
       </div>

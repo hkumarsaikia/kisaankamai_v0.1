@@ -411,6 +411,7 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         tags: tags.length ? tags : ["Verified"],
         workTypes,
         operatorIncluded: formData.get("operatorIncluded") === "on",
+        availableFrom: String(formData.get("availableFrom") || "").trim() || undefined,
         status: formData.get("status") === "paused" ? "paused" : "active",
       });
 
@@ -484,6 +485,8 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
           .split(",")
           .map((value) => value.trim())
           .filter(Boolean),
+        availableFrom:
+          String(formData.get("availableFrom") || "").trim() || existing.availableFrom || undefined,
         operatorIncluded:
           formData.get("operatorIncluded") === null
             ? existing.operatorIncluded

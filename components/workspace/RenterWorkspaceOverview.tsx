@@ -181,9 +181,12 @@ export function RenterWorkspaceOverview({
                         <Link href={listingId ? `/equipment/${listingId}` : "/rent-equipment"} className="flex-1 rounded-lg bg-primary-container py-2 text-center text-xs font-bold text-white transition-opacity hover:opacity-90">
                           Track Order
                         </Link>
-                        <Link href="/support" className="rounded-lg border border-outline-variant p-2 text-on-surface-variant transition-colors hover:bg-surface-container">
-                          <span className="material-symbols-outlined text-xl">chat</span>
-                        </Link>
+            <a
+              href="tel:+9118005550123"
+              className="rounded-lg border border-outline-variant p-2 text-on-surface-variant transition-colors hover:bg-surface-container"
+            >
+              <span className="material-symbols-outlined text-xl">call</span>
+            </a>
                       </div>
                     </div>
                   </article>

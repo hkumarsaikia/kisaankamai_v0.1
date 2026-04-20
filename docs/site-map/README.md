@@ -24,6 +24,15 @@ This generates:
 - unresolved internal references
 - external destinations
 
+Current route conventions reflected by the generated sitemap:
+
+- `/owner-profile/*` is the owner workspace family.
+- `/renter-profile/*` is the renter workspace family.
+- `/owner-profile/earnings` is the canonical earnings route.
+- `/list-equipment?listingId=<id>` is the owner listing edit entrypoint.
+- `/support` and `/report` are separate public help flows.
+- profile/workspace pages render the local workspace footer with the trust/legal split used in the active shell.
+
 ## What changed
 
 The old graph viewer has been retired. There is no longer any graph canvas, inspector, filters, journey lens model, `viewer.js`, `annotations.js`, or generated `map-data.js`.

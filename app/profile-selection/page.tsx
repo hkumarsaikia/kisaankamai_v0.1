@@ -4,6 +4,7 @@
 import { useEffect, useTransition } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { selectWorkspaceAction } from "@/lib/actions/local-data";
+import { Footer } from "@/components/Footer";
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageContext";
@@ -68,7 +69,7 @@ export default function ProfileSelectionPage() {
         </nav>
       </header>
 
-      <main className="relative z-10 flex-grow pt-32 pb-20 px-6 flex flex-col items-center justify-center">
+      <main className="relative z-10 flex-grow px-6 pb-20 pt-32 flex flex-col items-center justify-center">
         <div className="text-center mb-16 max-w-2xl">
           <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4 tracking-tight text-white drop-shadow-lg">
             {langText("Welcome back, ", "स्वागत आहे, ")}
@@ -157,6 +158,9 @@ export default function ProfileSelectionPage() {
           </button>
         </div>
       </main>
+      <div className="relative z-10">
+        <Footer />
+      </div>
     </div>
   );
 }

@@ -1,7 +1,14 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
-import { RenterProfileFeedbackContent } from "@/components/renter-profile/RenterProfileViews";
+import { ProfileFeedbackForm } from "@/components/profile/ProfileFeedbackForm";
+import { getCurrentSession } from "@/lib/server/local-auth";
 
-export default function OwnerProfileFeedbackPage() {
+export default async function OwnerProfileFeedbackPage() {
+  const session = await getCurrentSession();
+
+  if (!session) {
+    return null;
+  }
+
   return (
     <OwnerProfileWorkspaceShell
       family="owner-profile"
@@ -9,7 +16,7 @@ export default function OwnerProfileFeedbackPage() {
       title="Feedback"
       subtitle="Share ideas that would improve the owner profile and fleet workflow."
     >
-      <RenterProfileFeedbackContent />
+      <ProfileFeedbackForm family="owner-profile" session={session} />
     </OwnerProfileWorkspaceShell>
   );
 }

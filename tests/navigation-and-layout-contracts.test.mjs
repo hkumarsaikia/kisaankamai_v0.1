@@ -133,17 +133,23 @@ test("report source removes the requested support and guidance copy only", async
   assert.doesNotMatch(source, /Bilingual support/);
   assert.doesNotMatch(source, /24h Response Goal/);
   assert.doesNotMatch(source, /How to make your report useful/);
-  assert.match(source, /Report Submitted!/);
+  assert.match(source, /Direct Support/);
+  assert.match(source, /Submitted/);
 });
 
 test("list equipment page keeps the owner workspace shell and sticky live preview layout", async () => {
-  const source = await readFile(new URL("../app/list-equipment/page.tsx", import.meta.url), "utf8");
+  const [pageSource, editorSource] = await Promise.all([
+    readFile(new URL("../app/list-equipment/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/owner-profile/ListEquipmentEditorPage.tsx", import.meta.url), "utf8"),
+  ]);
 
-  assert.match(source, /family="owner-profile"/);
-  assert.match(source, /activeTab="add-listing"/);
-  assert.match(source, /sticky top-28/);
-  assert.match(source, /Live Preview/);
-  assert.doesNotMatch(source, /activeWorkspace === "renter" \? "owner-profile" : "renter-profile"/);
+  assert.match(pageSource, /family="owner-profile"/);
+  assert.match(pageSource, /activeTab="add-listing"/);
+  assert.match(editorSource, /sticky top-28/);
+  assert.match(editorSource, /Live Preview/);
+  assert.match(editorSource, /Available from specific date/);
+  assert.match(editorSource, /type="date"/);
+  assert.doesNotMatch(pageSource, /activeWorkspace === "renter" \? "owner-profile" : "renter-profile"/);
 });
 
 test("base rent-equipment source keeps the avail-eq style controls and pagination", async () => {
