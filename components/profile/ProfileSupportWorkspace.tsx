@@ -2,6 +2,7 @@
 
 import { postJson } from "@/lib/client/forms";
 import type { LocalSession } from "@/lib/local-data/types";
+import { supportContact } from "@/lib/support-contact";
 import { useState, useTransition } from "react";
 
 type ProfileSupportWorkspaceProps = {
@@ -181,24 +182,24 @@ export function ProfileSupportWorkspace({
           <h3 className="text-xl font-black">Direct Channels</h3>
           <div className="mt-5 space-y-4">
             <a
-              href="tel:+9118005550123"
+              href={supportContact.phoneHref}
               className="block rounded-2xl bg-white/10 p-4 transition hover:bg-white/15"
             >
               <p className="text-xs font-black uppercase tracking-[0.2em] text-primary-fixed">
                 Call Support
               </p>
-              <p className="mt-1 text-lg font-bold">+91 1800 555 0123</p>
-              <p className="text-sm text-white/75">8 AM - 8 PM Daily</p>
+              <p className="mt-1 text-lg font-bold">{supportContact.phoneDisplay}</p>
+              <p className="text-sm text-white/75">{supportContact.serviceHours} Daily</p>
             </a>
             <a
-              href="https://wa.me/919876543210"
+              href={supportContact.whatsappHref}
               className="block rounded-2xl bg-[#1f9d57] p-4 transition hover:bg-[#19864a]"
             >
               <p className="text-xs font-black uppercase tracking-[0.2em] text-white/80">
                 WhatsApp
               </p>
-              <p className="mt-1 text-lg font-bold">Chat with Kisan Mitra</p>
-              <p className="text-sm text-white/75">Marathi & English Support</p>
+              <p className="mt-1 text-lg font-bold">Chat with {supportContact.primaryContactName}</p>
+              <p className="text-sm text-white/75">{supportContact.whatsappDisplay}</p>
             </a>
           </div>
         </section>

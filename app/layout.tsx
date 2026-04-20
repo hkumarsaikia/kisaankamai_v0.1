@@ -10,6 +10,7 @@ import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { SingleLanguageRuntime } from "@/components/SingleLanguageRuntime";
 import { SiteChrome } from "@/components/SiteChrome";
 import { getCurrentSession } from "@/lib/server/local-auth";
+import { DEFAULT_SHARE_DESCRIPTION, getDefaultShareImageUrl, getMetadataBaseUrl, SITE_NAME } from "@/lib/site-metadata";
 import { Suspense } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -34,8 +35,38 @@ const languageBootScript = `
 `;
 
 export const metadata: Metadata = {
-  title: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
-  description: "India's premier agritech marketplace. Rent high-quality agricultural equipment from trusted local owners. Smarter farming, powered by technology, rooted in trust.",
+  metadataBase: getMetadataBaseUrl(),
+  title: {
+    default: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+    template: `%s | ${SITE_NAME}`,
+  },
+  description: DEFAULT_SHARE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  manifest: "/manifest.webmanifest",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    url: "/",
+    title: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+    description: DEFAULT_SHARE_DESCRIPTION,
+    images: [
+      {
+        url: getDefaultShareImageUrl(),
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+    description: DEFAULT_SHARE_DESCRIPTION,
+    images: [getDefaultShareImageUrl()],
+  },
 };
 
 export const dynamic = "force-dynamic";

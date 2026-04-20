@@ -1,6 +1,7 @@
 "use client";
 
 import { SubmissionError, postJson } from "@/lib/client/forms";
+import { supportContact } from "@/lib/support-contact";
 import { partnerInquirySchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
@@ -372,8 +373,8 @@ export default function PartnerPage() {
                 <h4 className="text-sm font-bold text-on-surface">Need immediate assistance?</h4>
                 <p className="mt-1 text-xs text-on-surface-variant">
                   Contact our corporate relations desk at{" "}
-                  <a className="font-semibold text-primary hover:underline" href="mailto:partners@kisankamai.in">
-                    partners@kisankamai.in
+                  <a className="font-semibold text-primary hover:underline" href={supportContact.emailHref}>
+                    {supportContact.email}
                   </a>
                 </p>
               </div>

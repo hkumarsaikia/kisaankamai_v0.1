@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { assetPath } from "@/lib/site";
+import { supportContact } from "@/lib/support-contact";
 
 type ListingSummary = {
   id: string;
@@ -311,7 +312,7 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
               Schedule
             </Link>
             <a
-              href="tel:+9118005550123"
+              href={supportContact.phoneHref}
               className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-container-highest text-primary transition-colors hover:bg-surface-container"
             >
               <span className="material-symbols-outlined">call</span>

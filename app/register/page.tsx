@@ -6,15 +6,10 @@ import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import { FormNotice } from "@/components/forms/FormKit";
 import { registerAction } from "@/lib/actions/local-data";
 
-const DEMO_OTP = "123456";
-
 export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showOtp, setShowOtp] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -24,7 +19,7 @@ export default function RegisterPage() {
     pincode: "",
     district: "Pune",
     role: "renter" as "renter" | "owner" | "both",
-    idType: "Aadhaar Card",
+    idType: "",
     idNumber: "",
   });
 
@@ -35,38 +30,11 @@ export default function RegisterPage() {
 
   const updateField = (field: keyof typeof formData, value: string) => {
     setFormData((current) => ({ ...current, [field]: value }));
-    if (field === "phone") {
-      setOtpVerified(false);
-    }
-  };
-
-  const handleSendOtp = () => {
-    setShowOtp(true);
-    setOtp("");
-    setOtpVerified(false);
-    setError("");
-  };
-
-  const handleVerifyOtp = () => {
-    if (otp.trim() === DEMO_OTP) {
-      setOtpVerified(true);
-      setError("");
-      window.alert("OTP verified successfully.");
-      return;
-    }
-
-    setOtpVerified(false);
-    window.alert("OTP could not be verified. Please check and try again.");
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isSubmitting) {
-      return;
-    }
-
-    if (!otpVerified) {
-      setError("Please verify the OTP before creating your account.");
       return;
     }
 
@@ -84,10 +52,9 @@ export default function RegisterPage() {
         address,
         district: formData.district,
         role: formData.role,
-        idType: formData.idType,
+        idType: formData.idType || undefined,
         idNumber: formData.idNumber.trim(),
         fieldArea: "N/A",
-        otpVerified: true,
       });
 
       if (!result.ok) {
@@ -158,57 +125,15 @@ export default function RegisterPage() {
 
                   <label className="space-y-1.5">
                     <span className="text-xs font-bold uppercase tracking-wider text-outline">Mobile Number / मोबाईल नंबर</span>
-                    <div className="flex gap-2">
-                      <input
-                        className="min-w-0 flex-1 rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
-                        placeholder="+91 98765 43210"
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => updateField("phone", e.target.value)}
-                        required
-                      />
-                      <button
-                        className="shrink-0 rounded-xl bg-primary px-4 py-3 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-container"
-                        type="button"
-                        onClick={handleSendOtp}
-                      >
-                        Send OTP
-                      </button>
-                    </div>
+                    <input
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      placeholder="+91 90000 00000"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => updateField("phone", e.target.value)}
+                      required
+                    />
                   </label>
-
-                  {showOtp ? (
-                    <div className="space-y-3 md:col-span-2">
-                      <div className="rounded-2xl border border-primary-fixed bg-primary-fixed/20 p-4">
-                        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
-                          <label className="min-w-0 flex-1 space-y-1.5">
-                            <span className="text-xs font-bold uppercase tracking-wider text-primary">Enter OTP</span>
-                            <input
-                              className="w-full rounded-xl border-0 bg-white px-4 py-3.5 font-mono text-lg font-bold tracking-[0.45em] text-center text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
-                              inputMode="numeric"
-                              maxLength={6}
-                              placeholder="000000"
-                              value={otp}
-                              onChange={(e) => {
-                                setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
-                                setOtpVerified(false);
-                              }}
-                            />
-                          </label>
-                          <button
-                            className="rounded-xl bg-primary-container px-5 py-3 font-bold text-white transition-colors hover:bg-primary"
-                            type="button"
-                            onClick={handleVerifyOtp}
-                          >
-                            Verify OTP
-                          </button>
-                        </div>
-                        <p className="mt-3 text-xs font-medium text-on-surface-variant">
-                          Demo OTP: <span className="font-bold text-primary">123456</span>
-                        </p>
-                      </div>
-                    </div>
-                  ) : null}
 
                   <label className="space-y-1.5">
                     <span className="text-xs font-bold uppercase tracking-wider text-outline">Email Address / ईमेल पत्ता</span>
@@ -311,10 +236,10 @@ export default function RegisterPage() {
                   <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
                     verified_user
                   </span>
-                  <h2 className="font-headline text-2xl font-bold text-primary">Verification / पडताळणी</h2>
+                  <h2 className="font-headline text-2xl font-bold text-primary">Optional Identity Verification / ऐच्छिक ओळख पडताळणी</h2>
                 </div>
                 <p className="max-w-3xl text-sm leading-relaxed text-on-surface-variant">
-                  Aadhaar verification helps confirm identity and builds trust between owners and renters. You can also do this later from your profile.
+                  Uploading an identity document is optional. You can add Aadhaar, PAN, Voter ID, or another government-issued document later from your profile when backend verification is enabled.
                 </p>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   <label className="space-y-1.5">
@@ -324,16 +249,18 @@ export default function RegisterPage() {
                       value={formData.idType}
                       onChange={(e) => updateField("idType", e.target.value)}
                     >
+                      <option value="">Select document type (optional)</option>
                       <option>Aadhaar Card</option>
                       <option>PAN Card</option>
                       <option>Voter ID</option>
+                      <option>Driving License</option>
                     </select>
                   </label>
                   <label className="space-y-1.5">
                     <span className="text-xs font-bold uppercase tracking-wider text-outline">ID Number / ओळखपत्र क्रमांक</span>
                     <input
                       className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
-                      placeholder="XXXX XXXX XXXX"
+                      placeholder="Document number (optional)"
                       type="text"
                       value={formData.idNumber}
                       onChange={(e) => updateField("idNumber", e.target.value)}
@@ -356,7 +283,7 @@ export default function RegisterPage() {
                 <button
                   className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
                   type="submit"
-                  disabled={isSubmitting || !otpVerified}
+                  disabled={isSubmitting}
                 >
                   {isSubmitting ? "Creating Account..." : "Create My Account / माझे खाते तयार करा"}
                   <span className="material-symbols-outlined">how_to_reg</span>
@@ -367,11 +294,6 @@ export default function RegisterPage() {
                     Login here
                   </Link>
                 </p>
-                {!otpVerified ? (
-                  <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-outline">
-                    Verify OTP to unlock account creation
-                  </p>
-                ) : null}
               </div>
             </form>
           </div>

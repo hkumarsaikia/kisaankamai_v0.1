@@ -3,6 +3,7 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
+import { supportContact } from "@/lib/support-contact";
 
 const dashboardBookings = [
   {
@@ -747,11 +748,11 @@ export function OwnerProfileSupportContent() {
             <div className="mt-5 space-y-4">
               <div className="rounded-2xl bg-white/10 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary-fixed">WhatsApp Support</p>
-                <p className="mt-1 text-lg font-bold">+91 98765 43210</p>
+                <p className="mt-1 text-lg font-bold">{supportContact.whatsappDisplay}</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary-fixed">Call Support</p>
-                <p className="mt-1 text-lg font-bold">1800-123-4567</p>
+                <p className="mt-1 text-lg font-bold">{supportContact.phoneDisplay}</p>
               </div>
             </div>
           </section>

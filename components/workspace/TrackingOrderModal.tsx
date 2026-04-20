@@ -1,5 +1,7 @@
 "use client";
 
+import { supportContact } from "@/lib/support-contact";
+
 type TrackingOrderModalProps = {
   open: boolean;
   equipmentName: string;
@@ -27,7 +29,7 @@ export function TrackingOrderModal({
     return null;
   }
 
-  const dialTarget = contactPhone?.trim() || "+9118005550123";
+  const dialTarget = contactPhone?.trim() || supportContact.phoneE164;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-on-background/40 p-4 backdrop-blur-sm">

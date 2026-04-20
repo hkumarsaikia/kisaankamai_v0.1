@@ -6,6 +6,7 @@ import { selectWorkspaceAction } from "@/lib/actions/local-data";
 import { useAuth } from "@/components/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageContext";
+import { WEB_PUSH_ENABLED } from "@/lib/notifications";
 
 export const OwnerTopBar = () => {
   const { user, profile } = useAuth();
@@ -48,11 +49,13 @@ export const OwnerTopBar = () => {
           <span className="material-symbols-outlined text-[16px]">swap_horiz</span>
           {t("ownerTopBar.switch_to_renter")}
         </button>
-        <div className="flex items-center gap-1 md:gap-2 text-slate-500">
-          <span className="material-symbols-outlined p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors text-sm md:text-base">
-            notifications
-          </span>
-        </div>
+        {WEB_PUSH_ENABLED ? (
+          <div className="flex items-center gap-1 md:gap-2 text-slate-500">
+            <span className="material-symbols-outlined p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full cursor-pointer transition-colors text-sm md:text-base">
+              notifications
+            </span>
+          </div>
+        ) : null}
         {/* Avatar with name */}
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-emerald-500 overflow-hidden shadow-sm">

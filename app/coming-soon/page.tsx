@@ -8,6 +8,7 @@ import {
 } from "@/lib/coming-soon-config.js";
 import { HOMEPAGE_MARKERS } from "@/lib/map-data";
 import { NORTHERN_MAHARASHTRA_SERVICE_AREAS } from "@/lib/service-areas.js";
+import { supportContact } from "@/lib/support-contact";
 
 const trustPartners = [
   { icon: "agriculture" },
@@ -181,17 +182,17 @@ export default function ComingSoonPage() {
             <div className="flex flex-wrap justify-center gap-4">
               <a
                 className="flex items-center gap-3 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 font-bold shadow-sm transition-all hover:shadow-md"
-                href="mailto:Support@krishiseva.in"
+                href={supportContact.emailHref}
               >
                 <span className="material-symbols-outlined text-secondary">mail</span>
-                Support@krishiseva.in
+                {supportContact.email}
               </a>
               <a
                 className="flex items-center gap-3 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 font-bold shadow-sm transition-all hover:shadow-md"
-                href="tel:+918001234567"
+                href={supportContact.phoneHref}
               >
                 <span className="material-symbols-outlined text-secondary">call</span>
-                +91 800 123 4567
+                {supportContact.phoneDisplay}
               </a>
             </div>
           </div>

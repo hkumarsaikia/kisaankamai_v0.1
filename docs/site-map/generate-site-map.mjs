@@ -57,6 +57,25 @@ function normalizeRoute(route) {
   return clean || "/";
 }
 
+function resolveInternalPath(raw, existingRoutes) {
+  const normalized = normalizeRoute(raw);
+  if (existingRoutes.has(normalized)) {
+    return normalized;
+  }
+
+  if (normalized.includes("${")) {
+    if (normalized.startsWith("/equipment/") && existingRoutes.has("/equipment/[id]")) {
+      return "/equipment/[id]";
+    }
+
+    if (normalized.startsWith("/list-equipment") && existingRoutes.has("/list-equipment")) {
+      return "/list-equipment";
+    }
+  }
+
+  return null;
+}
+
 function routeFromPageFile(filePath) {
   const relative = toPosix(path.relative(APP_DIR, filePath));
   if (relative === "page.tsx") return "/";
@@ -217,15 +236,16 @@ function extractDestinations(text, existingRoutes, filePath) {
       }
 
       if (!raw.startsWith("/")) continue;
+      const resolvedPath = resolveInternalPath(raw, existingRoutes);
       const normalized = normalizeRoute(raw);
 
       if (context !== "href") {
-        redirects.push({ target: normalized, context, origin });
+        redirects.push({ target: resolvedPath || normalized, context, origin });
       }
 
-      if (existingRoutes.has(normalized)) {
-        if (!internal.has(normalized)) internal.set(normalized, { path: normalized, origins: [origin] });
-        else internal.get(normalized).origins.push(origin);
+      if (resolvedPath) {
+        if (!internal.has(resolvedPath)) internal.set(resolvedPath, { path: resolvedPath, origins: [origin] });
+        else internal.get(resolvedPath).origins.push(origin);
       } else {
         if (!unresolved.has(normalized)) unresolved.set(normalized, { path: normalized, origins: [origin] });
         else unresolved.get(normalized).origins.push(origin);

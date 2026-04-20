@@ -4,6 +4,8 @@ import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
+import { supportContact } from "@/lib/support-contact";
+import { PHONE_RESET_OTP_ENABLED } from "@/lib/auth-capabilities";
 import {
   getResetStorageItem,
   maskResetIdentifier,
@@ -58,6 +60,16 @@ export default function VerifyOtpPage() {
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (!PHONE_RESET_OTP_ENABLED) {
+      setError(
+        langText(
+          "Secure reset verification is not active yet. Please contact support to reset your password safely.",
+          "सुरक्षित पासवर्ड रीसेट पडताळणी अजून सुरू नाही. सुरक्षित रीसेटसाठी कृपया सपोर्टशी संपर्क साधा."
+        )
+      );
+      return;
+    }
+
     const otp = otpDigits.join("");
     if (!/^\d{6}$/.test(otp)) {
       setError(langText("Enter a valid 6-digit code.", "वैध ६ अंकी कोड टाका."));
@@ -98,9 +110,14 @@ export default function VerifyOtpPage() {
                 {langText("Verify your mobile number", "तुमच्या मोबाईल क्रमांकाची पडताळणी करा")}
               </h1>
               <p className="mb-4 text-sm font-medium text-primary/70">
-                {text("Enter the 6-digit verification code to continue your secure password reset.", {
-                  cacheKey: "forgot-password.verify-otp.description",
-                })}
+                {PHONE_RESET_OTP_ENABLED
+                  ? text("Enter the 6-digit verification code to continue your secure password reset.", {
+                      cacheKey: "forgot-password.verify-otp.description",
+                    })
+                  : langText(
+                      "Password reset verification will be activated once backend authentication is configured.",
+                      "बॅकएंड प्रमाणीकरण कॉन्फिगर झाल्यावर पासवर्ड रीसेट पडताळणी सुरू होईल."
+                    )}
               </p>
               <div className="mx-auto flex w-fit items-center gap-3 rounded-full border border-outline-variant/30 bg-surface-container/50 px-4 py-2">
                 <span className="font-semibold tracking-widest text-on-surface-variant">{maskResetIdentifier(identifier)}</span>
@@ -113,7 +130,7 @@ export default function VerifyOtpPage() {
 
             <form className="space-y-8" onSubmit={handleSubmit}>
               <div>
-                <div className="mb-8 flex justify-between gap-3">
+                <div className={`mb-8 flex justify-between gap-3 ${PHONE_RESET_OTP_ENABLED ? "" : "opacity-50"}`}>
                   {otpDigits.map((digit, index) => (
                     <input
                       key={index}
@@ -128,6 +145,7 @@ export default function VerifyOtpPage() {
                       }`}
                       inputMode="numeric"
                       maxLength={1}
+                      disabled={!PHONE_RESET_OTP_ENABLED}
                       type="text"
                       value={digit}
                       onChange={(event) => updateDigit(index, event.target.value)}
@@ -141,20 +159,28 @@ export default function VerifyOtpPage() {
                     <span className="material-symbols-outlined text-base">error</span>
                     <span>{error}</span>
                   </div>
-                ) : (
+                ) : PHONE_RESET_OTP_ENABLED ? (
                   <div className="mb-6 flex items-center gap-2 text-sm font-medium text-on-surface-variant">
                     <span className="material-symbols-outlined text-base">timer</span>
-                    <span>{langText("Local verification gate. Any 6 digits will continue.", "स्थानिक पडताळणी. कोणतेही ६ अंक पुढे जातील.")}</span>
+                    <span>{langText("Enter the verification code sent to your confirmed contact.", "तुमच्या खात्री झालेल्या संपर्कावर पाठवलेला पडताळणी कोड टाका.")}</span>
+                  </div>
+                ) : (
+                  <div className="mb-6 rounded-2xl border border-primary-container/20 bg-primary-fixed/10 px-4 py-4 text-sm font-medium text-on-surface-variant">
+                    {langText(
+                      `Need help now? Call ${supportContact.phoneDisplay} or email ${supportContact.email}.`,
+                      `तात्काळ मदत हवी आहे का? ${supportContact.phoneDisplay} वर कॉल करा किंवा ${supportContact.email} वर ईमेल करा.`
+                    )}
                   </div>
                 )}
               </div>
 
               <div className="space-y-6">
                 <button
-                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-container px-6 py-4 text-lg font-bold text-white shadow-xl shadow-primary-container/20 transition-all hover:bg-primary hover:-translate-y-0.5"
+                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-container px-6 py-4 text-lg font-bold text-white shadow-xl shadow-primary-container/20 transition-all hover:bg-primary hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-primary-container"
                   type="submit"
+                  disabled={!PHONE_RESET_OTP_ENABLED}
                 >
-                  <span>{langText("Verify and Continue", "पडताळणी करा आणि पुढे जा")}</span>
+                  <span>{PHONE_RESET_OTP_ENABLED ? langText("Verify and Continue", "पडताळणी करा आणि पुढे जा") : langText("Verification Pending Backend Setup", "पडताळणी बॅकएंड सेटअपनंतर सुरू होईल")}</span>
                   <span className="material-symbols-outlined">arrow_forward</span>
                 </button>
 
@@ -162,12 +188,14 @@ export default function VerifyOtpPage() {
                   <div className="flex items-center gap-2 font-medium text-on-surface-variant">
                     <span className="material-symbols-outlined text-lg">timer</span>
                     <span>
-                      {langText("Resend in:", "पुन्हा पाठविण्यासाठी:")}{" "}
-                      <span className="font-bold text-secondary">00:59</span>
+                      {PHONE_RESET_OTP_ENABLED
+                        ? langText("Resend in:", "पुन्हा पाठविण्यासाठी:")
+                        : langText("Backend verification pending", "बॅकएंड पडताळणी प्रलंबित")}{" "}
+                      {PHONE_RESET_OTP_ENABLED ? <span className="font-bold text-secondary">00:59</span> : null}
                     </span>
                   </div>
                   <button className="cursor-not-allowed font-bold text-on-surface-variant/40" type="button">
-                    {langText("Resend OTP", "ओटीपी पुन्हा पाठवा")}
+                    {PHONE_RESET_OTP_ENABLED ? langText("Resend OTP", "ओटीपी पुन्हा पाठवा") : langText("Enable backend verification first", "प्रथम बॅकएंड पडताळणी सक्षम करा")}
                   </button>
                 </div>
               </div>

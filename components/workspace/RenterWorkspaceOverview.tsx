@@ -5,6 +5,7 @@ import Image from "next/image";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { assetPath } from "@/lib/site";
+import { supportContact } from "@/lib/support-contact";
 
 type BookingSummary = {
   id: string;
@@ -104,10 +105,10 @@ export function RenterWorkspaceOverview({
           <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-on-surface-variant">
             <span>Renter Profile</span>
             <span className="h-1 w-1 rounded-full bg-outline-variant" />
-            <span className="text-secondary">शेतकरी पोर्टल</span>
+            <span className="text-secondary">शेतकरी प्रोफाइल</span>
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-on-surface">
-            Renter Profile <span className="font-bold text-on-surface-variant">/ शेतकरी डॅशबोर्ड</span>
+            Renter Profile <span className="font-bold text-on-surface-variant">/ शेतकरी प्रोफाइल</span>
           </h1>
           <p className="mt-1 text-sm font-medium text-on-surface-variant">
             {langText(
@@ -182,7 +183,7 @@ export function RenterWorkspaceOverview({
                           Track Order
                         </Link>
             <a
-              href="tel:+9118005550123"
+              href={supportContact.phoneHref}
               className="rounded-lg border border-outline-variant p-2 text-on-surface-variant transition-colors hover:bg-surface-container"
             >
               <span className="material-symbols-outlined text-xl">call</span>

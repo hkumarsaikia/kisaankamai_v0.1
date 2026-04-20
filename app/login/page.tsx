@@ -100,7 +100,7 @@ export default function LoginPage() {
                 {/* Identifier Input */}
                 <div className="space-y-3">
                   <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label ml-1" htmlFor="identifier">
-                    {langText("Mobile number, Email ID, or Aadhaar number", "मोबाईल नंबर, ईमेल किंवा आधार क्रमांक")} / {langText("Contact details", "संपर्क तपशील")}
+                    {langText("Mobile number or Email ID", "मोबाईल नंबर किंवा ईमेल आयडी")} / {langText("Contact details", "संपर्क तपशील")}
                   </label>
                   <div className="relative group">
                     <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
@@ -109,7 +109,7 @@ export default function LoginPage() {
                     <input
                       className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400"
                       id="identifier"
-                      placeholder={langText("Mobile number, Email ID, or Aadhar number", "मोबाईल नंबर, ईमेल किंवा आधार क्रमांक लिहा")}
+                      placeholder={langText("Mobile number or Email ID", "मोबाईल नंबर किंवा ईमेल आयडी")}
                       type="text"
                       value={identifier}
                       onChange={(e) => setIdentifier(e.target.value)}

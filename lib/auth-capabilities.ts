@@ -1,0 +1,1 @@
+export const PHONE_RESET_OTP_ENABLED = Boolean(process.env.NEXT_PUBLIC_PHONE_RESET_OTP_ENABLED);

@@ -2,6 +2,7 @@ import { AppLink as Link } from "@/components/AppLink";
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
+import { supportContact } from "@/lib/support-contact";
 
 export default async function OwnerProfilePage() {
   const session = await getCurrentSession();
@@ -84,7 +85,7 @@ export default async function OwnerProfilePage() {
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
                     <a
-                      href={`tel:${booking.renterProfile?.phone || "+9118005550123"}`}
+                      href={`tel:${booking.renterProfile?.phone || supportContact.phoneE164}`}
                       className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-on-surface dark:border-slate-700 dark:text-slate-100"
                     >
                       <span className="material-symbols-outlined text-[18px]">call</span>

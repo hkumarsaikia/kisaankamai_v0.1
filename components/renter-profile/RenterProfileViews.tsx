@@ -4,6 +4,7 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import { OwnerRevenuePanel } from "@/components/workspace/OwnerRevenuePanel";
+import { supportContact } from "@/lib/support-contact";
 
 const bookingRequests = [
   {
@@ -547,11 +548,11 @@ export function RenterProfileSupportContent() {
             <div className="mt-5 space-y-4">
               <div className="rounded-2xl bg-white/10 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary-fixed">Call Support</p>
-                <p className="mt-1 text-lg font-bold">1800-123-4567</p>
+                <p className="mt-1 text-lg font-bold">{supportContact.phoneDisplay}</p>
               </div>
               <div className="rounded-2xl bg-white/10 p-4">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary-fixed">WhatsApp Support</p>
-                <p className="mt-1 text-lg font-bold">+91 98765 43210</p>
+                <p className="mt-1 text-lg font-bold">{supportContact.whatsappDisplay}</p>
               </div>
             </div>
           </section>
@@ -593,7 +594,7 @@ export function RenterProfileFeedbackContent() {
             </label>
             <label className="space-y-2">
               <span className="text-sm font-semibold text-on-surface">Contact Number</span>
-              <input className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950" placeholder="+91 98765 43210" />
+              <input className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950" placeholder="+91 90000 00000" />
             </label>
           </div>
           <label className="space-y-2">

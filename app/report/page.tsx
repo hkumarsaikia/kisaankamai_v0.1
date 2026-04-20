@@ -2,6 +2,7 @@
 
 import { ContentImage } from "@/components/ContentImage";
 import { postJson } from "@/lib/client/forms";
+import { supportContact } from "@/lib/support-contact";
 import { useState, useTransition } from "react";
 
 const categories = [
@@ -152,7 +153,7 @@ export default function ReportPage() {
                     value={formState.phone}
                     onChange={(event) => updateField("phone", event.target.value)}
                     className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
-                    placeholder="9876543210"
+                    placeholder="Enter 10 digit mobile number"
                     type="tel"
                   />
                 </label>
@@ -261,8 +262,8 @@ export default function ReportPage() {
                 <div className="flex items-center gap-3 rounded-2xl bg-white/50 p-4">
                   <span className="material-symbols-outlined text-on-tertiary-container">support_agent</span>
                   <div>
-                    <p className="text-sm font-bold text-primary-container">+91 1800-KISAN-HELP</p>
-                    <p className="text-xs text-slate-500">9 AM - 7 PM, Mon-Sat</p>
+                    <p className="text-sm font-bold text-primary-container">{supportContact.phoneDisplay}</p>
+                    <p className="text-xs text-slate-500">{supportContact.serviceHours}, Mon-Sat</p>
                   </div>
                 </div>
               </div>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { FormNotice } from "@/components/forms/FormKit";
+import { PHONE_RESET_OTP_ENABLED } from "@/lib/auth-capabilities";
 import {
   removeResetStorageItem,
   RESET_IDENTIFIER_KEY,
@@ -84,10 +85,15 @@ export default function ForgotPasswordPage() {
               {langText("Forgot Password", "पासवर्ड विसरलात")}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-on-surface-variant">
-              {langText(
-                "Enter your mobile number or email to receive a reset code.",
-                "रिसेट कोड मिळवण्यासाठी तुमचा मोबाईल नंबर किंवा ईमेल टाका."
-              )}
+              {PHONE_RESET_OTP_ENABLED
+                ? langText(
+                    "Enter your mobile number or email to continue the secure reset flow.",
+                    "सुरक्षित रीसेट प्रक्रियेसाठी तुमचा मोबाईल नंबर किंवा ईमेल टाका."
+                  )
+                : langText(
+                    "Enter your mobile number or email to review the secure reset steps.",
+                    "सुरक्षित रीसेट प्रक्रियेच्या पुढील टप्प्यांसाठी तुमचा मोबाईल नंबर किंवा ईमेल टाका."
+                  )}
             </p>
           </div>
 
@@ -105,7 +111,7 @@ export default function ForgotPasswordPage() {
                 <input
                   className="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 pl-12 text-on-surface shadow-sm transition-all placeholder:text-outline focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   name="contact"
-                  placeholder={langText("e.g. +91 98765 43210", "उदा. +९१ ९८७६५ ४३२१०")}
+                  placeholder={langText("e.g. +91 90000 00000", "उदा. +९१ ९०००० ०००००")}
                   type="text"
                   value={identifier}
                   onChange={(event) => {
@@ -122,7 +128,7 @@ export default function ForgotPasswordPage() {
               className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container py-4 text-lg font-bold text-on-primary shadow-xl shadow-primary/10 transition-all hover:shadow-primary/20 active:scale-[0.98]"
               type="submit"
             >
-              <span>{langText("Send Code", "कोड पाठवा")}</span>
+              <span>{langText("Continue", "पुढे जा")}</span>
               <span className="material-symbols-outlined text-xl">send</span>
             </button>
           </form>

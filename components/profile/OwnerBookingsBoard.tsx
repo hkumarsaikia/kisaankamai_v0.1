@@ -4,6 +4,7 @@ import { AppLink as Link } from "@/components/AppLink";
 import { TrackingOrderModal } from "@/components/workspace/TrackingOrderModal";
 import { updateBookingStatusAction } from "@/lib/actions/local-data";
 import type { BookingRecord, ListingRecord, ProfileRecord } from "@/lib/local-data/types";
+import { supportContact } from "@/lib/support-contact";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 
@@ -174,7 +175,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
               const status = mapBookingStatus(booking.status);
               const actionState = buttonState[booking.id] || "idle";
               const detailsHref = `/equipment/${listing?.id || booking.listingId}`;
-              const renterPhone = renter?.phone || "+9118005550123";
+              const renterPhone = renter?.phone || supportContact.phoneE164;
               const renterName = renter?.fullName || "Verified Renter";
               const canApprove = booking.status === "pending";
               const canDecline = booking.status === "pending" || booking.status === "confirmed";

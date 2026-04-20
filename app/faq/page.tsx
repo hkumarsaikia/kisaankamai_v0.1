@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/components/LanguageContext";
+import { supportContact } from "@/lib/support-contact";
 
 interface FAQItem {
   questionKey:
@@ -132,16 +133,22 @@ export default function FAQ() {
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("faq.still_have_questions")}</h2>
               <p className="text-on-primary-container text-lg mb-8">{t("faq.our_team_is_ready_to_help_you_find_the_right_equipment_or_help_you_list_your_own")}</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <button className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-50 transition-colors">
+                <a
+                  href={supportContact.phoneHref}
+                  className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-50 transition-colors"
+                >
                   <span className="material-symbols-outlined">call</span>
                   {t("faq.call_support")}
-                </button>
-                <button className="w-full sm:w-auto px-8 py-4 bg-secondary text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+                </a>
+                <a
+                  href={supportContact.whatsappHref}
+                  className="w-full sm:w-auto px-8 py-4 bg-secondary text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                >
                   <span className="material-symbols-outlined">chat</span>
                   {t("faq.whatsapp_us")}
-                </button>
+                </a>
               </div>
-              <p className="mt-6 text-white/80 font-semibold font-mukta">{t("faq.contact_91_98765_43210")}</p>
+              <p className="mt-6 text-white/80 font-semibold font-mukta">{supportContact.phoneDisplay}</p>
             </div>
           </div>
         </div>

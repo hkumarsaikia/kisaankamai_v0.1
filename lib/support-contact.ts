@@ -1,6 +1,11 @@
-const DEFAULT_SUPPORT_EMAIL = "support@kisankamai.com";
-const DEFAULT_SUPPORT_PHONE_E164 = "+918001234567";
-const DEFAULT_SUPPORT_PHONE_DISPLAY = "+91 80012 34567";
+type SupportTeamContact = {
+  name: string;
+  email: string;
+  phoneE164: string;
+  phoneDisplay: string;
+  whatsappE164: string;
+  whatsappDisplay: string;
+};
 
 function normalizeDigits(value: string) {
   return value.replace(/[^\d]/g, "");
@@ -16,18 +21,38 @@ function buildWhatsappHref(phoneE164: string) {
   return digits ? `https://wa.me/${digits}` : "https://wa.me/";
 }
 
-const supportEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL || DEFAULT_SUPPORT_EMAIL;
-const supportPhoneE164 = process.env.NEXT_PUBLIC_SUPPORT_PHONE || DEFAULT_SUPPORT_PHONE_E164;
-const supportPhoneDisplay = process.env.NEXT_PUBLIC_SUPPORT_PHONE_DISPLAY || DEFAULT_SUPPORT_PHONE_DISPLAY;
-const supportWhatsappDisplay = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP_DISPLAY || supportPhoneDisplay;
+function withLinks(contact: SupportTeamContact) {
+  return {
+    ...contact,
+    emailHref: `mailto:${contact.email}`,
+    phoneHref: buildTelHref(contact.phoneE164),
+    whatsappHref: buildWhatsappHref(contact.whatsappE164),
+  };
+}
+
+export const supportTeamContacts = [
+  {
+    name: "Pratik Shinde",
+    email: "pratikshinde6416@gmail.com",
+    phoneE164: "+917385204960",
+    phoneDisplay: "+91 73852 04960",
+    whatsappE164: "+917385204960",
+    whatsappDisplay: "+91 73852 04960",
+  },
+  {
+    name: "Rohit Nikaam",
+    email: "nikamrohit3531@gmail.com",
+    phoneE164: "+918485883531",
+    phoneDisplay: "+91 84858 83531",
+    whatsappE164: "+918485883531",
+    whatsappDisplay: "+91 84858 83531",
+  },
+] satisfies SupportTeamContact[];
 
 export const supportContact = {
-  email: supportEmail,
-  emailHref: `mailto:${supportEmail}`,
-  phoneE164: supportPhoneE164,
-  phoneDisplay: supportPhoneDisplay,
-  phoneHref: buildTelHref(supportPhoneE164),
-  whatsappDisplay: supportWhatsappDisplay,
-  whatsappHref: buildWhatsappHref(supportPhoneE164),
+  primaryContactName: supportTeamContacts[1].name,
   serviceHours: "8 AM to 8 PM",
+  ...withLinks(supportTeamContacts[1]),
 };
+
+export const supportRoster = supportTeamContacts.map(withLinks);

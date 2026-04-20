@@ -2,6 +2,7 @@
 
 import { useLanguage } from "@/components/LanguageContext";
 import { AppLink as Link } from "@/components/AppLink";
+import { supportContact } from "@/lib/support-contact";
 
 export default function TermsAndSafetyPage() {
   const { langText } = useLanguage();
@@ -174,11 +175,11 @@ export default function TermsAndSafetyPage() {
               <div className="pt-6 space-y-4">
                 <div className="flex items-center gap-4 text-primary font-black text-xl">
                   <span className="material-symbols-outlined text-3xl">mail</span>
-                  <span>safety@kisankamai.com</span>
+                  <span>{supportContact.email}</span>
                 </div>
                 <div className="flex items-center gap-4 text-primary font-black text-xl">
                   <span className="material-symbols-outlined text-3xl">call</span>
-                  <span>+91 1800-Kisan-Kamai</span>
+                  <span>{supportContact.phoneDisplay}</span>
                 </div>
               </div>
             </div>

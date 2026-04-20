@@ -6,6 +6,7 @@ import { selectWorkspaceAction } from "@/lib/actions/local-data";
 import { useAuth } from "@/components/AuthContext";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageContext";
+import { WEB_PUSH_ENABLED } from "@/lib/notifications";
 
 export const RenterTopBar = () => {
   const { user, profile } = useAuth();
@@ -46,12 +47,14 @@ export const RenterTopBar = () => {
           {t("renterTopBar.switch_to_owner")}
         </button>
         {/* Notification bell */}
-        <div className="relative">
-          <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
-            notifications
-          </span>
-          <span className="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full border-2 border-white" />
-        </div>
+        {WEB_PUSH_ENABLED ? (
+          <div className="relative">
+            <span className="material-symbols-outlined text-slate-600 dark:text-slate-400 cursor-pointer p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+              notifications
+            </span>
+            <span className="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full border-2 border-white" />
+          </div>
+        ) : null}
         {/* Quick Action */}
         <Link
           href="/rent-equipment"

@@ -3,6 +3,7 @@
 import { LazyMap } from "@/components/LazyMap";
 import { postJson } from "@/lib/client/forms";
 import { SUPPORT_HUB_MARKERS } from "@/lib/map-data";
+import { supportContact } from "@/lib/support-contact";
 import { useState, useTransition } from "react";
 
 const supportCategories = [
@@ -125,7 +126,7 @@ export default function SupportPage() {
                     value={formState.phone}
                     onChange={(event) => updateField("phone", event.target.value)}
                     className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
-                    placeholder="9876543210"
+                    placeholder="Enter 10 digit mobile number"
                     type="tel"
                   />
                 </label>
@@ -194,8 +195,8 @@ export default function SupportPage() {
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container">Call Us</p>
-                    <p className="mt-1 text-xl font-bold">+91 1800 555 0123</p>
-                    <p className="text-sm text-white/70">8 AM - 8 PM Daily</p>
+                    <p className="mt-1 text-xl font-bold">{supportContact.phoneDisplay}</p>
+                    <p className="text-sm text-white/70">{supportContact.serviceHours} Daily</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -204,8 +205,8 @@ export default function SupportPage() {
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container">WhatsApp</p>
-                    <p className="mt-1 text-xl font-bold">Chat with Kisan Mitra</p>
-                    <p className="text-sm text-white/70">Marathi &amp; English Support</p>
+                    <p className="mt-1 text-xl font-bold">Chat with {supportContact.primaryContactName}</p>
+                    <p className="text-sm text-white/70">{supportContact.whatsappDisplay}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-4">
@@ -214,7 +215,7 @@ export default function SupportPage() {
                   </div>
                   <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container">Email</p>
-                    <p className="mt-1 text-xl font-bold">support@kisankamai.com</p>
+                    <p className="mt-1 text-xl font-bold">{supportContact.email}</p>
                     <p className="text-sm text-white/70">24/48 hr response</p>
                   </div>
                 </div>
@@ -289,7 +290,7 @@ export default function SupportPage() {
                 Call Support
               </a>
               <a
-                href="https://wa.me/9118005550123"
+                href={supportContact.whatsappHref}
                 className="rounded-2xl bg-[#1f9d57] px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-[#178045]"
               >
                 WhatsApp

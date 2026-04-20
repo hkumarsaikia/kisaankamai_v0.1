@@ -4,7 +4,7 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 
 export default function VerifyContactPage() {
-  const { t } = useLanguage();
+  const { langText } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col">
@@ -14,17 +14,20 @@ export default function VerifyContactPage() {
             <span className="material-symbols-outlined text-4xl">verified</span>
           </div>
           <h1 className="text-3xl font-black text-primary dark:text-emerald-50">
-            {t("verify-contact.verification_disabled_for_local_testing")}
+            {langText("Contact details ready", "संपर्क तपशील तयार आहेत")}
           </h1>
           <p className="mt-4 text-slate-600 dark:text-slate-400 font-medium">
-            {t("verify-contact.otp_phone_verification_and_email_verification_are_bypassed_in_this_local_data_phase")}
+            {langText(
+              "Your account can continue now. Optional identity verification can be completed later from your profile once the backend flow is enabled.",
+              "तुमचे खाते आता पुढे जाऊ शकते. बॅकएंड पडताळणी सुरू झाल्यावर प्रोफाइलमधून ऐच्छिक ओळख पडताळणी नंतर पूर्ण करता येईल."
+            )}
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <Link href="/profile-selection" className="rounded-2xl bg-primary px-6 py-4 font-black text-white dark:bg-emerald-700">
-              {t("verify-contact.go_to_profile_selection")}
+              {langText("Go to profile selection", "प्रोफाइल निवडीकडे जा")}
             </Link>
             <Link href="/complete-profile" className="rounded-2xl border border-outline-variant px-6 py-4 font-black text-primary dark:text-emerald-300">
-              {t("verify-contact.edit_profile")}
+              {langText("Edit profile", "प्रोफाइल संपादित करा")}
             </Link>
           </div>
         </div>

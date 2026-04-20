@@ -45,6 +45,15 @@ interface ActionResult {
   redirectTo?: string;
 }
 
+const MAX_LISTING_IMAGES = 8;
+const MAX_LISTING_IMAGE_BYTES = 8 * 1024 * 1024;
+const ALLOWED_LISTING_IMAGE_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/avif",
+]);
+
 function finishFormAction(result: ActionResult): void {
   if (!result.ok) {
     throw new Error(result.error || "Action failed.");
@@ -59,16 +68,32 @@ function safeErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback;
 }
 
+function safeRevalidatePath(path: string) {
+  try {
+    revalidatePath(path);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    // `next build` may evaluate server action modules without an active IPC revalidation origin.
+    // In that environment invalidation is a no-op anyway, so ignore only that specific build-time case.
+    if (message.includes("localhost:undefined") || message.includes("Invalid URL")) {
+      return;
+    }
+
+    throw error;
+  }
+}
+
 function revalidateCommonPaths() {
-  revalidatePath("/");
-  revalidatePath("/rent-equipment");
-  revalidatePath("/owner-profile");
-  revalidatePath("/renter-profile");
-  revalidatePath("/owner-registration");
-  revalidatePath("/support");
-  revalidatePath("/feedback");
-  revalidatePath("/report");
-  revalidatePath("/coming-soon");
+  safeRevalidatePath("/");
+  safeRevalidatePath("/rent-equipment");
+  safeRevalidatePath("/owner-profile");
+  safeRevalidatePath("/renter-profile");
+  safeRevalidatePath("/owner-registration");
+  safeRevalidatePath("/support");
+  safeRevalidatePath("/feedback");
+  safeRevalidatePath("/report");
+  safeRevalidatePath("/coming-soon");
 }
 
 async function runLoggedAction<T>(
@@ -84,6 +109,20 @@ async function saveListingImages(ownerUserId: string, listingId: string, files: 
   const validFiles = files.filter((file) => file.size > 0);
   if (!validFiles.length) {
     return [] as Array<{ objectPath: string; publicUrl: string }>;
+  }
+
+  if (validFiles.length > MAX_LISTING_IMAGES) {
+    throw new Error(`Upload up to ${MAX_LISTING_IMAGES} listing images at a time.`);
+  }
+
+  for (const file of validFiles) {
+    if (!ALLOWED_LISTING_IMAGE_TYPES.has(file.type)) {
+      throw new Error("Upload JPG, PNG, WEBP, or AVIF images only.");
+    }
+
+    if (file.size > MAX_LISTING_IMAGE_BYTES) {
+      throw new Error("Each listing image must be 8 MB or smaller.");
+    }
   }
 
   const storedPaths = await Promise.all(
