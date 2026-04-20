@@ -18,11 +18,13 @@ test("owner-profile workspace shell exposes owner-style navigation with earnings
   assert.doesNotMatch(source, /href: "\/owner-profile\/saved", label: "Saved Equipment"/);
 });
 
-test("owner-profile routes use the new owner dashboard, equipment browser, and earnings views", async () => {
-  const [root, browse, earnings] = await Promise.all([
+test("owner-profile routes use the new owner dashboard, equipment browser, earnings views, and owner-only redirects", async () => {
+  const [root, browse, earnings, saved, feedbackSuccess] = await Promise.all([
     readFile(new URL("../app/owner-profile/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/browse/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/earnings/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-profile/saved/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(root, /title="Owner Profile"/);
@@ -34,6 +36,10 @@ test("owner-profile routes use the new owner dashboard, equipment browser, and e
   assert.match(earnings, /Pricing & Earnings/);
   assert.match(earnings, /getOwnerPayments/);
   assert.match(earnings, /activeTab="earnings"/);
+  assert.match(saved, /redirect\("\/owner-profile\/browse"\)/);
+  assert.match(feedbackSuccess, /primaryHref="\/owner-profile"/);
+  assert.match(feedbackSuccess, /secondaryHref="\/owner-profile\/browse"/);
+  assert.doesNotMatch(feedbackSuccess, /RenterProfileViews/);
 });
 
 test("owner earnings content uses the revenue panel and owner-family links", async () => {

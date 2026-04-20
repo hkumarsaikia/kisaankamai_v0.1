@@ -1,5 +1,5 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
-import { OwnerProfileFeedbackSuccessContent } from "@/components/owner-profile/OwnerProfileViews";
+import { ProfileFeedbackSuccessCard } from "@/components/profile/ProfileFeedbackSuccessCard";
 
 export default function RenterProfileFeedbackSuccessPage() {
   return (
@@ -7,9 +7,15 @@ export default function RenterProfileFeedbackSuccessPage() {
       family="renter-profile"
       activeTab="feedback"
       title="Feedback Submitted"
-      subtitle="Thank you for helping us improve Kisan Kamai."
+      subtitle="Thank you for helping us improve the renter experience."
     >
-      <OwnerProfileFeedbackSuccessContent />
+      <ProfileFeedbackSuccessCard
+        primaryHref="/renter-profile"
+        primaryLabel="Back to Renter Profile"
+        secondaryHref="/renter-profile/bookings"
+        secondaryLabel="My Bookings"
+        message="Your feedback has been recorded for the renter workspace."
+      />
     </OwnerProfileWorkspaceShell>
   );
 }

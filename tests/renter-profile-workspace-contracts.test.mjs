@@ -19,10 +19,11 @@ test("renter-profile workspace shell exposes renter-style navigation with saved 
 });
 
 test("renter-profile routes use the new renter booking board while preserving compatibility redirects", async () => {
-  const [root, bookings, earnings] = await Promise.all([
+  const [root, bookings, earnings, feedbackSuccess] = await Promise.all([
     readFile(new URL("../app/renter-profile/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/renter-profile/bookings/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/renter-profile/earnings/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/renter-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(root, /title="Renter Profile"/);
@@ -31,6 +32,9 @@ test("renter-profile routes use the new renter booking board while preserving co
   assert.match(bookings, /RenterBookingsBoard/);
   assert.match(bookings, /variant="page"/);
   assert.match(earnings, /redirect\("\/owner-profile\/earnings"\)/);
+  assert.match(feedbackSuccess, /primaryHref="\/renter-profile"/);
+  assert.match(feedbackSuccess, /secondaryHref="\/renter-profile\/bookings"/);
+  assert.doesNotMatch(feedbackSuccess, /OwnerProfileViews/);
 });
 
 test("renter-style views keep renter-family links and saved equipment flows", async () => {
