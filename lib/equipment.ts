@@ -23,6 +23,15 @@ export interface EquipmentRecord {
   operatorIncluded: boolean;
 }
 
+const DEPRECATED_EQUIPMENT_DESCRIPTION =
+  "A premium tractor listing with verified operator support, strong PTO output, and regional owner coverage.";
+
+export function sanitizeEquipmentDescription(description: string) {
+  return description === DEPRECATED_EQUIPMENT_DESCRIPTION
+    ? "A premium tractor listing with strong PTO output and regional owner coverage."
+    : description;
+}
+
 export const MOCK_EQUIPMENT: EquipmentRecord[] = [
   {
     id: "1",
@@ -150,7 +159,9 @@ export const MOCK_EQUIPMENT: EquipmentRecord[] = [
     district: "Sangli",
     state: "Maharashtra",
     description:
-      "A premium tractor listing with verified operator support, strong PTO output, and regional owner coverage.",
+      sanitizeEquipmentDescription(
+        "A premium tractor listing with strong PTO output and regional owner coverage."
+      ),
     pricePerHour: 850,
     unitLabel: "per hour",
     rating: 4.9,

@@ -38,10 +38,14 @@ export const registerInputSchema = z
     village: z.string().trim().min(2, "Enter your city or village.").max(120),
     pincode: sixDigitPincode,
     phone: optionalPhone,
-    fieldArea: positiveNumberString,
+    fieldArea: z.union([positiveNumberString, z.string()]).optional(),
     password: z.string().min(6, "Password must be at least 6 characters.").max(128),
     role: z.enum(["renter", "owner", "both"]).default("renter"),
     otpVerified: z.boolean().optional().default(false),
+    district: z.string().optional(),
+    language: z.enum(["en", "mr"]).optional(),
+    idType: z.string().optional(),
+    idNumber: z.string().optional(),
   })
   .refine((value) => Boolean(value.email || value.phone), {
     message: "Enter at least one contact method: email or phone.",

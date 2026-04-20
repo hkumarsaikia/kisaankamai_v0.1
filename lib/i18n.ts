@@ -1,6 +1,7 @@
 import { enMessages, mrMessages } from "@/lib/i18n.messages";
 
 export type Language = "en" | "mr";
+export const DEFAULT_LANGUAGE: Language = "mr";
 
 export interface LocalizedValue<T> {
   en: T;
@@ -11,6 +12,10 @@ export type LocalizedText = LocalizedValue<string>;
 
 export function localizedText(en: string, mr: string): LocalizedText {
   return { en, mr };
+}
+
+export function isLanguage(value: unknown): value is Language {
+  return value === "en" || value === "mr";
 }
 
 export function pickLocalizedValue<T>(value: LocalizedValue<T>, language: Language): T {

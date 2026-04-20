@@ -2,6 +2,14 @@
 
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
 import {
+  buildTranslationFallbackCacheKey,
+  GOOGLE_TRANSLATE_FALLBACK_PATH,
+  normalizeSingleLanguageSource,
+  type SingleLanguageTextOptions,
+  type TranslationFallbackPayload,
+} from "@/lib/i18n.fallback";
+import {
+  DEFAULT_LANGUAGE,
   Language,
   LocalizedText,
   TranslationKey,
@@ -14,6 +22,8 @@ interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: TranslationKey, params?: TranslationParams) => string;
+  text: (value: LocalizedText | string, options?: SingleLanguageTextOptions) => string;
+  translateText: (value: string, options?: SingleLanguageTextOptions) => Promise<string>;
   langText: {
     (value: LocalizedText): string;
     (enText: string, mrText?: string): string;
@@ -21,6 +31,10 @@ interface LanguageContextType {
 }
 
 const STORAGE_KEY = "kk_language";
+const translationFallbackCache = new Map<string, string>();
+const translationFallbackRequests = new Map<string, Promise<string>>();
+const DEVANAGARI_REGEX = /\p{Script=Devanagari}/u;
+const LATIN_REGEX = /[A-Za-z]/;
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -31,7 +45,136 @@ function applyLanguageToDocument(language: Language) {
   document.documentElement.classList.toggle("lang-en", language === "en");
 }
 
+function containsDevanagari(value: string) {
+  return DEVANAGARI_REGEX.test(value);
+}
+
+function containsLatin(value: string) {
+  return LATIN_REGEX.test(value);
+}
+
+function inferSourceLanguage(text: string, explicitSourceLanguage?: Language): Language {
+  const normalizedSourceLanguage = normalizeSingleLanguageSource(explicitSourceLanguage);
+  if (explicitSourceLanguage) {
+    return normalizedSourceLanguage;
+  }
+
+  const trimmedText = text.trim();
+  if (!trimmedText) {
+    return normalizedSourceLanguage;
+  }
+
+  if (containsDevanagari(trimmedText) && !containsLatin(trimmedText)) {
+    return "mr";
+  }
+
+  return normalizedSourceLanguage;
+}
+
+function extractInlineLocalizedText(value: string): LocalizedText | null {
+  const normalizedValue = value.trim();
+  if (!normalizedValue) {
+    return null;
+  }
+
+  const delimiterCandidates = [" / ", " | ", "\n"];
+
+  for (const delimiter of delimiterCandidates) {
+    const segments = normalizedValue
+      .split(delimiter)
+      .map((segment) => segment.trim())
+      .filter(Boolean);
+
+    if (segments.length !== 2) {
+      continue;
+    }
+
+    const [firstSegment, secondSegment] = segments;
+    const firstHasDevanagari = containsDevanagari(firstSegment);
+    const secondHasDevanagari = containsDevanagari(secondSegment);
+    const firstHasLatin = containsLatin(firstSegment);
+    const secondHasLatin = containsLatin(secondSegment);
+
+    if (firstHasDevanagari && !secondHasDevanagari && secondHasLatin) {
+      return { en: secondSegment, mr: firstSegment };
+    }
+
+    if (secondHasDevanagari && !firstHasDevanagari && firstHasLatin) {
+      return { en: firstSegment, mr: secondSegment };
+    }
+  }
+
+  return null;
+}
+
+function buildSingleLanguagePayload(
+  text: string,
+  targetLanguage: Language,
+  options?: SingleLanguageTextOptions
+): TranslationFallbackPayload {
+  return {
+    text,
+    sourceLanguage: inferSourceLanguage(text, options?.sourceLanguage),
+    targetLanguage,
+    cacheKey: options?.cacheKey,
+  };
+}
+
+function readCachedTranslation(payload: TranslationFallbackPayload) {
+  return translationFallbackCache.get(buildTranslationFallbackCacheKey(payload));
+}
+
+async function requestTranslationFallback(payload: TranslationFallbackPayload) {
+  if (!payload.text.trim() || payload.sourceLanguage === payload.targetLanguage) {
+    return payload.text;
+  }
+
+  const cacheKey = buildTranslationFallbackCacheKey(payload);
+  const cachedTranslation = translationFallbackCache.get(cacheKey);
+  if (cachedTranslation) {
+    return cachedTranslation;
+  }
+
+  const pendingRequest = translationFallbackRequests.get(cacheKey);
+  if (pendingRequest) {
+    return pendingRequest;
+  }
+
+  const requestPromise = fetch(GOOGLE_TRANSLATE_FALLBACK_PATH, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  })
+    .then(async (response) => {
+      const result = (await response.json().catch(() => null)) as
+        | {
+            ok?: boolean;
+            translation?: string;
+            error?: string;
+          }
+        | null;
+
+      if (!response.ok) {
+        throw new Error(result?.error || "Translation fallback request failed.");
+      }
+
+      const translation = result?.translation || payload.text;
+      translationFallbackCache.set(cacheKey, translation);
+      return translation;
+    })
+    .catch(() => payload.text)
+    .finally(() => {
+      translationFallbackRequests.delete(cacheKey);
+    });
+
+  translationFallbackRequests.set(cacheKey, requestPromise);
+  return requestPromise;
+}
+
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [, setTranslationCacheVersion] = useState(0);
   const [language, setLanguage] = useState<Language>(() => {
     if (typeof document !== "undefined") {
       const bootLanguage = document.documentElement.dataset.language;
@@ -40,7 +183,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    return "mr";
+    return DEFAULT_LANGUAGE;
   });
 
   useEffect(() => {
@@ -63,17 +206,77 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem(STORAGE_KEY, nextLanguage);
   };
 
+  const ensureTranslation = (payload: TranslationFallbackPayload) => {
+    if (!payload.text.trim() || payload.sourceLanguage === payload.targetLanguage) {
+      return;
+    }
+
+    const cacheKey = buildTranslationFallbackCacheKey(payload);
+    if (translationFallbackCache.has(cacheKey) || translationFallbackRequests.has(cacheKey)) {
+      return;
+    }
+
+    requestTranslationFallback(payload).then((translatedValue) => {
+      if (translatedValue !== payload.text) {
+        setTranslationCacheVersion((current) => current + 1);
+      }
+    });
+  };
+
   const value = useMemo<LanguageContextType>(
     () => ({
       language,
       setLanguage: handleSetLanguage,
       t: (key, params) => translate(language, key, params),
+      text: (value, options) => {
+        if (typeof value === "object") {
+          return pickLocalizedText(value, language);
+        }
+
+        const inlineLocalizedText = extractInlineLocalizedText(value);
+        if (inlineLocalizedText) {
+          return pickLocalizedText(inlineLocalizedText, language);
+        }
+
+        const payload = buildSingleLanguagePayload(value, language, options);
+        const cachedTranslation = readCachedTranslation(payload);
+        if (cachedTranslation) {
+          return cachedTranslation;
+        }
+
+        ensureTranslation(payload);
+        return value;
+      },
+      translateText: (value, options) => {
+        const inlineLocalizedText = extractInlineLocalizedText(value);
+        if (inlineLocalizedText) {
+          return Promise.resolve(pickLocalizedText(inlineLocalizedText, language));
+        }
+
+        return requestTranslationFallback(buildSingleLanguagePayload(value, language, options));
+      },
       langText: (valueOrEnText: LocalizedText | string, mrText?: string) => {
         if (typeof valueOrEnText === "object") {
           return pickLocalizedText(valueOrEnText, language);
         }
 
-        return language === "mr" ? mrText || valueOrEnText : valueOrEnText;
+        if (typeof mrText === "string") {
+          return language === "mr" ? mrText : valueOrEnText;
+        }
+
+        const inlineLocalizedText = extractInlineLocalizedText(valueOrEnText);
+        if (inlineLocalizedText) {
+          return pickLocalizedText(inlineLocalizedText, language);
+        }
+
+        const payload = buildSingleLanguagePayload(valueOrEnText, language);
+        const cachedTranslation = readCachedTranslation(payload);
+        if (cachedTranslation) {
+          return cachedTranslation;
+        }
+
+        ensureTranslation(payload);
+        return valueOrEnText;
       },
     }),
     [language]
@@ -89,4 +292,37 @@ export function useLanguage() {
   }
 
   return context;
+}
+
+export function useLocalizedString(
+  value: LocalizedText | string,
+  options?: SingleLanguageTextOptions
+) {
+  const { language, text, translateText } = useLanguage();
+  const sourceLanguage = normalizeSingleLanguageSource(options?.sourceLanguage);
+  const cacheKey = options?.cacheKey;
+  const immediateValue = typeof value === "object" ? text(value) : text(value, { sourceLanguage, cacheKey });
+  const [resolvedValue, setResolvedValue] = useState(immediateValue);
+
+  useEffect(() => {
+    setResolvedValue(immediateValue);
+
+    if (typeof value !== "string" || !value.trim() || sourceLanguage === language) {
+      return;
+    }
+
+    let cancelled = false;
+
+    translateText(value, { sourceLanguage, cacheKey }).then((nextValue) => {
+      if (!cancelled) {
+        setResolvedValue(nextValue);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [cacheKey, immediateValue, language, sourceLanguage, translateText, value]);
+
+  return resolvedValue;
 }

@@ -32,6 +32,7 @@ logs/runtime/*.out.log
 
 # local env files
 .env*.local
+agents/codex-antigravity-sync/config/local.json
 
 # vercel
 .vercel

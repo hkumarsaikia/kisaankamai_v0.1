@@ -80,12 +80,13 @@ export async function clearSessionCookie() {
 export async function getCurrentSession(): Promise<LocalSession | null> {
   const store = await cookies();
   const sessionCookie = store.get(SESSION_COOKIE_NAME)?.value;
-  if (!sessionCookie) {
+  if (!sessionCookie || typeof sessionCookie !== "string" || sessionCookie.trim() === "" || sessionCookie === "undefined" || sessionCookie === "null") {
     return null;
   }
 
   try {
-    const decoded = await getAdminAuth().verifySessionCookie(sessionCookie, false);
+    const auth = getAdminAuth();
+    const decoded = await auth.verifySessionCookie(sessionCookie, false);
     const session = await getLocalSessionByUserId(decoded.uid);
     if (!session) {
       return null;
@@ -97,8 +98,15 @@ export async function getCurrentSession(): Promise<LocalSession | null> {
         normalizeWorkspaceCookie(store.get(WORKSPACE_COOKIE_NAME)?.value) ??
         normalizeRolePreference(session.profile.rolePreference),
     };
-  } catch (error) {
-    captureServerException(error, { subsystem: "getCurrentSession" });
+  } catch (error: any) {
+    // Specifically catch decoding errors caused by invalid/expired/guest tokens
+    // which are common in development and shouldn't trigger full bug reports.
+    const errorCode = error?.errorInfo?.code || error?.code;
+    const isMalformedToken = errorCode === "auth/argument-error" || errorCode === "auth/invalid-session-cookie";
+
+    if (!isMalformedToken) {
+      captureServerException(error, { subsystem: "getCurrentSession" });
+    }
     return null;
   }
 }

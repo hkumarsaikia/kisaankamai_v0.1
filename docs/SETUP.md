@@ -90,3 +90,18 @@ Required services:
 - [ ] Firebase environment variables and Admin credentials are set.
 - [ ] `npm run dev` starts the server on port 3000.
 - [ ] `npm run verify` passes.
+
+## Cross-Agent Handoff Setup
+
+If you want to share session context between Codex and Antigravity through the repo:
+
+1. Keep the handoff system in `agents/codex-antigravity-sync/`.
+2. Install the shared launcher into Codex and Antigravity:
+   ```bash
+   npm run cross-agent:install
+   ```
+3. Create `agents/codex-antigravity-sync/config/local.json` only if you want optional exported transcript drop-folder support.
+4. Run the launcher manually by name when you want to refresh the pack.
+5. Do not configure it to auto-run.
+
+Use `agents/codex-antigravity-sync/docs/README.md` for the subsystem contract, `agents/codex-antigravity-sync/docs/UPDATER.md` for refresh behavior, `agents/codex-antigravity-sync/docs/CONSUMER.md` for read order, and `agents/codex-antigravity-sync/docs/REFERENCES.md` for supported reference forms.

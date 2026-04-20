@@ -1,40 +1,108 @@
-import { Suspense } from "react";
-import RentEquipmentClient from "./RentEquipmentClient";
-import RentEquipmentResults from "./RentEquipmentResults";
+import RentEquipmentView from "./RentEquipmentView";
+import { getRentEquipmentView } from "@/lib/discovery-routes";
+import { getEquipmentList } from "@/lib/server/equipment";
 
-export default function RentEquipmentPage({
+const QUERY_ALIASES: Record<string, string[]> = {
+  tractor: ["tractor"],
+  tractors: ["tractor"],
+  harvester: ["harvester"],
+  harvesters: ["harvester"],
+  implement: ["implement", "rotavator", "seed drill"],
+  implements: ["implement", "rotavator", "seed drill"],
+  plough: ["plough", "plow"],
+  ploughs: ["plough", "plow"],
+  sprayer: ["sprayer"],
+  sprayers: ["sprayer"],
+  seeder: ["seeder", "seed drill"],
+  seeders: ["seeder", "seed drill"],
+  trolley: ["trolley"],
+  trolleys: ["trolley"],
+};
+
+function matchesLocation(candidate: string, location: string) {
+  if (!location) {
+    return true;
+  }
+
+  const normalizedCandidate = candidate.toLowerCase();
+  const normalizedLocation = location.toLowerCase();
+
+  if (normalizedLocation === "423501") {
+    return normalizedCandidate.includes("kalwan");
+  }
+
+  if (normalizedLocation === "431715") {
+    return normalizedCandidate.includes("mukhed");
+  }
+
+  return normalizedCandidate.includes(normalizedLocation);
+}
+
+function expandQueryTerms(query: string) {
+  const normalizedQuery = query.trim().toLowerCase();
+  const terms = new Set<string>();
+
+  if (!normalizedQuery) {
+    return terms;
+  }
+
+  terms.add(normalizedQuery);
+
+  if (normalizedQuery.endsWith("s") && normalizedQuery.length > 1) {
+    terms.add(normalizedQuery.slice(0, -1));
+  }
+
+  for (const alias of QUERY_ALIASES[normalizedQuery] || []) {
+    terms.add(alias);
+  }
+
+  return terms;
+}
+
+export default async function RentEquipmentPage({
   searchParams,
 }: {
   searchParams?: { location?: string; query?: string };
 }) {
   const location = searchParams?.location || "";
   const query = searchParams?.query || "";
+  const items = await getEquipmentList();
+  const normalizedQuery = query.trim().toLowerCase();
+  const queryTerms = expandQueryTerms(query);
+
+  const filteredItems = items.filter((item) => {
+    const searchableText = [
+      item.name,
+      item.categoryLabel,
+      item.category,
+      item.location,
+      item.district,
+      ...item.tags,
+      ...item.workTypes,
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    const queryMatch =
+      !normalizedQuery ||
+      Array.from(queryTerms).some((term) => searchableText.includes(term));
+
+    return queryMatch && matchesLocation(item.location, location);
+  });
+
+  const view = getRentEquipmentView({
+    query,
+    hasMatches: filteredItems.length > 0,
+  });
+
+  const visibleItems = view === "available" ? items.slice(0, 8) : filteredItems;
 
   return (
-    <RentEquipmentClient initialLocation={location} initialQuery={query}>
-      <Suspense fallback={<ResultsSkeleton />}>
-        <RentEquipmentResults location={location} query={query} />
-      </Suspense>
-    </RentEquipmentClient>
+    <RentEquipmentView
+      view={view}
+      items={visibleItems}
+      initialLocation={location}
+      initialQuery={query}
+    />
   );
 }
-
-function ResultsSkeleton() {
-  return (
-    <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-      {Array.from({ length: 6 }).map((_, index) => (
-        <div
-          key={index}
-          className="overflow-hidden rounded-2xl border border-outline-variant/20 bg-white p-6 shadow-sm dark:border-slate-800/50 dark:bg-slate-900/40"
-        >
-          <div className="mb-5 h-56 animate-pulse rounded-2xl bg-slate-200 dark:bg-slate-800" />
-          <div className="mb-3 h-4 w-24 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-          <div className="mb-3 h-8 w-2/3 animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-          <div className="mb-6 h-4 w-full animate-pulse rounded bg-slate-200 dark:bg-slate-800" />
-          <div className="h-11 w-full animate-pulse rounded-xl bg-slate-200 dark:bg-slate-800" />
-        </div>
-      ))}
-    </div>
-  );
-}
-

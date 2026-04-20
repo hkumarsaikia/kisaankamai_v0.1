@@ -304,8 +304,8 @@ function truncateValue(
   currentPath = "root",
   depth = 0
 ): unknown {
-  if (value === null || value === undefined) {
-    return value;
+  if (value === undefined || value === null) {
+    return null;
   }
 
   if (depth >= MAX_DEPTH) {
@@ -373,7 +373,7 @@ function normalizeAndTruncateRecord(record: BugReportRecord) {
   const truncatedRecord = truncateValue(prepared, state) as BugReportRecord;
   return {
     ...truncatedRecord,
-    truncated: state.truncated || truncatedRecord.truncated,
+    truncated: Boolean(state.truncated || truncatedRecord.truncated),
     truncationNotes: state.notes.length
       ? [...(truncatedRecord.truncationNotes || []), ...state.notes]
       : truncatedRecord.truncationNotes,

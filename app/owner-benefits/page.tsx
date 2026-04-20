@@ -1,9 +1,6 @@
 "use client";
 
 import { ContentImage } from "@/components/ContentImage";
-
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import { assetPath } from "@/lib/site";
 
@@ -11,8 +8,7 @@ export default function OwnerBenefitsPage() {
   const { t } = useLanguage();
 
   return (
-    <main className="bg-surface dark:bg-slate-950 min-h-screen">
-      <Header />
+    <div className="flex flex-col bg-surface dark:bg-slate-950 min-h-screen">
       <div className="pt-20">
         {/* Hero Section */}
         <section className="relative min-h-[716px] flex items-center overflow-hidden bg-primary-container dark:bg-slate-950">
@@ -22,12 +18,6 @@ export default function OwnerBenefitsPage() {
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-on-tertiary-container/20 border border-on-tertiary-container/30 rounded-full text-on-tertiary-container dark:text-amber-400 font-label text-xs font-bold uppercase tracking-widest">
-                <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  stars
-                </span>
-                {t("owner-benefits.owner_opportunity")}
-              </div>
               <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-white leading-tight">
                 {t("owner-benefits.maximize_your")}<br />
                 <span className="text-on-secondary-container dark:text-amber-200">{t("owner-benefits.machine_s_potential")}</span>
@@ -35,15 +25,6 @@ export default function OwnerBenefitsPage() {
               <p className="text-on-primary-container dark:text-emerald-100 text-lg md:text-xl max-w-xl font-medium leading-relaxed">
                 {t("owner-benefits.turn_your_idle_farming_equipment_into_a_consistent_revenue_stream_connect_with_verified_farmers_in_sangli_satara_and_kolhapur_districts")}
               </p>
-              <div className="flex flex-wrap gap-4">
-                <button className="bg-secondary-container text-on-secondary-container font-bold px-8 py-4 rounded-xl hover:scale-105 transition-transform flex items-center gap-2">
-                  {t("owner-benefits.list_your_machine_now")}
-                  <span className="material-symbols-outlined">arrow_forward</span>
-                </button>
-                <button className="bg-white/10 backdrop-blur text-white border border-white/20 font-bold px-8 py-4 rounded-xl hover:bg-white/20 transition-all">
-                  {t("owner-benefits.view_success_stories")}
-                </button>
-              </div>
             </div>
             <div className="hidden lg:grid grid-cols-2 gap-4">
               <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl mt-12">
@@ -148,48 +129,8 @@ export default function OwnerBenefitsPage() {
           </div>
         </section>
 
-        {/* Section 4: Owner Stories */}
-        <section className="py-24 bg-surface-container-low dark:bg-slate-950/20">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-              <div>
-                <div className="inline-block px-4 py-1 bg-secondary/10 text-secondary dark:text-amber-500 rounded-full text-xs font-bold uppercase mb-4 tracking-widest">{t("owner-benefits.trust_and_safety")}</div>
-                <h2 className="font-headline text-4xl font-extrabold text-primary dark:text-emerald-50 mb-6">{t("owner-benefits.your_machine_is_our_priority")}</h2>
-                <div className="space-y-8">
-                  <div className="flex gap-6">
-                    <div className="shrink-0 w-12 h-12 rounded-full bg-white dark:bg-slate-900/70 flex items-center justify-center shadow-sm">
-                      <span className="material-symbols-outlined text-primary dark:text-emerald-400" style={{ fontVariationSettings: "'FILL' 1" }}>security</span>
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-lg text-primary dark:text-emerald-100 mb-1">{t("owner-benefits.safe_handoff_protocol")}</h4>
-                      <p className="text-on-surface-variant dark:text-slate-400 text-sm">{t("owner-benefits.digital_checklist_and_photo_verification_at_both_pickup_and_return_ensures_your_equipment_s_condition_is_documented")}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="relative">
-                <div className="bg-white/80 dark:bg-slate-900/50 backdrop-blur-md border border-outline-variant/30 dark:border-slate-800/50 p-8 rounded-[2.5rem] relative z-10 shadow-xl">
-                  <div className="flex items-center gap-4 mb-6">
-                    <ContentImage className="w-16 h-16 rounded-full object-cover border-2 border-primary/20" alt="Owner" src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
-                    <div>
-                      <h5 className="font-bold text-primary dark:text-emerald-50">Sanjay Deshmukh</h5>
-                      <p className="text-xs text-on-surface-variant dark:text-slate-400 font-medium">{t("owner-benefits.tractor_owner_karad_satara")}</p>
-                    </div>
-                  </div>
-                  <p className="text-on-surface dark:text-slate-300 font-medium italic leading-relaxed mb-8">
-                    {t("owner-benefits.i_was_hesitant_about_giving_my_new_holland_tractor_to_someone_else_now_my_tractor_pays_for_its_own_emi_and_maintenance_through_rental_income_during_the_off_season")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Section 4: Owner Stories (Removed per request) */}
       </div>
-      <Footer />
-    </main>
+    </div>
   );
 }
-
-
-
-

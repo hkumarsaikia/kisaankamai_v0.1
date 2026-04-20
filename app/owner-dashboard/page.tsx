@@ -1,6 +1,5 @@
-import { LegacyRouteRedirect } from "@/components/LegacyRouteRedirect";
+import { redirect } from "next/navigation";
 
-export default function OwnerDashboardLegacyPage() {
-  return <LegacyRouteRedirect target="/owner-profile" title="Owner Profile" />;
+export default function OwnerDashboardPage() {
+  redirect("/owner-profile");
 }
-

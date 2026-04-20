@@ -1,0 +1,361 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
+import { assetPath } from "@/lib/site";
+
+type BookingSummary = {
+  id: string;
+  listingId: string;
+  status: string;
+  amount: number;
+  startDate: string;
+  endDate: string;
+  listing?: {
+    id?: string | null;
+    name?: string | null;
+    coverImage?: string | null;
+    district?: string | null;
+  } | null;
+  ownerProfile?: { fullName?: string | null } | null;
+};
+
+type SavedListingSummary = {
+  id: string;
+  name: string;
+  coverImage: string;
+  categoryLabel: string;
+  pricePerHour: number;
+};
+
+type PaymentSummary = {
+  id: string;
+  amount: number;
+  method: string;
+  status: string;
+  bookingId: string;
+};
+
+const recommendedEquipment = [
+  {
+    title: "Multicrop Seed Drill",
+    category: "Seed Drills",
+    price: "₹800",
+    unit: "/ acre",
+    href: "/rent-equipment?query=seeders",
+    image: assetPath("/assets/generated/seed_drill.png"),
+  },
+  {
+    title: "Kubota Harvester DC-68G",
+    category: "Harvesters",
+    price: "₹2,200",
+    unit: "/ hr",
+    href: "/rent-equipment?query=harvesters",
+    image: assetPath("/assets/generated/harvester_action.png"),
+  },
+  {
+    title: "DJI Agras Drone T30",
+    category: "Sprayers",
+    price: "₹450",
+    unit: "/ acre",
+    href: "/rent-equipment?query=sprayers",
+    image: assetPath("/assets/generated/sprayer.png"),
+  },
+];
+
+export function RenterWorkspaceOverview({
+  renterName,
+  bookings,
+  payments,
+  savedListings,
+}: {
+  renterName: string;
+  bookings: BookingSummary[];
+  payments: PaymentSummary[];
+  savedListings: SavedListingSummary[];
+}) {
+  const { langText } = useLanguage();
+  const [bookingView, setBookingView] = useState<"current" | "upcoming" | "history">("current");
+  const currentBookings = bookings.filter((booking) => booking.status !== "completed" && booking.status !== "cancelled" && booking.status !== "upcoming");
+  const upcomingBookings = bookings.filter((booking) => booking.status === "upcoming");
+  const completedBookings = bookings.filter((booking) => booking.status === "completed");
+  const displayedBookings =
+    bookingView === "current"
+      ? currentBookings
+      : bookingView === "upcoming"
+        ? upcomingBookings
+        : completedBookings;
+  const bookingViewTitle =
+    bookingView === "current"
+      ? langText("Active Bookings", "सक्रिय बुकिंग्ज")
+      : bookingView === "upcoming"
+        ? langText("Upcoming Bookings", "आगामी बुकिंग्ज")
+        : langText("Recent History", "अलीकडील व्यवहार");
+  const totalSpent = payments.reduce((sum, payment) => sum + payment.amount, 0);
+  const paidAmount = payments.filter((payment) => payment.status === "paid").reduce((sum, payment) => sum + payment.amount, 0);
+  const upcomingAmount = Math.max(totalSpent - paidAmount, 0);
+
+  return (
+    <div className="space-y-8">
+      <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-on-surface-variant">
+            <span>Renter Profile</span>
+            <span className="h-1 w-1 rounded-full bg-outline-variant" />
+            <span className="text-secondary">शेतकरी पोर्टल</span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight text-on-surface">
+            Renter Profile <span className="font-bold text-on-surface-variant">/ शेतकरी डॅशबोर्ड</span>
+          </h1>
+          <p className="mt-1 text-sm font-medium text-on-surface-variant">
+            {langText(
+              `Welcome back, ${renterName}. You have ${currentBookings.length} active bookings and ${savedListings.length} saved listings.`,
+              `पुन्हा स्वागत आहे, ${renterName}. तुमच्याकडे ${currentBookings.length} सक्रिय बुकिंग्ज आणि ${savedListings.length} जतन केलेली उपकरणे आहेत.`
+            )}
+          </p>
+        </div>
+        <div className="flex w-full overflow-hidden rounded-full border border-outline-variant/40 bg-surface-container-low p-1 text-xs font-bold text-on-surface-variant shadow-sm md:w-auto">
+          {(["current", "upcoming", "history"] as const).map((view) => (
+            <button
+              key={view}
+              type="button"
+              aria-pressed={bookingView === view}
+              onClick={() => setBookingView(view)}
+              className={`flex-1 rounded-full px-5 py-2 text-center capitalize transition-colors md:flex-none ${
+                bookingView === view ? "bg-primary-container text-white" : "hover:bg-white/70 hover:text-primary"
+              }`}
+            >
+              {view}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="space-y-10">
+          <section>
+            <div className="mb-6 flex items-center justify-between gap-4">
+              <h2 className="flex items-center gap-2 text-lg font-bold text-on-surface">
+                {bookingViewTitle}
+              </h2>
+              <Link href="/renter-profile" className="text-sm font-bold text-primary-container hover:underline">
+                View All
+              </Link>
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              {displayedBookings.slice(0, 2).map((booking) => {
+                const listingId = booking.listing?.id || booking.listingId;
+                return (
+                  <article key={booking.id} className="group overflow-hidden rounded-2xl border border-outline-variant/50 bg-white shadow-sm transition-all hover:shadow-xl hover:shadow-primary-container/5">
+                    <div className="relative h-44">
+                      <Image
+                        src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
+                        alt={booking.listing?.name || "Equipment"}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <span className="absolute left-3 top-3 rounded-full bg-primary-container px-3 py-1 text-[10px] font-bold uppercase tracking-tight text-white">
+                        {booking.status}
+                      </span>
+                    </div>
+                    <div className="p-5">
+                      <div className="mb-2 flex items-start justify-between gap-4">
+                        <h3 className="text-lg font-bold text-on-surface">{booking.listing?.name || langText("Equipment", "उपकरण")}</h3>
+                        <p className="text-right text-sm font-extrabold text-primary">
+                          ₹{booking.amount.toLocaleString("en-IN")} <span className="block text-[10px] font-normal text-on-surface-variant">estimated</span>
+                        </p>
+                      </div>
+                      <div className="mb-5 space-y-2 text-sm text-on-surface-variant">
+                        <p className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-sm">event</span>
+                          {booking.startDate} - {booking.endDate}
+                        </p>
+                        <p className="flex items-center gap-2">
+                          <span className="material-symbols-outlined text-sm">person</span>
+                          Owner: {booking.ownerProfile?.fullName || langText("Owner", "मालक")}
+                        </p>
+                      </div>
+                      <div className="flex gap-2">
+                        <Link href={listingId ? `/equipment/${listingId}` : "/rent-equipment"} className="flex-1 rounded-lg bg-primary-container py-2 text-center text-xs font-bold text-white transition-opacity hover:opacity-90">
+                          Track Order
+                        </Link>
+                        <Link href="/support" className="rounded-lg border border-outline-variant p-2 text-on-surface-variant transition-colors hover:bg-surface-container">
+                          <span className="material-symbols-outlined text-xl">chat</span>
+                        </Link>
+                      </div>
+                    </div>
+                  </article>
+                );
+              })}
+              {!displayedBookings.length ? (
+                <div className="rounded-2xl border border-dashed border-outline-variant bg-white p-8 text-sm font-medium text-on-surface-variant">
+                  {bookingView === "history"
+                    ? langText("Completed rentals will appear here.", "पूर्ण झालेले व्यवहार येथे दिसतील.")
+                    : langText("No bookings in this view yet. Browse equipment to start a new rental.", "या दृश्यात अजून बुकिंग नाहीत. नवीन भाडे सुरू करण्यासाठी उपकरणे पहा.")}
+                </div>
+              ) : null}
+            </div>
+          </section>
+
+          <section>
+            <div className="mb-6 flex items-center justify-between gap-4">
+              <h2 className="text-lg font-bold text-on-surface">
+                Recommended for You <span className="font-normal text-on-surface-variant">/ तुमच्यासाठी शिफारस</span>
+              </h2>
+              <Link href="/rent-equipment" className="text-sm font-bold text-primary-container hover:underline">
+                Browse all
+              </Link>
+            </div>
+            <div className="flex gap-4 overflow-x-auto pb-4">
+              {recommendedEquipment.map((item) => (
+                <Link key={item.title} href={item.href} className="group w-64 flex-none rounded-xl border border-outline-variant/30 bg-white p-3 transition-colors hover:border-primary-container">
+                  <div className="relative mb-3 h-32 overflow-hidden rounded-lg">
+                    <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                  </div>
+                  <p className="mb-1 text-xs font-medium text-tertiary">{item.category}</p>
+                  <h4 className="mb-2 text-sm font-bold text-on-surface">{item.title}</h4>
+                  <p className="text-sm font-extrabold text-primary-container">
+                    {item.price} <span className="text-[10px] font-normal text-on-surface-variant">{item.unit}</span>
+                  </p>
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h2 className="mb-6 text-lg font-bold text-on-surface">
+              Recent History <span className="font-normal text-on-surface-variant">/ अलीकडील व्यवहार</span>
+            </h2>
+            <div className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-white">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[680px] text-left">
+                  <thead className="border-b border-outline-variant/30 bg-surface-container-low">
+                    <tr>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Equipment</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Dates</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Total Amount</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Status</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-outline-variant/20">
+                    {completedBookings.slice(0, 3).map((booking) => {
+                      const listingId = booking.listing?.id || booking.listingId;
+                      return (
+                        <tr key={booking.id} className="transition-colors hover:bg-surface-container-lowest">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="relative h-10 w-10 overflow-hidden rounded-lg bg-surface-container">
+                                <Image src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")} alt={booking.listing?.name || "Equipment"} fill className="object-cover" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-bold text-on-surface">{booking.listing?.name || langText("Equipment", "उपकरण")}</p>
+                                <p className="text-[10px] text-on-surface-variant">Owner: {booking.ownerProfile?.fullName || langText("Owner", "मालक")}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-sm text-on-surface-variant">{booking.startDate} - {booking.endDate}</td>
+                          <td className="px-6 py-4 text-sm font-bold text-on-surface">₹{booking.amount.toLocaleString("en-IN")}</td>
+                          <td className="px-6 py-4">
+                            <span className="rounded-full bg-on-primary-container/10 px-2 py-0.5 text-[10px] font-bold text-primary-container">Completed</span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <Link href={listingId ? `/equipment/${listingId}` : "/rent-equipment"} className="text-xs font-bold text-primary-container hover:underline">
+                              Re-book
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                    {!completedBookings.length ? (
+                      <tr>
+                        <td colSpan={5} className="px-6 py-8 text-sm text-on-surface-variant">
+                          {langText("Completed rentals will appear here.", "पूर्ण झालेले व्यवहार येथे दिसतील.")}
+                        </td>
+                      </tr>
+                    ) : null}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside className="space-y-6">
+          <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-bold text-on-surface">Booking Schedule</h3>
+              <span className="material-symbols-outlined text-on-surface-variant">calendar_today</span>
+            </div>
+            <div className="mb-4 grid grid-cols-7 gap-1 text-center">
+              {["M", "T", "W", "T", "F", "S", "S"].map((day, index) => (
+                <div key={`${day}-${index}`} className={`text-[10px] font-bold text-on-surface-variant ${index === 6 ? "text-error" : ""}`}>{day}</div>
+              ))}
+              {[10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23].map((day) => (
+                <div key={day} className={`py-2 text-xs ${day >= 12 && day <= 15 ? "rounded-full bg-primary-container font-bold text-white" : day >= 18 && day <= 19 ? "rounded-full bg-secondary-container font-bold text-on-secondary-fixed" : "text-on-surface-variant"}`}>
+                  {day}
+                </div>
+              ))}
+            </div>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 rounded-lg border-l-4 border-primary-container bg-surface-container-low p-2">
+                <div className="text-[10px] font-bold leading-tight text-on-surface-variant">12<br />Oct</div>
+                <div className="truncate text-xs font-bold text-on-surface">Equipment delivery</div>
+              </div>
+              <div className="flex items-center gap-3 rounded-lg border-l-4 border-secondary-container bg-surface-container-low p-2">
+                <div className="text-[10px] font-bold leading-tight text-on-surface-variant">18<br />Oct</div>
+                <div className="truncate text-xs font-bold text-on-surface">Pending request review</div>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm">
+            <h3 className="mb-1 font-bold text-on-surface">Spending Summary</h3>
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Current account</p>
+            <div className="mb-4">
+              <p className="text-3xl font-extrabold text-primary-container">₹{totalSpent.toLocaleString("en-IN")}</p>
+              <p className="text-xs font-medium text-on-surface-variant">Estimated spend recorded so far</p>
+            </div>
+            <div className="space-y-3">
+              <ProgressRow label="Paid" value={paidAmount} total={Math.max(totalSpent, 1)} tone="bg-primary-container" />
+              <ProgressRow label="Upcoming" value={upcomingAmount} total={Math.max(totalSpent, 1)} tone="bg-secondary-container" />
+            </div>
+            <Link href="/renter-profile" className="mt-6 block rounded-xl border border-outline-variant py-2.5 text-center text-xs font-bold transition-colors hover:bg-surface-container">
+              View Payments
+            </Link>
+          </section>
+
+          <section className="relative overflow-hidden rounded-2xl bg-tertiary-container p-6">
+            <span className="material-symbols-outlined absolute -bottom-4 -right-4 rotate-12 text-8xl text-white/10">support_agent</span>
+            <div className="relative z-10">
+              <h3 className="mb-2 text-lg font-bold leading-tight text-white">Need help with your booking?</h3>
+              <p className="mb-6 text-xs text-on-primary-container opacity-90">Our field support team is available from 8 AM to 8 PM.</p>
+              <Link href="/support" className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-xs font-extrabold text-tertiary-container shadow-lg shadow-tertiary-container/40 transition-transform hover:-translate-y-0.5">
+                <span className="material-symbols-outlined text-sm">call</span>
+                Contact Support
+              </Link>
+            </div>
+          </section>
+        </aside>
+      </section>
+    </div>
+  );
+}
+
+function ProgressRow({ label, value, total, tone }: { label: string; value: number; total: number; tone: string }) {
+  const width = Math.min(100, Math.round((value / total) * 100));
+
+  return (
+    <div>
+      <div className="mb-1 flex justify-between text-[10px] font-bold uppercase text-on-surface-variant">
+        <span>{label}</span>
+        <span>₹{value.toLocaleString("en-IN")}</span>
+      </div>
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container">
+        <div className={`h-full ${tone}`} style={{ width: `${width}%` }} />
+      </div>
+    </div>
+  );
+}

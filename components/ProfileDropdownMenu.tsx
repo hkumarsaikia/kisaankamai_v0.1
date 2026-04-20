@@ -1,0 +1,225 @@
+"use client";
+
+import { AppLink as Link } from "@/components/AppLink";
+import { useAuth } from "@/components/AuthContext";
+import { useLanguage } from "@/components/LanguageContext";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  resolvePortalHref,
+  resolveWorkspaceSettingsHref,
+  resolveWorkspaceSupportHref,
+} from "@/lib/workspace-routing.js";
+
+type ProfileDropdownMenuProps = {
+  className?: string;
+  settingsHref?: string;
+  showLabel?: boolean;
+  fullWidth?: boolean;
+  panelMode?: "popover" | "inline";
+};
+
+export function ProfileDropdownMenu({
+  className = "",
+  settingsHref,
+  showLabel = true,
+  fullWidth = false,
+  panelMode = "popover",
+}: ProfileDropdownMenuProps) {
+  const pathname = usePathname();
+  const { user, profile, activeWorkspace } = useAuth();
+  const { t, langText, text } = useLanguage();
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const resolvedSettingsHref = useMemo(
+    () =>
+      resolveWorkspaceSettingsHref({
+        pathname: pathname || "",
+        activeWorkspace,
+        settingsHref,
+      }),
+    [activeWorkspace, pathname, settingsHref]
+  );
+  const resolvedSupportHref = useMemo(
+    () =>
+      resolveWorkspaceSupportHref({
+        pathname: pathname || "",
+        activeWorkspace,
+      }),
+    [activeWorkspace, pathname]
+  );
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const displayName = user?.name || profile?.fullName || "Ramesh Kumar";
+  const avatarAlt = langText(
+    "User profile avatar with premium trust badge",
+    "प्रिमियम विश्वास बॅज असलेला वापरकर्ता प्रोफाइल अवतार"
+  );
+  const avatarSrc =
+    "https://lh3.googleusercontent.com/aida-public/AB6AXuAPynK0ZgVc0Xzw8MYvvIJVEOBk4zukvEedpGHH-Q7GM4Q6ob6SzcxRnBhYfxqofDsJWFC7lfXUaGfZMThvBAf8Y1jiJ3gC5BCxHldTTrj-gQ1XCOjfrfZgcMdEnuSILrTv8J2g2rqTQIvXtn8XTF960gPu-Vbi6N1NEba-XC-RjoAwEhPTECJPQHTsfp8-dDhQCJk7qO4kWaJx64AXPdx3sM6jdD_Z4E6hnrcRhAu6hpPKCSgoqVcxRkVSp4tBOuc3kPngwxOMVd_g";
+  const triggerClassName = fullWidth
+    ? "w-full justify-between"
+    : "justify-between";
+  const panelClassName =
+    panelMode === "inline"
+      ? "relative mt-3 w-full"
+      : "absolute right-0 top-full mt-3 w-[20rem] max-w-[calc(100vw-1.5rem)]";
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative ${fullWidth ? "w-full" : ""} ${className}`}
+      data-settings-href={resolvedSettingsHref}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        className={`flex items-center gap-3 rounded-full border border-white/40 bg-white/70 px-1.5 py-1.5 pr-4 text-left shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] backdrop-blur-xl transition hover:bg-white/90 dark:border-white/10 dark:bg-[rgba(24,28,34,0.75)] dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.3)] ${triggerClassName}`}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-label={t("header.aria.my_profile")}
+      >
+        <img
+          alt={avatarAlt}
+          className="h-10 w-10 rounded-full border-2 border-on-tertiary-container/30 object-cover shadow-sm"
+          src={avatarSrc}
+        />
+        {showLabel ? (
+          <span className="hidden min-w-0 flex-1 sm:block">
+            <span className="block truncate font-headline text-sm font-semibold leading-tight text-on-surface dark:text-slate-100">
+              {displayName}
+            </span>
+            <span className="mt-0.5 block truncate font-label text-xs font-light tracking-wide text-on-surface-variant dark:text-slate-400">
+              {text("Verified Owner", { cacheKey: "header.profile.verified_owner" })}
+            </span>
+          </span>
+        ) : null}
+        <span
+          className={`material-symbols-outlined ml-2 text-lg text-on-surface-variant transition-transform ${
+            open ? "rotate-180" : ""
+          }`}
+        >
+          expand_more
+        </span>
+      </button>
+
+      {open ? (
+        <div
+          className={`${panelClassName} overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.22)] dark:border-slate-800 dark:bg-slate-950`}
+          role="menu"
+        >
+          <div className="flex items-center gap-4 border-b border-slate-100 bg-slate-50 px-6 py-5 dark:border-slate-800 dark:bg-slate-900/70">
+            <img
+              alt={avatarAlt}
+              className="h-14 w-14 rounded-full object-cover"
+              src={avatarSrc}
+            />
+            <div className="min-w-0">
+              <p className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">
+                {displayName}
+              </p>
+              <p className="truncate text-sm text-slate-500 dark:text-slate-400">
+                {user?.email || profile?.email || "test@kisankamai.com"}
+              </p>
+            </div>
+          </div>
+
+          <div className="px-4 py-3">
+            <h4 className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+              {t("header.menu.profiles")}
+            </h4>
+            <div className="space-y-2">
+              <Link
+                href={resolvePortalHref("owner")}
+                onClick={() => setOpen(false)}
+                className="group flex items-center gap-4 rounded-2xl px-3 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                  <span className="material-symbols-outlined text-[22px]">agriculture</span>
+                </span>
+                <span>
+                  <span className="block text-sm font-semibold text-slate-800 transition-colors group-hover:text-primary dark:text-slate-200">
+                    {t("header.dropdown.owner_profile")}
+                  </span>
+                  <span className="block text-xs text-slate-500 dark:text-slate-400">
+                    {t("header.desc.manage_your_fleet")}
+                  </span>
+                </span>
+              </Link>
+
+              <Link
+                href={resolvePortalHref("renter")}
+                onClick={() => setOpen(false)}
+                className="group flex items-center gap-4 rounded-2xl px-3 py-3 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+                  <span className="material-symbols-outlined text-[22px]">grid_view</span>
+                </span>
+                <span>
+                  <span className="block text-sm font-semibold text-slate-800 transition-colors group-hover:text-primary dark:text-slate-200">
+                    {t("header.dropdown.renter_profile")}
+                  </span>
+                  <span className="block text-xs text-slate-500 dark:text-slate-400">
+                    {t("header.desc.your_bookings_and_equipment")}
+                  </span>
+                </span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="mx-4 h-px bg-slate-100 dark:bg-slate-800" />
+
+          <div className="px-4 py-3">
+            <h4 className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-slate-400">
+              {t("header.menu.account")}
+            </h4>
+            <div className="space-y-1">
+              <Link
+                href={resolvedSettingsHref}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-4 rounded-2xl px-3 py-3 text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900"
+              >
+                <span className="material-symbols-outlined text-xl text-slate-500">settings</span>
+                <span className="text-sm font-medium">{t("header.menu.settings")}</span>
+              </Link>
+              <Link
+                href={resolvedSupportHref}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-4 rounded-2xl px-3 py-3 text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900"
+              >
+                <span className="material-symbols-outlined text-xl text-slate-500">help_outline</span>
+                <span className="text-sm font-medium">{t("header.menu.help_support")}</span>
+              </Link>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-100 bg-slate-50 px-4 py-4 dark:border-slate-800 dark:bg-slate-900/70">
+            <Link
+              href="/logout"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-3 rounded-2xl px-2 py-1 text-red-600 transition-colors hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+            >
+              <span className="material-symbols-outlined text-xl">logout</span>
+              <span className="text-sm font-medium">{t("header.menu.sign_out")}</span>
+            </Link>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+}

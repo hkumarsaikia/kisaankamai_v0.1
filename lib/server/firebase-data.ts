@@ -4,7 +4,12 @@ import { randomUUID } from "node:crypto";
 import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { unstable_noStore as noStore } from "next/cache";
-import { getMockEquipmentById, getMockEquipmentList, type EquipmentRecord } from "@/lib/equipment";
+import {
+  getMockEquipmentById,
+  getMockEquipmentList,
+  sanitizeEquipmentDescription,
+  type EquipmentRecord,
+} from "@/lib/equipment";
 import type {
   BookingRecord,
   FormSubmissionRecord,
@@ -202,7 +207,9 @@ function mapListingFromFirestore(data: Partial<ListingRecord> & { id?: string })
     location,
     district,
     state: data.state || "Maharashtra",
-    description: data.description || "Verified equipment listed on Kisan Kamai.",
+    description: sanitizeEquipmentDescription(
+      data.description || "Verified equipment listed on Kisan Kamai."
+    ),
     pricePerHour: Number(data.pricePerHour || 0),
     unitLabel: data.unitLabel || "per hour",
     rating: Number(data.rating || 4.8),
@@ -556,7 +563,7 @@ export function listingToEquipmentRecord(listing: ListingRecord): EquipmentRecor
     location: listing.location,
     district: listing.district,
     state: listing.state,
-    description: listing.description,
+    description: sanitizeEquipmentDescription(listing.description),
     pricePerHour: listing.pricePerHour,
     unitLabel: listing.unitLabel,
     rating: listing.rating,

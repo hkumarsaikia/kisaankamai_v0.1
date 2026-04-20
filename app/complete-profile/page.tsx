@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
@@ -53,7 +51,6 @@ export default function CompleteProfilePage() {
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col">
-      <Header />
       <main className="flex-grow flex items-center justify-center pt-24 pb-12 px-6">
         <FormShell
           eyebrow={t("complete-profile.complete_your_profile")}
@@ -112,9 +109,6 @@ export default function CompleteProfilePage() {
           </form>
         </FormShell>
       </main>
-      <Footer />
     </div>
   );
 }
-
-

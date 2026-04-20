@@ -26,6 +26,7 @@ import {
   registerAndCreateSession,
   setWorkspaceCookie,
 } from "@/lib/server/local-auth";
+import { resolvePortalHref } from "@/lib/workspace-routing.js";
 import { mirrorAuthEvent } from "@/lib/server/sheets-mirror";
 import {
   bookingRequestSchema,
@@ -62,14 +63,12 @@ function revalidateCommonPaths() {
   revalidatePath("/");
   revalidatePath("/rent-equipment");
   revalidatePath("/owner-profile");
-  revalidatePath("/owner-profile/equipment");
-  revalidatePath("/owner-profile/bookings");
-  revalidatePath("/owner-profile/revenue");
   revalidatePath("/renter-profile");
-  revalidatePath("/renter-profile/browse");
-  revalidatePath("/renter-profile/bookings");
-  revalidatePath("/renter-profile/saved");
-  revalidatePath("/renter-profile/payments");
+  revalidatePath("/owner-registration");
+  revalidatePath("/support");
+  revalidatePath("/feedback");
+  revalidatePath("/report");
+  revalidatePath("/coming-soon");
 }
 
 async function runLoggedAction<T>(
@@ -151,7 +150,7 @@ export async function registerAction(input: RegisterInputPayload): Promise<Actio
       });
 
       revalidateCommonPaths();
-      return { ok: true, redirectTo: "/profile-selection" };
+      return { ok: true, redirectTo: "/register/success" };
     } catch (error) {
       return { ok: false, error: safeErrorMessage(error, "Registration failed.") };
     }
@@ -417,7 +416,7 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
 
       revalidateCommonPaths();
       revalidatePath(`/equipment/${listing.id}`);
-      return { ok: true, redirectTo: "/owner-profile/equipment" };
+      return { ok: true, redirectTo: resolvePortalHref("owner") };
     } catch (error) {
       return { ok: false, error: safeErrorMessage(error, "Could not create listing.") };
     }
@@ -493,7 +492,7 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
 
       revalidateCommonPaths();
       revalidatePath(`/equipment/${listingId}`);
-      return { ok: true, redirectTo: "/owner-profile/equipment" };
+      return { ok: true, redirectTo: resolvePortalHref("owner") };
     } catch (error) {
       return { ok: false, error: safeErrorMessage(error, "Could not update listing.") };
     }
@@ -612,7 +611,7 @@ export async function createBookingAction(
 
       revalidateCommonPaths();
       revalidatePath(`/equipment/${listing.id}`);
-      return { ok: true, redirectTo: "/renter-profile/bookings" };
+      return { ok: true, redirectTo: resolvePortalHref("renter") };
     } catch (error) {
       return { ok: false, error: safeErrorMessage(error, "Could not create booking.") };
     }
@@ -689,7 +688,7 @@ export async function selectWorkspaceAction(
 
       return {
         ok: true,
-        redirectTo: workspace === "owner" ? "/owner-profile" : "/renter-profile",
+        redirectTo: resolvePortalHref(workspace),
       };
     } catch (error) {
       return { ok: false, error: safeErrorMessage(error, "Could not switch workspace.") };

@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+
 import { useEffect, useTransition } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { selectWorkspaceAction } from "@/lib/actions/local-data";
@@ -8,11 +8,11 @@ import { LanguageToggle } from "@/components/LanguageToggle";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/components/LanguageContext";
 import { useAuth } from "@/components/AuthContext";
-import { assetPath } from "@/lib/site";
+import { resolvePortalHref } from "@/lib/workspace-routing.js";
 
 export default function ProfileSelectionPage() {
-  const { t } = useLanguage();
-  const { user, logout, loading, activeWorkspace } = useAuth();
+  const { t, langText } = useLanguage();
+  const { user, loading, activeWorkspace } = useAuth();
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
@@ -34,117 +34,127 @@ export default function ProfileSelectionPage() {
       }
 
       window.location.href =
-        result.redirectTo || (workspace === "owner" ? "/owner-profile" : "/renter-profile");
+        result.redirectTo || resolvePortalHref(workspace);
     });
   };
 
   return (
-    <div className="relative flex min-h-screen flex-col overflow-x-hidden bg-surface text-on-surface">
+    <div className="min-h-screen bg-surface font-body text-on-surface flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
+      {/* Editorial Background Composition */}
       <div className="fixed inset-0 z-0">
-        <Image
-          className="object-cover opacity-10 dark:opacity-20"
-          src={assetPath("/assets/generated/modern_farm_tech.png")}
-          alt="Farm fields"
-          fill
-          sizes="100vw"
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-container/20 to-secondary-container/10 z-10"></div>
+        <img
+          alt="Agriculture background"
+          className="w-full h-full object-cover grayscale-[20%] brightness-[85%]"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-surface/50 via-surface/80 to-surface dark:from-slate-950/60 dark:via-slate-950/85 dark:to-slate-950" />
       </div>
 
-      <header className="fixed top-0 z-50 w-full border-b border-slate-200/50 bg-white/80 shadow-sm backdrop-blur-md dark:border-slate-800/50 dark:bg-slate-900/80">
+      <header className="fixed top-0 z-50 w-full border-b border-white/20 bg-white/10 backdrop-blur-md">
         <nav className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-12">
-          <Link href="/" className="text-xl font-black tracking-tighter text-primary dark:text-emerald-400">
+          <Link href="/" className="text-xl font-black tracking-tighter text-on-surface">
             Kisan Kamai
           </Link>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <ThemeToggle />
             <LanguageToggle compact />
-            <button
-              type="button"
-              onClick={async () => {
-                await logout();
-                window.location.href = "/";
-              }}
-              className="hidden text-sm font-semibold tracking-tight text-slate-600 transition-colors hover:text-secondary dark:text-slate-400 dark:hover:text-amber-500 sm:inline"
+            <Link
+              href="/logout"
+              className="px-4 py-2 rounded-xl bg-white/20 text-on-surface font-bold text-sm tracking-wide hover:bg-white/30 transition-all"
             >
               {t("profile-selection.sign_out")}
-            </button>
+            </Link>
           </div>
         </nav>
       </header>
 
-      <main className="relative z-10 container mx-auto flex-grow px-6 pb-20 pt-32 lg:px-12">
-        <div className="mx-auto mb-16 max-w-2xl text-center">
-          <h1 className="mb-4 text-4xl font-extrabold leading-tight tracking-tight text-primary dark:text-emerald-400 md:text-5xl">
-            {t("profile-selection.choose_your_workspace")}
+      <main className="relative z-10 flex-grow pt-32 pb-20 px-6 flex flex-col items-center justify-center">
+        <div className="text-center mb-16 max-w-2xl">
+          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4 tracking-tight text-white drop-shadow-lg">
+            {langText("Welcome back, ", "स्वागत आहे, ")}
+            <span className="text-primary-fixed">{user.name || user.phone}</span>
           </h1>
-          <p className="text-lg font-medium text-on-surface-variant">
-            {t("profile-selection.open_the_owner_or_renter_profile_attached_to_this_local_account")}
+          <p className="text-xl text-white/90 font-medium drop-shadow-md">
+            {langText("Choose your workspace to get started", "प्रारंभ करण्यासाठी आपले वर्कस्पेस निवडा")}
           </p>
         </div>
 
-        <div className="mx-auto mb-16 grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
-          <div className="group relative rounded-3xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-xl shadow-surface-container-high/50 dark:bg-slate-900/40 dark:shadow-black/20">
-            <div className="flex h-full flex-col">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-container/10 dark:bg-emerald-500/10">
-                <span className="material-symbols-outlined text-4xl text-primary-container dark:text-emerald-400">agriculture</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl">
+          {/* Owner Profile Tile */}
+          <button
+            onClick={() => handleWorkspaceSelect("owner")}
+            disabled={isPending}
+            className={`group relative overflow-hidden bg-white/85 backdrop-blur-xl border border-white/40 rounded-[2.5rem] p-10 text-left transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:bg-white disabled:opacity-70 ${
+              activeWorkspace === "owner" ? "ring-4 ring-primary-container/30" : ""
+            }`}
+          >
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="w-20 h-20 rounded-3xl bg-primary-container flex items-center justify-center mb-8 shadow-xl shadow-primary/20 group-hover:rotate-6 transition-transform">
+                <span className="material-symbols-outlined text-4xl text-white" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  agriculture
+                </span>
               </div>
-              <div className="mb-8">
-                <h2 className="mb-3 text-2xl font-bold font-headline text-primary-container dark:text-emerald-400">
-                  {t("profile-selection.owner_profile")}
-                </h2>
-                <p className="leading-relaxed text-on-surface-variant">
-                  {t("profile-selection.manage_listings_bookings_and_local_earnings_data")}
-                </p>
-              </div>
-              <div className="mt-auto space-y-3">
-                {activeWorkspace === "owner" ? (
-                  <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/80 px-4 py-2 text-center text-xs font-black uppercase tracking-[0.16em] text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/30 dark:text-emerald-300">
-                    {t("profile-selection.last_used_workspace")}
-                  </div>
-                ) : null}
-                <button
-                  type="button"
-                  disabled={isPending}
-                  onClick={() => handleWorkspaceSelect("owner")}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-6 py-4 font-bold tracking-tight text-white disabled:opacity-60"
-                >
-                  {t("profile-selection.open_owner_profile")}
-                </button>
+              <h2 className="text-3xl font-black font-headline text-primary mb-3">
+                {langText("I am an Owner", "मी मालक आहे")}
+              </h2>
+              <p className="text-on-surface-variant font-medium leading-relaxed mb-8 text-lg">
+                {langText("Manage listings, check bookings, and track your farming earnings.", "सूची व्यवस्थापित करा, बुकिंग तपासा आणि तुमची शेतीची कमाई ट्रॅक करा.")}
+              </p>
+              <div className="mt-auto flex items-center justify-between">
+                <span className="inline-flex items-center gap-2 text-primary font-black text-lg tracking-tight group-hover:gap-4 transition-all">
+                  {langText("Open Owner Profile", "मालक प्रोफाइल उघडा")}
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </span>
+                {activeWorkspace === "owner" && (
+                  <span className="bg-primary/10 text-primary text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-primary/20">
+                    {langText("Last Used", "शेवटचे वापरलेले")}
+                  </span>
+                )}
               </div>
             </div>
-          </div>
+            {/* Background Decorative Element */}
+            <div className="absolute -right-12 -bottom-12 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+              <span className="material-symbols-outlined text-[15rem]">agriculture</span>
+            </div>
+          </button>
 
-          <div className="group relative rounded-3xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-xl shadow-surface-container-high/50 dark:bg-slate-900/40 dark:shadow-black/20">
-            <div className="flex h-full flex-col">
-              <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/10 dark:bg-amber-500/10">
-                <span className="material-symbols-outlined text-4xl text-secondary dark:text-amber-500">handshake</span>
+          {/* Renter Profile Tile */}
+          <button
+            onClick={() => handleWorkspaceSelect("renter")}
+            disabled={isPending}
+            className={`group relative overflow-hidden bg-white/85 backdrop-blur-xl border border-white/40 rounded-[2.5rem] p-10 text-left transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:bg-white disabled:opacity-70 ${
+              activeWorkspace === "renter" ? "ring-4 ring-secondary/30" : ""
+            }`}
+          >
+            <div className="relative z-10 flex flex-col h-full">
+              <div className="w-20 h-20 rounded-3xl bg-secondary flex items-center justify-center mb-8 shadow-xl shadow-secondary/20 group-hover:-rotate-6 transition-transform">
+                <span className="material-symbols-outlined text-4xl text-white" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  person_search
+                </span>
               </div>
-              <div className="mb-8">
-                <h2 className="mb-3 text-2xl font-bold font-headline text-secondary dark:text-amber-500">
-                  {t("profile-selection.renter_profile")}
-                </h2>
-                <p className="leading-relaxed text-on-surface-variant">
-                  {t("profile-selection.browse_equipment_save_listings_and_manage_bookings")}
-                </p>
-              </div>
-              <div className="mt-auto space-y-3">
-                {activeWorkspace === "renter" ? (
-                  <div className="rounded-xl border border-amber-200/70 bg-amber-50/80 px-4 py-2 text-center text-xs font-black uppercase tracking-[0.16em] text-amber-700 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300">
-                    {t("profile-selection.last_used_workspace")}
-                  </div>
-                ) : null}
-                <button
-                  type="button"
-                  disabled={isPending}
-                  onClick={() => handleWorkspaceSelect("renter")}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-4 font-bold tracking-tight text-white disabled:opacity-60 dark:bg-amber-500"
-                >
-                  {t("profile-selection.open_renter_profile")}
-                </button>
+              <h2 className="text-3xl font-black font-headline text-secondary mb-3">
+                {langText("I am a Renter", "मी भाडेकरी आहे")}
+              </h2>
+              <p className="text-on-surface-variant font-medium leading-relaxed mb-8 text-lg">
+                {langText("Browse equipment, save listings, and manage your tractor bookings.", "उपकरणे ब्राउझ करा, सूची जतन करा आणि तुमचे ट्रॅक्टर बुकिंग व्यवस्थापित करा.")}
+              </p>
+              <div className="mt-auto flex items-center justify-between">
+                <span className="inline-flex items-center gap-2 text-secondary font-black text-lg tracking-tight group-hover:gap-4 transition-all">
+                  {langText("Open Renter Profile", "भाडेकरी प्रोफाइल उघडा")}
+                  <span className="material-symbols-outlined">arrow_forward</span>
+                </span>
+                {activeWorkspace === "renter" && (
+                  <span className="bg-secondary/10 text-secondary text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest border border-secondary/20">
+                    {langText("Last Used", "शेवटचे वापरलेले")}
+                  </span>
+                )}
               </div>
             </div>
-          </div>
+            {/* Background Decorative Element */}
+            <div className="absolute -right-12 -bottom-12 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+              <span className="material-symbols-outlined text-[15rem]">person_search</span>
+            </div>
+          </button>
         </div>
       </main>
     </div>

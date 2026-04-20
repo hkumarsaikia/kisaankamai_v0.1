@@ -2,35 +2,23 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { usePathname } from "next/navigation";
-import { useAuth } from "./AuthContext";
 import { useState } from "react";
+import { useAuth } from "./AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 
 export const RenterSidebar = () => {
   const pathname = usePathname();
-  const { user, profile, logout } = useAuth();
+  const { user, profile } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { t } = useLanguage();
 
   const userName = user?.name || profile?.fullName || t("renterSidebar.default_name");
   const initials = userName.substring(0, 1).toUpperCase();
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      window.location.href = "/login";
-    } catch {
-      window.location.href = "/login";
-    }
-  };
-
   const navItems = [
     { name: t("renterSidebar.profile"), icon: "dashboard", path: "/renter-profile" },
-    { name: t("renterSidebar.browse_equipment"), icon: "agriculture", path: "/renter-profile/browse" },
-    { name: t("renterSidebar.my_bookings"), icon: "calendar_month", path: "/renter-profile/bookings" },
-    { name: t("renterSidebar.saved_equipment"), icon: "bookmark", path: "/renter-profile/saved" },
-    { name: t("renterSidebar.payments"), icon: "payments", path: "/renter-profile/payments" },
-    { name: t("renterSidebar.settings"), icon: "settings", path: "/renter-profile/settings" },
+    { name: t("renterSidebar.browse_equipment"), icon: "agriculture", path: "/rent-equipment" },
+    { name: t("renterSidebar.my_bookings"), icon: "support_agent", path: "/support" },
   ];
 
   return (
@@ -96,20 +84,21 @@ export const RenterSidebar = () => {
         {/* Bottom Actions */}
         <div className="mt-auto border-t border-white/5 px-2 py-2">
           <Link
-            href="/renter-profile/switch-profile"
+            href="/profile-selection"
             onClick={() => setMobileMenuOpen(false)}
             className="flex items-center gap-3 px-4 py-4 text-emerald-200/60 hover:bg-emerald-800/30 hover:text-white text-sm font-semibold uppercase tracking-wider transition-all"
           >
             <span className="material-symbols-outlined">swap_horiz</span>
             <span>{t("renterSidebar.switch_to_owner")}</span>
           </Link>
-          <button
-            onClick={handleLogout}
+          <Link
+            href="/logout"
+            onClick={() => setMobileMenuOpen(false)}
             className="w-full flex items-center gap-3 px-4 py-4 text-emerald-200/60 hover:bg-red-950/30 hover:text-red-300 text-sm font-semibold uppercase tracking-wider transition-all text-left"
           >
             <span className="material-symbols-outlined">logout</span>
             <span>{t("renterSidebar.logout")}</span>
-          </button>
+          </Link>
         </div>
       </aside>
     </>

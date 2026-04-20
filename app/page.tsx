@@ -1,9 +1,6 @@
 "use client";
 
 import { ContentImage } from "@/components/ContentImage";
-
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { LazyMap } from "@/components/LazyMap";
 import { useLanguage } from "@/components/LanguageContext";
 import { ScrollReveal } from "@/components/ScrollReveal";
@@ -11,6 +8,7 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useState, useEffect } from "react";
 import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { HOMEPAGE_MARKERS } from "@/lib/map-data";
+import { NORTHERN_MAHARASHTRA_SERVICE_AREAS } from "@/lib/service-areas.js";
 import { assetPath } from "@/lib/site";
 
 const heroImages = [
@@ -41,9 +39,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950 text-on-surface">
-      <Header />
-      <main className="flex-grow">
+    <div className="flex flex-col text-on-surface">
+      <div className="flex-grow">
         {/* Hero Section */}
         <section className="relative min-h-[870px] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
@@ -55,12 +52,14 @@ export default function Home() {
             {/* Slider Controls */}
             <button 
               onClick={() => setCurrentSlide((prev) => (prev - 1 + heroImages.length) % heroImages.length)}
+              aria-label="Show previous hero image"
               className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/20 hover:bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all z-20"
             >
               <span className="material-symbols-outlined">chevron_left</span>
             </button>
             <button 
               onClick={() => setCurrentSlide((prev) => (prev + 1) % heroImages.length)}
+              aria-label="Show next hero image"
               className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-black/20 hover:bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-sm transition-all z-20"
             >
               <span className="material-symbols-outlined">chevron_right</span>
@@ -70,7 +69,7 @@ export default function Home() {
             <div className="text-white">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-6 mt-16 lg:mt-0">
                 <span className="w-2 h-2 bg-secondary rounded-full transform dark:bg-amber-400"></span>
-                <span className="text-sm font-label font-bold uppercase tracking-widest">{t("home.now_serving_maharashtra")}</span>
+                <span className="text-sm font-label font-bold uppercase tracking-widest">Now Serving Northern Maharashtra</span>
               </div>
               <h1 className="text-5xl md:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
                 {t("home.modern_machinery_for_every_farm")}
@@ -111,12 +110,13 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         {/* Featured Categories */}
         <section className="py-24 bg-white dark:bg-slate-950">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex justify-between items-end mb-12">
               <div>
-              <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">{t("home.explore_equipment_categories")}</h2>
+                <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">{t("home.explore_equipment_categories")}</h2>
                 <p className="text-slate-600 dark:text-slate-400 max-w-xl">{t("home.from_land_preparation_to_harvesting_find_the_right_tool_for_every_stage_of_your_farming_cycle")}</p>
               </div>
               <Link className="text-secondary font-bold flex items-center gap-2 hover:gap-3 transition-all" href="/categories">
@@ -125,7 +125,7 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
               {/* Tractors */}
-              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/rent-equipment?query=tractors" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="High-horsepower tractor parked in a vibrant green farm field" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
@@ -136,7 +136,7 @@ export default function Home() {
                 </div>
               </Link>
               {/* Harvesters */}
-              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/rent-equipment?query=harvesters" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Combine harvester working through a wheat field" src={assetPath("/assets/generated/harvester_action.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
@@ -147,7 +147,7 @@ export default function Home() {
                 </div>
               </Link>
               {/* Implements */}
-              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/rent-equipment?query=implements" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Agricultural implements including a rotavator and seed drill" src={assetPath("/assets/generated/implement_4k.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
@@ -158,7 +158,7 @@ export default function Home() {
                 </div>
               </Link>
               {/* Ploughs */}
-              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/rent-equipment?query=ploughs" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Ploughing" src={assetPath("/assets/generated/plough_4k.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
@@ -169,7 +169,7 @@ export default function Home() {
                 </div>
               </Link>
               {/* Sprayers */}
-              <Link href="/models" className="group relative h-[350px] overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
+              <Link href="/rent-equipment?query=sprayers" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="Sprayer" src={assetPath("/assets/generated/sprayer.png")} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
@@ -191,17 +191,6 @@ export default function Home() {
                 <ContentImage className="rounded-[2.5rem] shadow-2xl relative z-10" alt="Indian farmer leaning against a tractor with pride" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
                 <div className="absolute -top-10 -left-10 w-40 h-40 bg-secondary/5 rounded-full -z-0"></div>
                 <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary/5 rounded-full -z-0"></div>
-                <div className="absolute top-1/2 -right-8 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl z-20 max-w-[200px] border border-slate-50 dark:border-slate-800/50">
-                  <div className="flex items-center gap-1 text-amber-500 mb-2">
-                    <span className="material-symbols-outlined text-sm" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
-                    <span className="material-symbols-outlined text-sm" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
-                    <span className="material-symbols-outlined text-sm" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
-                    <span className="material-symbols-outlined text-sm" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
-                    <span className="material-symbols-outlined text-sm" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
-                  </div>
-                  <p className="text-xs font-bold text-primary mb-1">&quot;Best rental service in Kolhapur district.&quot;</p>
-                  <p className="text-[10px] text-slate-400 font-label">Amit Patil, Sugarcane Farmer</p>
-                </div>
               </div>
               <div>
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-8 tracking-tight leading-tight">
@@ -249,9 +238,9 @@ export default function Home() {
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-6 tracking-tight">{t("home.expanding_across_maharashtra")}</h2>
                 <p className="text-slate-600 dark:text-slate-400 mb-8">{t("home.we_are_currently_focused_on_providing_the_best_service_within_these_three_core_districts_ensuring_fast_delivery_and_local_support")}</p>
                 <ul className="space-y-4">
-                  {[t("home.kalwan_area"), t("home.mukhed_area")].map((d) => (
-                    <li key={d} className="flex items-center gap-3 font-bold text-lg text-primary dark:text-emerald-50">
-                      <span className="w-6 h-6 bg-secondary text-white rounded-full flex items-center justify-center text-xs">✓</span> {d}
+                  {NORTHERN_MAHARASHTRA_SERVICE_AREAS.map(({ areaLabel }) => (
+                    <li key={areaLabel} className="flex items-center gap-3 font-bold text-lg text-primary dark:text-emerald-50">
+                      <span className="w-6 h-6 bg-secondary text-white rounded-full flex items-center justify-center text-xs">✓</span> {areaLabel}
                     </li>
                   ))}
                 </ul>
@@ -279,7 +268,7 @@ export default function Home() {
           </ScrollReveal>
         </section>
 
-        {/* Farmer Stories */}
+        {/* Farmer Stories (Visual Only Stars) */}
         <section className="py-24 bg-white dark:bg-slate-950">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-4xl font-black text-primary dark:text-emerald-50 text-center mb-16 tracking-tight">{t("home.rooted_success_stories")}</h2>
@@ -301,6 +290,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
+              {/* Other stories... */}
               <div className="bg-surface-container-low dark:bg-slate-900/40 p-8 rounded-3xl border border-slate-100 dark:border-slate-800/50">
                 <div className="flex gap-1 text-amber-500 mb-6">
                   <span className="material-symbols-outlined" style={{fontVariationSettings: "'FILL' 1"}}>star</span>
@@ -344,34 +334,35 @@ export default function Home() {
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-4xl font-black text-primary dark:text-emerald-50 text-center mb-16 tracking-tight">{t("home.frequently_asked_questions")}</h2>
             <div className="space-y-4">
-              <div className="bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 p-6 cursor-pointer group">
-                <div className="flex justify-between items-center">
+              <details className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/50 dark:bg-slate-900/40">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
                   <h4 className="font-bold text-lg text-primary dark:text-emerald-50">How do I verify the condition of the equipment?</h4>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add</span>
-                </div>
-                <p className="mt-4 text-slate-600 dark:text-slate-400 hidden group-hover:block">All equipment listed undergoes a preliminary verification. We also encourage renters to inspect the machinery upon delivery before signing off on the rental period.</p>
-              </div>
-              <div className="bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 p-6 cursor-pointer group">
-                <div className="flex justify-between items-center">
+                  <span className="material-symbols-outlined text-slate-400 transition-transform group-open:rotate-45 group-open:text-primary">add</span>
+                </summary>
+                <p className="mt-4 text-slate-600 dark:text-slate-400">All equipment listed undergoes a preliminary verification. We also encourage renters to inspect the machinery upon delivery before signing off on the rental period.</p>
+              </details>
+              {/* Other FAQs... */}
+              <details className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/50 dark:bg-slate-900/40">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
                   <h4 className="font-bold text-lg text-primary dark:text-emerald-50">What happens if the equipment breaks down during work?</h4>
-<p className="mt-4 text-slate-600 dark:text-slate-400 hidden group-hover:block">Don't worry. Our platform requires owners to handle immediate malfunctions. You must notify us within 2 hours of breakdown, and you will receive a prorated refund or replacement equipment depending on availability.</p>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add</span>
-                </div>
-              </div>
-              <div className="bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 p-6 cursor-pointer group">
-                <div className="flex justify-between items-center">
+                  <span className="material-symbols-outlined text-slate-400 transition-transform group-open:rotate-45 group-open:text-primary">add</span>
+                </summary>
+                <p className="mt-4 text-slate-600 dark:text-slate-400">Don't worry. Our platform requires owners to handle immediate malfunctions. You must notify us within 2 hours of breakdown, and you will receive a prorated refund or replacement equipment depending on availability.</p>
+              </details>
+              <details className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/50 dark:bg-slate-900/40">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
                   <h4 className="font-bold text-lg text-primary dark:text-emerald-50">Are there any hidden service charges?</h4>
-<p className="mt-4 text-slate-600 dark:text-slate-400 hidden group-hover:block">No. The price you see at booking is exactly what you pay. It includes the equipment cost, and if required, the driver's fee. Kisan Kamai takes a small transparent commission directly from the owner's payout.</p>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add</span>
-                </div>
-              </div>
-              <div className="bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50 p-6 cursor-pointer group">
-                <div className="flex justify-between items-center">
+                  <span className="material-symbols-outlined text-slate-400 transition-transform group-open:rotate-45 group-open:text-primary">add</span>
+                </summary>
+                <p className="mt-4 text-slate-600 dark:text-slate-400">No. The price you see at booking is exactly what you pay. It includes the equipment cost, and if required, the driver's fee. Kisan Kamai takes a small transparent commission directly from the owner's payout.</p>
+              </details>
+              <details className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/50 dark:bg-slate-900/40">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
                   <h4 className="font-bold text-lg text-primary dark:text-emerald-50">How can I pay for my rental?</h4>
-<p className="mt-4 text-slate-600 dark:text-slate-400 hidden group-hover:block">You can pay securely via UPI, Credit/Debit cards, Net Banking, or choose Cash on Delivery directly to the equipment owner when the machinery arrives at your field.</p>
-                  <span className="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">add</span>
-                </div>
-              </div>
+                  <span className="material-symbols-outlined text-slate-400 transition-transform group-open:rotate-45 group-open:text-primary">add</span>
+                </summary>
+                <p className="mt-4 text-slate-600 dark:text-slate-400">You can pay securely via UPI, Credit/Debit cards, Net Banking, or choose Cash on Delivery directly to the equipment owner when the machinery arrives at your field.</p>
+              </details>
             </div>
           </div>
         </section>
@@ -389,18 +380,10 @@ export default function Home() {
               <Link href="/rent-equipment" className="bg-secondary text-white px-10 py-5 rounded-xl text-lg font-black hover:bg-secondary/90 shadow-xl transition-all text-center">
                 {t("home.browse_equipment")}
               </Link>
-              <Link href="/list-equipment" className="bg-white/10 backdrop-blur-md text-white border border-white/20 px-10 py-5 rounded-xl text-lg font-black hover:bg-white/20 transition-all text-center">
-                {t("home.register_your_fleet")}
-              </Link>
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
+      </div>
     </div>
   );
 }
-
-
-
-

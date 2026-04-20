@@ -1,303 +1,272 @@
-"use client";
-
-import Image from "next/image";
-import { FormEvent, useRef, useState } from "react";
-import { AppLink } from "@/components/AppLink";
-import { Footer } from "@/components/Footer";
-import { Header } from "@/components/Header";
-import { useLanguage } from "@/components/LanguageContext";
 import { LazyMap } from "@/components/LazyMap";
-import { FormActions, FormField, FormGrid, FormNotice, FormSection, FormShell } from "@/components/forms/FormKit";
-import {
-  submitCallbackRequestAction,
-  submitSupportRequestAction,
-} from "@/lib/actions/local-data";
 import { SUPPORT_HUB_MARKERS } from "@/lib/map-data";
-import { supportContact } from "@/lib/support-contact";
-import { callbackRequestSchema, supportRequestSchema } from "@/lib/validation/forms";
 
-export default function Support() {
-  const { t } = useLanguage();
-  const formRef = useRef<HTMLFormElement | null>(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+const supportCategories = [
+  ["key", "Rent", "भाड्याने घेणे"],
+  ["agriculture", "List", "नोंदणी करा"],
+  ["calendar_month", "Bookings", "बुकिंग"],
+  ["payments", "Payments", "देयके"],
+  ["local_shipping", "Machine", "मशीन/वितरण"],
+  ["help", "General", "सामान्य प्रश्न"],
+] as const;
 
-  const handleSupportSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setError("");
-    setSuccess("");
+const faqItems = [
+  {
+    question: "How is the equipment condition verified?",
+    answer:
+      "Every machine on Kisan Kamai undergoes a 20-point quality check by local hub managers before being listed.",
+  },
+  {
+    question: "What happens if a breakdown occurs?",
+    answer:
+      "Contact our emergency helpline immediately. We dispatch a technician or arrange a replacement machine quickly based on local availability.",
+  },
+  {
+    question: "Are there any hidden service charges?",
+    answer:
+      "No. The price you see includes clearly listed fees. Diesel and operator costs are shown before booking.",
+  },
+  {
+    question: "How do I cancel a booking?",
+    answer:
+      "Cancellations made before the slot follow the booking terms shown during checkout. Our team can help review time-sensitive cases.",
+  },
+  {
+    question: "How do I list multiple machines?",
+    answer:
+      "Owners can list multiple machines and manage them from the equipment workspace with listing and booking support.",
+  },
+];
 
-    const form = new FormData(event.currentTarget);
-    const parsed = supportRequestSchema.safeParse({
-      fullName: form.get("fullName"),
-      phone: form.get("phone"),
-      email: form.get("email"),
-      category: form.get("category"),
-      message: form.get("message"),
-      sourcePath: "/support",
-    });
-
-    if (!parsed.success) {
-      setError(
-        parsed.error.flatten().formErrors[0] ||
-          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          t("support.please_complete_the_support_form_correctly")
-      );
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const result = await submitSupportRequestAction(parsed.data);
-      if (!result.ok) {
-        setError(result.error || t("support.could_not_submit_your_support_request_right_now"));
-        return;
-      }
-
-      setSuccess(t("support.support_request_submitted"));
-      event.currentTarget.reset();
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleCallbackRequest = async () => {
-    if (!formRef.current) {
-      return;
-    }
-
-    setError("");
-    setSuccess("");
-    const form = new FormData(formRef.current);
-    const parsed = callbackRequestSchema.safeParse({
-      fullName: form.get("fullName"),
-      phone: form.get("phone"),
-      equipmentNeeded: form.get("category") || "Support callback",
-      location: "",
-    });
-
-    if (!parsed.success) {
-      setError(
-        parsed.error.flatten().formErrors[0] ||
-          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          t("support.enter_your_name_and_phone_to_request_a_callback")
-      );
-      return;
-    }
-
-    setIsSubmitting(true);
-    try {
-      const result = await submitCallbackRequestAction(parsed.data);
-      if (!result.ok) {
-        setError(result.error || t("support.could_not_request_a_callback_right_now"));
-        return;
-      }
-
-      setSuccess(t("support.callback_request_submitted"));
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
+export default function SupportPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
-      <Header />
-      <main className="flex-grow pt-28 pb-20">
-        {/* Hero */}
-        <section className="max-w-7xl mx-auto px-6 mb-16">
-          <div className="relative overflow-hidden rounded-xl bg-primary-container p-8 md:p-16 text-white shadow-2xl">
-            <div className="relative z-10 max-w-2xl">
-              <span className="inline-block px-4 py-1.5 bg-on-tertiary-container/20 text-on-tertiary-container rounded-full text-sm font-bold tracking-wide uppercase mb-6">{t("support.contact_us")}</span>
-              <h1 className="text-4xl md:text-6xl font-extrabold font-headline leading-tight mb-6 tracking-tight">
-                {t("support.we_are_here_to_help")} <br />
-                <span className="text-on-primary-container font-mukta">{t("support.text")}</span>
-              </h1>
-              <p className="text-lg md:text-xl text-on-primary-fixed-variant max-w-xl font-medium leading-relaxed opacity-90">
-                {t("support.reach_out_to_our_team_in_sangli_satara_or_kolhapur_for_any_equipment_rental_or_listing_support")}
+    <div className="bg-background text-on-background font-body min-h-screen">
+      <main className="pt-20">
+        <section className="relative flex h-[420px] items-center justify-center overflow-hidden">
+          <div className="absolute inset-0 bg-primary-container/40 z-10" />
+          <img
+            className="absolute inset-0 h-full w-full object-cover"
+            alt="Panoramic sugarcane field in Maharashtra at sunrise"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK2cmkJApn0nVehtGu1-O_Jh3H-OClLodq9_KX4xxh_OGVj2OqUEJYC-MWqpXMUvo8s6YGuo2rAKTsiptklUZYK2GXmxUasToDyjIKYgZ6d2J_Pkgub_7fiQpQNhcEv8VxQuR8hODqErTQw7TKGyWGg3m2JAGHHxB4iYLF2PqEyPLJBNp5wBelH0ryDM7vxtqJjeDkfd2rhmMS92lXx-3DhPg-r4N2sbauY7gJLOnTcq-cElZZkta36SlaL4MJEYWW9Gmijhd13vep"
+          />
+          <div className="relative z-20 px-6 text-center">
+            <h1 className="font-headline text-4xl font-extrabold text-white md:text-6xl">
+              We&apos;re here to help
+              <br />
+              <span className="font-semibold text-3xl md:text-5xl">आम्ही मदतीसाठी येथे आहोत</span>
+            </h1>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-7xl px-6 py-16">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+            {supportCategories.map(([icon, title, subtitle]) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 text-center transition-all hover:border-surface-tint hover:shadow-xl"
+              >
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-fixed text-primary-container">
+                  <span className="material-symbols-outlined text-3xl">{icon}</span>
+                </div>
+                <h3 className="font-bold text-primary">{title}</h3>
+                <p className="text-sm text-on-surface-variant">{subtitle}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-5">
+          <div className="rounded-3xl border border-emerald-900/5 bg-white p-10 shadow-sm lg:col-span-3">
+            <h2 className="text-3xl font-extrabold text-primary">Send us a message</h2>
+            <p className="mb-8 mt-2 text-on-surface-variant">
+              आम्हाला संदेश पाठवा - आमची टीम लवकरच संपर्क साधेल.
+            </p>
+            <form className="space-y-6">
+              <div className="grid gap-6 md:grid-cols-2">
+                <label className="space-y-2">
+                  <span className="text-sm font-semibold text-primary">Full Name / पूर्ण नाव</span>
+                  <input className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary" placeholder="Rahul Patil" type="text" />
+                </label>
+                <label className="space-y-2">
+                  <span className="text-sm font-semibold text-primary">Phone / फोन नंबर</span>
+                  <input className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary" placeholder="+91 00000 00000" type="tel" />
+                </label>
+              </div>
+              <label className="space-y-2">
+                <span className="text-sm font-semibold text-primary">Category / वर्गवारी</span>
+                <select className="w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary">
+                  <option>Rental Inquiry</option>
+                  <option>Equipment Listing</option>
+                  <option>Payment Issue</option>
+                  <option>Technical Support</option>
+                </select>
+              </label>
+              <label className="space-y-2">
+                <span className="text-sm font-semibold text-primary">Message / संदेश</span>
+                <textarea className="min-h-[150px] w-full rounded-xl border border-outline-variant bg-surface-container-low px-4 py-3 outline-none focus:ring-2 focus:ring-primary" placeholder="Tell us how we can help..." />
+              </label>
+              <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container py-4 text-lg font-bold text-white" type="button">
+                Submit Request / विनंती सबमिट करा
+                <span className="material-symbols-outlined">send</span>
+              </button>
+            </form>
+          </div>
+
+          <div className="space-y-6 lg:col-span-2">
+            <div className="rounded-3xl bg-primary-container p-8 text-white">
+              <h3 className="text-2xl font-bold">Direct Channels</h3>
+              <div className="mt-6 space-y-8">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
+                    <span className="material-symbols-outlined text-white">call</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container">Call Us</p>
+                    <p className="mt-1 text-xl font-bold">+91 1800 555 0123</p>
+                    <p className="text-sm text-white/70">8 AM - 8 PM Daily</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
+                    <span className="material-symbols-outlined text-white">forum</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container">WhatsApp</p>
+                    <p className="mt-1 text-xl font-bold">Chat with Kisan Mitra</p>
+                    <p className="text-sm text-white/70">Marathi &amp; English Support</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
+                    <span className="material-symbols-outlined text-white">mail</span>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container">Email</p>
+                    <p className="mt-1 text-xl font-bold">support@kisankamai.com</p>
+                    <p className="text-sm text-white/70">24/48 hr response</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-tertiary-container p-8 text-white">
+              <div className="mb-4 flex items-center gap-3">
+                <span className="material-symbols-outlined text-tertiary-fixed">verified_user</span>
+                <h4 className="font-bold text-lg">Owner Support Priority</h4>
+              </div>
+              <p className="text-sm leading-relaxed text-white/80">
+                Are you an equipment owner? Use our specialized helpline for machine maintenance and deployment coordination.
               </p>
             </div>
-            <div className="absolute right-0 top-0 w-1/3 h-full opacity-20 pointer-events-none hidden lg:block">
-              <Image
-                alt="Farmer with phone"
-                className="object-cover"
-                src="/assets/generated/hero_tractor.png"
-                fill
-                sizes="33vw"
-              />
-            </div>
           </div>
         </section>
 
-        {/* Content Grid */}
-        <section className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white dark:bg-slate-900/40 p-8 rounded-xl shadow-sm border border-emerald-50 dark:border-slate-800/50">
-              <h2 className="text-xl font-bold font-headline mb-6 text-emerald-900 dark:text-emerald-50">{t("support.direct_support_channels")}</h2>
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-emerald-50 dark:bg-emerald-800/30 flex items-center justify-center text-emerald-900 dark:text-emerald-400 shrink-0">
-                    <span className="material-symbols-outlined">call</span>
+        <section className="bg-surface-container-low px-6 py-20">
+          <div className="mx-auto flex max-w-7xl flex-col gap-12 md:flex-row md:items-center">
+            <div className="flex-1">
+              <h2 className="text-4xl font-extrabold text-primary">Regional Support Hubs</h2>
+              <p className="mt-6 text-lg leading-relaxed text-on-surface-variant">
+                We understand rural India. Our physical hubs in Southern Maharashtra ensure that help is never too far away from your village.
+              </p>
+              <div className="mt-8 space-y-4">
+                {[
+                  ["Sangli", "Central Distribution & Support Hub"],
+                  ["Satara", "Equipment Inspection Center"],
+                  ["Kolhapur", "Owner Onboarding & Training"],
+                ].map(([city, detail]) => (
+                  <div key={city} className="flex items-center justify-between rounded-2xl border border-outline-variant bg-white p-6">
+                    <div>
+                      <p className="text-xl font-bold text-primary">{city}</p>
+                      <p className="text-sm text-on-surface-variant">{detail}</p>
+                    </div>
+                    <span className="material-symbols-outlined text-secondary">chevron_right</span>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{t("support.call_us")}</p>
-                    <a className="text-lg font-bold text-emerald-900 dark:text-emerald-50 hover:text-secondary transition-colors" href={supportContact.phoneHref}>{supportContact.phoneDisplay}</a>
-                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{t("support.free_for_all_indian_networks")}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-emerald-50 dark:bg-emerald-800/30 flex items-center justify-center text-emerald-900 dark:text-emerald-400 shrink-0">
-                    <span className="material-symbols-outlined">chat</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{t("support.whatsapp")}</p>
-                    <a className="text-lg font-bold text-emerald-900 dark:text-emerald-50 hover:text-secondary transition-colors" href={supportContact.whatsappHref}>{supportContact.whatsappDisplay}</a>
-                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{t("support.average_response_15_mins")}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-lg bg-emerald-50 dark:bg-emerald-800/30 flex items-center justify-center text-emerald-900 dark:text-emerald-400 shrink-0">
-                    <span className="material-symbols-outlined">mail</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">{t("support.email")}</p>
-                    <a className="text-lg font-bold text-emerald-900 dark:text-emerald-50 hover:text-secondary transition-colors" href={supportContact.emailHref}>{supportContact.email}</a>
-                    <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">{t("support.official_correspondence")}</p>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
-            <div className="bg-surface-container-low dark:bg-slate-900/50 p-8 rounded-xl border border-surface-container-highest dark:border-slate-800/50">
-              <h3 className="font-bold text-lg mb-4 flex items-center gap-2 text-on-surface dark:text-emerald-50">
-                <span className="material-symbols-outlined text-secondary">schedule</span>
-                {t("support.service_hours")}
-              </h3>
-              <p className="text-on-surface-variant dark:text-slate-300 font-medium">{supportContact.serviceHours}</p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <AppLink className="bg-white dark:bg-slate-900/40 p-6 rounded-xl border border-emerald-100 dark:border-slate-800/50 hover:border-emerald-500 hover:shadow-md transition-all" href="/faq">
-                <span className="material-symbols-outlined text-secondary mb-3 block">menu_book</span>
-                <span className="font-bold block text-emerald-900 dark:text-emerald-50">{t("support.how_to_rent")}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tighter">{t("support.guide")}</span>
-              </AppLink>
-              <AppLink className="bg-white dark:bg-slate-900/40 p-6 rounded-xl border border-emerald-100 dark:border-slate-800/50 hover:border-emerald-500 hover:shadow-md transition-all" href="/list-equipment">
-                <span className="material-symbols-outlined text-secondary mb-3 block">handyman</span>
-                <span className="font-bold block text-emerald-900 dark:text-emerald-50">{t("support.owner_guide")}</span>
-                <span className="text-xs text-slate-500 dark:text-slate-400 mt-1 uppercase font-bold tracking-tighter">{t("support.help")}</span>
-              </AppLink>
-            </div>
-          </div>
-
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <FormShell
-              eyebrow={t("support.contact_us")}
-              title={t("support.send_a_message")}
-              description={t("support.fill_out_the_form_below_and_our_team_will_get_back_to_you_within_2_4_business_hours")}
-              aside={
-                <div className="space-y-4">
-                  <h3 className="text-lg font-black text-primary">{t("support.service_hours")}</h3>
-                  <p className="text-sm font-medium text-on-surface-variant">{t("support.daily_8_am_to_8_pm")}</p>
-                  <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-5">
-                    <p className="text-sm font-black uppercase tracking-[0.18em] text-secondary">{t("support.direct_support_channels")}</p>
-                    <div className="mt-4 space-y-3 text-sm font-medium text-on-surface-variant">
-                      <p>{t("support.call_us")}: {supportContact.phoneDisplay}</p>
-                      <p>{t("support.whatsapp")}: {supportContact.whatsappDisplay}</p>
-                      <p>{t("support.email")}: {supportContact.email}</p>
-                    </div>
-                  </div>
-                </div>
-              }
-            >
-              <form className="space-y-6" ref={formRef} onSubmit={handleSupportSubmit}>
-                {error ? <FormNotice tone="error">{error}</FormNotice> : null}
-                {success ? <FormNotice tone="success">{success}</FormNotice> : null}
-
-                <FormSection
-                  title={t("support.contact_us")}
-                  description={t("support.reach_out_to_our_team_in_sangli_satara_or_kolhapur_for_any_equipment_rental_or_listing_support")}
-                >
-                  <FormGrid>
-                    <FormField label={t("support.full_name")} required>
-                      <input className="kk-input" name="fullName" placeholder={t("support.enter_your_name")} type="text" />
-                    </FormField>
-                    <FormField label={t("support.phone_number")} required>
-                      <input className="kk-input" name="phone" placeholder="+91 00000 00000" type="tel" />
-                    </FormField>
-                  </FormGrid>
-                  <FormGrid>
-                    <FormField label={t("support.email_address_optional")}>
-                      <input className="kk-input" name="email" placeholder="email@example.com" type="email" />
-                    </FormField>
-                    <FormField label={t("support.category")} required>
-                      <select className="kk-input" defaultValue={t("support.i_want_to_rent")} name="category">
-                        <option>{t("support.i_want_to_rent")}</option>
-                        <option>{t("support.i_want_to_list")}</option>
-                        <option>{t("support.payment_issue")}</option>
-                        <option>{t("support.general_support")}</option>
-                      </select>
-                    </FormField>
-                  </FormGrid>
-                  <FormField label={t("support.message")} required>
-                    <textarea className="kk-input min-h-[160px]" name="message" placeholder={t("support.how_can_we_help_you_today")} rows={5} />
-                  </FormField>
-                </FormSection>
-
-                <FormActions>
-                  <button className="kk-button-outline" disabled={isSubmitting} onClick={handleCallbackRequest} type="button">
-                    {t("support.request_callback")}
-                  </button>
-                  <button className="kk-form-primary-button" disabled={isSubmitting} type="submit">
-                    {isSubmitting ? t("support.sending") : t("support.send_message")}
-                  </button>
-                </FormActions>
-              </form>
-            </FormShell>
-          </div>
-        </section>
-
-        {/* Regional Hubs with Real Map */}
-        <section className="max-w-7xl mx-auto px-6 mt-20">
-          <div className="bg-white dark:bg-slate-900/40 rounded-xl shadow-sm border border-emerald-50 dark:border-slate-800/50 overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="p-8 md:p-12">
-                <h2 className="text-2xl font-bold font-headline text-emerald-900 dark:text-emerald-50 mb-4">{t("support.visit_our_regional_hubs")}</h2>
-                <p className="text-slate-600 dark:text-slate-400 mb-8">{t("support.direct_support_is_available_at_our_partner_centers_across_southern_maharashtra")}</p>
-                <div className="space-y-6">
-                  {[
-                    { name: t("support.sangli_district_hub"), addr: "Market Yard Road, Sangli, Maharashtra 416416" },
-                    { name: t("support.satara_district_hub"), addr: "Bombay Restaurant Chowk, Satara, Maharashtra 415001" },
-                    { name: t("support.kolhapur_regional_hub"), addr: "Shiroli Pulachi, Kolhapur, Maharashtra 416122" },
-                    { name: t("support.kalwan_area_hub"), addr: "Nashik Region, Maharashtra 423501" },
-                    { name: t("support.mukhed_area_hub"), addr: "Nanded Region, Maharashtra 431715" },
-                  ].map((hub) => (
-                    <div key={hub.name} className="flex items-start gap-4">
-                      <span className="material-symbols-outlined text-secondary">location_on</span>
-                      <div>
-                        <h4 className="font-bold text-emerald-900 dark:text-emerald-50">{hub.name}</h4>
-                        <p className="text-slate-500 dark:text-slate-400 text-sm">{hub.addr}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="h-64 lg:h-auto min-h-[400px] relative">
+            <div className="flex-1">
+              <div className="overflow-hidden rounded-[2.5rem] border-8 border-white shadow-2xl">
                 <LazyMap
-                  center={[17.05, 74.40]}
-                  zoom={9}
+                  center={[16.82, 74.57]}
+                  zoom={8}
                   markers={SUPPORT_HUB_MARKERS}
-                  height="100%"
-                  showControls={false}
+                  height="400px"
                   className="rounded-none"
+                  showControls
+                  deferUntilVisible={false}
                 />
               </div>
             </div>
           </div>
         </section>
+
+        <section className="mx-auto max-w-4xl px-6 py-24">
+          <h2 className="mb-12 text-center text-4xl font-extrabold text-primary">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-4">
+            {faqItems.map((item, index) => (
+              <details
+                key={item.question}
+                className="overflow-hidden rounded-2xl border border-outline-variant bg-white"
+                open={index === 0}
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between p-6">
+                  <span className="text-lg font-bold text-primary">{item.question}</span>
+                  <span className="material-symbols-outlined">expand_more</span>
+                </summary>
+                <div className="border-t border-outline-variant/50 px-6 pb-6 pt-4 text-on-surface-variant">
+                  {item.answer}
+                </div>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section className="mx-auto mb-16 max-w-7xl px-6">
+          <div className="rounded-[40px] border border-white bg-surface-container-high p-12 text-center">
+            <h3 className="mb-12 text-3xl font-extrabold text-primary">Rooted in trust, driven by support</h3>
+            <div className="flex flex-wrap items-center justify-center gap-12 opacity-60">
+              {[
+                ["verified", "Verified Owners"],
+                ["gavel", "Legal Protection"],
+                ["handshake", "Fair Pricing"],
+              ].map(([icon, label]) => (
+                <div key={label} className="flex flex-col items-center gap-2">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-sm">
+                    <span className="material-symbols-outlined text-3xl text-primary">{icon}</span>
+                  </div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-primary">{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="relative flex min-h-[280px] items-center overflow-hidden">
+          <img
+            className="absolute inset-0 h-full w-full object-cover"
+            alt="Smiling Indian farmer standing in a golden wheat field at sunset"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdj-by0sXYvLBIrvGYViSBZkk5i4Nr-zEtpE0S9WPbZKTBOPq7lkgPu1oJ5sgap8nM1Ozpout85-xGpst9bAssJz0A6HWCMDQZW9VbUPBzUy2YAu5Cim_0V_X6iVIYR23J7y7yTHYhcFdbMewyoWe30Qeuu6pyKp8cn9KOnR0g5MZ6wZ5fVAW4r1gzB401zBKPEQN8uQ1fc7XctKpeopjg9mAWI-wEa2v6KvVHVibhPqq2tYH6pv4LJf7RTFlNZ1ZaBl7SN3LKuHEZ"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary-container via-primary-container/80 to-transparent" />
+          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-8 px-8 py-12 md:flex-row">
+            <div className="text-white">
+              <h2 className="text-4xl font-extrabold">Need help right now?</h2>
+              <p className="mt-2 text-xl text-primary-fixed-dim">त्वरीत मदतीची आवश्यकता आहे? आम्हाला कॉल करा.</p>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <button className="flex items-center gap-2 rounded-2xl bg-secondary px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-on-secondary-fixed-variant" type="button">
+                <span className="material-symbols-outlined">call</span>
+                Call Support
+              </button>
+              <button className="rounded-2xl bg-[#1f9d57] px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-[#178045]" type="button">
+                WhatsApp
+              </button>
+            </div>
+          </div>
+        </section>
       </main>
-      <Footer />
     </div>
   );
 }

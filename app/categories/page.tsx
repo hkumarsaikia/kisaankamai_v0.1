@@ -1,9 +1,6 @@
 "use client";
 
 import { ContentImage } from "@/components/ContentImage";
-
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { useLanguage } from "@/components/LanguageContext";
 import { AppLink as Link } from "@/components/AppLink";
 import { assetPath } from "@/lib/site";
@@ -27,7 +24,6 @@ export default function Categories() {
 
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950">
-      <Header />
       <main className="flex-grow py-24 bg-surface-container-lowest dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-12">
@@ -36,7 +32,7 @@ export default function Categories() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {categories.map((cat) => (
-              <Link key={cat.id} href={`/models?category=${cat.id}`} className="group relative h-[400px] overflow-hidden rounded-3xl shadow-xl cursor-pointer block">
+              <Link key={cat.id} href={`/rent-equipment?query=${cat.id}`} className="group relative aspect-square overflow-hidden rounded-3xl shadow-xl cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={t(cat.nameKey)} src={cat.img} loading="lazy" decoding="async" />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-8 w-full">
@@ -50,11 +46,6 @@ export default function Categories() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
-
-
-
-

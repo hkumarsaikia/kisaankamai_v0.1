@@ -50,3 +50,15 @@ npm run start:logged
 ```
 
 Generated logs belong in `logs/runtime/`.
+
+## Cross-Agent Handoff
+
+Use `agents/codex-antigravity-sync/` as the manual shared-memory subtree when you want Codex and Antigravity to hand work off through the repo.
+
+- Launcher name: `codex-antigravity-sync`
+- Install: `npm run cross-agent:install`
+- Runner: `npm run cross-agent:sync`
+- Consumer entrypoint: `agents/codex-antigravity-sync/docs/CONSUMER.md`
+- Reference contract: `agents/codex-antigravity-sync/docs/REFERENCES.md`
+
+Nothing in this workflow should auto-run.

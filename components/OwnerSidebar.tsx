@@ -3,32 +3,17 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 
 export const OwnerSidebar = () => {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { logout } = useAuth();
   const { t } = useLanguage();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      window.location.href = "/login";
-    } catch (err) {
-      console.error(t("ownerSidebar.logout_failed"), err);
-      // Failsafe
-      window.location.href = "/login";
-    }
-  };
 
   const navItems = [
     { name: t("ownerSidebar.profile"), icon: "dashboard", path: "/owner-profile" },
-    { name: t("ownerSidebar.my_equipment"), icon: "agriculture", path: "/owner-profile/equipment" },
-    { name: t("ownerSidebar.bookings"), icon: "calendar_month", path: "/owner-profile/bookings" },
-    { name: t("ownerSidebar.earnings"), icon: "payments", path: "/owner-profile/revenue" },
-    { name: t("ownerSidebar.settings"), icon: "settings", path: "/owner-profile/settings" },
+    { name: t("ownerSidebar.add_new_listing"), icon: "add_circle", path: "/owner-registration" },
+    { name: t("ownerSidebar.support"), icon: "help_center", path: "/support" },
   ];
 
   return (
@@ -89,20 +74,13 @@ export const OwnerSidebar = () => {
             <span>{t("ownerSidebar.add_new_listing")}</span>
           </Link>
           <Link
-            href="/owner-profile/support"
+            href="/logout"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-3 px-4 py-3 text-emerald-100/70 hover:bg-emerald-900/30 hover:text-white rounded-lg transition-colors font-manrope text-sm font-medium tracking-tight"
-          >
-            <span className="material-symbols-outlined">help_center</span>
-            <span>{t("ownerSidebar.support")}</span>
-          </Link>
-          <button
-            onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 text-red-300 hover:bg-red-950/30 hover:text-red-100 rounded-lg transition-colors font-manrope text-sm font-medium tracking-tight w-full text-left"
           >
             <span className="material-symbols-outlined">logout</span>
             <span>{t("ownerSidebar.sign_out")}</span>
-          </button>
+          </Link>
         </div>
       </aside>
     </>

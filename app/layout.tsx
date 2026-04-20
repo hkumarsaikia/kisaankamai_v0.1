@@ -7,6 +7,8 @@ import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
 import { NavigationTransitionProvider } from "@/components/NavigationTransitionProvider";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
+import { SingleLanguageRuntime } from "@/components/SingleLanguageRuntime";
+import { SiteChrome } from "@/components/SiteChrome";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { Suspense } from "react";
 import "leaflet/dist/leaflet.css";
@@ -57,11 +59,16 @@ export default async function RootLayout({
           {languageBootScript}
         </Script>
       </head>
-      <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased`}>
+      <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <LanguageProvider>
+            <SingleLanguageRuntime />
             <AuthProvider initialSession={initialSession}>
-              <NavigationTransitionProvider>{children}</NavigationTransitionProvider>
+              <NavigationTransitionProvider>
+                <SiteChrome>
+                  {children}
+                </SiteChrome>
+              </NavigationTransitionProvider>
               <Suspense fallback={null}>
                 <PerformanceMonitor />
               </Suspense>

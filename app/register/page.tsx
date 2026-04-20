@@ -1,191 +1,382 @@
 "use client";
 
-import Image from "next/image";
-import { useState, useTransition } from "react";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { FormEvent, useMemo, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
-import { useLanguage } from "@/components/LanguageContext";
-import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
+import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import { FormNotice } from "@/components/forms/FormKit";
 import { registerAction } from "@/lib/actions/local-data";
-import { assetPath } from "@/lib/site";
 
-type RoleValue = "renter" | "owner";
+const DEMO_OTP = "123456";
 
 export default function RegisterPage() {
-  const { t } = useLanguage();
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showOtp, setShowOtp] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpVerified, setOtpVerified] = useState(false);
   const [formData, setFormData] = useState({
     fullName: "",
-    email: "",
     phone: "",
-    address: "",
+    email: "",
+    password: "",
     village: "",
     pincode: "",
-    fieldArea: "",
-    password: "",
-    role: "renter" as RoleValue,
+    district: "Pune",
+    role: "renter" as "renter" | "owner" | "both",
+    idType: "Aadhaar Card",
+    idNumber: "",
   });
+
+  const address = useMemo(
+    () => [formData.village.trim(), formData.district.trim(), formData.pincode.trim()].filter(Boolean).join(", "),
+    [formData.district, formData.pincode, formData.village]
+  );
 
   const updateField = (field: keyof typeof formData, value: string) => {
     setFormData((current) => ({ ...current, [field]: value }));
+    if (field === "phone") {
+      setOtpVerified(false);
+    }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSendOtp = () => {
+    setShowOtp(true);
+    setOtp("");
+    setOtpVerified(false);
     setError("");
+  };
 
-    startTransition(async () => {
+  const handleVerifyOtp = () => {
+    if (otp.trim() === DEMO_OTP) {
+      setOtpVerified(true);
+      setError("");
+      window.alert("OTP verified successfully.");
+      return;
+    }
+
+    setOtpVerified(false);
+    window.alert("OTP could not be verified. Please check and try again.");
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
+    if (!otpVerified) {
+      setError("Please verify the OTP before creating your account.");
+      return;
+    }
+
+    setError("");
+    setIsSubmitting(true);
+
+    try {
       const result = await registerAction({
-        ...formData,
+        fullName: formData.fullName.trim(),
         phone: formData.phone.trim(),
-        fieldArea: formData.fieldArea,
+        email: formData.email.trim(),
+        password: formData.password,
+        village: formData.village.trim(),
+        pincode: formData.pincode.trim(),
+        address,
+        district: formData.district,
+        role: formData.role,
+        idType: formData.idType,
+        idNumber: formData.idNumber.trim(),
+        fieldArea: "N/A",
         otpVerified: true,
       });
 
       if (!result.ok) {
-        setError(result.error || t("register.registration_failed"));
+        setError(result.error || "Registration failed.");
+        setIsSubmitting(false);
         return;
       }
 
-      window.location.href = result.redirectTo || "/profile-selection";
-    });
+      window.location.href = result.redirectTo || "/register/success";
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Registration failed.");
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background text-on-surface">
-      <Header />
-      <main className="relative overflow-hidden pt-24">
+    <div className="min-h-screen bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed flex flex-col">
+      <main className="relative flex-grow overflow-hidden pt-24 pb-12">
         <div className="absolute inset-0">
-          <Image
-            src={assetPath("/assets/generated/modern_farm_tech.png")}
-            alt="Farm technology"
-            className="object-cover opacity-10 dark:opacity-15"
-            fill
-            sizes="100vw"
+          <div className="absolute inset-0 bg-gradient-to-br from-primary-container/15 via-transparent to-secondary-container/10" />
+          <img
+            alt="Maharashtra agriculture background"
+            className="h-full w-full object-cover grayscale-[10%] brightness-[92%]"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/95 to-background dark:from-slate-950/80 dark:via-slate-950/95 dark:to-slate-950" />
         </div>
 
-        <div className="relative mx-auto max-w-5xl px-6 py-16">
-          <div className="mx-auto max-w-3xl text-center">
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-white/80 px-4 py-2 text-xs font-black uppercase tracking-[0.22em] text-secondary backdrop-blur dark:border-slate-800 dark:bg-slate-950/70 dark:text-amber-400">
-              <span className="material-symbols-outlined text-base">person_add</span>
-              {t("register.local_registration")}
-            </span>
-            <h1 className="mt-6 text-4xl font-black tracking-tight text-primary dark:text-emerald-50 md:text-6xl">
-              {t("register.create_your_kisan_kamai_account")}
-            </h1>
-            <p className="mt-5 text-lg font-medium text-slate-600 dark:text-slate-400">
-              {t("register.use_email_or_phone_plus_password_otp_and_external_verification_are_disabled_in_this_local_phase")}
-            </p>
-          </div>
+        <div className="relative z-10 mx-auto w-full max-w-3xl px-4">
+          <div className="overflow-hidden rounded-[2rem] border border-white/40 bg-white/90 shadow-2xl backdrop-blur-xl">
+            <div className="bg-primary-container px-6 py-8 text-white sm:px-10">
+              <h1 className="font-headline text-3xl font-extrabold tracking-tight sm:text-4xl">Join Kisan Kamai</h1>
+              <p className="mt-2 max-w-2xl text-sm font-medium text-primary-fixed-dim sm:text-base">
+                आजच तुमचे खाते तयार करा आणि शेती सुलभ करा.
+              </p>
+            </div>
 
-          <FormShell
-            eyebrow={t("register.local_registration")}
-            title={t("register.create_your_kisan_kamai_account")}
-            description={t("register.use_email_or_phone_plus_password_otp_and_external_verification_are_disabled_in_this_local_phase")}
-            step={step}
-            totalSteps={3}
-            aside={
-              <div className="space-y-4">
-                <h3 className="text-lg font-black text-primary dark:text-emerald-50">{t("register.preferred_workspace")}</h3>
-                <p className="text-sm font-medium text-on-surface-variant">
-                  New users still choose a preferred starting workspace, but every account can switch between owner and renter after sign-in.
-                </p>
-              </div>
-            }
-          >
-            <form className="space-y-6" onSubmit={handleSubmit}>
+            <form className="space-y-10 px-6 py-8 sm:px-10 sm:py-10" onSubmit={handleSubmit}>
               {error ? <FormNotice tone="error">{error}</FormNotice> : null}
 
-              {step === 1 ? (
-                <FormSection title="Account basics" description="Start with the same identity and password fields already used by the local registration flow.">
-                  <FormGrid>
-                    <FormField label={t("register.full_name")} required>
-                      <input className="kk-input" value={formData.fullName} onChange={(event) => updateField("fullName", event.target.value)} />
-                    </FormField>
-                    <FormField label={t("register.email")}>
-                      <input className="kk-input" type="email" value={formData.email} onChange={(event) => updateField("email", event.target.value)} />
-                    </FormField>
-                    <FormField label={t("register.phone")}>
-                      <input className="kk-input" value={formData.phone} onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))} />
-                    </FormField>
-                    <FormField label={t("register.password")} required>
-                      <input className="kk-input" type="password" value={formData.password} onChange={(event) => updateField("password", event.target.value)} />
-                    </FormField>
-                  </FormGrid>
-                  <FormStepActions nextLabel="Continue to location" onNext={() => setStep(2)} disableNext={!formData.fullName || !formData.password || (!formData.email && !formData.phone)} />
-                </FormSection>
-              ) : null}
+              <section className="space-y-5">
+                <GoogleAuthButton label="Create your account with Google / गुगलसह खाते तयार करा" />
+                <div className="flex items-center gap-4">
+                  <div className="h-px flex-1 bg-outline-variant/70" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-outline">or register manually</span>
+                  <div className="h-px flex-1 bg-outline-variant/70" />
+                </div>
+              </section>
 
-              {step === 2 ? (
-                <FormSection title="Location and farm profile" description="These fields map directly to the current profile schema used across the live app.">
-                  <FormGrid>
-                    <FormField label={t("register.village_city")} required>
-                      <input className="kk-input" value={formData.village} onChange={(event) => updateField("village", event.target.value)} />
-                    </FormField>
-                    <FormField label={t("register.pincode")} required>
-                      <input className="kk-input" value={formData.pincode} onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))} />
-                    </FormField>
-                    <FormField label={t("register.field_area")} required>
-                      <input className="kk-input" value={formData.fieldArea} onChange={(event) => updateField("fieldArea", event.target.value)} />
-                    </FormField>
-                  </FormGrid>
-                  <FormField label={t("register.address")} required>
-                    <input className="kk-input" value={formData.address} onChange={(event) => updateField("address", event.target.value)} />
-                  </FormField>
-                  <FormStepActions backLabel="Back" nextLabel="Continue to workspace" onBack={() => setStep(1)} onNext={() => setStep(3)} disableNext={!formData.village || !formData.pincode || !formData.address || !formData.fieldArea} />
-                </FormSection>
-              ) : null}
-
-              {step === 3 ? (
-                <FormSection title="Workspace and review" description="Choose your initial workspace and confirm the data before the account is created.">
-                  <FormField label={t("register.preferred_workspace")} required>
-                    <ChoicePills
-                      value={formData.role}
-                      onChange={(value) => updateField("role", value)}
-                      options={[
-                        { label: t("register.renter"), value: "renter" },
-                        { label: t("register.owner"), value: "owner" },
-                      ]}
+              <section className="space-y-6">
+                <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
+                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    account_circle
+                  </span>
+                  <h2 className="font-headline text-2xl font-bold text-primary">Account Details / खाते तपशील</h2>
+                </div>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Full Name / पूर्ण नाव</span>
+                    <input
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      placeholder="E.g. Rajesh Patil"
+                      type="text"
+                      value={formData.fullName}
+                      onChange={(e) => updateField("fullName", e.target.value)}
+                      required
                     />
-                  </FormField>
-                  <ReviewList
-                    items={[
-                      { label: t("register.full_name"), value: formData.fullName },
-                      { label: t("register.email"), value: formData.email || "-" },
-                      { label: t("register.phone"), value: formData.phone || "-" },
-                      { label: t("register.village_city"), value: formData.village },
-                      { label: t("register.pincode"), value: formData.pincode },
-                      { label: t("register.field_area"), value: formData.fieldArea },
-                      { label: t("register.address"), value: formData.address },
-                      { label: t("register.preferred_workspace"), value: formData.role === "owner" ? t("register.owner") : t("register.renter") },
-                    ]}
-                  />
-                  <FormStepActions
-                    backLabel="Back"
-                    nextLabel={isPending ? t("register.creating_account") : t("register.create_account")}
-                    onBack={() => setStep(2)}
-                    submit
-                    disableNext={isPending}
-                  />
-                </FormSection>
-              ) : null}
-            </form>
+                  </label>
 
-            <p className="mt-6 text-center text-sm font-medium text-slate-600 dark:text-slate-400">
-              {t("register.already_have_an_account")}{" "}
-              <Link href="/login" className="font-black text-secondary hover:underline dark:text-amber-400">
-                {t("register.login")}
-              </Link>
-            </p>
-          </FormShell>
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Mobile Number / मोबाईल नंबर</span>
+                    <div className="flex gap-2">
+                      <input
+                        className="min-w-0 flex-1 rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                        placeholder="+91 98765 43210"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => updateField("phone", e.target.value)}
+                        required
+                      />
+                      <button
+                        className="shrink-0 rounded-xl bg-primary px-4 py-3 text-xs font-bold uppercase tracking-wider text-white transition-colors hover:bg-primary-container"
+                        type="button"
+                        onClick={handleSendOtp}
+                      >
+                        Send OTP
+                      </button>
+                    </div>
+                  </label>
+
+                  {showOtp ? (
+                    <div className="space-y-3 md:col-span-2">
+                      <div className="rounded-2xl border border-primary-fixed bg-primary-fixed/20 p-4">
+                        <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                          <label className="min-w-0 flex-1 space-y-1.5">
+                            <span className="text-xs font-bold uppercase tracking-wider text-primary">Enter OTP</span>
+                            <input
+                              className="w-full rounded-xl border-0 bg-white px-4 py-3.5 font-mono text-lg font-bold tracking-[0.45em] text-center text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                              inputMode="numeric"
+                              maxLength={6}
+                              placeholder="000000"
+                              value={otp}
+                              onChange={(e) => {
+                                setOtp(e.target.value.replace(/\D/g, "").slice(0, 6));
+                                setOtpVerified(false);
+                              }}
+                            />
+                          </label>
+                          <button
+                            className="rounded-xl bg-primary-container px-5 py-3 font-bold text-white transition-colors hover:bg-primary"
+                            type="button"
+                            onClick={handleVerifyOtp}
+                          >
+                            Verify OTP
+                          </button>
+                        </div>
+                        <p className="mt-3 text-xs font-medium text-on-surface-variant">
+                          Demo OTP: <span className="font-bold text-primary">123456</span>
+                        </p>
+                      </div>
+                    </div>
+                  ) : null}
+
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Email Address / ईमेल पत्ता</span>
+                    <input
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      placeholder="name@example.com"
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => updateField("email", e.target.value)}
+                    />
+                  </label>
+
+                  <label className="relative space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Password / पासवर्ड</span>
+                    <div className="relative">
+                      <input
+                        className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 pr-12 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                        placeholder="••••••••"
+                        type={showPassword ? "text" : "password"}
+                        value={formData.password}
+                        onChange={(e) => updateField("password", e.target.value)}
+                        required
+                      />
+                      <button
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary"
+                        type="button"
+                        onClick={() => setShowPassword((current) => !current)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                      >
+                        <span className="material-symbols-outlined">{showPassword ? "visibility_off" : "visibility"}</span>
+                      </button>
+                    </div>
+                  </label>
+                </div>
+              </section>
+
+              <section className="space-y-6">
+                <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
+                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    location_on
+                  </span>
+                  <h2 className="font-headline text-2xl font-bold text-primary">Location & Profile / स्थान आणि प्रोफाइल</h2>
+                </div>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Village/Town / गाव/शहर</span>
+                    <input
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      type="text"
+                      value={formData.village}
+                      onChange={(e) => updateField("village", e.target.value)}
+                      required
+                    />
+                  </label>
+
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">District / जिल्हा</span>
+                    <select
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      value={formData.district}
+                      onChange={(e) => updateField("district", e.target.value)}
+                    >
+                      <option value="Pune">Pune</option>
+                      <option value="Satara">Satara</option>
+                      <option value="Kolhapur">Kolhapur</option>
+                      <option value="Nashik">Nashik</option>
+                    </select>
+                  </label>
+
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Pincode / पिनकोड</span>
+                    <input
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      inputMode="numeric"
+                      maxLength={6}
+                      type="text"
+                      value={formData.pincode}
+                      onChange={(e) => updateField("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))}
+                      required
+                    />
+                  </label>
+
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Role / भूमिका</span>
+                    <select
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      value={formData.role}
+                      onChange={(e) => updateField("role", e.target.value)}
+                    >
+                      <option value="renter">Renter</option>
+                      <option value="owner">Owner</option>
+                      <option value="both">Both</option>
+                    </select>
+                  </label>
+                </div>
+              </section>
+
+              <section className="space-y-6">
+                <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
+                  <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    verified_user
+                  </span>
+                  <h2 className="font-headline text-2xl font-bold text-primary">Verification / पडताळणी</h2>
+                </div>
+                <p className="max-w-3xl text-sm leading-relaxed text-on-surface-variant">
+                  Aadhaar verification helps confirm identity and builds trust between owners and renters. You can also do this later from your profile.
+                </p>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">ID Type / ओळखपत्राचा प्रकार</span>
+                    <select
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      value={formData.idType}
+                      onChange={(e) => updateField("idType", e.target.value)}
+                    >
+                      <option>Aadhaar Card</option>
+                      <option>PAN Card</option>
+                      <option>Voter ID</option>
+                    </select>
+                  </label>
+                  <label className="space-y-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">ID Number / ओळखपत्र क्रमांक</span>
+                    <input
+                      className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50"
+                      placeholder="XXXX XXXX XXXX"
+                      type="text"
+                      value={formData.idNumber}
+                      onChange={(e) => updateField("idNumber", e.target.value)}
+                    />
+                  </label>
+                </div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-outline-variant bg-surface-container-low/40 px-6 py-8 text-center">
+                    <span className="material-symbols-outlined text-3xl text-outline">upload_file</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Front Side / समोरची बाजू</span>
+                  </div>
+                  <div className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-outline-variant bg-surface-container-low/40 px-6 py-8 text-center">
+                    <span className="material-symbols-outlined text-3xl text-outline">upload_file</span>
+                    <span className="text-xs font-bold uppercase tracking-wider text-outline">Back Side / मागची बाजू</span>
+                  </div>
+                </div>
+              </section>
+
+              <div className="space-y-4 border-t border-outline-variant/30 pt-8">
+                <button
+                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
+                  type="submit"
+                  disabled={isSubmitting || !otpVerified}
+                >
+                  {isSubmitting ? "Creating Account..." : "Create My Account / माझे खाते तयार करा"}
+                  <span className="material-symbols-outlined">how_to_reg</span>
+                </button>
+                <p className="text-center text-sm font-medium text-on-surface-variant">
+                  Already have an account?{" "}
+                  <Link href="/login" className="font-bold text-primary hover:underline">
+                    Login here
+                  </Link>
+                </p>
+                {!otpVerified ? (
+                  <p className="text-center text-xs font-semibold uppercase tracking-[0.2em] text-outline">
+                    Verify OTP to unlock account creation
+                  </p>
+                ) : null}
+              </div>
+            </form>
+          </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

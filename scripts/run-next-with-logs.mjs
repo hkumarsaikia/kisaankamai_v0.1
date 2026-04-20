@@ -4,8 +4,10 @@ import path from "node:path";
 import process from "node:process";
 import { spawn } from "node:child_process";
 import { createRequire } from "node:module";
+import { DEV_RUNTIME_DIR, ensureRuntimeDirs, moveLegacyRootRuntimeFiles } from "./runtime-files.mjs";
 
 const require = createRequire(import.meta.url);
+// Repo-managed dev/stdout/stderr files live under logs/runtime/dev.
 
 function readArgValue(args, longFlag, shortFlag, fallback) {
   const longIndex = args.findIndex((arg) => arg === longFlag);
@@ -24,12 +26,14 @@ function readArgValue(args, longFlag, shortFlag, fallback) {
 async function main() {
   const [, , mode = "dev", ...forwardedArgs] = process.argv;
   const nextBin = require.resolve("next/dist/bin/next");
-  const logDir = path.join(process.cwd(), "logs", "runtime");
+  const logDir = DEV_RUNTIME_DIR;
   const port = readArgValue(forwardedArgs, "--port", "-p", mode === "start" ? "3000" : "3000");
   const stem = mode === "start" ? `start-runtime-${port}` : `dev-runtime-${port}`;
   const outPath = path.join(logDir, `${stem}.log`);
   const errPath = path.join(logDir, `${stem}.err.log`);
 
+  moveLegacyRootRuntimeFiles(process.cwd());
+  ensureRuntimeDirs();
   await mkdir(logDir, { recursive: true });
 
   const outStream = createWriteStream(outPath, { flags: "w" });

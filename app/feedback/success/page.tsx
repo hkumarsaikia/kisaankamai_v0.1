@@ -1,16 +1,10 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
-import { useLanguage } from "@/components/LanguageContext";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 
 export default function FeedbackSuccessPage() {
-  const { t } = useLanguage();
-
   return (
     <div className="min-h-screen flex flex-col bg-background dark:bg-slate-950 text-on-surface">
-      <Header />
       <main className="flex-1 flex flex-col justify-center items-center py-12 px-4 @container bg-surface-container-low">
       <div className="max-w-[800px] w-full bg-surface rounded-2xl shadow-sm border border-outline-variant overflow-hidden flex flex-col">
         {/* Banner Image */}
@@ -29,11 +23,11 @@ export default function FeedbackSuccessPage() {
           </div>
 
           <h1 className="text-on-surface font-headline text-3xl md:text-4xl font-bold leading-tight mb-4">
-            {t("feedback.success.thank_you_for_your_feedback")}
+            Thanks, we received your request
           </h1>
           
           <p className="text-on-surface-variant text-base md:text-lg font-normal leading-relaxed max-w-2xl mb-10">
-            {t("feedback.success.we_ve_received_your_feedback_our_team_reviews_every_suggestion_to_build_a_better_kisan_kamai_for_you")}
+            Your idea is now in our review queue. We use these requests to guide what Kisan Kamai builds next for farmers and equipment owners.
           </p>
 
           {/* Actions */}
@@ -42,28 +36,26 @@ export default function FeedbackSuccessPage() {
               href="/"
               className="flex items-center justify-center rounded-lg h-12 px-6 bg-primary-container text-on-primary-container hover:bg-primary transition-colors text-base font-label font-semibold w-full sm:w-auto shadow-sm"
             >
-              <span className="truncate">{t("feedback.success.back_to_home")}</span>
+              <span className="truncate">Back to Home</span>
             </Link>
             
             <Link 
               href="/rent-equipment"
               className="flex items-center justify-center rounded-lg h-12 px-6 bg-surface-container-high text-on-surface hover:bg-surface-dim transition-colors text-base font-label font-semibold w-full sm:w-auto"
             >
-              <span className="truncate">{t("feedback.success.browse_equipment")}</span>
+              <span className="truncate">Browse Equipment</span>
             </Link>
             
             <Link 
               href="/support"
               className="flex items-center justify-center rounded-lg h-12 px-6 bg-transparent border border-outline text-on-surface hover:bg-surface-container transition-colors text-base font-label font-semibold w-full sm:w-auto"
             >
-              <span className="truncate">{t("feedback.success.contact_support")}</span>
+              <span className="truncate">Contact Support</span>
             </Link>
           </div>
         </div>
       </div>
     </main>
-    <Footer />
   </div>
   );
 }
-

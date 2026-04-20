@@ -1,6 +1,5 @@
-import { LegacyRouteRedirect } from "@/components/LegacyRouteRedirect";
+import { redirect } from "next/navigation";
 
-export default function RenterDashboardLegacyPage() {
-  return <LegacyRouteRedirect target="/renter-profile" title="Renter Profile" />;
+export default function RenterDashboardPage() {
+  redirect("/renter-profile");
 }
-

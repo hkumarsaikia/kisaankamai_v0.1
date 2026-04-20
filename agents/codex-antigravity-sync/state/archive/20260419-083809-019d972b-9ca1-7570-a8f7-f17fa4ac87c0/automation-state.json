@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "tools": {
+    "codex": {
+      "initialized": false,
+      "firstRunAt": null,
+      "lastRunAt": null,
+      "lastScanMode": null
+    },
+    "antigravity": {
+      "initialized": false,
+      "firstRunAt": null,
+      "lastRunAt": null,
+      "lastScanMode": null
+    }
+  },
+  "lastDocsAuditAt": null,
+  "lastRefreshAt": null
+}

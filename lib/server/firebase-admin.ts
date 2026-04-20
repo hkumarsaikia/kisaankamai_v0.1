@@ -46,7 +46,13 @@ export function getAdminAuth() {
 }
 
 export function getAdminDb() {
-  return getFirestore(getAdminApp());
+  const db = getFirestore(getAdminApp());
+  try {
+    db.settings({ ignoreUndefinedProperties: true });
+  } catch {
+    // Ignore error if settings are already applied during hot-reload
+  }
+  return db;
 }
 
 export function getAdminStorage() {

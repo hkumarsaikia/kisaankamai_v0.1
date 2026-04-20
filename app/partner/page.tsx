@@ -1,18 +1,80 @@
 "use client";
 
-import { ContentImage } from "@/components/ContentImage";
-import { FormActions, FormField, FormGrid, FormNotice, FormSection, FormShell } from "@/components/forms/FormKit";
-
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { useLanguage } from "@/components/LanguageContext";
-import { postJson, SubmissionError } from "@/lib/client/forms";
-import { assetPath } from "@/lib/site";
+import { SubmissionError, postJson } from "@/lib/client/forms";
 import { partnerInquirySchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
+import { AppLink as Link } from "@/components/AppLink";
+
+const ecosystemCards = [
+  {
+    icon: "account_balance",
+    title: "Rural Finance",
+    description:
+      "Enable equipment owners to expand their fleet with tailored finance and risk assessment support.",
+    highlights: ["Verified equipment owner leads", "Utilization data for risk assessment"],
+    colorClass: "text-primary",
+    bgClass: "bg-primary-fixed",
+  },
+  {
+    icon: "local_shipping",
+    title: "Logistics & Transport",
+    description:
+      "Support heavy machinery movement across rural hubs with seasonal route planning and reliable dispatch.",
+    highlights: ["Predictable seasonal demand", "Route optimization support"],
+    colorClass: "text-secondary",
+    bgClass: "bg-secondary-fixed",
+  },
+  {
+    icon: "agriculture",
+    title: "OEMs & Dealers",
+    description:
+      "List new equipment for rental or showcase products to a high-intent network of farmers and owners.",
+    highlights: ["Direct access to active farmers", "Product demonstration via rentals"],
+    colorClass: "text-on-tertiary-container",
+    bgClass: "bg-tertiary-fixed",
+  },
+];
+
+const nextSteps = [
+  {
+    step: "1",
+    title: "Submission Review",
+    description: "Our strategic team reviews your proposal within 2-3 business days.",
+  },
+  {
+    step: "2",
+    title: "Introductory Call",
+    description: "If aligned, we schedule a brief call to understand mutual synergies.",
+  },
+  {
+    step: "3",
+    title: "Pilot Planning",
+    description: "Develop a localized pilot integration plan for targeted districts.",
+  },
+];
+
+const reasonsToPartner = [
+  {
+    icon: "verified_user",
+    title: "Trusted Ground Network",
+    description:
+      "Deep operational presence and trust within rural farming communities in Maharashtra.",
+  },
+  {
+    icon: "integration_instructions",
+    title: "Seamless Tech Integration",
+    description:
+      "Modern platform flows that support finance, logistics, and dealer collaboration.",
+  },
+  {
+    icon: "trending_up",
+    title: "High Intent User Base",
+    description:
+      "Direct access to verified equipment owners and active commercial farmers.",
+  },
+];
 
 export default function PartnerPage() {
-  const { t } = useLanguage();
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,7 +98,7 @@ export default function PartnerPage() {
       setError(
         parsed.error.flatten().formErrors[0] ||
           Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          "Please complete the inquiry form correctly."
+          "Please complete the enquiry form correctly."
       );
       return;
     }
@@ -45,13 +107,13 @@ export default function PartnerPage() {
 
     try {
       await postJson("/api/forms/partner-inquiry", parsed.data);
-      setSuccess("Inquiry received. Our partnership team will contact you within 24 hours.");
+      setSuccess("Enquiry received. Our partnership team will contact you within 24 hours.");
       event.currentTarget.reset();
     } catch (submitError) {
       if (submitError instanceof SubmissionError) {
         setError(submitError.message);
       } else {
-        setError("Could not submit your inquiry right now.");
+        setError("Could not submit your enquiry right now.");
       }
     } finally {
       setIsSubmitting(false);
@@ -59,256 +121,266 @@ export default function PartnerPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-surface dark:bg-slate-950">
-      <Header />
-      <main className="flex-grow pt-28 pb-12">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden py-16 lg:py-24">
-        <div className="absolute inset-0 bg-[radial-gradient(at_0%_0%,rgba(20,59,46,0.05)_0px,transparent_50%),radial-gradient(at_100%_100%,rgba(168,91,51,0.05)_0px,transparent_50%)]" />
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-center relative z-10">
-          <div>
-            <span className="inline-block py-1 px-3 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant text-sm font-bold tracking-wider mb-6">{t("partner.opportunity_for_growth")}</span>
-            <h1 className="text-5xl lg:text-7xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-6 leading-tight tracking-tighter">
-              {t("partner.empowering_rural_entrepreneurs")}
+    <div className="bg-background text-on-background min-h-screen">
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-24 sm:px-6 lg:px-8">
+        <section className="relative overflow-hidden rounded-[2rem] bg-primary-container px-6 pb-12 pt-16 text-white shadow-md md:px-12 md:pb-16">
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(20,59,46,0.88)_0%,rgba(20,59,46,0.52)_45%,rgba(0,0,0,0.12)_100%)]" />
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage:
+                'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGvUW1pyMSm542J9EtkW-M2MoUvI42nDbcFq-GqQCvxthRJrHAny67FAM2h7NW67l95VCBjI_OieY5IsqWFCx2PZuTqesmOGOhm1OIrJtS6XF2VyuSqzgwDwdbsN6LpkKxY-1gIBGdyjtgA2Vw5paH0TH5-i_1B5fSyhI8_Q9n9dn5Fuh2xdszZ1ndnUVTFLdY08m6_u3pXFqvTXuOLVfpwuAY_EHG4IOWFEYgboIwRrqS8RTqONfFPSX_JnoqwmWO-wc4MoWg30Lf")',
+            }}
+          />
+          <div className="relative z-10 max-w-3xl">
+            <h1 className="text-4xl font-black tracking-[-0.03em] md:text-5xl lg:text-6xl">
+              Expand Agricultural Access in Maharashtra
             </h1>
-            <p className="text-xl text-on-surface-variant dark:text-slate-400 leading-relaxed mb-4 max-w-xl">
-              {t("partner.join_india_s_fastest_growing_agritech_marketplace_partner_with_kisan_kamai_to_transform_agricultural_logistics")}
+            <p className="mt-5 max-w-2xl text-base leading-relaxed text-primary-fixed md:text-lg">
+              Join the trusted network revolutionizing rural agriculture. We connect farmers with
+              high-quality equipment, financing, and support across Western Maharashtra.
             </p>
-            <p className="text-base text-secondary dark:text-amber-400 font-bold mb-10 font-mukta">
-              भारतातील सर्वात वेगाने वाढणाऱ्या कृषी तंत्रज्ञान बाजारपेठेत सामील व्हा.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a className="bg-primary-container text-white text-center px-8 py-4 rounded-xl font-bold text-lg hover:shadow-xl transition-all" href="#inquiry">{t("partner.become_a_partner")}</a>
-              <a className="border-2 border-primary-container dark:border-emerald-600 text-primary-container dark:text-emerald-400 text-center px-8 py-4 rounded-xl font-bold text-lg hover:bg-primary-container/5 transition-all" href="#models">{t("partner.explore_models")}</a>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <a
+                href="#enquiry-form"
+                className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-base font-bold text-primary shadow-sm transition-colors hover:bg-slate-100"
+              >
+                Apply for Partnership
+              </a>
+              <Link
+                href="/how-it-works"
+                className="inline-flex items-center justify-center rounded-lg border-2 border-white/80 px-6 py-3 text-base font-bold text-white transition-colors hover:bg-white/10"
+              >
+                Explore Ecosystem
+              </Link>
             </div>
           </div>
-          <div className="relative">
-            <div className="aspect-square rounded-3xl overflow-hidden shadow-2xl">
-              <ContentImage className="w-full h-full object-cover" alt="Farmer and agritech representative in wheat field" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
-            </div>
-            <div className="absolute -bottom-8 -left-8 bg-white dark:bg-slate-900/80 p-6 rounded-2xl card-shadow-xl hidden md:block max-w-[240px]">
-              <div className="flex items-center gap-3 mb-2">
-                <span className="material-symbols-outlined text-secondary text-3xl">trending_up</span>
-                <span className="font-bold text-primary dark:text-emerald-50">High Growth</span>
-              </div>
-              <p className="text-sm text-on-surface-variant dark:text-slate-400 leading-tight">Partners see an average increase of 40% in machinery utilization rates.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Partnership Models */}
-      <section className="py-24 bg-white dark:bg-slate-950/50" id="models">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-5xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-4 tracking-tight">{t("partner.tailored_partnership_models")}</h2>
-            <p className="text-lg text-on-surface-variant dark:text-slate-400 max-w-2xl mx-auto">{t("partner.we_offer_flexible_collaboration_frameworks_designed_for_fpos_local_dealers_and_financial_innovators")}</p>
+        <section className="px-1 py-16" id="ecosystem">
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-primary md:text-4xl">
+              The Kisan Kamai Ecosystem
+            </h2>
+            <p className="mt-4 text-base leading-relaxed text-on-surface-variant md:text-lg">
+              We are building a robust network to support modern farming. Partner with us to
+              deliver value directly to rural equipment owners and farming communities.
+            </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-            {/* Listing Partner */}
-            <div className="md:col-span-8 bg-surface-container-low dark:bg-slate-900/40 rounded-3xl p-8 flex flex-col justify-between border border-outline-variant/30 dark:border-slate-800/50 hover:shadow-lg transition-all group overflow-hidden relative min-h-[300px]">
-              <div className="relative z-10">
-                <span className="bg-primary dark:bg-emerald-600 text-white px-3 py-1 rounded text-xs font-bold mb-4 inline-block">FOR DEALERS & FPOs</span>
-                <h3 className="text-3xl font-extrabold text-primary dark:text-emerald-50 mb-4">Equipment Listing Partner</h3>
-                <p className="text-on-surface-variant dark:text-slate-400 max-w-md mb-6 leading-relaxed">Digitize your inventory and reach thousands of verified renters.</p>
-                <ul className="space-y-3 mb-8">
-                  {["Zero upfront platform fees", "Integrated GPS monitoring", "Secure automated payments"].map((item) => (
-                    <li key={item} className="flex items-center gap-2 font-medium text-primary-container dark:text-emerald-400">
-                      <span className="material-symbols-outlined text-emerald-600 dark:text-emerald-400 text-sm">check_circle</span>
-                      {item}
+
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {ecosystemCards.map((card) => (
+              <article
+                key={card.title}
+                className="rounded-xl border border-outline-variant/40 bg-surface-container-low p-8 shadow-sm transition-shadow hover:shadow-lg"
+              >
+                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-lg ${card.bgClass} ${card.colorClass}`}>
+                  <span className="material-symbols-outlined text-3xl">{card.icon}</span>
+                </div>
+                <h3 className="text-xl font-bold text-on-surface">{card.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">{card.description}</p>
+                <ul className="mt-6 space-y-2">
+                  {card.highlights.map((highlight) => (
+                    <li key={highlight} className="flex items-center gap-2 text-sm text-on-surface">
+                      <span className={`material-symbols-outlined text-sm ${card.colorClass}`}>check_circle</span>
+                      {highlight}
                     </li>
                   ))}
                 </ul>
-              </div>
-              <button className="relative z-10 w-fit bg-primary-container text-white px-6 py-3 rounded-lg font-bold hover:opacity-90 transition-all">Start Listing</button>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="grid gap-8 px-1 lg:grid-cols-[1.6fr_0.8fr]" id="enquiry-form">
+          <div className="rounded-xl border border-outline-variant bg-white p-6 shadow-sm md:p-10">
+            <div className="border-b border-outline-variant pb-6">
+              <h2 className="text-2xl font-bold text-on-surface md:text-3xl">
+                Premium Partnership Enquiry
+              </h2>
+              <p className="mt-2 text-sm text-on-surface-variant">
+                Submit your details to discuss strategic integration with the Kisan Kamai network.
+              </p>
             </div>
 
-            {/* Financing Partner */}
-            <div className="md:col-span-4 bg-secondary-container rounded-3xl p-8 flex flex-col border border-on-secondary-container/10 hover:shadow-lg transition-all">
-              <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                <span className="material-symbols-outlined text-on-secondary-container text-3xl">account_balance</span>
-              </div>
-              <h3 className="text-2xl font-extrabold text-on-secondary-container mb-4">Financial Institution</h3>
-              <p className="text-on-secondary-container/80 mb-6 flex-grow">Partner with us to provide asset financing and credit lines to equipment owners.</p>
-              <div className="mt-auto pt-6 border-t border-on-secondary-container/10">
-                <p className="font-bold text-on-secondary-container mb-2">Benefit from:</p>
-                <p className="text-sm text-on-secondary-container/70">Verified transaction history & risk-mitigated asset monitoring.</p>
-              </div>
-            </div>
+            <form className="mt-8 space-y-8" onSubmit={handleSubmit}>
+              {error ? (
+                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                  {error}
+                </div>
+              ) : null}
+              {success ? (
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                  {success}
+                </div>
+              ) : null}
 
-            {/* Hub Operator */}
-            <div className="md:col-span-4 bg-tertiary-container rounded-3xl p-8 flex flex-col border border-tertiary/20 hover:shadow-lg transition-all text-white">
-              <div className="w-14 h-14 bg-on-tertiary-container rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-                <span className="material-symbols-outlined text-white text-3xl">hub</span>
-              </div>
-              <h3 className="text-2xl font-extrabold mb-4">Operating Hub Partner</h3>
-              <p className="text-white/80 mb-6 flex-grow">Become a regional service center. Manage logistics, maintenance, and operator training.</p>
-              <div className="mt-auto flex items-center gap-2 font-bold text-on-tertiary-container">
-                Learn more <span className="material-symbols-outlined">arrow_forward</span>
-              </div>
-            </div>
-
-            {/* FPO Network */}
-            <div className="md:col-span-8 bg-surface-dim dark:bg-slate-900/10 rounded-3xl p-8 flex items-center gap-8 border border-outline-variant/30 dark:border-slate-800/50 overflow-hidden">
-              <div className="flex-1">
-                <h3 className="text-2xl font-extrabold text-primary dark:text-emerald-50 mb-4">Strategic FPO Network</h3>
-                <p className="text-on-surface-variant dark:text-slate-400 max-w-sm mb-6">Empower your FPO members with collective access to mechanization.</p>
-                <div className="flex gap-4">
-                  <div className="bg-white/50 dark:bg-slate-900/60 backdrop-blur rounded-xl px-4 py-2">
-                    <p className="text-2xl font-bold text-primary dark:text-emerald-50">150+</p>
-                    <p className="text-xs uppercase tracking-widest font-bold opacity-60">Active FPOs</p>
-                  </div>
-                  <div className="bg-white/50 dark:bg-slate-900/60 backdrop-blur rounded-xl px-4 py-2">
-                    <p className="text-2xl font-bold text-primary dark:text-emerald-50">25k+</p>
-                    <p className="text-xs uppercase tracking-widest font-bold opacity-60">Farmers Served</p>
-                  </div>
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-on-surface">
+                  <span className="material-symbols-outlined text-[18px] text-primary">business</span>
+                  Business Details
+                </h3>
+                <div className="grid gap-5 md:grid-cols-2">
+                  <label className="space-y-1.5">
+                    <span className="text-sm font-medium text-on-surface">Company Name *</span>
+                    <input
+                      className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
+                      name="organizationName"
+                      placeholder="e.g. Mahila Vikas Agro"
+                      type="text"
+                    />
+                  </label>
+                  <label className="space-y-1.5">
+                    <span className="text-sm font-medium text-on-surface">Partnership Type *</span>
+                    <select
+                      className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                      defaultValue=""
+                      name="partnerType"
+                    >
+                      <option value="" disabled>
+                        Select Category
+                      </option>
+                      <option value="Finance / NBFC">Finance / NBFC</option>
+                      <option value="Equipment OEM / Dealer">Equipment OEM / Dealer</option>
+                      <option value="Logistics / Transport">Logistics / Transport</option>
+                      <option value="FPO / NGO">FPO / NGO</option>
+                      <option value="Agri-Technology Integration">Agri-Technology Integration</option>
+                      <option value="Other Strategic Alliance">Other Strategic Alliance</option>
+                    </select>
+                  </label>
+                  <label className="space-y-1.5 md:col-span-2">
+                    <span className="text-sm font-medium text-on-surface">
+                      Operating Regions in Maharashtra *
+                    </span>
+                    <input
+                      className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
+                      name="businessLocation"
+                      placeholder="e.g. Pune, Satara, Sangli districts"
+                      type="text"
+                    />
+                  </label>
                 </div>
               </div>
-              <div className="hidden lg:block w-1/3 aspect-video rounded-2xl overflow-hidden shadow-inner">
-                <ContentImage className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Farm equipment facility" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Benefits Section */}
-      <section className="py-24 bg-surface-container-highest/30 dark:bg-slate-950/30">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="text-4xl font-extrabold font-headline text-primary dark:text-emerald-50 mb-8 tracking-tight">{t("partner.why_partner_with_kisan_kamai")}</h2>
-              <div className="space-y-8">
-                {[
-                  { icon: "payments", title: t("partner.sustainable_revenue_streams"), desc: t("partner.maximize_roi_on_expensive_assets_by_keeping_them_utilized_throughout_the_season") },
-                  { icon: "analytics", title: t("partner.data_driven_insights"), desc: t("partner.access_detailed_reports_on_demand_patterns_machine_health_and_operator_efficiency") },
-                  { icon: "verified_user", title: t("partner.risk_mitigation"), desc: t("partner.every_rental_is_backed_by_verified_users_and_digital_contracts") },
-                ].map((b) => (
-                  <div key={b.title} className="flex gap-6">
-                    <div className="shrink-0 w-12 h-12 rounded-full bg-emerald-100 dark:bg-slate-900/60 flex items-center justify-center text-emerald-800 dark:text-emerald-400">
-                      <span className="material-symbols-outlined">{b.icon}</span>
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-on-surface">
+                  <span className="material-symbols-outlined text-[18px] text-primary">person</span>
+                  Contact Person
+                </h3>
+                <div className="grid gap-5 md:grid-cols-2">
+                  <label className="space-y-1.5">
+                    <span className="text-sm font-medium text-on-surface">Full Name *</span>
+                    <input
+                      className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
+                      name="contactPerson"
+                      placeholder="Your full name"
+                      type="text"
+                    />
+                  </label>
+                  <label className="space-y-1.5">
+                    <span className="text-sm font-medium text-on-surface">Mobile Number *</span>
+                    <div className="flex">
+                      <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-outline bg-surface-container px-3 text-sm text-on-surface-variant">
+                        +91
+                      </span>
+                      <input
+                        className="h-12 w-full rounded-r-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
+                        name="phone"
+                        placeholder="10-digit mobile number"
+                        type="tel"
+                      />
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-on-surface">
+                  <span className="material-symbols-outlined text-[18px] text-primary">description</span>
+                  Proposal Details
+                </h3>
+                <label className="space-y-1.5">
+                  <span className="text-sm font-medium text-on-surface">
+                    Brief Description of Proposed Partnership *
+                  </span>
+                  <textarea
+                    className="min-h-[160px] w-full rounded-lg border border-outline bg-surface-container-lowest p-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
+                    name="message"
+                    placeholder="How do you envision working with Kisan Kamai? What value does it bring to the rural ecosystem?"
+                  />
+                </label>
+              </div>
+
+              <div className="flex justify-end border-t border-outline-variant pt-4">
+                <button
+                  className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-lg bg-primary-container px-8 py-3 text-base font-bold text-white shadow-md transition-colors hover:bg-primary"
+                  disabled={isSubmitting}
+                  type="submit"
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Enquiry"}
+                  <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <div className="flex flex-col gap-6">
+            <div className="rounded-xl border border-primary-fixed-dim/30 bg-primary-container p-6 text-white shadow-sm">
+              <h3 className="flex items-center gap-2 text-xl font-bold">
+                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  rule_folder
+                </span>
+                Next Steps
+              </h3>
+              <ol className="relative mt-5 space-y-5 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-primary-fixed-dim/30 before:content-['']">
+                {nextSteps.map((step) => (
+                  <li key={step.step} className="relative z-10 flex gap-4">
+                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-fixed text-xs font-bold text-primary">
+                      {step.step}
                     </div>
                     <div>
-                      <h4 className="text-xl font-bold text-primary dark:text-emerald-50 mb-2">{b.title}</h4>
-                      <p className="text-on-surface-variant dark:text-slate-400">{b.desc}</p>
+                      <h4 className="text-base font-bold">{step.title}</h4>
+                      <p className="mt-1 text-sm text-primary-fixed-dim">{step.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div className="rounded-xl border border-outline-variant bg-surface-container-low p-6 shadow-sm">
+              <h3 className="text-lg font-bold text-on-surface">Why Partner With Us?</h3>
+              <div className="mt-4 space-y-4">
+                {reasonsToPartner.map((reason) => (
+                  <div key={reason.title} className="flex gap-3">
+                    <span className="material-symbols-outlined mt-0.5 text-secondary">{reason.icon}</span>
+                    <div>
+                      <h4 className="text-sm font-bold text-on-surface">{reason.title}</h4>
+                      <p className="mt-1 text-xs leading-relaxed text-on-surface-variant">
+                        {reason.description}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="relative grid grid-cols-2 gap-4">
-              <div className="pt-12">
-                <ContentImage className="rounded-2xl shadow-lg mb-4 h-64 w-full object-cover" alt="Agricultural dealers" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
-                <div className="bg-primary-container p-6 rounded-2xl text-white">
-                  <p className="text-3xl font-bold mb-1">98%</p>
-                  <p className="text-sm opacity-80">Partner retention rate</p>
-                </div>
+
+            <div className="flex items-center gap-4 rounded-xl border border-outline-variant bg-white p-5 shadow-sm">
+              <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-surface-container-highest text-on-surface-variant">
+                <span className="material-symbols-outlined text-2xl">support_agent</span>
               </div>
               <div>
-                <div className="bg-secondary p-6 rounded-2xl text-white mb-4">
-                  <p className="text-3xl font-bold mb-1">₹12Cr+</p>
-                  <p className="text-sm opacity-80">Total partner earnings</p>
-                </div>
-                <ContentImage className="rounded-2xl shadow-lg h-80 w-full object-cover" alt="Entrepreneur with tablet" src={assetPath("/assets/generated/modern_farm_tech.png")} loading="lazy" decoding="async" />
+                <h4 className="text-sm font-bold text-on-surface">Need immediate assistance?</h4>
+                <p className="mt-1 text-xs text-on-surface-variant">
+                  Contact our corporate relations desk at{" "}
+                  <a className="font-semibold text-primary hover:underline" href="mailto:partners@kisankamai.in">
+                    partners@kisankamai.in
+                  </a>
+                </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Inquiry Form */}
-      <section className="py-24 bg-white dark:bg-slate-950/30 relative" id="inquiry">
-        <div className="max-w-4xl mx-auto px-6">
-          <FormShell
-            eyebrow={t("partner.opportunity_for_growth")}
-            title={t("partner.partner_inquiry")}
-            description={t("partner.tell_us_about_your_organization_and_we_ll_reach_out_within_24_hours")}
-            aside={
-              <div className="space-y-4">
-                <h3 className="text-lg font-black text-primary">Reference partner types</h3>
-                <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-5">
-                  <ul className="space-y-2 text-sm font-medium text-on-surface-variant">
-                    <li>FPO / Cooperative</li>
-                    <li>Equipment Dealer</li>
-                    <li>Financial Institution</li>
-                    <li>Logistics / Tech Partner</li>
-                  </ul>
-                </div>
-              </div>
-            }
-          >
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              {error ? <FormNotice tone="error">{error}</FormNotice> : null}
-              {success ? <FormNotice tone="success">{success}</FormNotice> : null}
-
-              <FormSection title="Organization details">
-                <FormGrid>
-                  <FormField label="Organization Name" required>
-                    <input className="kk-input" name="organizationName" placeholder="e.g. Mahalakshmi FPO" type="text" />
-                  </FormField>
-                  <FormField label="Type of Partner" required>
-                    <select className="kk-input" defaultValue="FPO / Cooperative" name="partnerType">
-                      <option>FPO / Cooperative</option>
-                      <option>Equipment Dealer</option>
-                      <option>Financial Institution</option>
-                      <option>Logistics / Tech Partner</option>
-                    </select>
-                  </FormField>
-                </FormGrid>
-                <FormGrid>
-                  <FormField label="Contact Person" required>
-                    <input className="kk-input" name="contactPerson" placeholder="Full Name" type="text" />
-                  </FormField>
-                  <FormField label="Phone Number" required>
-                    <input className="kk-input" name="phone" placeholder="98765 43210" type="tel" />
-                  </FormField>
-                </FormGrid>
-                <FormField label="Business Location" required>
-                  <input className="kk-input" name="businessLocation" placeholder="District, State" type="text" />
-                </FormField>
-                <FormField label="How can we work together?" required>
-                  <textarea className="kk-input min-h-[160px]" name="message" placeholder="Briefly describe your goals..." rows={4} />
-                </FormField>
-              </FormSection>
-
-              <FormActions>
-                <span className="text-sm font-medium text-on-surface-variant">
-                  This inquiry keeps the existing local submission pipeline and business fields.
-                </span>
-                <button type="submit" disabled={isSubmitting} className="kk-form-primary-button">
-                  {isSubmitting ? "Submitting..." : t("partner.submit_inquiry")}
-                </button>
-              </FormActions>
-            </form>
-          </FormShell>
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <section className="py-12 px-6">
-        <div className="max-w-7xl mx-auto rounded-[2rem] bg-secondary-fixed text-on-secondary-fixed-variant p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-          <div className="absolute right-0 top-0 h-full w-1/3 opacity-10 pointer-events-none">
-            <span className="material-symbols-outlined text-[300px] leading-none" style={{ fontVariationSettings: "'FILL' 1" }}>handshake</span>
-          </div>
-          <div className="max-w-2xl text-center md:text-left relative z-10">
-            <h2 className="text-3xl md:text-4xl font-extrabold mb-4 tracking-tight">{t("partner.rooted_in_trust_serving_indian_agriculture")}</h2>
-            <p className="text-lg opacity-90">{t("partner.let_s_build_the_future_of_farming_together")}</p>
-          </div>
-          <div className="shrink-0 relative z-10">
-            <a className="inline-flex items-center gap-3 bg-white text-secondary-container px-8 py-4 rounded-full font-bold shadow-xl hover:scale-105 transition-transform" href="mailto:partners@kisankamai.com">
-              <span className="material-symbols-outlined">mail</span>
-              Email our Strategy Team
-            </a>
-          </div>
-        </div>
-      </section>
-
+        </section>
       </main>
-      <Footer />
     </div>
   );
 }
-
-
-
-

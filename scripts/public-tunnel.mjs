@@ -6,14 +6,16 @@ import { spawn, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
+import { ensureRuntimeDirs, moveLegacyRootRuntimeFiles, TUNNEL_RUNTIME_DIR } from "./runtime-files.mjs";
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+// Repo-managed tunnel pid/stdout/stderr/state files live under logs/runtime/tunnel.
 const CACHE_DIR = path.join(ROOT_DIR, ".cache", "cloudflared");
-const TUNNEL_LOG_PATH = path.join(ROOT_DIR, "tunnel.log");
-const TUNNEL_STATE_PATH = path.join(CACHE_DIR, "public-tunnel-state.json");
+const TUNNEL_LOG_PATH = path.join(TUNNEL_RUNTIME_DIR, "public-tunnel.url");
+const TUNNEL_STATE_PATH = path.join(TUNNEL_RUNTIME_DIR, "public-tunnel-state.json");
 const RUNTIME_LOG_PATHS = [
-  path.join(ROOT_DIR, ".cache", "public-tunnel.stdout.log"),
-  path.join(ROOT_DIR, ".cache", "public-tunnel.stderr.log")
+  path.join(TUNNEL_RUNTIME_DIR, "public-tunnel.stdout.log"),
+  path.join(TUNNEL_RUNTIME_DIR, "public-tunnel.stderr.log")
 ];
 const LOCAL_URL = "http://127.0.0.1:3000";
 const TUNNEL_URL_PATTERN = /https:\/\/[a-z0-9-]+\.trycloudflare\.com/gi;
@@ -53,6 +55,7 @@ const resolvePortableAsset = () => PORTABLE_ASSETS[process.platform]?.[process.a
 const getPortableBinaryPath = (binaryName) => path.join(CACHE_DIR, binaryName);
 
 const ensureCacheDir = () => {
+  ensureRuntimeDirs();
   fs.mkdirSync(CACHE_DIR, { recursive: true });
 };
 
@@ -510,6 +513,7 @@ const waitForReachableTunnelUrl = async (url) => {
 };
 
 const main = async () => {
+  moveLegacyRootRuntimeFiles(ROOT_DIR);
   const isLocalServerHealthy = await checkLocalServer();
   if (!isLocalServerHealthy) {
     console.error(`Dev server is not reachable at ${LOCAL_URL}. Start it first with "npm run dev:public".`);

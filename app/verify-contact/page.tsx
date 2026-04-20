@@ -1,7 +1,5 @@
 "use client";
 
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 
@@ -10,7 +8,6 @@ export default function VerifyContactPage() {
 
   return (
     <div className="min-h-screen bg-background text-on-surface flex flex-col">
-      <Header />
       <main className="flex-grow flex items-center justify-center px-6 pt-24 pb-12">
         <div className="kk-glass w-full max-w-2xl p-8 lg:p-10 text-center">
           <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300">
@@ -32,8 +29,6 @@ export default function VerifyContactPage() {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
-

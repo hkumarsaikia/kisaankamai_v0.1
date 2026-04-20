@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "tools": {
+    "codex": {
+      "initialized": true,
+      "firstRunAt": "2026-04-19T08:38:09.852Z",
+      "lastRunAt": "2026-04-19T08:38:09.852Z",
+      "lastScanMode": "full_scan"
+    },
+    "antigravity": {
+      "initialized": false,
+      "firstRunAt": null,
+      "lastRunAt": null,
+      "lastScanMode": null
+    }
+  },
+  "lastDocsAuditAt": "2026-04-19T08:38:09.852Z",
+  "lastRefreshAt": "2026-04-19T08:38:09.852Z"
+}

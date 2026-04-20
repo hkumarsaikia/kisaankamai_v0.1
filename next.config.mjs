@@ -117,6 +117,17 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config) => {
+    config.ignoreWarnings = [
+      { module: /node_modules\/@opentelemetry/ },
+      { module: /node_modules\/require-in-the-middle/ },
+    ];
+    return config;
+  },
+  experimental: {
+    workerThreads: true,
+    cpus: 12,
+  },
 };
 
 export default nextConfig;
