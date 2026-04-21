@@ -1,5 +1,6 @@
 import "server-only";
 
+import workbookManifest from "@/data/operational-sheets-workbook.json";
 import type {
   BookingRecord,
   FormSubmissionRecord,
@@ -9,10 +10,48 @@ import type {
   ProfileRecord,
 } from "@/lib/local-data/types";
 import type { BugReportRecord } from "@/lib/bug-reporting/types";
-import { appendSheetRowsSafe } from "@/lib/server/google-sheets";
+import { appendSheetRowsSafe, type SheetKey } from "@/lib/server/google-sheets";
 
-function profileTargetSheet(rolePreference?: string) {
-  return rolePreference === "owner" ? "owners" : "renters";
+type SheetColumnManifest = {
+  key: SheetKey;
+  columns: Array<{ key: string }>;
+};
+
+const SHEET_COLUMN_KEYS = new Map(
+  (workbookManifest.sheets as SheetColumnManifest[]).map((sheet) => [sheet.key, sheet.columns.map((column) => column.key)])
+);
+
+function sheetValues(sheet: SheetKey, row: Record<string, unknown>) {
+  const columnKeys = SHEET_COLUMN_KEYS.get(sheet);
+  if (!columnKeys) {
+    throw new Error(`No sheet manifest found for ${sheet}`);
+  }
+
+  return columnKeys.map((columnKey) => row[columnKey] ?? "");
+}
+
+function profileTargetSheets(rolePreference?: string) {
+  return rolePreference === "owner" ? (["owners"] as const) : (["renters"] as const);
+}
+
+function safeJson(value: unknown) {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
+
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
+function textList(value: unknown) {
+  if (!Array.isArray(value) || !value.length) {
+    return "";
+  }
+
+  return value.map((entry) => String(entry)).join(" | ");
 }
 
 export async function mirrorAuthEvent(input: {
@@ -27,22 +66,24 @@ export async function mirrorAuthEvent(input: {
     [
       {
         sheet: "auth_events",
-        values: [
-          new Date().toISOString(),
-          input.eventType,
-          input.session?.user.id || "",
-          input.session?.user.email || input.identifier || "",
-          input.session?.user.phone || "",
-          input.workspace || input.session?.activeWorkspace || "",
-          input.path || "",
-          input.outcome,
-        ],
+        values: sheetValues("auth_events", {
+          occurred_at: new Date().toISOString(),
+          event_type: input.eventType,
+          user_id: input.session?.user.id || "",
+          email_or_identifier: input.session?.user.email || input.identifier || "",
+          phone: input.session?.user.phone || "",
+          workspace: input.workspace || input.session?.activeWorkspace || "",
+          path: input.path || "",
+          outcome: input.outcome,
+          source: "live-app",
+        }),
       },
     ],
     {
       entityType: "auth_event",
       entityId: input.session?.user.id || input.identifier || input.eventType,
       note: input.eventType,
+      operation: "append-auth-event",
     }
   );
 }
@@ -52,29 +93,31 @@ export async function mirrorProfile(input: {
   profile: ProfileRecord;
   source: string;
 }) {
-  await appendSheetRowsSafe(
-    [
-      {
-        sheet: profileTargetSheet(input.profile.rolePreference),
-        values: [
-          new Date().toISOString(),
-          input.userId,
-          input.profile.fullName,
-          input.profile.email || "",
-          input.profile.phone || "",
-          input.profile.village,
-          input.profile.pincode,
-          input.profile.rolePreference,
-          input.source,
-        ],
-      },
-    ],
-    {
-      entityType: "profile",
-      entityId: input.userId,
-      note: input.source,
-    }
-  );
+  const rows = profileTargetSheets(input.profile.rolePreference).map((sheet) => ({
+    sheet,
+    values: sheetValues(sheet, {
+      mirrored_at: new Date().toISOString(),
+      user_id: input.userId,
+      account_scope: sheet === "owners" ? "owner" : "renter",
+      full_name: input.profile.fullName,
+      role_preference: input.profile.rolePreference,
+      email: input.profile.email || "",
+      phone: input.profile.phone || "",
+      village: input.profile.village,
+      address: input.profile.address,
+      pincode: input.profile.pincode,
+      field_area_acres: Number(input.profile.fieldArea || 0),
+      source: input.source,
+      record_state: "live",
+    }),
+  }));
+
+  await appendSheetRowsSafe(rows, {
+    entityType: "profile",
+    entityId: input.userId,
+    note: input.source,
+    operation: "append-profile",
+  });
 }
 
 export async function mirrorListing(listing: ListingRecord, source: string) {
@@ -82,24 +125,44 @@ export async function mirrorListing(listing: ListingRecord, source: string) {
     [
       {
         sheet: "listings",
-        values: [
-          new Date().toISOString(),
-          listing.id,
-          listing.ownerUserId,
-          listing.name,
-          listing.category,
-          listing.location,
-          listing.district,
-          listing.pricePerHour,
-          listing.status,
-          listing.coverImage,
-        ],
+        values: sheetValues("listings", {
+          mirrored_at: new Date().toISOString(),
+          listing_id: listing.id,
+          owner_user_id: listing.ownerUserId,
+          name: listing.name,
+          slug: listing.slug,
+          category: listing.category,
+          category_label: listing.categoryLabel,
+          status: listing.status,
+          location: listing.location,
+          district: listing.district,
+          state: listing.state,
+          price_per_hour: listing.pricePerHour,
+          unit_label: listing.unitLabel,
+          operator_included: listing.operatorIncluded,
+          rating: listing.rating,
+          hp: listing.hp,
+          distance_km: listing.distanceKm,
+          available_from: listing.availableFrom || "",
+          work_types: textList(listing.workTypes),
+          tags: textList(listing.tags),
+          owner_name: listing.ownerName,
+          owner_location: listing.ownerLocation,
+          owner_verified: listing.ownerVerified,
+          cover_image: listing.coverImage,
+          gallery_count: listing.galleryImages.length,
+          image_path_count: listing.imagePaths.length,
+          created_at: listing.createdAt,
+          updated_at: listing.updatedAt,
+          source,
+        }),
       },
     ],
     {
       entityType: "listing",
       entityId: listing.id,
       note: source,
+      operation: "append-listing",
     }
   );
 }
@@ -108,33 +171,38 @@ export async function mirrorBookingAndPayment(booking: BookingRecord, payment?: 
   const rows: Array<{ sheet: "bookings" | "payments"; values: unknown[] }> = [
     {
       sheet: "bookings",
-      values: [
-        new Date().toISOString(),
-        booking.id,
-        booking.listingId,
-        booking.ownerUserId,
-        booking.renterUserId,
-        booking.status,
-        booking.startDate,
-        booking.endDate,
-        booking.amount,
-      ],
+      values: sheetValues("bookings", {
+        mirrored_at: new Date().toISOString(),
+        booking_id: booking.id,
+        listing_id: booking.listingId,
+        owner_user_id: booking.ownerUserId,
+        renter_user_id: booking.renterUserId,
+        status: booking.status,
+        start_date: booking.startDate,
+        end_date: booking.endDate,
+        amount: booking.amount,
+        created_at: booking.createdAt,
+        updated_at: booking.updatedAt,
+        source: payment ? "booking+payment" : "booking",
+      }),
     },
   ];
 
   if (payment) {
     rows.push({
       sheet: "payments",
-      values: [
-        new Date().toISOString(),
-        payment.id,
-        payment.bookingId,
-        payment.ownerUserId,
-        payment.renterUserId,
-        payment.amount,
-        payment.status,
-        payment.method,
-      ],
+      values: sheetValues("payments", {
+        mirrored_at: new Date().toISOString(),
+        payment_id: payment.id,
+        booking_id: payment.bookingId,
+        owner_user_id: payment.ownerUserId,
+        renter_user_id: payment.renterUserId,
+        amount: payment.amount,
+        status: payment.status,
+        method: payment.method,
+        created_at: payment.createdAt,
+        source: "booking-payment",
+      }),
     });
   }
 
@@ -142,60 +210,110 @@ export async function mirrorBookingAndPayment(booking: BookingRecord, payment?: 
     entityType: "booking",
     entityId: booking.id,
     note: payment ? "booking+payment" : "booking",
+    operation: "append-booking",
   });
 }
 
 export async function mirrorSubmission(submission: FormSubmissionRecord) {
   const payload = submission.payload || {};
-  const supportCategory = typeof payload.category === "string" ? payload.category : "";
 
   if (submission.type === "feedback") {
     await appendSheetRowsSafe(
       [
         {
           sheet: "feedback",
-          values: [
-            submission.createdAt,
-            submission.id,
-            submission.userId || "",
-            payload.role || "",
-            payload.category || "",
-            payload.subject || "",
-            payload.rating || "",
-            payload.contactMe || false,
-          ],
+          values: sheetValues("feedback", {
+            submitted_at: submission.createdAt,
+            submission_id: submission.id,
+            user_id: submission.userId || "",
+            role: payload.role || "",
+            category: payload.category || "",
+            subject: payload.subject || "",
+            rating: Number(payload.rating || 0),
+            contact_me: Boolean(payload.contactMe),
+            full_name: payload.fullName || "",
+            mobile_number: payload.mobileNumber || payload.phone || "",
+            message: payload.message || "",
+            payload_json: safeJson(payload),
+          }),
         },
       ],
       {
         entityType: "submission",
         entityId: submission.id,
         note: submission.type,
+        operation: "append-feedback",
       }
     );
     return;
   }
 
-  if (submission.type === "support-request" || submission.type === "callback-request" || submission.type === "partner-inquiry") {
+  if (submission.type === "booking-request") {
     await appendSheetRowsSafe(
       [
         {
-          sheet: "support_requests",
-          values: [
-            submission.createdAt,
-            submission.id,
-            submission.userId || "",
-            supportCategory || submission.type,
-            payload.fullName || "",
-            payload.phone || payload.mobileNumber || "",
-            payload.email || "",
-            payload.sourcePath || "",
-          ],
+          sheet: "booking_requests",
+          values: sheetValues("booking_requests", {
+            submitted_at: submission.createdAt,
+            submission_id: submission.id,
+            user_id: submission.userId || "",
+            listing_id: submission.listingId || "",
+            equipment_id: payload.equipmentId || "",
+            equipment_name: payload.equipmentName || "",
+            field_location: payload.fieldLocation || "",
+            work_type: payload.workType || "",
+            start_date: payload.startDate || "",
+            duration: payload.duration || "",
+            task: payload.task || "",
+            field_size: Number(payload.fieldSize || 0),
+            phone: payload.phone || "",
+            source_path: payload.sourcePath || "",
+            payload_json: safeJson(payload),
+          }),
         },
       ],
       {
         entityType: "submission",
         entityId: submission.id,
         note: submission.type,
+        operation: "append-booking-request",
+      }
+    );
+    return;
+  }
+
+  if (
+    submission.type === "support-request" ||
+    submission.type === "callback-request" ||
+    submission.type === "partner-inquiry" ||
+    submission.type === "owner-application"
+  ) {
+    await appendSheetRowsSafe(
+      [
+        {
+          sheet: "support_requests",
+          values: sheetValues("support_requests", {
+            submitted_at: submission.createdAt,
+            submission_id: submission.id,
+            submission_type: submission.type,
+            user_id: submission.userId || "",
+            category: payload.category || "",
+            full_name: payload.fullName || "",
+            phone: payload.phone || payload.mobileNumber || "",
+            email: payload.email || "",
+            source_path: payload.sourcePath || "",
+            location: payload.location || "",
+            equipment_needed: payload.equipmentNeeded || "",
+            message: payload.message || "",
+            payload_json: safeJson(payload),
+          }),
+        },
+      ],
+      {
+        entityType: "submission",
+        entityId: submission.id,
+        note: submission.type,
+        operation: "append-support-request",
       }
     );
   }
@@ -206,24 +324,39 @@ export async function mirrorBugReport(report: BugReportRecord) {
     [
       {
         sheet: "bug_reports",
-        values: [
-          report.occurredAt,
-          report.id,
-          report.severity,
-          report.source,
-          report.runtime,
-          report.pathname || "",
-          report.statusCode || "",
-          report.userId || "",
-          report.fingerprint || "",
-        ],
+        values: sheetValues("bug_reports", {
+          occurred_at: report.occurredAt,
+          bug_id: report.id,
+          severity: report.severity,
+          source: report.source,
+          runtime: report.runtime,
+          environment: report.environment,
+          access_surface: report.accessSurface,
+          pathname: report.pathname || "",
+          url: report.url || "",
+          method: report.method || "",
+          status_code: report.statusCode || "",
+          user_id: report.userId || "",
+          active_workspace: report.activeWorkspace || "",
+          request_id: report.requestId || "",
+          fingerprint: report.fingerprint || "",
+          handled: report.handled,
+          browser: report.client?.browser || "",
+          os: report.client?.os || "",
+          device_type: report.client?.deviceType || "",
+          metric_name: report.performance?.metricName || "",
+          metric_value: report.performance?.metricValue || "",
+          error_name: report.error?.name || "",
+          error_message: report.error?.message || "",
+          truncated: Boolean(report.truncated),
+        }),
       },
     ],
     {
       entityType: "bug_report",
       entityId: report.id,
       note: report.source,
+      operation: "append-bug-report",
     }
   );
 }
-

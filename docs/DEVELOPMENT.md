@@ -16,6 +16,7 @@ npm run lint
 npm run typecheck
 npm run build
 npm run verify
+npm run firebase:deploy
 ```
 
 ## Firebase Requirements
@@ -30,7 +31,7 @@ If Firebase Admin credentials are missing, some authenticated/data-backed runtim
 
 ## Alternate App Surface
 
-`apps/production` is retained as a fully maintained alternate app surface for QA, browser checks, and parallel product validation. It is not the canonical public domain target, but it should stay aligned with the root app's Firebase-only runtime, redesign, and operational behavior.
+`apps/production` is retained as a fully maintained alternate app surface for QA, browser checks, and parallel product validation. It is not the canonical public domain target, but it should stay aligned with the root app's Firebase-backed runtime, Sheets mirror contract, and operational behavior.
 
 ```bash
 cd apps/production
@@ -62,3 +63,31 @@ Use `agents/codex-antigravity-sync/` as the manual shared-memory subtree when yo
 - Reference contract: `agents/codex-antigravity-sync/docs/REFERENCES.md`
 
 Nothing in this workflow should auto-run.
+
+## Sheets Operations
+
+Operational workbook tooling is script-based and lives under `scripts/`.
+
+```bash
+npm run sheets:bootstrap
+npm run sheets:verify
+npm run sheets:backfill
+```
+
+Use `docs/OPERATIONS_GOOGLE_SHEETS.md` for the workbook model, backfill scope, and verification flow.
+
+## Final Test Accounts
+
+Seed the canonical owner and renter test accounts:
+
+```bash
+npm run seed:final-test-accounts -- --owner-password "<password>" --renter-password "<password>"
+```
+
+Cleanup:
+
+```bash
+npm run cleanup:final-test-accounts
+```
+
+The latest local summaries are written to `logs/runtime/final-test-accounts/`.

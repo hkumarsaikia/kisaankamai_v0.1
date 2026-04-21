@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "owner": {
+    "uid": "kk-final-test-owner",
+    "email": "final.owner.test@example.com",
+    "phone": "9000000101",
+    "displayName": "Kisan Kamai Final Test Owner",
+    "otpCode": "111111",
+    "profile": {
+      "fullName": "Kisan Kamai Final Test Owner",
+      "village": "Sangli",
+      "address": "Final Test Operations, Sangli",
+      "pincode": "416416",
+      "fieldArea": 24,
+      "rolePreference": "owner",
+      "email": "final.owner.test@example.com",
+      "phone": "9000000101"
+    }
+  },
+  "renter": {
+    "uid": "kk-final-test-renter",
+    "email": "final.renter.test@example.com",
+    "phone": "9000000102",
+    "displayName": "Kisan Kamai Final Test Renter",
+    "otpCode": "222222",
+    "profile": {
+      "fullName": "Kisan Kamai Final Test Renter",
+      "village": "Satara",
+      "address": "Final Test Operations, Satara",
+      "pincode": "415001",
+      "fieldArea": 8,
+      "rolePreference": "renter",
+      "email": "final.renter.test@example.com",
+      "phone": "9000000102"
+    }
+  },
+  "naming": {
+    "listingPrefix": "ft-listing",
+    "bookingPrefix": "ft-booking",
+    "paymentPrefix": "ft-payment"
+  }
+}

@@ -80,7 +80,10 @@ Required services:
 2. **Firebase Authentication** for session-cookie backed sign-in.
 3. **Cloud Firestore** for users, profiles, listings, bookings, payments, saved items, and submissions.
 4. **Cloud Storage** for listing media uploads.
-5. Optional **Sentry** or Google Cloud logging for production observability.
+5. Optional **Google Sheets** workbook plus service account credentials for the best-effort operational mirror.
+6. Optional **Sentry** or Google Cloud logging for production observability.
+7. Firebase Auth **phone test numbers** in Console for deterministic OTP validation.
+8. Firebase Cloud Messaging **Web Push VAPID key** in Console for browser notifications.
 
 ---
 
@@ -88,6 +91,10 @@ Required services:
 
 - [ ] `npm install` completed without errors.
 - [ ] Firebase environment variables and Admin credentials are set.
+- [ ] Firebase Console has fictional phone numbers configured:
+  - [ ] `+91 90000 00101` with code `111111`
+  - [ ] `+91 90000 00102` with code `222222`
+- [ ] Firebase Console has a Web Push VAPID key and the public key is exposed as `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY`.
 - [ ] `npm run dev` starts the server on port 3000.
 - [ ] `npm run verify` passes.
 

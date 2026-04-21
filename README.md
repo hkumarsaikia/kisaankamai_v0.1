@@ -35,6 +35,12 @@ npm run lint
 npm run typecheck
 npm run build
 npm run verify
+npm run firebase:deploy
+npm run sheets:bootstrap
+npm run sheets:verify
+npm run sheets:backfill
+npm run seed:final-test-accounts -- --owner-password "<password>" --renter-password "<password>"
+npm run cleanup:final-test-accounts
 ```
 
 Runtime logs captured with the helper scripts are stored under `logs/runtime/`.
@@ -61,6 +67,36 @@ The root app is still the canonical live frontend for `https://www.kisankamai.co
 - Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
+
+## Operational Tooling
+
+Run the operational scripts from the repo root:
+
+```bash
+npm run sheets:bootstrap
+npm run sheets:verify
+npm run sheets:backfill
+npm run seed:final-test-accounts -- --owner-password "<password>" --renter-password "<password>"
+npm run cleanup:final-test-accounts
+npm run repo:sync-live -- --repo-url "<git-url>" --branch main
+npm run discord:notify -- --webhook-url "<url>" --title "..." --summary "..."
+```
+
+Manual Firebase Console prerequisites still required outside repo code:
+
+- Authentication > Phone > Phone numbers for testing:
+  - `+91 90000 00101` with OTP code `111111`
+  - `+91 90000 00102` with OTP code `222222`
+- Cloud Messaging > Web Push certificates:
+  - generate or import the VAPID key pair
+  - expose the public key as `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY`
+
+Runbooks:
+
+- Google Sheets ops: `docs/OPERATIONS_GOOGLE_SHEETS.md`
+- Final test accounts: `docs/OPERATIONS_FINAL_TEST_ACCOUNTS.md`
+- Live repo sync + Discord: `docs/OPERATIONS_LIVE_REPO_SYNC.md`
+- Deferred domain cutover: `docs/RUNBOOK_GODADDY_FIREBASE_DOMAIN_MIGRATION.md`
 
 ## Repository Notes
 

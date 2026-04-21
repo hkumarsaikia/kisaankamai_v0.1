@@ -712,6 +712,18 @@ export async function updateBookingStatusFormAction(
   finishFormAction(await updateBookingStatusAction(bookingId, status));
 }
 
+export async function saveFcmTokenAction(token: string): Promise<ActionResult> {
+  return runLoggedAction("saveFcmTokenAction", [token], async () => {
+    const session = await getCurrentSession();
+    if (!session) {
+      return { ok: false, error: "Login required" };
+    }
+    const { saveFcmToken } = await import("@/lib/server/firebase-data");
+    await saveFcmToken(session.user.id, token);
+    return { ok: true };
+  });
+}
+
 export async function selectWorkspaceAction(
   workspace: "owner" | "renter"
 ): Promise<ActionResult> {

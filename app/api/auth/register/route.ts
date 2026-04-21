@@ -1,22 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { registerAndCreateSession } from "@/lib/server/local-auth";
-import { registerInputSchema } from "@/lib/validation/forms";
+import {
+  createFirebaseBackedSession,
+  firebaseSessionRequestSchema,
+} from "@/lib/server/firebase-session-route";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
   try {
-    const payload = registerInputSchema.parse(await request.json());
-    const session = await registerAndCreateSession(payload);
-
-    if (!session) {
-      return NextResponse.json({ ok: false, error: "Registration failed." }, { status: 400 });
-    }
+    const payload = firebaseSessionRequestSchema.parse(await request.json());
+    const result = await createFirebaseBackedSession(payload);
 
     return NextResponse.json({
       ok: true,
-      userId: session.user.id,
-      email: session.user.email,
+      uid: result.uid,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Registration failed.";

@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isListingOwner(ownerUserId) {
+      return signedIn() && request.auth.uid == ownerUserId;
+    }
+
+    function isAllowedListingImage() {
+      return request.resource != null &&
+        request.resource.size <= 8 * 1024 * 1024 &&
+        request.resource.contentType.matches('image/(jpeg|png|webp|avif)');
+    }
+
+    match /listings/{ownerUserId}/{listingId}/{allPaths=**} {
+      allow read: if true;
+      allow write: if isListingOwner(ownerUserId) && (
+        request.resource == null ||
+        isAllowedListingImage()
+      );
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

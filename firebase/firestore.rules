@@ -1,0 +1,331 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    function validRolePreference(value) {
+      return value in ["owner", "renter", "both"];
+    }
+
+    function validListingStatus(value) {
+      return value in ["active", "paused"];
+    }
+
+    function validBookingStatus(value) {
+      return value in ["pending", "upcoming", "active", "confirmed", "completed", "cancelled"];
+    }
+
+    function userKeys() {
+      return [
+        "id",
+        "email",
+        "phone",
+        "passwordHash",
+        "roles",
+        "fcmTokens",
+        "createdAt",
+        "updatedAt"
+      ];
+    }
+
+    function profileKeys() {
+      return [
+        "userId",
+        "fullName",
+        "village",
+        "address",
+        "pincode",
+        "fieldArea",
+        "rolePreference",
+        "email",
+        "phone"
+      ];
+    }
+
+    function listingKeys() {
+      return [
+        "id",
+        "ownerUserId",
+        "slug",
+        "name",
+        "category",
+        "categoryLabel",
+        "location",
+        "district",
+        "state",
+        "description",
+        "pricePerHour",
+        "unitLabel",
+        "rating",
+        "hp",
+        "distanceKm",
+        "ownerName",
+        "ownerLocation",
+        "ownerVerified",
+        "coverImage",
+        "galleryImages",
+        "imagePaths",
+        "tags",
+        "workTypes",
+        "operatorIncluded",
+        "availableFrom",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ];
+    }
+
+    function bookingKeys() {
+      return [
+        "id",
+        "listingId",
+        "ownerUserId",
+        "renterUserId",
+        "status",
+        "startDate",
+        "endDate",
+        "amount",
+        "createdAt",
+        "updatedAt"
+      ];
+    }
+
+    function savedItemKeys() {
+      return ["userId", "listingId", "createdAt"];
+    }
+
+    function listingOwnerMatches(listingId, ownerUserId) {
+      return exists(/databases/$(database)/documents/listings/$(listingId)) &&
+        get(/databases/$(database)/documents/listings/$(listingId)).data.ownerUserId == ownerUserId;
+    }
+
+    match /users/{uid} {
+      allow read: if isSelf(uid);
+
+      allow create: if isSelf(uid) &&
+        request.resource.data.keys().hasOnly(userKeys()) &&
+        request.resource.data.id == uid &&
+        request.resource.data.email is string &&
+        request.resource.data.phone is string &&
+        request.resource.data.passwordHash == "" &&
+        request.resource.data.roles is list &&
+        request.resource.data.fcmTokens is list &&
+        request.resource.data.createdAt is string &&
+        request.resource.data.updatedAt is string;
+
+      allow update: if isSelf(uid) &&
+        request.resource.data.keys().hasOnly(userKeys()) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "email",
+          "phone",
+          "fcmTokens",
+          "updatedAt"
+        ]) &&
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.passwordHash == resource.data.passwordHash &&
+        request.resource.data.roles == resource.data.roles &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.email is string &&
+        request.resource.data.phone is string &&
+        request.resource.data.fcmTokens is list &&
+        request.resource.data.updatedAt is string;
+
+      allow delete: if false;
+    }
+
+    match /profiles/{uid} {
+      allow read: if isSelf(uid);
+
+      allow create: if isSelf(uid) &&
+        request.resource.data.keys().hasOnly(profileKeys()) &&
+        request.resource.data.userId == uid &&
+        request.resource.data.fullName is string &&
+        request.resource.data.village is string &&
+        request.resource.data.address is string &&
+        request.resource.data.pincode is string &&
+        request.resource.data.fieldArea is number &&
+        validRolePreference(request.resource.data.rolePreference) &&
+        (
+          !request.resource.data.keys().hasAny(["email"]) ||
+          request.resource.data.email is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["phone"]) ||
+          request.resource.data.phone is string
+        );
+
+      allow update: if isSelf(uid) &&
+        request.resource.data.keys().hasOnly(profileKeys()) &&
+        request.resource.data.userId == resource.data.userId &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "fullName",
+          "village",
+          "address",
+          "pincode",
+          "fieldArea",
+          "rolePreference",
+          "email",
+          "phone"
+        ]) &&
+        request.resource.data.fullName is string &&
+        request.resource.data.village is string &&
+        request.resource.data.address is string &&
+        request.resource.data.pincode is string &&
+        request.resource.data.fieldArea is number &&
+        validRolePreference(request.resource.data.rolePreference) &&
+        (
+          !request.resource.data.keys().hasAny(["email"]) ||
+          request.resource.data.email is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["phone"]) ||
+          request.resource.data.phone is string
+        );
+
+      allow delete: if false;
+    }
+
+    match /listings/{listingId} {
+      allow read: if true;
+
+      allow create: if signedIn() &&
+        request.resource.data.keys().hasOnly(listingKeys()) &&
+        request.resource.data.id == listingId &&
+        request.resource.data.ownerUserId == request.auth.uid &&
+        request.resource.data.slug is string &&
+        request.resource.data.name is string &&
+        request.resource.data.category is string &&
+        request.resource.data.location is string &&
+        request.resource.data.description is string &&
+        request.resource.data.pricePerHour is number &&
+        request.resource.data.status is string &&
+        validListingStatus(request.resource.data.status) &&
+        request.resource.data.createdAt is string &&
+        request.resource.data.updatedAt is string;
+
+      allow update: if signedIn() &&
+        resource.data.ownerUserId == request.auth.uid &&
+        request.resource.data.keys().hasOnly(listingKeys()) &&
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.ownerUserId == resource.data.ownerUserId &&
+        request.resource.data.slug == resource.data.slug &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "name",
+          "category",
+          "categoryLabel",
+          "location",
+          "district",
+          "state",
+          "description",
+          "pricePerHour",
+          "unitLabel",
+          "rating",
+          "hp",
+          "distanceKm",
+          "ownerName",
+          "ownerLocation",
+          "ownerVerified",
+          "coverImage",
+          "galleryImages",
+          "imagePaths",
+          "tags",
+          "workTypes",
+          "operatorIncluded",
+          "availableFrom",
+          "status",
+          "updatedAt"
+        ]) &&
+        request.resource.data.status is string &&
+        validListingStatus(request.resource.data.status) &&
+        request.resource.data.updatedAt is string;
+
+      allow delete: if signedIn() && resource.data.ownerUserId == request.auth.uid;
+    }
+
+    match /bookings/{bookingId} {
+      allow read: if signedIn() && (
+        resource.data.ownerUserId == request.auth.uid ||
+        resource.data.renterUserId == request.auth.uid
+      );
+
+      allow create: if signedIn() &&
+        request.resource.data.keys().hasOnly(bookingKeys()) &&
+        request.resource.data.id == bookingId &&
+        request.resource.data.renterUserId == request.auth.uid &&
+        listingOwnerMatches(request.resource.data.listingId, request.resource.data.ownerUserId) &&
+        request.resource.data.status == "pending" &&
+        request.resource.data.startDate is string &&
+        request.resource.data.endDate is string &&
+        request.resource.data.amount is number &&
+        request.resource.data.createdAt is string &&
+        request.resource.data.updatedAt is string;
+
+      allow update: if signedIn() &&
+        request.resource.data.keys().hasOnly(bookingKeys()) &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status", "updatedAt"]) &&
+        request.resource.data.id == resource.data.id &&
+        request.resource.data.listingId == resource.data.listingId &&
+        request.resource.data.ownerUserId == resource.data.ownerUserId &&
+        request.resource.data.renterUserId == resource.data.renterUserId &&
+        request.resource.data.startDate == resource.data.startDate &&
+        request.resource.data.endDate == resource.data.endDate &&
+        request.resource.data.amount == resource.data.amount &&
+        request.resource.data.createdAt == resource.data.createdAt &&
+        request.resource.data.updatedAt is string &&
+        validBookingStatus(request.resource.data.status) &&
+        (
+          resource.data.ownerUserId == request.auth.uid ||
+          (
+            resource.data.renterUserId == request.auth.uid &&
+            request.resource.data.status == "cancelled"
+          )
+        );
+
+      allow delete: if false;
+    }
+
+    match /payments/{paymentId} {
+      allow read: if signedIn() && (
+        resource.data.ownerUserId == request.auth.uid ||
+        resource.data.renterUserId == request.auth.uid
+      );
+
+      allow write: if false;
+    }
+
+    match /saved-items/{savedItemId} {
+      allow read: if isSelf(resource.data.userId);
+
+      allow create: if signedIn() &&
+        request.resource.data.keys().hasOnly(savedItemKeys()) &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.listingId is string &&
+        request.resource.data.createdAt is string &&
+        savedItemId == request.auth.uid + "__" + request.resource.data.listingId;
+
+      allow update: if false;
+
+      allow delete: if isSelf(resource.data.userId);
+    }
+
+    match /form-submissions/{submissionId} {
+      allow read, write: if false;
+    }
+
+    match /bug-reports/{bugReportId} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

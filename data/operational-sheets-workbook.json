@@ -1,0 +1,330 @@
+{
+  "version": 2,
+  "title": "Kisan Kamai Operational Mirror",
+  "sourceOfTruth": "Firebase",
+  "mirrorPolicy": "Google Sheets is a best-effort operational mirror only and must never block Firebase writes.",
+  "sheets": [
+    {
+      "key": "workbook_meta",
+      "title": "workbook_meta",
+      "backfillMode": "replace",
+      "tabColor": "#455A64",
+      "columns": [
+        { "key": "section", "header": "Section", "width": 180, "type": "text" },
+        { "key": "key", "header": "Key", "width": 220, "type": "text" },
+        { "key": "value", "header": "Value", "width": 360, "type": "text" },
+        { "key": "updated_at", "header": "Updated At", "width": 190, "type": "datetime" },
+        { "key": "notes", "header": "Notes", "width": 360, "type": "text" }
+      ]
+    },
+    {
+      "key": "owners",
+      "title": "owners",
+      "backfillMode": "replace",
+      "tabColor": "#1B7742",
+      "columns": [
+        { "key": "mirrored_at", "header": "Mirrored At", "width": 190, "type": "datetime" },
+        { "key": "user_id", "header": "User ID", "width": 180, "type": "text" },
+        { "key": "account_scope", "header": "Account Scope", "width": 130, "type": "text" },
+        { "key": "full_name", "header": "Full Name", "width": 220, "type": "text" },
+        { "key": "role_preference", "header": "Role Preference", "width": 140, "type": "text" },
+        { "key": "email", "header": "Email", "width": 240, "type": "text" },
+        { "key": "phone", "header": "Phone", "width": 140, "type": "text" },
+        { "key": "village", "header": "Village", "width": 160, "type": "text" },
+        { "key": "address", "header": "Address", "width": 260, "type": "text" },
+        { "key": "pincode", "header": "Pincode", "width": 120, "type": "text" },
+        { "key": "field_area_acres", "header": "Field Area Acres", "width": 140, "type": "number" },
+        { "key": "source", "header": "Source", "width": 160, "type": "text" },
+        { "key": "record_state", "header": "Record State", "width": 120, "type": "text" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "role_preference", "type": "TEXT_EQ", "value": "owner", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "role_preference", "type": "TEXT_EQ", "value": "both", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "record_state", "type": "TEXT_EQ", "value": "live", "background": "#E8F0FE", "foreground": "#185ABC" }
+      ]
+    },
+    {
+      "key": "renters",
+      "title": "renters",
+      "backfillMode": "replace",
+      "tabColor": "#2990B0",
+      "columns": [
+        { "key": "mirrored_at", "header": "Mirrored At", "width": 190, "type": "datetime" },
+        { "key": "user_id", "header": "User ID", "width": 180, "type": "text" },
+        { "key": "account_scope", "header": "Account Scope", "width": 130, "type": "text" },
+        { "key": "full_name", "header": "Full Name", "width": 220, "type": "text" },
+        { "key": "role_preference", "header": "Role Preference", "width": 140, "type": "text" },
+        { "key": "email", "header": "Email", "width": 240, "type": "text" },
+        { "key": "phone", "header": "Phone", "width": 140, "type": "text" },
+        { "key": "village", "header": "Village", "width": 160, "type": "text" },
+        { "key": "address", "header": "Address", "width": 260, "type": "text" },
+        { "key": "pincode", "header": "Pincode", "width": 120, "type": "text" },
+        { "key": "field_area_acres", "header": "Field Area Acres", "width": 140, "type": "number" },
+        { "key": "source", "header": "Source", "width": 160, "type": "text" },
+        { "key": "record_state", "header": "Record State", "width": 120, "type": "text" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "role_preference", "type": "TEXT_EQ", "value": "renter", "background": "#E8F0FE", "foreground": "#185ABC" },
+        { "columnKey": "role_preference", "type": "TEXT_EQ", "value": "both", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "record_state", "type": "TEXT_EQ", "value": "live", "background": "#E6F4EA", "foreground": "#137333" }
+      ]
+    },
+    {
+      "key": "listings",
+      "title": "listings",
+      "backfillMode": "replace",
+      "tabColor": "#B57920",
+      "columns": [
+        { "key": "mirrored_at", "header": "Mirrored At", "width": 190, "type": "datetime" },
+        { "key": "listing_id", "header": "Listing ID", "width": 140, "type": "text" },
+        { "key": "owner_user_id", "header": "Owner User ID", "width": 150, "type": "text" },
+        { "key": "name", "header": "Name", "width": 260, "type": "text" },
+        { "key": "slug", "header": "Slug", "width": 220, "type": "text" },
+        { "key": "category", "header": "Category", "width": 140, "type": "text" },
+        { "key": "category_label", "header": "Category Label", "width": 180, "type": "text" },
+        { "key": "status", "header": "Status", "width": 120, "type": "text" },
+        { "key": "location", "header": "Location", "width": 180, "type": "text" },
+        { "key": "district", "header": "District", "width": 160, "type": "text" },
+        { "key": "state", "header": "State", "width": 140, "type": "text" },
+        { "key": "price_per_hour", "header": "Price Per Hour", "width": 140, "type": "currency" },
+        { "key": "unit_label", "header": "Unit Label", "width": 120, "type": "text" },
+        { "key": "operator_included", "header": "Operator Included", "width": 150, "type": "boolean" },
+        { "key": "rating", "header": "Rating", "width": 110, "type": "number" },
+        { "key": "hp", "header": "HP", "width": 100, "type": "text" },
+        { "key": "distance_km", "header": "Distance KM", "width": 120, "type": "number" },
+        { "key": "available_from", "header": "Available From", "width": 150, "type": "date" },
+        { "key": "work_types", "header": "Work Types", "width": 240, "type": "text" },
+        { "key": "tags", "header": "Tags", "width": 220, "type": "text" },
+        { "key": "owner_name", "header": "Owner Name", "width": 220, "type": "text" },
+        { "key": "owner_location", "header": "Owner Location", "width": 220, "type": "text" },
+        { "key": "owner_verified", "header": "Owner Verified", "width": 130, "type": "boolean" },
+        { "key": "cover_image", "header": "Cover Image", "width": 300, "type": "url" },
+        { "key": "gallery_count", "header": "Gallery Count", "width": 120, "type": "number" },
+        { "key": "image_path_count", "header": "Image Path Count", "width": 140, "type": "number" },
+        { "key": "created_at", "header": "Created At", "width": 190, "type": "datetime" },
+        { "key": "updated_at", "header": "Updated At", "width": 190, "type": "datetime" },
+        { "key": "source", "header": "Source", "width": 160, "type": "text" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "active", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "paused", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "owner_verified", "type": "TEXT_EQ", "value": "TRUE", "background": "#E8F0FE", "foreground": "#185ABC" }
+      ]
+    },
+    {
+      "key": "bookings",
+      "title": "bookings",
+      "backfillMode": "replace",
+      "tabColor": "#8E63B9",
+      "columns": [
+        { "key": "mirrored_at", "header": "Mirrored At", "width": 190, "type": "datetime" },
+        { "key": "booking_id", "header": "Booking ID", "width": 150, "type": "text" },
+        { "key": "listing_id", "header": "Listing ID", "width": 140, "type": "text" },
+        { "key": "owner_user_id", "header": "Owner User ID", "width": 150, "type": "text" },
+        { "key": "renter_user_id", "header": "Renter User ID", "width": 150, "type": "text" },
+        { "key": "status", "header": "Status", "width": 120, "type": "text" },
+        { "key": "start_date", "header": "Start Date", "width": 140, "type": "date" },
+        { "key": "end_date", "header": "End Date", "width": 140, "type": "date" },
+        { "key": "amount", "header": "Amount", "width": 140, "type": "currency" },
+        { "key": "created_at", "header": "Created At", "width": 190, "type": "datetime" },
+        { "key": "updated_at", "header": "Updated At", "width": 190, "type": "datetime" },
+        { "key": "source", "header": "Source", "width": 160, "type": "text" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "upcoming", "background": "#E8F0FE", "foreground": "#185ABC" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "confirmed", "background": "#E0F7FA", "foreground": "#006064" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "active", "background": "#E3F2FD", "foreground": "#1565C0" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "completed", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "cancelled", "background": "#FCE8E6", "foreground": "#C5221F" }
+      ]
+    },
+    {
+      "key": "payments",
+      "title": "payments",
+      "backfillMode": "replace",
+      "tabColor": "#EB9D2E",
+      "columns": [
+        { "key": "mirrored_at", "header": "Mirrored At", "width": 190, "type": "datetime" },
+        { "key": "payment_id", "header": "Payment ID", "width": 150, "type": "text" },
+        { "key": "booking_id", "header": "Booking ID", "width": 150, "type": "text" },
+        { "key": "owner_user_id", "header": "Owner User ID", "width": 150, "type": "text" },
+        { "key": "renter_user_id", "header": "Renter User ID", "width": 150, "type": "text" },
+        { "key": "amount", "header": "Amount", "width": 140, "type": "currency" },
+        { "key": "status", "header": "Status", "width": 120, "type": "text" },
+        { "key": "method", "header": "Method", "width": 180, "type": "text" },
+        { "key": "created_at", "header": "Created At", "width": 190, "type": "datetime" },
+        { "key": "source", "header": "Source", "width": 160, "type": "text" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "paid", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "processing", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "status", "type": "TEXT_EQ", "value": "refunded", "background": "#FCE8E6", "foreground": "#C5221F" }
+      ]
+    },
+    {
+      "key": "saved_items",
+      "title": "saved_items",
+      "backfillMode": "replace",
+      "tabColor": "#00695C",
+      "columns": [
+        { "key": "synced_at", "header": "Synced At", "width": 190, "type": "datetime" },
+        { "key": "saved_item_id", "header": "Saved Item ID", "width": 220, "type": "text" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "listing_id", "header": "Listing ID", "width": 140, "type": "text" },
+        { "key": "created_at", "header": "Created At", "width": 190, "type": "datetime" },
+        { "key": "source", "header": "Source", "width": 160, "type": "text" }
+      ]
+    },
+    {
+      "key": "support_requests",
+      "title": "support_requests",
+      "backfillMode": "replace",
+      "tabColor": "#D24654",
+      "columns": [
+        { "key": "submitted_at", "header": "Submitted At", "width": 190, "type": "datetime" },
+        { "key": "submission_id", "header": "Submission ID", "width": 170, "type": "text" },
+        { "key": "submission_type", "header": "Submission Type", "width": 150, "type": "text" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "category", "header": "Category", "width": 150, "type": "text" },
+        { "key": "full_name", "header": "Full Name", "width": 220, "type": "text" },
+        { "key": "phone", "header": "Phone", "width": 150, "type": "text" },
+        { "key": "email", "header": "Email", "width": 240, "type": "text" },
+        { "key": "source_path", "header": "Source Path", "width": 180, "type": "text" },
+        { "key": "location", "header": "Location", "width": 180, "type": "text" },
+        { "key": "equipment_needed", "header": "Equipment Needed", "width": 200, "type": "text" },
+        { "key": "message", "header": "Message", "width": 320, "type": "text" },
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" }
+      ]
+    },
+    {
+      "key": "booking_requests",
+      "title": "booking_requests",
+      "backfillMode": "replace",
+      "tabColor": "#5C6BC0",
+      "columns": [
+        { "key": "submitted_at", "header": "Submitted At", "width": 190, "type": "datetime" },
+        { "key": "submission_id", "header": "Submission ID", "width": 170, "type": "text" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "listing_id", "header": "Listing ID", "width": 140, "type": "text" },
+        { "key": "equipment_id", "header": "Equipment ID", "width": 140, "type": "text" },
+        { "key": "equipment_name", "header": "Equipment Name", "width": 240, "type": "text" },
+        { "key": "field_location", "header": "Field Location", "width": 180, "type": "text" },
+        { "key": "work_type", "header": "Work Type", "width": 160, "type": "text" },
+        { "key": "start_date", "header": "Start Date", "width": 140, "type": "date" },
+        { "key": "duration", "header": "Duration", "width": 140, "type": "text" },
+        { "key": "task", "header": "Task", "width": 220, "type": "text" },
+        { "key": "field_size", "header": "Field Size", "width": 120, "type": "number" },
+        { "key": "phone", "header": "Phone", "width": 150, "type": "text" },
+        { "key": "source_path", "header": "Source Path", "width": 180, "type": "text" },
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" }
+      ]
+    },
+    {
+      "key": "feedback",
+      "title": "feedback",
+      "backfillMode": "replace",
+      "tabColor": "#E65C93",
+      "columns": [
+        { "key": "submitted_at", "header": "Submitted At", "width": 190, "type": "datetime" },
+        { "key": "submission_id", "header": "Submission ID", "width": 170, "type": "text" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "role", "header": "Role", "width": 120, "type": "text" },
+        { "key": "category", "header": "Category", "width": 160, "type": "text" },
+        { "key": "subject", "header": "Subject", "width": 220, "type": "text" },
+        { "key": "rating", "header": "Rating", "width": 110, "type": "number" },
+        { "key": "contact_me", "header": "Contact Me", "width": 120, "type": "boolean" },
+        { "key": "full_name", "header": "Full Name", "width": 220, "type": "text" },
+        { "key": "mobile_number", "header": "Mobile Number", "width": 160, "type": "text" },
+        { "key": "message", "header": "Message", "width": 320, "type": "text" },
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "rating", "type": "NUMBER_GREATER_THAN_EQ", "value": "4", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "rating", "type": "NUMBER_LESS_THAN_EQ", "value": "2", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "contact_me", "type": "TEXT_EQ", "value": "TRUE", "background": "#FFF4E5", "foreground": "#9C6500" }
+      ]
+    },
+    {
+      "key": "bug_reports",
+      "title": "bug_reports",
+      "backfillMode": "replace",
+      "tabColor": "#A32B2B",
+      "columns": [
+        { "key": "occurred_at", "header": "Occurred At", "width": 190, "type": "datetime" },
+        { "key": "bug_id", "header": "Bug ID", "width": 170, "type": "text" },
+        { "key": "severity", "header": "Severity", "width": 120, "type": "text" },
+        { "key": "source", "header": "Source", "width": 180, "type": "text" },
+        { "key": "runtime", "header": "Runtime", "width": 120, "type": "text" },
+        { "key": "environment", "header": "Environment", "width": 130, "type": "text" },
+        { "key": "access_surface", "header": "Access Surface", "width": 150, "type": "text" },
+        { "key": "pathname", "header": "Pathname", "width": 220, "type": "text" },
+        { "key": "url", "header": "URL", "width": 320, "type": "url" },
+        { "key": "method", "header": "Method", "width": 100, "type": "text" },
+        { "key": "status_code", "header": "Status Code", "width": 120, "type": "number" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "active_workspace", "header": "Active Workspace", "width": 150, "type": "text" },
+        { "key": "request_id", "header": "Request ID", "width": 180, "type": "text" },
+        { "key": "fingerprint", "header": "Fingerprint", "width": 260, "type": "text" },
+        { "key": "handled", "header": "Handled", "width": 100, "type": "boolean" },
+        { "key": "browser", "header": "Browser", "width": 160, "type": "text" },
+        { "key": "os", "header": "OS", "width": 150, "type": "text" },
+        { "key": "device_type", "header": "Device Type", "width": 140, "type": "text" },
+        { "key": "metric_name", "header": "Metric Name", "width": 140, "type": "text" },
+        { "key": "metric_value", "header": "Metric Value", "width": 120, "type": "number" },
+        { "key": "error_name", "header": "Error Name", "width": 180, "type": "text" },
+        { "key": "error_message", "header": "Error Message", "width": 360, "type": "text" },
+        { "key": "truncated", "header": "Truncated", "width": 110, "type": "boolean" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "severity", "type": "TEXT_EQ", "value": "fatal", "background": "#F4CCCC", "foreground": "#990000" },
+        { "columnKey": "severity", "type": "TEXT_EQ", "value": "error", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "severity", "type": "TEXT_EQ", "value": "warning", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "severity", "type": "TEXT_EQ", "value": "info", "background": "#E8F0FE", "foreground": "#185ABC" }
+      ]
+    },
+    {
+      "key": "auth_events",
+      "title": "auth_events",
+      "backfillMode": "preserve",
+      "tabColor": "#3351BA",
+      "columns": [
+        { "key": "occurred_at", "header": "Occurred At", "width": 190, "type": "datetime" },
+        { "key": "event_type", "header": "Event Type", "width": 140, "type": "text" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "email_or_identifier", "header": "Email Or Identifier", "width": 240, "type": "text" },
+        { "key": "phone", "header": "Phone", "width": 150, "type": "text" },
+        { "key": "workspace", "header": "Workspace", "width": 130, "type": "text" },
+        { "key": "path", "header": "Path", "width": 180, "type": "text" },
+        { "key": "outcome", "header": "Outcome", "width": 120, "type": "text" },
+        { "key": "source", "header": "Source", "width": 140, "type": "text" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "outcome", "type": "TEXT_EQ", "value": "success", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "outcome", "type": "TEXT_EQ", "value": "error", "background": "#FCE8E6", "foreground": "#C5221F" }
+      ]
+    },
+    {
+      "key": "sync_audit",
+      "title": "sync_audit",
+      "backfillMode": "preserve",
+      "tabColor": "#72757A",
+      "columns": [
+        { "key": "recorded_at", "header": "Recorded At", "width": 190, "type": "datetime" },
+        { "key": "run_id", "header": "Run ID", "width": 220, "type": "text" },
+        { "key": "entity_type", "header": "Entity Type", "width": 140, "type": "text" },
+        { "key": "entity_id", "header": "Entity ID", "width": 170, "type": "text" },
+        { "key": "destination", "header": "Destination", "width": 150, "type": "text" },
+        { "key": "outcome", "header": "Outcome", "width": 120, "type": "text" },
+        { "key": "operation", "header": "Operation", "width": 140, "type": "text" },
+        { "key": "note", "header": "Note", "width": 260, "type": "text" },
+        { "key": "details_json", "header": "Details JSON", "width": 360, "type": "json" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "outcome", "type": "TEXT_EQ", "value": "success", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "outcome", "type": "TEXT_EQ", "value": "error", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "outcome", "type": "TEXT_EQ", "value": "skipped", "background": "#FFF4E5", "foreground": "#9C6500" }
+      ]
+    }
+  ]
+}

@@ -1,11 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
+import {
+  clearRecaptchaVerifier,
+  finishFirebaseAuthSession,
+  getFirebaseAuthError,
+  getOptionalFirebaseAuthClient,
+  signInWithEmailPassword,
+  startPhoneVerification,
+  verifyPhoneOtp,
+} from "@/components/auth/firebase-auth-client";
 import { useLanguage } from "@/components/LanguageContext";
 import { FormNotice } from "@/components/forms/FormKit";
-import { loginAction } from "@/lib/actions/local-data";
 
 const collageTiles = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD1NdTf_TQE_mui1qW599KaJFqfLAHNiHUMX5Gu_45w185fZoQy9NWmAauTutW8u_nNTpuUyDZXjGJD7t43mSOFR8_HurEJAdDUcI5FErR3-ZXK0KgYkSysjyeml1WzYMwxm-9F8PcBb1bcj6oLnxg7D5meKMQwpmefnzuB9QFftY2o0ZN8a5CZeZni3YlW_u10JW0duifo2OXANqqYVkOO5EqGl7ZB1KiuWYCRqX3QTj1jpUCYU6ND3RdCNhFPeHXGZeBlKsEvOUXO",
@@ -18,39 +26,112 @@ const collageTiles = [
 
 export default function LoginPage() {
   const { t, langText } = useLanguage();
+  const auth = useMemo(() => getOptionalFirebaseAuthClient(), []);
+
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
+  const [confirmationId, setConfirmationId] = useState("");
+  const [mode, setMode] = useState<"phone" | "email">("phone");
+  
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const authUnavailableMessage = langText(
+    "Firebase sign-in is unavailable in this deployment. Please try again after the Firebase public config is restored.",
+    "या डिप्लॉयमेंटमध्ये Firebase साइन-इन उपलब्ध नाही. Firebase सार्वजनिक कॉन्फिगरेशन पुन्हा सक्षम झाल्यावर पुन्हा प्रयत्न करा."
+  );
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (isSubmitting) {
+  useEffect(() => () => clearRecaptchaVerifier("login"), []);
+
+  const setBusy = (val: boolean) => {
+    setIsSubmitting(val);
+    if (val) setError("");
+  };
+
+  const startPhoneLogin = async () => {
+    if (!auth) {
+      setError(authUnavailableMessage);
       return;
     }
 
-    setError("");
-    setIsSubmitting(true);
-
+    setBusy(true);
     try {
-      const result = await loginAction({ identifier, password });
-      if (!result.ok) {
-        setError(result.error || t("login.login_failed"));
-        setIsSubmitting(false);
-        return;
-      }
+      const verificationId = await startPhoneVerification({
+        auth,
+        phoneNumber: identifier,
+        containerId: "kk-recaptcha",
+        storeKey: "login",
+      });
+      setConfirmationId(verificationId);
+    } catch (error) {
+      setError(getFirebaseAuthError(error, langText("Could not send OTP.", "OTP पाठवता आला नाही.")));
+    } finally {
+      setBusy(false);
+    }
+  };
 
-      window.location.href = result.redirectTo || "/profile-selection";
-    } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : t("login.login_failed"));
-      setIsSubmitting(false);
+  const finishPhoneLogin = async () => {
+    if (!auth) {
+      setError(authUnavailableMessage);
+      return;
+    }
+
+    setBusy(true);
+    try {
+      await verifyPhoneOtp({
+        auth,
+        verificationId: confirmationId,
+        otp,
+      });
+      await finishFirebaseAuthSession({ auth });
+      window.location.href = "/profile-selection";
+    } catch (error) {
+      setError(getFirebaseAuthError(error, langText("Invalid OTP.", "अवैध OTP.")));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const loginWithEmail = async () => {
+    if (!auth) {
+      setError(authUnavailableMessage);
+      return;
+    }
+
+    setBusy(true);
+    try {
+      await signInWithEmailPassword({
+        auth,
+        email: identifier,
+        password,
+      });
+      await finishFirebaseAuthSession({ auth });
+      window.location.href = "/profile-selection";
+    } catch (error) {
+      setError(getFirebaseAuthError(error, t("login.login_failed")));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+
+    if (mode === "phone") {
+      if (confirmationId) {
+        await finishPhoneLogin();
+      } else {
+        await startPhoneLogin();
+      }
+    } else {
+      await loginWithEmail();
     }
   };
 
   return (
     <div className="min-h-screen bg-background text-on-background flex flex-col">
-      {/* Main Content */}
       <main className="flex-grow min-h-screen relative flex items-center justify-center pt-20 overflow-hidden">
         {/* Sharp Creative Tiled Background */}
         <div className="absolute inset-0 z-0" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridTemplateRows: "repeat(2, 1fr)", gap: 0, background: "#00251a", overflow: "hidden" }}>
@@ -82,6 +163,11 @@ export default function LoginPage() {
                   <p className="text-slate-700 font-bold font-headline">
                     {langText("Sign in to your account", "आपल्या खात्यात साइन इन करा")}
                   </p>
+                  {!auth ? (
+                    <p className="text-sm font-semibold text-amber-700">
+                      {authUnavailableMessage}
+                    </p>
+                  ) : null}
                 </div>
               </div>
 
@@ -90,70 +176,152 @@ export default function LoginPage() {
                 <div className="flex items-center gap-4">
                   <div className="h-px flex-1 bg-slate-200" />
                   <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                    {langText("or use password", "किंवा पासवर्ड वापरा")}
+                    {langText("or use phone/email", "किंवा फोन/ईमेल वापरा")}
                   </span>
                   <div className="h-px flex-1 bg-slate-200" />
+                </div>
+                {/* Mode Selector */}
+                <div className="flex bg-slate-100 rounded-xl p-1 gap-1 w-full max-w-sm mx-auto">
+                  <button
+                    type="button"
+                    onClick={() => { setMode("phone"); setConfirmationId(""); }}
+                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === "phone" ? "bg-white shadow-sm text-primary-container" : "text-slate-500 hover:bg-slate-200"}`}
+                  >
+                    Phone OTP
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setMode("email"); setConfirmationId(""); }}
+                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === "email" ? "bg-white shadow-sm text-primary-container" : "text-slate-500 hover:bg-slate-200"}`}
+                  >
+                    Email
+                  </button>
                 </div>
               </div>
 
               <form className="w-full text-left space-y-6" onSubmit={handleSubmit}>
-                {/* Identifier Input */}
-                <div className="space-y-3">
-                  <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label ml-1" htmlFor="identifier">
-                    {langText("Mobile number or Email ID", "मोबाईल नंबर किंवा ईमेल आयडी")} / {langText("Contact details", "संपर्क तपशील")}
-                  </label>
-                  <div className="relative group">
-                    <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
-                      fingerprint
-                    </span>
-                    <input
-                      className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400"
-                      id="identifier"
-                      placeholder={langText("Mobile number or Email ID", "मोबाईल नंबर किंवा ईमेल आयडी")}
-                      type="text"
-                      value={identifier}
-                      onChange={(e) => setIdentifier(e.target.value)}
-                      required
-                    />
-                  </div>
-                </div>
+                <div id="kk-recaptcha" className="hidden" />
 
-                {/* Password */}
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center ml-1">
-                    <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label" htmlFor="password">
-                      {langText("Password", "पासवर्ड")} / {langText("Password", "पासवर्ड")}
+                {/* Identifier Input */}
+                {mode === "phone" && !confirmationId ? (
+                  <div className="space-y-3">
+                    <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label ml-1" htmlFor="identifier">
+                      {langText("Mobile number", "मोबाईल नंबर")}
                     </label>
-                    <Link href="/forgot-password" title="Forgot Password?">
-                      <span className="text-[11px] font-bold text-secondary hover:text-primary-container transition-colors uppercase tracking-widest cursor-pointer">
-                        {langText("Forgot Password?", "पासवर्ड विसरलात?")}
+                    <div className="relative group">
+                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
+                        phone
                       </span>
-                    </Link>
+                      <input
+                        className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400 disabled:opacity-50"
+                        id="identifier"
+                        placeholder="+91 90000 00000"
+                        type="tel"
+                        value={identifier}
+                        onChange={(e) => setIdentifier(e.target.value)}
+                        required
+                        disabled={!!confirmationId || isSubmitting}
+                      />
+                    </div>
                   </div>
-                  <div className="relative group">
-                    <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
-                      lock
-                    </span>
-                    <input
-                      className="w-full pl-14 pr-14 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400"
-                      id="password"
-                      placeholder="••••••••"
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <button
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-primary-container transition-colors"
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                    >
-                      <span className="material-symbols-outlined text-xl">
-                        {showPassword ? "visibility_off" : "visibility"}
+                ) : mode === "email" ? (
+                  <div className="space-y-3">
+                    <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label ml-1" htmlFor="identifier">
+                      {langText("Email ID", "ईमेल आयडी")}
+                    </label>
+                    <div className="relative group">
+                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
+                        mail
                       </span>
-                    </button>
+                      <input
+                        className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400 disabled:opacity-50"
+                        id="identifier"
+                        placeholder="name@example.com"
+                        type="email"
+                        value={identifier}
+                        onChange={(e) => setIdentifier(e.target.value)}
+                        required
+                        disabled={isSubmitting}
+                      />
+                    </div>
                   </div>
-                </div>
+                ) : null}
+
+                {/* OTP Input */}
+                {mode === "phone" && confirmationId ? (
+                  <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
+                    <div className="flex justify-between items-center ml-1">
+                      <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label" htmlFor="otp">
+                        {langText("Enter OTP", "OTP प्रविष्ट करा")}
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => { setConfirmationId(""); setOtp(""); }}
+                        className="text-[11px] font-bold text-secondary hover:text-primary-container transition-colors uppercase tracking-widest cursor-pointer"
+                        disabled={isSubmitting}
+                      >
+                        Change Number
+                      </button>
+                    </div>
+                    <div className="relative group">
+                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
+                        password
+                      </span>
+                      <input
+                        className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-bold text-lg tracking-[0.2em] placeholder:tracking-normal placeholder:text-slate-400 disabled:opacity-50"
+                        id="otp"
+                        placeholder="123456"
+                        type="text"
+                        maxLength={6}
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                        required
+                        disabled={isSubmitting}
+                      />
+                    </div>
+                  </div>
+                ) : null}
+
+                {/* Password Input (Email Only) */}
+                {mode === "email" ? (
+                  <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
+                    <div className="flex justify-between items-center ml-1">
+                      <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label" htmlFor="password">
+                        {langText("Password", "पासवर्ड")}
+                      </label>
+                      <Link href="/forgot-password" title="Forgot Password?">
+                        <span className="text-[11px] font-bold text-secondary hover:text-primary-container transition-colors uppercase tracking-widest cursor-pointer">
+                          {langText("Forgot Password?", "पासवर्ड विसरलात?")}
+                        </span>
+                      </Link>
+                    </div>
+                    <div className="relative group">
+                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
+                        lock
+                      </span>
+                      <input
+                        className="w-full pl-14 pr-14 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400 disabled:opacity-50"
+                        id="password"
+                        placeholder="••••••••"
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        disabled={isSubmitting}
+                      />
+                      <button
+                        className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-primary-container transition-colors disabled:opacity-50"
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        disabled={isSubmitting}
+                      >
+                        <span className="material-symbols-outlined text-xl">
+                          {showPassword ? "visibility_off" : "visibility"}
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
 
                 {error ? <FormNotice tone="error">{error}</FormNotice> : null}
 
@@ -164,9 +332,13 @@ export default function LoginPage() {
                     type="submit"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? langText("Logging in...", "लॉगिन होत आहे...") : langText("Login to Kisan Kamai / लॉगिन", "किसान कमाई मध्ये लॉगिन करा")}
+                    {isSubmitting 
+                      ? langText("Please wait...", "कृपया प्रतीक्षा करा...") 
+                      : mode === "phone" && confirmationId 
+                        ? langText("Verify OTP", "OTP तपासा") 
+                        : langText("Login / लॉगिन", "लॉगिन करा")}
                     <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
-                      arrow_forward
+                      {mode === "phone" && !confirmationId ? "sms" : "arrow_forward"}
                     </span>
                   </button>
                   <p className="text-sm font-semibold text-slate-700">

@@ -3,15 +3,14 @@
 import { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useAuth } from "@/components/AuthContext";
+import {
+  fetchCurrentSession,
+  finishFirebaseAuthSession,
+  getFirebaseAuthError,
+  getOptionalFirebaseAuthClient,
+} from "@/components/auth/firebase-auth-client";
 import { FormNotice } from "@/components/forms/FormKit";
-import { getFirebaseAuthClient } from "@/lib/firebase-client";
 import type { LocalSession } from "@/lib/local-data/types";
-
-type SessionResponse = {
-  ok?: boolean;
-  error?: string;
-  session?: LocalSession | null;
-};
 
 interface GoogleAuthButtonProps {
   label: string;
@@ -19,70 +18,29 @@ interface GoogleAuthButtonProps {
 }
 
 function getGoogleAuthError(error: unknown) {
-  const message = error instanceof Error ? error.message : "";
-
-  if (message.includes("auth/popup-closed-by-user") || message.includes("auth/cancelled-popup-request")) {
-    return "Google sign-in was cancelled. Please try again when you are ready.";
-  }
-
-  if (message.includes("auth/operation-not-allowed")) {
-    return "Google sign-in is not enabled for this Firebase project. Enable the Google provider in Firebase Authentication.";
-  }
-
-  if (message.includes("auth/unauthorized-domain")) {
-    return "This domain is not authorized for Google sign-in in Firebase. Add it to the Firebase authorized domains list.";
-  }
-
-  if (message.includes("auth/network-request-failed")) {
-    return "Google sign-in could not reach Firebase. Please check your connection and try again.";
-  }
-
-  if (message.includes("Missing required Firebase public env")) {
-    return message;
-  }
-
-  return message || "Google sign-in failed. Please try again.";
+  return getFirebaseAuthError(error, "Google sign-in failed. Please try again.");
 }
 
 function isProfileComplete(session: LocalSession) {
   return Boolean(session.profile?.phone?.trim() && session.profile?.pincode?.trim());
 }
 
-async function fetchCurrentSession() {
-  const response = await fetch("/api/auth/session", {
-    credentials: "include",
-    cache: "no-store",
-  });
-  const payload = (await response.json().catch(() => ({}))) as SessionResponse;
-
-  if (!response.ok || !payload.session) {
-    throw new Error(payload.error || "Could not load your session after Google sign-in.");
+async function signInWithGoogleAndCreateSession() {
+  const auth = getOptionalFirebaseAuthClient();
+  if (!auth) {
+    throw new Error("Firebase sign-in is unavailable in this deployment.");
   }
 
-  return payload.session;
-}
-
-async function signInWithGoogleAndCreateSession() {
-  const auth = getFirebaseAuthClient();
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
 
-  const credential = await signInWithPopup(auth, provider);
-  const idToken = await credential.user.getIdToken();
-
-  const response = await fetch("/api/auth/session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "include",
-    body: JSON.stringify({ idToken }),
+  await signInWithPopup(auth, provider);
+  const session = await finishFirebaseAuthSession({
+    auth,
+    shouldFetchSession: true,
   });
-  const payload = (await response.json().catch(() => ({}))) as SessionResponse;
 
-  if (!response.ok || payload.ok === false) {
-    throw new Error(payload.error || "Could not create your Kisan Kamai session.");
-  }
-
-  return fetchCurrentSession();
+  return session || fetchCurrentSession();
 }
 
 export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProps) {

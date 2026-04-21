@@ -1,111 +1,81 @@
 import "server-only";
 
 import { JWT } from "google-auth-library";
+import workbookManifest from "@/data/operational-sheets-workbook.json";
 
-type SheetKey =
+export type SheetKey =
+  | "workbook_meta"
   | "owners"
   | "renters"
   | "listings"
   | "bookings"
   | "payments"
+  | "saved_items"
   | "support_requests"
+  | "booking_requests"
   | "feedback"
   | "bug_reports"
   | "auth_events"
   | "sync_audit";
 
+type WorkbookColumnType =
+  | "text"
+  | "number"
+  | "currency"
+  | "boolean"
+  | "date"
+  | "datetime"
+  | "json"
+  | "url";
+
+type WorkbookColumn = {
+  key: string;
+  header: string;
+  width?: number;
+  type: WorkbookColumnType;
+};
+
+type WorkbookConditionalRule = {
+  columnKey: string;
+  type: string;
+  value?: string;
+  background: string;
+  foreground: string;
+};
+
 type SheetDefinition = {
   key: SheetKey;
   title: string;
+  backfillMode: "replace" | "preserve";
+  tabColor: string;
+  columns: WorkbookColumn[];
+  conditionalRules?: WorkbookConditionalRule[];
   headers: string[];
-  tabColor: { red: number; green: number; blue: number };
+};
+
+type SpreadsheetStateEntry = {
+  title: string;
+  sheetId: number;
+  frozenRowCount: number;
+  columnCount: number;
+  conditionalRuleCount: number;
+  hasBasicFilter: boolean;
 };
 
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 
-const SHEET_DEFINITIONS: SheetDefinition[] = [
-  {
-    key: "owners",
-    title: "owners",
-    headers: ["timestamp", "uid", "full_name", "email", "phone", "village", "pincode", "workspace", "source"],
-    tabColor: { red: 0.11, green: 0.47, blue: 0.26 },
-  },
-  {
-    key: "renters",
-    title: "renters",
-    headers: ["timestamp", "uid", "full_name", "email", "phone", "village", "pincode", "workspace", "source"],
-    tabColor: { red: 0.16, green: 0.56, blue: 0.69 },
-  },
-  {
-    key: "listings",
-    title: "listings",
-    headers: [
-      "timestamp",
-      "listing_id",
-      "owner_uid",
-      "name",
-      "category",
-      "location",
-      "district",
-      "price_per_hour",
-      "status",
-      "cover_image",
-    ],
-    tabColor: { red: 0.71, green: 0.47, blue: 0.13 },
-  },
-  {
-    key: "bookings",
-    title: "bookings",
-    headers: [
-      "timestamp",
-      "booking_id",
-      "listing_id",
-      "owner_uid",
-      "renter_uid",
-      "status",
-      "start_date",
-      "end_date",
-      "amount",
-    ],
-    tabColor: { red: 0.6, green: 0.39, blue: 0.74 },
-  },
-  {
-    key: "payments",
-    title: "payments",
-    headers: ["timestamp", "payment_id", "booking_id", "owner_uid", "renter_uid", "amount", "status", "method"],
-    tabColor: { red: 0.92, green: 0.62, blue: 0.18 },
-  },
-  {
-    key: "support_requests",
-    title: "support_requests",
-    headers: ["timestamp", "submission_id", "user_id", "category", "full_name", "phone", "email", "source_path"],
-    tabColor: { red: 0.82, green: 0.27, blue: 0.33 },
-  },
-  {
-    key: "feedback",
-    title: "feedback",
-    headers: ["timestamp", "submission_id", "user_id", "role", "category", "subject", "rating", "contact_me"],
-    tabColor: { red: 0.9, green: 0.36, blue: 0.58 },
-  },
-  {
-    key: "bug_reports",
-    title: "bug_reports",
-    headers: ["timestamp", "bug_id", "severity", "source", "runtime", "pathname", "status_code", "user_id", "fingerprint"],
-    tabColor: { red: 0.63, green: 0.18, blue: 0.18 },
-  },
-  {
-    key: "auth_events",
-    title: "auth_events",
-    headers: ["timestamp", "event_type", "user_id", "email", "phone", "workspace", "path", "outcome"],
-    tabColor: { red: 0.2, green: 0.32, blue: 0.73 },
-  },
-  {
-    key: "sync_audit",
-    title: "sync_audit",
-    headers: ["timestamp", "entity_type", "entity_id", "destination", "outcome", "note"],
-    tabColor: { red: 0.45, green: 0.45, blue: 0.49 },
-  },
-];
+const SHEET_DEFINITIONS: SheetDefinition[] = (workbookManifest.sheets as Array<
+  Omit<SheetDefinition, "headers">
+>).map((sheet) => ({
+  ...sheet,
+  headers: sheet.columns.map((column) => column.header),
+}));
+const LEGACY_SHEET_TITLES: Partial<Record<SheetKey, string[]>> = {
+  owners: ["Owners"],
+  renters: ["Renters"],
+  listings: ["Equipment"],
+  bookings: ["Bookings"],
+};
 
 const sheetGlobals = globalThis as typeof globalThis & {
   __kkSheetsReady?: Promise<void>;
@@ -133,12 +103,8 @@ function sanitizeCell(value: unknown) {
     return "";
   }
 
-  if (typeof value === "string") {
+  if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
     return value;
-  }
-
-  if (typeof value === "number" || typeof value === "boolean") {
-    return String(value);
   }
 
   try {
@@ -148,6 +114,191 @@ function sanitizeCell(value: unknown) {
   }
 }
 
+function safeJson(value: unknown) {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
+
+  try {
+    return JSON.stringify(value);
+  } catch {
+    return String(value);
+  }
+}
+
+function hexToRgbColor(hex: string) {
+  const normalized = hex.replace("#", "").trim();
+  const safe =
+    normalized.length === 3
+      ? normalized
+          .split("")
+          .map((part) => `${part}${part}`)
+          .join("")
+      : normalized;
+
+  return {
+    red: Number.parseInt(safe.slice(0, 2), 16) / 255,
+    green: Number.parseInt(safe.slice(2, 4), 16) / 255,
+    blue: Number.parseInt(safe.slice(4, 6), 16) / 255,
+  };
+}
+
+function columnToA1(index: number) {
+  let current = index + 1;
+  let output = "";
+
+  while (current > 0) {
+    const remainder = (current - 1) % 26;
+    output = String.fromCharCode(65 + remainder) + output;
+    current = Math.floor((current - 1) / 26);
+  }
+
+  return output;
+}
+
+function getSheetDefinition(sheetKey: SheetKey) {
+  const definition = SHEET_DEFINITIONS.find((sheet) => sheet.key === sheetKey);
+  if (!definition) {
+    throw new Error(`Unknown sheet: ${sheetKey}`);
+  }
+  return definition;
+}
+
+function getLegacyTitleCandidates(definition: SheetDefinition) {
+  return [
+    definition.title,
+    definition.title.toLowerCase(),
+    definition.title.toUpperCase(),
+    ...(LEGACY_SHEET_TITLES[definition.key] || []),
+  ];
+}
+
+function getSheetEndColumn(definition: SheetDefinition) {
+  return columnToA1(definition.columns.length - 1);
+}
+
+function getHeaderRange(definition: SheetDefinition) {
+  return `${definition.title}!A1:${getSheetEndColumn(definition)}1`;
+}
+
+function getAppendRange(definition: SheetDefinition) {
+  return `${definition.title}!A:${getSheetEndColumn(definition)}`;
+}
+
+function groupColumnWidths(columns: WorkbookColumn[]) {
+  const groups: Array<{ startIndex: number; endIndex: number; width: number }> = [];
+  let startIndex = 0;
+
+  while (startIndex < columns.length) {
+    const width = columns[startIndex].width || 180;
+    let endIndex = startIndex + 1;
+
+    while (endIndex < columns.length && (columns[endIndex].width || 180) === width) {
+      endIndex += 1;
+    }
+
+    groups.push({ startIndex, endIndex, width });
+    startIndex = endIndex;
+  }
+
+  return groups;
+}
+
+function buildColumnFormat(column: WorkbookColumn) {
+  if (column.type === "currency") {
+    return {
+      format: {
+        numberFormat: {
+          type: "NUMBER",
+          pattern: "[$₹]#,##0.00",
+        },
+        horizontalAlignment: "RIGHT",
+      },
+      fields: "userEnteredFormat(numberFormat,horizontalAlignment)",
+    };
+  }
+
+  if (column.type === "number") {
+    return {
+      format: {
+        numberFormat: {
+          type: "NUMBER",
+          pattern: "0.00",
+        },
+        horizontalAlignment: "RIGHT",
+      },
+      fields: "userEnteredFormat(numberFormat,horizontalAlignment)",
+    };
+  }
+
+  if (column.type === "boolean") {
+    return {
+      format: {
+        horizontalAlignment: "CENTER",
+      },
+      fields: "userEnteredFormat(horizontalAlignment)",
+    };
+  }
+
+  return null;
+}
+
+function buildConditionalFormatRequests(definition: SheetDefinition, sheetState: SpreadsheetStateEntry) {
+  const requests: object[] = [];
+
+  for (let index = sheetState.conditionalRuleCount - 1; index >= 0; index -= 1) {
+    requests.push({
+      deleteConditionalFormatRule: {
+        sheetId: sheetState.sheetId,
+        index,
+      },
+    });
+  }
+
+  for (const [index, rule] of (definition.conditionalRules || []).entries()) {
+    const columnIndex = definition.columns.findIndex((column) => column.key === rule.columnKey);
+    if (columnIndex < 0) {
+      continue;
+    }
+
+    const condition: { type: string; values?: Array<{ userEnteredValue: string }> } = {
+      type: rule.type,
+    };
+
+    if (rule.value !== undefined) {
+      condition.values = [{ userEnteredValue: String(rule.value) }];
+    }
+
+    requests.push({
+      addConditionalFormatRule: {
+        index,
+        rule: {
+          ranges: [
+            {
+              sheetId: sheetState.sheetId,
+              startRowIndex: 1,
+              startColumnIndex: columnIndex,
+              endColumnIndex: columnIndex + 1,
+            },
+          ],
+          booleanRule: {
+            condition,
+            format: {
+              backgroundColor: hexToRgbColor(rule.background),
+              textFormat: {
+                foregroundColor: hexToRgbColor(rule.foreground),
+                bold: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  return requests;
+}
+
 async function getSheetsToken() {
   const client = new JWT({
     email: getServiceAccountEmail(),
@@ -155,7 +306,13 @@ async function getSheetsToken() {
     scopes: [SHEETS_SCOPE],
   });
 
-  const token = await client.getAccessToken();
+  const response = await client.getAccessToken();
+  const token =
+    typeof response === "string"
+      ? response
+      : response && typeof response === "object" && typeof response.token === "string"
+        ? response.token
+        : "";
   if (!token) {
     throw new Error("Could not acquire a Google Sheets access token.");
   }
@@ -187,16 +344,38 @@ async function sheetsFetch<T = unknown>(path: string, init?: RequestInit) {
   return (await response.json()) as T;
 }
 
-async function getExistingSheets() {
-  const payload = await sheetsFetch<{ sheets?: Array<{ properties?: { sheetId?: number; title?: string } }> }>(
-    "?fields=sheets(properties(sheetId,title))"
+async function getSpreadsheetState() {
+  const payload = await sheetsFetch<{
+    sheets?: Array<{
+      properties?: {
+        sheetId?: number;
+        title?: string;
+        gridProperties?: {
+          frozenRowCount?: number;
+          columnCount?: number;
+        };
+      };
+      conditionalFormats?: unknown[];
+      basicFilter?: object;
+    }>;
+  }>(
+    `?fields=${encodeURIComponent(
+      "sheets(properties(sheetId,title,gridProperties(frozenRowCount,columnCount)),conditionalFormats,basicFilter)"
+    )}`
   );
 
   return new Map(
     (payload.sheets || [])
-      .map((sheet) => sheet.properties)
-      .filter((sheet): sheet is { sheetId: number; title: string } => Boolean(sheet?.sheetId !== undefined && sheet.title))
-      .map((sheet) => [sheet.title, sheet.sheetId])
+      .map((sheet) => ({
+        title: sheet.properties?.title,
+        sheetId: sheet.properties?.sheetId,
+        frozenRowCount: sheet.properties?.gridProperties?.frozenRowCount || 0,
+        columnCount: sheet.properties?.gridProperties?.columnCount || 0,
+        conditionalRuleCount: Array.isArray(sheet.conditionalFormats) ? sheet.conditionalFormats.length : 0,
+        hasBasicFilter: Boolean(sheet.basicFilter),
+      }))
+      .filter((sheet): sheet is SpreadsheetStateEntry => Boolean(sheet.title && sheet.sheetId !== undefined))
+      .map((sheet) => [sheet.title, sheet])
   );
 }
 
@@ -205,83 +384,129 @@ async function ensureWorkbookStructure() {
     return;
   }
 
-  const existingSheets = await getExistingSheets();
-  const requests: object[] = [];
+  const initialState = await getSpreadsheetState();
+  const renameRequests: object[] = [];
+  const reservedTitles = new Set(initialState.keys());
 
   for (const definition of SHEET_DEFINITIONS) {
-    if (!existingSheets.has(definition.title)) {
-      requests.push({
-        addSheet: {
-          properties: {
-            title: definition.title,
-            gridProperties: {
-              frozenRowCount: 1,
-            },
-            tabColorStyle: {
-              rgbColor: definition.tabColor,
-            },
-          },
-        },
-      });
-    }
-  }
-
-  if (requests.length) {
-    await sheetsFetch(":batchUpdate", {
-      method: "POST",
-      body: JSON.stringify({ requests }),
-    });
-  }
-
-  const refreshedSheets = await getExistingSheets();
-  const formattingRequests: object[] = [];
-
-  for (const definition of SHEET_DEFINITIONS) {
-    const sheetId = refreshedSheets.get(definition.title);
-    if (sheetId === undefined) {
+    if (initialState.has(definition.title)) {
       continue;
     }
 
-    formattingRequests.push(
-      {
-        updateSheetProperties: {
-          properties: {
-            sheetId,
-            gridProperties: {
-              frozenRowCount: 1,
-            },
-            tabColorStyle: {
-              rgbColor: definition.tabColor,
-            },
+    const aliasState = getLegacyTitleCandidates(definition)
+      .filter((candidate, index, list) => candidate && list.indexOf(candidate) === index)
+      .map((candidate) => initialState.get(candidate))
+      .find(Boolean);
+
+    if (!aliasState || reservedTitles.has(definition.title)) {
+      continue;
+    }
+
+    renameRequests.push({
+      updateSheetProperties: {
+        properties: {
+          sheetId: aliasState.sheetId,
+          title: definition.title,
+        },
+        fields: "title",
+      },
+    });
+    reservedTitles.add(definition.title);
+  }
+
+  if (renameRequests.length) {
+    await sheetsFetch(":batchUpdate", {
+      method: "POST",
+      body: JSON.stringify({ requests: renameRequests }),
+    });
+  }
+
+  const renamedState = renameRequests.length ? await getSpreadsheetState() : initialState;
+  const addRequests: object[] = [];
+
+  for (const definition of SHEET_DEFINITIONS) {
+    if (renamedState.has(definition.title)) {
+      continue;
+    }
+
+    addRequests.push({
+      addSheet: {
+        properties: {
+          title: definition.title,
+          gridProperties: {
+            rowCount: 200,
+            columnCount: definition.columns.length,
+            frozenRowCount: 1,
           },
-          fields: "gridProperties.frozenRowCount,tabColorStyle",
+          tabColorStyle: {
+            rgbColor: hexToRgbColor(definition.tabColor),
+          },
         },
       },
-      {
+    });
+  }
+
+  if (addRequests.length) {
+    await sheetsFetch(":batchUpdate", {
+      method: "POST",
+      body: JSON.stringify({ requests: addRequests }),
+    });
+  }
+
+  const sheetStateMap = await getSpreadsheetState();
+  const formatRequests: object[] = [];
+
+  for (const definition of SHEET_DEFINITIONS) {
+    const sheetState = sheetStateMap.get(definition.title);
+    if (!sheetState) {
+      continue;
+    }
+
+    formatRequests.push({
+      updateSheetProperties: {
+        properties: {
+          sheetId: sheetState.sheetId,
+          gridProperties: {
+            frozenRowCount: 1,
+            columnCount: Math.max(sheetState.columnCount, definition.columns.length),
+          },
+          tabColorStyle: {
+            rgbColor: hexToRgbColor(definition.tabColor),
+          },
+        },
+        fields: "gridProperties.frozenRowCount,gridProperties.columnCount,tabColorStyle",
+      },
+    });
+
+    for (const widthGroup of groupColumnWidths(definition.columns)) {
+      formatRequests.push({
         updateDimensionProperties: {
           range: {
-            sheetId,
+            sheetId: sheetState.sheetId,
             dimension: "COLUMNS",
-            startIndex: 0,
-            endIndex: definition.headers.length,
+            startIndex: widthGroup.startIndex,
+            endIndex: widthGroup.endIndex,
           },
           properties: {
-            pixelSize: 180,
+            pixelSize: widthGroup.width,
           },
           fields: "pixelSize",
         },
-      },
+      });
+    }
+
+    formatRequests.push(
       {
         repeatCell: {
           range: {
-            sheetId,
+            sheetId: sheetState.sheetId,
             startRowIndex: 0,
             endRowIndex: 1,
           },
           cell: {
             userEnteredFormat: {
               backgroundColorStyle: {
-                rgbColor: definition.tabColor,
+                rgbColor: hexToRgbColor(definition.tabColor),
               },
               textFormat: {
                 bold: true,
@@ -291,32 +516,78 @@ async function ensureWorkbookStructure() {
                   blue: 1,
                 },
               },
+              horizontalAlignment: "CENTER",
+              verticalAlignment: "MIDDLE",
               wrapStrategy: "WRAP",
             },
           },
-          fields: "userEnteredFormat(backgroundColorStyle,textFormat,wrapStrategy)",
+          fields:
+            "userEnteredFormat(backgroundColorStyle,textFormat,horizontalAlignment,verticalAlignment,wrapStrategy)",
+        },
+      },
+      {
+        repeatCell: {
+          range: {
+            sheetId: sheetState.sheetId,
+            startRowIndex: 1,
+            startColumnIndex: 0,
+            endColumnIndex: definition.columns.length,
+          },
+          cell: {
+            userEnteredFormat: {
+              verticalAlignment: "TOP",
+              wrapStrategy: "WRAP",
+            },
+          },
+          fields: "userEnteredFormat(verticalAlignment,wrapStrategy)",
         },
       }
     );
+
+    for (const [columnIndex, column] of definition.columns.entries()) {
+      const format = buildColumnFormat(column);
+      if (!format) {
+        continue;
+      }
+
+      formatRequests.push({
+        repeatCell: {
+          range: {
+            sheetId: sheetState.sheetId,
+            startRowIndex: 1,
+            startColumnIndex: columnIndex,
+            endColumnIndex: columnIndex + 1,
+          },
+          cell: {
+            userEnteredFormat: format.format,
+          },
+          fields: format.fields,
+        },
+      });
+    }
+
+    formatRequests.push(...buildConditionalFormatRequests(definition, sheetState));
   }
 
-  if (formattingRequests.length) {
+  if (formatRequests.length) {
     await sheetsFetch(":batchUpdate", {
       method: "POST",
-      body: JSON.stringify({ requests: formattingRequests }),
+      body: JSON.stringify({ requests: formatRequests }),
     });
   }
 
-  for (const definition of SHEET_DEFINITIONS) {
-    await sheetsFetch(`/values/${encodeURIComponent(`${definition.title}!A1:Z1`)}?valueInputOption=RAW`, {
-      method: "PUT",
-      body: JSON.stringify({
-        range: `${definition.title}!A1:Z1`,
-        majorDimension: "ROWS",
-        values: [definition.headers],
-      }),
-    });
-  }
+  await Promise.all(
+    SHEET_DEFINITIONS.map((definition) =>
+      sheetsFetch(`/values/${encodeURIComponent(getHeaderRange(definition))}?valueInputOption=RAW`, {
+        method: "PUT",
+        body: JSON.stringify({
+          range: getHeaderRange(definition),
+          majorDimension: "ROWS",
+          values: [definition.headers],
+        }),
+      })
+    )
+  );
 }
 
 async function ensureSheetsReady() {
@@ -340,12 +611,9 @@ export async function appendSheetRow(sheet: SheetKey, row: unknown[]) {
   }
 
   await ensureSheetsReady();
-  const definition = SHEET_DEFINITIONS.find((entry) => entry.key === sheet);
-  if (!definition) {
-    throw new Error(`Unknown sheet: ${sheet}`);
-  }
+  const definition = getSheetDefinition(sheet);
 
-  await sheetsFetch(`/values/${encodeURIComponent(`${definition.title}!A:Z`)}:append?valueInputOption=RAW`, {
+  await sheetsFetch(`/values/${encodeURIComponent(getAppendRange(definition))}:append?valueInputOption=RAW`, {
     method: "POST",
     body: JSON.stringify({
       values: [row.map(sanitizeCell)],
@@ -353,9 +621,26 @@ export async function appendSheetRow(sheet: SheetKey, row: unknown[]) {
   });
 }
 
-export async function recordSheetAudit(entityType: string, entityId: string, outcome: string, note?: string) {
+export async function recordSheetAudit(
+  entityType: string,
+  entityId: string,
+  outcome: string,
+  note?: string,
+  operation = "append",
+  details?: unknown
+) {
   try {
-    await appendSheetRow("sync_audit", [new Date().toISOString(), entityType, entityId, "google-sheets", outcome, note || ""]);
+    await appendSheetRow("sync_audit", [
+      new Date().toISOString(),
+      "",
+      entityType,
+      entityId,
+      "google-sheets",
+      outcome,
+      operation,
+      note || "",
+      safeJson(details),
+    ]);
   } catch (error) {
     console.error("Could not record Google Sheets sync audit event:", error);
   }
@@ -363,7 +648,7 @@ export async function recordSheetAudit(entityType: string, entityId: string, out
 
 export async function appendSheetRowsSafe(
   rows: Array<{ sheet: SheetKey; values: unknown[] }>,
-  audit?: { entityType: string; entityId: string; note?: string }
+  audit?: { entityType: string; entityId: string; note?: string; operation?: string; details?: unknown }
 ) {
   // Sheets is an operational mirror only. Firebase remains the write of record,
   // so mirroring failures must never block a successful primary write path.
@@ -377,13 +662,19 @@ export async function appendSheetRowsSafe(
     }
 
     if (audit) {
-      await recordSheetAudit(audit.entityType, audit.entityId, "success", audit.note);
+      await recordSheetAudit(audit.entityType, audit.entityId, "success", audit.note, audit.operation, audit.details);
     }
   } catch (error) {
     console.error("Could not mirror rows to Google Sheets:", error);
     if (audit) {
-      await recordSheetAudit(audit.entityType, audit.entityId, "error", error instanceof Error ? error.message : String(error));
+      await recordSheetAudit(
+        audit.entityType,
+        audit.entityId,
+        "error",
+        error instanceof Error ? error.message : String(error),
+        audit.operation,
+        audit.details
+      );
     }
   }
 }
-

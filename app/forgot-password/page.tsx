@@ -7,42 +7,109 @@ import { useLanguage } from "@/components/LanguageContext";
 import { FormNotice } from "@/components/forms/FormKit";
 import { PHONE_RESET_OTP_ENABLED } from "@/lib/auth-capabilities";
 import {
-  removeResetStorageItem,
+  clearPasswordResetStorage,
+  RESET_EMAIL_KEY,
   RESET_IDENTIFIER_KEY,
-  RESET_VERIFIED_KEY,
+  RESET_MASKED_PHONE_KEY,
+  RESET_PHONE_E164_KEY,
   setResetStorageItem,
 } from "@/components/auth/password-reset-storage";
 
 const fieldImage =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD_KwzX0B_B6HuECBqVqnkY_--Z7oQ05aWN_4YWcakLnSg3H9G_SNmYEpfzo6Dn5oZoZsOuHGNXVjHQbSXhRZo77C2GB40pdUdHfGPhXRbPxrvi26ZcUOUjyO_aBaetrsZCE-2umNTP-E9PE_k_m6jVj3eGcmw6ic2FjUA1RJpU8qVnhyD4uFk3fdQCiwWQA6j_-sV6gU3v8D999U3P0MXhEXIuPz8jed9mTgYtyxux0p_bmtjgOQe3RGinttMll9cOxI3MTlw92uI";
 
+type PasswordResetLookupResponse = {
+  ok?: boolean;
+  error?: string;
+  phoneE164?: string;
+  maskedPhone?: string;
+  email?: string;
+};
+
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const { langText, text } = useLanguage();
   const [identifier, setIdentifier] = useState("");
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const resetUnavailableMessage = langText(
+    "Password reset by OTP is unavailable in this deployment because Firebase phone authentication is not configured.",
+    "या डिप्लॉयमेंटमध्ये Firebase फोन प्रमाणीकरण कॉन्फिगर नसल्यामुळे OTP द्वारे पासवर्ड रीसेट उपलब्ध नाही."
+  );
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmedIdentifier = identifier.trim();
+    if (isSubmitting) {
+      return;
+    }
 
+    const trimmedIdentifier = identifier.trim();
     if (!trimmedIdentifier) {
       setError(langText("Enter your registered mobile number or email.", "तुमचा नोंदणीकृत मोबाईल नंबर किंवा ईमेल टाका."));
       return;
     }
 
-    if (!setResetStorageItem(RESET_IDENTIFIER_KEY, trimmedIdentifier)) {
-      setError(
-        langText(
-          "Your browser is blocking temporary reset storage. Please allow site storage and try again.",
-          "तुमचा ब्राउझर तात्पुरते रीसेट स्टोरेज ब्लॉक करत आहे. साइट स्टोरेज परवानगी द्या आणि पुन्हा प्रयत्न करा."
-        )
-      );
+    if (!PHONE_RESET_OTP_ENABLED) {
+      setError(resetUnavailableMessage);
       return;
     }
 
-    removeResetStorageItem(RESET_VERIFIED_KEY);
-    router.push("/forgot-password/verify-otp");
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/auth/password-reset/request", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          identifier: trimmedIdentifier,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as PasswordResetLookupResponse;
+
+      if (!response.ok || payload.ok === false || !payload.phoneE164 || !payload.maskedPhone) {
+        throw new Error(
+          payload.error ||
+            langText(
+              "We could not find a mobile number linked to that account.",
+              "त्या खात्याशी जोडलेला मोबाईल नंबर सापडला नाही."
+            )
+        );
+      }
+
+      clearPasswordResetStorage();
+
+      const writesSucceeded = [
+        setResetStorageItem(RESET_IDENTIFIER_KEY, trimmedIdentifier),
+        setResetStorageItem(RESET_PHONE_E164_KEY, payload.phoneE164),
+        setResetStorageItem(RESET_MASKED_PHONE_KEY, payload.maskedPhone),
+      ];
+
+      if (payload.email) {
+        writesSucceeded.push(setResetStorageItem(RESET_EMAIL_KEY, payload.email));
+      }
+
+      if (writesSucceeded.includes(false)) {
+        throw new Error(
+          langText(
+            "Your browser blocked temporary reset storage. Please allow site storage and try again.",
+            "तुमच्या ब्राउझरने तात्पुरते रीसेट स्टोरेज ब्लॉक केले. साइट स्टोरेज परवानगी द्या आणि पुन्हा प्रयत्न करा."
+          )
+        );
+      }
+
+      router.push("/forgot-password/verify-otp");
+    } catch (submitError) {
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : langText("Could not start password reset.", "पासवर्ड रीसेट सुरू करता आला नाही.")
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -66,7 +133,7 @@ export default function ForgotPasswordPage() {
             {text("Secure Access", { cacheKey: "forgot-password.hero-title" })}
           </h2>
           <p className="mt-3 leading-relaxed text-on-surface-variant">
-            {text("Protecting your agricultural data with secure reset verification. Your trust is our greatest harvest.", {
+            {text("Reset access through the registered mobile number linked to your Kisan Kamai account.", {
               cacheKey: "forgot-password.hero-body",
             })}
           </p>
@@ -87,13 +154,10 @@ export default function ForgotPasswordPage() {
             <p className="mt-4 text-base leading-relaxed text-on-surface-variant">
               {PHONE_RESET_OTP_ENABLED
                 ? langText(
-                    "Enter your mobile number or email to continue the secure reset flow.",
-                    "सुरक्षित रीसेट प्रक्रियेसाठी तुमचा मोबाईल नंबर किंवा ईमेल टाका."
+                    "Enter your registered mobile number or email. We will send the reset OTP to the mobile number already linked to that account.",
+                    "तुमचा नोंदणीकृत मोबाईल नंबर किंवा ईमेल टाका. त्या खात्याशी आधीपासून जोडलेल्या मोबाईल नंबरवर रीसेट ओटीपी पाठवला जाईल."
                   )
-                : langText(
-                    "Enter your mobile number or email to review the secure reset steps.",
-                    "सुरक्षित रीसेट प्रक्रियेच्या पुढील टप्प्यांसाठी तुमचा मोबाईल नंबर किंवा ईमेल टाका."
-                  )}
+                : resetUnavailableMessage}
             </p>
           </div>
 
@@ -111,24 +175,27 @@ export default function ForgotPasswordPage() {
                 <input
                   className="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 pl-12 text-on-surface shadow-sm transition-all placeholder:text-outline focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   name="contact"
-                  placeholder={langText("e.g. +91 90000 00000", "उदा. +९१ ९०००० ०००००")}
+                  placeholder={langText("e.g. +91 90000 00000 or name@example.com", "उदा. +९१ ९०००० ००००० किंवा name@example.com")}
                   type="text"
                   value={identifier}
                   onChange={(event) => {
                     setIdentifier(event.target.value);
                     setError("");
                   }}
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
 
             {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+            {!PHONE_RESET_OTP_ENABLED && !error ? <FormNotice tone="error">{resetUnavailableMessage}</FormNotice> : null}
 
             <button
-              className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container py-4 text-lg font-bold text-on-primary shadow-xl shadow-primary/10 transition-all hover:shadow-primary/20 active:scale-[0.98]"
+              className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container py-4 text-lg font-bold text-on-primary shadow-xl shadow-primary/10 transition-all hover:shadow-primary/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
               type="submit"
+              disabled={isSubmitting || !PHONE_RESET_OTP_ENABLED}
             >
-              <span>{langText("Continue", "पुढे जा")}</span>
+              <span>{isSubmitting ? langText("Checking account...", "खाते तपासत आहे...") : langText("Continue", "पुढे जा")}</span>
               <span className="material-symbols-outlined text-xl">send</span>
             </button>
           </form>
@@ -148,7 +215,7 @@ export default function ForgotPasswordPage() {
                 verified
               </span>
               <span className="text-[10px] font-bold uppercase tracking-wider text-on-secondary-container">
-                {langText("Trusted by 50K+ Farmers", "५० हजारहून अधिक शेतकऱ्यांचा विश्वास")}
+                {langText("Reset uses your registered account contact", "रीसेट नोंदणीकृत खात्याच्या संपर्कावर आधारित आहे")}
               </span>
             </div>
           </div>

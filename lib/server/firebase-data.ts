@@ -25,6 +25,7 @@ import type {
 } from "@/lib/local-data/types";
 import { getAdminAuth, getAdminDb } from "@/lib/server/firebase-admin";
 import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
+import { sendPushNotificationToUsers } from "@/lib/server/firebase-messaging";
 import { captureServerException } from "@/lib/server/firebase-observability";
 import { deleteStorageObject } from "@/lib/server/firebase-storage";
 import { mirrorBookingAndPayment, mirrorListing, mirrorProfile, mirrorSubmission } from "@/lib/server/sheets-mirror";
@@ -284,6 +285,7 @@ function mapUserFromFirestore(
     phone: normalizePhone(data?.phone || authUser?.phoneNumber || ""),
     passwordHash: data?.passwordHash || "",
     roles: data?.roles?.length ? data.roles : allUserRoles(),
+    fcmTokens: data?.fcmTokens || [],
     createdAt: data?.createdAt || nowIso(),
     updatedAt: data?.updatedAt || nowIso(),
   };
@@ -435,6 +437,7 @@ export async function registerLocalUser(input: RegisterInput) {
     phone: normalizedPhone || normalizePhone(authUser.phoneNumber),
     passwordHash: "",
     roles: allUserRoles(),
+    fcmTokens: [],
     createdAt: timestamp,
     updatedAt: timestamp,
   };
@@ -508,6 +511,7 @@ export async function updateLocalProfile(
       email: nextEmail || `${userId}@kisankamai.local`,
       phone: nextPhone || "",
       roles: currentUser?.roles || allUserRoles(),
+      fcmTokens: currentUser?.fcmTokens || [],
       passwordHash: currentUser?.passwordHash || "",
       createdAt: currentUser?.createdAt || timestamp,
       updatedAt: timestamp,
@@ -829,6 +833,11 @@ export async function createBookingRecord(input: {
   await batch.commit();
 
   await mirrorBookingAndPayment(nextBooking, nextPayment);
+  await notifyBookingCreated({
+    booking: nextBooking,
+    listingName: listing.name,
+    renterName: renterSession?.profile.fullName || renterSession?.user.name || "A renter",
+  });
 
   return nextBooking;
 }
@@ -843,6 +852,92 @@ function paymentStatusForBookingStatus(status: BookingRecord["status"]): Payment
   }
 
   return "processing";
+}
+
+function bookingStatusLabel(status: BookingRecord["status"]) {
+  switch (status) {
+    case "confirmed":
+      return "confirmed";
+    case "active":
+      return "active";
+    case "upcoming":
+      return "scheduled";
+    case "completed":
+      return "completed";
+    case "cancelled":
+      return "cancelled";
+    default:
+      return "updated";
+  }
+}
+
+async function notifyBookingCreated(input: {
+  booking: BookingRecord;
+  listingName: string;
+  renterName: string;
+}) {
+  await sendPushNotificationToUsers({
+    userIds: [input.booking.ownerUserId],
+    title: "New booking request",
+    body: `${input.renterName} requested ${input.listingName}.`,
+    link: "/owner-profile/bookings",
+    data: {
+      bookingId: input.booking.id,
+      listingId: input.booking.listingId,
+      status: input.booking.status,
+      workspace: "owner",
+    },
+  });
+
+  await sendPushNotificationToUsers({
+    userIds: [input.booking.renterUserId],
+    title: "Booking request sent",
+    body: `Your request for ${input.listingName} is pending confirmation.`,
+    link: "/renter-profile/bookings",
+    data: {
+      bookingId: input.booking.id,
+      listingId: input.booking.listingId,
+      status: input.booking.status,
+      workspace: "renter",
+    },
+  });
+}
+
+async function notifyBookingStatusChanged(input: {
+  booking: BookingRecord;
+  listingName: string;
+  actorRole: "owner" | "renter";
+}) {
+  const statusLabel = bookingStatusLabel(input.booking.status);
+
+  if (input.actorRole === "owner") {
+    await sendPushNotificationToUsers({
+      userIds: [input.booking.renterUserId],
+      title: `Booking ${statusLabel}`,
+      body: `Your booking for ${input.listingName} is now ${input.booking.status}.`,
+      link: "/renter-profile/bookings",
+      data: {
+        bookingId: input.booking.id,
+        listingId: input.booking.listingId,
+        status: input.booking.status,
+        workspace: "renter",
+      },
+    });
+    return;
+  }
+
+  await sendPushNotificationToUsers({
+    userIds: [input.booking.ownerUserId],
+    title: "Booking cancelled",
+    body: `A renter cancelled the booking for ${input.listingName}.`,
+    link: "/owner-profile/bookings",
+    data: {
+      bookingId: input.booking.id,
+      listingId: input.booking.listingId,
+      status: input.booking.status,
+      workspace: "owner",
+    },
+  });
 }
 
 export async function updateBookingStatus(
@@ -885,6 +980,12 @@ export async function updateBookingStatus(
 
   const refreshedPayment = paymentSnapshot.docs[0]?.data() as PaymentRecord | undefined;
   await mirrorBookingAndPayment(updated, refreshedPayment ? { ...refreshedPayment, status: paymentStatusForBookingStatus(status) } : undefined);
+  const listing = await getListingById(updated.listingId);
+  await notifyBookingStatusChanged({
+    booking: updated,
+    listingName: listing?.name || "your equipment",
+    actorRole: ownerCanUpdate ? "owner" : "renter",
+  });
 
   return updated;
 }
@@ -1019,5 +1120,18 @@ export async function removeLocalUploadIfExists(filePath: string) {
     await unlink(absolutePath);
   } catch {
     // Ignore legacy local upload cleanup failures.
+  }
+}
+
+export async function saveFcmToken(userId: string, token: string) {
+  const collection = usersCollection();
+  const userSnapshot = await collection.doc(userId).get();
+  if (userSnapshot.exists) {
+    const data = userSnapshot.data() as UserRecord;
+    const tokens = new Set(data.fcmTokens || []);
+    if (!tokens.has(token)) {
+      tokens.add(token);
+      await collection.doc(userId).set({ fcmTokens: Array.from(tokens) }, { merge: true });
+    }
   }
 }

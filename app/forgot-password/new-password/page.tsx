@@ -6,12 +6,18 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { FormNotice } from "@/components/forms/FormKit";
 import {
+  clearPasswordResetStorage,
   getResetStorageItem,
-  removeResetStorageItem,
+  RESET_ID_TOKEN_KEY,
   RESET_IDENTIFIER_KEY,
   RESET_VERIFIED_KEY,
 } from "@/components/auth/password-reset-storage";
-import { resetPasswordAction } from "@/lib/actions/local-data";
+import { getFirebaseAuthClient } from "@/lib/firebase-client";
+
+type ResetCompleteResponse = {
+  ok?: boolean;
+  error?: string;
+};
 
 export default function NewPasswordPage() {
   const router = useRouter();
@@ -27,13 +33,14 @@ export default function NewPasswordPage() {
   useEffect(() => {
     const storedIdentifier = getResetStorageItem(RESET_IDENTIFIER_KEY);
     const verified = getResetStorageItem(RESET_VERIFIED_KEY);
+    const idToken = getResetStorageItem(RESET_ID_TOKEN_KEY);
 
     if (!storedIdentifier) {
       router.replace("/forgot-password");
       return;
     }
 
-    if (verified !== "true") {
+    if (verified !== "true" || !idToken) {
       router.replace("/forgot-password/verify-otp");
       return;
     }
@@ -55,19 +62,41 @@ export default function NewPasswordPage() {
       return;
     }
 
+    const idToken = getResetStorageItem(RESET_ID_TOKEN_KEY);
+    if (!idToken) {
+      setError(langText("Verify the reset OTP again before changing your password.", "पासवर्ड बदलण्यापूर्वी रीसेट ओटीपी पुन्हा पडताळा."));
+      router.replace("/forgot-password/verify-otp");
+      return;
+    }
+
     setError("");
     setIsSubmitting(true);
 
     try {
-      const result = await resetPasswordAction({ identifier, password, confirmPassword });
-      if (!result.ok) {
-        setError(result.error || langText("Could not update password.", "पासवर्ड अपडेट करता आला नाही."));
-        setIsSubmitting(false);
-        return;
+      const response = await fetch("/api/auth/password-reset/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          idToken,
+          password,
+          confirmPassword,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as ResetCompleteResponse;
+
+      if (!response.ok || payload.ok === false) {
+        throw new Error(payload.error || langText("Could not update password.", "पासवर्ड अपडेट करता आला नाही."));
       }
 
-      removeResetStorageItem(RESET_IDENTIFIER_KEY);
-      removeResetStorageItem(RESET_VERIFIED_KEY);
+      try {
+        await getFirebaseAuthClient().signOut();
+      } catch {
+        // Ignore client sign-out failures after a successful password update.
+      }
+
+      clearPasswordResetStorage();
       router.push("/forgot-password/success");
     } catch (submitError) {
       setError(
@@ -95,10 +124,15 @@ export default function NewPasswordPage() {
               </h1>
               <p className="mt-4 max-w-xs text-sm font-medium text-on-surface-variant">
                 {langText(
-                  "Your new password must be different from previous passwords.",
-                  "तुमचा नवीन पासवर्ड आधीच्या पासवर्डपेक्षा वेगळा असावा."
+                  "Your new password must be different from previous passwords and will apply to your linked Kisan Kamai credentials.",
+                  "तुमचा नवीन पासवर्ड आधीच्या पासवर्डपेक्षा वेगळा असावा आणि तो तुमच्या Kisan Kamai खात्याच्या जोडलेल्या क्रेडेन्शियल्सवर लागू होईल."
                 )}
               </p>
+              {identifier ? (
+                <p className="mt-3 text-xs font-bold uppercase tracking-[0.2em] text-secondary">
+                  {identifier}
+                </p>
+              ) : null}
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit}>
@@ -130,9 +164,7 @@ export default function NewPasswordPage() {
                     onClick={() => setShowPassword((current) => !current)}
                     aria-label={langText("Toggle password visibility", "पासवर्ड दृश्यमानता बदला")}
                   >
-                    <span className="material-symbols-outlined">
-                      {showPassword ? "visibility_off" : "visibility"}
-                    </span>
+                    <span className="material-symbols-outlined">{showPassword ? "visibility_off" : "visibility"}</span>
                   </button>
                 </div>
               </div>
@@ -160,9 +192,7 @@ export default function NewPasswordPage() {
                     onClick={() => setShowConfirmPassword((current) => !current)}
                     aria-label={langText("Toggle confirm password visibility", "पासवर्ड पुष्टी दृश्यमानता बदला")}
                   >
-                    <span className="material-symbols-outlined">
-                      {showConfirmPassword ? "visibility_off" : "visibility"}
-                    </span>
+                    <span className="material-symbols-outlined">{showConfirmPassword ? "visibility_off" : "visibility"}</span>
                   </button>
                 </div>
               </div>

@@ -1,15 +1,27 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppLink as Link } from "@/components/AppLink";
+import {
+  clearRecaptchaVerifier,
+  getFirebaseAuthError,
+  getOptionalFirebaseAuthClient,
+  startPhoneVerification,
+  verifyPhoneOtp,
+} from "@/components/auth/firebase-auth-client";
 import { useLanguage } from "@/components/LanguageContext";
+import { FormNotice } from "@/components/forms/FormKit";
 import { supportContact } from "@/lib/support-contact";
 import { PHONE_RESET_OTP_ENABLED } from "@/lib/auth-capabilities";
 import {
   getResetStorageItem,
-  maskResetIdentifier,
+  removeResetStorageItem,
+  RESET_ID_TOKEN_KEY,
   RESET_IDENTIFIER_KEY,
+  RESET_MASKED_PHONE_KEY,
+  RESET_PHONE_E164_KEY,
+  RESET_VERIFICATION_ID_KEY,
   RESET_VERIFIED_KEY,
   setResetStorageItem,
 } from "@/components/auth/password-reset-storage";
@@ -22,20 +34,55 @@ const soilBackdrop =
 export default function VerifyOtpPage() {
   const router = useRouter();
   const { langText, text } = useLanguage();
-  const [identifier, setIdentifier] = useState("");
+  const auth = useMemo(() => getOptionalFirebaseAuthClient(), []);
+  const [phoneE164, setPhoneE164] = useState("");
+  const [maskedPhone, setMaskedPhone] = useState("");
   const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
+  const [verificationId, setVerificationId] = useState("");
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [resendAvailableIn, setResendAvailableIn] = useState(0);
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const resetUnavailableMessage = langText(
+    "Password reset by OTP is unavailable in this deployment because Firebase phone authentication is not configured.",
+    "या डिप्लॉयमेंटमध्ये Firebase फोन प्रमाणीकरण कॉन्फिगर नसल्यामुळे OTP द्वारे पासवर्ड रीसेट उपलब्ध नाही."
+  );
+  const storageBlockedMessage = langText(
+    "Your browser blocked temporary reset storage. Please allow site storage and try again.",
+    "तुमच्या ब्राउझरने तात्पुरते रीसेट स्टोरेज ब्लॉक केले. साइट स्टोरेज परवानगी द्या आणि पुन्हा प्रयत्न करा."
+  );
 
   useEffect(() => {
     const storedIdentifier = getResetStorageItem(RESET_IDENTIFIER_KEY);
-    if (!storedIdentifier) {
+    const storedPhone = getResetStorageItem(RESET_PHONE_E164_KEY);
+    const storedMaskedPhone = getResetStorageItem(RESET_MASKED_PHONE_KEY);
+    const storedVerificationId = getResetStorageItem(RESET_VERIFICATION_ID_KEY);
+
+    if (!storedIdentifier || !storedPhone || !storedMaskedPhone) {
       router.replace("/forgot-password");
       return;
     }
 
-    setIdentifier(storedIdentifier);
+    setPhoneE164(storedPhone);
+    setMaskedPhone(storedMaskedPhone);
+    setVerificationId(storedVerificationId || "");
   }, [router]);
+
+  useEffect(() => () => clearRecaptchaVerifier("password-reset"), []);
+
+  useEffect(() => {
+    if (!resendAvailableIn) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setResendAvailableIn((current) => (current <= 1 ? 0 : current - 1));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [resendAvailableIn]);
 
   const updateDigit = (index: number, value: string) => {
     const nextValue = value.replace(/\D/g, "").slice(-1);
@@ -57,36 +104,112 @@ export default function VerifyOtpPage() {
     }
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const sendCode = useCallback(async () => {
+    if (!PHONE_RESET_OTP_ENABLED || !auth || !phoneE164 || isSending) {
+      if (!PHONE_RESET_OTP_ENABLED || !auth) {
+        setError(resetUnavailableMessage);
+      }
+      return;
+    }
 
-    if (!PHONE_RESET_OTP_ENABLED) {
-      setError(
+    setIsSending(true);
+    setError("");
+    setInfo("");
+
+    try {
+      const nextVerificationId = await startPhoneVerification({
+        auth,
+        phoneNumber: phoneE164,
+        containerId: "kk-reset-recaptcha",
+        storeKey: "password-reset",
+      });
+      if (!setResetStorageItem(RESET_VERIFICATION_ID_KEY, nextVerificationId)) {
+        throw new Error(storageBlockedMessage);
+      }
+
+      removeResetStorageItem(RESET_ID_TOKEN_KEY);
+      removeResetStorageItem(RESET_VERIFIED_KEY);
+      setVerificationId(nextVerificationId);
+      setResendAvailableIn(60);
+      setInfo(
         langText(
-          "Secure reset verification is not active yet. Please contact support to reset your password safely.",
-          "सुरक्षित पासवर्ड रीसेट पडताळणी अजून सुरू नाही. सुरक्षित रीसेटसाठी कृपया सपोर्टशी संपर्क साधा."
+          `A reset code was sent to ${maskedPhone}. Enter the six-digit code to continue.`,
+          `${maskedPhone} वर रीसेट कोड पाठवला आहे. पुढे जाण्यासाठी सहा अंकी कोड टाका.`
         )
       );
+    } catch (sendError) {
+      setError(
+        getFirebaseAuthError(
+          sendError,
+          langText("Could not send the reset OTP.", "रीसेट ओटीपी पाठवता आला नाही.")
+        )
+      );
+    } finally {
+      setIsSending(false);
+    }
+  }, [auth, isSending, langText, maskedPhone, phoneE164, resetUnavailableMessage, storageBlockedMessage]);
+
+  useEffect(() => {
+    if (!PHONE_RESET_OTP_ENABLED || !auth || !phoneE164 || verificationId) {
+      return;
+    }
+
+    void sendCode();
+  }, [auth, phoneE164, sendCode, verificationId]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isVerifying) {
+      return;
+    }
+
+    if (!PHONE_RESET_OTP_ENABLED || !auth) {
+      setError(resetUnavailableMessage);
       return;
     }
 
     const otp = otpDigits.join("");
+    if (!verificationId) {
+      setError(langText("Send a reset code first.", "प्रथम रीसेट कोड पाठवा."));
+      return;
+    }
+
     if (!/^\d{6}$/.test(otp)) {
       setError(langText("Enter a valid 6-digit code.", "वैध ६ अंकी कोड टाका."));
       return;
     }
 
-    if (!setResetStorageItem(RESET_VERIFIED_KEY, "true")) {
+    setIsVerifying(true);
+    setError("");
+
+    try {
+      const result = await verifyPhoneOtp({
+        auth,
+        verificationId,
+        otp,
+      });
+      const idToken = await result.user.getIdToken(true);
+
+      const writesSucceeded = [
+        setResetStorageItem(RESET_ID_TOKEN_KEY, idToken),
+        setResetStorageItem(RESET_VERIFIED_KEY, "true"),
+      ];
+
+      if (writesSucceeded.includes(false)) {
+        throw new Error(storageBlockedMessage);
+      }
+
+      router.push("/forgot-password/new-password");
+    } catch (verifyError) {
       setError(
-        langText(
-          "Your browser is blocking temporary reset storage. Please allow site storage and try again.",
-          "तुमचा ब्राउझर तात्पुरते रीसेट स्टोरेज ब्लॉक करत आहे. साइट स्टोरेज परवानगी द्या आणि पुन्हा प्रयत्न करा."
+        getFirebaseAuthError(
+          verifyError,
+          langText("Could not verify the reset OTP.", "रीसेट ओटीपी पडताळता आला नाही.")
         )
       );
-      return;
+    } finally {
+      setIsVerifying(false);
     }
-
-    router.push("/forgot-password/new-password");
   };
 
   return (
@@ -110,17 +233,14 @@ export default function VerifyOtpPage() {
                 {langText("Verify your mobile number", "तुमच्या मोबाईल क्रमांकाची पडताळणी करा")}
               </h1>
               <p className="mb-4 text-sm font-medium text-primary/70">
-                {PHONE_RESET_OTP_ENABLED
-                  ? text("Enter the 6-digit verification code to continue your secure password reset.", {
-                      cacheKey: "forgot-password.verify-otp.description",
-                    })
-                  : langText(
-                      "Password reset verification will be activated once backend authentication is configured.",
-                      "बॅकएंड प्रमाणीकरण कॉन्फिगर झाल्यावर पासवर्ड रीसेट पडताळणी सुरू होईल."
-                    )}
+                {text("Enter the 6-digit verification code sent to the registered mobile number linked to your account.", {
+                  cacheKey: "forgot-password.verify-otp.description",
+                })}
               </p>
               <div className="mx-auto flex w-fit items-center gap-3 rounded-full border border-outline-variant/30 bg-surface-container/50 px-4 py-2">
-                <span className="font-semibold tracking-widest text-on-surface-variant">{maskResetIdentifier(identifier)}</span>
+                <span className="font-semibold tracking-widest text-on-surface-variant">
+                  {maskedPhone || langText("your registered mobile", "तुमचा नोंदणीकृत मोबाईल")}
+                </span>
                 <Link className="flex items-center gap-1 text-xs font-bold text-secondary hover:underline" href="/forgot-password">
                   <span className="material-symbols-outlined text-sm">edit</span>
                   {langText("Edit", "बदला")}
@@ -130,7 +250,7 @@ export default function VerifyOtpPage() {
 
             <form className="space-y-8" onSubmit={handleSubmit}>
               <div>
-                <div className={`mb-8 flex justify-between gap-3 ${PHONE_RESET_OTP_ENABLED ? "" : "opacity-50"}`}>
+                <div className="mb-8 flex justify-between gap-3">
                   {otpDigits.map((digit, index) => (
                     <input
                       key={index}
@@ -145,7 +265,6 @@ export default function VerifyOtpPage() {
                       }`}
                       inputMode="numeric"
                       maxLength={1}
-                      disabled={!PHONE_RESET_OTP_ENABLED}
                       type="text"
                       value={digit}
                       onChange={(event) => updateDigit(index, event.target.value)}
@@ -154,33 +273,27 @@ export default function VerifyOtpPage() {
                   ))}
                 </div>
 
-                {error ? (
-                  <div className="mb-6 flex items-center gap-2 text-sm font-medium text-error">
-                    <span className="material-symbols-outlined text-base">error</span>
-                    <span>{error}</span>
-                  </div>
-                ) : PHONE_RESET_OTP_ENABLED ? (
-                  <div className="mb-6 flex items-center gap-2 text-sm font-medium text-on-surface-variant">
-                    <span className="material-symbols-outlined text-base">timer</span>
-                    <span>{langText("Enter the verification code sent to your confirmed contact.", "तुमच्या खात्री झालेल्या संपर्कावर पाठवलेला पडताळणी कोड टाका.")}</span>
-                  </div>
-                ) : (
+                <div id="kk-reset-recaptcha" className="hidden" />
+
+                {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+                {!error && info ? <FormNotice tone="info">{info}</FormNotice> : null}
+                {!error && !info ? (
                   <div className="mb-6 rounded-2xl border border-primary-container/20 bg-primary-fixed/10 px-4 py-4 text-sm font-medium text-on-surface-variant">
                     {langText(
-                      `Need help now? Call ${supportContact.phoneDisplay} or email ${supportContact.email}.`,
-                      `तात्काळ मदत हवी आहे का? ${supportContact.phoneDisplay} वर कॉल करा किंवा ${supportContact.email} वर ईमेल करा.`
+                      `Reset will continue only after OTP verification on ${maskedPhone || "your registered mobile number"}.`,
+                      `${maskedPhone || "तुमच्या नोंदणीकृत मोबाईल नंबरवर"} ओटीपी पडताळल्यानंतरच रीसेट पुढे जाईल.`
                     )}
                   </div>
-                )}
+                ) : null}
               </div>
 
               <div className="space-y-6">
                 <button
                   className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-container px-6 py-4 text-lg font-bold text-white shadow-xl shadow-primary-container/20 transition-all hover:bg-primary hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-primary-container"
                   type="submit"
-                  disabled={!PHONE_RESET_OTP_ENABLED}
+                  disabled={isSending || isVerifying}
                 >
-                  <span>{PHONE_RESET_OTP_ENABLED ? langText("Verify and Continue", "पडताळणी करा आणि पुढे जा") : langText("Verification Pending Backend Setup", "पडताळणी बॅकएंड सेटअपनंतर सुरू होईल")}</span>
+                  <span>{isVerifying ? langText("Verifying...", "पडताळणी करत आहे...") : langText("Verify and Continue", "पडताळणी करा आणि पुढे जा")}</span>
                   <span className="material-symbols-outlined">arrow_forward</span>
                 </button>
 
@@ -188,14 +301,19 @@ export default function VerifyOtpPage() {
                   <div className="flex items-center gap-2 font-medium text-on-surface-variant">
                     <span className="material-symbols-outlined text-lg">timer</span>
                     <span>
-                      {PHONE_RESET_OTP_ENABLED
-                        ? langText("Resend in:", "पुन्हा पाठविण्यासाठी:")
-                        : langText("Backend verification pending", "बॅकएंड पडताळणी प्रलंबित")}{" "}
-                      {PHONE_RESET_OTP_ENABLED ? <span className="font-bold text-secondary">00:59</span> : null}
+                      {resendAvailableIn > 0
+                        ? langText("Resend in", "पुन्हा पाठवण्यासाठी")
+                        : langText("Need a new code?", "नवीन कोड हवा आहे?")}{" "}
+                      {resendAvailableIn > 0 ? <span className="font-bold text-secondary">{String(resendAvailableIn).padStart(2, "0")}s</span> : null}
                     </span>
                   </div>
-                  <button className="cursor-not-allowed font-bold text-on-surface-variant/40" type="button">
-                    {PHONE_RESET_OTP_ENABLED ? langText("Resend OTP", "ओटीपी पुन्हा पाठवा") : langText("Enable backend verification first", "प्रथम बॅकएंड पडताळणी सक्षम करा")}
+                  <button
+                    className="font-bold text-secondary disabled:cursor-not-allowed disabled:text-on-surface-variant/40"
+                    type="button"
+                    onClick={() => void sendCode()}
+                    disabled={isSending || resendAvailableIn > 0}
+                  >
+                    {isSending ? langText("Sending...", "पाठवत आहे...") : langText("Resend OTP", "ओटीपी पुन्हा पाठवा")}
                   </button>
                 </div>
               </div>
@@ -214,7 +332,7 @@ export default function VerifyOtpPage() {
           </div>
         </div>
 
-        <div className="mt-8 flex justify-center gap-8 opacity-60">
+        <div className="mt-8 flex flex-col items-center gap-3 opacity-70 md:flex-row md:justify-center md:gap-8">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-secondary">verified_user</span>
             <span className="text-xs font-bold text-primary">
@@ -222,8 +340,10 @@ export default function VerifyOtpPage() {
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-secondary">encrypted</span>
-            <span className="text-xs font-bold text-primary">256-bit SSL</span>
+            <span className="material-symbols-outlined text-secondary">support_agent</span>
+            <span className="text-xs font-bold text-primary">
+              {langText(`Need help? Call ${supportContact.phoneDisplay}`, `मदत हवी आहे का? ${supportContact.phoneDisplay} वर कॉल करा`)}
+            </span>
           </div>
         </div>
       </div>

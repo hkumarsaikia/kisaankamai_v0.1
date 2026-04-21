@@ -7,6 +7,7 @@ export interface UserRecord {
   phone: string;
   passwordHash: string;
   roles: UserRole[];
+  fcmTokens?: string[];
   createdAt: string;
   updatedAt: string;
 }
