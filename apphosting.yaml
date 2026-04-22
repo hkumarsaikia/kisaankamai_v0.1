@@ -22,6 +22,8 @@ env:
     value: "1:385695590128:web:8ae3734344861e8b808435"
   - variable: NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
     value: G-P246QD9TH4
+  - variable: NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY
+    value: BCl_Z7YhyuBCvlx7U2O0tTEqmmWs-4Okr_Rm3EPGnTBuS45mzwbnkiyYMlEGcryJ6K6IZj1TpRLAktxfX7dA65w
   - variable: NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
     secret: nextPublicGoogleMapsApiKey
     availability:
