@@ -299,14 +299,18 @@ function buildConditionalFormatRequests(definition: SheetDefinition, sheetState:
   return requests;
 }
 
-async function getSheetsToken() {
-  const client = new JWT({
-    email: getServiceAccountEmail(),
-    key: getServiceAccountKey(),
-    scopes: [SHEETS_SCOPE],
-  });
+let _sheetsJwtClient: JWT | undefined;
 
-  const response = await client.getAccessToken();
+async function getSheetsToken() {
+  if (!_sheetsJwtClient) {
+    _sheetsJwtClient = new JWT({
+      email: getServiceAccountEmail(),
+      key: getServiceAccountKey(),
+      scopes: [SHEETS_SCOPE],
+    });
+  }
+
+  const response = await _sheetsJwtClient.getAccessToken();
   const token =
     typeof response === "string"
       ? response

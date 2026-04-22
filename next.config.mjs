@@ -44,6 +44,7 @@ function buildCsp() {
       "https://maps.googleapis.com",
       "https://maps.gstatic.com",
       "https://www.google.com",
+      "https://placehold.co",
     ])}`,
     `font-src ${joinSources([
       "'self'",
