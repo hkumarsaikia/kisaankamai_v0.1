@@ -4,16 +4,16 @@
     "codex": {
       "initialized": true,
       "firstRunAt": "2026-04-19T08:38:09.852Z",
-      "lastRunAt": "2026-04-20T04:04:00.448Z",
+      "lastRunAt": "2026-04-22T05:59:30.426Z",
       "lastScanMode": "full_scan"
     },
     "antigravity": {
       "initialized": true,
       "firstRunAt": "2026-04-19T08:38:16.943Z",
-      "lastRunAt": "2026-04-19T10:00:40.620Z",
+      "lastRunAt": "2026-04-21T03:02:56.268Z",
       "lastScanMode": "full_scan"
     }
   },
-  "lastDocsAuditAt": "2026-04-20T04:04:00.448Z",
-  "lastRefreshAt": "2026-04-20T04:04:00.448Z"
+  "lastDocsAuditAt": "2026-04-22T05:59:30.426Z",
+  "lastRefreshAt": "2026-04-22T05:59:30.426Z"
 }
