@@ -4,7 +4,7 @@
     "codex": {
       "initialized": true,
       "firstRunAt": "2026-04-19T08:38:09.852Z",
-      "lastRunAt": "2026-04-22T05:59:30.426Z",
+      "lastRunAt": "2026-04-22T10:36:55.482Z",
       "lastScanMode": "full_scan"
     },
     "antigravity": {
@@ -14,6 +14,6 @@
       "lastScanMode": "full_scan"
     }
   },
-  "lastDocsAuditAt": "2026-04-22T05:59:30.426Z",
-  "lastRefreshAt": "2026-04-22T05:59:30.426Z"
+  "lastDocsAuditAt": "2026-04-22T10:36:55.482Z",
+  "lastRefreshAt": "2026-04-22T10:36:55.482Z"
 }

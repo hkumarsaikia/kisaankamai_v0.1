@@ -1,6 +1,6 @@
 # Summary
 
-- Last refresh: `2026-04-22T05:59:30.426Z`
+- Last refresh: `2026-04-22T10:36:55.482Z`
 - Invoking tool: `codex`
 - Scan mode: `full_scan`
 - Current pack path: `agents/codex-antigravity-sync/state/current`
