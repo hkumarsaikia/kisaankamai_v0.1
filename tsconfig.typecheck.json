@@ -9,7 +9,6 @@
     "node_modules",
     ".next",
     "vendor",
-    "apps/production",
     ".worktrees",
     "worktrees"
   ]

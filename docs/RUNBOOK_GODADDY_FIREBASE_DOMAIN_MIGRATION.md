@@ -37,7 +37,7 @@ Do not guess the DNS records ahead of time. Use the console-generated values for
 
 1. Check both the apex domain and `www`.
 2. Confirm HTTPS certificate issuance.
-3. Confirm the root app resolves, not `apps/production`.
+3. Confirm the root app resolves correctly on both the apex domain and `www`.
 4. Validate login, listing read paths, booking flows, and at least one Sheets-backed write path.
 5. Re-run `node scripts/live-repo-sync.mjs --repo-url "<git-url>" --branch main`.
 6. Re-run `node scripts/google-sheets-verify.mjs`.

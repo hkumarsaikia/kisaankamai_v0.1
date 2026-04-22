@@ -29,18 +29,6 @@ Local work that exercises the Firebase-backed root runtime may require:
 
 If Firebase Admin credentials are missing, some authenticated/data-backed runtime flows will not function outside mocked/static fallbacks.
 
-## Alternate App Surface
-
-`apps/production` is retained as a fully maintained alternate app surface for QA, browser checks, and parallel product validation. It is not the canonical public domain target, but it should stay aligned with the root app's Firebase-backed runtime, Sheets mirror contract, and operational behavior.
-
-```bash
-cd apps/production
-npm install
-npm run dev
-npm run typecheck
-npm run build
-```
-
 ## Logs
 
 Use the logged helper scripts when you want captured runtime logs:
@@ -91,3 +79,12 @@ npm run cleanup:final-test-accounts
 ```
 
 The latest local summaries are written to `logs/runtime/final-test-accounts/`.
+
+## Antigravity Handoff
+
+When handing the project to Google Antigravity for browser/API/CLI completion work, use:
+
+- `docs/GOOGLE_ANTIGRAVITY_EXECUTION_PROMPT.md`
+- `agents/codex-antigravity-sync/docs/CONSUMER.md`
+
+The root app is the only supported surface for that handoff.

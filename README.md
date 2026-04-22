@@ -4,7 +4,6 @@ Kisan Kamai now uses the root Next.js app as the only public frontend for `https
 
 - Live app: repo root, deployed with Firebase App Hosting
 - Canonical domain: `https://www.kisankamai.com`
-- Alternate maintained app surface: `apps/production`
 
 ## Root App
 
@@ -56,12 +55,6 @@ Required runtime configuration includes:
 - optional Sentry DSNs
 - optional Google Maps key
 
-## Alternate App Surface
-
-`apps/production` remains in the repo as a fully maintained alternate app surface. It shares the same backend contract as the root app: Firebase Auth, Firestore, and Storage are the primary runtime systems, while Google Sheets is kept as a best-effort mirror for admin/reporting visibility only.
-
-The root app is still the canonical live frontend for `https://www.kisankamai.com`.
-
 ## Backend Contract
 
 - Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
@@ -93,6 +86,7 @@ Manual Firebase Console prerequisites still required outside repo code:
 
 Runbooks:
 
+- Google Antigravity handoff prompt: `docs/GOOGLE_ANTIGRAVITY_EXECUTION_PROMPT.md`
 - Google Sheets ops: `docs/OPERATIONS_GOOGLE_SHEETS.md`
 - Final test accounts: `docs/OPERATIONS_FINAL_TEST_ACCOUNTS.md`
 - Live repo sync + Discord: `docs/OPERATIONS_LIVE_REPO_SYNC.md`

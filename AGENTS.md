@@ -1,6 +1,6 @@
 # Repository Guide
 
-The root Next.js app is the canonical public frontend for `https://www.kisankamai.com`. `apps/production` is a maintained alternate app surface for QA, browser checks, and parallel validation, but it is not the default public target.
+The root Next.js app is the canonical public frontend for `https://www.kisankamai.com`.
 
 ## Root App Commands
 
@@ -21,16 +21,6 @@ npm run verify
 - Runtime logs from the helper scripts live under `logs/runtime/`.
 - Start `npm run dev:public` before `npm run tunnel:public` when you need a shareable tunnel URL for the local app.
 - Treat `npm run verify` as the default root-app validation pass.
-
-## Alternate App Surface
-
-```bash
-cd apps/production
-npm install
-npm run dev
-npm run typecheck
-npm run build
-```
 
 ## Cross-Agent Handoff
 

@@ -11,8 +11,6 @@ The root app is the only public runtime.
 - Reporting mirror: Google Sheets (best-effort only, not the database of record)
 - Diagnostics: local runtime logging for development, Firebase/Sentry-oriented hooks for hosted environments
 
-`apps/production` remains in-repo as a maintained alternate surface that shares the same backend contract and design language, but it is not the canonical public domain target.
-
 ## Data Contract
 
 - Firebase is the primary runtime backend and the source of truth for auth, profiles, listings, bookings, payments, saved items, submissions, and bug reports.
