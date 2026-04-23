@@ -230,6 +230,11 @@ function mapListingFromFirestore(data: Partial<ListingRecord> & { id?: string })
     createdAt: data.createdAt || nowIso(),
     updatedAt: data.updatedAt || nowIso(),
   };
+}
+
+export async function getListingById(id: string) {
+  const snapshot = await listingsCollection().doc(id).get();
+  if (!snapshot.exists) {
     return null;
   }
 
