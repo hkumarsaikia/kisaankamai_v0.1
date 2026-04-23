@@ -92,12 +92,22 @@ function sanitizeCell(value) {
   return JSON.stringify(value);
 }
 
+function normalizePrivateKey(value) {
+  if (!value) {
+    return "";
+  }
+
+  return value.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+}
+
 async function getSheetsToken() {
   await loadRuntimeEnv();
 
   const client = new JWT({
     email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || requireEnv("FIREBASE_CLIENT_EMAIL"),
-    key: (process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || requireEnv("FIREBASE_PRIVATE_KEY")).replace(/\\n/g, "\n"),
+    key: normalizePrivateKey(
+      process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || requireEnv("FIREBASE_PRIVATE_KEY")
+    ),
     scopes: [SHEETS_SCOPE],
   });
 

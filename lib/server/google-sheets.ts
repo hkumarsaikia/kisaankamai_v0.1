@@ -91,7 +91,11 @@ function getServiceAccountEmail() {
 
 function getServiceAccountKey() {
   const value = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || process.env.FIREBASE_PRIVATE_KEY || "";
-  return value ? value.replace(/\\n/g, "\n") : "";
+  if (!value) {
+    return "";
+  }
+
+  return value.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
 }
 
 function isSheetsEnabled() {

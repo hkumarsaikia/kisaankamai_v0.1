@@ -7,7 +7,12 @@ import { getStorage } from "firebase-admin/storage";
 
 function resolvePrivateKey() {
   const key = process.env.FIREBASE_PRIVATE_KEY;
-  return key ? key.replace(/\\n/g, "\n") : undefined;
+  if (!key) {
+    return undefined;
+  }
+
+  const normalized = key.trim().replace(/^["']|["']$/g, "");
+  return normalized.replace(/\\n/g, "\n");
 }
 
 function createAdminApp() {

@@ -11,6 +11,14 @@ const APPHOSTING_ENV_OVERRIDES = [
   "NEXT_PUBLIC_SITE_URL",
 ];
 
+function normalizePrivateKey(value) {
+  if (!value) {
+    return "";
+  }
+
+  return value.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+}
+
 export function getRepoRoot() {
   return REPO_ROOT;
 }
@@ -85,7 +93,7 @@ export function getGoogleSheetConfig(overrides = {}) {
     overrides.clientEmail || process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || process.env.FIREBASE_CLIENT_EMAIL || "";
   const rawPrivateKey =
     overrides.privateKey || process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY || process.env.FIREBASE_PRIVATE_KEY || "";
-  const privateKey = rawPrivateKey ? rawPrivateKey.replace(/\\n/g, "\n") : "";
+  const privateKey = normalizePrivateKey(rawPrivateKey);
 
   return {
     spreadsheetId,
@@ -98,7 +106,7 @@ export function getFirebaseAdminConfig() {
   const projectId =
     process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "gokisaan";
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL || "";
-  const privateKey = (process.env.FIREBASE_PRIVATE_KEY || "").replace(/\\n/g, "\n");
+  const privateKey = normalizePrivateKey(process.env.FIREBASE_PRIVATE_KEY || "");
   const storageBucket =
     process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "gokisaan.firebasestorage.app";
 

@@ -6,7 +6,11 @@ import { loadRuntimeEnv, requireEnv } from "./shared-env.mjs";
 
 function resolvePrivateKey() {
   const value = process.env.FIREBASE_PRIVATE_KEY;
-  return value ? value.replace(/\\n/g, "\n") : "";
+  if (!value) {
+    return "";
+  }
+
+  return value.trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
 }
 
 let runtimeCache = null;
