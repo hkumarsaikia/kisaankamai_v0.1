@@ -1,8 +1,7 @@
 "use client";
 
-import { FormEvent, KeyboardEvent, useRef } from "react";
-import { useLanguage } from "@/components/LanguageContext";
-import { FormNotice } from "@/components/forms/FormKit";
+import type { FormEvent, KeyboardEvent, ReactNode } from "react";
+import { useRef } from "react";
 
 interface OtpVerificationFormProps {
   phone: string;
@@ -14,7 +13,19 @@ interface OtpVerificationFormProps {
   onResend: () => void;
   onChangeNumber: () => void;
   error?: string;
-  info?: string;
+  title: string;
+  description: ReactNode;
+  submitLabel: string;
+  submittingLabel: string;
+  resendLabel: string;
+  resendCountdownLabel: string;
+  editLabel: string;
+  bannerTitle?: string;
+  bannerDescription?: string;
+  bannerTone?: "info" | "error";
+  view?: "entry" | "loading" | "success";
+  successTitle?: string;
+  successMessage?: string;
 }
 
 export function OtpVerificationForm({
@@ -27,10 +38,24 @@ export function OtpVerificationForm({
   onResend,
   onChangeNumber,
   error,
-  info,
+  title,
+  description,
+  submitLabel,
+  submittingLabel,
+  resendLabel,
+  resendCountdownLabel,
+  editLabel,
+  bannerTitle,
+  bannerDescription,
+  bannerTone = "info",
+  view = "entry",
+  successTitle,
+  successMessage,
 }: OtpVerificationFormProps) {
-  const { langText } = useLanguage();
   const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const disableInputs = isSubmitting || view !== "entry";
+  const showErrorState = Boolean(error) && view === "entry";
+  const canSubmit = otpDigits.every((digit) => digit.trim().length === 1);
 
   const updateDigit = (index: number, value: string) => {
     const nextValue = value.replace(/\D/g, "").slice(-1);
@@ -49,88 +74,152 @@ export function OtpVerificationForm({
     }
   };
 
+  const handlePaste = (event: React.ClipboardEvent<HTMLDivElement>) => {
+    const pastedValue = event.clipboardData.getData("text").replace(/\D/g, "").slice(0, otpDigits.length);
+    if (!pastedValue) {
+      return;
+    }
+
+    event.preventDefault();
+    const nextDigits = Array.from({ length: otpDigits.length }, (_, index) => pastedValue[index] || "");
+    setOtpDigits(nextDigits);
+    const nextIndex = Math.min(pastedValue.length, otpDigits.length - 1);
+    inputsRef.current[nextIndex]?.focus();
+  };
+
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSubmit();
   };
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col items-center text-center">
-        <div className="mb-6">
-          <div className="w-20 h-20 bg-primary-container/10 text-primary rounded-3xl flex items-center justify-center mb-4 mx-auto shadow-sm">
-            <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>vibration</span>
-          </div>
-          <h3 className="text-2xl font-extrabold text-primary font-headline tracking-tight">
-            {langText("Verify your mobile number", "तुमच्या मोबाईल नंबरची पडताळणी करा")}
-          </h3>
-          <p className="text-on-surface-variant mt-3 text-sm">
-            {langText("Enter the 6-digit code sent to", "")} <span className="font-bold text-on-surface font-mono">{phone}</span><br/>
-            <span className="text-xs mt-1 block">तुमच्या मोबाईलवर पाठवलेला ६ अंकी कोड प्रविष्ट करा</span>
-          </p>
-        </div>
-
-        <form className="w-full flex flex-col items-center" onSubmit={handleSubmit}>
-          <div className="flex gap-2 justify-center mb-6 w-full max-w-sm">
-            {otpDigits.map((digit, index) => (
-              <input
-                key={index}
-                ref={(node) => { inputsRef.current[index] = node; }}
-                className="otp-input w-full bg-slate-100/50 border border-slate-200/50 focus:bg-white focus:ring-2 focus:ring-primary-container/40 rounded-xl px-2 py-4 text-center text-xl font-bold text-on-surface transition-all outline-none"
-                maxLength={1}
-                type="text"
-                inputMode="numeric"
-                value={digit}
-                onChange={(e) => updateDigit(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e)}
-                disabled={isSubmitting}
-                autoFocus={index === 0}
-              />
-            ))}
-          </div>
-
-          <div className="w-full max-w-sm mb-6">
-            {error && <FormNotice tone="error">{error}</FormNotice>}
-            {!error && info && <FormNotice tone="info">{info}</FormNotice>}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full max-w-sm bg-primary-container text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-70 disabled:hover:scale-100 mb-6"
-          >
-            {isSubmitting 
-              ? langText("Verifying...", "पडताळणी करत आहे...") 
-              : langText("Verify & Continue / पडताळणी करा आणि पुढे जा", "Verify & Continue / पडताळणी करा आणि पुढे जा")}
-          </button>
-
-          <div className="space-y-4 w-full max-w-sm">
-            <div className="flex items-center justify-between px-2 text-xs font-bold uppercase tracking-widest">
-              <span className="text-outline">
-                {resendAvailableIn > 0 
-                  ? `${langText("Resend in", "पुन्हा पाठवा")} 00:${String(resendAvailableIn).padStart(2, "0")}` 
-                  : langText("Need a new code?", "नवीन कोड हवा आहे?")}
+    <div className="w-full rounded-[2.5rem] border border-white/60 bg-white/85 shadow-2xl backdrop-blur-xl">
+      <div className="p-10 text-center">
+        {view === "success" ? (
+          <div className="space-y-5">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-700 shadow-sm">
+              <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                check_circle
               </span>
-              <button
-                type="button"
-                onClick={onResend}
-                disabled={isSubmitting || resendAvailableIn > 0}
-                className={`font-bold transition-colors ${resendAvailableIn > 0 ? "text-primary opacity-50 cursor-not-allowed" : "text-secondary hover:text-primary"}`}
-              >
-                Resend OTP
-              </button>
             </div>
-            <div className="h-px bg-surface-container-highest/60 w-full" />
-            <button
-              type="button"
-              onClick={onChangeNumber}
-              disabled={isSubmitting}
-              className="text-sm font-bold text-primary hover:underline inline-block mt-2"
-            >
-              Edit Details / तपशील संपादित करा
-            </button>
+            <div className="space-y-2">
+              <h3 className="font-headline text-2xl font-extrabold tracking-tight text-primary">
+                {successTitle}
+              </h3>
+              <p className="text-sm text-on-surface-variant">{successMessage}</p>
+            </div>
           </div>
-        </form>
+        ) : (
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-container/10 text-primary shadow-sm">
+                <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  vibration
+                </span>
+              </div>
+              <div className="space-y-2">
+                <h3 className="font-headline text-2xl font-extrabold tracking-tight text-primary">{title}</h3>
+                <div className="space-y-1 text-sm text-on-surface-variant">
+                  <div>{description}</div>
+                  <div className="font-mono font-bold text-on-surface">{phone}</div>
+                </div>
+              </div>
+            </div>
+
+            {bannerTitle ? (
+              <div
+                className={`flex items-start gap-3 rounded-xl border p-3 text-left ${
+                  bannerTone === "error"
+                    ? "border-error/20 bg-error-container/60 text-error"
+                    : "border-slate-200 bg-slate-100 text-primary"
+                }`}
+              >
+                <span className="material-symbols-outlined text-xl">
+                  {bannerTone === "error" ? "error" : "info"}
+                </span>
+                <div className="space-y-1">
+                  <p className="text-sm font-semibold">{bannerTitle}</p>
+                  {bannerDescription ? <p className="text-xs text-on-surface-variant">{bannerDescription}</p> : null}
+                </div>
+              </div>
+            ) : null}
+
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              <div className="flex gap-2" onPaste={handlePaste}>
+                {otpDigits.map((digit, index) => (
+                  <input
+                    key={index}
+                    ref={(node) => {
+                      inputsRef.current[index] = node;
+                    }}
+                    className={`otp-input w-full rounded-xl border px-2 py-4 text-center text-xl font-bold text-on-surface transition-all outline-none ${
+                      showErrorState
+                        ? "border-error/50 bg-error-container/20"
+                        : "border-slate-200/50 bg-slate-100/50 focus:border-primary-container/40 focus:bg-white focus:ring-2 focus:ring-primary-container/30"
+                    } ${disableInputs ? "opacity-60" : ""}`}
+                    maxLength={1}
+                    type="text"
+                    inputMode="numeric"
+                    value={digit}
+                    onChange={(e) => updateDigit(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e)}
+                    disabled={disableInputs}
+                    autoFocus={index === 0 && view === "entry"}
+                  />
+                ))}
+              </div>
+
+              {error ? <p className="text-sm font-bold text-error">{error}</p> : null}
+
+              <button
+                type="submit"
+                disabled={disableInputs || !canSubmit}
+                className="w-full rounded-2xl bg-primary-container py-4 text-lg font-bold text-white shadow-xl shadow-primary/20 transition-all disabled:cursor-not-allowed disabled:opacity-90"
+              >
+                {view === "loading" ? (
+                  <span className="flex items-center justify-center gap-3">
+                    <svg className="h-5 w-5 animate-spin text-white" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4Zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647Z" fill="currentColor" />
+                    </svg>
+                    <span>{submittingLabel}</span>
+                  </span>
+                ) : (
+                  submitLabel
+                )}
+              </button>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between px-2 text-xs font-bold uppercase tracking-widest text-outline">
+                  <span>
+                    {resendAvailableIn > 0
+                      ? `${resendCountdownLabel} 00:${String(resendAvailableIn).padStart(2, "0")}`
+                      : resendCountdownLabel}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={onResend}
+                    disabled={isSubmitting || resendAvailableIn > 0}
+                    className={`font-bold transition-colors ${
+                      resendAvailableIn > 0 ? "cursor-not-allowed opacity-50" : "text-primary"
+                    }`}
+                  >
+                    {resendLabel}
+                  </button>
+                </div>
+                <div className="h-px bg-surface-container-highest/60" />
+                <button
+                  type="button"
+                  onClick={onChangeNumber}
+                  disabled={isSubmitting}
+                  className="text-sm font-bold text-primary hover:underline"
+                >
+                  {editLabel}
+                </button>
+              </div>
+            </form>
+          </div>
+        )}
       </div>
     </div>
   );

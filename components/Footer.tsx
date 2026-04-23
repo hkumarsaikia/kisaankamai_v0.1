@@ -2,8 +2,8 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-import { FOOTER_COPY } from "@/lib/discovery-routes";
 import { FOOTER_MARKETPLACE_LINKS, FOOTER_TRUST_LINKS } from "@/lib/site-navigation.js";
+import { SharedIcon } from "@/components/SharedIcon";
 
 export const Footer = () => {
   const { t, langText } = useLanguage();
@@ -50,14 +50,32 @@ export const Footer = () => {
             {t("Footer.empowering_indian_farmers_through_shared_technology_and_machinery_access_rooted_in_trust")}
           </p>
           <div className="flex gap-4">
-            <a href="https://x.com/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors">
+            <a
+              href="https://x.com/kisankamai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={langText("Follow Kisan Kamai on X", "Kisan Kamai ला X वर फॉलो करा")}
+              className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors"
+            >
               <span className="font-black text-lg">X</span>
             </a>
-            <a href="https://linkedin.com/company/kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-[#0077b5] transition-colors">
+            <a
+              href="https://linkedin.com/company/kisankamai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={langText("Follow Kisan Kamai on LinkedIn", "Kisan Kamai ला LinkedIn वर फॉलो करा")}
+              className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-[#0077b5] transition-colors"
+            >
               <span className="font-black text-lg">in</span>
             </a>
-            <a href="https://youtube.com/@kisankamai" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-[#ff0000] transition-colors">
-              <span className="material-symbols-outlined text-[24px]">smart_display</span>
+            <a
+              href="https://youtube.com/@kisankamai"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={langText("Watch Kisan Kamai on YouTube", "Kisan Kamai ला YouTube वर पहा")}
+              className="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white hover:bg-[#ff0000] transition-colors"
+            >
+              <SharedIcon name="youtube" className="h-5 w-5" />
             </a>
           </div>
         </div>
@@ -94,21 +112,31 @@ export const Footer = () => {
               placeholder={t("Footer.email")}
               type="email"
             />
-            <button className="bg-emerald-600 text-white p-2 rounded-lg hover:bg-emerald-500 transition-colors">
-              <span className="material-symbols-outlined">send</span>
+            <button
+              type="button"
+              aria-label={langText("Subscribe to the newsletter", "न्यूजलेटरसाठी सदस्य व्हा")}
+              title={langText("Subscribe to the newsletter", "न्यूजलेटरसाठी सदस्य व्हा")}
+              className="bg-emerald-600 text-white p-2 rounded-lg hover:bg-emerald-500 transition-colors"
+            >
+              <SharedIcon name="send" className="h-5 w-5" />
             </button>
           </div>
           <div className="mt-6">
             <p className="text-slate-500 text-xs font-normal">{t("Footer.operating_in")}</p>
             <p className="text-white font-medium text-sm flex items-center gap-1 mt-1">
-              <span className="material-symbols-outlined text-emerald-400 text-sm">location_on</span>
+              <SharedIcon name="location" className="h-4 w-4 text-emerald-400" />
               {t("Footer.maharashtra_india")}
             </p>
           </div>
         </div>
       </div>
       <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 text-center">
-        <p className="text-slate-400 text-sm font-normal">{`${FOOTER_COPY.left} ${FOOTER_COPY.right}`}</p>
+        <p className="text-slate-400 text-sm font-normal">
+          {langText(
+            "© 2026 Kisan Kamai. All rights reserved. Built with care for Bharat.",
+            "© २०२६ किसान कमाई. सर्व हक्क राखीव. भारतासाठी जपून तयार केले."
+          )}
+        </p>
       </div>
     </footer>
   );

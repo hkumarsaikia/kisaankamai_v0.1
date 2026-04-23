@@ -12,9 +12,15 @@ import {
   signInWithEmailAndPassword,
   signInWithPhoneNumber,
 } from "firebase/auth";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import { PHONE_AUTH_TEST_MODE } from "@/lib/auth-capabilities";
-import { getFirebaseAuthClient, getFirebaseAuthClientOrNull } from "@/lib/firebase-client";
-import type { LocalSession } from "@/lib/local-data/types";
+import { getFirebaseAuthClient, getFirebaseAuthClientOrNull, getFirebaseClientApp } from "@/lib/firebase-client";
+import type {
+  LocalSession,
+  VerificationDocumentKind,
+  VerificationDocumentRecord,
+  VerificationStatus,
+} from "@/lib/local-data/types";
 
 type SessionResponse = {
   ok?: boolean;
@@ -30,6 +36,11 @@ type SessionProfilePayload = {
   village: string;
   pincode: string;
   fieldArea: number;
+  district?: string;
+  verificationStatus?: VerificationStatus;
+  verificationDocumentType?: string;
+  verificationDocumentNumber?: string;
+  verificationDocuments?: VerificationDocumentRecord[];
 };
 
 type SessionPayload = {
@@ -43,6 +54,7 @@ type WindowWithRecaptchaStore = typeof window & {
 
 const FIREBASE_ERROR_MESSAGES: Record<string, string> = {
   "auth/cancelled-popup-request": "Google sign-in was cancelled. Please try again when you are ready.",
+  "auth/code-expired": "The OTP has expired. Request a new code and try again.",
   "auth/credential-already-in-use": "These login details are already linked to another account.",
   "auth/invalid-app-credential": "Firebase could not validate this request. Refresh the page and try again.",
   "auth/invalid-email": "Enter a valid email address.",
@@ -254,6 +266,60 @@ export async function finishFirebaseAuthSession(input?: {
   const session = input?.shouldFetchSession ? await fetchCurrentSession() : null;
   await auth.signOut();
   return session;
+}
+
+function sanitizeStorageFileName(fileName: string) {
+  return fileName
+    .trim()
+    .replace(/[^a-zA-Z0-9._-]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "document";
+}
+
+export async function uploadVerificationDocuments(input: {
+  auth?: Auth;
+  documents: Array<{ kind: VerificationDocumentKind; file: File }>;
+}) {
+  const validDocuments = input.documents.filter((document) => document.file.size > 0);
+  if (!validDocuments.length) {
+    return [] as VerificationDocumentRecord[];
+  }
+
+  const auth = input.auth || getFirebaseAuthClient();
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    throw new Error("Verify your mobile number before uploading documents.");
+  }
+
+  const storage = getStorage(getFirebaseClientApp());
+
+  return Promise.all(
+    validDocuments.map(async ({ kind, file }) => {
+      const objectPath = `profile-verification/${currentUser.uid}/${Date.now()}-${kind}-${sanitizeStorageFileName(file.name)}`;
+      const storageRef = ref(storage, objectPath);
+
+      await uploadBytes(storageRef, file, {
+        contentType: file.type || "application/octet-stream",
+      });
+
+      return {
+        kind,
+        name: file.name,
+        contentType: file.type || "application/octet-stream",
+        size: file.size,
+        storagePath: objectPath,
+        downloadUrl: await getDownloadURL(storageRef),
+        uploadedAt: new Date().toISOString(),
+      } satisfies VerificationDocumentRecord;
+    })
+  );
+}
+
+export async function clearServerAuthSession() {
+  await fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  });
 }
 
 export async function getCurrentResetIdToken(auth?: Auth) {

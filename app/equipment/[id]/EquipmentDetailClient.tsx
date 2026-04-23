@@ -10,6 +10,7 @@ import type { EquipmentRecord } from "@/lib/equipment";
 import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { createListingMarker } from "@/lib/map-data";
 import { DETAIL_BOOKING_LAYOUT } from "@/lib/equipment-detail-layout.js";
+import { assetPath } from "@/lib/site";
 
 const SERVICE_FEE = 150;
 
@@ -23,7 +24,7 @@ function formatCurrency(value: number) {
 
 function deriveDriveLabel(equipment: EquipmentRecord) {
   const driveTag = equipment.tags.find((tag) => /(2wd|4wd)/i.test(tag));
-  return driveTag || "Standard";
+  return driveTag || null;
 }
 
 export default function EquipmentDetailClient({
@@ -38,7 +39,7 @@ export default function EquipmentDetailClient({
   const [isPending, startTransition] = useTransition();
   const [formState, setFormState] = useState({
     fieldLocation: "",
-    workType: equipment.workTypes[0] || "Ploughing",
+    workType: equipment.workTypes[0] || "",
     startDate: new Date().toISOString().slice(0, 10),
     approxHours: "4",
     phone: "",
@@ -130,7 +131,7 @@ export default function EquipmentDetailClient({
               className="object-cover"
               fill
               sizes="(min-width: 1280px) 900px, (min-width: 1024px) 66vw, 100vw"
-              src={equipment.coverImage}
+              src={assetPath(equipment.coverImage)}
             />
             <div className="absolute left-4 top-4 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-primary shadow">
               <span className="material-symbols-outlined text-sm">verified</span>
@@ -151,7 +152,7 @@ export default function EquipmentDetailClient({
                   className="object-cover"
                   fill
                   sizes="(min-width: 768px) 180px, 30vw"
-                  src={image}
+                  src={assetPath(image)}
                 />
               </div>
             ))}
@@ -182,11 +183,6 @@ export default function EquipmentDetailClient({
           <p className="max-w-4xl text-base leading-7 text-on-surface-variant">
             {equipment.description}
           </p>
-
-          <div className="inline-flex items-center gap-2 rounded-lg border border-green-100 bg-green-50 p-3 text-green-700">
-            <div className="h-3 w-3 animate-pulse rounded-full bg-green-500" />
-            <span className="font-medium">{langText("Available Today", "आज उपलब्ध")}</span>
-          </div>
         </section>
 
         <hr className="border-outline-variant" />
@@ -207,13 +203,15 @@ export default function EquipmentDetailClient({
                 icon: "verified",
                 label: langText("Condition", "स्थिती"),
                 value: equipment.ownerVerified
-                  ? langText("Excellent", "उत्तम")
-                  : langText("Verified", "सत्यापित"),
+                  ? langText("Verified owner", "सत्यापित मालक")
+                  : langText("Verification pending", "पडताळणी बाकी"),
               },
               {
                 icon: "settings",
                 label: langText("Drive", "ड्राईव्ह"),
-                value: text(driveLabel, { cacheKey: `equipment.${equipment.id}.drive.${driveLabel}` }),
+                value: driveLabel
+                  ? text(driveLabel, { cacheKey: `equipment.${equipment.id}.drive.${driveLabel}` })
+                  : langText("Not listed", "नमूद नाही"),
               },
             ].map((item) => (
               <div
@@ -279,37 +277,56 @@ export default function EquipmentDetailClient({
                   <span className="font-medium">{ownerBadge}</span>
                 </div>
               </div>
-              <p className="text-sm italic text-on-surface-variant">
-                {text("Providing quality equipment to local farmers with dependable service.", {
-                  cacheKey: `equipment.${equipment.id}.owner-quote`,
-                })}
-              </p>
+              {equipment.ownerLocation ? (
+                <p className="text-sm text-on-surface-variant">
+                  {langText("Listing location", "लिस्टिंग ठिकाण")}: {equipment.ownerLocation}
+                </p>
+              ) : null}
             </div>
           </div>
         </section>
 
         <section>
           <h2 className="mb-4 text-xl font-bold">{langText("Service Area", "सेवा क्षेत्र")}</h2>
-          <div className="relative overflow-hidden rounded-xl border border-outline-variant shadow-inner">
-            <LazyMap
-              center={[markers[0]?.lat || 16.86, markers[0]?.lng || 74.57]}
-              zoom={12}
-              markers={markers}
-              height="256px"
-              className="rounded-none"
-              showControls
-              deferUntilVisible={false}
-            />
-            <div className="pointer-events-none absolute bottom-4 left-4 rounded-lg bg-white/90 p-3 text-sm shadow-md">
-              <p className="flex items-center gap-1 font-bold text-on-surface">
-                <span className="material-symbols-outlined text-sm text-primary">near_me</span>
-                {equipment.distanceKm} {langText("km Radius", "किमी परिसर")}
+          {markers.length ? (
+            <div className="relative overflow-hidden rounded-xl border border-outline-variant shadow-inner">
+              <LazyMap
+                center={[markers[0].lat, markers[0].lng]}
+                zoom={12}
+                markers={markers}
+                height="256px"
+                className="rounded-none"
+                showControls
+                deferUntilVisible={false}
+              />
+              {equipment.distanceKm > 0 ? (
+                <div className="pointer-events-none absolute bottom-4 left-4 rounded-lg bg-white/90 p-3 text-sm shadow-md">
+                  <p className="flex items-center gap-1 font-bold text-on-surface">
+                    <span className="material-symbols-outlined text-sm text-primary">near_me</span>
+                    {equipment.distanceKm} {langText("km Radius", "किमी परिसर")}
+                  </p>
+                  <p className="text-xs text-on-surface-variant">
+                    {langText("from", "पासून")} {equipment.location}
+                  </p>
+                </div>
+              ) : null}
+            </div>
+          ) : (
+            <div className="rounded-xl border border-outline-variant bg-white p-6 shadow-sm">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">
+                {langText("Map unavailable", "नकाशा उपलब्ध नाही")}
               </p>
-              <p className="text-xs text-on-surface-variant">
-                {langText("from", "पासून")} {equipment.location}
+              <h3 className="mt-3 text-xl font-bold text-on-surface">
+                {langText("This listing does not have enough live location data for the public map yet.", "या लिस्टिंगसाठी सार्वजनिक नकाशावर दाखवण्यासाठी पुरेशी स्थान माहिती अजून उपलब्ध नाही.")}
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-on-surface-variant">
+                {langText(
+                  "The equipment detail remains live, but the service-area map stays hidden until the listing location can be matched safely.",
+                  "उपकरण तपशील उपलब्ध आहे, पण लिस्टिंगचे ठिकाण सुरक्षितरीत्या जुळल्याशिवाय सेवा-क्षेत्र नकाशा लपवून ठेवला जातो."
+                )}
               </p>
             </div>
-          </div>
+          )}
         </section>
 
         <section className="pb-10">

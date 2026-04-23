@@ -1,70 +1,186 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { AppLink as Link } from "@/components/AppLink";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
-import { useLanguage } from "@/components/LanguageContext";
-import { FormNotice } from "@/components/forms/FormKit";
-import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 import {
   clearRecaptchaVerifier,
+  clearServerAuthSession,
   finishFirebaseAuthSession,
   getFirebaseAuthError,
   getOptionalFirebaseAuthClient,
   linkEmailPasswordCredential,
   startPhoneVerification,
+  uploadVerificationDocuments,
   verifyPhoneOtp,
 } from "@/components/auth/firebase-auth-client";
+import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
+import { useLanguage } from "@/components/LanguageContext";
+import { getIndiaDistrictSuggestions } from "@/lib/auth/india-districts";
+import type { VerificationDocumentRecord } from "@/lib/local-data/types";
+
+type RegisterFormState = {
+  fullName: string;
+  phone: string;
+  email: string;
+  password: string;
+  village: string;
+  district: string;
+  pincode: string;
+  idType: string;
+  idNumber: string;
+};
+
+type UploadState = {
+  front: File | null;
+  back: File | null;
+};
+
+type VerificationStage = "form" | "otp" | "verifying" | "verified";
+
+const verificationDocumentTypes = [
+  "Aadhaar Card",
+  "PAN Card",
+  "Voter ID",
+  "Driving License",
+  "Passport",
+];
 
 export default function RegisterPage() {
+  const router = useRouter();
   const { langText } = useLanguage();
   const auth = useMemo(() => getOptionalFirebaseAuthClient(), []);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  
-  const [confirmationId, setConfirmationId] = useState("");
-  const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
-  const [resendAvailableIn, setResendAvailableIn] = useState(0);
-
-  const [formData, setFormData] = useState({
+  const [formState, setFormState] = useState<RegisterFormState>({
     fullName: "",
     phone: "",
     email: "",
     password: "",
     village: "",
+    district: "",
     pincode: "",
-    district: "Pune",
-    role: "renter",
     idType: "",
     idNumber: "",
   });
+  const [documents, setDocuments] = useState<UploadState>({
+    front: null,
+    back: null,
+  });
+  const [confirmationId, setConfirmationId] = useState("");
+  const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
+  const [resendAvailableIn, setResendAvailableIn] = useState(0);
+  const [stage, setStage] = useState<VerificationStage>("form");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isOtpVerified, setIsOtpVerified] = useState(false);
+  const [error, setError] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showDistrictSuggestions, setShowDistrictSuggestions] = useState(false);
 
-  useEffect(() => {
-    if (!resendAvailableIn) return;
-    const timer = window.setInterval(() => {
-      setResendAvailableIn((c) => (c <= 1 ? 0 : c - 1));
-    }, 1000);
-    return () => window.clearInterval(timer);
-  }, [resendAvailableIn]);
-
-  const address = useMemo(
-    () => [formData.village.trim(), formData.district.trim(), formData.pincode.trim()].filter(Boolean).join(", "),
-    [formData.district, formData.pincode, formData.village]
+  const districtSuggestions = useMemo(
+    () => getIndiaDistrictSuggestions(formState.district, 12),
+    [formState.district]
   );
+
   const authUnavailableMessage = langText(
-    "Firebase registration is unavailable in this deployment. Please restore the Firebase public config and try again.",
+    "Firebase registration is unavailable in this deployment. Please restore the Firebase public configuration and try again.",
     "या डिप्लॉयमेंटमध्ये Firebase नोंदणी उपलब्ध नाही. Firebase सार्वजनिक कॉन्फिगरेशन पुन्हा सक्षम करून पुन्हा प्रयत्न करा."
   );
 
-  const updateField = (field: keyof typeof formData, value: string) => {
-    setFormData((current) => ({ ...current, [field]: value }));
-  };
-
   useEffect(() => () => clearRecaptchaVerifier("register"), []);
 
+  useEffect(() => {
+    if (!resendAvailableIn) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setResendAvailableIn((current) => (current <= 1 ? 0 : current - 1));
+    }, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [resendAvailableIn]);
+
+  useEffect(() => {
+    if (stage !== "verified") {
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      router.replace("/login");
+    }, 1400);
+
+    return () => window.clearTimeout(timer);
+  }, [router, stage]);
+
+  const updateField = (field: keyof RegisterFormState, value: string) => {
+    setFormState((current) => ({ ...current, [field]: value }));
+    setError("");
+  };
+
+  const updateDocument = (field: keyof UploadState, file: File | null) => {
+    setDocuments((current) => ({ ...current, [field]: file }));
+    setError("");
+  };
+
+  const resetOtpStage = () => {
+    setStage("form");
+    setConfirmationId("");
+    setOtpDigits(Array.from({ length: 6 }, () => ""));
+    setResendAvailableIn(0);
+    setIsOtpVerified(false);
+    setError("");
+  };
+
+  const validateRegisterForm = () => {
+    if (formState.fullName.trim().length < 2) {
+      return langText("Enter your full name.", "तुमचे पूर्ण नाव टाका.");
+    }
+
+    if (!/^\+?\d[\d\s-]{9,14}$/.test(formState.phone.trim())) {
+      return langText("Enter a valid mobile number.", "वैध मोबाईल नंबर टाका.");
+    }
+
+    if (!formState.village.trim()) {
+      return langText("Enter your village or town.", "तुमचे गाव किंवा शहर टाका.");
+    }
+
+    if (!formState.district.trim()) {
+      return langText("Enter your district.", "तुमचा जिल्हा टाका.");
+    }
+
+    if (!/^\d{6}$/.test(formState.pincode.trim())) {
+      return langText("Enter a valid 6-digit pincode.", "वैध 6 अंकी पिनकोड टाका.");
+    }
+
+    if (formState.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formState.email.trim())) {
+      return langText("Enter a valid email address.", "वैध ईमेल पत्ता टाका.");
+    }
+
+    if ((formState.email && !formState.password) || (!formState.email && formState.password)) {
+      return langText(
+        "Enter both email and password, or leave both blank.",
+        "ईमेल आणि पासवर्ड दोन्ही भरा किंवा दोन्ही रिकामे ठेवा."
+      );
+    }
+
+    if (formState.password && formState.password.length < 6) {
+      return langText("Password must be at least 6 characters.", "पासवर्ड किमान 6 अक्षरांचा असावा.");
+    }
+
+    if ((documents.front || documents.back || formState.idNumber) && !formState.idType) {
+      return langText("Select the document type for verification.", "पडताळणीसाठी कागदपत्राचा प्रकार निवडा.");
+    }
+
+    return "";
+  };
+
   const startVerification = async () => {
+    const validationError = validateRegisterForm();
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     if (!auth) {
       setError(authUnavailableMessage);
       return;
@@ -72,23 +188,25 @@ export default function RegisterPage() {
 
     setIsSubmitting(true);
     setError("");
+
     try {
       const verificationId = await startPhoneVerification({
         auth,
-        phoneNumber: formData.phone,
+        phoneNumber: formState.phone,
         containerId: "kk-register-recaptcha",
         storeKey: "register",
       });
       setConfirmationId(verificationId);
+      setStage("otp");
       setResendAvailableIn(60);
-    } catch (error) {
-      setError(getFirebaseAuthError(error, "Could not send OTP."));
+    } catch (authError) {
+      setError(getFirebaseAuthError(authError, langText("Could not send the OTP.", "OTP पाठवता आला नाही.")));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const completeRegistration = async () => {
+  const finishRegistration = async () => {
     if (!auth) {
       setError(authUnavailableMessage);
       return;
@@ -96,348 +214,440 @@ export default function RegisterPage() {
 
     setIsSubmitting(true);
     setError("");
+    setStage("verifying");
+
     try {
-      await verifyPhoneOtp({
+      if (!isOtpVerified) {
+        await verifyPhoneOtp({
+          auth,
+          verificationId: confirmationId,
+          otp: otpDigits.join(""),
+        });
+        setIsOtpVerified(true);
+      }
+
+      const verificationDocuments = await uploadVerificationDocuments({
         auth,
-        verificationId: confirmationId,
-        otp: otpDigits.join(""),
+        documents: [
+          ...(documents.front ? [{ kind: "front" as const, file: documents.front }] : []),
+          ...(documents.back ? [{ kind: "back" as const, file: documents.back }] : []),
+        ],
       });
 
-      if (formData.email && formData.password) {
-        try {
-          await linkEmailPasswordCredential({
-            auth,
-            email: formData.email,
-            password: formData.password,
-          });
-        } catch (linkError) {
-          console.warn("Email/password could not be linked to this phone-auth account.", linkError);
-        }
+      if (formState.email && formState.password) {
+        await linkEmailPasswordCredential({
+          auth,
+          email: formState.email,
+          password: formState.password,
+        });
       }
+
+      const verificationPayload: VerificationDocumentRecord[] | undefined =
+        verificationDocuments.length ? verificationDocuments : undefined;
 
       await finishFirebaseAuthSession({
         auth,
         payload: {
-          workspacePreference: "renter",
           profile: {
-            fullName: formData.fullName.trim(),
-            phone: formData.phone.trim(),
-            email: formData.email.trim() || undefined,
-            address,
-            village: formData.village.trim(),
-            pincode: formData.pincode.trim(),
+            fullName: formState.fullName.trim(),
+            phone: formState.phone.trim(),
+            email: formState.email.trim() || undefined,
+            address: `${formState.village.trim()}, ${formState.district.trim()}, ${formState.pincode.trim()}`,
+            village: formState.village.trim(),
+            pincode: formState.pincode.trim(),
             fieldArea: 0,
+            district: formState.district.trim(),
+            verificationStatus:
+              formState.idType || formState.idNumber || verificationDocuments.length ? "submitted" : "not_submitted",
+            verificationDocumentType: formState.idType.trim() || undefined,
+            verificationDocumentNumber: formState.idNumber.trim() || undefined,
+            verificationDocuments: verificationPayload,
           },
         },
       });
-      window.location.href = "/register/success";
-    } catch (error) {
-      setError(getFirebaseAuthError(error, "Could not complete registration."));
+
+      await clearServerAuthSession();
+      setStage("verified");
+    } catch (authError) {
+      setStage("otp");
+      setError(getFirebaseAuthError(authError, langText("Could not complete registration.", "नोंदणी पूर्ण करता आली नाही.")));
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isSubmitting) return;
-
-    if (confirmationId) {
-      await completeRegistration();
-    } else {
-      await startVerification();
+    if (isSubmitting) {
+      return;
     }
+
+    if (stage === "otp") {
+      await finishRegistration();
+      return;
+    }
+
+    await startVerification();
   };
 
   return (
-    <div className="min-h-screen bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed flex flex-col">
-      <main className="relative flex-grow overflow-hidden pt-24 pb-12">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-container/15 via-transparent to-secondary-container/10" />
-          <img
-            alt="Maharashtra agriculture background"
-            className="h-full w-full object-cover grayscale-[10%] brightness-[92%]"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
-          />
-        </div>
+    <div className="relative min-h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-transparent to-surface" />
+        <img
+          alt="Kisan Kamai agriculture background"
+          className="h-full w-full object-cover grayscale-[10%] brightness-[90%]"
+          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
+        />
+      </div>
 
-        <div className="relative z-10 mx-auto w-full max-w-3xl px-4">
-          <div className="overflow-hidden rounded-[2rem] border border-white/40 bg-white/90 shadow-2xl backdrop-blur-xl">
-            <div className="bg-primary-container px-6 py-8 text-white sm:px-10">
-              <h1 className="font-headline text-3xl font-extrabold tracking-tight sm:text-4xl">Join Kisan Kamai</h1>
-              <p className="mt-2 max-w-2xl text-sm font-medium text-primary-fixed-dim sm:text-base">
-                आजच तुमचे खाते तयार करा आणि शेती सुलभ करा.
-              </p>
-              {!auth ? (
-                <p className="mt-3 text-sm font-semibold text-primary-fixed">
-                  {authUnavailableMessage}
-                </p>
-              ) : null}
-            </div>
-
-            <form className="space-y-10 px-6 py-8 sm:px-10 sm:py-10" onSubmit={handleSubmit}>
-              {error ? <FormNotice tone="error">{error}</FormNotice> : null}
-
+      <main className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
+        <div className="w-full max-w-3xl">
+          {stage === "otp" || stage === "verifying" || stage === "verified" ? (
+            <div className="mx-auto max-w-md">
+              <OtpVerificationForm
+                phone={formState.phone}
+                otpDigits={otpDigits}
+                setOtpDigits={setOtpDigits}
+                onSubmit={finishRegistration}
+                isSubmitting={isSubmitting}
+                resendAvailableIn={resendAvailableIn}
+                onResend={startVerification}
+                onChangeNumber={resetOtpStage}
+                error={error}
+                title={langText("Verify your mobile number", "तुमच्या मोबाईल नंबरची पडताळणी करा")}
+                description={langText("Enter the six-digit code sent to", "तुमच्या मोबाईलवर पाठवलेला सहा अंकी कोड टाका")}
+                submitLabel={langText("Verify and Continue", "पडताळणी करून पुढे जा")}
+                submittingLabel={langText("Verifying...", "पडताळणी होत आहे...")}
+                resendLabel={langText("Resend OTP", "OTP पुन्हा पाठवा")}
+                resendCountdownLabel={langText("Resend in", "पुन्हा पाठवा")}
+                editLabel={langText("Edit details", "तपशील संपादित करा")}
+                bannerTitle={
+                  stage === "otp" && resendAvailableIn === 0 && !error
+                    ? langText("OTP has expired. Please request a new one.", "OTP ची मुदत संपली आहे. कृपया नवीन OTP मागवा.")
+                    : undefined
+                }
+                bannerDescription={
+                  stage === "otp" && resendAvailableIn === 0 && !error
+                    ? langText("Use resend to receive a fresh code.", "नवीन कोड मिळवण्यासाठी पुन्हा पाठवा निवडा.")
+                    : undefined
+                }
+                view={stage === "verified" ? "success" : stage === "verifying" ? "loading" : "entry"}
+                successTitle={langText("Verified. Please login.", "पडताळणी पूर्ण झाली. कृपया लॉगिन करा.")}
+                successMessage={langText(
+                  "Your account is ready. Redirecting you to login now.",
+                  "तुमचे खाते तयार झाले आहे. तुम्हाला लॉगिनकडे वळवले जात आहे."
+                )}
+              />
               <div id="kk-register-recaptcha" className="hidden" />
-
-              <section className="space-y-5">
-                <GoogleAuthButton label="Create your account with Google / गुगलसह खाते तयार करा" />
-                <div className="flex items-center gap-4">
-                  <div className="h-px flex-1 bg-outline-variant/70" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-outline">or register manually</span>
-                  <div className="h-px flex-1 bg-outline-variant/70" />
+            </div>
+          ) : (
+            <div className="overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/85 shadow-2xl backdrop-blur-xl">
+              <div className="border-b border-white/60 bg-white/20 px-6 py-8 text-center sm:px-10">
+                <div className="space-y-2">
+                  <h1 className="font-headline text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
+                    {langText("Create your Kisan Kamai account", "तुमचे किसान कमाई खाते तयार करा")}
+                  </h1>
+                  <p className="text-sm font-medium text-on-surface-variant sm:text-base">
+                    {langText(
+                      "Phone verification creates the account, while optional email and documents stay linked to the same Firebase-backed profile.",
+                      "फोन पडताळणी खात्याची निर्मिती करते, आणि पर्यायी ईमेल व कागदपत्रे त्याच Firebase-आधारित प्रोफाइलशी जोडली जातात."
+                    )}
+                  </p>
+                  {!auth ? <p className="text-sm font-semibold text-amber-700">{authUnavailableMessage}</p> : null}
                 </div>
-              </section>
+              </div>
 
-              {!confirmationId ? (
-                <>
-                  <section className="space-y-6">
-                    <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
-                      <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        account_circle
-                      </span>
-                      <h2 className="font-headline text-2xl font-bold text-primary">Account Details / खाते तपशील</h2>
-                    </div>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Full Name / पूर्ण नाव</span>
-                        <input
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          placeholder="E.g. Rajesh Patil"
-                          type="text"
-                          value={formData.fullName}
-                          onChange={(e) => updateField("fullName", e.target.value)}
-                          required
-                          disabled={isSubmitting}
-                        />
-                      </label>
+              <form className="space-y-8 px-6 py-8 sm:px-10 sm:py-10" onSubmit={handleSubmit}>
+                <div id="kk-register-recaptcha" className="hidden" />
 
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Mobile Number / मोबाईल नंबर</span>
-                        <input
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          placeholder="+91 90000 00000"
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => updateField("phone", e.target.value)}
-                          required
-                          disabled={isSubmitting}
-                        />
-                      </label>
-
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Email Address / ईमेल पत्ता</span>
-                        <input
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          placeholder="name@example.com"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => updateField("email", e.target.value)}
-                          disabled={isSubmitting}
-                        />
-                      </label>
-
-                      <label className="relative space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Password / पासवर्ड</span>
-                        <div className="relative">
-                          <input
-                            className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 pr-12 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                            placeholder="••••••••"
-                            type={showPassword ? "text" : "password"}
-                            value={formData.password}
-                            onChange={(e) => updateField("password", e.target.value)}
-                            required
-                            disabled={isSubmitting}
-                          />
-                          <button
-                            className="absolute right-3 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary disabled:opacity-50"
-                            type="button"
-                            onClick={() => setShowPassword((current) => !current)}
-                            aria-label={showPassword ? "Hide password" : "Show password"}
-                            disabled={isSubmitting}
-                          >
-                            <span className="material-symbols-outlined">{showPassword ? "visibility_off" : "visibility"}</span>
-                          </button>
-                        </div>
-                      </label>
-                    </div>
-                  </section>
-
-                  <section className="space-y-6">
-                    <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
-                      <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        location_on
-                      </span>
-                      <h2 className="font-headline text-2xl font-bold text-primary">Location & Profile / स्थान आणि प्रोफाइल</h2>
-                    </div>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Village/Town / गाव/शहर</span>
-                        <input
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          type="text"
-                          value={formData.village}
-                          onChange={(e) => updateField("village", e.target.value)}
-                          required
-                          disabled={isSubmitting}
-                        />
-                      </label>
-
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">District / जिल्हा</span>
-                        <input
-                          list="maharashtra-districts"
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          placeholder="Select or type district"
-                          value={formData.district}
-                          onChange={(e) => updateField("district", e.target.value)}
-                          disabled={isSubmitting}
-                        />
-                        <datalist id="maharashtra-districts">
-                          <option value="Ahmednagar" />
-                          <option value="Akola" />
-                          <option value="Amravati" />
-                          <option value="Aurangabad" />
-                          <option value="Beed" />
-                          <option value="Bhandara" />
-                          <option value="Buldhana" />
-                          <option value="Chandrapur" />
-                          <option value="Dhule" />
-                          <option value="Gadchiroli" />
-                          <option value="Gondia" />
-                          <option value="Hingoli" />
-                          <option value="Jalgaon" />
-                          <option value="Jalna" />
-                          <option value="Kolhapur" />
-                          <option value="Latur" />
-                          <option value="Mumbai City" />
-                          <option value="Mumbai Suburban" />
-                          <option value="Nagpur" />
-                          <option value="Nanded" />
-                          <option value="Nandurbar" />
-                          <option value="Nashik" />
-                          <option value="Osmanabad" />
-                          <option value="Palghar" />
-                          <option value="Parbhani" />
-                          <option value="Pune" />
-                          <option value="Raigad" />
-                          <option value="Ratnagiri" />
-                          <option value="Sangli" />
-                          <option value="Satara" />
-                          <option value="Sindhudurg" />
-                          <option value="Solapur" />
-                          <option value="Thane" />
-                          <option value="Wardha" />
-                          <option value="Washim" />
-                          <option value="Yavatmal" />
-                        </datalist>
-                      </label>
-
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Pincode / पिनकोड</span>
-                        <input
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          inputMode="numeric"
-                          maxLength={6}
-                          type="text"
-                          value={formData.pincode}
-                          onChange={(e) => updateField("pincode", e.target.value.replace(/\D/g, "").slice(0, 6))}
-                          required
-                          disabled={isSubmitting}
-                        />
-                      </label>
-                    </div>
-                  </section>
-
-                  <section className="space-y-6">
-                    <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
-                      <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                        verified_user
-                      </span>
-                      <h2 className="font-headline text-2xl font-bold text-primary">Optional Identity Verification / ऐच्छिक ओळख पडताळणी</h2>
-                    </div>
-                    <p className="max-w-3xl text-sm leading-relaxed text-on-surface-variant">
-                      Uploading an identity document is optional. You can add Aadhaar, PAN, Voter ID, or another government-issued document later from your profile when backend verification is enabled.
-                    </p>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">ID Type / ओळखपत्राचा प्रकार</span>
-                        <select
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          value={formData.idType}
-                          onChange={(e) => updateField("idType", e.target.value)}
-                          disabled={isSubmitting}
-                        >
-                          <option value="">Select document type (optional)</option>
-                          <option>Aadhaar Card</option>
-                          <option>PAN Card</option>
-                          <option>Voter ID</option>
-                          <option>Driving License</option>
-                        </select>
-                      </label>
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">ID Number / ओळखपत्र क्रमांक</span>
-                        <input
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          placeholder="Document number (optional)"
-                          type="text"
-                          value={formData.idNumber}
-                          onChange={(e) => updateField("idNumber", e.target.value)}
-                          disabled={isSubmitting}
-                        />
-                      </label>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <label className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center cursor-pointer hover:bg-surface-container-low transition-colors">
-                        <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
-                        <span className="text-xs font-bold uppercase tracking-wider text-primary-container">Front Side / समोरची बाजू</span>
-                        <input type="file" className="hidden" accept="image/*,.pdf" />
-                      </label>
-                      <label className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center cursor-pointer hover:bg-surface-container-low transition-colors">
-                        <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
-                        <span className="text-xs font-bold uppercase tracking-wider text-primary-container">Back Side / मागची बाजू</span>
-                        <input type="file" className="hidden" accept="image/*,.pdf" />
-                      </label>
-                    </div>
-                  </section>
-                </>
-              ) : (
-                <section className="animate-in fade-in slide-in-from-bottom-2">
-                  <OtpVerificationForm
-                    phone={formData.phone}
-                    otpDigits={otpDigits}
-                    setOtpDigits={setOtpDigits}
-                    onSubmit={completeRegistration}
-                    isSubmitting={isSubmitting}
-                    resendAvailableIn={resendAvailableIn}
-                    onResend={startVerification}
-                    onChangeNumber={() => { setConfirmationId(""); setOtpDigits(Array.from({ length: 6 }, () => "")); }}
-                  />
+                <section className="space-y-5">
+                  <GoogleAuthButton label={langText("Create account with Google", "Google सह खाते तयार करा")} />
+                  <div className="flex items-center gap-4">
+                    <div className="h-px flex-1 bg-outline-variant/70" />
+                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-outline">
+                      {langText("or register manually", "किंवा स्वतः नोंदणी करा")}
+                    </span>
+                    <div className="h-px flex-1 bg-outline-variant/70" />
+                  </div>
                 </section>
-              )}
 
-              {confirmationId ? null : (
+                {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
+
+                <section className="space-y-6">
+                  <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
+                    <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      account_circle
+                    </span>
+                    <h2 className="font-headline text-2xl font-bold text-primary">
+                      {langText("Account details", "खाते तपशील")}
+                    </h2>
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <label className="space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Full name", "पूर्ण नाव")}
+                      </span>
+                      <input
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.fullName}
+                        onChange={(event) => updateField("fullName", event.target.value)}
+                        placeholder={langText("Rajesh Patil", "राजेश पाटील")}
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </label>
+
+                    <label className="space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Mobile number", "मोबाईल नंबर")}
+                      </span>
+                      <input
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.phone}
+                        onChange={(event) => updateField("phone", event.target.value)}
+                        placeholder="+91 90000 00000"
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </label>
+
+                    <label className="space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Email address (optional)", "ईमेल पत्ता (पर्यायी)")}
+                      </span>
+                      <input
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.email}
+                        onChange={(event) => updateField("email", event.target.value)}
+                        placeholder="name@example.com"
+                        type="email"
+                        disabled={isSubmitting}
+                      />
+                    </label>
+
+                    <label className="space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Password (optional with email)", "पासवर्ड (ईमेलसह पर्यायी)")}
+                      </span>
+                      <div className="relative">
+                        <input
+                          className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 pr-12 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                          value={formState.password}
+                          onChange={(event) => updateField("password", event.target.value)}
+                          placeholder="••••••••"
+                          type={showPassword ? "text" : "password"}
+                          disabled={isSubmitting}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((current) => !current)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary"
+                          aria-label={langText("Toggle password visibility", "पासवर्ड दृश्यमानता बदला")}
+                        >
+                          <span className="material-symbols-outlined">
+                            {showPassword ? "visibility_off" : "visibility"}
+                          </span>
+                        </button>
+                      </div>
+                    </label>
+                  </div>
+                </section>
+
+                <section className="space-y-6">
+                  <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
+                    <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      location_on
+                    </span>
+                    <h2 className="font-headline text-2xl font-bold text-primary">
+                      {langText("Location", "स्थान")}
+                    </h2>
+                  </div>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <label className="space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Village or town", "गाव किंवा शहर")}
+                      </span>
+                      <input
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.village}
+                        onChange={(event) => updateField("village", event.target.value)}
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </label>
+
+                    <label className="relative space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("District", "जिल्हा")}
+                      </span>
+                      <input
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.district}
+                        onChange={(event) => {
+                          updateField("district", event.target.value);
+                          setShowDistrictSuggestions(true);
+                        }}
+                        onFocus={() => setShowDistrictSuggestions(true)}
+                        onBlur={() => {
+                          window.setTimeout(() => setShowDistrictSuggestions(false), 120);
+                        }}
+                        placeholder={langText("Start typing your district", "तुमचा जिल्हा टाइप करा")}
+                        disabled={isSubmitting}
+                        required
+                      />
+                      {showDistrictSuggestions && districtSuggestions.length ? (
+                        <div className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                          {districtSuggestions.map((district) => (
+                            <button
+                              key={district}
+                              type="button"
+                              onMouseDown={(event) => event.preventDefault()}
+                              onClick={() => {
+                                updateField("district", district);
+                                setShowDistrictSuggestions(false);
+                              }}
+                              className="block w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-on-surface transition-colors hover:bg-slate-100"
+                            >
+                              {district}
+                            </button>
+                          ))}
+                        </div>
+                      ) : null}
+                    </label>
+
+                    <label className="space-y-1.5 md:col-span-2">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Pincode", "पिनकोड")}
+                      </span>
+                      <input
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.pincode}
+                        onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
+                        inputMode="numeric"
+                        maxLength={6}
+                        disabled={isSubmitting}
+                        required
+                      />
+                    </label>
+                  </div>
+                </section>
+
+                <section className="space-y-6">
+                  <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
+                    <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      verified_user
+                    </span>
+                    <h2 className="font-headline text-2xl font-bold text-primary">
+                      {langText("Optional identity verification", "पर्यायी ओळख पडताळणी")}
+                    </h2>
+                  </div>
+
+                  <p className="text-sm leading-relaxed text-on-surface-variant">
+                    {langText(
+                      "Upload identity documents now if you want them attached to your shared profile from day one.",
+                      "तुमच्या सामायिक प्रोफाइलशी पहिल्याच दिवशी जोडण्यासाठी तुम्ही आत्ता ओळख कागदपत्रे अपलोड करू शकता."
+                    )}
+                  </p>
+
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <label className="space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Document type", "कागदपत्राचा प्रकार")}
+                      </span>
+                      <select
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.idType}
+                        onChange={(event) => updateField("idType", event.target.value)}
+                        disabled={isSubmitting}
+                      >
+                        <option value="">
+                          {langText("Select a document type", "कागदपत्राचा प्रकार निवडा")}
+                        </option>
+                        {verificationDocumentTypes.map((type) => (
+                          <option key={type} value={type}>
+                            {type}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+
+                    <label className="space-y-1.5">
+                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
+                        {langText("Document number", "कागदपत्र क्रमांक")}
+                      </span>
+                      <input
+                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+                        value={formState.idNumber}
+                        onChange={(event) => updateField("idNumber", event.target.value)}
+                        disabled={isSubmitting}
+                      />
+                    </label>
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center transition-colors hover:bg-surface-container-low">
+                      <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-primary-container">
+                        {langText("Front side", "समोरची बाजू")}
+                      </span>
+                      <span className="text-xs text-on-surface-variant">
+                        {documents.front?.name || langText("Image or PDF", "प्रतिमा किंवा PDF")}
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*,.pdf"
+                        onChange={(event) => updateDocument("front", event.target.files?.[0] || null)}
+                      />
+                    </label>
+
+                    <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center transition-colors hover:bg-surface-container-low">
+                      <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-primary-container">
+                        {langText("Back side", "मागची बाजू")}
+                      </span>
+                      <span className="text-xs text-on-surface-variant">
+                        {documents.back?.name || langText("Image or PDF", "प्रतिमा किंवा PDF")}
+                      </span>
+                      <input
+                        type="file"
+                        className="hidden"
+                        accept="image/*,.pdf"
+                        onChange={(event) => updateDocument("back", event.target.files?.[0] || null)}
+                      />
+                    </label>
+                  </div>
+                </section>
+
                 <div className="space-y-4 border-t border-outline-variant/30 pt-8">
                   <button
-                    className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
+                    className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
                     type="submit"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting 
-                      ? "Please wait..." 
-                      : "Send OTP / OTP पाठवा"}
-                    <span className="material-symbols-outlined">sms</span>
+                    <span>
+                      {isSubmitting
+                        ? langText("Please wait...", "कृपया प्रतीक्षा करा...")
+                        : langText("Create Account", "खाते तयार करा")}
+                    </span>
+                    <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">
+                      arrow_forward
+                    </span>
                   </button>
+
                   <p className="text-center text-sm font-medium text-on-surface-variant">
-                    Already have an account?{" "}
+                    {langText("Already have an account?", "आधीच खाते आहे का?")}{" "}
                     <Link href="/login" className="font-bold text-primary hover:underline">
-                      Login here
+                      {langText("Login here", "इथे लॉगिन करा")}
                     </Link>
                   </p>
                 </div>
-              )}
-            </form>
-          </div>
+              </form>
+            </div>
+          )}
         </div>
       </main>
     </div>

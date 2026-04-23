@@ -5,7 +5,7 @@ import {
   getPublicEquipmentById,
   getPublicEquipmentList,
   listingToEquipmentRecord,
-} from "@/lib/server/local-data";
+} from "@/lib/server/firebase-data";
 
 export async function getEquipmentList() {
   return getPublicEquipmentList();

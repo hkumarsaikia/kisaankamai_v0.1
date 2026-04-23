@@ -12,52 +12,95 @@ import {
   startPhoneVerification,
   verifyPhoneOtp,
 } from "@/components/auth/firebase-auth-client";
-import { useLanguage } from "@/components/LanguageContext";
-import { FormNotice } from "@/components/forms/FormKit";
 import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
+import { useLanguage } from "@/components/LanguageContext";
 
 const collageTiles = [
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuD1NdTf_TQE_mui1qW599KaJFqfLAHNiHUMX5Gu_45w185fZoQy9NWmAauTutW8u_nNTpuUyDZXjGJD7t43mSOFR8_HurEJAdDUcI5FErR3-ZXK0KgYkSysjyeml1WzYMwxm-9F8PcBb1bcj6oLnxg7D5meKMQwpmefnzuB9QFftY2o0ZN8a5CZeZni3YlW_u10JW0duifo2OXANqqYVkOO5EqGl7ZB1KiuWYCRqX3QTj1jpUCYU6ND3RdCNhFPeHXGZeBlKsEvOUXO",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAlgpeZWJbUZsmbZ8XaO0XmLQUKQDEkl-bmeb9Drj4hNP00BxUEFihyyMfzGeO7g71DTxY8bEsxcLPVSK4n8wpAPpYMNVFSy9f7TEO37HIlydnDYsbGYQiqY77nE-jMRZIYdG_NNoPr9Vs2_70Gy4ip6A0tmnn_GZvHyEVKEPkShAqbzkZ1R7Yku7CNigayWPOUpJeYI_tmweffN44ABOv0D943UcY-KODmUguxYTTw6XTCiIzVVYduEw8OYyCBUmbNaFb0mqIST3aZ",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCqHTQZtetKJbo1gUXV05Ncked-C3RqcJhKsWplYgeG-FBZexcWLhA7l3xcXoZdjeGnX4fVuRT2UWuwRlV7rJjhZPFFqBI2kBRhju1xbyrRaXQ1LOLj36ScKmnYQIaqQFeY4BP1Pja8GrEnTkaRKagTWgAfG7lmUv7U4JeNDKP5_VcFDalE1nLWcTJx3Qs7fUpr-BiSQNSdX4R4uT5DzpHYdhuZkqoRsp85Se-3_IonDkf5J8_fUJSWaOql843dx-9QsfSiofAD5G0M",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuCxVjoIDCi4qXyHGRpT90MKo-ANJ5IS82NSsQuh6Ar0m9bMySmgUBAqpaVym7oj4aVA2LTdYkngtq2hbUDl8jNGH9ixPxg5dvjTPt5fn8_bUVMIzX4Z-MnTh04IlfKvFHcsmky5nZh-5ZB12gP2P8dYVyXtzC0ujaUUXDfRLAwE2MnTCtD_vnEpZnQPVytiNnDIQEDIWB6_URyggToQgWw6dZ7DuMFZwp90XEg8eK8cw3BqxuclClplBsgYMTBAgv1ypCE_gTubzd5G",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAoEshckljM-rzWOXN5zxmnMaKHFvxxRArCXOs7XpzRpbXJ5FOqiVoRnRzMsYs3zLx-TdiJ1_uTHIWGnXvujGglm5jrER9d00jb9lLjY6veTOguWA6u2rt_Qlj-nkfCx7baWXPDQV5OPtXwoEsGb6QTu9SFP2ok2Lx3w-wGwzvwQ0-vrl6xoOLLyxxbUkeaGSKYYyV_YAsWDC2g3w5i63UME62xuvba1AwpznEtfzRT_gW7LBGZYKCIotsAFExblyuVJYdA_y6_c75q",
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuAJRkw1C3bl1LlarpIhMrl1isLFlE5vIRxQgRzYvPME43nJJx6_7gAhSegAA9vfzfjwkw2-PsKfxBOtTwOhO1iJhN5v4fDAyyjZOikKz8VVaMXTktXbEjtY9v21F3IlNxr27M-b24T__nzXEiPAVgYn8lLQ0CIvgJxl8tXhcrcCHXO2I1pw6VDUF2wsBv3v1gLRAI2OPwawAlDpNvBjV51BGtce7_Jw-PPlDH2_qE9NgrDXVVny8BAs8S_ugnojB8BVS_qZKxZ8-iIh",
+  {
+    className: "col-span-5 row-span-6",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuA_pcRi7kqAR57jlutMIa12HOJnU_9q3iInzLHc0nMY9xx0b5IHaLNAEfa9Ssfgi2ns2LFedCH_oZcTOAr3Hfvi49ZsgiKvFE9b7hsmJ-kU9hlgHoNtuG53dODDCb-960DUnL5SL6rCrSYkv7MSIy34UsaMpXN4H988Cfb5j1fVBJq4O3EUSw0jEJiJzuU9LYyGSRONAlfc7gmgD7Dkq-CkaqP2nypiWlG7sptJGw8Q3r8QZEUjextFG4-WyM6ePMe37JC-WPqXCOaT",
+  },
+  {
+    className: "col-span-7 row-span-4",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDhG2qAkWx4YRhXVOwVwDIYnJ2RBDKYq_HG7rBOpDy1QQSyz7fI8lKhmuL3FMrqynLMDJ2aa4ONVz1shtrpSJAtie3PKzMRkXgxzXQtHvF2eSLU3p4RnOZCimoEnM2Nv_OWCbLSJRkVg98m5_TBKWo4BAHhYbxq7slGwVHoTa8rqa624Exf6JR35BfwO40PhaM1uD380Q2YVPpfVfFaj0igWCOBH1uplA_lc_w2PROYG-je7zbBYEE1-VvBi8FzPMY4kQKMpIbIU5oU",
+  },
+  {
+    className: "col-span-3 row-span-6",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuCPliM4zCgbkjzQ2PDyIhXJwYKu22V0x4kvFCJAcrVqvQIcHCEGeR7sjRINQFuD1afhsbWHP6UZaJCmfaFKynXLXeG7Yf5pOCOp6PwpDoeWkslI4_K_9xIHgmJGuxqlDo-rb87ttAlnAJ880r8xlV6gLEpsGteEQrCxDfo9Hpv4oFn9rHYa64feiASJfRTCgDICpKJ3PVimJEzWY6N228FSnBVauwYL5Xor6gJdmgShSrpjOU4E_00GI-8QP0dh28HZuzYIRMZLiw1N",
+  },
+  {
+    className: "col-span-7 row-span-4",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBV7vj9X1VdEt0syXe9h5Qf0sy6c2TGocRc-QhKPdTAuOQzpeUj4xVbzvJzY9G9-zrVOImIQpJldku8HV8VxgpWEmFycmIN_RVpxRuvbWxflff1hXDlXotZsThAYVSli1lFHlS6R5GJGjylaDjJmmpv5OZmXv0M4faKaMgTrcNCf0x-M30vmreHm_dh9b2uuUwEn-D9VPmaryJRERtdh5PmkksU7tSysfFQt6nNOYeORzev5raE0rA_-vPKNit7Gi_8RRT7PiFNOiDW",
+  },
+  {
+    className: "col-span-4 row-span-4",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDH660fQmy5SHxapGGMyLHpABbs4WzGa0l-t8LHgTD8qbYMgcsoH1w1mvgwSN11XmYT1RjtbToWZhEG3TIRC_R9P8_IGZU0HleM79DHh42vmnPudSGNOCTG-qzWdRvAmAOwogVg-YgNwLdhqwXgWbrF4sNC0DPi4A7zZcyb8vXdmAdGNiQgajwSQHXdgyrVfYTF9m6J06lRM6tCRuILUTuAO6fIi_YzMP_hvGKPdIIUonfAfDMXhZZv38YrVAGiELz_ltCRxBfCQ7tz",
+  },
+  {
+    className: "col-span-3 row-span-4",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuA_pcRi7kqAR57jlutMIa12HOJnU_9q3iInzLHc0nMY9xx0b5IHaLNAEfa9Ssfgi2ns2LFedCH_oZcTOAr3Hfvi49ZsgiKvFE9b7hsmJ-kU9hlgHoNtuG53dODDCb-960DUnL5SL6rCrSYkv7MSIy34UsaMpXN4H988Cfb5j1fVBJq4O3EUSw0jEJiJzuU9LYyGSRONAlfc7gmgD7Dkq-CkaqP2nypiWlG7sptJGw8Q3r8QZEUjextFG4-WyM6ePMe37JC-WPqXCOaT",
+  },
+  {
+    className: "col-span-2 row-span-6",
+    image:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDhG2qAkWx4YRhXVOwVwDIYnJ2RBDKYq_HG7rBOpDy1QQSyz7fI8lKhmuL3FMrqynLMDJ2aa4ONVz1shtrpSJAtie3PKzMRkXgxzXQtHvF2eSLU3p4RnOZCimoEnM2Nv_OWCbLSJRkVg98m5_TBKWo4BAHhYbxq7slGwVHoTa8rqa624Exf6JR35BfwO40PhaM1uD380Q2YVPpfVfFaj0igWCOBH1uplA_lc_w2PROYG-je7zbBYEE1-VvBi8FzPMY4kQKMpIbIU5oU",
+  },
 ];
 
 export default function LoginPage() {
-  const { t, langText } = useLanguage();
+  const { langText } = useLanguage();
   const auth = useMemo(() => getOptionalFirebaseAuthClient(), []);
-
+  const [mode, setMode] = useState<"phone" | "email">("email");
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
-  const [confirmationId, setConfirmationId] = useState("");
-  const [resendAvailableIn, setResendAvailableIn] = useState(0);
-  const [mode, setMode] = useState<"phone" | "email">("phone");
-  
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmationId, setConfirmationId] = useState("");
+  const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
+  const [resendAvailableIn, setResendAvailableIn] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
   const authUnavailableMessage = langText(
-    "Firebase sign-in is unavailable in this deployment. Please try again after the Firebase public config is restored.",
+    "Firebase sign-in is unavailable in this deployment. Please try again after the Firebase public configuration is restored.",
     "या डिप्लॉयमेंटमध्ये Firebase साइन-इन उपलब्ध नाही. Firebase सार्वजनिक कॉन्फिगरेशन पुन्हा सक्षम झाल्यावर पुन्हा प्रयत्न करा."
   );
 
   useEffect(() => () => clearRecaptchaVerifier("login"), []);
 
-  const setBusy = (val: boolean) => {
-    setIsSubmitting(val);
-    if (val) setError("");
-  };
-
   useEffect(() => {
-    if (!resendAvailableIn) return;
+    if (!resendAvailableIn) {
+      return;
+    }
+
     const timer = window.setInterval(() => {
-      setResendAvailableIn((c) => (c <= 1 ? 0 : c - 1));
+      setResendAvailableIn((current) => (current <= 1 ? 0 : current - 1));
     }, 1000);
+
     return () => window.clearInterval(timer);
   }, [resendAvailableIn]);
+
+  const resetOtpState = () => {
+    setConfirmationId("");
+    setOtpDigits(Array.from({ length: 6 }, () => ""));
+    setError("");
+  };
+
+  const withBusyState = async (action: () => Promise<void>) => {
+    setIsSubmitting(true);
+    setError("");
+
+    try {
+      await action();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const startPhoneLogin = async () => {
     if (!auth) {
@@ -65,21 +108,20 @@ export default function LoginPage() {
       return;
     }
 
-    setBusy(true);
-    try {
-      const verificationId = await startPhoneVerification({
-        auth,
-        phoneNumber: identifier,
-        containerId: "kk-recaptcha",
-        storeKey: "login",
-      });
-      setConfirmationId(verificationId);
-      setResendAvailableIn(60);
-    } catch (error) {
-      setError(getFirebaseAuthError(error, langText("Could not send OTP.", "OTP पाठवता आला नाही.")));
-    } finally {
-      setBusy(false);
-    }
+    await withBusyState(async () => {
+      try {
+        const verificationId = await startPhoneVerification({
+          auth,
+          phoneNumber: identifier,
+          containerId: "kk-login-recaptcha",
+          storeKey: "login",
+        });
+        setConfirmationId(verificationId);
+        setResendAvailableIn(60);
+      } catch (authError) {
+        setError(getFirebaseAuthError(authError, langText("Could not send the OTP.", "OTP पाठवता आला नाही.")));
+      }
+    });
   };
 
   const finishPhoneLogin = async () => {
@@ -88,20 +130,19 @@ export default function LoginPage() {
       return;
     }
 
-    setBusy(true);
-    try {
-      await verifyPhoneOtp({
-        auth,
-        verificationId: confirmationId,
-        otp: otpDigits.join(""),
-      });
-      await finishFirebaseAuthSession({ auth });
-      window.location.href = "/profile-selection";
-    } catch (error) {
-      setError(getFirebaseAuthError(error, langText("Invalid OTP.", "अवैध OTP.")));
-    } finally {
-      setBusy(false);
-    }
+    await withBusyState(async () => {
+      try {
+        await verifyPhoneOtp({
+          auth,
+          verificationId: confirmationId,
+          otp: otpDigits.join(""),
+        });
+        await finishFirebaseAuthSession({ auth });
+        window.location.href = "/profile-selection";
+      } catch (authError) {
+        setError(getFirebaseAuthError(authError, langText("Incorrect OTP. Please try again.", "चुकीचा OTP. कृपया पुन्हा प्रयत्न करा.")));
+      }
+    });
   };
 
   const loginWithEmail = async () => {
@@ -110,25 +151,26 @@ export default function LoginPage() {
       return;
     }
 
-    setBusy(true);
-    try {
-      await signInWithEmailPassword({
-        auth,
-        email: identifier,
-        password,
-      });
-      await finishFirebaseAuthSession({ auth });
-      window.location.href = "/profile-selection";
-    } catch (error) {
-      setError(getFirebaseAuthError(error, t("login.login_failed")));
-    } finally {
-      setBusy(false);
-    }
+    await withBusyState(async () => {
+      try {
+        await signInWithEmailPassword({
+          auth,
+          email: identifier,
+          password,
+        });
+        await finishFirebaseAuthSession({ auth });
+        window.location.href = "/profile-selection";
+      } catch (authError) {
+        setError(getFirebaseAuthError(authError, langText("Login failed.", "लॉगिन अयशस्वी झाले.")));
+      }
+    });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (isSubmitting) return;
+    if (isSubmitting) {
+      return;
+    }
 
     if (mode === "phone") {
       if (confirmationId) {
@@ -136,177 +178,184 @@ export default function LoginPage() {
       } else {
         await startPhoneLogin();
       }
-    } else {
-      await loginWithEmail();
+      return;
     }
+
+    await loginWithEmail();
   };
 
   return (
-    <div className="min-h-screen bg-background text-on-background flex flex-col">
-      <main className="flex-grow min-h-screen relative flex items-center justify-center pt-20 overflow-hidden">
-        {/* Sharp Creative Tiled Background */}
-        <div className="absolute inset-0 z-0" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gridTemplateRows: "repeat(2, 1fr)", gap: 0, background: "#00251a", overflow: "hidden" }}>
-          {collageTiles.map((image, index) => (
-            <div
-              key={`${image.slice(-10)}-${index}`}
-              className="relative transition-transform duration-500"
-              style={{ backgroundImage: `url(${image})`, backgroundSize: "cover", backgroundPosition: "center", filter: "brightness(0.7)" }}
-            />
-          ))}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(circle at center, rgba(0,37,26,0.1) 0%, rgba(0,37,26,0.5) 100%)" }} />
-        </div>
+    <div className="relative min-h-screen overflow-hidden bg-background text-on-background">
+      <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-1 bg-primary">
+        {collageTiles.map((tile) => (
+          <div
+            key={tile.image + tile.className}
+            className={`relative ${tile.className}`}
+            style={{
+              backgroundImage: `url(${tile.image})`,
+              backgroundPosition: "center",
+              backgroundSize: "cover",
+              filter: "brightness(0.85)",
+            }}
+          />
+        ))}
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,37,26,0.4)_0%,rgba(0,37,26,0.1)_50%,rgba(0,37,26,0.45)_100%)]" />
+      </div>
 
-        <div className="container relative z-10 mx-auto px-6 flex justify-center py-12">
-          {/* Glassmorphic Login Card */}
-          <div className="w-full max-w-[520px] bg-white/85 backdrop-blur-[24px] saturate-[180%] border border-white/40 rounded-[3rem] shadow-[0_32px_128px_-16px_rgba(0,0,0,0.5)] overflow-hidden p-8 md:p-14 ring-1 ring-white/40">
-            <div className="flex flex-col items-center text-center space-y-10">
-              {/* Brand Section */}
-              <div className="space-y-4">
-                <div className="w-20 h-20 bg-primary-container/10 rounded-3xl flex items-center justify-center mx-auto ring-1 ring-primary-container/20">
-                  <span className="material-symbols-outlined text-5xl text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
-                    agriculture
-                  </span>
-                </div>
-                <div className="space-y-1">
-                  <h1 className="text-3xl font-extrabold text-on-background font-headline tracking-tight">
-                    {langText("Welcome to Kisan Kamai", "किसान कमाई मध्ये स्वागत आहे")}
-                  </h1>
-                  <p className="text-slate-700 font-bold font-headline">
-                    {langText("Sign in to your account", "आपल्या खात्यात साइन इन करा")}
-                  </p>
-                  {!auth ? (
-                    <p className="text-sm font-semibold text-amber-700">
-                      {authUnavailableMessage}
-                    </p>
-                  ) : null}
-                </div>
+      <main className="relative z-10 flex min-h-screen items-center justify-center px-6 py-16">
+        <div className="w-full max-w-[540px] overflow-hidden rounded-[3rem] border border-white/30 bg-white/92 p-8 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] ring-1 ring-white/20 backdrop-blur-xl md:p-14">
+          <div className="space-y-10">
+            <div className="space-y-4 text-center">
+              <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-container/10 ring-1 ring-primary-container/20">
+                <span className="material-symbols-outlined text-5xl text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+                  agriculture
+                </span>
+              </div>
+              <div className="space-y-1">
+                <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-background">
+                  {langText("Welcome to Kisan Kamai", "किसान कमाईमध्ये स्वागत आहे")}
+                </h1>
+                <p className="font-headline text-sm font-bold text-slate-600">
+                  {langText("Sign in to your account", "आपल्या खात्यात साइन इन करा")}
+                </p>
+                {!auth ? <p className="text-sm font-semibold text-amber-700">{authUnavailableMessage}</p> : null}
+              </div>
+            </div>
+
+            <div className="space-y-5">
+              <GoogleAuthButton label={langText("Continue with Google", "Google सह पुढे जा")} />
+
+              <div className="flex items-center gap-4">
+                <div className="h-px flex-1 bg-slate-200" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                  {langText("or use your credentials", "किंवा तुमचे तपशील वापरा")}
+                </span>
+                <div className="h-px flex-1 bg-slate-200" />
               </div>
 
-              <div className="w-full space-y-5">
-                <GoogleAuthButton label="Login with Google" />
-                <div className="flex items-center gap-4">
-                  <div className="h-px flex-1 bg-slate-200" />
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
-                    {langText("or use phone/email", "किंवा फोन/ईमेल वापरा")}
-                  </span>
-                  <div className="h-px flex-1 bg-slate-200" />
-                </div>
-                {/* Mode Selector */}
-                <div className="flex bg-slate-100 rounded-xl p-1 gap-1 w-full max-w-sm mx-auto">
-                  <button
-                    type="button"
-                    onClick={() => { setMode("phone"); setConfirmationId(""); }}
-                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === "phone" ? "bg-white shadow-sm text-primary-container" : "text-slate-500 hover:bg-slate-200"}`}
-                  >
-                    Phone OTP
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => { setMode("email"); setConfirmationId(""); }}
-                    className={`flex-1 py-2 text-sm font-bold rounded-lg transition-all ${mode === "email" ? "bg-white shadow-sm text-primary-container" : "text-slate-500 hover:bg-slate-200"}`}
-                  >
-                    Email
-                  </button>
-                </div>
+              <div className="mx-auto flex max-w-sm gap-1 rounded-xl bg-slate-100 p-1">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode("email");
+                    resetOtpState();
+                  }}
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+                    mode === "email" ? "bg-white text-primary shadow-sm" : "text-slate-500"
+                  }`}
+                >
+                  {langText("Email", "ईमेल")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode("phone");
+                    resetOtpState();
+                  }}
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+                    mode === "phone" ? "bg-white text-primary shadow-sm" : "text-slate-500"
+                  }`}
+                >
+                  {langText("Phone OTP", "फोन OTP")}
+                </button>
               </div>
+            </div>
 
-              <form className="w-full text-left space-y-6" onSubmit={handleSubmit}>
-                <div id="kk-recaptcha" className="hidden" />
+            {mode === "phone" && confirmationId ? (
+              <>
+                <OtpVerificationForm
+                  phone={identifier}
+                  otpDigits={otpDigits}
+                  setOtpDigits={setOtpDigits}
+                  onSubmit={finishPhoneLogin}
+                  isSubmitting={isSubmitting}
+                  resendAvailableIn={resendAvailableIn}
+                  onResend={startPhoneLogin}
+                  onChangeNumber={resetOtpState}
+                  error={error}
+                  title={langText("Verify your mobile number", "तुमच्या मोबाईल नंबरची पडताळणी करा")}
+                  description={langText("Enter the six-digit code sent to", "तुमच्या मोबाईलवर पाठवलेला सहा अंकी कोड टाका")}
+                  submitLabel={langText("Verify and Continue", "पडताळणी करून पुढे जा")}
+                  submittingLabel={langText("Verifying...", "पडताळणी होत आहे...")}
+                  resendLabel={langText("Resend OTP", "OTP पुन्हा पाठवा")}
+                  resendCountdownLabel={langText("Resend in", "पुन्हा पाठवा")}
+                  editLabel={langText("Edit details", "तपशील संपादित करा")}
+                  bannerTitle={
+                    resendAvailableIn === 0 && !error
+                      ? langText("OTP has expired. Please request a new one.", "OTP ची मुदत संपली आहे. कृपया नवीन OTP मागवा.")
+                      : undefined
+                  }
+                  bannerDescription={
+                    resendAvailableIn === 0 && !error
+                      ? langText("Use resend to receive a fresh code.", "नवीन कोड मिळवण्यासाठी पुन्हा पाठवा निवडा.")
+                      : undefined
+                  }
+                  view={isSubmitting ? "loading" : "entry"}
+                />
+                <div id="kk-login-recaptcha" className="hidden" />
+              </>
+            ) : (
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div id="kk-login-recaptcha" className="hidden" />
 
-                {/* Identifier Input */}
-                {mode === "phone" && !confirmationId ? (
-                  <div className="space-y-3">
-                    <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label ml-1" htmlFor="identifier">
-                      {langText("Mobile number", "मोबाईल नंबर")}
-                    </label>
-                    <div className="relative group">
-                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
-                        phone
-                      </span>
-                      <input
-                        className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400 disabled:opacity-50"
-                        id="identifier"
-                        placeholder="+91 90000 00000"
-                        type="tel"
-                        value={identifier}
-                        onChange={(e) => setIdentifier(e.target.value)}
-                        required
-                        disabled={!!confirmationId || isSubmitting}
-                      />
-                    </div>
-                  </div>
-                ) : mode === "email" ? (
-                  <div className="space-y-3">
-                    <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label ml-1" htmlFor="identifier">
-                      {langText("Email ID", "ईमेल आयडी")}
-                    </label>
-                    <div className="relative group">
-                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
-                        mail
-                      </span>
-                      <input
-                        className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400 disabled:opacity-50"
-                        id="identifier"
-                        placeholder="name@example.com"
-                        type="email"
-                        value={identifier}
-                        onChange={(e) => setIdentifier(e.target.value)}
-                        required
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                  </div>
-                ) : null}
-
-                {/* OTP Input */}
-                {mode === "phone" && confirmationId ? (
-                  <div className="animate-in fade-in slide-in-from-bottom-2 bg-white rounded-2xl">
-                    <OtpVerificationForm
-                      phone={identifier}
-                      otpDigits={otpDigits}
-                      setOtpDigits={setOtpDigits}
-                      onSubmit={finishPhoneLogin}
-                      isSubmitting={isSubmitting}
-                      resendAvailableIn={resendAvailableIn}
-                      onResend={startPhoneLogin}
-                      onChangeNumber={() => { setConfirmationId(""); setOtpDigits(Array.from({ length: 6 }, () => "")); }}
-                      error={error}
+                <div className="space-y-3">
+                  <label className="ml-1 text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500" htmlFor="identifier">
+                    {mode === "email"
+                      ? langText("Email address", "ईमेल पत्ता")
+                      : langText("Mobile number", "मोबाईल नंबर")}
+                  </label>
+                  <div className="relative group">
+                    <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-500 transition-colors group-focus-within:text-primary-container">
+                      {mode === "email" ? "mail" : "fingerprint"}
+                    </span>
+                    <input
+                      id="identifier"
+                      type={mode === "email" ? "email" : "tel"}
+                      value={identifier}
+                      onChange={(event) => {
+                        setIdentifier(event.target.value);
+                        setError("");
+                      }}
+                      placeholder={mode === "email" ? "name@example.com" : "+91 90000 00000"}
+                      className="w-full rounded-[1.25rem] border border-slate-300 bg-white py-5 pl-14 pr-5 font-semibold text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary-container focus:ring-4 focus:ring-primary-container/10"
+                      disabled={isSubmitting}
+                      required
                     />
                   </div>
-                ) : null}
+                </div>
 
-                {/* Password Input (Email Only) */}
                 {mode === "email" ? (
-                  <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
-                    <div className="flex justify-between items-center ml-1">
-                      <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label" htmlFor="password">
+                  <div className="space-y-3">
+                    <div className="ml-1 flex items-center justify-between">
+                      <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500" htmlFor="password">
                         {langText("Password", "पासवर्ड")}
                       </label>
-                      <Link href="/forgot-password" title="Forgot Password?">
-                        <span className="text-[11px] font-bold text-secondary hover:text-primary-container transition-colors uppercase tracking-widest cursor-pointer">
-                          {langText("Forgot Password?", "पासवर्ड विसरलात?")}
-                        </span>
+                      <Link href="/forgot-password" className="text-[11px] font-bold uppercase tracking-widest text-secondary transition-colors hover:text-primary-container">
+                        {langText("Forgot password?", "पासवर्ड विसरलात?")}
                       </Link>
                     </div>
                     <div className="relative group">
-                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
+                      <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-500 transition-colors group-focus-within:text-primary-container">
                         lock
                       </span>
                       <input
-                        className="w-full pl-14 pr-14 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-semibold placeholder:text-slate-400 disabled:opacity-50"
                         id="password"
-                        placeholder="••••••••"
                         type={showPassword ? "text" : "password"}
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
+                        onChange={(event) => {
+                          setPassword(event.target.value);
+                          setError("");
+                        }}
+                        placeholder="••••••••"
+                        className="w-full rounded-[1.25rem] border border-slate-300 bg-white py-5 pl-14 pr-14 font-semibold text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary-container focus:ring-4 focus:ring-primary-container/10"
                         disabled={isSubmitting}
+                        required
                       />
                       <button
-                        className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-primary-container transition-colors disabled:opacity-50"
                         type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        disabled={isSubmitting}
+                        onClick={() => setShowPassword((current) => !current)}
+                        className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-primary-container"
+                        aria-label={langText("Toggle password visibility", "पासवर्ड दृश्यमानता बदला")}
                       >
                         <span className="material-symbols-outlined text-xl">
                           {showPassword ? "visibility_off" : "visibility"}
@@ -316,34 +365,33 @@ export default function LoginPage() {
                   </div>
                 ) : null}
 
-                {error && !(mode === "phone" && confirmationId) ? <FormNotice tone="error">{error}</FormNotice> : null}
+                {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
 
-                {!(mode === "phone" && confirmationId) && (
-                  <div className="pt-4 flex flex-col items-center gap-8">
-                    <button
-                      className="w-full py-5 bg-primary-container text-white text-lg font-bold rounded-2xl shadow-[0_12px_24px_-8px_rgba(20,59,46,0.5)] hover:shadow-[0_20px_32px_-12px_rgba(20,59,46,0.6)] hover:-translate-y-1 active:translate-y-0 transition-all flex items-center justify-center gap-3 group disabled:opacity-70 disabled:hover:translate-y-0"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting 
-                        ? langText("Please wait...", "कृपया प्रतीक्षा करा...") 
-                        : langText("Login / लॉगिन", "लॉगिन करा")}
-                      <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
-                        {mode === "phone" && !confirmationId ? "sms" : "arrow_forward"}
-                      </span>
-                    </button>
-                    <p className="text-sm font-semibold text-slate-700">
-                      {langText("New to Kisan Kamai?", "किसान कमाई मध्ये नवीन आहात?")}{" "}
-                      <Link href="/register">
-                        <span className="text-primary-container font-extrabold hover:underline ml-1 cursor-pointer">
-                          {langText("Create Account", "खाते तयार करा")}
-                        </span>
-                      </Link>
-                    </p>
-                  </div>
-                )}
+                <div className="space-y-8 pt-4 text-center">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-container py-5 text-lg font-bold text-white shadow-[0_12px_24px_-8px_rgba(20,59,46,0.5)] transition-all hover:-translate-y-1 hover:shadow-[0_20px_32px_-12px_rgba(20,59,46,0.6)] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                  >
+                    <span>
+                      {isSubmitting
+                        ? langText("Please wait...", "कृपया प्रतीक्षा करा...")
+                        : langText("Login to Kisan Kamai", "किसान कमाईमध्ये लॉगिन करा")}
+                    </span>
+                    <span className="material-symbols-outlined text-2xl transition-transform group-hover:translate-x-1">
+                      arrow_forward
+                    </span>
+                  </button>
+
+                  <p className="text-sm font-semibold text-slate-600">
+                    {langText("New to Kisan Kamai?", "किसान कमाईमध्ये नवीन आहात?")}{" "}
+                    <Link href="/register" className="font-extrabold text-primary-container hover:underline">
+                      {langText("Create Account", "खाते तयार करा")}
+                    </Link>
+                  </p>
+                </div>
               </form>
-            </div>
+            )}
           </div>
         </div>
       </main>

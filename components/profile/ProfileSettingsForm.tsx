@@ -1,9 +1,8 @@
 "use client";
 
-import { updateProfileSettingsAction } from "@/lib/actions/local-data";
-import type { LocalSession, UserRole } from "@/lib/local-data/types";
+import type { LocalSession, UserRole, VerificationDocumentRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 
 type ProfileSettingsFormProps = {
   family: "owner-profile" | "renter-profile";
@@ -12,14 +11,19 @@ type ProfileSettingsFormProps = {
 
 type SubmitState = "idle" | "pending" | "success" | "error";
 
+type ExtraProfileState = {
+  district: string;
+  verificationStatus: "not_submitted" | "submitted";
+  verificationDocumentType: string;
+  verificationDocumentNumber: string;
+  verificationDocuments: VerificationDocumentRecord[];
+};
+
 function labelForFamily(family: ProfileSettingsFormProps["family"]) {
   return family === "owner-profile" ? "Owner Profile" : "Renter Profile";
 }
 
-export function ProfileSettingsForm({
-  family,
-  session,
-}: ProfileSettingsFormProps) {
+export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProps) {
   type WorkspacePreference = "owner" | "renter";
   type SettingsState = {
     fullName: string;
@@ -31,11 +35,19 @@ export function ProfileSettingsForm({
     fieldArea: string;
     rolePreference: WorkspacePreference;
   };
+
   const formId = `${family}-settings-form`;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [error, setError] = useState("");
+  const [extraProfileState, setExtraProfileState] = useState<ExtraProfileState>({
+    district: session.profile.district || "",
+    verificationStatus: session.profile.verificationStatus || "not_submitted",
+    verificationDocumentType: session.profile.verificationDocumentType || "",
+    verificationDocumentNumber: session.profile.verificationDocumentNumber || "",
+    verificationDocuments: session.profile.verificationDocuments || [],
+  });
   const [formState, setFormState] = useState<SettingsState>({
     fullName: session.profile.fullName || session.user.name || "",
     email: session.profile.email || session.user.email || "",
@@ -44,9 +56,45 @@ export function ProfileSettingsForm({
     address: session.profile.address || "",
     pincode: session.profile.pincode || "",
     fieldArea: String(session.profile.fieldArea || 0),
-    rolePreference:
-      session.profile.rolePreference === "owner" ? "owner" : "renter",
+    rolePreference: session.profile.rolePreference === "owner" ? "owner" : "renter",
   });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadExtraProfileState = async () => {
+      try {
+        const response = await fetch("/api/profile/complete", {
+          cache: "no-store",
+          credentials: "include",
+        });
+        const payload = (await response.json().catch(() => ({}))) as {
+          ok?: boolean;
+          profile?: Partial<ExtraProfileState>;
+        };
+
+        if (!response.ok || payload.ok === false || !payload.profile || !isMounted) {
+          return;
+        }
+
+        setExtraProfileState((current) => ({
+          district: payload.profile?.district || current.district,
+          verificationStatus: payload.profile?.verificationStatus || current.verificationStatus,
+          verificationDocumentType: payload.profile?.verificationDocumentType || current.verificationDocumentType,
+          verificationDocumentNumber: payload.profile?.verificationDocumentNumber || current.verificationDocumentNumber,
+          verificationDocuments: payload.profile?.verificationDocuments || current.verificationDocuments,
+        }));
+      } catch {
+        // Keep the session-derived fallback when the extra profile fetch is unavailable.
+      }
+    };
+
+    void loadExtraProfileState();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const workspaceOptions = useMemo(
     () =>
@@ -67,10 +115,20 @@ export function ProfileSettingsForm({
         : "Save Changes";
 
   const updateField = (
-    field: keyof typeof formState,
+    field: keyof SettingsState,
     value: string | WorkspacePreference
   ) => {
     setFormState((current) => ({ ...current, [field]: value }));
+    if (submitState !== "idle") {
+      setSubmitState("idle");
+    }
+  };
+
+  const updateExtraField = (
+    field: keyof Omit<ExtraProfileState, "verificationDocuments">,
+    value: string
+  ) => {
+    setExtraProfileState((current) => ({ ...current, [field]: value }));
     if (submitState !== "idle") {
       setSubmitState("idle");
     }
@@ -82,19 +140,35 @@ export function ProfileSettingsForm({
     setSubmitState("pending");
 
     startTransition(async () => {
-      const result = await updateProfileSettingsAction({
-        fullName: formState.fullName,
-        phone: formState.phone,
-        village: formState.village,
-        address: formState.address,
-        pincode: formState.pincode,
-        fieldArea: Number(formState.fieldArea || 0),
-        rolePreference: formState.rolePreference,
+      const response = await fetch("/api/profile/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          fullName: formState.fullName.trim(),
+          phone: formState.phone.replace(/\D/g, "").slice(-10),
+          village: formState.village.trim(),
+          address: formState.address.trim(),
+          pincode: formState.pincode.replace(/\D/g, "").slice(0, 6),
+          fieldArea: Number(formState.fieldArea || 0),
+          role: formState.rolePreference,
+          district: extraProfileState.district.trim(),
+          verificationStatus: extraProfileState.verificationStatus,
+          verificationDocumentType: extraProfileState.verificationDocumentType.trim() || undefined,
+          verificationDocumentNumber: extraProfileState.verificationDocumentNumber.trim() || undefined,
+          verificationDocuments: extraProfileState.verificationDocuments,
+        }),
       });
+      const payload = (await response.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
 
-      if (!result.ok) {
+      if (!response.ok || payload.ok === false) {
         setSubmitState("error");
-        setError(result.error || "Could not update settings.");
+        setError(payload.error || "Could not update settings.");
         return;
       }
 
@@ -118,7 +192,7 @@ export function ProfileSettingsForm({
               <h2 className="text-3xl font-black text-primary">Settings</h2>
               <p className="mt-2 text-sm text-on-surface-variant">
                 Manage your {labelForFamily(family).toLowerCase()} details,
-                saved contact information, and preferred workspace.
+                saved contact information, district, and preferred workspace.
               </p>
             </div>
           </div>
@@ -128,9 +202,7 @@ export function ProfileSettingsForm({
           <h3 className="text-xl font-bold text-primary">Personal Information</h3>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">
-                Full Name
-              </span>
+              <span className="text-sm font-semibold text-on-surface">Full Name</span>
               <input
                 value={formState.fullName}
                 onChange={(event) => updateField("fullName", event.target.value)}
@@ -160,11 +232,11 @@ export function ProfileSettingsForm({
               <select
                 value={formState.rolePreference}
                 onChange={(event) =>
-                    updateField(
-                      "rolePreference",
-                      event.target.value as WorkspacePreference
-                    )
-                  }
+                  updateField(
+                    "rolePreference",
+                    event.target.value as WorkspacePreference
+                  )
+                }
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
               >
                 {workspaceOptions.map((option) => (
@@ -185,6 +257,14 @@ export function ProfileSettingsForm({
               <input
                 value={formState.village}
                 onChange={(event) => updateField("village", event.target.value)}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              />
+            </label>
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-on-surface">District</span>
+              <input
+                value={extraProfileState.district}
+                onChange={(event) => updateExtraField("district", event.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
               />
             </label>
@@ -220,6 +300,52 @@ export function ProfileSettingsForm({
             </label>
           </div>
         </section>
+
+        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <h3 className="text-xl font-bold text-primary">Identity Verification</h3>
+          <div className="mt-6 grid gap-5 md:grid-cols-2">
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-on-surface">Verification Status</span>
+              <input
+                value={extraProfileState.verificationStatus === "submitted" ? "Submitted" : "Not submitted"}
+                readOnly
+                className="w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-on-surface-variant dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400"
+              />
+            </label>
+            <label className="space-y-2">
+              <span className="text-sm font-semibold text-on-surface">Document Type</span>
+              <input
+                value={extraProfileState.verificationDocumentType}
+                onChange={(event) => updateExtraField("verificationDocumentType", event.target.value)}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              />
+            </label>
+            <label className="space-y-2 md:col-span-2">
+              <span className="text-sm font-semibold text-on-surface">Document Number</span>
+              <input
+                value={extraProfileState.verificationDocumentNumber}
+                onChange={(event) => updateExtraField("verificationDocumentNumber", event.target.value)}
+                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              />
+            </label>
+          </div>
+          {extraProfileState.verificationDocuments.length ? (
+            <div className="mt-6 grid gap-3">
+              {extraProfileState.verificationDocuments.map((document) => (
+                <a
+                  key={`${document.kind}-${document.storagePath}`}
+                  href={document.downloadUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-primary dark:border-slate-700 dark:bg-slate-950"
+                >
+                  <span>{document.kind === "front" ? "Front Document" : "Back Document"}</span>
+                  <span className="truncate pl-4 text-on-surface-variant">{document.name}</span>
+                </a>
+              ))}
+            </div>
+          ) : null}
+        </section>
       </form>
 
       <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
@@ -228,8 +354,8 @@ export function ProfileSettingsForm({
             Save Changes
           </h3>
           <p className="mt-2 text-sm text-on-surface-variant dark:text-slate-400">
-            Update your contact details, farm information, and preferred
-            workspace from this panel.
+            Update your contact details, farm information, district, and saved
+            identity metadata from this panel.
           </p>
           <button
             type="button"
@@ -262,8 +388,8 @@ export function ProfileSettingsForm({
           </p>
           <p className="mt-2 text-sm text-on-surface-variant dark:text-slate-400">
             You are editing the {labelForFamily(family).toLowerCase()} route.
-            Saving here keeps the profile details in sync with the shared account
-            session.
+            Saving here keeps the shared profile and verification metadata in
+            sync with the account session.
           </p>
         </div>
       </aside>

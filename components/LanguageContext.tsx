@@ -187,23 +187,29 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved === "en" || saved === "mr") {
-      setLanguage(saved);
-      applyLanguageToDocument(saved);
-      return;
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === "en" || saved === "mr") {
+        setLanguage(saved);
+      }
+    } catch {
+      // Ignore storage access issues and keep the boot language.
     }
-
-    applyLanguageToDocument(language);
-  }, [language]);
+  }, []);
 
   useEffect(() => {
     applyLanguageToDocument(language);
   }, [language]);
 
   const handleSetLanguage = (nextLanguage: Language) => {
+    applyLanguageToDocument(nextLanguage);
     setLanguage(nextLanguage);
-    localStorage.setItem(STORAGE_KEY, nextLanguage);
+
+    try {
+      localStorage.setItem(STORAGE_KEY, nextLanguage);
+    } catch {
+      // Ignore storage access issues and keep the in-memory language.
+    }
   };
 
   const ensureTranslation = (payload: TranslationFallbackPayload) => {

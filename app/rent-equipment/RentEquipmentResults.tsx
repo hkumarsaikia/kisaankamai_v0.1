@@ -1,9 +1,9 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { ContentImage } from "@/components/ContentImage";
 import { LazyMap } from "@/components/LazyMap";
-import { assetPath } from "@/lib/site";
+import { createHubCirclesFromEquipment, createListingMarkersFromEquipment } from "@/lib/map-data";
 import { getEquipmentList } from "@/lib/server/equipment";
-import { RENT_RESULTS_CIRCLES, RENT_RESULTS_MARKERS } from "@/lib/map-data";
+import { assetPath } from "@/lib/site";
 
 const QUERY_ALIASES: Record<string, string[]> = {
   tractor: ["tractor"],
@@ -39,6 +39,14 @@ function matchesLocation(candidate: string, location: string) {
   }
 
   return normalizedCandidate.includes(normalizedLocation);
+}
+
+function matchesEquipmentLocation(
+  item: Awaited<ReturnType<typeof getEquipmentList>>[number],
+  location: string
+) {
+  const searchableLocation = [item.location, item.district, item.state].filter(Boolean).join(" ");
+  return matchesLocation(searchableLocation, location);
 }
 
 function expandQueryTerms(query: string) {
@@ -131,7 +139,14 @@ function ResultCard({
   );
 }
 
-function EmptyState() {
+function EmptyState({
+  inventoryItems,
+}: {
+  inventoryItems: Awaited<ReturnType<typeof getEquipmentList>>;
+}) {
+  const inventoryMarkers = createListingMarkersFromEquipment(inventoryItems);
+  const inventoryCircles = createHubCirclesFromEquipment(inventoryItems);
+
   return (
     <section className="space-y-12">
       <div className="mx-auto max-w-4xl rounded-3xl border border-outline-variant bg-white p-8 text-center shadow-sm dark:border-slate-800/50 dark:bg-slate-900/40 md:p-12">
@@ -179,15 +194,25 @@ function EmptyState() {
           </div>
         </div>
 
-        <LazyMap
-          center={[16.855, 74.56]}
-          zoom={11}
-          markers={RENT_RESULTS_MARKERS}
-          circles={RENT_RESULTS_CIRCLES}
-          height="400px"
-          className="rounded-3xl border border-outline-variant shadow-lg dark:border-slate-800/50"
-          showControls
-        />
+        {inventoryMarkers.length ? (
+          <LazyMap
+            center={[inventoryMarkers[0].lat, inventoryMarkers[0].lng]}
+            zoom={11}
+            markers={inventoryMarkers}
+            circles={inventoryCircles}
+            height="400px"
+            className="rounded-3xl border border-outline-variant shadow-lg dark:border-slate-800/50"
+            showControls
+          />
+        ) : (
+          <div className="rounded-3xl border border-outline-variant bg-white p-8 shadow-lg dark:border-slate-800/50 dark:bg-slate-900/40">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">Map unavailable</p>
+            <h3 className="mt-3 text-2xl font-black text-primary dark:text-emerald-50">No mapped live listing regions yet</h3>
+            <p className="mt-3 text-sm font-medium leading-6 text-on-surface-variant dark:text-slate-400">
+              Live listings are available, but the current records do not include enough location detail to place them on the public map.
+            </p>
+          </div>
+        )}
       </div>
 
     </section>
@@ -222,11 +247,11 @@ export default async function RentEquipmentResults({
       !normalizedQuery ||
       Array.from(queryTerms).some((term) => searchableText.includes(term));
 
-    return queryMatch && matchesLocation(item.location, location);
+    return queryMatch && matchesEquipmentLocation(item, location);
   });
 
   if (!filteredItems.length) {
-    return <EmptyState />;
+    return <EmptyState inventoryItems={items} />;
   }
 
   return (

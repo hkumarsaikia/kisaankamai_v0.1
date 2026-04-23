@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import EquipmentDetailClient from "./EquipmentDetailClient";
 import { getEquipmentById, getEquipmentList } from "@/lib/server/equipment";
 import { getSiteUrl } from "@/lib/runtime";
+import { assetPath } from "@/lib/site";
 
 export const dynamicParams = true;
 
@@ -22,6 +23,9 @@ export async function generateMetadata({
 
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/equipment/${equipment.id}`;
+  const coverImageUrl = equipment.coverImage.startsWith("http")
+    ? equipment.coverImage
+    : `${siteUrl}${assetPath(equipment.coverImage)}`;
 
   return {
     title: `${equipment.name} | Kisan Kamai`,
@@ -35,9 +39,7 @@ export async function generateMetadata({
       url: canonicalUrl,
       images: [
         {
-          url: equipment.coverImage.startsWith("http")
-            ? equipment.coverImage
-            : `${siteUrl}${equipment.coverImage}`,
+          url: coverImageUrl,
           alt: equipment.name,
         },
       ],
@@ -46,11 +48,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: `${equipment.name} | Kisan Kamai`,
       description: equipment.description,
-      images: [
-        equipment.coverImage.startsWith("http")
-          ? equipment.coverImage
-          : `${siteUrl}${equipment.coverImage}`,
-      ],
+      images: [coverImageUrl],
     },
   };
 }

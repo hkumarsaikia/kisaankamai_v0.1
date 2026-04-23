@@ -2,6 +2,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageContext";
+import { SharedIcon } from "@/components/SharedIcon";
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -17,17 +18,17 @@ export function ThemeToggle() {
   }
 
   const isDark = resolvedTheme === "dark";
+  const label = isDark ? t("theme.switch_to_light_mode") : t("theme.switch_to_dark_mode");
 
   return (
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
       className="kk-icon-button"
-      aria-label={isDark ? t("theme.switch_to_light_mode") : t("theme.switch_to_dark_mode")}
+      aria-label={label}
+      title={label}
     >
-      <span className="material-symbols-outlined text-[20px]">
-        {isDark ? "light_mode" : "dark_mode"}
-      </span>
+      <SharedIcon name={isDark ? "sun" : "moon"} className="h-5 w-5" />
     </button>
   );
 }

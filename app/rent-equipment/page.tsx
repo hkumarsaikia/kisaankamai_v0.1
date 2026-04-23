@@ -38,6 +38,14 @@ function matchesLocation(candidate: string, location: string) {
   return normalizedCandidate.includes(normalizedLocation);
 }
 
+function matchesEquipmentLocation(
+  item: Awaited<ReturnType<typeof getEquipmentList>>[number],
+  location: string
+) {
+  const searchableLocation = [item.location, item.district, item.state].filter(Boolean).join(" ");
+  return matchesLocation(searchableLocation, location);
+}
+
 function expandQueryTerms(query: string) {
   const normalizedQuery = query.trim().toLowerCase();
   const terms = new Set<string>();
@@ -87,15 +95,17 @@ export default async function RentEquipmentPage({
       !normalizedQuery ||
       Array.from(queryTerms).some((term) => searchableText.includes(term));
 
-    return queryMatch && matchesLocation(item.location, location);
+    return queryMatch && matchesEquipmentLocation(item, location);
   });
 
-  const view = getRentEquipmentView({
+  const requestedView = getRentEquipmentView({
     query,
     hasMatches: filteredItems.length > 0,
   });
+  const view = items.length > 0 ? requestedView : "empty";
 
-  const visibleItems = view === "available" ? items.slice(0, 8) : filteredItems;
+  const visibleItems =
+    view === "available" ? items.slice(0, 8) : view === "empty" ? items : filteredItems;
 
   return (
     <RentEquipmentView

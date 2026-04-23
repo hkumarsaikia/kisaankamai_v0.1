@@ -6,8 +6,6 @@ import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { unstable_noStore as noStore } from "next/cache";
 import {
-  getMockEquipmentById,
-  getMockEquipmentList,
   sanitizeEquipmentDescription,
   type EquipmentRecord,
 } from "@/lib/equipment";
@@ -46,6 +44,20 @@ function db() {
 
 function nowIso() {
   return new Date().toISOString();
+}
+
+function normalizeOptionalString(value?: string | null) {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function normalizeStringList(values?: string[] | null) {
+  return Array.from(
+    new Set(
+      (values || [])
+        .map((value) => normalizeOptionalString(value))
+        .filter(Boolean)
+    )
+  );
 }
 
 function createId(prefix: string) {
@@ -181,16 +193,23 @@ async function exchangePasswordLogin(email: string, password: string) {
 }
 
 function mapListingFromFirestore(data: Partial<ListingRecord> & { id?: string }): ListingRecord {
-  const name = data.name || "Equipment";
-  const category = (data.category || "equipment").toLowerCase();
-  const location = data.location || "Maharashtra";
-  const district = data.district || "Maharashtra";
-  const ownerName = data.ownerName || "Kisan Kamai Owner";
-  const fallbackCover = getMockEquipmentById("1")?.coverImage || "/assets/generated/hero_tractor.png";
-  const coverImage = data.coverImage || fallbackCover;
-  const galleryImages =
-    data.galleryImages?.length ? data.galleryImages : data.coverImage ? [data.coverImage] : [coverImage];
-  const imagePaths = data.imagePaths?.length ? data.imagePaths : [];
+  const name = normalizeOptionalString(data.name) || "Equipment";
+  const category = normalizeOptionalString(data.category).toLowerCase() || "equipment";
+  const location = normalizeOptionalString(data.location);
+  const district = normalizeOptionalString(data.district);
+  const state = normalizeOptionalString(data.state);
+  const ownerName = normalizeOptionalString(data.ownerName);
+  const coverImage = normalizeOptionalString(data.coverImage);
+  const galleryImages = normalizeStringList(data.galleryImages);
+  const imagePaths = normalizeStringList(data.imagePaths);
+  const resolvedGalleryImages =
+    galleryImages.length > 0 ? galleryImages : coverImage ? [coverImage] : [];
+  const description = sanitizeEquipmentDescription(normalizeOptionalString(data.description));
+  const categoryLabel =
+    normalizeOptionalString(data.categoryLabel) ||
+    [category.charAt(0).toUpperCase() + category.slice(1), name.split(" ")[0] || "Equipment"].join(" • ");
+  const ownerLocation =
+    normalizeOptionalString(data.ownerLocation) || [location, district].filter(Boolean).join(", ");
 
   return {
     id: data.id || createId("listing"),
@@ -203,34 +222,48 @@ function mapListingFromFirestore(data: Partial<ListingRecord> & { id?: string })
         .replace(/(^-|-$)/g, "")}-${randomUUID().slice(0, 6)}`,
     name,
     category,
-    categoryLabel:
-      data.categoryLabel ||
-      `${category.charAt(0).toUpperCase()}${category.slice(1)} • ${name.split(" ")[0] || "Kisan Kamai"}`,
+    categoryLabel,
     location,
     district,
-    state: data.state || "Maharashtra",
-    description: sanitizeEquipmentDescription(
-      data.description || "Verified equipment listed on Kisan Kamai."
-    ),
+    state,
+    description,
     pricePerHour: Number(data.pricePerHour || 0),
     unitLabel: data.unitLabel || "per hour",
-    rating: Number(data.rating || 4.8),
-    hp: data.hp || "N/A",
+    rating: Number(data.rating || 0),
+    hp: normalizeOptionalString(data.hp),
     distanceKm: Number(data.distanceKm || 0),
     ownerName,
-    ownerLocation: data.ownerLocation || `${location}, ${district}`,
-    ownerVerified: data.ownerVerified ?? true,
+    ownerLocation,
+    ownerVerified: Boolean(data.ownerVerified),
     coverImage,
-    galleryImages,
+    galleryImages: resolvedGalleryImages,
     imagePaths,
-    tags: data.tags?.length ? data.tags : ["Verified"],
-    workTypes: data.workTypes?.length ? data.workTypes : [],
+    tags: normalizeStringList(data.tags),
+    workTypes: normalizeStringList(data.workTypes),
     operatorIncluded: Boolean(data.operatorIncluded),
     availableFrom: data.availableFrom || undefined,
     status: data.status === "paused" ? "paused" : "active",
     createdAt: data.createdAt || nowIso(),
     updatedAt: data.updatedAt || nowIso(),
   };
+}
+
+function isPublicListingReady(listing: ListingRecord) {
+  return Boolean(
+    listing.status === "active" &&
+      normalizeOptionalString(listing.id) &&
+      normalizeOptionalString(listing.name) &&
+      normalizeOptionalString(listing.category) &&
+      normalizeOptionalString(listing.location) &&
+      normalizeOptionalString(listing.district) &&
+      normalizeOptionalString(listing.description) &&
+      normalizeOptionalString(listing.ownerName) &&
+      normalizeOptionalString(listing.coverImage) &&
+      listing.galleryImages.length > 0 &&
+      listing.workTypes.length > 0 &&
+      Number.isFinite(listing.pricePerHour) &&
+      listing.pricePerHour > 0
+  );
 }
 
 function mapBookingFromFirestore(data: Partial<BookingRecord> & { id?: string }): BookingRecord {
@@ -272,6 +305,11 @@ function mapProfileFromFirestore(userId: string, data?: Partial<ProfileRecord> |
     rolePreference: normalizeRolePreference(data?.rolePreference),
     email: data?.email,
     phone: normalizePhone(data?.phone),
+    district: normalizeOptionalString(data?.district) || undefined,
+    verificationStatus: data?.verificationStatus || "not_submitted",
+    verificationDocumentType: normalizeOptionalString(data?.verificationDocumentType) || undefined,
+    verificationDocumentNumber: normalizeOptionalString(data?.verificationDocumentNumber) || undefined,
+    verificationDocuments: Array.isArray(data?.verificationDocuments) ? data.verificationDocuments : [],
   };
 }
 
@@ -331,6 +369,36 @@ async function listAllListings() {
   return snapshot.docs
     .map((doc) => mapListingFromFirestore(withFirestoreId(doc.id, doc.data() as ListingRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+}
+
+function buildPublicListingDedupeKey(listing: ListingRecord) {
+  const normalizedSlug = normalizeOptionalString(listing.slug).toLowerCase();
+  if (normalizedSlug) {
+    return `slug:${normalizedSlug}`;
+  }
+
+  return [
+    normalizeOptionalString(listing.name).toLowerCase(),
+    normalizeOptionalString(listing.category).toLowerCase(),
+    normalizeOptionalString(listing.location).toLowerCase(),
+    normalizeOptionalString(listing.district).toLowerCase(),
+    normalizeOptionalString(listing.ownerUserId).toLowerCase(),
+    String(Number(listing.pricePerHour || 0)),
+  ].join("|");
+}
+
+function dedupePublicListings(listings: ListingRecord[]) {
+  const seen = new Set<string>();
+
+  return listings.filter((listing) => {
+    const dedupeKey = buildPublicListingDedupeKey(listing);
+    if (seen.has(dedupeKey)) {
+      return false;
+    }
+
+    seen.add(dedupeKey);
+    return true;
+  });
 }
 
 async function listAllProfiles() {
@@ -453,6 +521,7 @@ export async function registerLocalUser(input: RegisterInput) {
     rolePreference,
     email: normalizedEmail || undefined,
     phone: normalizedPhone || undefined,
+    district: normalizeOptionalString(input.district) || undefined,
   };
 
   await Promise.all([
@@ -480,7 +549,19 @@ export async function updateLocalProfile(
   input: Partial<
     Pick<
       ProfileRecord,
-      "fullName" | "village" | "address" | "pincode" | "fieldArea" | "rolePreference" | "email" | "phone"
+      | "fullName"
+      | "village"
+      | "address"
+      | "pincode"
+      | "fieldArea"
+      | "rolePreference"
+      | "email"
+      | "phone"
+      | "district"
+      | "verificationStatus"
+      | "verificationDocumentType"
+      | "verificationDocumentNumber"
+      | "verificationDocuments"
     >
   >
 ) {
@@ -497,6 +578,22 @@ export async function updateLocalProfile(
         ? currentProfile.rolePreference
         : normalizeRolePreference(input.rolePreference),
     fieldArea: input.fieldArea === undefined ? currentProfile.fieldArea : Number(input.fieldArea),
+    district:
+      input.district === undefined
+        ? currentProfile.district
+        : normalizeOptionalString(input.district) || undefined,
+    verificationDocumentType:
+      input.verificationDocumentType === undefined
+        ? currentProfile.verificationDocumentType
+        : normalizeOptionalString(input.verificationDocumentType) || undefined,
+    verificationDocumentNumber:
+      input.verificationDocumentNumber === undefined
+        ? currentProfile.verificationDocumentNumber
+        : normalizeOptionalString(input.verificationDocumentNumber) || undefined,
+    verificationDocuments:
+      input.verificationDocuments === undefined
+        ? currentProfile.verificationDocuments || []
+        : input.verificationDocuments,
   };
 
   await profilesCollection().doc(userId).set(updatedProfile, { merge: true });
@@ -589,7 +686,7 @@ export function listingToEquipmentRecord(listing: ListingRecord): EquipmentRecor
 export async function getPublicEquipmentList() {
   noStore();
   try {
-    const listings = (await listAllListings()).filter((listing) => listing.status === "active");
+    const listings = dedupePublicListings((await listAllListings()).filter(isPublicListingReady));
     return listings.map(listingToEquipmentRecord);
   } catch (error) {
     captureServerException(error, { subsystem: "getPublicEquipmentList" });
@@ -600,7 +697,7 @@ export async function getPublicEquipmentList() {
 export async function getPublicEquipmentById(id: string) {
   try {
     const listing = await getListingById(id);
-    if (listing && listing.status === "active") {
+    if (listing && isPublicListingReady(listing)) {
       return listingToEquipmentRecord(listing);
     }
   } catch (error) {

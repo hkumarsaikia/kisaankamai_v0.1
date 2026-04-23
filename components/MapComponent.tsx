@@ -12,6 +12,22 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { Circle as LeafletCircle, MapContainer, Marker as LeafletMarker, Popup, TileLayer, useMap } from "react-leaflet";
 
+let hasConfiguredLeafletRuntime = false;
+
+function configureLeafletRuntime() {
+  if (typeof window === "undefined" || hasConfiguredLeafletRuntime) {
+    return;
+  }
+
+  delete (L.Icon.Default.prototype as { _getIconUrl?: unknown })._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  });
+  hasConfiguredLeafletRuntime = true;
+}
+
 interface MapMarker {
   lat: number;
   lng: number;
@@ -150,6 +166,7 @@ function LeafletMapView({
   className,
   showControls,
 }: Required<MapComponentProps>) {
+  configureLeafletRuntime();
   const [providerIndex, setProviderIndex] = useState(0);
   const [tileErrors, setTileErrors] = useState(0);
   const [providerLoaded, setProviderLoaded] = useState(false);

@@ -8,6 +8,7 @@ import { useLanguage } from "./LanguageContext";
 import { useAuth } from "./AuthContext";
 import { ProfileDropdownMenu } from "./ProfileDropdownMenu";
 import { HEADER_PRIMARY_LINKS } from "@/lib/site-navigation.js";
+import { SharedIcon } from "./SharedIcon";
 
 type HeaderLanguageControlProps = {
   className?: string;
@@ -35,8 +36,11 @@ export const HeaderLanguageControl = ({ className = "" }: HeaderLanguageControlP
 export const Header = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { t } = useLanguage();
+  const { t, langText } = useLanguage();
   const { user, loading } = useAuth();
+  const mobileMenuLabel = mobileOpen
+    ? langText("Close navigation menu", "नेव्हिगेशन मेनू बंद करा")
+    : langText("Open navigation menu", "नेव्हिगेशन मेनू उघडा");
 
   useEffect(() => {
     setMobileOpen(false);
@@ -103,10 +107,17 @@ export const Header = () => {
 
             {/* Mobile hamburger */}
             <button
+              type="button"
               onClick={() => setMobileOpen(!mobileOpen)}
+              aria-expanded={mobileOpen}
+              aria-label={mobileMenuLabel}
+              title={mobileMenuLabel}
               className="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-900/50 rounded-lg transition-all"
             >
-              <span className="material-symbols-outlined">{mobileOpen ? "close" : "menu"}</span>
+              <SharedIcon
+                name={mobileOpen ? "close" : "menu"}
+                className="h-6 w-6"
+              />
             </button>
           </div>
         </div>

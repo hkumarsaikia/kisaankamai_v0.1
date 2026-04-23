@@ -1,3 +1,5 @@
+import type { EquipmentRecord } from "@/lib/equipment";
+
 export interface SiteMapMarker {
   lat: number;
   lng: number;
@@ -129,9 +131,7 @@ export const SUPPORT_HUB_MARKERS: SiteMapMarker[] = REGIONAL_HUBS.filter((hub) =
 
 export const RENT_RESULTS_MARKERS: SiteMapMarker[] = [];
 
-export const RENT_RESULTS_CIRCLES: SiteMapCircle[] = [
-  { lat: 16.855, lng: 74.56, radius: 4000, color: "#10b981" },
-];
+export const RENT_RESULTS_CIRCLES: SiteMapCircle[] = [];
 
 export const LOCATIONS_OVERVIEW_MARKERS: SiteMapMarker[] = REGIONAL_HUBS.map((hub) => ({
   lat: hub.center[0],
@@ -152,11 +152,43 @@ export function getRegionalHubBySlug(slug: string) {
   return REGIONAL_HUBS.find((hub) => hub.slug === slug);
 }
 
+function normalizeLocationValue(value?: string) {
+  return value?.trim().toLowerCase() || "";
+}
+
+function findHubForListingLocation(location: string, district?: string) {
+  const normalizedLocation = normalizeLocationValue(location);
+  const normalizedDistrict = normalizeLocationValue(district);
+
+  if (!normalizedLocation && !normalizedDistrict) {
+    return null;
+  }
+
+  return (
+    REGIONAL_HUBS.find((hub) =>
+      [
+        hub.slug,
+        hub.name,
+        hub.district,
+        ...hub.clusters,
+      ].some((entry) => {
+        const candidate = normalizeLocationValue(entry);
+        return (
+          Boolean(candidate) &&
+          ((normalizedLocation && (normalizedLocation.includes(candidate) || candidate.includes(normalizedLocation))) ||
+            (normalizedDistrict && (normalizedDistrict.includes(candidate) || candidate.includes(normalizedDistrict))))
+        );
+      })
+    ) || null
+  );
+}
+
 export function createListingMarker(label: string, location: string, district?: string): SiteMapMarker[] {
-  const matchingHub =
-    REGIONAL_HUBS.find((hub) => location.toLowerCase().includes(hub.slug)) ||
-    REGIONAL_HUBS.find((hub) => district && hub.district.toLowerCase().includes(district.toLowerCase())) ||
-    REGIONAL_HUBS[0];
+  const matchingHub = findHubForListingLocation(location, district);
+
+  if (!matchingHub) {
+    return [];
+  }
 
   return [
     {
@@ -167,4 +199,36 @@ export function createListingMarker(label: string, location: string, district?: 
       color: matchingHub.markerColor,
     },
   ];
+}
+
+export function createListingMarkersFromEquipment(
+  items: Pick<EquipmentRecord, "id" | "name" | "location" | "district">[]
+) {
+  return items.flatMap((item) => createListingMarker(item.name, item.location, item.district));
+}
+
+export function createHubCirclesFromEquipment(
+  items: Pick<EquipmentRecord, "location" | "district">[]
+) {
+  const seen = new Set<string>();
+
+  return items.flatMap((item) => {
+    const matchingHub = findHubForListingLocation(item.location, item.district);
+    if (!matchingHub || seen.has(matchingHub.slug)) {
+      return [];
+    }
+
+    seen.add(matchingHub.slug);
+    return [
+      {
+        lat: matchingHub.center[0],
+        lng: matchingHub.center[1],
+        radius:
+          matchingHub.slug === "sangli" || matchingHub.slug === "satara" || matchingHub.slug === "kolhapur"
+            ? 22000
+            : 18000,
+        color: matchingHub.markerColor,
+      } satisfies SiteMapCircle,
+    ];
+  });
 }

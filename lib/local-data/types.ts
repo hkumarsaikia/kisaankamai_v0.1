@@ -1,5 +1,17 @@
 export type UserRole = "owner" | "renter";
 export type RolePreference = UserRole | "both";
+export type VerificationStatus = "not_submitted" | "submitted";
+export type VerificationDocumentKind = "front" | "back";
+
+export interface VerificationDocumentRecord {
+  kind: VerificationDocumentKind;
+  name: string;
+  contentType: string;
+  size: number;
+  storagePath: string;
+  downloadUrl: string;
+  uploadedAt: string;
+}
 
 export interface UserRecord {
   id: string;
@@ -22,6 +34,11 @@ export interface ProfileRecord {
   rolePreference: RolePreference;
   email?: string;
   phone?: string;
+  district?: string;
+  verificationStatus?: VerificationStatus;
+  verificationDocumentType?: string;
+  verificationDocumentNumber?: string;
+  verificationDocuments?: VerificationDocumentRecord[];
 }
 
 export type ListingStatus = "active" | "paused";
