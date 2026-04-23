@@ -24,7 +24,9 @@ import {
   RESET_VERIFICATION_ID_KEY,
   RESET_VERIFIED_KEY,
   setResetStorageItem,
+  setResetStorageItem,
 } from "@/components/auth/password-reset-storage";
+import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 
 const tractorBackdrop =
   "https://lh3.googleusercontent.com/aida-public/AB6AXuAV0-MxLuHs8OSUPnH54Falhov6x8BfedXlBEmENI0wLBPe6EVlktzQ0z2w1nE4PioD0L8F8jUy8ZJ-pQK41gpB3AkOJNaXtc-81oZ1t8ZxpgBJHHRjkOAO3XWl4XVwGpYYIET90NtSxBVyHHcrs3JGchhwRoROyJMerYL58P43R_DBmRLu7kCk3mU-HWJ2KCm7AmBKeHl_KTX1RxIUhI67svCJP4yzWF3IV4HKvz0LlVlZnuYaa6iR3ZWAjfMOicJ_gTPCNjzJhsD1";
@@ -84,36 +86,6 @@ export default function VerifyOtpPage() {
     return () => window.clearInterval(timer);
   }, [resendAvailableIn]);
 
-  const updateDigit = (index: number, value: string) => {
-    const nextValue = value.replace(/\D/g, "").slice(-1);
-    setOtpDigits((current) => {
-      const next = [...current];
-      next[index] = nextValue;
-      return next;
-    });
-    setError("");
-
-    if (nextValue && index < inputsRef.current.length - 1) {
-      inputsRef.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (index: number, event: KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Backspace" && !otpDigits[index] && index > 0) {
-      inputsRef.current[index - 1]?.focus();
-    }
-  };
-
-  const sendCode = useCallback(async () => {
-    if (!PHONE_RESET_OTP_ENABLED || !auth || !phoneE164 || isSending) {
-      if (!PHONE_RESET_OTP_ENABLED || !auth) {
-        setError(resetUnavailableMessage);
-      }
-      return;
-    }
-
-    setIsSending(true);
-    setError("");
     setInfo("");
 
     try {
@@ -157,8 +129,7 @@ export default function VerifyOtpPage() {
     void sendCode();
   }, [auth, phoneE164, sendCode, verificationId]);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     if (isVerifying) {
       return;
     }
@@ -223,101 +194,22 @@ export default function VerifyOtpPage() {
       <div className="relative z-10 w-full max-w-xl">
         <div className="overflow-hidden rounded-[2rem] border border-white/20 bg-white/80 shadow-2xl backdrop-blur-xl dark:border-slate-700/30 dark:bg-slate-900/80">
           <div className="p-8 md:p-12">
-            <div className="mb-10 text-center">
-              <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-primary-container text-on-primary shadow-inner">
-                <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  vibration
-                </span>
-              </div>
-              <h1 className="mb-2 text-3xl font-black tracking-tight text-primary md:text-4xl">
-                {langText("Verify your mobile number", "तुमच्या मोबाईल क्रमांकाची पडताळणी करा")}
-              </h1>
-              <p className="mb-4 text-sm font-medium text-primary/70">
-                {text("Enter the 6-digit verification code sent to the registered mobile number linked to your account.", {
-                  cacheKey: "forgot-password.verify-otp.description",
-                })}
-              </p>
-              <div className="mx-auto flex w-fit items-center gap-3 rounded-full border border-outline-variant/30 bg-surface-container/50 px-4 py-2">
-                <span className="font-semibold tracking-widest text-on-surface-variant">
-                  {maskedPhone || langText("your registered mobile", "तुमचा नोंदणीकृत मोबाईल")}
-                </span>
-                <Link className="flex items-center gap-1 text-xs font-bold text-secondary hover:underline" href="/forgot-password">
-                  <span className="material-symbols-outlined text-sm">edit</span>
-                  {langText("Edit", "बदला")}
-                </Link>
-              </div>
-            </div>
-
-            <form className="space-y-8" onSubmit={handleSubmit}>
-              <div>
-                <div className="mb-8 flex justify-between gap-3">
-                  {otpDigits.map((digit, index) => (
-                    <input
-                      key={index}
-                      ref={(node) => {
-                        inputsRef.current[index] = node;
-                      }}
-                      autoComplete="one-time-code"
-                      className={`h-14 w-12 rounded-2xl border-2 bg-surface-container-lowest text-center font-mono text-2xl font-bold transition-all focus:outline-none md:h-20 md:w-16 ${
-                        error && index === Math.max(otpDigits.findIndex((value) => value === ""), 0)
-                          ? "border-error bg-error-container/20 text-error"
-                          : "border-outline-variant text-on-surface focus:border-secondary"
-                      }`}
-                      inputMode="numeric"
-                      maxLength={1}
-                      type="text"
-                      value={digit}
-                      onChange={(event) => updateDigit(index, event.target.value)}
-                      onKeyDown={(event) => handleKeyDown(index, event)}
-                    />
-                  ))}
-                </div>
-
-                <div id="kk-reset-recaptcha" className="hidden" />
-
-                {error ? <FormNotice tone="error">{error}</FormNotice> : null}
-                {!error && info ? <FormNotice tone="info">{info}</FormNotice> : null}
-                {!error && !info ? (
-                  <div className="mb-6 rounded-2xl border border-primary-container/20 bg-primary-fixed/10 px-4 py-4 text-sm font-medium text-on-surface-variant">
-                    {langText(
-                      `Reset will continue only after OTP verification on ${maskedPhone || "your registered mobile number"}.`,
-                      `${maskedPhone || "तुमच्या नोंदणीकृत मोबाईल नंबरवर"} ओटीपी पडताळल्यानंतरच रीसेट पुढे जाईल.`
-                    )}
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="space-y-6">
-                <button
-                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-container px-6 py-4 text-lg font-bold text-white shadow-xl shadow-primary-container/20 transition-all hover:bg-primary hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-primary-container"
-                  type="submit"
-                  disabled={isSending || isVerifying}
-                >
-                  <span>{isVerifying ? langText("Verifying...", "पडताळणी करत आहे...") : langText("Verify and Continue", "पडताळणी करा आणि पुढे जा")}</span>
-                  <span className="material-symbols-outlined">arrow_forward</span>
-                </button>
-
-                <div className="flex flex-col items-center justify-between gap-4 px-2 text-sm md:flex-row">
-                  <div className="flex items-center gap-2 font-medium text-on-surface-variant">
-                    <span className="material-symbols-outlined text-lg">timer</span>
-                    <span>
-                      {resendAvailableIn > 0
-                        ? langText("Resend in", "पुन्हा पाठवण्यासाठी")
-                        : langText("Need a new code?", "नवीन कोड हवा आहे?")}{" "}
-                      {resendAvailableIn > 0 ? <span className="font-bold text-secondary">{String(resendAvailableIn).padStart(2, "0")}s</span> : null}
-                    </span>
-                  </div>
-                  <button
-                    className="font-bold text-secondary disabled:cursor-not-allowed disabled:text-on-surface-variant/40"
-                    type="button"
-                    onClick={() => void sendCode()}
-                    disabled={isSending || resendAvailableIn > 0}
-                  >
-                    {isSending ? langText("Sending...", "पाठवत आहे...") : langText("Resend OTP", "ओटीपी पुन्हा पाठवा")}
-                  </button>
-                </div>
-              </div>
-            </form>
+            <OtpVerificationForm
+              phone={maskedPhone || langText("your registered mobile", "तुमचा नोंदणीकृत मोबाईल")}
+              otpDigits={otpDigits}
+              setOtpDigits={setOtpDigits}
+              onSubmit={handleSubmit}
+              isSubmitting={isVerifying || isSending}
+              resendAvailableIn={resendAvailableIn}
+              onResend={sendCode}
+              onChangeNumber={() => router.push("/forgot-password")}
+              error={error}
+              info={info || langText(
+                `Reset will continue only after OTP verification on ${maskedPhone || "your registered mobile number"}.`,
+                `${maskedPhone || "तुमच्या नोंदणीकृत मोबाईल नंबरवर"} ओटीपी पडताळल्यानंतरच रीसेट पुढे जाईल.`
+              )}
+            />
+            <div id="kk-reset-recaptcha" className="hidden" />
           </div>
 
           <div className="flex items-center justify-center gap-3 border-t border-outline-variant/20 bg-surface-container-high/50 p-4">

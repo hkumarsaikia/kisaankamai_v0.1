@@ -5,6 +5,7 @@ import { AppLink as Link } from "@/components/AppLink";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import { useLanguage } from "@/components/LanguageContext";
 import { FormNotice } from "@/components/forms/FormKit";
+import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 import {
   clearRecaptchaVerifier,
   finishFirebaseAuthSession,
@@ -24,7 +25,8 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   
   const [confirmationId, setConfirmationId] = useState("");
-  const [otp, setOtp] = useState("");
+  const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
+  const [resendAvailableIn, setResendAvailableIn] = useState(0);
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -34,10 +36,19 @@ export default function RegisterPage() {
     village: "",
     pincode: "",
     district: "Pune",
-    role: "renter" as "renter" | "owner" | "both",
+    district: "Pune",
+    role: "renter",
     idType: "",
     idNumber: "",
   });
+
+  useEffect(() => {
+    if (!resendAvailableIn) return;
+    const timer = window.setInterval(() => {
+      setResendAvailableIn((c) => (c <= 1 ? 0 : c - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [resendAvailableIn]);
 
   const address = useMemo(
     () => [formData.village.trim(), formData.district.trim(), formData.pincode.trim()].filter(Boolean).join(", "),
@@ -70,6 +81,7 @@ export default function RegisterPage() {
         storeKey: "register",
       });
       setConfirmationId(verificationId);
+      setResendAvailableIn(60);
     } catch (error) {
       setError(getFirebaseAuthError(error, "Could not send OTP."));
     } finally {
@@ -89,7 +101,7 @@ export default function RegisterPage() {
       await verifyPhoneOtp({
         auth,
         verificationId: confirmationId,
-        otp,
+        otp: otpDigits.join(""),
       });
 
       if (formData.email && formData.password) {
@@ -107,7 +119,7 @@ export default function RegisterPage() {
       await finishFirebaseAuthSession({
         auth,
         payload: {
-          workspacePreference: formData.role === "owner" ? "owner" : "renter",
+          workspacePreference: "renter",
           profile: {
             fullName: formData.fullName.trim(),
             phone: formData.phone.trim(),
@@ -274,17 +286,52 @@ export default function RegisterPage() {
 
                       <label className="space-y-1.5">
                         <span className="text-xs font-bold uppercase tracking-wider text-outline">District / जिल्हा</span>
-                        <select
+                        <input
+                          list="maharashtra-districts"
                           className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
+                          placeholder="Select or type district"
                           value={formData.district}
                           onChange={(e) => updateField("district", e.target.value)}
                           disabled={isSubmitting}
-                        >
-                          <option value="Pune">Pune</option>
-                          <option value="Satara">Satara</option>
-                          <option value="Kolhapur">Kolhapur</option>
-                          <option value="Nashik">Nashik</option>
-                        </select>
+                        />
+                        <datalist id="maharashtra-districts">
+                          <option value="Ahmednagar" />
+                          <option value="Akola" />
+                          <option value="Amravati" />
+                          <option value="Aurangabad" />
+                          <option value="Beed" />
+                          <option value="Bhandara" />
+                          <option value="Buldhana" />
+                          <option value="Chandrapur" />
+                          <option value="Dhule" />
+                          <option value="Gadchiroli" />
+                          <option value="Gondia" />
+                          <option value="Hingoli" />
+                          <option value="Jalgaon" />
+                          <option value="Jalna" />
+                          <option value="Kolhapur" />
+                          <option value="Latur" />
+                          <option value="Mumbai City" />
+                          <option value="Mumbai Suburban" />
+                          <option value="Nagpur" />
+                          <option value="Nanded" />
+                          <option value="Nandurbar" />
+                          <option value="Nashik" />
+                          <option value="Osmanabad" />
+                          <option value="Palghar" />
+                          <option value="Parbhani" />
+                          <option value="Pune" />
+                          <option value="Raigad" />
+                          <option value="Ratnagiri" />
+                          <option value="Sangli" />
+                          <option value="Satara" />
+                          <option value="Sindhudurg" />
+                          <option value="Solapur" />
+                          <option value="Thane" />
+                          <option value="Wardha" />
+                          <option value="Washim" />
+                          <option value="Yavatmal" />
+                        </datalist>
                       </label>
 
                       <label className="space-y-1.5">
@@ -301,18 +348,6 @@ export default function RegisterPage() {
                         />
                       </label>
 
-                      <label className="space-y-1.5">
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Role / भूमिका</span>
-                        <select
-                          className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 disabled:opacity-50"
-                          value={formData.role}
-                          onChange={(e) => updateField("role", e.target.value)}
-                          disabled={isSubmitting}
-                        >
-                          <option value="renter">Renter</option>
-                          <option value="owner">Owner</option>
-                          <option value="both">Both</option>
-                        </select>
                       </label>
                     </div>
                   </section>
@@ -356,73 +391,54 @@ export default function RegisterPage() {
                       </label>
                     </div>
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <div className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-outline-variant bg-surface-container-low/40 px-6 py-8 text-center opacity-50 cursor-not-allowed">
-                        <span className="material-symbols-outlined text-3xl text-outline">upload_file</span>
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Front Side / समोरची बाजू</span>
-                      </div>
-                      <div className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-outline-variant bg-surface-container-low/40 px-6 py-8 text-center opacity-50 cursor-not-allowed">
-                        <span className="material-symbols-outlined text-3xl text-outline">upload_file</span>
-                        <span className="text-xs font-bold uppercase tracking-wider text-outline">Back Side / मागची बाजू</span>
-                      </div>
+                      <label className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center cursor-pointer hover:bg-surface-container-low transition-colors">
+                        <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-primary-container">Front Side / समोरची बाजू</span>
+                        <input type="file" className="hidden" accept="image/*,.pdf" />
+                      </label>
+                      <label className="flex min-h-28 flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center cursor-pointer hover:bg-surface-container-low transition-colors">
+                        <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
+                        <span className="text-xs font-bold uppercase tracking-wider text-primary-container">Back Side / मागची बाजू</span>
+                        <input type="file" className="hidden" accept="image/*,.pdf" />
+                      </label>
                     </div>
                   </section>
                 </>
               ) : (
-                <section className="space-y-6 animate-in fade-in slide-in-from-bottom-2">
-                  <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
-                    <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      password
-                    </span>
-                    <h2 className="font-headline text-2xl font-bold text-primary">Verify Phone / फोन तपासा</h2>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2">
-                    <label className="space-y-1.5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-outline">Enter OTP / OTP प्रविष्ट करा</span>
-                      <input
-                        className="w-full rounded-xl border-0 bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm focus:ring-2 focus:ring-primary-container/50 tracking-[0.2em] font-bold text-lg disabled:opacity-50"
-                        placeholder="123456"
-                        type="text"
-                        maxLength={6}
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                        disabled={isSubmitting}
-                        required
-                      />
-                    </label>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => { setConfirmationId(""); setOtp(""); }}
-                    className="text-primary font-bold text-sm hover:underline"
-                    disabled={isSubmitting}
-                  >
-                    Change Number / नंबर बदला
-                  </button>
+                <section className="animate-in fade-in slide-in-from-bottom-2">
+                  <OtpVerificationForm
+                    phone={formData.phone}
+                    otpDigits={otpDigits}
+                    setOtpDigits={setOtpDigits}
+                    onSubmit={completeRegistration}
+                    isSubmitting={isSubmitting}
+                    resendAvailableIn={resendAvailableIn}
+                    onResend={startVerification}
+                    onChangeNumber={() => { setConfirmationId(""); setOtpDigits(Array.from({ length: 6 }, () => "")); }}
+                  />
                 </section>
               )}
 
-              <div className="space-y-4 border-t border-outline-variant/30 pt-8">
-                <button
-                  className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
-                  type="submit"
-                  disabled={isSubmitting}
-                >
-                  {isSubmitting 
-                    ? "Please wait..." 
-                    : confirmationId 
-                      ? "Verify and Create Account / खाते तयार करा" 
+              {confirmationId ? null : (
+                <div className="space-y-4 border-t border-outline-variant/30 pt-8">
+                  <button
+                    className="flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting 
+                      ? "Please wait..." 
                       : "Send OTP / OTP पाठवा"}
-                  <span className="material-symbols-outlined">
-                    {confirmationId ? "how_to_reg" : "sms"}
-                  </span>
-                </button>
-                <p className="text-center text-sm font-medium text-on-surface-variant">
-                  Already have an account?{" "}
-                  <Link href="/login" className="font-bold text-primary hover:underline">
-                    Login here
-                  </Link>
-                </p>
-              </div>
+                    <span className="material-symbols-outlined">sms</span>
+                  </button>
+                  <p className="text-center text-sm font-medium text-on-surface-variant">
+                    Already have an account?{" "}
+                    <Link href="/login" className="font-bold text-primary hover:underline">
+                      Login here
+                    </Link>
+                  </p>
+                </div>
+              )}
             </form>
           </div>
         </div>

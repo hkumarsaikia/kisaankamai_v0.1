@@ -127,11 +127,7 @@ export const SUPPORT_HUB_MARKERS: SiteMapMarker[] = REGIONAL_HUBS.filter((hub) =
   color: hub.markerColor,
 }));
 
-export const RENT_RESULTS_MARKERS: SiteMapMarker[] = [
-  { lat: 16.86, lng: 74.57, label: "Mahindra 575 DI", sublabel: "₹800/hr • 4.2 km away", color: "#00251a" },
-  { lat: 16.84, lng: 74.52, label: "John Deere W70", sublabel: "₹2,500/hr • 8.5 km away", color: "#934a24" },
-  { lat: 16.87, lng: 74.55, label: "Shaktiman Rotavator", sublabel: "₹350/hr • 1.2 km away", color: "#693c00" },
-];
+export const RENT_RESULTS_MARKERS: SiteMapMarker[] = [];
 
 export const RENT_RESULTS_CIRCLES: SiteMapCircle[] = [
   { lat: 16.855, lng: 74.56, radius: 4000, color: "#10b981" },

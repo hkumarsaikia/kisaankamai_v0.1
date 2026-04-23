@@ -93,28 +93,13 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
       <article className="flex flex-col md:flex-row bg-surface rounded-2xl border border-surface-variant shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
         <div className="w-full md:w-2/5 lg:w-1/3 relative h-64 md:h-auto bg-surface-container-lowest">
           <ContentImage alt={item.name} className="w-full h-full object-cover object-center" src={item.coverImage} />
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            <span className="bg-tertiary text-on-tertiary text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider shadow-sm flex items-center gap-1">
-              <span className="material-symbols-outlined text-[14px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-                verified
-              </span>
-              Premium Listing
-            </span>
-          </div>
+
         </div>
         <div className="flex-1 p-5 md:p-6 flex flex-col justify-between">
           <div className="flex flex-col gap-3">
             <div className="flex justify-between items-start gap-4">
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="flex items-center text-tertiary-container font-bold text-sm bg-tertiary-fixed px-2 py-0.5 rounded">
-                    {item.rating.toFixed(1)}
-                    <span className="material-symbols-outlined text-[14px] ml-0.5" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      star
-                    </span>
-                  </span>
-                  <span className="text-on-surface-variant text-sm font-label">({Math.max(4, Math.round(item.rating * 5))} reviews)</span>
-                </div>
+
                 <h3 className="text-xl md:text-2xl font-bold text-on-background font-headline leading-tight">
                   {item.name}
                   <span className="block text-base font-medium text-on-surface-variant mt-0.5">{item.categoryLabel}</span>
@@ -376,50 +361,7 @@ export default function RentEquipmentView({
             ))}
           </div>
 
-          <div className="mt-4 flex items-center justify-center border-t border-surface-variant p-8">
-            <nav aria-label="Pagination" className="flex items-center gap-2">
-              <button
-                aria-label="Previous page"
-                className="flex size-10 items-center justify-center rounded-full text-on-surface transition-colors hover:bg-surface-container"
-                type="button"
-              >
-                <span className="material-symbols-outlined text-[20px]">chevron_left</span>
-              </button>
-              <button
-                aria-current="page"
-                className="flex size-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-on-primary shadow-sm"
-                type="button"
-              >
-                1
-              </button>
-              <button
-                className="flex size-10 items-center justify-center rounded-full text-sm font-medium text-on-surface transition-colors hover:bg-surface-container"
-                type="button"
-              >
-                2
-              </button>
-              <button
-                className="flex size-10 items-center justify-center rounded-full text-sm font-medium text-on-surface transition-colors hover:bg-surface-container"
-                type="button"
-              >
-                3
-              </button>
-              <span className="flex size-10 items-center justify-center text-sm text-on-surface-variant">...</span>
-              <button
-                className="flex size-10 items-center justify-center rounded-full text-sm font-medium text-on-surface transition-colors hover:bg-surface-container"
-                type="button"
-              >
-                8
-              </button>
-              <button
-                aria-label="Next page"
-                className="flex size-10 items-center justify-center rounded-full text-on-surface transition-colors hover:bg-surface-container"
-                type="button"
-              >
-                <span className="material-symbols-outlined text-[20px]">chevron_right</span>
-              </button>
-            </nav>
-          </div>
+
         </div>
       </main>
     </div>

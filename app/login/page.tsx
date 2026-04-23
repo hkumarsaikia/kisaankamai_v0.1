@@ -14,6 +14,7 @@ import {
 } from "@/components/auth/firebase-auth-client";
 import { useLanguage } from "@/components/LanguageContext";
 import { FormNotice } from "@/components/forms/FormKit";
+import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 
 const collageTiles = [
   "https://lh3.googleusercontent.com/aida-public/AB6AXuD1NdTf_TQE_mui1qW599KaJFqfLAHNiHUMX5Gu_45w185fZoQy9NWmAauTutW8u_nNTpuUyDZXjGJD7t43mSOFR8_HurEJAdDUcI5FErR3-ZXK0KgYkSysjyeml1WzYMwxm-9F8PcBb1bcj6oLnxg7D5meKMQwpmefnzuB9QFftY2o0ZN8a5CZeZni3YlW_u10JW0duifo2OXANqqYVkOO5EqGl7ZB1KiuWYCRqX3QTj1jpUCYU6ND3RdCNhFPeHXGZeBlKsEvOUXO",
@@ -30,8 +31,9 @@ export default function LoginPage() {
 
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
-  const [otp, setOtp] = useState("");
+  const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
   const [confirmationId, setConfirmationId] = useState("");
+  const [resendAvailableIn, setResendAvailableIn] = useState(0);
   const [mode, setMode] = useState<"phone" | "email">("phone");
   
   const [error, setError] = useState("");
@@ -49,6 +51,14 @@ export default function LoginPage() {
     if (val) setError("");
   };
 
+  useEffect(() => {
+    if (!resendAvailableIn) return;
+    const timer = window.setInterval(() => {
+      setResendAvailableIn((c) => (c <= 1 ? 0 : c - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [resendAvailableIn]);
+
   const startPhoneLogin = async () => {
     if (!auth) {
       setError(authUnavailableMessage);
@@ -64,6 +74,7 @@ export default function LoginPage() {
         storeKey: "login",
       });
       setConfirmationId(verificationId);
+      setResendAvailableIn(60);
     } catch (error) {
       setError(getFirebaseAuthError(error, langText("Could not send OTP.", "OTP पाठवता आला नाही.")));
     } finally {
@@ -82,7 +93,7 @@ export default function LoginPage() {
       await verifyPhoneOtp({
         auth,
         verificationId: confirmationId,
-        otp,
+        otp: otpDigits.join(""),
       });
       await finishFirebaseAuthSession({ auth });
       window.location.href = "/profile-selection";
@@ -249,36 +260,18 @@ export default function LoginPage() {
 
                 {/* OTP Input */}
                 {mode === "phone" && confirmationId ? (
-                  <div className="space-y-3 animate-in fade-in slide-in-from-bottom-2">
-                    <div className="flex justify-between items-center ml-1">
-                      <label className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-600 font-label" htmlFor="otp">
-                        {langText("Enter OTP", "OTP प्रविष्ट करा")}
-                      </label>
-                      <button
-                        type="button"
-                        onClick={() => { setConfirmationId(""); setOtp(""); }}
-                        className="text-[11px] font-bold text-secondary hover:text-primary-container transition-colors uppercase tracking-widest cursor-pointer"
-                        disabled={isSubmitting}
-                      >
-                        Change Number
-                      </button>
-                    </div>
-                    <div className="relative group">
-                      <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-500 text-xl group-focus-within:text-primary-container transition-colors">
-                        password
-                      </span>
-                      <input
-                        className="w-full pl-14 pr-5 py-5 bg-white border border-slate-300 rounded-[1.25rem] focus:ring-4 focus:ring-primary-container/10 focus:border-primary-container transition-all outline-none text-slate-900 font-bold text-lg tracking-[0.2em] placeholder:tracking-normal placeholder:text-slate-400 disabled:opacity-50"
-                        id="otp"
-                        placeholder="123456"
-                        type="text"
-                        maxLength={6}
-                        value={otp}
-                        onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                        required
-                        disabled={isSubmitting}
-                      />
-                    </div>
+                  <div className="animate-in fade-in slide-in-from-bottom-2 bg-white rounded-2xl">
+                    <OtpVerificationForm
+                      phone={identifier}
+                      otpDigits={otpDigits}
+                      setOtpDigits={setOtpDigits}
+                      onSubmit={finishPhoneLogin}
+                      isSubmitting={isSubmitting}
+                      resendAvailableIn={resendAvailableIn}
+                      onResend={startPhoneLogin}
+                      onChangeNumber={() => { setConfirmationId(""); setOtpDigits(Array.from({ length: 6 }, () => "")); }}
+                      error={error}
+                    />
                   </div>
                 ) : null}
 
@@ -323,33 +316,32 @@ export default function LoginPage() {
                   </div>
                 ) : null}
 
-                {error ? <FormNotice tone="error">{error}</FormNotice> : null}
+                {error && !(mode === "phone" && confirmationId) ? <FormNotice tone="error">{error}</FormNotice> : null}
 
-                {/* Login CTA */}
-                <div className="pt-4 flex flex-col items-center gap-8">
-                  <button
-                    className="w-full py-5 bg-primary-container text-white text-lg font-bold rounded-2xl shadow-[0_12px_24px_-8px_rgba(20,59,46,0.5)] hover:shadow-[0_20px_32px_-12px_rgba(20,59,46,0.6)] hover:-translate-y-1 active:translate-y-0 transition-all flex items-center justify-center gap-3 group disabled:opacity-70 disabled:hover:translate-y-0"
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting 
-                      ? langText("Please wait...", "कृपया प्रतीक्षा करा...") 
-                      : mode === "phone" && confirmationId 
-                        ? langText("Verify OTP", "OTP तपासा") 
+                {!(mode === "phone" && confirmationId) && (
+                  <div className="pt-4 flex flex-col items-center gap-8">
+                    <button
+                      className="w-full py-5 bg-primary-container text-white text-lg font-bold rounded-2xl shadow-[0_12px_24px_-8px_rgba(20,59,46,0.5)] hover:shadow-[0_20px_32px_-12px_rgba(20,59,46,0.6)] hover:-translate-y-1 active:translate-y-0 transition-all flex items-center justify-center gap-3 group disabled:opacity-70 disabled:hover:translate-y-0"
+                      type="submit"
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting 
+                        ? langText("Please wait...", "कृपया प्रतीक्षा करा...") 
                         : langText("Login / लॉगिन", "लॉगिन करा")}
-                    <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
-                      {mode === "phone" && !confirmationId ? "sms" : "arrow_forward"}
-                    </span>
-                  </button>
-                  <p className="text-sm font-semibold text-slate-700">
-                    {langText("New to Kisan Kamai?", "किसान कमाई मध्ये नवीन आहात?")}{" "}
-                    <Link href="/register">
-                      <span className="text-primary-container font-extrabold hover:underline ml-1 cursor-pointer">
-                        {langText("Create Account", "खाते तयार करा")}
+                      <span className="material-symbols-outlined text-2xl group-hover:translate-x-1 transition-transform">
+                        {mode === "phone" && !confirmationId ? "sms" : "arrow_forward"}
                       </span>
-                    </Link>
-                  </p>
-                </div>
+                    </button>
+                    <p className="text-sm font-semibold text-slate-700">
+                      {langText("New to Kisan Kamai?", "किसान कमाई मध्ये नवीन आहात?")}{" "}
+                      <Link href="/register">
+                        <span className="text-primary-container font-extrabold hover:underline ml-1 cursor-pointer">
+                          {langText("Create Account", "खाते तयार करा")}
+                        </span>
+                      </Link>
+                    </p>
+                  </div>
+                )}
               </form>
             </div>
           </div>
