@@ -36,7 +36,6 @@ export default function RegisterPage() {
     village: "",
     pincode: "",
     district: "Pune",
-    district: "Pune",
     role: "renter",
     idType: "",
     idNumber: "",
