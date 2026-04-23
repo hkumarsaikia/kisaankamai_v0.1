@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { FormEvent, KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -24,7 +25,6 @@ import {
   RESET_VERIFICATION_ID_KEY,
   RESET_VERIFIED_KEY,
   setResetStorageItem,
-  setResetStorageItem,
 } from "@/components/auth/password-reset-storage";
 import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 
@@ -45,8 +45,7 @@ export default function VerifyOtpPage() {
   const [info, setInfo] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
-  const [resendAvailableIn, setResendAvailableIn] = useState(0);
-  const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+  const [resendAvailableIn, setResendAvailableIn] = useState(60);
   const resetUnavailableMessage = langText(
     "Password reset by OTP is unavailable in this deployment because Firebase phone authentication is not configured.",
     "या डिप्लॉयमेंटमध्ये Firebase फोन प्रमाणीकरण कॉन्फिगर नसल्यामुळे OTP द्वारे पासवर्ड रीसेट उपलब्ध नाही."
@@ -85,7 +84,13 @@ export default function VerifyOtpPage() {
 
     return () => window.clearInterval(timer);
   }, [resendAvailableIn]);
+  const sendCode = useCallback(async () => {
+    if (isSending || !PHONE_RESET_OTP_ENABLED || !auth || !phoneE164) {
+      return;
+    }
 
+    setIsSending(true);
+    setError("");
     setInfo("");
 
     try {
@@ -119,7 +124,7 @@ export default function VerifyOtpPage() {
     } finally {
       setIsSending(false);
     }
-  }, [auth, isSending, langText, maskedPhone, phoneE164, resetUnavailableMessage, storageBlockedMessage]);
+  }, [auth, isSending, langText, maskedPhone, phoneE164, storageBlockedMessage]);
 
   useEffect(() => {
     if (!PHONE_RESET_OTP_ENABLED || !auth || !phoneE164 || verificationId) {

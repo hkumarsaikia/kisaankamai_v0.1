@@ -347,8 +347,6 @@ export default function RegisterPage() {
                           disabled={isSubmitting}
                         />
                       </label>
-
-                      </label>
                     </div>
                   </section>
 
