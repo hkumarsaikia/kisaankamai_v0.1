@@ -37,6 +37,7 @@
   "exclude": [
     "node_modules",
     "vendor",
+    "Vendor",
     ".worktrees",
     "worktrees",
     "scripts"
