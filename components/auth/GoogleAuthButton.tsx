@@ -1,7 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { useEffect, useState } from "react";
+import {
+  GoogleAuthProvider,
+  getRedirectResult,
+  signInWithPopup,
+  signInWithRedirect,
+  type Auth,
+} from "firebase/auth";
 import { useAuth } from "@/components/AuthContext";
 import {
   fetchCurrentSession,
@@ -25,6 +31,24 @@ function isProfileComplete(session: LocalSession) {
   return Boolean(session.profile?.phone?.trim() && session.profile?.pincode?.trim());
 }
 
+async function finishGoogleSessionFromAuth(auth: Auth) {
+  const session = await finishFirebaseAuthSession({
+    auth,
+    shouldFetchSession: true,
+  });
+
+  return session || fetchCurrentSession();
+}
+
+function shouldFallbackToRedirect(error: unknown) {
+  const code =
+    typeof error === "object" && error && "code" in error && typeof error.code === "string"
+      ? error.code
+      : "";
+
+  return code === "auth/popup-blocked" || code === "auth/cancelled-popup-request";
+}
+
 async function signInWithGoogleAndCreateSession() {
   const auth = getOptionalFirebaseAuthClient();
   if (!auth) {
@@ -34,19 +58,60 @@ async function signInWithGoogleAndCreateSession() {
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
 
-  await signInWithPopup(auth, provider);
-  const session = await finishFirebaseAuthSession({
-    auth,
-    shouldFetchSession: true,
-  });
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (error) {
+    if (shouldFallbackToRedirect(error)) {
+      await signInWithRedirect(auth, provider);
+      return null;
+    }
 
-  return session || fetchCurrentSession();
+    throw error;
+  }
+
+  return finishGoogleSessionFromAuth(auth);
 }
 
 export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProps) {
   const { setSession } = useAuth();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const auth = getOptionalFirebaseAuthClient();
+    if (!auth) {
+      return;
+    }
+
+    let isActive = true;
+    getRedirectResult(auth)
+      .then(async (result) => {
+        if (!isActive || !result?.user) {
+          return;
+        }
+
+        setIsLoading(true);
+        const session = await finishGoogleSessionFromAuth(auth);
+        if (!isActive) {
+          return;
+        }
+
+        setSession(session);
+        window.location.href = isProfileComplete(session) ? "/profile-selection" : "/complete-profile";
+      })
+      .catch((authError) => {
+        if (!isActive) {
+          return;
+        }
+
+        setError(getGoogleAuthError(authError));
+        setIsLoading(false);
+      });
+
+    return () => {
+      isActive = false;
+    };
+  }, [setSession]);
 
   const handleGoogleAuth = async () => {
     if (isLoading) {
@@ -58,6 +123,9 @@ export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProp
 
     try {
       const session = await signInWithGoogleAndCreateSession();
+      if (!session) {
+        return;
+      }
       setSession(session);
       window.location.href = isProfileComplete(session) ? "/profile-selection" : "/complete-profile";
     } catch (authError) {

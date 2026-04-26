@@ -37,34 +37,10 @@ const metrics = [
 ];
 
 const team = [
-  {
-    name: "Amol Deshmukh",
-    role: "Founder & CEO",
-    roleMr: "संस्थापक आणि मुख्य कार्यकारी अधिकारी",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCSnB84BFmwcoVZ-E3jCWWp-dyTxq4S94reWgsWm_PolCj99YjqQptYvQ4iVqUPcdqeL_k4UQ0a8l5c_xi6jK9aZyXKmUbLDGBkzjpXbstpeG_ET9Mop9V4RDmQ7BE_iZ7vqCN44FE21AZusPOBZSZeTKeJhznBdhT-8sWCu8liideyGqUus4JeCZm-wdv8CVRsTcHx6THBMKAzqiIly3naKczLqe1WyU6qkpDyP8noy1WY4D1KjDtDhRzzQ8Ef5lRxtivywT6HOxxV",
-  },
-  {
-    name: "Priya Patil",
-    role: "Chief Technology Officer",
-    roleMr: "मुख्य तंत्रज्ञान अधिकारी",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBQ2jH3Y7CD3U9YZR3aYx4tdbmbzFVR5m0JQWM5QaYTM2aX91KBn1UZq0_ra620cVMzH0DLVrdUvYXgL0cwmII5Je5r5ye9xqWiFDrAZvFusQMn1w3xc6_7bCHGqXBHxN8cxeRE0_Ykk-qa_Z43xZ-ypucjfWiaKUTKqUn3Oa08L96oHk6sxpI2-kh4tmctz2Q7E8m5FLX-Bl1CX_dYx92xYCnlN9PlfKHaeL36QpgPch2lWxKqW3EbqMCYw3bcGIdwj5yA2RkAi9v3",
-  },
-  {
-    name: "Siddharth Mane",
-    role: "Head of Operations",
-    roleMr: "ऑपरेशन्स प्रमुख",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuCgRjA86YTweuTqOl7pPaMgvfhtC54eQ2RVSNV-jQ0AybTu9GtWpY-jvJcYtOw_mn6afjDRA4lIO1KoQf2RmmLgqdiCrHq3n0oGDbeeEpOyaInHZLU3FYJ6JI83GXWAEg5TChRQ4wcf2ANzdXygBPahGGSPO-ofRyDcdZyCmQDQ_08TlSEqH7FaSRdhXVJw6pqZO7iYV-93vZ_mqbCngI3H4Pl1-gD_Bvf-ASNwBfhrufjg_ih6TF9GCRxTZ0TSdov_cPO1K7-kgHts",
-  },
-  {
-    name: "Anjali Kulkarni",
-    role: "Agronomy Advisor",
-    roleMr: "कृषी सल्लागार",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuB1n1WUls6hvepccuz8zvAXTTZDBzq3jTiLNpO2f3vRHecv2QBf4X2yXCUbzoyfwcrvgpIheb2Ei7lmLRMy9NEcnW_X_hyOMzsfRBVilWJ-kfUo080ojCM_irqkWCKxKE4kkBV61REjF4xQ599yAB-HCbKmnlEBxmJDxROvYOzHzdA3fCVI8cy2ijePEQpY8H8EHpZzugfc9Y2DxB-GEMwLsIT8JsAKIvNVSWqjAXexFjvXGo_rCC8ApOTFPCzLaCbEWdFBHFlGTNyj",
-  },
+  "Rohit Nikaam",
+  "Pratik Shinde",
+  "Harshwardhan Shinde",
+  "Raksha Sonawane",
 ];
 
 export default function AboutPage() {
@@ -183,14 +159,11 @@ export default function AboutPage() {
           <SectionTitle title={{ en: "Meet the Team", mr: "आमचे नेतृत्व" }} />
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {team.map((person) => (
-              <div key={person.name} className="text-center">
-                <div className="relative mb-4 aspect-square overflow-hidden rounded-[2rem] border border-outline-variant/20 bg-surface-container">
-                  <Image src={person.image} alt={`${person.name}, ${person.role}`} fill className="object-cover" />
-                </div>
-                <h4 className="text-lg font-bold">{person.name}</h4>
-                <p className="text-sm font-semibold uppercase tracking-wider text-secondary">
-                  {langText(person.role, person.roleMr)}
-                </p>
+              <div
+                key={person}
+                className="rounded-2xl border border-outline-variant/30 bg-surface-container-low px-4 py-8 text-center"
+              >
+                <h4 className="text-lg font-bold">{person}</h4>
               </div>
             ))}
           </div>

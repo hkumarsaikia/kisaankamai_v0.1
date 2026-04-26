@@ -20,7 +20,7 @@ test("header primary nav matches the approved order and routes", async () => {
   );
 });
 
-test("home and categories use square equipment cards and northern maharashtra copy", async () => {
+test("home and categories use square equipment cards, northern maharashtra copy, and live categories", async () => {
   const [homeSource, categoriesSource] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/categories/page.tsx", import.meta.url), "utf8"),
@@ -31,6 +31,10 @@ test("home and categories use square equipment cards and northern maharashtra co
   assert.doesNotMatch(homeSource, /h-\[350px\]/);
 
   assert.match(categoriesSource, /aspect-square/);
+  assert.match(categoriesSource, /getEquipmentList/);
+  assert.match(categoriesSource, /getCategorySummariesFromEquipment/);
+  assert.doesNotMatch(categoriesSource, /const categories = \[/);
+  assert.doesNotMatch(categoriesSource, /hero_tractor|harvester_action|implement_4k|plough_4k|sprayer\.png/);
   assert.doesNotMatch(categoriesSource, /h-\[400px\]/);
 });
 
@@ -211,15 +215,11 @@ test("about and terms pages remove only the requested heading blocks", async () 
   assert.doesNotMatch(termsSource, /Need Help\?/);
 });
 
-test("equipment seed data removes the requested /equipment/5 description sentence", async () => {
-  const { getMockEquipmentById } = await import("../lib/equipment.ts");
-  const equipment = getMockEquipmentById("5");
+test("public equipment module no longer exports mock equipment records", async () => {
+  const equipmentSource = await readFile(new URL("../lib/equipment.ts", import.meta.url), "utf8");
 
-  assert(equipment, "Expected seeded equipment 5 to exist");
-  assert.notEqual(
-    equipment.description,
-    "A premium tractor listing with verified operator support, strong PTO output, and regional owner coverage."
-  );
+  assert.doesNotMatch(equipmentSource, /MOCK_EQUIPMENT|getMockEquipmentList|getMockEquipmentById/);
+  assert.doesNotMatch(equipmentSource, /Mahindra Novo|John Deere|Swaraj|Shaktiman/);
 });
 
 test("shared equipment description sanitizer removes the deprecated copy", async () => {

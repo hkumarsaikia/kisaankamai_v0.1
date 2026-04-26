@@ -1,5 +1,6 @@
 import RentEquipmentView from "./RentEquipmentView";
 import { getRentEquipmentView } from "@/lib/discovery-routes";
+import { getCategorySummariesFromEquipment } from "@/lib/equipment-categories";
 import { getEquipmentList } from "@/lib/server/equipment";
 
 const QUERY_ALIASES: Record<string, string[]> = {
@@ -55,6 +56,7 @@ function expandQueryTerms(query: string) {
   }
 
   terms.add(normalizedQuery);
+  terms.add(normalizedQuery.replace(/-/g, " "));
 
   if (normalizedQuery.endsWith("s") && normalizedQuery.length > 1) {
     terms.add(normalizedQuery.slice(0, -1));
@@ -76,6 +78,7 @@ export default async function RentEquipmentPage({
   const location = resolvedSearchParams?.location || "";
   const query = resolvedSearchParams?.query || "";
   const items = await getEquipmentList();
+  const categorySummaries = getCategorySummariesFromEquipment(items);
   const normalizedQuery = query.trim().toLowerCase();
   const queryTerms = expandQueryTerms(query);
 
@@ -105,13 +108,13 @@ export default async function RentEquipmentPage({
   });
   const view = items.length > 0 ? requestedView : "empty";
 
-  const visibleItems =
-    view === "available" ? items.slice(0, 8) : view === "empty" ? items : filteredItems;
+  const visibleItems = view === "available" ? items : view === "empty" ? items : filteredItems;
 
   return (
     <RentEquipmentView
       view={view}
       items={visibleItems}
+      categorySummaries={categorySummaries}
       initialLocation={location}
       initialQuery={query}
     />

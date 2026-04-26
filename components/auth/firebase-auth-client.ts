@@ -45,6 +45,7 @@ type SessionProfilePayload = {
 
 type SessionPayload = {
   workspacePreference?: "owner" | "renter";
+  password?: string;
   profile?: SessionProfilePayload;
 };
 

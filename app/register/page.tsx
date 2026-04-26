@@ -6,11 +6,9 @@ import { AppLink as Link } from "@/components/AppLink";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import {
   clearRecaptchaVerifier,
-  clearServerAuthSession,
   finishFirebaseAuthSession,
   getFirebaseAuthError,
   getOptionalFirebaseAuthClient,
-  linkEmailPasswordCredential,
   startPhoneVerification,
   uploadVerificationDocuments,
   verifyPhoneOtp,
@@ -30,6 +28,7 @@ type RegisterFormState = {
   pincode: string;
   idType: string;
   idNumber: string;
+  workspacePreference: "renter" | "owner";
 };
 
 type UploadState = {
@@ -61,6 +60,7 @@ export default function RegisterPage() {
     pincode: "",
     idType: "",
     idNumber: "",
+    workspacePreference: "renter",
   });
   const [documents, setDocuments] = useState<UploadState>({
     front: null,
@@ -106,13 +106,13 @@ export default function RegisterPage() {
     }
 
     const timer = window.setTimeout(() => {
-      router.replace("/login");
+      router.replace("/profile-selection");
     }, 1400);
 
     return () => window.clearTimeout(timer);
   }, [router, stage]);
 
-  const updateField = (field: keyof RegisterFormState, value: string) => {
+  const updateField = <K extends keyof RegisterFormState>(field: K, value: RegisterFormState[K]) => {
     setFormState((current) => ({ ...current, [field]: value }));
     setError("");
   };
@@ -156,14 +156,7 @@ export default function RegisterPage() {
       return langText("Enter a valid email address.", "वैध ईमेल पत्ता टाका.");
     }
 
-    if ((formState.email && !formState.password) || (!formState.email && formState.password)) {
-      return langText(
-        "Enter both email and password, or leave both blank.",
-        "ईमेल आणि पासवर्ड दोन्ही भरा किंवा दोन्ही रिकामे ठेवा."
-      );
-    }
-
-    if (formState.password && formState.password.length < 6) {
+    if (!formState.password || formState.password.length < 6) {
       return langText("Password must be at least 6 characters.", "पासवर्ड किमान 6 अक्षरांचा असावा.");
     }
 
@@ -234,20 +227,14 @@ export default function RegisterPage() {
         ],
       });
 
-      if (formState.email && formState.password) {
-        await linkEmailPasswordCredential({
-          auth,
-          email: formState.email,
-          password: formState.password,
-        });
-      }
-
       const verificationPayload: VerificationDocumentRecord[] | undefined =
         verificationDocuments.length ? verificationDocuments : undefined;
 
       await finishFirebaseAuthSession({
         auth,
         payload: {
+          workspacePreference: formState.workspacePreference,
+          password: formState.password,
           profile: {
             fullName: formState.fullName.trim(),
             phone: formState.phone.trim(),
@@ -266,7 +253,6 @@ export default function RegisterPage() {
         },
       });
 
-      await clearServerAuthSession();
       setStage("verified");
     } catch (authError) {
       setStage("otp");
@@ -333,10 +319,10 @@ export default function RegisterPage() {
                     : undefined
                 }
                 view={stage === "verified" ? "success" : stage === "verifying" ? "loading" : "entry"}
-                successTitle={langText("Verified. Please login.", "पडताळणी पूर्ण झाली. कृपया लॉगिन करा.")}
+                successTitle={langText("Account verified", "खाते पडताळले गेले")}
                 successMessage={langText(
-                  "Your account is ready. Redirecting you to login now.",
-                  "तुमचे खाते तयार झाले आहे. तुम्हाला लॉगिनकडे वळवले जात आहे."
+                  "Your account is ready. Redirecting you to choose your workspace now.",
+                  "तुमचे खाते तयार झाले आहे. आता तुम्हाला कार्यक्षेत्र निवडण्यासाठी वळवले जात आहे."
                 )}
               />
               <div id="kk-register-recaptcha" className="hidden" />
@@ -350,8 +336,8 @@ export default function RegisterPage() {
                   </h1>
                   <p className="text-sm font-medium text-on-surface-variant sm:text-base">
                     {langText(
-                      "Phone verification creates the account, while optional email and documents stay linked to the same Firebase-backed profile.",
-                      "फोन पडताळणी खात्याची निर्मिती करते, आणि पर्यायी ईमेल व कागदपत्रे त्याच Firebase-आधारित प्रोफाइलशी जोडली जातात."
+                      "Phone verification creates the account, and your password lets you sign in later with either mobile number or email.",
+                      "फोन पडताळणी खात्याची निर्मिती करते, आणि पासवर्डमुळे तुम्ही नंतर मोबाईल नंबर किंवा ईमेलने लॉगिन करू शकता."
                     )}
                   </p>
                   {!auth ? <p className="text-sm font-semibold text-amber-700">{authUnavailableMessage}</p> : null}
@@ -429,7 +415,7 @@ export default function RegisterPage() {
 
                     <label className="space-y-1.5">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
-                        {langText("Password (optional with email)", "पासवर्ड (ईमेलसह पर्यायी)")}
+                        {langText("Password", "पासवर्ड")}
                       </span>
                       <div className="relative">
                         <input
@@ -439,6 +425,7 @@ export default function RegisterPage() {
                           placeholder="••••••••"
                           type={showPassword ? "text" : "password"}
                           disabled={isSubmitting}
+                          required
                         />
                         <button
                           type="button"
@@ -452,6 +439,58 @@ export default function RegisterPage() {
                         </button>
                       </div>
                     </label>
+                  </div>
+                </section>
+
+                <section className="space-y-4">
+                  <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
+                    <span
+                      className="material-symbols-outlined text-3xl text-primary"
+                      style={{ fontVariationSettings: "'FILL' 1" }}
+                    >
+                      dashboard
+                    </span>
+                    <h2 className="font-headline text-2xl font-bold text-primary">
+                      {langText("Primary workspace", "मुख्य कार्यक्षेत्र")}
+                    </h2>
+                  </div>
+
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    {[
+                      {
+                        value: "renter" as const,
+                        title: langText("Rent equipment", "उपकरणे भाड्याने घ्या"),
+                        description: langText(
+                          "Find and request nearby machines.",
+                          "जवळच्या मशिन्स शोधा आणि विनंती करा."
+                        ),
+                      },
+                      {
+                        value: "owner" as const,
+                        title: langText("List equipment", "उपकरणे सूचीबद्ध करा"),
+                        description: langText(
+                          "Publish machines and manage bookings.",
+                          "मशिन्स प्रकाशित करा आणि बुकिंग सांभाळा."
+                        ),
+                      },
+                    ].map((option) => (
+                      <button
+                        key={option.value}
+                        type="button"
+                        onClick={() => updateField("workspacePreference", option.value)}
+                        className={`rounded-2xl border p-4 text-left transition-all ${
+                          formState.workspacePreference === option.value
+                            ? "border-primary bg-primary/10 text-primary"
+                            : "border-outline-variant bg-surface-container-low text-on-surface hover:border-primary-container"
+                        }`}
+                        disabled={isSubmitting}
+                      >
+                        <span className="block text-sm font-extrabold">{option.title}</span>
+                        <span className="mt-1 block text-xs font-medium opacity-75">
+                          {option.description}
+                        </span>
+                      </button>
+                    ))}
                   </div>
                 </section>
 

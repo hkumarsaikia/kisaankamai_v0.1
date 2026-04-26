@@ -72,6 +72,10 @@ function normalizeIdentifier(identifier: string) {
   return trimmed.replace(/\D/g, "");
 }
 
+function normalizeEmail(input?: string | null) {
+  return normalizeOptionalString(input).toLowerCase();
+}
+
 function normalizePhone(input?: string | null) {
   return (input || "").replace(/\D/g, "").slice(-10);
 }
@@ -127,6 +131,31 @@ function savedItemId(userId: string, listingId: string) {
 
 function isPlaceholderEmail(email?: string | null) {
   return Boolean(email && email.endsWith("@kisankamai.local"));
+}
+
+function buildPasswordLoginEmail(phoneOrUserId: string) {
+  const normalizedPhone = normalizePhone(phoneOrUserId);
+  const safeIdentifier = (normalizedPhone || phoneOrUserId)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return `phone.${safeIdentifier || randomUUID().slice(0, 8)}@kisankamai.local`;
+}
+
+export function resolvePasswordLoginEmail(user: Pick<UserRecord, "email" | "phone" | "passwordLoginEmail">) {
+  const configuredEmail = normalizeEmail(user.passwordLoginEmail);
+  if (configuredEmail) {
+    return configuredEmail;
+  }
+
+  const accountEmail = normalizeEmail(user.email);
+  if (accountEmail && !isPlaceholderEmail(accountEmail)) {
+    return accountEmail;
+  }
+
+  return "";
 }
 
 async function exchangeCustomToken(customToken: string) {
@@ -320,6 +349,7 @@ function mapUserFromFirestore(
   return {
     id: uid,
     email: data?.email || authUser?.email || `${uid}@kisankamai.local`,
+    passwordLoginEmail: data?.passwordLoginEmail || "",
     phone: normalizePhone(data?.phone || authUser?.phoneNumber || ""),
     passwordHash: data?.passwordHash || "",
     roles: data?.roles?.length ? data.roles : allUserRoles(),
@@ -451,7 +481,7 @@ export async function getLocalSessionByUserId(userId: string): Promise<LocalSess
     user: {
       id: userId,
       name: profile.fullName || authUser?.displayName || "Kisan Kamai User",
-      email: profile.email || user.email,
+      email: profile.email || (isPlaceholderEmail(user.email) ? "" : user.email),
       phone: profile.phone || user.phone,
       roles: user.roles,
     },
@@ -467,7 +497,12 @@ export async function loginWithIdentifier(identifier: string, password: string) 
   }
 
   try {
-    const idToken = await exchangePasswordLogin(user.email, password);
+    const passwordLoginEmail = resolvePasswordLoginEmail(user);
+    if (!passwordLoginEmail) {
+      return null;
+    }
+
+    const idToken = await exchangePasswordLogin(passwordLoginEmail, password);
     return { idToken, session: await getLocalSessionByUserId(user.id) };
   } catch {
     return null;
@@ -475,8 +510,9 @@ export async function loginWithIdentifier(identifier: string, password: string) 
 }
 
 export async function registerLocalUser(input: RegisterInput) {
-  const normalizedEmail = input.email?.trim().toLowerCase() || "";
+  const normalizedEmail = normalizeEmail(input.email);
   const normalizedPhone = normalizePhone(input.phone);
+  const passwordLoginEmail = normalizedEmail || buildPasswordLoginEmail(normalizedPhone || input.phone || "");
   const rolePreference = normalizeRolePreference(input.role);
 
   const existingByEmail =
@@ -494,14 +530,16 @@ export async function registerLocalUser(input: RegisterInput) {
   const timestamp = nowIso();
   const authUser = await getAdminAuth().createUser({
     displayName: input.fullName.trim(),
-    email: normalizedEmail || undefined,
+    email: passwordLoginEmail,
     phoneNumber: toE164Phone(normalizedPhone),
     password: input.password,
+    emailVerified: Boolean(normalizedEmail),
   });
 
   const userRecord: UserRecord = {
     id: authUser.uid,
-    email: normalizedEmail || authUser.email || `${authUser.uid}@kisankamai.local`,
+    email: normalizedEmail || passwordLoginEmail,
+    passwordLoginEmail,
     phone: normalizedPhone || normalizePhone(authUser.phoneNumber),
     passwordHash: "",
     roles: allUserRoles(),
@@ -541,6 +579,63 @@ export async function registerLocalUser(input: RegisterInput) {
     idToken,
     session: await getLocalSessionByUserId(authUser.uid),
   };
+}
+
+export async function createOrUpdatePasswordLoginCredential(
+  userId: string,
+  input: {
+    email?: string | null;
+    phone?: string | null;
+    password: string;
+  }
+) {
+  const password = normalizeOptionalString(input.password);
+  if (password.length < 6) {
+    throw new Error("Password must be at least 6 characters.");
+  }
+
+  const currentUser = await getUserRecordById(userId);
+  const normalizedEmail = normalizeEmail(input.email);
+  const normalizedPhone = normalizePhone(input.phone || currentUser?.phone || "");
+  const currentPasswordLoginEmail = currentUser ? resolvePasswordLoginEmail(currentUser) : "";
+  const passwordLoginEmail =
+    normalizedEmail || currentPasswordLoginEmail || buildPasswordLoginEmail(normalizedPhone || userId);
+  const timestamp = nowIso();
+  const visibleEmail =
+    normalizedEmail ||
+    (currentUser?.email && !isPlaceholderEmail(currentUser.email) ? currentUser.email : passwordLoginEmail);
+
+  const authUpdates: {
+    email: string;
+    password: string;
+    emailVerified: boolean;
+    phoneNumber?: string;
+  } = {
+    email: passwordLoginEmail,
+    password,
+    emailVerified: Boolean(normalizedEmail),
+  };
+
+  const e164Phone = toE164Phone(normalizedPhone);
+  if (e164Phone) {
+    authUpdates.phoneNumber = e164Phone;
+  }
+
+  await getAdminAuth().updateUser(userId, authUpdates);
+  await usersCollection().doc(userId).set(
+    {
+      id: userId,
+      email: visibleEmail,
+      passwordLoginEmail,
+      phone: normalizedPhone || currentUser?.phone || "",
+      roles: currentUser?.roles || allUserRoles(),
+      fcmTokens: currentUser?.fcmTokens || [],
+      passwordHash: "",
+      createdAt: currentUser?.createdAt || timestamp,
+      updatedAt: timestamp,
+    } satisfies UserRecord,
+    { merge: true }
+  );
 }
 
 export async function updateLocalProfile(
@@ -601,11 +696,19 @@ export async function updateLocalProfile(
     input.email === undefined ? currentUser?.email || updatedProfile.email : input.email || currentUser?.email;
   const nextPhone =
     input.phone === undefined ? currentUser?.phone || updatedProfile.phone : normalizePhone(input.phone);
+  const nextPasswordLoginEmail =
+    input.email !== undefined && nextEmail && !isPlaceholderEmail(nextEmail)
+      ? normalizeEmail(nextEmail)
+      : currentUser?.passwordLoginEmail || resolvePasswordLoginEmail(currentUser || {
+          email: nextEmail || "",
+          phone: nextPhone || "",
+        });
 
   await usersCollection().doc(userId).set(
     {
       id: userId,
       email: nextEmail || `${userId}@kisankamai.local`,
+      passwordLoginEmail: nextPasswordLoginEmail || "",
       phone: nextPhone || "",
       roles: currentUser?.roles || allUserRoles(),
       fcmTokens: currentUser?.fcmTokens || [],
@@ -645,14 +748,11 @@ export async function resetLocalPassword(identifier: string, password: string) {
     throw new Error("No account found for this email or phone.");
   }
 
-  await getAdminAuth().updateUser(user.id, { password });
-  await usersCollection().doc(user.id).set(
-    {
-      updatedAt: nowIso(),
-      passwordHash: "",
-    },
-    { merge: true }
-  );
+  await createOrUpdatePasswordLoginCredential(user.id, {
+    email: isPlaceholderEmail(user.email) ? undefined : user.email,
+    phone: user.phone,
+    password,
+  });
 }
 
 export function listingToEquipmentRecord(listing: ListingRecord): EquipmentRecord {
@@ -839,6 +939,32 @@ export async function updateListingRecord(
   await listingsCollection().doc(listingId).set(updated, { merge: true });
   await mirrorListing(updated, "update");
   return updated;
+}
+
+export async function notifyListingChanged(input: {
+  listing: ListingRecord;
+  action: "created" | "updated" | "paused" | "activated";
+}) {
+  const title =
+    input.action === "created"
+      ? "Listing published"
+      : input.action === "paused"
+        ? "Listing paused"
+        : input.action === "activated"
+          ? "Listing activated"
+          : "Listing updated";
+
+  await sendPushNotificationToUsers({
+    userIds: [input.listing.ownerUserId],
+    title,
+    body: `${input.listing.name} is now ${input.listing.status}.`,
+    link: "/owner-profile",
+    data: {
+      listingId: input.listing.id,
+      status: input.listing.status,
+      workspace: "owner",
+    },
+  });
 }
 
 export async function deleteListingRecord(listingId: string, ownerUserId: string) {

@@ -24,6 +24,7 @@
     "sheets:backfill": "node scripts/google-sheets-backfill.mjs",
     "seed:final-test-accounts": "node scripts/final-test-accounts-seed.mjs",
     "cleanup:final-test-accounts": "node scripts/final-test-accounts-cleanup.mjs",
+    "pause:mock-listings": "node scripts/pause-mock-listings.mjs",
     "repo:sync-live": "node scripts/live-repo-sync.mjs",
     "discord:notify": "node scripts/discord-webhook-notify.mjs"
   },

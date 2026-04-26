@@ -10,22 +10,40 @@ import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { DETAIL_ROUTE_TEMPLATE } from "@/lib/discovery-routes";
 import { createHubCirclesFromEquipment, createListingMarkersFromEquipment } from "@/lib/map-data";
 import { assetPath } from "@/lib/site";
+import { normalizeCategorySlug, type EquipmentCategorySummary } from "@/lib/equipment-categories";
 import type { EquipmentRecord } from "@/lib/equipment";
 
 type RentEquipmentViewMode = "available" | "query-category" | "empty";
-
-const categoryChips = [
-  { label: { en: "Tractors", mr: "ट्रॅक्टर्स" }, value: "tractors", icon: "agriculture" },
-  { label: { en: "Harvesters", mr: "हार्वेस्टर्स" }, value: "harvesters", icon: "agriculture" },
-  { label: { en: "Sprayers", mr: "स्प्रेअर्स" }, value: "sprayers", icon: "mist" },
-  { label: { en: "Rotavators", mr: "रोटाव्हेटर्स" }, value: "rotavators", icon: "settings_input_component" },
-  { label: { en: "Implements", mr: "अवजारे" }, value: "implements", icon: "build" },
-] as const;
 
 type LocalizedLabel = {
   en: string;
   mr: string;
 };
+
+const categoryIconBySlug: Record<string, string> = {
+  tractor: "agriculture",
+  tractors: "agriculture",
+  harvester: "precision_manufacturing",
+  harvesters: "precision_manufacturing",
+  implement: "build",
+  implements: "build",
+  sprayer: "mist",
+  sprayers: "mist",
+  rotavator: "settings_input_component",
+  rotavators: "settings_input_component",
+  seeder: "psychiatry",
+  seeders: "psychiatry",
+  trolley: "local_shipping",
+  trolleys: "local_shipping",
+};
+
+function getCategoryIcon(summary: EquipmentCategorySummary) {
+  return (
+    categoryIconBySlug[summary.slug] ||
+    categoryIconBySlug[summary.category] ||
+    "agriculture"
+  );
+}
 
 function buildSearchHref(location: string, query: string) {
   const params = new URLSearchParams();
@@ -215,11 +233,13 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
 export default function RentEquipmentView({
   view,
   items,
+  categorySummaries,
   initialLocation,
   initialQuery,
 }: {
   view: RentEquipmentViewMode;
   items: EquipmentRecord[];
+  categorySummaries: EquipmentCategorySummary[];
   initialLocation: string;
   initialQuery: string;
 }) {
@@ -227,6 +247,7 @@ export default function RentEquipmentView({
   const [location, setLocation] = useState(initialLocation);
   const [query, setQuery] = useState(initialQuery);
   const [availablePage, setAvailablePage] = useState(1);
+  const activeCategorySlug = normalizeCategorySlug(initialQuery);
   const inventoryMarkers = useMemo(() => createListingMarkersFromEquipment(items), [items]);
   const inventoryCircles = useMemo(() => createHubCirclesFromEquipment(items), [items]);
   const availablePageSize = 8;
@@ -416,18 +437,23 @@ export default function RentEquipmentView({
               />
             </div>
             <div className="flex overflow-x-auto pb-2 gap-3 hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
-              {categoryChips.map((chip) => (
+              {categorySummaries.map((category) => (
                 <Link
-                  key={chip.value}
-                  href={`/rent-equipment?query=${chip.value}`}
+                  key={category.slug}
+                  href={`/rent-equipment?query=${category.slug}`}
                   className={`flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm font-medium whitespace-nowrap border transition-colors ${
-                    query.trim().toLowerCase() === chip.value
+                    activeCategorySlug === category.slug
                       ? "bg-primary text-on-primary border-primary"
                       : "bg-surface text-on-surface border-outline-variant hover:bg-surface-container-low"
                   }`}
                 >
-                  <span className="material-symbols-outlined text-sm">{chip.icon}</span>
-                  {langText(chip.label.en, chip.label.mr)}
+                  <span className="material-symbols-outlined text-sm">
+                    {getCategoryIcon(category)}
+                  </span>
+                  {category.name}
+                  <span className="rounded-full bg-surface-container-high px-2 py-0.5 text-[11px] font-bold text-on-surface-variant">
+                    {category.count}
+                  </span>
                 </Link>
               ))}
             </div>

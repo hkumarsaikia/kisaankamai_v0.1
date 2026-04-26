@@ -9,6 +9,7 @@ import {
   createSubmissionRecord,
   deleteListingRecord,
   getListingById,
+  notifyListingChanged,
   normalizeRolePreference,
   removeLocalUploadIfExists,
   resetLocalPassword,
@@ -454,6 +455,7 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         status: formData.get("status") === "paused" ? "paused" : "active",
       });
 
+      await notifyListingChanged({ listing, action: listing.status === "active" ? "created" : "paused" });
       revalidateCommonPaths();
       revalidatePath(`/equipment/${listing.id}`);
       return { ok: true, redirectTo: resolvePortalHref("owner") };
@@ -500,7 +502,7 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
         : existing.galleryImages;
       const coverImage = uploadedImages[0]?.publicUrl || existing.coverImage;
 
-      await updateListingRecord(listingId, session.user.id, {
+      const updatedListing = await updateListingRecord(listingId, session.user.id, {
         name: String(formData.get("name") || existing.name).trim(),
         category: String(formData.get("category") || existing.category).trim().toLowerCase(),
         categoryLabel:
@@ -532,6 +534,7 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
             : formData.get("operatorIncluded") === "on",
       });
 
+      await notifyListingChanged({ listing: updatedListing, action: "updated" });
       revalidateCommonPaths();
       revalidatePath(`/equipment/${listingId}`);
       return { ok: true, redirectTo: resolvePortalHref("owner") };
@@ -585,7 +588,11 @@ export async function toggleListingStatusAction(
     }
 
     try {
-      await updateListingRecord(listingId, session.user.id, { status });
+      const listing = await updateListingRecord(listingId, session.user.id, { status });
+      await notifyListingChanged({
+        listing,
+        action: status === "active" ? "activated" : "paused",
+      });
       revalidateCommonPaths();
       revalidatePath(`/equipment/${listingId}`);
       return { ok: true };

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCurrentSession } from "@/lib/server/local-auth";
+import { clearSessionCookie, getCurrentSession } from "@/lib/server/local-auth";
 import {
   createFirebaseBackedSession,
   firebaseSessionRequestSchema,
@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: true, uid: result.uid });
   } catch (error) {
+    await clearSessionCookie().catch(() => undefined);
     const message = error instanceof Error ? error.message : "Could not create session.";
     return NextResponse.json({ ok: false, error: message }, { status: 400 });
   }

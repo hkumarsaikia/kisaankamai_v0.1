@@ -81,6 +81,7 @@ export function buildFinalTestSeedData(options = {}) {
     ownerUserId: owner.uid,
     ownerName: owner.profile.fullName,
     ownerLocation: owner.profile.village,
+    status: "paused",
     createdAt: listing.createdAt || timestamp,
     updatedAt: listing.updatedAt || timestamp,
   }));

@@ -10,6 +10,7 @@
     ".next",
     "vendor",
     "Vendor",
+    "old",
     ".worktrees",
     "worktrees"
   ]

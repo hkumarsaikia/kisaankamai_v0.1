@@ -2,11 +2,16 @@ import "server-only";
 
 import { z } from "zod";
 import { createSessionFromIdToken } from "@/lib/server/local-auth";
-import { normalizeRolePreference, updateLocalProfile } from "@/lib/server/firebase-data";
+import {
+  createOrUpdatePasswordLoginCredential,
+  normalizeRolePreference,
+  updateLocalProfile,
+} from "@/lib/server/firebase-data";
 
 export const firebaseSessionRequestSchema = z.object({
   idToken: z.string().min(1),
   workspacePreference: z.enum(["owner", "renter"]).optional(),
+  password: z.string().min(6).max(128).optional(),
   profile: z
     .object({
       fullName: z.string().min(2),
@@ -66,6 +71,14 @@ export async function createFirebaseBackedSession(payload: FirebaseSessionReques
     }
 
     await updateLocalProfile(uid, profileUpdate);
+  }
+
+  if (payload.password) {
+    await createOrUpdatePasswordLoginCredential(uid, {
+      email: payload.profile?.email,
+      phone: payload.profile?.phone,
+      password: payload.password,
+    });
   }
 
   return { uid };

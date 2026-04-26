@@ -16,6 +16,7 @@ export interface VerificationDocumentRecord {
 export interface UserRecord {
   id: string;
   email: string;
+  passwordLoginEmail?: string;
   phone: string;
   passwordHash: string;
   roles: UserRole[];

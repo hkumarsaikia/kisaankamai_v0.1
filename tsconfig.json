@@ -39,6 +39,7 @@
     "node_modules",
     "vendor",
     "Vendor",
+    "old",
     ".worktrees",
     "worktrees",
     "scripts"
