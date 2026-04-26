@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useMemo, useState } from "react";
+import { getOptionalFirebaseAuthClient } from "@/components/auth/firebase-auth-client";
 import type { LocalSession, ProfileRecord } from "@/lib/local-data/types";
 
 interface AuthContextType {
@@ -71,6 +72,7 @@ export function AuthProvider({
         method: "POST",
         credentials: "include",
       });
+      await getOptionalFirebaseAuthClient()?.signOut().catch(() => undefined);
       setSessionState(null);
     } finally {
       setLoading(false);

@@ -2,18 +2,19 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
-test("rent equipment routes receive live category summaries instead of static chips", async () => {
+test("rent equipment routes receive merged baseline and live category summaries instead of static chips", async () => {
   const [pageSource, viewSource, categorySource] = await Promise.all([
     readFile(new URL("../app/rent-equipment/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/rent-equipment/RentEquipmentView.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/equipment-categories.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(pageSource, /getCategorySummariesFromEquipment/);
+  assert.match(pageSource, /getMergedCategorySummariesFromEquipment/);
   assert.match(pageSource, /categorySummaries=/);
   assert.match(viewSource, /categorySummaries/);
   assert.doesNotMatch(viewSource, /const categoryChips = \[/);
   assert.match(categorySource, /getCategorySummariesFromEquipment/);
+  assert.match(categorySource, /getMergedCategorySummariesFromEquipment/);
   assert.match(categorySource, /normalizeCategorySlug/);
 });
 

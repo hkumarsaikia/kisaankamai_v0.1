@@ -175,16 +175,7 @@ async function requestTranslationFallback(payload: TranslationFallbackPayload) {
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [, setTranslationCacheVersion] = useState(0);
-  const [language, setLanguage] = useState<Language>(() => {
-    if (typeof document !== "undefined") {
-      const bootLanguage = document.documentElement.dataset.language;
-      if (bootLanguage === "en" || bootLanguage === "mr") {
-        return bootLanguage;
-      }
-    }
-
-    return DEFAULT_LANGUAGE;
-  });
+  const [language, setLanguage] = useState<Language>(DEFAULT_LANGUAGE);
 
   useEffect(() => {
     try {

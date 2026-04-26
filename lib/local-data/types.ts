@@ -18,6 +18,7 @@ export interface UserRecord {
   email: string;
   passwordLoginEmail?: string;
   phone: string;
+  photoUrl?: string;
   passwordHash: string;
   roles: UserRole[];
   fcmTokens?: string[];
@@ -35,6 +36,7 @@ export interface ProfileRecord {
   rolePreference: RolePreference;
   email?: string;
   phone?: string;
+  photoUrl?: string;
   district?: string;
   verificationStatus?: VerificationStatus;
   verificationDocumentType?: string;
@@ -131,6 +133,7 @@ export interface LocalSessionUser {
   name: string;
   email: string;
   phone: string;
+  photoUrl?: string;
   roles: UserRole[];
 }
 

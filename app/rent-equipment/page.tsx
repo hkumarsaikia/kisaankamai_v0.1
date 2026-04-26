@@ -1,6 +1,6 @@
 import RentEquipmentView from "./RentEquipmentView";
 import { getRentEquipmentView } from "@/lib/discovery-routes";
-import { getCategorySummariesFromEquipment } from "@/lib/equipment-categories";
+import { getMergedCategorySummariesFromEquipment } from "@/lib/equipment-categories";
 import { getEquipmentList } from "@/lib/server/equipment";
 
 const QUERY_ALIASES: Record<string, string[]> = {
@@ -78,7 +78,7 @@ export default async function RentEquipmentPage({
   const location = resolvedSearchParams?.location || "";
   const query = resolvedSearchParams?.query || "";
   const items = await getEquipmentList();
-  const categorySummaries = getCategorySummariesFromEquipment(items);
+  const categorySummaries = getMergedCategorySummariesFromEquipment(items);
   const normalizedQuery = query.trim().toLowerCase();
   const queryTerms = expandQueryTerms(query);
 

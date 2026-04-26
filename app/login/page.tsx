@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import { useLanguage } from "@/components/LanguageContext";
@@ -51,6 +51,18 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [showPleaseLogin, setShowPleaseLogin] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("pleaseLogin") !== "1") {
+      return;
+    }
+
+    setShowPleaseLogin(true);
+    const timer = window.setTimeout(() => setShowPleaseLogin(false), 1000);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -78,11 +90,16 @@ export default function LoginPage() {
 
   return (
     <div className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-background text-on-background">
-      <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-1 bg-primary">
-        {collageTiles.map((tile) => (
+      {showPleaseLogin ? (
+        <div className="fixed left-1/2 top-28 z-50 -translate-x-1/2 rounded-full bg-primary-container px-5 py-3 text-sm font-bold text-white shadow-2xl transition-opacity">
+          {langText("Please login", "कृपया लॉगिन करा")}
+        </div>
+      ) : null}
+      <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 bg-primary">
+        {collageTiles.slice(0, 4).map((tile) => (
           <div
             key={tile.image + tile.className}
-            className={`relative ${tile.className}`}
+            className="relative min-h-0 min-w-0"
             style={{
               backgroundImage: `url(${tile.image})`,
               backgroundPosition: "center",

@@ -10,8 +10,6 @@ import {
 } from "firebase/auth";
 import { useAuth } from "@/components/AuthContext";
 import {
-  fetchCurrentSession,
-  finishFirebaseAuthSession,
   getFirebaseAuthError,
   getOptionalFirebaseAuthClient,
 } from "@/components/auth/firebase-auth-client";
@@ -37,17 +35,65 @@ function getGoogleAuthError(error: unknown) {
   return getFirebaseAuthError(error, "Google sign-in failed. Please try again.");
 }
 
+type GoogleResolveResponse = {
+  ok?: boolean;
+  status?: "signed_in" | "registration_required";
+  session?: LocalSession;
+  email?: string;
+  emailVerified?: boolean;
+  name?: string;
+  photoUrl?: string;
+  error?: string;
+};
+
 function isProfileComplete(session: LocalSession) {
   return Boolean(session.profile?.phone?.trim() && session.profile?.pincode?.trim());
 }
 
-async function finishGoogleSessionFromAuth(auth: Auth) {
-  const session = await finishFirebaseAuthSession({
-    auth,
-    shouldFetchSession: true,
-  });
+function persistPendingGoogleRegistration(payload: GoogleResolveResponse) {
+  window.localStorage.setItem(
+    "kk_google_registration",
+    JSON.stringify({
+      email: payload.email || "",
+      emailVerified: Boolean(payload.emailVerified),
+      name: payload.name || "",
+      photoUrl: payload.photoUrl || "",
+      createdAt: new Date().toISOString(),
+    })
+  );
+}
 
-  return session || fetchCurrentSession();
+async function resolveGoogleAccount(auth: Auth) {
+  const user = auth.currentUser;
+  if (!user) {
+    throw new Error("Google sign-in did not return an account.");
+  }
+
+  const idToken = await user.getIdToken(true);
+  const response = await fetch("/api/auth/google/resolve", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ idToken }),
+  });
+  const payload = (await response.json().catch(() => null)) as GoogleResolveResponse | null;
+
+  if (!response.ok || !payload?.ok) {
+    throw new Error(payload?.error || "Could not resolve Google sign-in.");
+  }
+
+  if (payload.status === "registration_required") {
+    persistPendingGoogleRegistration(payload);
+    window.location.href = "/register/google-email";
+    return null;
+  }
+
+  if (!payload.session) {
+    throw new Error("Google sign-in did not return a session.");
+  }
+
+  await auth.signOut().catch(() => undefined);
+  return payload.session;
 }
 
 function shouldFallbackToRedirect(error: unknown) {
@@ -76,7 +122,7 @@ async function signInWithGoogleAndCreateSession() {
     throw error;
   }
 
-  return finishGoogleSessionFromAuth(auth);
+  return resolveGoogleAccount(auth);
 }
 
 export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProps) {
@@ -98,8 +144,11 @@ export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProp
         }
 
         setIsLoading(true);
-        const session = await finishGoogleSessionFromAuth(auth);
+        const session = await resolveGoogleAccount(auth);
         if (!isActive) {
+          return;
+        }
+        if (!session) {
           return;
         }
 

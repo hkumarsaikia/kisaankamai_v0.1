@@ -17,6 +17,7 @@ Validation:
 npm run lint
 npm run typecheck
 npm run build
+npm run test:contracts
 npm run verify
 npm run firebase:preflight
 npm run firebase:rules:dry-run
@@ -30,6 +31,7 @@ Local work that exercises the Firebase-backed root runtime may require:
 - Firebase web config in `.env.local`
 - Firebase Admin credentials in `.env.local`
 - Firebase Auth Google provider enabled when testing Google login/register
+- Firebase Auth authorized domains for `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com`
 - optional Google Maps config
 - optional Sentry DSNs for observability
 
@@ -37,10 +39,19 @@ If Firebase Admin credentials are missing, some authenticated/data-backed runtim
 
 Google OAuth depends on Firebase Console configuration, browser API key referrer restrictions, and the app CSP. Keep the production custom domains authorized in Firebase Auth, include the Firebase auth handler origin in the API key referrer allowlist, and keep `accounts.google.com`, `apis.google.com`, and the configured Firebase auth domain in the security headers before deploying auth-page changes.
 
+Google auth flow contract:
+
+- Existing Google accounts with an app profile sign in through `/api/auth/google/resolve`.
+- New Google accounts go to `/register/google-email`, then `/api/auth/google/register` creates the app profile from the verified Google email and profile photo.
+- After Google registration, the client signs out and returns to `/login?pleaseLogin=1`; the user signs in explicitly after the one-second prompt.
+- Manual register and profile updates must reserve identifiers in the `auth-identifiers` Firestore collection so a phone or email cannot create multiple accounts.
+- Booking and listing notifications are Firebase Cloud Messaging only. Do not add MSG91/SMS code until that provider is intentionally introduced.
+
 ## Ubuntu Runtime Notes
 
 - Active dependencies are installed into root `node_modules` with `PUPPETEER_SKIP_DOWNLOAD=true npm ci`.
 - npm cache is project-local under `.cache/npm`.
+- Firebase CLI local state is ignored under `.firebase/`; do not commit VS Code/Firebase logs from that folder.
 - Tailwind/PostCSS config is ESM: `tailwind.config.mjs` and `postcss.config.mjs`.
 - Next.js 16 builds with Turbopack after removing legacy Pages Router stubs.
 - Protected pre-render route checks use the Next.js 16 `proxy.js` file convention; `/list-equipment` still performs server-side session verification after the proxy cookie-presence guard.
@@ -93,3 +104,9 @@ The latest local summaries are written to `logs/runtime/final-test-accounts/`.
 ## Launch Gate
 
 Run `npm run launch:gate` before any production deploy. It runs the standard root verification, validates Firebase/App Hosting config, compiles Firestore and Storage rules with a dry run, and verifies the operational workbook.
+
+## Public Data Contract
+
+- `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
+- `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details.
+- Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.

@@ -32,6 +32,7 @@ type SessionProfilePayload = {
   fullName: string;
   phone: string;
   email?: string;
+  photoUrl?: string;
   address: string;
   village: string;
   pincode: string;

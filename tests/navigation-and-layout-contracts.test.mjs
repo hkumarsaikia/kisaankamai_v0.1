@@ -20,7 +20,7 @@ test("header primary nav matches the approved order and routes", async () => {
   );
 });
 
-test("home and categories use square equipment cards, northern maharashtra copy, and live categories", async () => {
+test("home and categories use square equipment cards, northern maharashtra copy, and merged categories", async () => {
   const [homeSource, categoriesSource] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/categories/page.tsx", import.meta.url), "utf8"),
@@ -32,7 +32,7 @@ test("home and categories use square equipment cards, northern maharashtra copy,
 
   assert.match(categoriesSource, /aspect-square/);
   assert.match(categoriesSource, /getEquipmentList/);
-  assert.match(categoriesSource, /getCategorySummariesFromEquipment/);
+  assert.match(categoriesSource, /getMergedCategorySummariesFromEquipment/);
   assert.doesNotMatch(categoriesSource, /const categories = \[/);
   assert.doesNotMatch(categoriesSource, /hero_tractor|harvester_action|implement_4k|plough_4k|sprayer\.png/);
   assert.doesNotMatch(categoriesSource, /h-\[400px\]/);

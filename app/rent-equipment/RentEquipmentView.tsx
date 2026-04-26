@@ -35,6 +35,12 @@ const categoryIconBySlug: Record<string, string> = {
   seeders: "psychiatry",
   trolley: "local_shipping",
   trolleys: "local_shipping",
+  thresher: "precision_manufacturing",
+  threshers: "precision_manufacturing",
+  pump: "water_drop",
+  pumps: "water_drop",
+  baler: "inventory_2",
+  balers: "inventory_2",
 };
 
 function getCategoryIcon(summary: EquipmentCategorySummary) {
@@ -251,6 +257,7 @@ export default function RentEquipmentView({
   const inventoryMarkers = useMemo(() => createListingMarkersFromEquipment(items), [items]);
   const inventoryCircles = useMemo(() => createHubCirclesFromEquipment(items), [items]);
   const availablePageSize = 8;
+  const hasRequestedCategoryOrQuery = Boolean(initialQuery.trim());
   const availableTotalPages = Math.max(1, Math.ceil(items.length / availablePageSize));
   const activeAvailablePage = Math.min(availablePage, availableTotalPages);
   const paginatedAvailableItems = items.slice(
@@ -287,7 +294,7 @@ export default function RentEquipmentView({
     return (
       <div className="bg-surface text-on-surface pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-6 mb-8">
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-outline-variant">
+          <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <SearchForm
               location={location}
               query={query}
@@ -299,21 +306,31 @@ export default function RentEquipmentView({
         </div>
 
         <section className="max-w-7xl mx-auto px-6 mb-12">
-          <div className="bg-white rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
             <div className="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mb-6">
               <SharedIcon name="agriculture" className="h-16 w-16 text-on-primary-container opacity-20" />
             </div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-primary-container mb-4 font-headline">
-              {langText(
-                "No live equipment listings are available right now.",
-                "सध्या कोणतीही थेट उपकरण यादी उपलब्ध नाही."
-              )}
+              {hasRequestedCategoryOrQuery
+                ? langText(
+                    "Equipment does not exist for this category yet.",
+                    "या वर्गवारीसाठी अजून उपकरण उपलब्ध नाही."
+                  )
+                : langText(
+                    "No live equipment listings are available right now.",
+                    "सध्या कोणतीही थेट उपकरण यादी उपलब्ध नाही."
+                  )}
             </h2>
             <p className="text-on-surface-variant max-w-lg text-lg leading-relaxed">
-              {langText(
-                "Public results stay empty until owners publish complete live listings with images and location details.",
-                "मालकांनी फोटो आणि ठिकाणाच्या तपशीलांसह पूर्ण थेट यादी प्रकाशित करेपर्यंत सार्वजनिक निकाल रिकामे राहतील."
-              )}
+              {hasRequestedCategoryOrQuery
+                ? langText(
+                    "When owners publish complete live listings in this category, they will appear here automatically.",
+                    "मालकांनी या वर्गवारीतील पूर्ण थेट यादी प्रकाशित केली की ती येथे आपोआप दिसेल."
+                  )
+                : langText(
+                    "Public results stay empty until owners publish complete live listings with images and location details.",
+                    "मालकांनी फोटो आणि ठिकाणाच्या तपशीलांसह पूर्ण थेट यादी प्रकाशित करेपर्यंत सार्वजनिक निकाल रिकामे राहतील."
+                  )}
             </p>
           </div>
         </section>
@@ -325,7 +342,7 @@ export default function RentEquipmentView({
     return (
       <div className="bg-surface text-on-surface pt-24 pb-16">
         <div className="max-w-7xl mx-auto px-6 mb-8">
-          <div className="bg-white p-4 rounded-xl shadow-sm border border-outline-variant">
+          <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <SearchForm
               location={location}
               query={query}
@@ -337,12 +354,17 @@ export default function RentEquipmentView({
         </div>
 
         <section className="max-w-7xl mx-auto px-6 mb-12">
-          <div className="bg-white rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
             <div className="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mb-6">
               <SharedIcon name="agriculture" className="h-16 w-16 text-on-primary-container opacity-20" />
             </div>
             <h2 className="text-2xl md:text-3xl font-extrabold text-primary-container mb-4 font-headline">
-              {langText("No equipment matched this search.", "या शोधाशी जुळणारे कोणतेही उपकरण सापडले नाही.")}
+              {hasRequestedCategoryOrQuery
+                ? langText(
+                    "Equipment does not exist for this category yet.",
+                    "या वर्गवारीसाठी अजून उपकरण उपलब्ध नाही."
+                  )
+                : langText("No equipment matched this search.", "या शोधाशी जुळणारे कोणतेही उपकरण सापडले नाही.")}
             </h2>
             <p className="text-on-surface-variant max-w-lg mb-2 text-lg leading-relaxed">
               {langText(
@@ -398,7 +420,7 @@ export default function RentEquipmentView({
               deferUntilVisible={false}
             />
           ) : (
-            <div className="rounded-2xl border border-outline-variant bg-white p-8 shadow-lg">
+            <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-8 shadow-lg">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">
                 {langText("Map unavailable", "नकाशा उपलब्ध नाही")}
               </p>

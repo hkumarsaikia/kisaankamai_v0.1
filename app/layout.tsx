@@ -33,6 +33,29 @@ const languageBootScript = `
   }
 })();
 `;
+const themeBootScript = `
+(() => {
+  try {
+    const root = document.documentElement;
+    const saved = window.localStorage.getItem("theme");
+    if (saved === "dark") {
+      root.classList.add("dark");
+      root.style.colorScheme = "dark";
+      return;
+    }
+
+    if (saved === "system") {
+      window.localStorage.setItem("theme", "light");
+    }
+
+    root.classList.remove("dark");
+    root.classList.add("light");
+    root.style.colorScheme = "light";
+  } catch (_error) {
+    // Ignore theme boot errors and let hydration recover.
+  }
+})();
+`;
 
 export const metadata: Metadata = {
   metadataBase: getMetadataBaseUrl(),
@@ -91,9 +114,12 @@ export default async function RootLayout({
         <Script id="kk-language-boot" strategy="beforeInteractive">
           {languageBootScript}
         </Script>
+        <Script id="kk-theme-boot" strategy="beforeInteractive">
+          {themeBootScript}
+        </Script>
       </head>
       <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased min-h-screen flex flex-col`}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <LanguageProvider>
             <SingleLanguageRuntime />
             <AuthProvider initialSession={initialSession}>
@@ -113,4 +139,3 @@ export default async function RootLayout({
     </html>
   );
 }
-

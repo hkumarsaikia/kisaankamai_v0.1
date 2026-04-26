@@ -52,9 +52,28 @@ When Sheets is configured, that data is written into `workbook_meta` and a repo 
 Recommended publish order:
 
 1. Commit and push the working repo.
-2. Run `npm run repo:sync-live -- --repo-url "<git-url>" --branch main --push`.
-3. Verify the deployed/live runtime health.
-4. Send the Discord live-update notification.
+2. Sync the live frontend repo.
+3. Create the Firebase App Hosting rollout from the deployed commit.
+4. Verify the deployed/live runtime health.
+5. Send the Discord live-update notification.
+
+Current Kisan Kamai targets:
+
+```bash
+git push origin main
+GH_TOKEN="$GITHUB_MCP_PAT_KISAANKAMAI" npm run repo:sync-live -- \
+  --repo-url "https://github.com/kisaankamai/kisankamai" \
+  --branch main \
+  --push \
+  --notify \
+  --discord-channel github
+firebase apphosting:rollouts:create kisankamai-web-backend \
+  --git-commit "<commit-sha>" \
+  --project gokisaan \
+  --force
+```
+
+Only run the rollout command after `npm run verify` and the launch gate checks pass locally. If the live repo sync or Firebase rollout fails, do not send a success Discord message; send a warning with the failed command and output summary.
 
 ## Discord Helper
 

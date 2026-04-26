@@ -1,38 +1,71 @@
 "use client";
 
 import { ContentImage } from "@/components/ContentImage";
+import { useLanguage } from "@/components/LanguageContext";
 import { postJson } from "@/lib/client/forms";
 import { supportContact } from "@/lib/support-contact";
-import { useState, useTransition } from "react";
+import { type FormEvent, type ReactNode, useState, useTransition } from "react";
 
 const categories = [
-  ["Wrong Equipment Details", "चुकीचे तपशील"],
-  ["Booking Problem", "बुकिंग समस्या"],
-  ["Payment Issue", "पेमेंट समस्या"],
-  ["Safety Concern", "सुरक्षा चिंता"],
+  {
+    icon: "info",
+    value: "Wrong Equipment Details",
+    label: { en: "Wrong Equipment Details", mr: "चुकीचे उपकरण तपशील" },
+    description: { en: "Listing information is incorrect", mr: "लिस्टिंग माहिती चुकीची आहे" },
+  },
+  {
+    icon: "event_busy",
+    value: "Booking Problem",
+    label: { en: "Booking Problem", mr: "बुकिंग समस्या" },
+    description: { en: "Booking flow or dates failed", mr: "बुकिंग प्रक्रिया किंवा तारीख अडली" },
+  },
+  {
+    icon: "payments",
+    value: "Payment Issue",
+    label: { en: "Payment Issue", mr: "पेमेंट समस्या" },
+    description: { en: "Pricing or payment concern", mr: "किंमत किंवा पेमेंट समस्या" },
+  },
+  {
+    icon: "report_problem",
+    value: "Safety Concern",
+    label: { en: "Safety Concern", mr: "सुरक्षा चिंता" },
+    description: { en: "Machine, owner, or renter safety", mr: "मशीन, मालक किंवा भाडेकरू सुरक्षा" },
+  },
+] as const;
+
+const roleOptions = [
+  { value: "Renter", label: { en: "Renter", mr: "भाडेकरू" } },
+  { value: "Owner", label: { en: "Owner", mr: "मालक" } },
+] as const;
+
+const urgencyOptions = [
+  { value: "Low", label: { en: "Low", mr: "कमी" } },
+  { value: "Medium", label: { en: "Medium", mr: "मध्यम" } },
+  { value: "High Urgent", label: { en: "High", mr: "तातडीचे" } },
 ] as const;
 
 export default function ReportPage() {
+  const { langText } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>(categories[0][0]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(categories[0].value);
   const [formState, setFormState] = useState({
     fullName: "",
     phone: "",
     role: "Renter",
-    district: "Pune",
+    district: "Nashik",
     bookingId: "",
     title: "",
     description: "",
-    urgency: "High / Urgent",
+    urgency: "High Urgent",
   });
 
   const updateField = (field: keyof typeof formState, value: string) => {
     setFormState((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
     setSubmitState("pending");
@@ -59,41 +92,41 @@ export default function ReportPage() {
         setSubmitState("success");
       } catch (submitError) {
         setSubmitState("error");
-        setError(submitError instanceof Error ? submitError.message : "Could not submit the report.");
+        setError(submitError instanceof Error ? submitError.message : langText("Could not submit the report.", "रिपोर्ट सबमिट करता आला नाही."));
       }
     });
   };
 
   const submitLabel =
     submitState === "pending"
-      ? "Submitting..."
+      ? langText("Submitting...", "सबमिट करत आहे...")
       : submitState === "success"
-        ? "Submitted"
-        : "Submit Report";
+        ? langText("Submitted", "सबमिट झाले")
+        : langText("Submit Report", "रिपोर्ट सबमिट करा");
 
   return (
     <div className="min-h-screen bg-background font-body text-on-background antialiased">
       <main className="pt-20">
-        <section className="relative flex h-[400px] items-center overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <ContentImage
-              alt="Report a Problem"
-              className="h-full w-full object-cover"
-              data-alt="cinematic wide shot of a green tractor in a sprawling maharashtra farm at dawn with soft morning mist and golden sunlight"
-              decoding="async"
-              loading="lazy"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDprln7ei_-7KiHHUMhRaq3RPbGYAStHFc9k345CkGiggTfvSAe7LHkNV9H2R-yzCcb2F954B6sVfFlEyjr86aTHMksY7Pdl50EXBcMK0neZWBEFqJNEUHbanR1INlv_4BwH7QgTimp3zJS2d9oIeOrzhMu-EZxJeLof62W-9oekBbcMO53eyXg9J-WzmmncPNcu6fN3TeC1NbGqiDsyh6mQm8xeQ5ZmGwUISUiWEU1AQi7y-xWajGQWxA2QrOZp3ahSmQVe_1_HO5R"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-container/90 via-primary-container/60 to-transparent" />
-          </div>
+        <section className="relative flex min-h-[400px] items-center overflow-hidden">
+          <ContentImage
+            alt="Report a problem"
+            className="absolute inset-0 h-full w-full object-cover"
+            data-alt="cinematic wide shot of a green tractor in a sprawling maharashtra farm at dawn with soft morning mist and golden sunlight"
+            decoding="async"
+            loading="lazy"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDprln7ei_-7KiHHUMhRaq3RPbGYAStHFc9k345CkGiggTfvSAe7LHkNV9H2R-yzCcb2F954B6sVfFlEyjr86aTHMksY7Pdl50EXBcMK0neZWBEFqJNEUHbanR1INlv_4BwH7QgTimp3zJS2d9oIeOrzhMu-EZxJeLof62W-9oekBbcMO53eyXg9J-WzmmncPNcu6fN3TeC1NbGqiDsyh6mQm8xeQ5ZmGwUISUiWEU1AQi7y-xWajGQWxA2QrOZp3ahSmQVe_1_HO5R"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary-container/65 to-transparent dark:from-slate-950/95 dark:via-primary-container/80" />
 
           <div className="relative z-10 mx-auto w-full max-w-7xl px-6 text-white">
             <h1 className="mb-4 text-4xl font-extrabold leading-tight md:text-6xl">
-              Report a Problem <br />
-              <span className="text-on-primary-container">समस्या रिपोर्ट करा</span>
+              {langText("Report a Problem", "समस्या कळवा")}
             </h1>
-            <p className="mb-8 max-w-xl text-lg font-medium text-slate-200 md:text-xl">
-              Tell us what went wrong. Our team is committed to resolving your concerns promptly in English and Marathi.
+            <p className="mb-8 max-w-xl text-lg font-medium text-white/85 md:text-xl">
+              {langText(
+                "Tell us what went wrong so our team can review and respond.",
+                "काय चुकले ते आम्हाला सांगा, आमची टीम तपासून प्रतिसाद देईल."
+              )}
             </p>
           </div>
         </section>
@@ -101,31 +134,37 @@ export default function ReportPage() {
         <section className="bg-surface py-16">
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-10 text-center">
-              <h2 className="mb-2 text-3xl font-bold text-primary-container">What happened? / काय झाले?</h2>
-              <p className="font-medium text-slate-500">Select a category to start your report</p>
+              <h2 className="mb-2 text-3xl font-bold text-primary-container">
+                {langText("What happened?", "काय झाले?")}
+              </h2>
+              <p className="font-medium text-on-surface-variant">
+                {langText("Select a category to start your report", "रिपोर्ट सुरू करण्यासाठी वर्गवारी निवडा")}
+              </p>
             </div>
 
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-              {categories.map(([title, subtitle], index) => {
-                const active = selectedCategory === title;
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-4">
+              {categories.map((category) => {
+                const active = selectedCategory === category.value;
                 return (
                   <button
-                    key={title}
+                    key={category.value}
                     className={`group rounded-2xl border p-6 text-left transition-all ${
                       active
                         ? "border-primary-container bg-primary-container text-white shadow-xl"
-                        : "border-outline-variant bg-white hover:border-primary-container hover:shadow-xl"
+                        : "border-outline-variant bg-surface-container-lowest text-on-surface hover:border-primary-container hover:shadow-xl"
                     }`}
                     type="button"
-                    onClick={() => setSelectedCategory(title)}
+                    onClick={() => setSelectedCategory(category.value)}
                   >
                     <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${active ? "bg-white/10 text-white" : "bg-surface-container-low text-primary-container"}`}>
-                      <span className="material-symbols-outlined text-2xl">
-                        {index === 0 ? "info" : index === 1 ? "event_busy" : index === 2 ? "payments" : "report_problem"}
-                      </span>
+                      <span className="material-symbols-outlined text-2xl">{category.icon}</span>
                     </div>
-                    <h3 className={`font-bold ${active ? "text-white" : "text-primary-container"}`}>{title}</h3>
-                    <p className={`mt-1 text-sm ${active ? "text-white/80" : "text-slate-500"}`}>{subtitle}</p>
+                    <h3 className={`font-bold ${active ? "text-white" : "text-primary-container"}`}>
+                      {langText(category.label.en, category.label.mr)}
+                    </h3>
+                    <p className={`mt-1 text-sm ${active ? "text-white/80" : "text-on-surface-variant"}`}>
+                      {langText(category.description.en, category.description.mr)}
+                    </p>
                   </button>
                 );
               })}
@@ -133,99 +172,103 @@ export default function ReportPage() {
           </div>
         </section>
 
-        <section className="bg-white py-12">
+        <section className="bg-surface-container-lowest py-12">
           <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-3">
             <form className="space-y-8 lg:col-span-2" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <label className="space-y-2">
-                  <span className="text-sm font-bold uppercase tracking-wider text-primary-container">Full Name / पूर्ण नाव</span>
+                <Field label={langText("Full Name", "पूर्ण नाव")}>
                   <input
                     value={formState.fullName}
                     onChange={(event) => updateField("fullName", event.target.value)}
-                    className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
-                    placeholder="Enter your name"
+                    className="kk-input"
+                    placeholder={langText("Enter your name", "तुमचे नाव टाका")}
                     type="text"
+                    required
                   />
-                </label>
-                <label className="space-y-2">
-                  <span className="text-sm font-bold uppercase tracking-wider text-primary-container">Mobile Number / मोबाईल नंबर</span>
+                </Field>
+                <Field label={langText("Mobile Number", "मोबाईल नंबर")}>
                   <input
                     value={formState.phone}
-                    onChange={(event) => updateField("phone", event.target.value)}
-                    className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
-                    placeholder="Enter 10 digit mobile number"
+                    onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))}
+                    className="kk-input"
+                    placeholder={langText("Enter 10 digit mobile number", "१० अंकी मोबाईल नंबर टाका")}
                     type="tel"
+                    inputMode="numeric"
+                    required
                   />
-                </label>
-                <label className="space-y-2">
-                  <span className="text-sm font-bold uppercase tracking-wider text-primary-container">I am a / मी आहे</span>
+                </Field>
+                <Field label={langText("I am a", "मी आहे")}>
                   <select
                     value={formState.role}
                     onChange={(event) => updateField("role", event.target.value)}
-                    className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
+                    className="kk-input"
                   >
-                    <option>Renter</option>
-                    <option>Owner</option>
+                    {roleOptions.map((role) => (
+                      <option key={role.value} value={role.value}>
+                        {langText(role.label.en, role.label.mr)}
+                      </option>
+                    ))}
                   </select>
-                </label>
-                <label className="space-y-2">
-                  <span className="text-sm font-bold uppercase tracking-wider text-primary-container">District / जिल्हा</span>
+                </Field>
+                <Field label={langText("District", "जिल्हा")}>
                   <select
                     value={formState.district}
                     onChange={(event) => updateField("district", event.target.value)}
-                    className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
+                    className="kk-input"
                   >
-                    <option>Pune</option>
                     <option>Nashik</option>
-                    <option>Satara</option>
+                    <option>Nanded</option>
+                    <option>Jalgaon</option>
+                    <option>Dhule</option>
                     <option>Ahmednagar</option>
                   </select>
-                </label>
-                <label className="space-y-2 md:col-span-2">
-                  <span className="text-sm font-bold uppercase tracking-wider text-primary-container">Booking ID / बुकिंग आयडी (Optional)</span>
+                </Field>
+                <Field label={langText("Booking ID", "बुकिंग आयडी")} className="md:col-span-2">
                   <input
                     value={formState.bookingId}
                     onChange={(event) => updateField("bookingId", event.target.value)}
-                    className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
-                    placeholder="e.g. KK-45892"
+                    className="kk-input"
+                    placeholder={langText("Optional", "पर्यायी")}
                     type="text"
                   />
-                </label>
-                <label className="space-y-2 md:col-span-2">
-                  <span className="text-sm font-bold uppercase tracking-wider text-primary-container">Problem Title / विषयाची हेडलाईन</span>
+                </Field>
+                <Field label={langText("Problem Title", "समस्येचे शीर्षक")} className="md:col-span-2">
                   <input
                     value={formState.title}
                     onChange={(event) => updateField("title", event.target.value)}
-                    className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
-                    placeholder="Briefly describe the issue"
+                    className="kk-input"
+                    placeholder={langText("Briefly describe the issue", "समस्या थोडक्यात सांगा")}
                     type="text"
+                    required
                   />
-                </label>
-                <label className="space-y-2 md:col-span-2">
-                  <span className="text-sm font-bold uppercase tracking-wider text-primary-container">Description / वर्णन</span>
+                </Field>
+                <Field label={langText("Description", "वर्णन")} className="md:col-span-2">
                   <textarea
                     value={formState.description}
                     onChange={(event) => updateField("description", event.target.value)}
-                    className="w-full rounded-xl border-none bg-surface-container-low px-4 py-3 focus:ring-2 focus:ring-primary-container"
-                    placeholder="Tell us exactly what happened..."
+                    className="kk-input min-h-[150px]"
+                    placeholder={langText("Tell us exactly what happened...", "नेमके काय झाले ते सांगा...")}
                     rows={5}
+                    required
                   />
-                </label>
+                </Field>
                 <div className="space-y-4 md:col-span-2">
-                  <label className="text-sm font-bold uppercase tracking-wider text-primary-container">Urgency Level / निकडीची पातळी</label>
+                  <label className="text-sm font-bold uppercase tracking-wider text-primary-container">
+                    {langText("Urgency Level", "निकडीची पातळी")}
+                  </label>
                   <div className="flex flex-wrap gap-3">
-                    {["Low", "Medium", "High / Urgent"].map((urgency) => (
+                    {urgencyOptions.map((urgency) => (
                       <button
-                        key={urgency}
+                        key={urgency.value}
                         type="button"
-                        onClick={() => updateField("urgency", urgency)}
+                        onClick={() => updateField("urgency", urgency.value)}
                         className={`rounded-full border-2 px-6 py-2 font-bold transition-all ${
-                          formState.urgency === urgency
-                            ? "border-error bg-error/5 text-error"
-                            : "border-slate-200 text-slate-500 hover:border-on-tertiary-container hover:text-on-tertiary-container"
+                          formState.urgency === urgency.value
+                            ? "border-error bg-error-container text-error"
+                            : "border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container"
                         }`}
                       >
-                        {urgency}
+                        {langText(urgency.label.en, urgency.label.mr)}
                       </button>
                     ))}
                   </div>
@@ -239,7 +282,7 @@ export default function ReportPage() {
               ) : null}
               {submitState === "success" ? (
                 <div className="rounded-xl border border-primary/20 bg-primary-fixed/20 px-4 py-3 text-sm font-medium text-primary">
-                  Report submitted successfully. Our team will review it shortly.
+                  {langText("Report submitted successfully. Our team will review it shortly.", "रिपोर्ट सबमिट झाला. आमची टीम लवकरच तपासेल.")}
                 </div>
               ) : null}
 
@@ -258,12 +301,14 @@ export default function ReportPage() {
 
             <div className="space-y-6">
               <div className="sticky top-28 rounded-3xl border border-secondary-container/20 bg-secondary-fixed/30 p-8">
-                <h4 className="mb-4 font-bold text-on-secondary-fixed">Direct Support</h4>
-                <div className="flex items-center gap-3 rounded-2xl bg-white/50 p-4">
+                <h4 className="mb-4 font-bold text-on-secondary-fixed">{langText("Direct Support", "थेट सहाय्य")}</h4>
+                <div className="flex items-center gap-3 rounded-2xl bg-surface-container-lowest/70 p-4">
                   <span className="material-symbols-outlined text-on-tertiary-container">support_agent</span>
                   <div>
                     <p className="text-sm font-bold text-primary-container">{supportContact.phoneDisplay}</p>
-                    <p className="text-xs text-slate-500">{supportContact.serviceHours}, Mon-Sat</p>
+                    <p className="text-xs text-on-surface-variant">
+                      {supportContact.serviceHours}, {langText("Mon-Sat", "सोमवार-शनिवार")}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -272,5 +317,22 @@ export default function ReportPage() {
         </section>
       </main>
     </div>
+  );
+}
+
+function Field({
+  label,
+  className = "",
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <label className={`space-y-2 ${className}`}>
+      <span className="text-sm font-bold uppercase tracking-wider text-primary-container">{label}</span>
+      {children}
+    </label>
   );
 }

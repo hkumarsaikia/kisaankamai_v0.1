@@ -16,8 +16,8 @@ export default function OwnerBenefitsPage() {
             <ContentImage className="w-full h-full object-cover opacity-30 mix-blend-overlay" alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
             <div className="absolute inset-0 bg-gradient-to-r from-primary-container dark:from-emerald-950 via-primary-container/80 dark:via-emerald-950/80 to-transparent"></div>
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="relative z-10 max-w-7xl mx-auto px-6">
+            <div className="max-w-3xl space-y-8">
               <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-white leading-tight">
                 {t("owner-benefits.maximize_your")}<br />
                 <span className="text-on-secondary-container dark:text-amber-200">{t("owner-benefits.machine_s_potential")}</span>
@@ -25,22 +25,6 @@ export default function OwnerBenefitsPage() {
               <p className="text-on-primary-container dark:text-emerald-100 text-lg md:text-xl max-w-xl font-medium leading-relaxed">
                 {t("owner-benefits.turn_your_idle_farming_equipment_into_a_consistent_revenue_stream_connect_with_verified_farmers_in_sangli_satara_and_kolhapur_districts")}
               </p>
-            </div>
-            <div className="hidden lg:grid grid-cols-2 gap-4">
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl mt-12">
-                <span className="material-symbols-outlined text-on-secondary-container dark:text-amber-400 text-4xl mb-4">account_balance_wallet</span>
-                <h3 className="text-white font-bold text-xl mb-2">{t("owner-benefits.steady_income")}</h3>
-                <p className="text-on-primary-container dark:text-emerald-100 text-sm">
-                  {t("owner-benefits.supplement_your_seasonal_earnings_with_consistent_rental_requests_from_local_farmers")}
-                </p>
-              </div>
-              <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-6 rounded-3xl">
-                <span className="material-symbols-outlined text-on-secondary-container dark:text-amber-400 text-4xl mb-4">verified_user</span>
-                <h3 className="text-white font-bold text-xl mb-2">{t("owner-benefits.verified_renters")}</h3>
-                <p className="text-on-primary-container dark:text-emerald-100 text-sm">
-                  {t("owner-benefits.every_renter_is_kyc_verified_your_equipment_is_in_safe_professional_hands")}
-                </p>
-              </div>
             </div>
           </div>
         </section>

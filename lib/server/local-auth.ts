@@ -14,7 +14,8 @@ import type { RegisterInput } from "@/lib/validation/forms";
 
 const SESSION_COOKIE_NAME = "kisan_kamai_session";
 const WORKSPACE_COOKIE_NAME = "kisan_kamai_workspace";
-const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 5;
+const SESSION_MAX_AGE_DAYS = 14;
+const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * SESSION_MAX_AGE_DAYS;
 
 function normalizeWorkspaceCookie(value?: string | null): UserRole | null {
   return value === "owner" || value === "renter" ? value : null;

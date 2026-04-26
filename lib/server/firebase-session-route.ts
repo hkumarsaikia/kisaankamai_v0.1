@@ -4,6 +4,7 @@ import { z } from "zod";
 import { createSessionFromIdToken } from "@/lib/server/local-auth";
 import {
   createOrUpdatePasswordLoginCredential,
+  getExistingLocalSessionByUserId,
   normalizeRolePreference,
   updateLocalProfile,
 } from "@/lib/server/firebase-data";
@@ -17,6 +18,7 @@ export const firebaseSessionRequestSchema = z.object({
       fullName: z.string().min(2),
       phone: z.string().min(10),
       email: z.string().email().optional(),
+      photoUrl: z.string().url().optional(),
       address: z.string().min(3),
       village: z.string().min(2),
       pincode: z.string().regex(/^\d{6}$/),
@@ -49,12 +51,18 @@ export async function createFirebaseBackedSession(payload: FirebaseSessionReques
   const uid = await createSessionFromIdToken(payload.idToken, {
     workspacePreference: payload.workspacePreference,
   });
+  const existingSession = await getExistingLocalSessionByUserId(uid);
+
+  if (!existingSession && !payload.profile && !payload.password) {
+    throw new Error("Complete registration before signing in.");
+  }
 
   if (payload.profile) {
     const profileUpdate = {
       fullName: payload.profile.fullName,
       phone: payload.profile.phone,
       email: payload.profile.email,
+      photoUrl: payload.profile.photoUrl,
       address: payload.profile.address,
       village: payload.profile.village,
       pincode: payload.profile.pincode,

@@ -543,7 +543,7 @@ export const mrMessages = {
   "home.driven_by_technology": "तंत्रज्ञानाने चालित.",
   "home.equipment_delivered_or_picked_up_pay_through_secure_digital_channels_or_cash": "उपकरणे वितरित किंवा उचलली. डिजिटल किंवा रोख माध्यमातून पैसे द्या.",
   "home.every_owner_on_our_platform_undergoes_a_rigorous_verification_process_to_ensure_reliability_and_safety": "आमच्या व्यासपीठावरील प्रत्येक मालक विश्वासार्हता आणि सुरक्षितता सुनिश्चित करण्यासाठी कठोर पडताळणी प्रक्रियेतून जातो.",
-  "home.expanding_across_maharashtra": "पश्चिम महाराष्ट्र्यात विस्तार होत आहे",
+  "home.expanding_across_maharashtra": "उत्तर महाराष्ट्रात विस्तार होत आहे",
   "home.explore_equipment_categories": "उपकरण वर्गवारी शोधा",
   "home.fair_pricing_promise": "न्याय्य किंमत आश्वासन",
   "home.find_equipment_by_type_location_and_power_rating_across_maharashtra": "महाराष्ट्रातील प्रकार, स्थान आणि पॉवर रेटिंगनुसार उपकरणे शोधा.",

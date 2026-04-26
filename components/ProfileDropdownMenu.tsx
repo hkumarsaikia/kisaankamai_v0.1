@@ -70,8 +70,13 @@ export function ProfileDropdownMenu({
     "User profile avatar with premium trust badge",
     "प्रिमियम विश्वास बॅज असलेला वापरकर्ता प्रोफाइल अवतार"
   );
-  const avatarSrc =
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuAPynK0ZgVc0Xzw8MYvvIJVEOBk4zukvEedpGHH-Q7GM4Q6ob6SzcxRnBhYfxqofDsJWFC7lfXUaGfZMThvBAf8Y1jiJ3gC5BCxHldTTrj-gQ1XCOjfrfZgcMdEnuSILrTv8J2g2rqTQIvXtn8XTF960gPu-Vbi6N1NEba-XC-RjoAwEhPTECJPQHTsfp8-dDhQCJk7qO4kWaJx64AXPdx3sM6jdD_Z4E6hnrcRhAu6hpPKCSgoqVcxRkVSp4tBOuc3kPngwxOMVd_g";
+  const photoUrl = user?.photoUrl || profile?.photoUrl || "";
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join("") || "KK";
   const triggerClassName = fullWidth
     ? "w-full justify-between"
     : "justify-between";
@@ -94,11 +99,17 @@ export function ProfileDropdownMenu({
         aria-haspopup="menu"
         aria-label={t("header.aria.my_profile")}
       >
-        <img
-          alt={avatarAlt}
-          className="h-10 w-10 rounded-full border-2 border-on-tertiary-container/30 object-cover shadow-sm"
-          src={avatarSrc}
-        />
+        {photoUrl ? (
+          <img
+            alt={avatarAlt}
+            className="h-10 w-10 rounded-full border-2 border-on-tertiary-container/30 object-cover shadow-sm"
+            src={photoUrl}
+          />
+        ) : (
+          <span className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-on-tertiary-container/30 bg-primary-container text-sm font-black text-white shadow-sm">
+            {initials}
+          </span>
+        )}
         {showLabel ? (
           <span className="hidden min-w-0 flex-1 sm:block">
             <span className="block truncate font-headline text-sm font-semibold leading-tight text-on-surface dark:text-slate-100">
@@ -124,11 +135,17 @@ export function ProfileDropdownMenu({
           role="menu"
         >
           <div className="flex items-center gap-4 border-b border-slate-100 bg-slate-50 px-6 py-5 dark:border-slate-800 dark:bg-slate-900/70">
-            <img
-              alt={avatarAlt}
-              className="h-14 w-14 rounded-full object-cover"
-              src={avatarSrc}
-            />
+            {photoUrl ? (
+              <img
+                alt={avatarAlt}
+                className="h-14 w-14 rounded-full object-cover"
+                src={photoUrl}
+              />
+            ) : (
+              <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-container text-base font-black text-white">
+                {initials}
+              </span>
+            )}
             <div className="min-w-0">
               <p className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">
                 {displayName}

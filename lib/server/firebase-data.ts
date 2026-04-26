@@ -21,6 +21,7 @@ import type {
   UserRecord,
   UserRole,
 } from "@/lib/local-data/types";
+import type { Transaction } from "firebase-admin/firestore";
 import { getAdminAuth, getAdminDb } from "@/lib/server/firebase-admin";
 import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { sendPushNotificationToUsers } from "@/lib/server/firebase-messaging";
@@ -36,6 +37,7 @@ const BOOKINGS_COLLECTION = "bookings";
 const SAVED_ITEMS_COLLECTION = "saved-items";
 const PAYMENTS_COLLECTION = "payments";
 const SUBMISSIONS_COLLECTION = "form-submissions";
+const AUTH_IDENTIFIERS_COLLECTION = "auth-identifiers";
 
 function db() {
   return getAdminDb();
@@ -123,6 +125,134 @@ function paymentsCollection() {
 
 function submissionsCollection() {
   return db().collection(SUBMISSIONS_COLLECTION);
+}
+
+function authIdentifiersCollection() {
+  return db().collection(AUTH_IDENTIFIERS_COLLECTION);
+}
+
+type AuthIdentifierKind = "email" | "phone";
+
+function normalizeAuthIdentifier(kind: AuthIdentifierKind, value?: string | null) {
+  return kind === "email" ? normalizeEmail(value) : normalizePhone(value);
+}
+
+function authIdentifierDocId(kind: AuthIdentifierKind, value: string) {
+  return `${kind}:${value}`;
+}
+
+function buildAuthIdentifierClaims(input: { email?: string | null; phone?: string | null }) {
+  const claims: Array<{ kind: AuthIdentifierKind; value: string }> = [];
+  const email = normalizeAuthIdentifier("email", input.email);
+  const phone = normalizeAuthIdentifier("phone", input.phone);
+
+  if (email && !isPlaceholderEmail(email)) {
+    claims.push({ kind: "email", value: email });
+  }
+
+  if (phone) {
+    claims.push({ kind: "phone", value: phone });
+  }
+
+  return claims;
+}
+
+export async function claimAuthIdentifier(
+  transaction: Transaction,
+  kind: AuthIdentifierKind,
+  value: string,
+  userId: string,
+  timestamp = nowIso()
+) {
+  const ref = authIdentifiersCollection().doc(authIdentifierDocId(kind, value));
+  const snapshot = await transaction.get(ref);
+  const existingUserId = snapshot.exists ? (snapshot.data() as { userId?: string }).userId : "";
+
+  if (existingUserId && existingUserId !== userId) {
+    throw new Error(
+      kind === "email"
+        ? "An account with this email already exists."
+        : "An account with this phone number already exists."
+    );
+  }
+
+  transaction.set(
+    ref,
+    {
+      kind,
+      value,
+      userId,
+      createdAt: snapshot.exists ? (snapshot.data() as { createdAt?: string }).createdAt || timestamp : timestamp,
+      updatedAt: timestamp,
+    },
+    { merge: true }
+  );
+}
+
+async function reserveAuthIdentifiersForUser(
+  userId: string,
+  input: { email?: string | null; phone?: string | null }
+) {
+  const claims = buildAuthIdentifierClaims(input);
+  if (!claims.length) {
+    return;
+  }
+
+  const timestamp = nowIso();
+  await db().runTransaction(async (transaction) => {
+    const snapshots = await Promise.all(
+      claims.map((claim) =>
+        transaction
+          .get(authIdentifiersCollection().doc(authIdentifierDocId(claim.kind, claim.value)))
+          .then((snapshot) => ({ claim, snapshot }))
+      )
+    );
+
+    for (const { claim, snapshot } of snapshots) {
+      const existingUserId = snapshot.exists ? (snapshot.data() as { userId?: string }).userId : "";
+      if (existingUserId && existingUserId !== userId) {
+        throw new Error(
+          claim.kind === "email"
+            ? "An account with this email already exists."
+            : "An account with this phone number already exists."
+        );
+      }
+    }
+
+    for (const claim of claims) {
+      transaction.set(
+        authIdentifiersCollection().doc(authIdentifierDocId(claim.kind, claim.value)),
+        {
+          kind: claim.kind,
+          value: claim.value,
+          userId,
+          createdAt: timestamp,
+          updatedAt: timestamp,
+        },
+        { merge: true }
+      );
+    }
+  });
+}
+
+export async function releaseAuthIdentifier(kind: AuthIdentifierKind, value: string, userId: string) {
+  const normalized = normalizeAuthIdentifier(kind, value);
+  if (!normalized) {
+    return;
+  }
+
+  const ref = authIdentifiersCollection().doc(authIdentifierDocId(kind, normalized));
+  await db().runTransaction(async (transaction) => {
+    const snapshot = await transaction.get(ref);
+    if (!snapshot.exists) {
+      return;
+    }
+
+    const existingUserId = (snapshot.data() as { userId?: string }).userId;
+    if (existingUserId === userId) {
+      transaction.delete(ref);
+    }
+  });
 }
 
 function savedItemId(userId: string, listingId: string) {
@@ -333,6 +463,7 @@ function mapProfileFromFirestore(userId: string, data?: Partial<ProfileRecord> |
     rolePreference: normalizeRolePreference(data?.rolePreference),
     email: data?.email,
     phone: normalizePhone(data?.phone),
+    photoUrl: normalizeOptionalString(data?.photoUrl) || undefined,
     district: normalizeOptionalString(data?.district) || undefined,
     verificationStatus: data?.verificationStatus || "not_submitted",
     verificationDocumentType: normalizeOptionalString(data?.verificationDocumentType) || undefined,
@@ -351,6 +482,7 @@ function mapUserFromFirestore(
     email: data?.email || authUser?.email || `${uid}@kisankamai.local`,
     passwordLoginEmail: data?.passwordLoginEmail || "",
     phone: normalizePhone(data?.phone || authUser?.phoneNumber || ""),
+    photoUrl: normalizeOptionalString(data?.photoUrl) || undefined,
     passwordHash: data?.passwordHash || "",
     roles: data?.roles?.length ? data.roles : allUserRoles(),
     fcmTokens: data?.fcmTokens || [],
@@ -391,6 +523,11 @@ async function getUserRecordById(userId: string) {
 async function getProfileRecordById(userId: string) {
   const snapshot = await profilesCollection().doc(userId).get();
   return snapshot.exists ? mapProfileFromFirestore(userId, snapshot.data() as ProfileRecord) : null;
+}
+
+async function getExistingUserRecordById(userId: string) {
+  const snapshot = await usersCollection().doc(userId).get();
+  return snapshot.exists ? mapUserFromFirestore(userId, snapshot.data() as UserRecord) : null;
 }
 
 async function listAllListings() {
@@ -483,10 +620,36 @@ export async function getLocalSessionByUserId(userId: string): Promise<LocalSess
       name: profile.fullName || authUser?.displayName || "Kisan Kamai User",
       email: profile.email || (isPlaceholderEmail(user.email) ? "" : user.email),
       phone: profile.phone || user.phone,
+      photoUrl: profile.photoUrl || user.photoUrl || authUser?.photoURL || undefined,
       roles: user.roles,
     },
     profile,
     activeWorkspace: normalizeRolePreference(profile.rolePreference),
+  };
+}
+
+export async function getExistingLocalSessionByUserId(userId: string): Promise<LocalSession | null> {
+  const [authUser, userRecord, profileRecord] = await Promise.all([
+    getAdminAuth().getUser(userId).catch(() => null),
+    getExistingUserRecordById(userId),
+    getProfileRecordById(userId),
+  ]);
+
+  if (!userRecord || !profileRecord) {
+    return null;
+  }
+
+  return {
+    user: {
+      id: userId,
+      name: profileRecord.fullName || authUser?.displayName || "Kisan Kamai User",
+      email: profileRecord.email || (isPlaceholderEmail(userRecord.email) ? "" : userRecord.email),
+      phone: profileRecord.phone || userRecord.phone,
+      photoUrl: profileRecord.photoUrl || userRecord.photoUrl || authUser?.photoURL || undefined,
+      roles: userRecord.roles,
+    },
+    profile: profileRecord,
+    activeWorkspace: normalizeRolePreference(profileRecord.rolePreference),
   };
 }
 
@@ -536,11 +699,22 @@ export async function registerLocalUser(input: RegisterInput) {
     emailVerified: Boolean(normalizedEmail),
   });
 
+  try {
+    await reserveAuthIdentifiersForUser(authUser.uid, {
+      email: normalizedEmail,
+      phone: normalizedPhone,
+    });
+  } catch (error) {
+    await getAdminAuth().deleteUser(authUser.uid).catch(() => undefined);
+    throw error;
+  }
+
   const userRecord: UserRecord = {
     id: authUser.uid,
     email: normalizedEmail || passwordLoginEmail,
     passwordLoginEmail,
     phone: normalizedPhone || normalizePhone(authUser.phoneNumber),
+    photoUrl: undefined,
     passwordHash: "",
     roles: allUserRoles(),
     fcmTokens: [],
@@ -558,6 +732,7 @@ export async function registerLocalUser(input: RegisterInput) {
     rolePreference,
     email: normalizedEmail || undefined,
     phone: normalizedPhone || undefined,
+    photoUrl: undefined,
     district: normalizeOptionalString(input.district) || undefined,
   };
 
@@ -579,6 +754,89 @@ export async function registerLocalUser(input: RegisterInput) {
     idToken,
     session: await getLocalSessionByUserId(authUser.uid),
   };
+}
+
+export async function registerGoogleVerifiedUser(input: {
+  userId: string;
+  email: string;
+  fullName?: string | null;
+  photoUrl?: string | null;
+  emailVerified?: boolean;
+}) {
+  const normalizedEmail = normalizeEmail(input.email);
+  if (!normalizedEmail) {
+    throw new Error("Google account did not provide an email address.");
+  }
+  if (!input.emailVerified) {
+    throw new Error("Verify your email address before creating the account.");
+  }
+
+  const existing = await getExistingLocalSessionByUserId(input.userId);
+  if (existing) {
+    return existing;
+  }
+
+  const authUser = await getAdminAuth().getUser(input.userId).catch(() => null);
+  const timestamp = nowIso();
+  const displayName =
+    normalizeOptionalString(input.fullName) ||
+    normalizeOptionalString(authUser?.displayName) ||
+    normalizedEmail.split("@")[0] ||
+    "Kisan Kamai User";
+  const photoUrl =
+    normalizeOptionalString(input.photoUrl) || normalizeOptionalString(authUser?.photoURL) || undefined;
+
+  await reserveAuthIdentifiersForUser(input.userId, {
+    email: normalizedEmail,
+    phone: "",
+  });
+
+  const userRecord: UserRecord = {
+    id: input.userId,
+    email: normalizedEmail,
+    passwordLoginEmail: "",
+    phone: "",
+    photoUrl,
+    passwordHash: "",
+    roles: allUserRoles(),
+    fcmTokens: [],
+    createdAt: timestamp,
+    updatedAt: timestamp,
+  };
+
+  const profileRecord: ProfileRecord = {
+    userId: input.userId,
+    fullName: displayName,
+    village: "",
+    address: "",
+    pincode: "",
+    fieldArea: 0,
+    rolePreference: "renter",
+    email: normalizedEmail,
+    phone: "",
+    photoUrl,
+    verificationStatus: "not_submitted",
+    verificationDocuments: [],
+  };
+
+  await Promise.all([
+    usersCollection().doc(input.userId).set(userRecord, { merge: true }),
+    profilesCollection().doc(input.userId).set(profileRecord, { merge: true }),
+    getAdminAuth().updateUser(input.userId, {
+      displayName,
+      email: normalizedEmail,
+      emailVerified: true,
+      photoURL: photoUrl || null,
+    }).catch(() => undefined),
+  ]);
+
+  await mirrorProfile({
+    userId: input.userId,
+    profile: profileRecord,
+    source: "google-register",
+  });
+
+  return getExistingLocalSessionByUserId(input.userId);
 }
 
 export async function createOrUpdatePasswordLoginCredential(
@@ -604,6 +862,10 @@ export async function createOrUpdatePasswordLoginCredential(
   const visibleEmail =
     normalizedEmail ||
     (currentUser?.email && !isPlaceholderEmail(currentUser.email) ? currentUser.email : passwordLoginEmail);
+  await reserveAuthIdentifiersForUser(userId, {
+    email: visibleEmail,
+    phone: normalizedPhone || currentUser?.phone || "",
+  });
 
   const authUpdates: {
     email: string;
@@ -628,6 +890,7 @@ export async function createOrUpdatePasswordLoginCredential(
       email: visibleEmail,
       passwordLoginEmail,
       phone: normalizedPhone || currentUser?.phone || "",
+      photoUrl: currentUser?.photoUrl,
       roles: currentUser?.roles || allUserRoles(),
       fcmTokens: currentUser?.fcmTokens || [],
       passwordHash: "",
@@ -636,6 +899,13 @@ export async function createOrUpdatePasswordLoginCredential(
     } satisfies UserRecord,
     { merge: true }
   );
+
+  if (currentUser?.email && currentUser.email !== visibleEmail && !isPlaceholderEmail(currentUser.email)) {
+    await releaseAuthIdentifier("email", currentUser.email, userId);
+  }
+  if (currentUser?.phone && normalizePhone(currentUser.phone) !== normalizePhone(normalizedPhone)) {
+    await releaseAuthIdentifier("phone", currentUser.phone, userId);
+  }
 }
 
 export async function updateLocalProfile(
@@ -651,6 +921,7 @@ export async function updateLocalProfile(
       | "rolePreference"
       | "email"
       | "phone"
+      | "photoUrl"
       | "district"
       | "verificationStatus"
       | "verificationDocumentType"
@@ -688,14 +959,22 @@ export async function updateLocalProfile(
       input.verificationDocuments === undefined
         ? currentProfile.verificationDocuments || []
         : input.verificationDocuments,
+    photoUrl:
+      input.photoUrl === undefined
+        ? currentProfile.photoUrl
+        : normalizeOptionalString(input.photoUrl) || undefined,
   };
-
-  await profilesCollection().doc(userId).set(updatedProfile, { merge: true });
 
   const nextEmail =
     input.email === undefined ? currentUser?.email || updatedProfile.email : input.email || currentUser?.email;
   const nextPhone =
     input.phone === undefined ? currentUser?.phone || updatedProfile.phone : normalizePhone(input.phone);
+  await reserveAuthIdentifiersForUser(userId, {
+    email: nextEmail,
+    phone: nextPhone,
+  });
+
+  await profilesCollection().doc(userId).set(updatedProfile, { merge: true });
   const nextPasswordLoginEmail =
     input.email !== undefined && nextEmail && !isPlaceholderEmail(nextEmail)
       ? normalizeEmail(nextEmail)
@@ -710,6 +989,7 @@ export async function updateLocalProfile(
       email: nextEmail || `${userId}@kisankamai.local`,
       passwordLoginEmail: nextPasswordLoginEmail || "",
       phone: nextPhone || "",
+      photoUrl: updatedProfile.photoUrl || currentUser?.photoUrl,
       roles: currentUser?.roles || allUserRoles(),
       fcmTokens: currentUser?.fcmTokens || [],
       passwordHash: currentUser?.passwordHash || "",
@@ -719,7 +999,7 @@ export async function updateLocalProfile(
     { merge: true }
   );
 
-  const authUpdates: { displayName?: string; email?: string; phoneNumber?: string | null } = {};
+  const authUpdates: { displayName?: string; email?: string; phoneNumber?: string | null; photoURL?: string | null } = {};
   if (input.fullName !== undefined) {
     authUpdates.displayName = updatedProfile.fullName;
   }
@@ -729,8 +1009,18 @@ export async function updateLocalProfile(
   if (input.phone !== undefined) {
     authUpdates.phoneNumber = toE164Phone(nextPhone) || null;
   }
+  if (input.photoUrl !== undefined) {
+    authUpdates.photoURL = updatedProfile.photoUrl || null;
+  }
   if (Object.keys(authUpdates).length) {
     await getAdminAuth().updateUser(userId, authUpdates);
+  }
+
+  if (input.email !== undefined && currentUser?.email && currentUser.email !== nextEmail && !isPlaceholderEmail(currentUser.email)) {
+    await releaseAuthIdentifier("email", currentUser.email, userId);
+  }
+  if (input.phone !== undefined && currentUser?.phone && normalizePhone(currentUser.phone) !== normalizePhone(nextPhone)) {
+    await releaseAuthIdentifier("phone", currentUser.phone, userId);
   }
 
   await mirrorProfile({

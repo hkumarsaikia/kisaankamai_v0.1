@@ -47,6 +47,7 @@ agents/codex-antigravity-sync/state/current/transcript.md
 
 # local Firebase tooling
 firebase-debug.log
+.firebase/
 
 # vercel
 .vercel

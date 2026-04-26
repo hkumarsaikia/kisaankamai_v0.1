@@ -11,7 +11,7 @@ Kisan Kamai now uses the root Next.js app as the only public frontend for `https
 The root app is the production-facing application. It owns:
 
 - Firebase Auth session-cookie auth
-- Firebase Auth Google sign-in/sign-up through the shared login/register buttons
+- Firebase Auth Google sign-in for existing app profiles, with a Google-email registration completion page for new Google accounts
 - Firebase Auth phone verification for manual registration
 - Firebase Auth password login through one mobile-or-email identifier field
 - Firebase Cloud Messaging web push notifications for booking and listing updates
@@ -30,6 +30,9 @@ Current workspace behavior to know while validating `npm run dev`:
 - successful booking submissions redirect back into `/renter-profile`.
 - owner listing edit buttons route into `/list-equipment?listingId=<id>`.
 - support and report are separate public flows: `/support` for help requests and `/report` for issue escalation.
+- the public theme defaults to light mode; explicit dark-mode choices are still respected.
+- `/categories` shows the baseline equipment catalog and merges live owner-published categories into it.
+- `/rent-equipment` and equipment detail pages stay live-data only; they do not show mock equipment when Firestore has no published listings.
 
 Useful commands:
 
@@ -39,6 +42,7 @@ npm run dev
 npm run lint
 npm run typecheck
 npm run build
+npm run test:contracts
 npm run verify
 npm run firebase:preflight
 npm run firebase:rules:dry-run
@@ -60,6 +64,7 @@ Ubuntu rebuild notes:
 - The previous Windows/dirty-root reference is archived under `old/windows-root-reference-*`.
 - Previous installed/generated local artifacts are archived under `old/windows-local-artifacts-*`.
 - Active installs use `.npmrc` with project-local `.cache/npm`.
+- Local Firebase CLI state and logs belong under `.firebase/` and are ignored by git.
 - The app is App Router-only; legacy `pages/_app` and `pages/_document` are not part of the active root because they trigger unnecessary hybrid fallback behavior in Next 16.
 - Tailwind/PostCSS config is ESM: `tailwind.config.mjs` and `postcss.config.mjs`.
 - Use `PUPPETEER_SKIP_DOWNLOAD=true npm ci` on Ubuntu so Puppeteer does not download browser binaries into dependency folders; use `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome` for browser checks.
@@ -80,7 +85,11 @@ Required runtime configuration includes:
 
 - Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
 - Manual registration verifies the phone number with Firebase Auth, then stores a password-backed Firebase Auth login credential. Workspace choice is handled after account creation in `/profile-selection`, not on the registration page. Users sign in with a single mobile/email identifier plus password form.
-- Google sign-in requires Firebase Auth Google provider to stay enabled and `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com` to remain authorized Firebase Auth domains. The browser API key referrer allowlist must include the production site and Firebase auth handler origins. The root CSP must continue to allow the Google/Firebase OAuth origins used by the login and register buttons.
+- Google sign-in requires Firebase Auth Google provider to stay enabled and `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com` to remain authorized Firebase Auth domains. The browser API key referrer allowlist must include the production site and Firebase auth handler origins. The root CSP must continue to allow the Google/Firebase OAuth origins used by the login, register, and Google-email registration pages.
+- Existing Google users are resolved through `/api/auth/google/resolve`. New Google users are sent to `/register/google-email`; after confirmed Google email ownership, `/api/auth/google/register` creates the app profile, saves the Google profile photo URL, signs the browser back out, and redirects to login with the short "Please login" prompt.
+- Account uniqueness is enforced in Firestore through `auth-identifiers`: one normalized email and one normalized phone number can belong to only one app user.
+- Session cookies are long-lived for normal use; users should remain signed in until logout or cookie expiry.
+- User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.
 - Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.

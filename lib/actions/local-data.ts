@@ -154,7 +154,12 @@ export async function loginAction(input: { identifier: string; password: string 
         path: "/login",
       });
 
-      return { ok: true, redirectTo: "/profile-selection" };
+      return {
+        ok: true,
+        redirectTo: session.profile?.phone?.trim() && session.profile?.pincode?.trim()
+          ? "/profile-selection"
+          : "/complete-profile",
+      };
     } catch (error) {
       return { ok: false, error: safeErrorMessage(error, "Login failed.") };
     }

@@ -325,8 +325,8 @@ export default function RegisterPage() {
               <div id="kk-register-recaptcha" className="hidden" />
             </div>
           ) : (
-            <div className="overflow-hidden rounded-[2.5rem] border border-white/60 bg-white/85 shadow-2xl backdrop-blur-xl">
-              <div className="border-b border-white/60 bg-white/20 px-6 py-8 text-center sm:px-10">
+            <div className="overflow-hidden rounded-[2.5rem] border border-outline-variant bg-surface-container-lowest/95 shadow-2xl backdrop-blur-xl">
+              <div className="border-b border-outline-variant bg-surface-container-low/80 px-6 py-8 text-center sm:px-10">
                 <div className="space-y-2">
                   <h1 className="font-headline text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
                     {langText("Create your Kisan Kamai account", "तुमचे किसान कमाई खाते तयार करा")}
@@ -483,7 +483,7 @@ export default function RegisterPage() {
                         required
                       />
                       {showDistrictSuggestions && districtSuggestions.length ? (
-                        <div className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">
+                        <div className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-2xl border border-outline-variant bg-surface-container-lowest p-2 shadow-xl">
                           {districtSuggestions.map((district) => (
                             <button
                               key={district}
