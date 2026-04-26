@@ -11,6 +11,9 @@ Kisan Kamai now uses the root Next.js app as the only public frontend for `https
 The root app is the production-facing application. It owns:
 
 - Firebase Auth session-cookie auth
+- Firebase Auth phone verification for manual registration
+- Firebase Auth password login through one mobile-or-email identifier field
+- Firebase Cloud Messaging web push notifications for booking and listing updates
 - Firestore-backed listings, bookings, payments, submissions, and saved items
 - Cloud Storage-backed uploads
 - Google Sheets mirroring for admin/reporting visibility only
@@ -45,6 +48,8 @@ npm run sheets:verify
 npm run sheets:backfill
 npm run seed:final-test-accounts -- --owner-password "<password>" --renter-password "<password>"
 npm run cleanup:final-test-accounts
+npm run pause:mock-listings -- --dry-run
+npm run pause:mock-listings
 ```
 
 Runtime logs captured with the helper scripts are stored under `logs/runtime/`.
@@ -73,6 +78,8 @@ Required runtime configuration includes:
 ## Backend Contract
 
 - Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
+- Manual registration verifies the phone number with Firebase Auth, then stores a password-backed Firebase Auth login credential. Users sign in with a single mobile/email identifier plus password form.
+- Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
 
@@ -86,6 +93,8 @@ npm run sheets:verify
 npm run sheets:backfill
 npm run seed:final-test-accounts -- --owner-password "<password>" --renter-password "<password>"
 npm run cleanup:final-test-accounts
+npm run pause:mock-listings -- --dry-run
+npm run pause:mock-listings
 npm run repo:sync-live -- --repo-url "<git-url>" --branch main
 npm run discord:notify -- --channel deploy --title "..." --summary "..."
 ```

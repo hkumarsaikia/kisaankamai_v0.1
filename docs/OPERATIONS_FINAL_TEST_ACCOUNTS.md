@@ -51,10 +51,23 @@ These values match `data/final-test-accounts-manifest.json`. The latest local se
 
 - 2 user docs
 - 2 profile docs
-- 3 fixture listings reassigned to the final owner
+- 3 paused fixture listings reassigned to the final owner
 - 5 fixture bookings reassigned to the final owner and final renter
 - 4 payments whose source bookings exist in the imported fixture set
 - 2 saved items reassigned to the final renter
+
+Seeded fixture listings are deliberately paused so test/demo equipment does not appear on public rent-equipment, equipment-detail, or category pages. Use real owner-created active listings for public marketplace validation.
+
+## Pause Known Mock Listings
+
+If legacy mock listing docs already exist in Firestore, pause them instead of deleting them:
+
+```bash
+npm run pause:mock-listings -- --dry-run
+npm run pause:mock-listings
+```
+
+The script targets the known legacy IDs only: `2`, `4`, `5`, `ft-listing-2`, `ft-listing-4`, and `ft-listing-5`.
 
 ## Known Fixture Gaps
 
