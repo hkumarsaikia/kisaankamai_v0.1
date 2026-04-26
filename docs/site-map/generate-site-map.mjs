@@ -8,7 +8,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const ROOT_DIR = path.resolve(__dirname, "..", "..");
 const APP_DIR = path.join(ROOT_DIR, "app");
-const COMPONENTS_DIR = path.join(ROOT_DIR, "components");
 
 const HTML_OUTPUT = path.join(__dirname, "index.html");
 const JSON_OUTPUT = path.join(__dirname, "site-map-data.json");

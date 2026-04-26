@@ -1,16 +1,18 @@
 import fs from "node:fs";
 import { parseArgs, printUsage, getStringArrayOption, getStringOption } from "./lib/cli.mjs";
 import { loadRepoEnv } from "./lib/env.mjs";
-import { sendDiscordWebhook } from "./lib/discord.mjs";
+import { sendDiscordWebhookToChannels } from "./lib/discord.mjs";
 
 const options = parseArgs();
 
 if (options.help) {
   printUsage([
-    "Usage: node scripts/discord-webhook-notify.mjs [--webhook-url <url>] [--title <title>] [--summary <text>] [--status <info|success|warning|error>]",
+    "Usage: node scripts/discord-webhook-notify.mjs [--channel <ops|deploy|release|github|security|sentry>] [--title <title>] [--summary <text>] [--status <info|success|warning|error>]",
     "       node scripts/discord-webhook-notify.mjs [--webhook-url <url>] --payload-file <path-to-json>",
     "",
     "Repeated fields are passed as --field Name=Value",
+    "Repeated --channel or comma-separated channels send the same payload to multiple Discord webhooks.",
+    "Channel env vars: DISCORD_WEBHOOK_OPS_URL, DISCORD_WEBHOOK_DEPLOY_URL, DISCORD_WEBHOOK_RELEASE_URL, DISCORD_WEBHOOK_GITHUB_URL, DISCORD_WEBHOOK_SECURITY_URL, DISCORD_WEBHOOK_SENTRY_URL",
     "Fallback env var: DISCORD_WEBHOOK_URL",
   ]);
   process.exit(0);
@@ -19,6 +21,7 @@ if (options.help) {
 loadRepoEnv();
 
 const webhookUrl = getStringOption(options, "webhook-url", process.env.DISCORD_WEBHOOK_URL || "");
+const channels = getStringArrayOption(options, "channel");
 const payloadFile = getStringOption(options, "payload-file", "");
 const payload = payloadFile ? JSON.parse(fs.readFileSync(payloadFile, "utf8")) : undefined;
 const fields = getStringArrayOption(options, "field").map((entry) => {
@@ -30,7 +33,8 @@ const fields = getStringArrayOption(options, "field").map((entry) => {
   };
 });
 
-await sendDiscordWebhook({
+const notifiedChannels = await sendDiscordWebhookToChannels({
+  channels,
   webhookUrl,
   payload,
   title: getStringOption(options, "title", "Kisan Kamai Notification"),
@@ -41,4 +45,4 @@ await sendDiscordWebhook({
   fields,
 });
 
-console.log("Discord webhook notification sent.");
+console.log(`Discord webhook notification sent to: ${notifiedChannels.join(", ")}.`);

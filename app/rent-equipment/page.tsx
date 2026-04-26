@@ -70,10 +70,11 @@ function expandQueryTerms(query: string) {
 export default async function RentEquipmentPage({
   searchParams,
 }: {
-  searchParams?: { location?: string; query?: string };
+  searchParams?: Promise<{ location?: string; query?: string }>;
 }) {
-  const location = searchParams?.location || "";
-  const query = searchParams?.query || "";
+  const resolvedSearchParams = await searchParams;
+  const location = resolvedSearchParams?.location || "";
+  const query = resolvedSearchParams?.query || "";
   const items = await getEquipmentList();
   const normalizedQuery = query.trim().toLowerCase();
   const queryTerms = expandQueryTerms(query);

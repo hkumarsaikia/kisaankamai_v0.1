@@ -9,16 +9,16 @@ test("root layout installs the single-language runtime inside the language provi
   assert.match(source, /<LanguageProvider>\s*<SingleLanguageRuntime \/>/s);
 });
 
-test("single-language runtime watches DOM mutations and translates visible text and attributes", async () => {
+test("single-language runtime does not mutate the DOM after first paint", async () => {
   const source = await readFile(
     new URL("../components/SingleLanguageRuntime.tsx", import.meta.url),
     "utf8"
   );
 
-  assert.match(source, /new MutationObserver/);
-  assert.match(source, /translateText\(sourceValue\)/);
-  assert.match(source, /attributeFilter: \[\.\.\.BASE_TRANSLATABLE_ATTRIBUTES, "value"\]/);
-  assert.match(source, /material-symbols-outlined/);
+  assert.match(source, /return null/);
+  assert.doesNotMatch(source, /new MutationObserver/);
+  assert.doesNotMatch(source, /translateText\(sourceValue\)/);
+  assert.doesNotMatch(source, /attributeFilter/);
 });
 
 test("profile dropdown keeps owner and renter labels and descriptions aligned to the corrected routes", async () => {

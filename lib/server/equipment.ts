@@ -1,10 +1,8 @@
 import "server-only";
 
 import {
-  getListingById,
   getPublicEquipmentById,
   getPublicEquipmentList,
-  listingToEquipmentRecord,
 } from "@/lib/server/firebase-data";
 
 export async function getEquipmentList() {
@@ -12,13 +10,7 @@ export async function getEquipmentList() {
 }
 
 export async function getEquipmentById(id: string) {
-  const publicMatch = await getPublicEquipmentById(id);
-  if (publicMatch) {
-    return publicMatch;
-  }
-
-  const listing = await getListingById(id);
-  return listing ? listingToEquipmentRecord(listing) : null;
+  return getPublicEquipmentById(id);
 }
 
 export async function getEquipmentStaticParams() {

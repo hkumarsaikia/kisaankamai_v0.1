@@ -1,11 +1,11 @@
 # Setup & Replication Guide
 
-This document provides detailed setup instructions for Windows, macOS, and Ubuntu to ensure the Kisan Kamai project can be replicated accurately across different environments.
+This document provides setup instructions for the active Kisan Kamai root app. The current production development target is Ubuntu 26.04 LTS.
 
 ## 📋 General Requirements
 
-- **Node.js**: Version 18.17.0 or higher is required.
-- **npm**: Version 9.x or higher (standard with Node 18+).
+- **Node.js**: Version 20.9.0 or higher is required by the current Next.js stack. The Ubuntu workspace uses Node `v24.15.0`.
+- **npm**: Version 10.x or higher. The Ubuntu workspace uses npm `11.12.1`.
 - **Git**: Required for repository management.
 
 ---
@@ -45,17 +45,22 @@ This document provides detailed setup instructions for Windows, macOS, and Ubunt
 Ubuntu requires specific system-level libraries to run the **Puppeteer** profiler agent correctly.
 
 ### 1. Install Node.js
-We recommend using the NodeSource repository for the latest LTS:
+Use the project-selected user-level Node runtime. The current Ubuntu workspace has Node `v24.15.0` and npm `11.12.1`.
+
+The active frontend stack is Next.js 16, React 19, Tailwind CSS 4, and TypeScript 6. The app is App Router-only and uses Turbopack for production builds. Tailwind/PostCSS config files are `tailwind.config.mjs` and `postcss.config.mjs`.
+
+Install dependencies from the lockfile:
 ```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
+PUPPETEER_SKIP_DOWNLOAD=true npm ci
 ```
+
+The repo tracks `.npmrc` so npm cache stays project-local under `.cache/npm`. Use `PUPPETEER_SKIP_DOWNLOAD=true` during install so browser binaries are not downloaded into dependency folders.
 
 ### 2. Install Puppeteer System Dependencies
 > [!IMPORTANT]
 > Failure to install these libraries will cause Chromium-based browser checks to fail when launching in headless mode on Ubuntu.
 
-Run the following command for Ubuntu 22.04 and 24.04:
+Run the following command for Ubuntu 26.04 LTS:
 ```bash
 sudo apt update
 sudo apt install -y \
@@ -67,6 +72,28 @@ sudo apt install -y \
     libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss1 \
     libxtst6 wget
 ```
+
+Kisan Kamai uses system Chrome for Puppeteer/browser checks on Ubuntu:
+
+```bash
+export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
+```
+
+### 3. Python
+
+Use pyenv Python 3.12.10 for project scripts. Do not install Python packages into the OS Python.
+
+```bash
+python3 -m venv venv
+. venv/bin/activate
+python --version
+```
+
+Only install Python packages into this venv when a project script actually requires them.
+
+### 4. NVIDIA GPU
+
+The GTX 1650 is available through the NVIDIA driver and `/dev/dri/renderD*`. Use it for Chrome/Playwright rendering or profiling checks where possible. Lint, typecheck, build, Firebase CLI, and Firestore/Storage rules validation remain CPU-bound.
 
 ---
 
@@ -81,7 +108,7 @@ Required services:
 3. **Cloud Firestore** for users, profiles, listings, bookings, payments, saved items, and submissions.
 4. **Cloud Storage** for listing media uploads.
 5. Optional **Google Sheets** workbook plus service account credentials for the best-effort operational mirror.
-6. Optional **Sentry** or Google Cloud logging for production observability.
+6. Optional **Sentry** DSNs for production observability.
 7. Firebase Auth **phone test numbers** in Console for deterministic OTP validation.
 8. Firebase Cloud Messaging **Web Push VAPID key** in Console for browser notifications.
 
@@ -89,7 +116,7 @@ Required services:
 
 ## 🛠️ Replication Checklist
 
-- [ ] `npm install` completed without errors.
+- [ ] `PUPPETEER_SKIP_DOWNLOAD=true npm ci` completed without errors.
 - [ ] Firebase environment variables and Admin credentials are set.
 - [ ] Firebase Console has fictional phone numbers configured:
   - [ ] `+91 90000 00101` with code `111111`
@@ -97,18 +124,8 @@ Required services:
 - [ ] Firebase Console has a Web Push VAPID key and the public key is exposed as `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY`.
 - [ ] `npm run dev` starts the server on port 3000.
 - [ ] `npm run verify` passes.
+- [ ] `npm run launch:gate` passes.
 
-## Cross-Agent Handoff Setup
+## Archived Reference
 
-If you want to share session context between Codex and Antigravity through the repo:
-
-1. Keep the handoff system in `agents/codex-antigravity-sync/`.
-2. Install the shared launcher into Codex and Antigravity:
-   ```bash
-   npm run cross-agent:install
-   ```
-3. Create `agents/codex-antigravity-sync/config/local.json` only if you want optional exported transcript drop-folder support.
-4. Run the launcher manually by name when you want to refresh the pack.
-5. Do not configure it to auto-run.
-
-Use `agents/codex-antigravity-sync/docs/README.md` for the subsystem contract, `agents/codex-antigravity-sync/docs/UPDATER.md` for refresh behavior, `agents/codex-antigravity-sync/docs/CONSUMER.md` for read order, and `agents/codex-antigravity-sync/docs/REFERENCES.md` for supported reference forms.
+The pre-rebuild Windows-root reference and installed/generated local artifacts are archived under `old/`. Cross-agent handoff files are also archived there and are not part of the active root app.

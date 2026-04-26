@@ -1,5 +1,5 @@
 import { parseArgs, printUsage, getBooleanOption, getStringOption } from "./lib/cli.mjs";
-import { sendDiscordWebhook } from "./lib/discord.mjs";
+import { sendDiscordWebhookToChannels } from "./lib/discord.mjs";
 import { loadRepoEnv, getRepoRoot, isSheetsConfigured } from "./lib/env.mjs";
 import { ensureRemote, getLocalGitSummary, getRemoteHead, pushHeadToRemote } from "./lib/git.mjs";
 import {
@@ -29,6 +29,7 @@ const repoUrl = getStringOption(options, "repo-url", "");
 const branch = getStringOption(options, "branch", "main");
 const spreadsheetId = getStringOption(options, "sheet-id", "");
 const webhookUrl = getStringOption(options, "webhook-url", process.env.DISCORD_WEBHOOK_URL || "");
+const discordChannel = getStringOption(options, "discord-channel", "github");
 const notify = getBooleanOption(options, "notify", false);
 const push = getBooleanOption(options, "push", false);
 const allowDirty = getBooleanOption(options, "allow-dirty", false);
@@ -118,7 +119,8 @@ if (isSheetsConfigured(overrides)) {
 }
 
 if (webhookUrl && (notify || options["webhook-url"] !== undefined)) {
-  await sendDiscordWebhook({
+  await sendDiscordWebhookToChannels({
+    channels: [discordChannel],
     webhookUrl,
     title: "Kisan Kamai Live Repo Sync",
     summary,

@@ -1,16 +1,11 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 const isDev = process.env.NODE_ENV !== "production";
-
-function asOrigin(value) {
-  if (!value) {
-    return null;
-  }
-
-  try {
-    return new URL(value).origin;
-  } catch {
-    return null;
-  }
-}
+const sentryBuildConfigured = Boolean(
+  process.env.SENTRY_AUTH_TOKEN &&
+    process.env.SENTRY_ORG &&
+    process.env.SENTRY_PROJECT
+);
 
 function joinSources(values) {
   return values.filter(Boolean).join(" ");
@@ -63,6 +58,8 @@ function buildCsp() {
       "https://maps.gstatic.com",
       "https://www.google.com",
       "https://www.gstatic.com",
+      "https://*.sentry.io",
+      "https://*.ingest.sentry.io",
     ])}`,
     `frame-src ${joinSources([
       "'self'",
@@ -125,12 +122,16 @@ const nextConfig = {
     ];
     return config;
   },
-  experimental: {
-    workerThreads: true,
-    cpus: 12,
+};
+
+const sentryOptions = {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  silent: true,
+  telemetry: false,
+  sourcemaps: {
+    disable: !sentryBuildConfigured,
   },
 };
 
-export default nextConfig;
-
-
+export default withSentryConfig(nextConfig, sentryOptions);

@@ -1,5 +1,6 @@
 # dependencies
 /node_modules
+/venv/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -36,6 +37,7 @@ logs/runtime/final-test-accounts/
 logs/runtime/tunnel/
 
 # local env files
+.env
 .env*.local
 agents/codex-antigravity-sync/config/local.json
 
@@ -55,3 +57,6 @@ next-env.d.ts
 
 # misc local auth/tooling
 google_auth/
+
+# local migration/reference archive
+old/

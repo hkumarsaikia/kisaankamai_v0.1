@@ -10,9 +10,10 @@ export const dynamicParams = true;
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const equipment = await getEquipmentById(params.id);
+  const { id } = await params;
+  const equipment = await getEquipmentById(id);
 
   if (!equipment) {
     return {
@@ -53,8 +54,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
-  const equipment = await getEquipmentById(params.id);
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const equipment = await getEquipmentById(id);
 
   if (!equipment) {
     notFound();
@@ -66,4 +68,3 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   return <EquipmentDetailClient equipment={equipment} relatedEquipment={relatedEquipment} />;
 }
-

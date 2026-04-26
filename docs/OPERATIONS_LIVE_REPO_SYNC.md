@@ -13,7 +13,8 @@ npm run repo:sync-live -- --repo-url "<git-url>" --branch main
 Optional overrides:
 
 - `--sheet-id <id>` to target a specific workbook
-- `--webhook-url <url>` to send the result to Discord
+- `--webhook-url <url>` to send the result to Discord, or use channel env vars
+- `--discord-channel <channel>` to choose a channel mapping for repo sync notifications (default `github`)
 - `--notify` to force Discord notification when a webhook URL is present
 - `--remote-name <name>` to choose the git remote name used for push mode (default `live`)
 
@@ -60,14 +61,15 @@ Recommended publish order:
 Generic Discord webhook sender:
 
 ```bash
-npm run discord:notify -- --webhook-url "<url>" --title "Kisan Kamai" --summary "Backfill completed" --status success
+npm run discord:notify -- --channel ops --title "Kisan Kamai" --summary "Backfill completed" --status success
 ```
 
 Repeated fields:
 
 ```bash
 npm run discord:notify -- \
-  --webhook-url "<url>" \
+  --channel deploy \
+  --channel github \
   --title "Workbook Sync" \
   --summary "Repo drift detected" \
   --status warning \
@@ -81,6 +83,12 @@ You can also send a prebuilt payload JSON file:
 npm run discord:notify -- --webhook-url "<url>" --payload-file payload.json
 ```
 
-Fallback env var:
+Channel env vars:
 
 - `DISCORD_WEBHOOK_URL`
+- `DISCORD_WEBHOOK_OPS_URL`
+- `DISCORD_WEBHOOK_DEPLOY_URL`
+- `DISCORD_WEBHOOK_RELEASE_URL`
+- `DISCORD_WEBHOOK_GITHUB_URL`
+- `DISCORD_WEBHOOK_SECURITY_URL`
+- `DISCORD_WEBHOOK_SENTRY_URL`

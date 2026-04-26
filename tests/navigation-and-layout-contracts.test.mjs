@@ -145,11 +145,38 @@ test("list equipment page keeps the owner workspace shell and sticky live previe
 
   assert.match(pageSource, /family="owner-profile"/);
   assert.match(pageSource, /activeTab="add-listing"/);
+  assert.match(pageSource, /redirect\("\/login"\)/);
   assert.match(editorSource, /sticky top-28/);
   assert.match(editorSource, /Live Preview/);
   assert.match(editorSource, /Available from specific date/);
   assert.match(editorSource, /type="date"/);
   assert.doesNotMatch(pageSource, /activeWorkspace === "renter" \? "owner-profile" : "renter-profile"/);
+});
+
+test("list equipment redirects unauthenticated requests before the streaming fallback renders", async () => {
+  const proxySource = await readFile(new URL("../proxy.js", import.meta.url), "utf8").catch(() => "");
+
+  assert.notEqual(proxySource, "", "Expected a root proxy.js guard for protected owner entry routes");
+  assert.match(proxySource, /export function proxy/);
+  assert.match(proxySource, /kisan_kamai_session/);
+  assert.match(proxySource, /\/list-equipment/);
+  assert.match(proxySource, /NextResponse\.redirect/);
+
+  const { proxy, config } = await import("../proxy.js");
+  const { NextRequest } = await import("next/server.js");
+  const guestResponse = proxy(new NextRequest("https://www.kisankamai.com/list-equipment"));
+  const authenticatedResponse = proxy(
+    new NextRequest("https://www.kisankamai.com/list-equipment", {
+      headers: {
+        cookie: "kisan_kamai_session=test-session",
+      },
+    })
+  );
+
+  assert.equal(guestResponse.status, 307);
+  assert.equal(guestResponse.headers.get("location"), "https://www.kisankamai.com/login");
+  assert.equal(authenticatedResponse.headers.get("x-middleware-next"), "1");
+  assert.deepEqual(config.matcher, ["/list-equipment"]);
 });
 
 test("base rent-equipment source keeps the avail-eq style controls and pagination", async () => {

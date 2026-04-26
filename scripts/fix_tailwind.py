@@ -1,7 +1,7 @@
 import re
 import os
 
-config_path = 'tailwind.config.js'
+config_path = 'tailwind.config.mjs'
 with open(config_path, 'r') as f:
     config = f.read()
 

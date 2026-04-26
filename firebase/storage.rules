@@ -10,10 +10,20 @@ service firebase.storage {
       return signedIn() && request.auth.uid == ownerUserId;
     }
 
+    function isProfileOwner(userId) {
+      return signedIn() && request.auth.uid == userId;
+    }
+
     function isAllowedListingImage() {
       return request.resource != null &&
         request.resource.size <= 8 * 1024 * 1024 &&
         request.resource.contentType.matches('image/(jpeg|png|webp|avif)');
+    }
+
+    function isAllowedVerificationDocument() {
+      return request.resource != null &&
+        request.resource.size <= 8 * 1024 * 1024 &&
+        request.resource.contentType.matches('(image/(jpeg|png|webp|avif)|application/pdf)');
     }
 
     match /listings/{ownerUserId}/{listingId}/{allPaths=**} {
@@ -21,6 +31,14 @@ service firebase.storage {
       allow write: if isListingOwner(ownerUserId) && (
         request.resource == null ||
         isAllowedListingImage()
+      );
+    }
+
+    match /profile-verification/{userId}/{allPaths=**} {
+      allow read: if isProfileOwner(userId);
+      allow write: if isProfileOwner(userId) && (
+        request.resource == null ||
+        isAllowedVerificationDocument()
       );
     }
 

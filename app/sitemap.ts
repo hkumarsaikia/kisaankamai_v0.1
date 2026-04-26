@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getMockEquipmentList } from "@/lib/equipment";
+import { getPublicEquipmentList } from "@/lib/server/firebase-data";
 import { SITE_DOMAIN } from "@/lib/site-metadata";
 
 const STATIC_ROUTES = [
@@ -27,7 +27,7 @@ const STATIC_ROUTES = [
   "/verify-contact",
 ];
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
   const staticEntries = STATIC_ROUTES.map((route) => ({
     url: new URL(route, SITE_DOMAIN).toString(),
@@ -36,7 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route === "/" ? 1 : route === "/rent-equipment" || route === "/list-equipment" ? 0.9 : 0.7,
   })) satisfies MetadataRoute.Sitemap;
 
-  const equipmentEntries = getMockEquipmentList().map((item) => ({
+  const equipmentEntries = (await getPublicEquipmentList()).map((item) => ({
     url: new URL(`/equipment/${item.id}`, SITE_DOMAIN).toString(),
     lastModified: now,
     changeFrequency: "weekly",

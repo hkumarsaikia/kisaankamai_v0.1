@@ -114,3 +114,44 @@ test("root app exposes production metadata and crawler/share endpoints", async (
   assert.match(faqHeadSource, /renderHeadMetadata/);
   assert.match(forgotPasswordHeadSource, /renderHeadMetadata/);
 });
+
+test("sitemap and public equipment details only expose live public Firestore listings", async () => {
+  const [sitemapSource, serverEquipmentSource] = await Promise.all([
+    readFile(new URL("../app/sitemap.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/equipment.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(sitemapSource, /getMockEquipmentList|MOCK_EQUIPMENT/);
+  assert.match(sitemapSource, /getPublicEquipmentList/);
+  assert.doesNotMatch(serverEquipmentSource, /getListingById/);
+  assert.doesNotMatch(serverEquipmentSource, /listingToEquipmentRecord/);
+  assert.match(serverEquipmentSource, /getPublicEquipmentById/);
+});
+
+test("catalog pages do not ship hardcoded mock equipment detail experiences", async () => {
+  const [catalogSource, gallerySource] = await Promise.all([
+    readFile(new URL("../app/catalog/[slug]/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/catalog/[slug]/gallery/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  for (const source of [catalogSource, gallerySource]) {
+    assert.doesNotMatch(source, /John Deere 5310 Performer|Mahindra|Kubota|Swaraj/);
+    assert.doesNotMatch(source, /CatalogBookingForm/);
+    assert.match(source, /redirect\(/);
+    assert.match(source, /\/rent-equipment/);
+  }
+});
+
+test("password reset lookup does not reveal account email or hidden phone for email identifiers", async () => {
+  const [routeSource, pageSource, resetSource] = await Promise.all([
+    readFile(new URL("../app/api/auth/password-reset/request/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/forgot-password/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/password-reset.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(routeSource, /email:\s*target\.email/);
+  assert.doesNotMatch(routeSource, /resolvePasswordResetTarget/);
+  assert.match(routeSource, /resolvePasswordResetPhoneInput/);
+  assert.doesNotMatch(pageSource, /RESET_EMAIL_KEY/);
+  assert.match(resetSource, /resolvePasswordResetPhoneInput/);
+});

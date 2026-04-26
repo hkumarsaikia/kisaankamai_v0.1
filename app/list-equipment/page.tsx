@@ -3,16 +3,22 @@ import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProf
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getListingById } from "@/lib/server/local-data";
 import { localizedText } from "@/lib/i18n";
+import { redirect } from "next/navigation";
 
 export default async function ListEquipmentPage({
   searchParams,
 }: {
-  searchParams?: { listingId?: string };
+  searchParams?: Promise<{ listingId?: string }>;
 }) {
   const session = await getCurrentSession();
-  const listingId = searchParams?.listingId || "";
+  if (!session) {
+    redirect("/login");
+  }
+
+  const resolvedSearchParams = await searchParams;
+  const listingId = resolvedSearchParams?.listingId || "";
   const listing =
-    session && listingId
+    listingId
       ? await getListingById(listingId).then((record) =>
           record && record.ownerUserId === session.user.id ? record : null
         )

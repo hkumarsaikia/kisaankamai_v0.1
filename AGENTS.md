@@ -22,18 +22,10 @@ npm run verify
 - Start `npm run dev:public` before `npm run tunnel:public` when you need a shareable tunnel URL for the local app.
 - Treat `npm run verify` as the default root-app validation pass.
 
-## Cross-Agent Handoff
+## Archived Reference
 
-The manual shared-memory workflow lives under `agents/codex-antigravity-sync/`.
-
-```bash
-npm run cross-agent:install
-npm run cross-agent:sync
-npm run cross-agent:remove
-```
-
-- Nothing in the cross-agent workflow should auto-run.
-- Read `agents/codex-antigravity-sync/docs/CONSUMER.md` before consuming a shared pack.
+- The previous Windows-root reference and local generated artifacts live under `old/`.
+- Cross-agent handoff files are archived there for now and should not be restored unless explicitly requested.
 
 ## Repo Notes
 

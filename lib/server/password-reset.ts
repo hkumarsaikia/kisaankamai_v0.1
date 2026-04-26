@@ -46,6 +46,22 @@ export async function resolvePasswordResetTarget(identifier: string) {
   };
 }
 
+export async function resolvePasswordResetPhoneInput(identifier: string) {
+  if (identifier.includes("@")) {
+    throw new Error("Enter the registered mobile number for password reset.");
+  }
+
+  const phoneE164 = toE164(identifier);
+  if (!phoneE164) {
+    throw new Error("Enter a valid 10-digit registered mobile number.");
+  }
+
+  return {
+    phoneE164,
+    maskedPhone: maskPhoneNumber(phoneE164),
+  };
+}
+
 export async function completePasswordResetFromIdToken(input: {
   idToken: string;
   password: string;
@@ -63,13 +79,19 @@ export async function completePasswordResetFromIdToken(input: {
   }
 
   const authUser = await auth.getUser(decoded.uid);
-  if (!authUser.phoneNumber) {
+  const verifiedPhone = authUser.phoneNumber || (decoded as { phone_number?: string }).phone_number || "";
+  if (!verifiedPhone) {
     throw new Error("Phone verification is required before resetting the password.");
   }
 
-  await auth.updateUser(decoded.uid, {
+  const user = await findUserByIdentifier(verifiedPhone);
+  if (!user || user.id !== decoded.uid) {
+    throw new Error("No Kisan Kamai account is linked to this verified mobile number.");
+  }
+
+  await auth.updateUser(user.id, {
     password: parsed.password,
   });
 
-  return { uid: decoded.uid };
+  return { uid: user.id };
 }

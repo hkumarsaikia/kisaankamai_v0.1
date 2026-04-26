@@ -22,6 +22,10 @@ service cloud.firestore {
       return value in ["pending", "upcoming", "active", "confirmed", "completed", "cancelled"];
     }
 
+    function validVerificationStatus(value) {
+      return value in ["not_submitted", "submitted"];
+    }
+
     function userKeys() {
       return [
         "id",
@@ -45,7 +49,12 @@ service cloud.firestore {
         "fieldArea",
         "rolePreference",
         "email",
-        "phone"
+        "phone",
+        "district",
+        "verificationStatus",
+        "verificationDocumentType",
+        "verificationDocumentNumber",
+        "verificationDocuments"
       ];
     }
 
@@ -153,6 +162,26 @@ service cloud.firestore {
         request.resource.data.fieldArea is number &&
         validRolePreference(request.resource.data.rolePreference) &&
         (
+          !request.resource.data.keys().hasAny(["district"]) ||
+          request.resource.data.district is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationStatus"]) ||
+          validVerificationStatus(request.resource.data.verificationStatus)
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationDocumentType"]) ||
+          request.resource.data.verificationDocumentType is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationDocumentNumber"]) ||
+          request.resource.data.verificationDocumentNumber is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationDocuments"]) ||
+          request.resource.data.verificationDocuments is list
+        ) &&
+        (
           !request.resource.data.keys().hasAny(["email"]) ||
           request.resource.data.email is string
         ) &&
@@ -172,7 +201,12 @@ service cloud.firestore {
           "fieldArea",
           "rolePreference",
           "email",
-          "phone"
+          "phone",
+          "district",
+          "verificationStatus",
+          "verificationDocumentType",
+          "verificationDocumentNumber",
+          "verificationDocuments"
         ]) &&
         request.resource.data.fullName is string &&
         request.resource.data.village is string &&
@@ -180,6 +214,26 @@ service cloud.firestore {
         request.resource.data.pincode is string &&
         request.resource.data.fieldArea is number &&
         validRolePreference(request.resource.data.rolePreference) &&
+        (
+          !request.resource.data.keys().hasAny(["district"]) ||
+          request.resource.data.district is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationStatus"]) ||
+          validVerificationStatus(request.resource.data.verificationStatus)
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationDocumentType"]) ||
+          request.resource.data.verificationDocumentType is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationDocumentNumber"]) ||
+          request.resource.data.verificationDocumentNumber is string
+        ) &&
+        (
+          !request.resource.data.keys().hasAny(["verificationDocuments"]) ||
+          request.resource.data.verificationDocuments is list
+        ) &&
         (
           !request.resource.data.keys().hasAny(["email"]) ||
           request.resource.data.email is string

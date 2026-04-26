@@ -226,8 +226,16 @@ export default function RentEquipmentView({
   const { langText } = useLanguage();
   const [location, setLocation] = useState(initialLocation);
   const [query, setQuery] = useState(initialQuery);
+  const [availablePage, setAvailablePage] = useState(1);
   const inventoryMarkers = useMemo(() => createListingMarkersFromEquipment(items), [items]);
   const inventoryCircles = useMemo(() => createHubCirclesFromEquipment(items), [items]);
+  const availablePageSize = 8;
+  const availableTotalPages = Math.max(1, Math.ceil(items.length / availablePageSize));
+  const activeAvailablePage = Math.min(availablePage, availableTotalPages);
+  const paginatedAvailableItems = items.slice(
+    (activeAvailablePage - 1) * availablePageSize,
+    activeAvailablePage * availablePageSize
+  );
   const title = useMemo(() => {
     if (view === "available") {
       return langText("Available equipment", "उपलब्ध उपकरणे");
@@ -485,12 +493,36 @@ export default function RentEquipmentView({
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {items.map((item) => (
+            {paginatedAvailableItems.map((item) => (
               <EquipmentCard key={item.id} item={item} />
             ))}
           </div>
 
-
+          <div className="mt-8 flex items-center justify-between border-t border-outline-variant pt-6">
+            <p className="text-sm font-medium text-on-surface-variant">
+              {langText("Page", "पृष्ठ")} {activeAvailablePage} / {availableTotalPages}
+            </p>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant bg-surface text-on-surface transition-colors hover:bg-surface-container disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={activeAvailablePage <= 1}
+                aria-label={langText("Previous page", "मागील पृष्ठ")}
+                onClick={() => setAvailablePage((page) => Math.max(1, page - 1))}
+              >
+                <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+              </button>
+              <button
+                type="button"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-outline-variant bg-surface text-on-surface transition-colors hover:bg-surface-container disabled:cursor-not-allowed disabled:opacity-40"
+                disabled={activeAvailablePage >= availableTotalPages}
+                aria-label={langText("Next page", "पुढील पृष्ठ")}
+                onClick={() => setAvailablePage((page) => Math.min(availableTotalPages, page + 1))}
+              >
+                <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
         </div>
       </main>
     </div>

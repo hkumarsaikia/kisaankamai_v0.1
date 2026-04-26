@@ -5,6 +5,33 @@ const STATUS_COLORS = {
   info: 0x185abc,
 };
 
+export const DISCORD_WEBHOOK_ENV_BY_CHANNEL = {
+  ops: "DISCORD_WEBHOOK_OPS_URL",
+  deploy: "DISCORD_WEBHOOK_DEPLOY_URL",
+  release: "DISCORD_WEBHOOK_RELEASE_URL",
+  github: "DISCORD_WEBHOOK_GITHUB_URL",
+  security: "DISCORD_WEBHOOK_SECURITY_URL",
+  sentry: "DISCORD_WEBHOOK_SENTRY_URL",
+};
+
+export function normalizeDiscordChannels(channels = []) {
+  const normalized = channels
+    .flatMap((channel) => String(channel || "").split(","))
+    .map((channel) => channel.trim().toLowerCase())
+    .filter(Boolean);
+
+  return normalized.length ? [...new Set(normalized)] : ["ops"];
+}
+
+export function resolveDiscordWebhookUrl({ channel = "ops", explicitUrl = "", env = process.env } = {}) {
+  if (explicitUrl) {
+    return explicitUrl;
+  }
+
+  const envName = DISCORD_WEBHOOK_ENV_BY_CHANNEL[channel] || "";
+  return (envName && env[envName]) || env.DISCORD_WEBHOOK_URL || "";
+}
+
 export async function sendDiscordWebhook({
   webhookUrl,
   title,
@@ -53,4 +80,35 @@ export async function sendDiscordWebhook({
   }
 
   return true;
+}
+
+export async function sendDiscordWebhookToChannels({
+  channels = ["ops"],
+  webhookUrl = "",
+  env = process.env,
+  ...message
+}) {
+  const normalizedChannels = normalizeDiscordChannels(channels);
+  const results = [];
+
+  for (const channel of normalizedChannels) {
+    const resolvedWebhookUrl = resolveDiscordWebhookUrl({
+      channel,
+      explicitUrl: webhookUrl,
+      env,
+    });
+
+    if (!resolvedWebhookUrl) {
+      throw new Error(`Missing Discord webhook URL for channel "${channel}".`);
+    }
+
+    await sendDiscordWebhook({
+      ...message,
+      webhookUrl: resolvedWebhookUrl,
+    });
+
+    results.push(channel);
+  }
+
+  return results;
 }

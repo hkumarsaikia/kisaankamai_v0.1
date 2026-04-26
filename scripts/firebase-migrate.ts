@@ -93,9 +93,8 @@ async function migrateUsers(usersArray: UserSeedRecord[]) {
   for (const u of usersArray) {
     try {
       // 1. Check if user exists in Firebase Auth to prevent duplicates
-      let authUser;
       try {
-        authUser = await auth.getUserByEmail(u.email);
+        await auth.getUserByEmail(u.email);
       } catch (err: unknown) {
         if (
           typeof err === "object" &&
@@ -104,7 +103,7 @@ async function migrateUsers(usersArray: UserSeedRecord[]) {
           err.code === "auth/user-not-found"
         ) {
            // Create in Auth
-           authUser = await auth.createUser({
+           await auth.createUser({
              uid: u.id,
              email: u.email,
              phoneNumber: u.phone ? `+91${u.phone}`.replace("++", "+") : undefined,

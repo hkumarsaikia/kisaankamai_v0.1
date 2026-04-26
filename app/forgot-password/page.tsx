@@ -8,7 +8,6 @@ import { FormNotice } from "@/components/forms/FormKit";
 import { PHONE_RESET_OTP_ENABLED } from "@/lib/auth-capabilities";
 import {
   clearPasswordResetStorage,
-  RESET_EMAIL_KEY,
   RESET_IDENTIFIER_KEY,
   RESET_MASKED_PHONE_KEY,
   RESET_PHONE_E164_KEY,
@@ -23,7 +22,6 @@ type PasswordResetLookupResponse = {
   error?: string;
   phoneE164?: string;
   maskedPhone?: string;
-  email?: string;
 };
 
 export default function ForgotPasswordPage() {
@@ -45,7 +43,7 @@ export default function ForgotPasswordPage() {
 
     const trimmedIdentifier = identifier.trim();
     if (!trimmedIdentifier) {
-      setError(langText("Enter your registered mobile number or email.", "तुमचा नोंदणीकृत मोबाईल नंबर किंवा ईमेल टाका."));
+      setError(langText("Enter your registered mobile number.", "तुमचा नोंदणीकृत मोबाईल नंबर टाका."));
       return;
     }
 
@@ -73,8 +71,8 @@ export default function ForgotPasswordPage() {
         throw new Error(
           payload.error ||
             langText(
-              "We could not find a mobile number linked to that account.",
-              "त्या खात्याशी जोडलेला मोबाईल नंबर सापडला नाही."
+              "We could not start reset for that mobile number.",
+              "त्या मोबाईल नंबरसाठी रीसेट सुरू करता आला नाही."
             )
         );
       }
@@ -86,10 +84,6 @@ export default function ForgotPasswordPage() {
         setResetStorageItem(RESET_PHONE_E164_KEY, payload.phoneE164),
         setResetStorageItem(RESET_MASKED_PHONE_KEY, payload.maskedPhone),
       ];
-
-      if (payload.email) {
-        writesSucceeded.push(setResetStorageItem(RESET_EMAIL_KEY, payload.email));
-      }
 
       if (writesSucceeded.includes(false)) {
         throw new Error(
@@ -154,8 +148,8 @@ export default function ForgotPasswordPage() {
             <p className="mt-4 text-base leading-relaxed text-on-surface-variant">
               {PHONE_RESET_OTP_ENABLED
                 ? langText(
-                    "Enter your registered mobile number or email. We will send the reset OTP to the mobile number already linked to that account.",
-                    "तुमचा नोंदणीकृत मोबाईल नंबर किंवा ईमेल टाका. त्या खात्याशी आधीपासून जोडलेल्या मोबाईल नंबरवर रीसेट ओटीपी पाठवला जाईल."
+                    "Enter your registered mobile number. We will send the reset OTP to that number before allowing a password change.",
+                    "तुमचा नोंदणीकृत मोबाईल नंबर टाका. पासवर्ड बदलण्यापूर्वी त्या नंबरवर रीसेट ओटीपी पाठवला जाईल."
                   )
                 : resetUnavailableMessage}
             </p>
@@ -164,7 +158,7 @@ export default function ForgotPasswordPage() {
           <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label className="block px-1 text-sm font-semibold text-on-surface">
-                {langText("Mobile Number or Email", "मोबाईल नंबर किंवा ईमेल")}
+                {langText("Mobile Number", "मोबाईल नंबर")}
               </label>
               <div className="relative group">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
@@ -175,8 +169,8 @@ export default function ForgotPasswordPage() {
                 <input
                   className="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 pl-12 text-on-surface shadow-sm transition-all placeholder:text-outline focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   name="contact"
-                  placeholder={langText("e.g. +91 90000 00000 or name@example.com", "उदा. +९१ ९०००० ००००० किंवा name@example.com")}
-                  type="text"
+                  placeholder={langText("e.g. +91 90000 00000", "उदा. +९१ ९०००० ०००००")}
+                  type="tel"
                   value={identifier}
                   onChange={(event) => {
                     setIdentifier(event.target.value);

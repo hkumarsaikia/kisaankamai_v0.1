@@ -20,6 +20,10 @@ test("shared site chrome is hidden across both profile route families", () => {
   assert.equal(shouldHideSiteChrome("/renter-profile/settings"), true);
   assert.equal(shouldHideSiteChrome("/renter-profile/support"), true);
   assert.equal(shouldHideSiteChrome("/renter-profile/feedback"), true);
+  assert.equal(shouldHideSiteChrome("/login"), false);
+  assert.equal(shouldHideSiteChrome("/register"), false);
+  assert.equal(shouldHideSiteChrome("/forgot-password"), false);
+  assert.equal(shouldHideSiteChrome("/forgot-password/verify-otp"), false);
   assert.equal(shouldHideSiteChrome("/profile-selection"), false);
   assert.equal(shouldHideSiteChrome("/equipment/2"), false);
 });
@@ -38,6 +42,9 @@ test("bare route shell is bypassed across both profile route families", () => {
   assert.equal(shouldBypassRouteShell("/renter-profile/settings"), true);
   assert.equal(shouldBypassRouteShell("/renter-profile/support"), true);
   assert.equal(shouldBypassRouteShell("/renter-profile/feedback"), true);
+  assert.equal(shouldBypassRouteShell("/login"), false);
+  assert.equal(shouldBypassRouteShell("/register"), false);
+  assert.equal(shouldBypassRouteShell("/forgot-password"), false);
   assert.equal(shouldBypassRouteShell("/owner-registration"), false);
   assert.equal(shouldBypassRouteShell("/support"), false);
 });

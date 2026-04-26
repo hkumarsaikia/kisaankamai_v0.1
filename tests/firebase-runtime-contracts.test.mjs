@@ -27,8 +27,13 @@ test("root Firestore and Storage rules use the canonical root-app schema instead
   assert.match(firestoreRulesSource, /saved-items/);
   assert.match(firestoreRulesSource, /form-submissions/);
   assert.match(firestoreRulesSource, /bug-reports/);
+  assert.match(firestoreRulesSource, /verificationDocuments/);
+  assert.match(firestoreRulesSource, /verificationDocumentType/);
+  assert.match(firestoreRulesSource, /verificationDocumentNumber/);
   assert.doesNotMatch(firestoreRulesSource, /ownerUid|renterUid|userUid/);
   assert.match(storageRulesSource, /listings\/\{ownerUserId\}\/\{listingId\}/);
+  assert.match(storageRulesSource, /profile-verification\/\{userId\}/);
+  assert.match(storageRulesSource, /isAllowedVerificationDocument/);
 });
 
 test("server booking workflow emits Firebase push notifications through the shared helper", async () => {
@@ -68,4 +73,5 @@ test("package scripts expose the Firebase, Sheets, seed, repo-sync, and Discord 
   assert.match(packageSource, /"cleanup:final-test-accounts"/);
   assert.match(packageSource, /"repo:sync-live"/);
   assert.match(packageSource, /"discord:notify"/);
+  assert.doesNotMatch(packageSource, /"cross-agent:/);
 });
