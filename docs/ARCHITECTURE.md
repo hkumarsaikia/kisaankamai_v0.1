@@ -5,7 +5,7 @@
 The root app is the only public runtime.
 
 - Hosting: Firebase App Hosting
-- Auth: Firebase Auth with Admin-verified session cookies, phone verification for manual registration, and password login through one mobile/email identifier field
+- Auth: Firebase Auth with Admin-verified session cookies, Google login/register, phone verification for manual registration, and password login through one mobile/email identifier field
 - Data: Firestore
 - Uploads: Firebase Cloud Storage
 - Notifications: Firebase Cloud Messaging web push
@@ -15,6 +15,7 @@ The root app is the only public runtime.
 ## Data Contract
 
 - Firebase is the primary runtime backend and the source of truth for auth, profiles, listings, bookings, payments, saved items, submissions, and bug reports.
+- Registration does not choose an owner/renter workspace inline. New users complete auth/profile creation first, then choose the active workspace through `/profile-selection`.
 - Public equipment and category pages are generated from complete active Firestore listings only; archived seed/mock listings must stay paused or absent from the public active query set.
 - Booking and listing update notifications use Firebase Cloud Messaging. Phone-message providers are not part of the active runtime yet.
 - Google Sheets mirroring is intentional. It runs after Firebase persistence for admin/reporting visibility and must remain best-effort.

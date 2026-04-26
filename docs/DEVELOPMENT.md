@@ -29,10 +29,13 @@ Local work that exercises the Firebase-backed root runtime may require:
 
 - Firebase web config in `.env.local`
 - Firebase Admin credentials in `.env.local`
+- Firebase Auth Google provider enabled when testing Google login/register
 - optional Google Maps config
 - optional Sentry DSNs for observability
 
 If Firebase Admin credentials are missing, some authenticated/data-backed runtime flows will not function outside mocked/static fallbacks.
+
+Google OAuth depends on Firebase Console configuration, browser API key referrer restrictions, and the app CSP. Keep the production custom domains authorized in Firebase Auth, include the Firebase auth handler origin in the API key referrer allowlist, and keep `accounts.google.com`, `apis.google.com`, and the configured Firebase auth domain in the security headers before deploying auth-page changes.
 
 ## Ubuntu Runtime Notes
 

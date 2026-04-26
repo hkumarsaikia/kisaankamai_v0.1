@@ -42,8 +42,8 @@ npm run cleanup:final-test-accounts -- --dry-run
 
 Firebase does not expose fictional phone-number setup through the repo scripts. Add these two numbers manually in Firebase Console > Authentication > Sign-in method > Phone > Phone numbers for testing:
 
-- `+91 90000 00101` -> `111111`
-- `+91 90000 00102` -> `222222`
+- `+91 90000 00101` -> `123456`
+- `+91 90000 00102` -> `123456`
 
 These values match `data/final-test-accounts-manifest.json`. The latest local seed summary, including the seeded emails and passwords you used, is written to `logs/runtime/final-test-accounts/latest-seed.json`.
 

@@ -5,7 +5,7 @@
     "email": "final.owner.test@example.com",
     "phone": "9000000101",
     "displayName": "Kisan Kamai Final Test Owner",
-    "otpCode": "111111",
+    "otpCode": "123456",
     "profile": {
       "fullName": "Kisan Kamai Final Test Owner",
       "village": "Sangli",
@@ -22,7 +22,7 @@
     "email": "final.renter.test@example.com",
     "phone": "9000000102",
     "displayName": "Kisan Kamai Final Test Renter",
-    "otpCode": "222222",
+    "otpCode": "123456",
     "profile": {
       "fullName": "Kisan Kamai Final Test Renter",
       "village": "Satara",

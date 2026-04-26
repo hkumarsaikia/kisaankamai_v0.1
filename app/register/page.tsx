@@ -28,7 +28,6 @@ type RegisterFormState = {
   pincode: string;
   idType: string;
   idNumber: string;
-  workspacePreference: "renter" | "owner";
 };
 
 type UploadState = {
@@ -60,7 +59,6 @@ export default function RegisterPage() {
     pincode: "",
     idType: "",
     idNumber: "",
-    workspacePreference: "renter",
   });
   const [documents, setDocuments] = useState<UploadState>({
     front: null,
@@ -233,7 +231,6 @@ export default function RegisterPage() {
       await finishFirebaseAuthSession({
         auth,
         payload: {
-          workspacePreference: formState.workspacePreference,
           password: formState.password,
           profile: {
             fullName: formState.fullName.trim(),
@@ -277,7 +274,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+    <div className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
       <div className="fixed inset-0 z-0">
         <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-transparent to-surface" />
         <img
@@ -287,7 +284,7 @@ export default function RegisterPage() {
         />
       </div>
 
-      <main className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
+      <main className="relative z-10 flex min-h-[calc(100svh-5rem)] items-center justify-center px-4 pb-12 pt-28 sm:pb-16">
         <div className="w-full max-w-3xl">
           {stage === "otp" || stage === "verifying" || stage === "verified" ? (
             <div className="mx-auto max-w-md">
@@ -439,58 +436,6 @@ export default function RegisterPage() {
                         </button>
                       </div>
                     </label>
-                  </div>
-                </section>
-
-                <section className="space-y-4">
-                  <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
-                    <span
-                      className="material-symbols-outlined text-3xl text-primary"
-                      style={{ fontVariationSettings: "'FILL' 1" }}
-                    >
-                      dashboard
-                    </span>
-                    <h2 className="font-headline text-2xl font-bold text-primary">
-                      {langText("Primary workspace", "मुख्य कार्यक्षेत्र")}
-                    </h2>
-                  </div>
-
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {[
-                      {
-                        value: "renter" as const,
-                        title: langText("Rent equipment", "उपकरणे भाड्याने घ्या"),
-                        description: langText(
-                          "Find and request nearby machines.",
-                          "जवळच्या मशिन्स शोधा आणि विनंती करा."
-                        ),
-                      },
-                      {
-                        value: "owner" as const,
-                        title: langText("List equipment", "उपकरणे सूचीबद्ध करा"),
-                        description: langText(
-                          "Publish machines and manage bookings.",
-                          "मशिन्स प्रकाशित करा आणि बुकिंग सांभाळा."
-                        ),
-                      },
-                    ].map((option) => (
-                      <button
-                        key={option.value}
-                        type="button"
-                        onClick={() => updateField("workspacePreference", option.value)}
-                        className={`rounded-2xl border p-4 text-left transition-all ${
-                          formState.workspacePreference === option.value
-                            ? "border-primary bg-primary/10 text-primary"
-                            : "border-outline-variant bg-surface-container-low text-on-surface hover:border-primary-container"
-                        }`}
-                        disabled={isSubmitting}
-                      >
-                        <span className="block text-sm font-extrabold">{option.title}</span>
-                        <span className="mt-1 block text-xs font-medium opacity-75">
-                          {option.description}
-                        </span>
-                      </button>
-                    ))}
                   </div>
                 </section>
 

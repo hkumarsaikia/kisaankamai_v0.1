@@ -6,6 +6,9 @@ const sentryBuildConfigured = Boolean(
     process.env.SENTRY_ORG &&
     process.env.SENTRY_PROJECT
 );
+const googleAccountsOrigin = "https://accounts.google.com";
+const googleApisOrigin = "https://apis.google.com";
+const firebaseAuthOrigin = "https://gokisaan.firebaseapp.com";
 
 function joinSources(values) {
   return values.filter(Boolean).join(" ");
@@ -20,6 +23,8 @@ function buildCsp() {
       isDev ? "'unsafe-eval'" : null,
       "https://www.gstatic.com",
       "https://www.google.com",
+      googleAccountsOrigin,
+      googleApisOrigin,
       "https://maps.googleapis.com",
     ])}`,
     `style-src ${joinSources([
@@ -58,6 +63,9 @@ function buildCsp() {
       "https://maps.gstatic.com",
       "https://www.google.com",
       "https://www.gstatic.com",
+      googleAccountsOrigin,
+      googleApisOrigin,
+      firebaseAuthOrigin,
       "https://*.sentry.io",
       "https://*.ingest.sentry.io",
     ])}`,
@@ -65,6 +73,9 @@ function buildCsp() {
       "'self'",
       "https://www.google.com",
       "https://www.gstatic.com",
+      googleAccountsOrigin,
+      googleApisOrigin,
+      firebaseAuthOrigin,
     ])}`,
     "object-src 'none'",
     "base-uri 'self'",

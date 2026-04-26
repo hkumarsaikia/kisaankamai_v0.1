@@ -112,15 +112,18 @@ Required services:
 7. Firebase Auth **phone test numbers** in Console for deterministic OTP validation.
 8. Firebase Cloud Messaging **Web Push VAPID key** in Console for browser notifications.
 
+Google account registration/login uses the Firebase Auth Google provider. Keep the provider enabled and keep these Authentication authorized domains present: `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com`. The Firebase browser API key referrer allowlist must include the production site and Firebase auth handler origins. The root security headers must allow the Google/Firebase OAuth origins used by Firebase Auth (`accounts.google.com`, `apis.google.com`, and the Firebase auth domain).
+
 ---
 
 ## 🛠️ Replication Checklist
 
 - [ ] `PUPPETEER_SKIP_DOWNLOAD=true npm ci` completed without errors.
 - [ ] Firebase environment variables and Admin credentials are set.
+- [ ] Firebase Auth Google provider is enabled and the production custom domains are authorized.
 - [ ] Firebase Console has fictional phone numbers configured:
-  - [ ] `+91 90000 00101` with code `111111`
-  - [ ] `+91 90000 00102` with code `222222`
+  - [ ] `+91 90000 00101` with code `123456`
+  - [ ] `+91 90000 00102` with code `123456`
 - [ ] Firebase Console has a Web Push VAPID key and the public key is exposed as `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY`.
 - [ ] `npm run dev` starts the server on port 3000.
 - [ ] `npm run verify` passes.

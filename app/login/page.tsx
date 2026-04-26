@@ -77,7 +77,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background text-on-background">
+    <div className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-background text-on-background">
       <div className="absolute inset-0 grid grid-cols-12 grid-rows-12 gap-1 bg-primary">
         {collageTiles.map((tile) => (
           <div
@@ -94,7 +94,7 @@ export default function LoginPage() {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,37,26,0.4)_0%,rgba(0,37,26,0.1)_50%,rgba(0,37,26,0.45)_100%)]" />
       </div>
 
-      <main className="relative z-10 flex min-h-screen items-center justify-center px-6 py-16">
+      <main className="relative z-10 flex min-h-[calc(100svh-5rem)] items-center justify-center px-6 pb-12 pt-28 sm:pb-16">
         <div className="w-full max-w-[540px] overflow-hidden rounded-[3rem] border border-white/30 bg-white/92 p-8 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] ring-1 ring-white/20 backdrop-blur-xl md:p-14">
           <div className="space-y-10">
             <div className="space-y-4 text-center">

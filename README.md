@@ -11,6 +11,7 @@ Kisan Kamai now uses the root Next.js app as the only public frontend for `https
 The root app is the production-facing application. It owns:
 
 - Firebase Auth session-cookie auth
+- Firebase Auth Google sign-in/sign-up through the shared login/register buttons
 - Firebase Auth phone verification for manual registration
 - Firebase Auth password login through one mobile-or-email identifier field
 - Firebase Cloud Messaging web push notifications for booking and listing updates
@@ -78,7 +79,8 @@ Required runtime configuration includes:
 ## Backend Contract
 
 - Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
-- Manual registration verifies the phone number with Firebase Auth, then stores a password-backed Firebase Auth login credential. Users sign in with a single mobile/email identifier plus password form.
+- Manual registration verifies the phone number with Firebase Auth, then stores a password-backed Firebase Auth login credential. Workspace choice is handled after account creation in `/profile-selection`, not on the registration page. Users sign in with a single mobile/email identifier plus password form.
+- Google sign-in requires Firebase Auth Google provider to stay enabled and `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com` to remain authorized Firebase Auth domains. The browser API key referrer allowlist must include the production site and Firebase auth handler origins. The root CSP must continue to allow the Google/Firebase OAuth origins used by the login and register buttons.
 - Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
@@ -102,8 +104,8 @@ npm run discord:notify -- --channel deploy --title "..." --summary "..."
 Manual Firebase Console prerequisites still required outside repo code:
 
 - Authentication > Phone > Phone numbers for testing:
-  - `+91 90000 00101` with OTP code `111111`
-  - `+91 90000 00102` with OTP code `222222`
+  - `+91 90000 00101` with OTP code `123456`
+  - `+91 90000 00102` with OTP code `123456`
 - Cloud Messaging > Web Push certificates:
   - generate or import the VAPID key pair
   - expose the public key as `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY`

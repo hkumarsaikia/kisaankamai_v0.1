@@ -23,7 +23,17 @@ interface GoogleAuthButtonProps {
   className?: string;
 }
 
+function getFirebaseAuthCode(error: unknown) {
+  return typeof error === "object" && error && "code" in error && typeof error.code === "string"
+    ? error.code
+    : "";
+}
+
 function getGoogleAuthError(error: unknown) {
+  if (getFirebaseAuthCode(error) === "auth/internal-error") {
+    return "Google sign-in could not start. Refresh the page and try again.";
+  }
+
   return getFirebaseAuthError(error, "Google sign-in failed. Please try again.");
 }
 
@@ -41,12 +51,9 @@ async function finishGoogleSessionFromAuth(auth: Auth) {
 }
 
 function shouldFallbackToRedirect(error: unknown) {
-  const code =
-    typeof error === "object" && error && "code" in error && typeof error.code === "string"
-      ? error.code
-      : "";
+  const code = getFirebaseAuthCode(error);
 
-  return code === "auth/popup-blocked" || code === "auth/cancelled-popup-request";
+  return code === "auth/popup-blocked" || code === "auth/cancelled-popup-request" || code === "auth/internal-error";
 }
 
 async function signInWithGoogleAndCreateSession() {

@@ -44,14 +44,15 @@ test("manual registration keeps Firebase phone verification and requires passwor
   assert.match(registerSource, /verifyPhoneOtp/);
   assert.match(registerSource, /password/);
   assert.match(registerSource, /finishFirebaseAuthSession/);
-  assert.match(registerSource, /workspacePreference/);
+  assert.doesNotMatch(registerSource, /workspacePreference/);
+  assert.doesNotMatch(registerSource, /Primary workspace|मुख्य कार्यक्षेत्र/);
   assert.doesNotMatch(registerSource, /clearServerAuthSession/);
   assert.match(sessionRouteSource, /password/);
   assert.match(sessionRouteSource, /createOrUpdatePasswordLoginCredential/);
   assert.match(typeSource, /passwordLoginEmail/);
 });
 
-test("Google auth uses Firebase popup with redirect fallback and popup-compatible COOP", async () => {
+test("Google auth allows Firebase OAuth origins and redirects on popup internal errors", async () => {
   const [googleSource, nextConfigSource] = await Promise.all([
     readFile(new URL("../components/auth/GoogleAuthButton.tsx", import.meta.url), "utf8"),
     readFile(new URL("../next.config.mjs", import.meta.url), "utf8"),
@@ -60,7 +61,25 @@ test("Google auth uses Firebase popup with redirect fallback and popup-compatibl
   assert.match(googleSource, /signInWithPopup/);
   assert.match(googleSource, /signInWithRedirect/);
   assert.match(googleSource, /getRedirectResult/);
+  assert.match(googleSource, /auth\/internal-error/);
+  assert.match(nextConfigSource, /https:\/\/apis\.google\.com/);
+  assert.match(nextConfigSource, /https:\/\/accounts\.google\.com/);
+  assert.match(nextConfigSource, /https:\/\/gokisaan\.firebaseapp\.com/);
   assert.match(nextConfigSource, /same-origin-allow-popups/);
+});
+
+test("login and register pages fit inside the shared header and footer shell", async () => {
+  const [loginSource, registerSource, chromeSource] = await Promise.all([
+    readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(chromeSource, /<Footer \/>/);
+  assert.doesNotMatch(loginSource, /<main className="[^"]*min-h-screen/);
+  assert.doesNotMatch(registerSource, /<main className="[^"]*min-h-screen/);
+  assert.match(loginSource, /pt-28/);
+  assert.match(registerSource, /pt-28/);
 });
 
 test("booking and listing workflows stay Firebase FCM only for notifications", async () => {
