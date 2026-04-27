@@ -274,14 +274,14 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-transparent to-surface" />
+    <div className="kk-auth-page bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+      <div className="absolute inset-0 z-0">
         <img
           alt="Kisan Kamai agriculture background"
           className="h-full w-full object-cover grayscale-[10%] brightness-[90%]"
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
         />
+        <div className="kk-dark-image-overlay" />
       </div>
 
       <main className="relative z-10 flex min-h-[calc(100svh-5rem)] items-center justify-center px-4 pb-12 pt-28 sm:pb-16">
@@ -325,7 +325,7 @@ export default function RegisterPage() {
               <div id="kk-register-recaptcha" className="hidden" />
             </div>
           ) : (
-            <div className="overflow-hidden rounded-[2.5rem] border border-outline-variant bg-surface-container-lowest/95 shadow-2xl backdrop-blur-xl">
+            <div className="kk-auth-card overflow-hidden">
               <div className="border-b border-outline-variant bg-surface-container-low/80 px-6 py-8 text-center sm:px-10">
                 <div className="space-y-2">
                   <h1 className="font-headline text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
@@ -493,7 +493,7 @@ export default function RegisterPage() {
                                 updateField("district", district);
                                 setShowDistrictSuggestions(false);
                               }}
-                              className="block w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-on-surface transition-colors hover:bg-slate-100"
+                              className="block w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-low"
                             >
                               {district}
                             </button>
@@ -573,8 +573,8 @@ export default function RegisterPage() {
 
                   <div className="grid gap-4 sm:grid-cols-2">
                     <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center transition-colors hover:bg-surface-container-low">
-                      <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
-                      <span className="text-xs font-bold uppercase tracking-wider text-primary-container">
+                      <span className="material-symbols-outlined text-3xl text-primary">upload_file</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-primary">
                         {langText("Front side", "समोरची बाजू")}
                       </span>
                       <span className="text-xs text-on-surface-variant">
@@ -589,8 +589,8 @@ export default function RegisterPage() {
                     </label>
 
                     <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center transition-colors hover:bg-surface-container-low">
-                      <span className="material-symbols-outlined text-3xl text-primary-container">upload_file</span>
-                      <span className="text-xs font-bold uppercase tracking-wider text-primary-container">
+                      <span className="material-symbols-outlined text-3xl text-primary">upload_file</span>
+                      <span className="text-xs font-bold uppercase tracking-wider text-primary">
                         {langText("Back side", "मागची बाजू")}
                       </span>
                       <span className="text-xs text-on-surface-variant">

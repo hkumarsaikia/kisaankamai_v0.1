@@ -93,11 +93,11 @@ export function OtpVerificationForm({
   };
 
   return (
-    <div className="w-full rounded-[2.5rem] border border-white/60 bg-white/85 shadow-2xl backdrop-blur-xl">
+    <div className="kk-auth-card w-full">
       <div className="p-10 text-center">
         {view === "success" ? (
           <div className="space-y-5">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-700 shadow-sm">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-container/10 text-primary shadow-sm">
               <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                 check_circle
               </span>
@@ -130,8 +130,8 @@ export function OtpVerificationForm({
               <div
                 className={`flex items-start gap-3 rounded-xl border p-3 text-left ${
                   bannerTone === "error"
-                    ? "border-error/20 bg-error-container/60 text-error"
-                    : "border-slate-200 bg-slate-100 text-primary"
+                    ? "border-error/30 bg-error-container/40 text-error"
+                    : "border-outline-variant bg-surface-container-low text-primary"
                 }`}
               >
                 <span className="material-symbols-outlined text-xl">
@@ -152,10 +152,10 @@ export function OtpVerificationForm({
                     ref={(node) => {
                       inputsRef.current[index] = node;
                     }}
-                    className={`otp-input w-full rounded-xl border px-2 py-4 text-center text-xl font-bold text-on-surface transition-all outline-none ${
+                    className={`otp-input kk-otp-input ${
                       showErrorState
                         ? "border-error/50 bg-error-container/20"
-                        : "border-slate-200/50 bg-slate-100/50 focus:border-primary-container/40 focus:bg-white focus:ring-2 focus:ring-primary-container/30"
+                        : ""
                     } ${disableInputs ? "opacity-60" : ""}`}
                     maxLength={1}
                     type="text"

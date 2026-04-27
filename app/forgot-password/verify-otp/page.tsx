@@ -175,14 +175,14 @@ export default function VerifyOtpPage() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-surface px-4 py-10 font-body text-on-surface">
-      <div className="fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-container/20 via-transparent to-surface" />
+    <div className="kk-auth-page bg-surface px-4 py-10 font-body text-on-surface">
+      <div className="absolute inset-0 z-0">
         <img
           alt="Kisan Kamai agriculture background"
           className="h-full w-full object-cover grayscale-[10%] brightness-[90%]"
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
         />
+        <div className="kk-dark-image-overlay" />
       </div>
 
       <main className="relative z-10 flex min-h-screen items-center justify-center">

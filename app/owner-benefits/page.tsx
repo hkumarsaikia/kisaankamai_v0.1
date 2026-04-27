@@ -8,15 +8,15 @@ export default function OwnerBenefitsPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="flex flex-col bg-surface dark:bg-slate-950 min-h-screen">
+    <div className="flex min-h-screen flex-col bg-surface">
       <div className="pt-20">
         {/* Hero Section */}
-        <section className="relative min-h-[716px] flex items-center overflow-hidden bg-primary-container dark:bg-slate-950">
+        <section className="relative flex min-h-[716px] items-center overflow-hidden bg-primary-container">
           <div className="absolute inset-0 z-0">
-            <ContentImage className="w-full h-full object-cover opacity-30 mix-blend-overlay" alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-container dark:from-emerald-950 via-primary-container/80 dark:via-emerald-950/80 to-transparent"></div>
+            <ContentImage className="w-full h-full object-cover opacity-55" alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
+            <div className="kk-dark-image-overlay"></div>
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-6">
+          <div className="relative z-10 flex w-full justify-start px-6 text-left sm:px-10 lg:px-16 xl:px-24">
             <div className="max-w-3xl space-y-8">
               <h1 className="font-headline text-5xl md:text-7xl font-extrabold text-white leading-tight">
                 {t("owner-benefits.maximize_your")}<br />
@@ -30,17 +30,17 @@ export default function OwnerBenefitsPage() {
         </section>
 
         {/* Section 2: Earnings Calculator */}
-        <section className="py-24 bg-surface dark:bg-slate-950 relative overflow-hidden">
+        <section className="relative overflow-hidden bg-surface py-24">
           <div className="max-w-7xl mx-auto px-6">
             <div className="mb-16 text-center max-w-3xl mx-auto">
               <h2 className="font-headline text-4xl font-extrabold text-primary dark:text-emerald-50 mb-4">{t("owner-benefits.how_much_can_you_earn")}</h2>
-              <p className="text-on-surface-variant dark:text-slate-400 font-medium">
+              <p className="font-medium text-on-surface-variant">
                 {t("owner-benefits.select_your_equipment_type_to_see_estimated_monthly_earnings_based_on_local_market_rates_in_western_maharashtra")}
               </p>
             </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Calculator Sidebar */}
-              <div className="lg:col-span-1 bg-white dark:bg-slate-900/40 p-8 rounded-3xl shadow-sm border border-outline-variant/30 dark:border-slate-800/50 space-y-8">
+              <div className="space-y-8 rounded-3xl border border-outline-variant bg-surface-container-lowest p-8 shadow-sm lg:col-span-1">
                 <div>
                   <label className="block text-sm font-bold text-primary dark:text-emerald-400 mb-4 uppercase tracking-wider">{t("owner-benefits.equipment_type")}</label>
                   <div className="space-y-3">
@@ -48,17 +48,17 @@ export default function OwnerBenefitsPage() {
                       <span className="flex items-center gap-3"><span className="material-symbols-outlined">agriculture</span> {t("owner-benefits.tractor_45hp")}</span>
                       <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                     </button>
-                    <button className="w-full flex justify-between items-center px-4 py-3 rounded-xl border border-outline-variant text-on-surface-variant dark:text-slate-400 font-medium hover:border-primary/50 transition-colors">
+                    <button className="w-full flex justify-between items-center px-4 py-3 rounded-xl border border-outline-variant text-on-surface-variant font-medium hover:border-primary/50 transition-colors">
                       <span className="flex items-center gap-3"><span className="material-symbols-outlined">settings_input_component</span> {t("owner-benefits.harvester")}</span>
                     </button>
-                    <button className="w-full flex justify-between items-center px-4 py-3 rounded-xl border border-outline-variant text-on-surface-variant dark:text-slate-400 font-medium hover:border-primary/50 transition-colors">
+                    <button className="w-full flex justify-between items-center px-4 py-3 rounded-xl border border-outline-variant text-on-surface-variant font-medium hover:border-primary/50 transition-colors">
                       <span className="flex items-center gap-3"><span className="material-symbols-outlined">tire_repair</span> {t("owner-benefits.rotavator")}</span>
                     </button>
                   </div>
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-primary dark:text-emerald-400 mb-4 uppercase tracking-wider">{t("owner-benefits.operational_district")}</label>
-                  <select className="w-full rounded-xl border-outline-variant bg-white dark:bg-slate-900/50 text-on-surface dark:text-emerald-50 focus:ring-primary focus:border-primary py-3">
+                  <select className="w-full rounded-xl border-outline-variant bg-surface-container-lowest text-on-surface focus:ring-primary focus:border-primary py-3">
                     <option>{t("owner-benefits.sangli")}</option>
                     <option>{t("owner-benefits.satara")}</option>
                     <option>{t("owner-benefits.kolhapur")}</option>
@@ -66,8 +66,8 @@ export default function OwnerBenefitsPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-primary dark:text-emerald-400 mb-4 uppercase tracking-wider">{t("owner-benefits.expected_usage_days_month")}</label>
-                  <input className="w-full accent-primary h-2 bg-surface-container dark:bg-slate-900 rounded-lg appearance-none cursor-pointer" max="25" min="5" type="range" defaultValue="15" />
-                  <div className="flex justify-between mt-2 text-xs font-bold text-on-surface-variant dark:text-slate-400">
+                  <input className="w-full accent-primary h-2 bg-surface-container rounded-lg appearance-none cursor-pointer" max="25" min="5" type="range" defaultValue="15" />
+                  <div className="flex justify-between mt-2 text-xs font-bold text-on-surface-variant">
                     <span>{t("owner-benefits.5_days")}</span>
                     <span>{t("owner-benefits.25_days")}</span>
                   </div>

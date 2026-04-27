@@ -196,7 +196,7 @@ export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProp
         type="button"
         onClick={handleGoogleAuth}
         disabled={isLoading}
-        className="w-full rounded-2xl border border-slate-300 bg-white px-5 py-4 text-sm font-extrabold text-slate-800 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-container hover:shadow-md disabled:translate-y-0 disabled:opacity-70"
+        className="w-full rounded-2xl border border-outline-variant bg-surface-container-lowest px-5 py-4 text-sm font-extrabold text-on-surface shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary hover:shadow-md disabled:translate-y-0 disabled:opacity-70"
       >
         <span className="flex items-center justify-center gap-3">
           <svg className="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

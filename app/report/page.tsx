@@ -116,7 +116,7 @@ export default function ReportPage() {
             loading="lazy"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDprln7ei_-7KiHHUMhRaq3RPbGYAStHFc9k345CkGiggTfvSAe7LHkNV9H2R-yzCcb2F954B6sVfFlEyjr86aTHMksY7Pdl50EXBcMK0neZWBEFqJNEUHbanR1INlv_4BwH7QgTimp3zJS2d9oIeOrzhMu-EZxJeLof62W-9oekBbcMO53eyXg9J-WzmmncPNcu6fN3TeC1NbGqiDsyh6mQm8xeQ5ZmGwUISUiWEU1AQi7y-xWajGQWxA2QrOZp3ahSmQVe_1_HO5R"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary-container/65 to-transparent dark:from-slate-950/95 dark:via-primary-container/80" />
+          <div className="kk-dark-image-overlay" />
 
           <div className="relative z-10 mx-auto w-full max-w-7xl px-6 text-white">
             <h1 className="mb-4 text-4xl font-extrabold leading-tight md:text-6xl">
@@ -134,7 +134,7 @@ export default function ReportPage() {
         <section className="bg-surface py-16">
           <div className="mx-auto max-w-7xl px-6">
             <div className="mb-10 text-center">
-              <h2 className="mb-2 text-3xl font-bold text-primary-container">
+              <h2 className="mb-2 text-3xl font-bold text-primary">
                 {langText("What happened?", "काय झाले?")}
               </h2>
               <p className="font-medium text-on-surface-variant">
@@ -156,10 +156,10 @@ export default function ReportPage() {
                     type="button"
                     onClick={() => setSelectedCategory(category.value)}
                   >
-                    <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${active ? "bg-white/10 text-white" : "bg-surface-container-low text-primary-container"}`}>
+                    <div className={`mb-4 flex h-12 w-12 items-center justify-center rounded-xl ${active ? "bg-white/10 text-white" : "bg-surface-container-low text-primary"}`}>
                       <span className="material-symbols-outlined text-2xl">{category.icon}</span>
                     </div>
-                    <h3 className={`font-bold ${active ? "text-white" : "text-primary-container"}`}>
+                    <h3 className={`font-bold ${active ? "text-white" : "text-primary"}`}>
                       {langText(category.label.en, category.label.mr)}
                     </h3>
                     <p className={`mt-1 text-sm ${active ? "text-white/80" : "text-on-surface-variant"}`}>
@@ -253,7 +253,7 @@ export default function ReportPage() {
                   />
                 </Field>
                 <div className="space-y-4 md:col-span-2">
-                  <label className="text-sm font-bold uppercase tracking-wider text-primary-container">
+                  <label className="text-sm font-bold uppercase tracking-wider text-primary">
                     {langText("Urgency Level", "निकडीची पातळी")}
                   </label>
                   <div className="flex flex-wrap gap-3">
@@ -265,7 +265,7 @@ export default function ReportPage() {
                         className={`rounded-full border-2 px-6 py-2 font-bold transition-all ${
                           formState.urgency === urgency.value
                             ? "border-error bg-error-container text-error"
-                            : "border-outline-variant text-on-surface-variant hover:border-primary-container hover:text-primary-container"
+                            : "border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary"
                         }`}
                       >
                         {langText(urgency.label.en, urgency.label.mr)}
@@ -281,7 +281,7 @@ export default function ReportPage() {
                 </div>
               ) : null}
               {submitState === "success" ? (
-                <div className="rounded-xl border border-primary/20 bg-primary-fixed/20 px-4 py-3 text-sm font-medium text-primary">
+                <div className="rounded-xl border border-primary/20 bg-primary-container/20 px-4 py-3 text-sm font-medium text-primary">
                   {langText("Report submitted successfully. Our team will review it shortly.", "रिपोर्ट सबमिट झाला. आमची टीम लवकरच तपासेल.")}
                 </div>
               ) : null}
@@ -300,12 +300,12 @@ export default function ReportPage() {
             </form>
 
             <div className="space-y-6">
-              <div className="sticky top-28 rounded-3xl border border-secondary-container/20 bg-secondary-fixed/30 p-8">
-                <h4 className="mb-4 font-bold text-on-secondary-fixed">{langText("Direct Support", "थेट सहाय्य")}</h4>
+              <div className="sticky top-28 rounded-3xl border border-outline-variant bg-primary-container p-8 text-white">
+                <h4 className="mb-4 font-bold text-white">{langText("Direct Support", "थेट सहाय्य")}</h4>
                 <div className="flex items-center gap-3 rounded-2xl bg-surface-container-lowest/70 p-4">
-                  <span className="material-symbols-outlined text-on-tertiary-container">support_agent</span>
+                  <span className="material-symbols-outlined text-primary">support_agent</span>
                   <div>
-                    <p className="text-sm font-bold text-primary-container">{supportContact.phoneDisplay}</p>
+                    <p className="text-sm font-bold text-primary">{supportContact.phoneDisplay}</p>
                     <p className="text-xs text-on-surface-variant">
                       {supportContact.serviceHours}, {langText("Mon-Sat", "सोमवार-शनिवार")}
                     </p>
@@ -331,7 +331,7 @@ function Field({
 }) {
   return (
     <label className={`space-y-2 ${className}`}>
-      <span className="text-sm font-bold uppercase tracking-wider text-primary-container">{label}</span>
+      <span className="text-sm font-bold uppercase tracking-wider text-primary">{label}</span>
       {children}
     </label>
   );

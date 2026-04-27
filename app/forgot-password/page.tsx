@@ -107,7 +107,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="flex min-h-[calc(100vh-12rem)] flex-1 pt-24">
+    <main className="kk-auth-page flex flex-1 pt-24">
       <section className="relative hidden w-1/2 items-center justify-center overflow-hidden bg-surface-container-high md:flex">
         <div
           className="absolute inset-0 hidden bg-cover bg-center md:block"
@@ -115,9 +115,9 @@ export default function ForgotPasswordPage() {
             backgroundImage: `url("${fieldImage}")`,
           }}
         >
-          <div className="absolute inset-0 bg-white/45 backdrop-blur-[2px]" />
+          <div className="kk-dark-image-overlay" />
         </div>
-        <div className="relative z-10 mx-6 max-w-md rounded-3xl border border-white/50 bg-white/70 p-10 text-center shadow-2xl backdrop-blur-xl">
+        <div className="kk-auth-card relative z-10 mx-6 max-w-md p-10 text-center">
           <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-primary-container/20 text-primary">
             <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
               lock_reset
@@ -135,7 +135,7 @@ export default function ForgotPasswordPage() {
       </section>
 
       <section className="flex w-full items-center justify-center bg-surface-container-low px-6 py-12 md:w-1/2">
-        <div className="w-full max-w-md rounded-[2rem] bg-surface-container-lowest p-8 shadow-sm md:p-12">
+        <div className="kk-auth-card w-full max-w-md p-8 md:p-12">
           <div className="mb-10 text-center">
             <div className="mb-6 flex justify-center md:hidden">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-lg">
@@ -167,7 +167,7 @@ export default function ForgotPasswordPage() {
                   </span>
                 </div>
                 <input
-                  className="block w-full rounded-2xl border border-slate-200 bg-white px-4 py-4 pl-12 text-on-surface shadow-sm transition-all placeholder:text-outline focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  className="kk-auth-input block pl-12"
                   name="contact"
                   placeholder={langText("e.g. +91 90000 00000", "उदा. +९१ ९०००० ०००००")}
                   type="tel"

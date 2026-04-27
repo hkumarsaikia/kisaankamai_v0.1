@@ -125,7 +125,6 @@ export default function PartnerPage() {
     <div className="bg-background text-on-background min-h-screen">
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-24 sm:px-6 lg:px-8">
         <section className="relative overflow-hidden rounded-[2rem] bg-primary-container px-6 pb-12 pt-16 text-white shadow-md md:px-12 md:pb-16">
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(20,59,46,0.88)_0%,rgba(20,59,46,0.52)_45%,rgba(0,0,0,0.12)_100%)]" />
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{
@@ -133,6 +132,7 @@ export default function PartnerPage() {
                 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGvUW1pyMSm542J9EtkW-M2MoUvI42nDbcFq-GqQCvxthRJrHAny67FAM2h7NW67l95VCBjI_OieY5IsqWFCx2PZuTqesmOGOhm1OIrJtS6XF2VyuSqzgwDwdbsN6LpkKxY-1gIBGdyjtgA2Vw5paH0TH5-i_1B5fSyhI8_Q9n9dn5Fuh2xdszZ1ndnUVTFLdY08m6_u3pXFqvTXuOLVfpwuAY_EHG4IOWFEYgboIwRrqS8RTqONfFPSX_JnoqwmWO-wc4MoWg30Lf")',
             }}
           />
+          <div className="kk-dark-image-overlay" />
           <div className="relative z-10 max-w-3xl">
             <h1 className="text-4xl font-black tracking-[-0.03em] md:text-5xl lg:text-6xl">
               Expand Agricultural Access in Maharashtra
@@ -144,7 +144,7 @@ export default function PartnerPage() {
             <div className="mt-8 flex flex-wrap gap-4">
               <a
                 href="#enquiry-form"
-                className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-base font-bold text-primary shadow-sm transition-colors hover:bg-slate-100"
+                className="kk-deep-cta inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-bold"
               >
                 Apply for Partnership
               </a>
@@ -194,7 +194,7 @@ export default function PartnerPage() {
         </section>
 
         <section className="grid gap-8 px-1 lg:grid-cols-[1.6fr_0.8fr]" id="enquiry-form">
-          <div className="rounded-xl border border-outline-variant bg-white p-6 shadow-sm md:p-10">
+          <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm md:p-10">
             <div className="border-b border-outline-variant pb-6">
               <h2 className="text-2xl font-bold text-on-surface md:text-3xl">
                 Premium Partnership Enquiry
@@ -206,7 +206,7 @@ export default function PartnerPage() {
 
             <form className="mt-8 space-y-8" onSubmit={handleSubmit}>
               {error ? (
-                <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+                <div className="rounded-xl border border-error/30 bg-error-container/25 px-4 py-3 text-sm font-medium text-error">
                   {error}
                 </div>
               ) : null}
@@ -365,7 +365,7 @@ export default function PartnerPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 rounded-xl border border-outline-variant bg-white p-5 shadow-sm">
+            <div className="flex items-center gap-4 rounded-xl border border-outline-variant bg-surface-container-lowest p-5 shadow-sm">
               <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-surface-container-highest text-on-surface-variant">
                 <span className="material-symbols-outlined text-2xl">support_agent</span>
               </div>

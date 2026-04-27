@@ -89,7 +89,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="relative min-h-[calc(100svh-5rem)] overflow-hidden bg-background text-on-background">
+    <div className="kk-auth-page">
       {showPleaseLogin ? (
         <div className="fixed left-1/2 top-28 z-50 -translate-x-1/2 rounded-full bg-primary-container px-5 py-3 text-sm font-bold text-white shadow-2xl transition-opacity">
           {langText("Please login", "कृपया लॉगिन करा")}
@@ -108,16 +108,16 @@ export default function LoginPage() {
             }}
           />
         ))}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,37,26,0.4)_0%,rgba(0,37,26,0.1)_50%,rgba(0,37,26,0.45)_100%)]" />
+        <div className="kk-dark-image-overlay" />
       </div>
 
       <main className="relative z-10 flex min-h-[calc(100svh-5rem)] items-center justify-center px-6 pb-12 pt-28 sm:pb-16">
-        <div className="w-full max-w-[540px] overflow-hidden rounded-[3rem] border border-white/30 bg-white/92 p-8 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.4)] ring-1 ring-white/20 backdrop-blur-xl md:p-14">
+        <div className="kk-auth-card w-full max-w-[540px] overflow-hidden p-8 md:p-14">
           <div className="space-y-10">
             <div className="space-y-4 text-center">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-container/10 ring-1 ring-primary-container/20">
                 <span
-                  className="material-symbols-outlined text-5xl text-primary-container"
+                  className="material-symbols-outlined text-5xl text-primary"
                   style={{ fontVariationSettings: "'FILL' 1" }}
                 >
                   agriculture
@@ -127,7 +127,7 @@ export default function LoginPage() {
                 <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-background">
                   {langText("Welcome to Kisan Kamai", "किसान कमाईमध्ये स्वागत आहे")}
                 </h1>
-                <p className="font-headline text-sm font-bold text-slate-600">
+                <p className="font-headline text-sm font-bold text-on-surface-variant">
                   {langText("Sign in to your account", "आपल्या खात्यात साइन इन करा")}
                 </p>
               </div>
@@ -137,23 +137,23 @@ export default function LoginPage() {
               <GoogleAuthButton label={langText("Continue with Google", "Google सह पुढे जा")} />
 
               <div className="flex items-center gap-4">
-                <div className="h-px flex-1 bg-slate-200" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">
+                <div className="h-px flex-1 bg-outline-variant/70" />
+                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-outline">
                   {langText("or use your credentials", "किंवा तुमचे तपशील वापरा")}
                 </span>
-                <div className="h-px flex-1 bg-slate-200" />
+                <div className="h-px flex-1 bg-outline-variant/70" />
               </div>
 
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-3">
                   <label
-                    className="ml-1 text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500"
+                    className="ml-1 text-[12px] font-bold uppercase tracking-[0.15em] text-outline"
                     htmlFor="identifier"
                   >
                     {langText("Mobile number or Email ID", "मोबाईल नंबर किंवा ईमेल आयडी")}
                   </label>
                   <div className="relative group">
-                    <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-500 transition-colors group-focus-within:text-primary-container">
+                    <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-xl text-outline transition-colors group-focus-within:text-primary">
                       alternate_email
                     </span>
                     <input
@@ -165,7 +165,7 @@ export default function LoginPage() {
                         setError("");
                       }}
                       placeholder="name@example.com / +91 90000 00000"
-                      className="w-full rounded-[1.25rem] border border-slate-300 bg-white py-5 pl-14 pr-5 font-semibold text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary-container focus:ring-4 focus:ring-primary-container/10"
+                      className="kk-auth-input py-5 pl-14 pr-5"
                       disabled={isSubmitting}
                       required
                     />
@@ -175,20 +175,20 @@ export default function LoginPage() {
                 <div className="space-y-3">
                   <div className="ml-1 flex items-center justify-between">
                     <label
-                      className="text-[12px] font-bold uppercase tracking-[0.15em] text-slate-500"
+                      className="text-[12px] font-bold uppercase tracking-[0.15em] text-outline"
                       htmlFor="password"
                     >
                       {langText("Password", "पासवर्ड")}
                     </label>
                     <Link
                       href="/forgot-password"
-                      className="text-[11px] font-bold uppercase tracking-widest text-secondary transition-colors hover:text-primary-container"
+                      className="text-[11px] font-bold uppercase tracking-widest text-secondary transition-colors hover:text-primary"
                     >
                       {langText("Forgot password?", "पासवर्ड विसरलात?")}
                     </Link>
                   </div>
                   <div className="relative group">
-                    <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-xl text-slate-500 transition-colors group-focus-within:text-primary-container">
+                    <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-xl text-outline transition-colors group-focus-within:text-primary">
                       lock
                     </span>
                     <input
@@ -200,14 +200,14 @@ export default function LoginPage() {
                         setError("");
                       }}
                       placeholder="••••••••"
-                      className="w-full rounded-[1.25rem] border border-slate-300 bg-white py-5 pl-14 pr-14 font-semibold text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-primary-container focus:ring-4 focus:ring-primary-container/10"
+                      className="kk-auth-input py-5 pl-14 pr-14"
                       disabled={isSubmitting}
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword((current) => !current)}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-500 transition-colors hover:text-primary-container"
+                      className="absolute right-5 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary"
                       aria-label={langText("Toggle password visibility", "पासवर्ड दृश्यमानता बदला")}
                     >
                       <span className="material-symbols-outlined text-xl">
@@ -235,9 +235,9 @@ export default function LoginPage() {
                     </span>
                   </button>
 
-                  <p className="text-sm font-semibold text-slate-600">
+                  <p className="text-sm font-semibold text-on-surface-variant">
                     {langText("New to Kisan Kamai?", "किसान कमाईमध्ये नवीन आहात?")}{" "}
-                    <Link href="/register" className="font-extrabold text-primary-container hover:underline">
+                    <Link href="/register" className="font-extrabold text-primary hover:underline">
                       {langText("Create Account", "खाते तयार करा")}
                     </Link>
                   </p>

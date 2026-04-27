@@ -18,7 +18,7 @@ export default function TermsAndSafetyPage() {
               alt="Lush green field in Maharashtra" 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDltSi1i_6HGDAFLrlSUDFrky5M75B7VK9q---9vhn1fSwRcPwC0BU8GadHYCU3QjgP4FTVgy942SgO3gz_tU8U_KJyx3LLdjyjN5ytcbnWTrv4dgqodCXSESTrNyqZju3u4eAUR6-EVqm6yMpAdOdHddf398PmPbNnwSYUYFAiPeBuH1RjLNf1tHOpQWi4CLxpFk7IT9kSEtoaTgz5JR9y-gE4H3Rwidzz5gBeWnc3pHZXpWPqK3DnHfPnuwhwqSUxc6L2vc9RkGVZ"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-primary-container/40 to-surface"></div>
+            <div className="kk-dark-image-overlay"></div>
           </div>
           <div className="relative z-10 text-center px-6 max-w-4xl">
             <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
@@ -42,7 +42,7 @@ export default function TermsAndSafetyPage() {
               { icon: "verified_user", color: "blue", title: ["Verify Before Deal", "तपासा आणि निवडा"], desc: ["Always verify identity and machine condition before finalizing any agreement.", "प्रत्यक्ष भेटून आणि मशीन तपासूनच व्यवहार निश्चित करा."] },
               { icon: "gavel", color: "purple", title: ["Responsible Use", "जबाबदार वापर"], desc: ["Misuse of the platform or abusive language will lead to permanent removal.", "प्लॅटफॉर्मचा गैरवापर केल्यास खाते कायमचे बंद केले जाईल."] }
             ].map((card, i) => (
-              <div key={i} className="bg-white p-8 rounded-3xl shadow-2xl shadow-primary/5 border border-outline-variant hover:border-primary-container/30 transition-all group">
+              <div key={i} className="bg-surface-container-lowest p-8 rounded-3xl shadow-2xl shadow-primary/5 border border-outline-variant hover:border-primary/30 transition-all group">
                 <div className={`w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors`}>
                   <span className="material-symbols-outlined text-3xl">{card.icon}</span>
                 </div>
@@ -156,10 +156,10 @@ export default function TermsAndSafetyPage() {
               { icon: "person_off", title: ["Impersonation", "ओळख लपवणे"], desc: ["Misrepresenting your identity or business scale.", "तुमची खरी ओळख किंवा व्यवसायाची चुकीची माहिती देऊ नका."] },
               { icon: "voice_over_off", title: ["Abusive Language", "असभ्य भाषा"], desc: ["Threatening or harassing other users on call/message.", "इतर वापरकर्त्यांशी बोलताना असभ्य भाषेचा वापर करू नका."] }
             ].map((box, i) => (
-              <div key={i} className="p-10 border border-red-100 bg-red-50/20 rounded-[2.5rem] text-center hover:scale-[1.02] transition-transform">
-                <span className="material-symbols-outlined text-red-600 text-6xl mb-8">{box.icon}</span>
-                <h4 className="font-black text-2xl text-red-900 mb-4">{langText(box.title[0], box.title[1])}</h4>
-                <p className="text-red-900/70 text-sm font-bold leading-relaxed">{langText(box.desc[0], box.desc[1])}</p>
+              <div key={i} className="p-10 border border-error/25 bg-error-container/10 rounded-[2.5rem] text-center hover:scale-[1.02] transition-transform">
+                <span className="material-symbols-outlined text-error text-6xl mb-8">{box.icon}</span>
+                <h4 className="font-black text-2xl text-error mb-4">{langText(box.title[0], box.title[1])}</h4>
+                <p className="text-error/80 text-sm font-bold leading-relaxed">{langText(box.desc[0], box.desc[1])}</p>
               </div>
             ))}
           </div>
@@ -190,7 +190,7 @@ export default function TermsAndSafetyPage() {
                      {langText("Our support team is available Mon-Sat to help with platform usage.", "आमची टीम मदत करण्यासाठी सोमवार ते शनिवार उपलब्ध आहे.")}
                    </p>
                 </div>
-                <Link href="/support" className="bg-white text-primary py-5 rounded-2xl font-black text-center hover:scale-105 active:scale-95 transition-all w-full">
+                <Link href="/support" className="bg-surface-container-lowest text-primary py-5 rounded-2xl font-black text-center hover:scale-105 active:scale-95 transition-all w-full">
                    {langText("Go to Support Center", "मदत केंद्रावर जा")}
                 </Link>
               </div>

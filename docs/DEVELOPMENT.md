@@ -110,3 +110,4 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
 - `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details.
 - Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.
+- Dark-mode public imagery should use `kk-dark-image-overlay`, image cards should use `kk-image-card-overlay`, and auth/OTP screens should use the shared `kk-auth-*` classes. Keep `tests/dark-mode-visual-contracts.test.mjs` updated when a new public route gets a dark-mode visual contract.

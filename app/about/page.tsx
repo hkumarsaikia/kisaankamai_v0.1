@@ -57,7 +57,7 @@ export default function AboutPage() {
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/85 via-primary/55 to-transparent" />
+          <div className="kk-dark-image-overlay" />
           <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
             <div className="max-w-3xl">
               <h1 className="font-headline text-5xl font-extrabold leading-tight tracking-tight text-white md:text-7xl">
@@ -142,7 +142,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        <section className="bg-primary py-16">
+        <section className="bg-primary-container py-16">
           <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 text-center md:grid-cols-3">
             {metrics.map((metric) => (
               <div key={metric.label.en} className="flex flex-col gap-2">

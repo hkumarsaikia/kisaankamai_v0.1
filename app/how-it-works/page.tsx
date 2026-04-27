@@ -11,7 +11,7 @@ export default function HowItWorksPage() {
         {/* Hero Section */}
         <section className="relative min-h-[500px] flex items-center overflow-hidden bg-primary-container">
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary-container via-primary-container/80 to-transparent z-10"></div>
+            <div className="kk-dark-image-overlay z-10"></div>
             <img 
               className="w-full h-full object-cover grayscale-[20%] brightness-[70%]" 
               alt="Modern tractor working in a vast lush green field" 
@@ -40,7 +40,7 @@ export default function HowItWorksPage() {
               <h2 className="text-3xl font-extrabold text-primary mb-4 font-headline">
                 {langText("For Renters: Find What You Need", "भाड्याने घेणाऱ्यांसाठी: तुम्हाला काय हवे ते शोधा")}
               </h2>
-              <p className="text-slate-600 max-w-2xl font-medium">
+              <p className="text-on-surface-variant max-w-2xl font-medium">
                 {langText(
                   "Rent high-quality farming equipment from trusted owners in your local area with simple steps.",
                   "साध्या टप्प्यांसह तुमच्या स्थानिक भागातील विश्वसनीय मालकांकडून उच्च-गुणवत्तेची शेती उपकरणे भाड्याने घ्या."
@@ -54,7 +54,7 @@ export default function HowItWorksPage() {
                 { icon: "contact_support", title: ["Contact owner", "मालकाशी संपर्क साधा"], desc: ["Call the owner directly through the platform to discuss availability and pricing.", "उपलब्धता आणि किमतीबद्दल चर्चा करण्यासाठी थेट मालकाशी संपर्क साधा."] },
                 { icon: "handshake", title: ["Finalize directly", "थेट व्यवहार पूर्ण करा"], desc: ["Meet in person, verify the machine, and complete the transaction without middle-men.", "प्रत्यक्ष भेटा, मशीन तपासा आणि मध्यस्थाशिवाय व्यवहार पूर्ण करा."] },
               ].map((step, idx) => (
-                <div key={idx} className="relative group p-8 bg-white rounded-2xl border border-outline-variant shadow-sm hover:shadow-xl transition-all duration-300">
+                  <div key={idx} className="relative group p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm hover:shadow-xl transition-all duration-300">
                   <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary-container text-white flex items-center justify-center rounded-full font-black text-xl shadow-lg ring-4 ring-surface">
                     {idx + 1}
                   </div>
@@ -103,7 +103,7 @@ export default function HowItWorksPage() {
                   { step: "03", title: ["Receive requests", "विनंत्या मिळवा"], desc: ["Farmers will see your listing and contact you via phone directly.", "शेतकरी तुमची नोंदणी पाहतील आणि थेट फोनद्वारे संपर्क साधतील."] },
                   { step: "04", title: ["Discuss terms directly", "थेट चर्चा करा"], desc: ["Negotiate price, duration, and delivery directly with the renter.", "किंमत आणि कालावधीबद्दल थेट ग्राहकाशी चर्चा करा."] }
                 ].map((item, i) => (
-                  <div key={i} className="p-8 bg-white rounded-3xl shadow-sm border border-outline-variant hover:border-secondary transition-colors group">
+                  <div key={i} className="p-8 bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant hover:border-secondary transition-colors group">
                     <span className="text-secondary font-black text-lg mb-2 block tracking-tight group-hover:translate-x-1 transition-transform">{langText("Step " + item.step, "टप्पा " + item.step)}</span>
                     <h4 className="text-xl font-black text-primary mb-2 line-clamp-1">{langText(item.title[0], item.title[1])}</h4>
                     <p className="text-on-surface-variant text-sm font-medium">{langText(item.desc[0], item.desc[1])}</p>
@@ -115,7 +115,7 @@ export default function HowItWorksPage() {
         </section>
 
         {/* Trust Section */}
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-surface">
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-extrabold text-primary mb-4 font-headline uppercase tracking-tight">
@@ -147,23 +147,23 @@ export default function HowItWorksPage() {
         {/* Important Disclaimer */}
         <section className="py-12 bg-background">
           <div className="max-w-4xl mx-auto px-6">
-            <div className="bg-red-50 border-2 border-red-200 p-10 rounded-[2.5rem] relative overflow-hidden group">
+            <div className="bg-error-container/20 border-2 border-error/30 p-10 rounded-[2.5rem] relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform duration-500">
-                <span className="material-symbols-outlined text-9xl text-red-900">warning</span>
+                <span className="material-symbols-outlined text-9xl text-error">warning</span>
               </div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-black text-red-900 mb-6 flex items-center gap-3">
+                <h3 className="text-2xl font-black text-error mb-6 flex items-center gap-3">
                   <span className="material-symbols-outlined font-black">gpp_maybe</span>
                   {langText("Important Disclaimer", "महत्वाच्या सूचना")}
                 </h3>
-                <div className="text-red-900 font-bold leading-relaxed space-y-4">
+                <div className="text-error font-bold leading-relaxed space-y-4">
                   <p>
                     {langText(
                       "Kisan Kamai does not collect or process payments on the platform. Agreements happen directly between users. Kisan Kamai is a marketplace platform and does not own any equipment.",
                       "किसान कमाई प्लॅटफॉर्मवर पेमेंट गोळा करत नाही किंवा त्यावर प्रक्रिया करत नाही. वापरकर्त्यांमध्ये थेट व्यवहार होतात."
                     )}
                   </p>
-                  <p className="text-xl uppercase tracking-tight bg-red-900 text-white p-4 rounded-xl text-center">
+                  <p className="text-xl uppercase tracking-tight bg-error-container text-on-error-container p-4 rounded-xl text-center">
                     {langText(
                       "Always verify machine condition before paying.",
                       "पेमेंट करण्यापूर्वी नेहमी मशीनची स्थिती तपासा."
@@ -191,7 +191,7 @@ export default function HowItWorksPage() {
                   <span className="material-symbols-outlined font-black">search</span>
                   {langText("Browse Equipment", "उपकरणे शोधा")}
                 </Link>
-                <Link href="/owner-benefits" className="px-12 py-5 bg-white text-primary-container font-black rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 text-lg">
+                <Link href="/owner-benefits" className="px-12 py-5 bg-surface-container-lowest text-primary font-black rounded-2xl shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-3 text-lg">
                   <span className="material-symbols-outlined font-black">workspace_premium</span>
                   {langText("Owner Benefits", "मालकांचे फायदे")}
                 </Link>

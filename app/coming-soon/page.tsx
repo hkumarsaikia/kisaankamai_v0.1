@@ -52,8 +52,9 @@ export default function ComingSoonPage() {
   return (
     <div className="bg-background text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
       <main className="min-h-screen pt-24">
-        <section className="overflow-hidden bg-surface-container-low py-16">
-          <div className="mx-auto max-w-screen-2xl px-8">
+        <section className="relative overflow-hidden bg-surface-container-low py-16">
+          <div className="kk-dark-image-overlay opacity-[0.04] dark:opacity-[0.12]" />
+          <div className="relative mx-auto max-w-screen-2xl px-8">
             <h2 className="mb-12 text-center text-sm font-bold uppercase tracking-[0.2em] text-outline">
               Building Rural Prosperity with Strategic Partners
             </h2>
@@ -129,7 +130,7 @@ export default function ComingSoonPage() {
                 <div className="overflow-hidden rounded-[2rem] transition-all duration-300 ease-out">
                   {notifyState === "idle" ? (
                     <button
-                      className="w-full rounded-full bg-secondary py-4 font-bold text-white shadow-xl shadow-black/20 transition-all duration-300 hover:scale-105"
+                      className="kk-deep-cta w-full rounded-full py-4 font-bold"
                       type="button"
                       onClick={() => setNotifyState("form")}
                     >
@@ -147,7 +148,7 @@ export default function ComingSoonPage() {
                         onChange={(event) => setContact(event.target.value)}
                       />
                       <button
-                        className="w-full rounded-full bg-secondary py-4 font-bold text-white shadow-xl shadow-black/20 transition-transform hover:scale-105"
+                        className="kk-deep-cta w-full rounded-full py-4 font-bold"
                         type="submit"
                       >
                         Submit

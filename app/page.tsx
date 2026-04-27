@@ -176,7 +176,7 @@ export default function Home() {
                 decoding="async"
               />
             ))}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/80 via-primary/60 to-black/30"></div>
+            <div className="kk-dark-image-overlay"></div>
             
             {/* Slider Controls */}
             <button 
@@ -210,24 +210,24 @@ export default function Home() {
               <p className="text-xl text-white/80 mb-10 max-w-lg leading-relaxed">
                 {t("home.rent_high_quality_agricultural_equipment_from_trusted_local_owners_smarter_farming_powered_by_technology_rooted_in_trust")}
               </p>
-              <div className="bg-white dark:bg-slate-950 p-2 rounded-xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-2xl border border-transparent dark:border-slate-800">
-                <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800/50">
+              <div className="bg-surface-container-lowest p-2 rounded-xl shadow-2xl flex flex-col md:flex-row gap-2 max-w-2xl border border-outline-variant">
+                <div className="flex-1 flex items-center gap-3 px-4 py-3 border-b md:border-b-0 md:border-r border-outline-variant">
                   <SharedIcon name="location" className="h-5 w-5 text-secondary dark:text-emerald-400" />
                   <select 
-                    className="w-full border-none focus:ring-0 text-on-surface dark:text-emerald-50 bg-transparent cursor-pointer font-medium"
+                    className="w-full border-none focus:ring-0 text-on-surface bg-transparent cursor-pointer font-medium"
                     value={searchLocation}
                     onChange={(e) => setSearchLocation(e.target.value)}
                   >
-                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="" disabled>{t("home.select_location")}</option>
-                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="Kalwan">{t("home.kalwan")}</option>
-                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="Mukhed">{t("home.mukhed")}</option>
-                    <option className="dark:bg-slate-900 dark:text-slate-100 text-slate-800" value="More locations coming soon..." disabled>{t("home.more_locations_coming_soon")}</option>
+                    <option className="bg-surface-container-lowest text-on-surface" value="" disabled>{t("home.select_location")}</option>
+                    <option className="bg-surface-container-lowest text-on-surface" value="Kalwan">{t("home.kalwan")}</option>
+                    <option className="bg-surface-container-lowest text-on-surface" value="Mukhed">{t("home.mukhed")}</option>
+                    <option className="bg-surface-container-lowest text-on-surface" value="More locations coming soon..." disabled>{t("home.more_locations_coming_soon")}</option>
                   </select>
                 </div>
                 <div className="flex-1 flex items-center gap-3 px-4 py-3">
                   <SharedIcon name="agriculture" className="h-5 w-5 text-secondary dark:text-emerald-400" />
                   <input 
-                    className="w-full border-none focus:ring-0 text-on-surface dark:text-emerald-50 placeholder:text-slate-400 dark:placeholder-slate-500 bg-transparent font-medium" 
+                    className="w-full border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant bg-transparent font-medium"
                     placeholder={t("home.search_tractors_harvesters")} 
                     type="text" 
                     value={searchQuery}
@@ -235,7 +235,7 @@ export default function Home() {
                     onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   />
                 </div>
-                <button onClick={handleSearch} className="bg-secondary dark:bg-emerald-700 text-white px-8 py-4 rounded-lg font-bold hover:bg-secondary/90 dark:hover:bg-emerald-600 transition-all flex items-center justify-center gap-2">
+                <button onClick={handleSearch} className="kk-deep-cta px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-2">
                   <SharedIcon name="search" className="h-5 w-5" />
                   {t("home.search_now")}
                 </button>
@@ -245,12 +245,12 @@ export default function Home() {
         </section>
 
         {/* Featured Categories */}
-        <section className="py-24 bg-white dark:bg-slate-950">
+        <section className="py-24 bg-surface">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex justify-between items-end mb-12">
               <div>
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">{t("home.explore_equipment_categories")}</h2>
-                <p className="text-slate-600 dark:text-slate-400 max-w-xl">{t("home.from_land_preparation_to_harvesting_find_the_right_tool_for_every_stage_of_your_farming_cycle")}</p>
+                <p className="text-on-surface-variant max-w-xl">{t("home.from_land_preparation_to_harvesting_find_the_right_tool_for_every_stage_of_your_farming_cycle")}</p>
               </div>
               <Link className="text-secondary font-bold flex items-center gap-2 hover:gap-3 transition-all" href="/categories">
                 {t("home.view_all_categories")} <SharedIcon name="arrow-right" className="h-5 w-5" />
@@ -260,7 +260,7 @@ export default function Home() {
               {/* Tractors */}
               <Link href="/rent-equipment?query=tractors" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("High-horsepower tractor parked in a vibrant green farm field", "हिरव्यागार शेतात उभा असलेला उच्च क्षमतेचा ट्रॅक्टर")} src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+                <div className="kk-image-card-overlay"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.tractors")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -271,7 +271,7 @@ export default function Home() {
               {/* Harvesters */}
               <Link href="/rent-equipment?query=harvesters" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Combine harvester working through a wheat field", "गव्हाच्या शेतात काम करणारा कॉम्बाईन हार्वेस्टर")} src={assetPath("/assets/generated/harvester_action.png")} loading="lazy" decoding="async" />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+                <div className="kk-image-card-overlay"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.harvesters")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -282,7 +282,7 @@ export default function Home() {
               {/* Implements */}
               <Link href="/rent-equipment?query=implements" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Agricultural implements including a rotavator and seed drill", "रोटाव्हेटर आणि सीड ड्रिलसह कृषी अवजारे")} src={assetPath("/assets/generated/implement_4k.png")} loading="lazy" decoding="async" />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+                <div className="kk-image-card-overlay"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.implements")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -293,7 +293,7 @@ export default function Home() {
               {/* Ploughs */}
               <Link href="/rent-equipment?query=ploughs" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Plough working through prepared soil", "तयार जमिनीत चालणारा नांगर")} src={assetPath("/assets/generated/plough_4k.png")} loading="lazy" decoding="async" />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+                <div className="kk-image-card-overlay"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.ploughs")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -304,7 +304,7 @@ export default function Home() {
               {/* Sprayers */}
               <Link href="/rent-equipment?query=sprayers" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Crop sprayer ready for field coverage", "शेतात फवारणीसाठी तयार स्प्रेयर")} src={assetPath("/assets/generated/sprayer.png")} loading="lazy" decoding="async" />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent"></div>
+                <div className="kk-image-card-overlay"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.sprayers")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -317,7 +317,7 @@ export default function Home() {
         </section>
 
         {/* Why Kisan Kamai */}
-        <section className="py-24 bg-white dark:bg-slate-950 overflow-hidden">
+        <section className="py-24 bg-surface overflow-hidden">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-20 items-center">
               <div className="relative">
@@ -331,30 +331,30 @@ export default function Home() {
                 </h2>
                 <div className="space-y-8">
                   <div className="flex gap-6">
-                    <div className="w-12 h-12 bg-emerald-50 dark:bg-slate-900/60 rounded-xl flex items-center justify-center text-primary-container dark:text-emerald-400 flex-shrink-0">
+                    <div className="w-12 h-12 bg-surface-container-low rounded-xl flex items-center justify-center text-primary flex-shrink-0">
                       <SharedIcon name="verified" className="h-6 w-6" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-xl mb-2 dark:text-white">{t("home.vetted_equipment_owners")}</h4>
-                      <p className="text-slate-600 dark:text-slate-400">{t("home.every_owner_on_our_platform_undergoes_a_rigorous_verification_process_to_ensure_reliability_and_safety")}</p>
+                      <h4 className="font-bold text-xl mb-2 text-on-surface">{t("home.vetted_equipment_owners")}</h4>
+                      <p className="text-on-surface-variant">{t("home.every_owner_on_our_platform_undergoes_a_rigorous_verification_process_to_ensure_reliability_and_safety")}</p>
                     </div>
                   </div>
                   <div className="flex gap-6">
-                    <div className="w-12 h-12 bg-emerald-50 dark:bg-slate-900/60 rounded-xl flex items-center justify-center text-primary-container dark:text-emerald-400 flex-shrink-0">
+                    <div className="w-12 h-12 bg-surface-container-low rounded-xl flex items-center justify-center text-primary flex-shrink-0">
                       <SharedIcon name="support" className="h-6 w-6" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-xl mb-2 dark:text-white">{t("home.24_7_local_support")}</h4>
-                      <p className="text-slate-600 dark:text-slate-400">{t("home.our_team_is_available_round_the_clock_to_help_with_booking_issues_or_equipment_technicalities")}</p>
+                      <h4 className="font-bold text-xl mb-2 text-on-surface">{t("home.24_7_local_support")}</h4>
+                      <p className="text-on-surface-variant">{t("home.our_team_is_available_round_the_clock_to_help_with_booking_issues_or_equipment_technicalities")}</p>
                     </div>
                   </div>
                   <div className="flex gap-6">
-                    <div className="w-12 h-12 bg-emerald-50 dark:bg-slate-900/60 rounded-xl flex items-center justify-center text-primary-container dark:text-emerald-400 flex-shrink-0">
+                    <div className="w-12 h-12 bg-surface-container-low rounded-xl flex items-center justify-center text-primary flex-shrink-0">
                       <SharedIcon name="payments" className="h-6 w-6" />
                     </div>
                     <div>
-                      <h4 className="font-bold text-xl mb-2 dark:text-white">{t("home.fair_pricing_promise")}</h4>
-                      <p className="text-slate-600 dark:text-slate-400">{t("home.transparent_rates_with_no_hidden_costs_we_ensure_fair_value_for_both_renters_and_equipment_owners")}</p>
+                      <h4 className="font-bold text-xl mb-2 text-on-surface">{t("home.fair_pricing_promise")}</h4>
+                      <p className="text-on-surface-variant">{t("home.transparent_rates_with_no_hidden_costs_we_ensure_fair_value_for_both_renters_and_equipment_owners")}</p>
                     </div>
                   </div>
                 </div>
@@ -364,12 +364,12 @@ export default function Home() {
         </section>
 
         {/* Operating Area Map */}
-        <section className="py-24 bg-surface-container-low dark:bg-slate-950/50">
+        <section className="py-24 bg-surface-container-low">
           <ScrollReveal className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-12 gap-12 items-center">
               <div className="md:col-span-4">
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-6 tracking-tight">{t("home.expanding_across_maharashtra")}</h2>
-                <p className="text-slate-600 dark:text-slate-400 mb-8">{t("home.we_are_currently_focused_on_providing_the_best_service_within_these_three_core_districts_ensuring_fast_delivery_and_local_support")}</p>
+                <p className="text-on-surface-variant mb-8">{t("home.we_are_currently_focused_on_providing_the_best_service_within_these_three_core_districts_ensuring_fast_delivery_and_local_support")}</p>
                 <ul className="space-y-4">
                   {NORTHERN_MAHARASHTRA_SERVICE_AREAS.map(({ areaLabel }) => (
                     <li key={areaLabel} className="flex items-center gap-3 font-bold text-lg text-primary dark:text-emerald-50">
@@ -381,13 +381,13 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <div className="mt-12 p-6 bg-white dark:bg-slate-900/40 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800/50">
-                  <p className="text-sm font-label text-slate-500 dark:text-slate-400 mb-2">{t("home.are_you_from_another_district")}</p>
+                <div className="mt-12 p-6 bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant">
+                  <p className="text-sm font-label text-on-surface-variant mb-2">{t("home.are_you_from_another_district")}</p>
                   <Link className="text-secondary dark:text-amber-400 font-bold underline underline-offset-4" href="/support">{t("home.notify_me_when_you_launch_nearby")}</Link>
                 </div>
               </div>
               <div className="md:col-span-8">
-                <div className="bg-white dark:bg-slate-900/40 p-4 rounded-[2rem] shadow-xl border border-white dark:border-slate-800/50">
+                <div className="bg-surface-container-lowest p-4 rounded-[2rem] shadow-xl border border-outline-variant">
                   <div className="w-full h-[500px] rounded-[1.5rem] overflow-hidden">
                     <LazyMap
                       center={[16.85, 74.27]}
@@ -406,25 +406,25 @@ export default function Home() {
         </section>
 
         {/* Farmer Stories (Visual Only Stars) */}
-        <section className="py-24 bg-white dark:bg-slate-950">
+        <section className="py-24 bg-surface">
           <div className="max-w-7xl mx-auto px-6">
             <h2 className="text-4xl font-black text-primary dark:text-emerald-50 text-center mb-16 tracking-tight">{t("home.rooted_success_stories")}</h2>
             <div className="grid md:grid-cols-3 gap-8">
               {testimonials.map((item) => (
-                <div key={item.name} className="bg-surface-container-low dark:bg-slate-900/40 p-8 rounded-3xl border border-slate-100 dark:border-slate-800/50">
+                <div key={item.name} className="bg-surface-container-low p-8 rounded-3xl border border-outline-variant">
                   <div className="flex gap-1 text-amber-500 mb-6">
                     {Array.from({ length: 5 }).map((_, index) => (
                       <SharedIcon key={`${item.name}-star-${index}`} name="star" className="h-5 w-5" />
                     ))}
                   </div>
-                  <p className="text-slate-600 dark:text-slate-400 mb-8 italic leading-relaxed">
+                  <p className="text-on-surface-variant mb-8 italic leading-relaxed">
                     {langText(item.quoteEn, item.quoteMr)}
                   </p>
                   <div className="flex items-center gap-4">
                     <ContentImage className="w-12 h-12 rounded-full object-cover" alt={item.name} src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
                     <div>
                       <h5 className="font-bold text-primary dark:text-emerald-50">{item.name}</h5>
-                      <p className="text-xs font-label text-slate-400">{langText(item.areaEn, item.areaMr)}</p>
+                      <p className="text-xs font-label text-on-surface-variant">{langText(item.areaEn, item.areaMr)}</p>
                     </div>
                   </div>
                 </div>
@@ -434,19 +434,19 @@ export default function Home() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-24 bg-surface-container-low dark:bg-slate-950/50">
+        <section className="py-24 bg-surface-container-low">
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-4xl font-black text-primary dark:text-emerald-50 text-center mb-16 tracking-tight">{t("home.frequently_asked_questions")}</h2>
             <div className="space-y-4">
               {faqs.map((item) => (
-                <details key={item.questionEn} className="group rounded-2xl border border-slate-100 bg-white p-6 shadow-sm dark:border-slate-800/50 dark:bg-slate-900/40">
+                <details key={item.questionEn} className="group rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4">
                     <h4 className="font-bold text-lg text-primary dark:text-emerald-50">
                       {langText(item.questionEn, item.questionMr)}
                     </h4>
-                    <SharedIcon name="plus" className="h-5 w-5 text-slate-400 transition-transform group-open:rotate-45 group-open:text-primary" />
+                    <SharedIcon name="plus" className="h-5 w-5 text-outline transition-transform group-open:rotate-45 group-open:text-primary" />
                   </summary>
-                  <p className="mt-4 text-slate-600 dark:text-slate-400">
+                  <p className="mt-4 text-on-surface-variant">
                     {langText(item.answerEn, item.answerMr)}
                   </p>
                 </details>
@@ -459,7 +459,7 @@ export default function Home() {
         <section className="py-24 bg-primary text-white overflow-hidden relative">
           <div className="absolute inset-0 z-0">
             <ContentImage className="w-full h-full object-cover opacity-20 grayscale" alt={langText("Tractors parked in a rural equipment yard at dusk", "संध्याकाळी ग्रामीण यंत्रसामग्रीच्या अंगणात उभे असलेले ट्रॅक्टर")} src={assetPath("/assets/generated/farm_yard.png")} loading="lazy" decoding="async" />
-            <div className="absolute inset-0 bg-primary/80"></div>
+            <div className="kk-dark-image-overlay"></div>
           </div>
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
             <h2 className="text-5xl font-black mb-8 leading-tight">{t("home.ready_to_transform_your_farming_journey")}</h2>

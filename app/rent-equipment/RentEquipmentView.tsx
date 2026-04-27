@@ -308,9 +308,9 @@ export default function RentEquipmentView({
         <section className="max-w-7xl mx-auto px-6 mb-12">
           <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
             <div className="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mb-6">
-              <SharedIcon name="agriculture" className="h-16 w-16 text-on-primary-container opacity-20" />
+              <SharedIcon name="agriculture" className="h-16 w-16 text-primary opacity-35" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-primary-container mb-4 font-headline">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-primary mb-4 font-headline">
               {hasRequestedCategoryOrQuery
                 ? langText(
                     "Equipment does not exist for this category yet.",
@@ -356,9 +356,9 @@ export default function RentEquipmentView({
         <section className="max-w-7xl mx-auto px-6 mb-12">
           <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
             <div className="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mb-6">
-              <SharedIcon name="agriculture" className="h-16 w-16 text-on-primary-container opacity-20" />
+              <SharedIcon name="agriculture" className="h-16 w-16 text-primary opacity-35" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-primary-container mb-4 font-headline">
+            <h2 className="text-2xl md:text-3xl font-extrabold text-primary mb-4 font-headline">
               {hasRequestedCategoryOrQuery
                 ? langText(
                     "Equipment does not exist for this category yet.",
@@ -424,7 +424,7 @@ export default function RentEquipmentView({
               <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">
                 {langText("Map unavailable", "नकाशा उपलब्ध नाही")}
               </p>
-              <h3 className="mt-3 text-2xl font-bold text-primary-container">
+              <h3 className="mt-3 text-2xl font-bold text-primary">
                 {langText("No mapped live listing locations yet", "अजून नकाशासाठी पुरेशी थेट ठिकाण माहिती उपलब्ध नाही")}
               </h3>
               <p className="mt-3 text-sm leading-6 text-on-surface-variant">

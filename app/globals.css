@@ -176,6 +176,38 @@
     @apply rounded-3xl border border-outline-variant bg-surface-container-lowest shadow-xl backdrop-blur-xl;
   }
 
+  .kk-auth-page {
+    @apply relative min-h-[calc(100svh-5rem)] overflow-hidden bg-background text-on-background;
+  }
+
+  .kk-auth-card {
+    @apply rounded-[2.5rem] border border-outline-variant bg-surface-container-lowest/95 text-on-surface shadow-2xl backdrop-blur-xl;
+  }
+
+  .kk-auth-input {
+    @apply w-full rounded-[1.25rem] border border-outline-variant bg-surface-container-lowest px-4 py-4 font-semibold text-on-surface outline-none transition-all placeholder:text-on-surface-variant focus:border-primary focus:ring-4 focus:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-70;
+  }
+
+  .kk-otp-input {
+    @apply w-full rounded-xl border border-outline-variant bg-surface-container-low px-2 py-4 text-center text-xl font-bold text-on-surface outline-none transition-all placeholder:text-on-surface-variant focus:border-primary focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .kk-dark-image-overlay {
+    @apply absolute inset-0;
+    background:
+      linear-gradient(90deg, rgba(20, 59, 46, 0.78) 0%, rgba(20, 59, 46, 0.52) 48%, rgba(0, 0, 0, 0.24) 100%);
+  }
+
+  .kk-image-card-overlay {
+    @apply absolute inset-0;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(20, 59, 46, 0.18) 44%, rgba(20, 59, 46, 0.88) 100%);
+  }
+
+  .kk-deep-cta {
+    @apply bg-primary-container text-white shadow-[0_18px_40px_-22px_rgba(20,59,46,0.9)] transition-all hover:brightness-110 hover:shadow-[0_24px_48px_-26px_rgba(20,59,46,0.95)] active:scale-[0.98];
+  }
+
   .kk-input {
     @apply flex min-h-12 w-full rounded-[1.15rem] border border-outline-variant bg-surface-container-lowest px-4 py-3 text-sm font-semibold text-on-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-on-surface-variant focus:border-secondary focus:ring-2 focus:ring-secondary disabled:cursor-not-allowed disabled:opacity-60 file:mr-4 file:rounded-full file:border-0 file:bg-primary file:px-4 file:py-2 file:font-bold file:text-white;
   }
@@ -326,11 +358,11 @@
   }
 
   .kk-form-notice-error {
-    @apply border-red-200 bg-red-50 text-red-700;
+    @apply border-error/30 bg-error-container/25 text-error;
   }
 
   .kk-form-notice-success {
-    @apply border-emerald-200 bg-emerald-50 text-emerald-700;
+    @apply border-primary/30 bg-primary-container/20 text-primary;
   }
 
   .kk-form-notice-info {
@@ -387,6 +419,47 @@
 
   .kk-form-muted-banner {
     @apply rounded-[1.2rem] border border-secondary bg-secondary-fixed px-4 py-3 text-sm font-semibold text-secondary;
+  }
+
+  .dark .kk-auth-card {
+    @apply border-outline-variant bg-surface-container-lowest/95 shadow-[0_34px_90px_-52px_rgba(0,0,0,0.95)];
+  }
+
+  .dark .kk-auth-input,
+  .dark .kk-otp-input,
+  .dark .kk-input {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .dark .kk-dark-image-overlay {
+    background:
+      linear-gradient(90deg, rgba(12, 15, 19, 0.94) 0%, rgba(20, 59, 46, 0.76) 48%, rgba(12, 15, 19, 0.68) 100%);
+  }
+
+  .dark .kk-image-card-overlay {
+    background:
+      linear-gradient(180deg, rgba(12, 15, 19, 0.02) 0%, rgba(12, 15, 19, 0.34) 36%, rgba(12, 15, 19, 0.9) 100%);
+  }
+
+  .dark .kk-form-main-card {
+    background:
+      radial-gradient(circle at top left, rgba(166, 207, 189, 0.08), transparent 30%),
+      linear-gradient(180deg, rgba(12, 15, 19, 0.98), rgba(25, 28, 32, 0.96));
+  }
+
+  .dark .kk-form-aside,
+  .dark .kk-form-section {
+    background:
+      radial-gradient(circle at top right, rgba(166, 207, 189, 0.08), transparent 36%),
+      linear-gradient(180deg, rgba(25, 28, 32, 0.96), rgba(12, 15, 19, 0.98));
+  }
+
+  .dark .kk-form-notice-error {
+    @apply border-error/40 bg-error-container/25 text-error;
+  }
+
+  .dark .kk-form-notice-success {
+    @apply border-primary/30 bg-primary-container/40 text-primary-fixed;
   }
 }
 

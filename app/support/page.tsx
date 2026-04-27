@@ -119,7 +119,7 @@ export default function SupportPage() {
             alt="Panoramic sugarcane field in Maharashtra at sunrise"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK2cmkJApn0nVehtGu1-O_Jh3H-OClLodq9_KX4xxh_OGVj2OqUEJYC-MWqpXMUvo8s6YGuo2rAKTsiptklUZYK2GXmxUasToDyjIKYgZ6d2J_Pkgub_7fiQpQNhcEv8VxQuR8hODqErTQw7TKGyWGg3m2JAGHHxB4iYLF2PqEyPLJBNp5wBelH0ryDM7vxtqJjeDkfd2rhmMS92lXx-3DhPg-r4N2sbauY7gJLOnTcq-cElZZkta36SlaL4MJEYWW9Gmijhd13vep"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/85 via-primary/55 to-primary/25 dark:from-slate-950/90 dark:via-primary-container/70 dark:to-slate-950/35" />
+          <div className="kk-dark-image-overlay" />
           <div className="relative z-10 px-6 text-center">
             <h1 className="font-headline text-4xl font-extrabold text-white md:text-6xl">
               {langText("We're here to help", "आम्ही मदतीसाठी येथे आहोत")}
@@ -146,7 +146,7 @@ export default function SupportPage() {
                     : "border-outline-variant bg-surface-container-lowest text-on-surface hover:border-surface-tint hover:shadow-xl"
                 }`}
               >
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-fixed text-primary-container">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-container text-white">
                   <span className="material-symbols-outlined text-3xl">{category.icon}</span>
                 </div>
                 <h3 className="font-bold">{langText(category.label.en, category.label.mr)}</h3>
@@ -319,7 +319,7 @@ export default function SupportPage() {
             alt="Smiling Indian farmer standing in a golden wheat field at sunset"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdj-by0sXYvLBIrvGYViSBZkk5i4Nr-zEtpE0S9WPbZKTBOPq7lkgPu1oJ5sgap8nM1Ozpout85-xGpst9bAssJz0A6HWCMDQZW9VbUPBzUy2YAu5Cim_0V_X6iVIYR23J7y7yTHYhcFdbMewyoWe30Qeuu6pyKp8cn9KOnR0g5MZ6wZ5fVAW4r1gzB401zBKPEQN8uQ1fc7XctKpeopjg9mAWI-wEa2v6KvVHVibhPqq2tYH6pv4LJf7RTFlNZ1ZaBl7SN3LKuHEZ"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-primary/90 via-primary-container/80 to-secondary/55 dark:from-slate-950/90 dark:via-primary-container/80 dark:to-tertiary-container/70" />
+          <div className="kk-dark-image-overlay" />
           <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-8 px-8 py-12 md:flex-row">
             <div className="text-white">
               <h2 className="text-4xl font-extrabold">{langText("Need help right now?", "आत्ताच मदत हवी आहे का?")}</h2>
@@ -330,7 +330,7 @@ export default function SupportPage() {
             <div className="flex flex-wrap gap-4">
               <a
                 href="#direct-channels"
-                className="flex items-center gap-2 rounded-2xl bg-secondary px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-on-secondary-fixed-variant"
+                className="kk-deep-cta flex items-center gap-2 rounded-2xl px-10 py-5 text-lg font-bold"
               >
                 <span className="material-symbols-outlined">call</span>
                 {langText("Call Support", "सहाय्याला कॉल करा")}
