@@ -28,23 +28,34 @@ test("rent equipment empty states do not show owner-publish explanatory copy", a
 });
 
 test("login uses a registered mobile number and password only", async () => {
-  const [loginSource, validationSource, localAuthSource, firebaseDataSource] = await Promise.all([
+  const [loginSource, validationSource, localAuthSource, firebaseDataSource, authLoginRouteSource, httpSource] = await Promise.all([
     readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/validation/forms.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/local-auth.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/login/route.ts", import.meta.url), "utf8").catch(() => ""),
+    readFile(new URL("../lib/server/http.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(loginSource, /Mobile number/);
   assert.match(loginSource, /password/);
-  assert.match(loginSource, /loginAction/);
+  assert.match(loginSource, /\/api\/auth\/login/);
+  assert.doesNotMatch(loginSource, /loginAction/);
   assert.doesNotMatch(loginSource, /Mobile number or Email ID|Email ID|name@example\.com|Continue with Google|GoogleAuthButton/);
   assert.doesNotMatch(loginSource, /startPhoneVerification|verifyPhoneOtp|OtpVerificationForm|Phone OTP|confirmationId|otpDigits/);
   assert.doesNotMatch(validationSource, /Enter your mobile number or email/);
   assert.match(localAuthSource, /loginAndCreateSession/);
+  assert.match(authLoginRouteSource, /loginInputSchema/);
+  assert.match(authLoginRouteSource, /loginAndCreateSession/);
+  assert.match(authLoginRouteSource, /mirrorAuthEvent/);
+  assert.match(authLoginRouteSource, /withLoggedRoute/);
   assert.match(firebaseDataSource, /loginWithPhone/);
   assert.match(firebaseDataSource, /passwordLoginEmail/);
   assert.match(firebaseDataSource, /resolvePasswordLoginEmail/);
+  assert.match(firebaseDataSource, /buildIdentityToolkitReferer/);
+  assert.match(firebaseDataSource, /Referer/);
+  assert.match(httpSource, /isLoopbackHostname/);
+  assert.match(httpSource, /areSameOriginForMutation/);
 });
 
 test("successful registration returns to plain login without pleaseLogin query state", async () => {
@@ -59,17 +70,28 @@ test("successful registration returns to plain login without pleaseLogin query s
 });
 
 test("phone password auth repairs legacy credentials and reset uses the same credential writer", async () => {
-  const [firebaseDataSource, resetSource] = await Promise.all([
+  const [firebaseDataSource, resetSource, packageSource, repairScriptSource] = await Promise.all([
     readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/password-reset.ts", import.meta.url), "utf8"),
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/repair-password-login-emails.mjs", import.meta.url), "utf8").catch(() => ""),
   ]);
 
   assert.match(firebaseDataSource, /getPasswordLoginEmailCandidates/);
   assert.match(firebaseDataSource, /rememberPasswordLoginEmailForUser/);
   assert.match(firebaseDataSource, /buildPasswordLoginEmail\(normalizedPhone \|\| userId\)/);
-  assert.match(firebaseDataSource, /for \(const passwordLoginEmail of getPasswordLoginEmailCandidates\(user\)\)/);
+  assert.match(firebaseDataSource, /getAuthUserByPhone/);
+  assert.match(firebaseDataSource, /getUserByPhoneNumber/);
+  assert.match(firebaseDataSource, /getPasswordLoginEmailCandidates\(user,\s*authUserByPhone\)/);
+  assert.match(firebaseDataSource, /authUserByPhone\?\.email/);
   assert.match(resetSource, /createOrUpdatePasswordLoginCredential/);
   assert.doesNotMatch(resetSource, /auth\.updateUser\(user\.id,\s*\{\s*password/);
+  assert.match(packageSource, /auth:repair-password-login-emails/);
+  assert.match(repairScriptSource, /getUserByPhoneNumber/);
+  assert.match(repairScriptSource, /passwordLoginEmail/);
+  assert.match(repairScriptSource, /redactEmail/);
+  assert.doesNotMatch(repairScriptSource, /password\s*:/);
+  assert.doesNotMatch(repairScriptSource, /idToken|refreshToken/);
 });
 
 test("manual registration checks uniqueness before Firebase OTP and requires password-backed phone login", async () => {

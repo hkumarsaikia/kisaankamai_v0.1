@@ -22,6 +22,7 @@
     "sheets:bootstrap": "node scripts/google-sheets-bootstrap.mjs",
     "sheets:verify": "node scripts/google-sheets-verify.mjs",
     "sheets:backfill": "node scripts/google-sheets-backfill.mjs",
+    "auth:repair-password-login-emails": "node scripts/repair-password-login-emails.mjs",
     "seed:final-test-accounts": "node scripts/final-test-accounts-seed.mjs",
     "cleanup:final-test-accounts": "node scripts/final-test-accounts-cleanup.mjs",
     "pause:mock-listings": "node scripts/pause-mock-listings.mjs",

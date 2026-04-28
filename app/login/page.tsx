@@ -3,7 +3,6 @@
 import { type FormEvent, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-import { loginAction } from "@/lib/actions/local-data";
 
 const collageTiles = [
   {
@@ -61,9 +60,18 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const result = await loginAction({ phone, password });
-      if (!result.ok) {
-        setError(result.error || langText("Login failed.", "लॉगिन अयशस्वी झाले."));
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone, password }),
+      });
+      const result = (await response.json().catch(() => null)) as {
+        ok?: boolean;
+        error?: string;
+        redirectTo?: string;
+      } | null;
+      if (!result?.ok) {
+        setError(result?.error || langText("Login failed.", "लॉगिन अयशस्वी झाले."));
         return;
       }
 

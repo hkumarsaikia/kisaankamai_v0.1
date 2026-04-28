@@ -135,6 +135,12 @@ function authIdentifiersCollection() {
 
 type AuthIdentifierKind = "email" | "phone";
 
+type PasswordLoginAuthUser = {
+  uid?: string;
+  email?: string | null;
+  phoneNumber?: string | null;
+};
+
 function normalizeAuthIdentifier(kind: AuthIdentifierKind, value?: string | null) {
   return kind === "email" ? normalizeEmail(value) : normalizePhone(value);
 }
@@ -331,11 +337,14 @@ export function resolvePasswordLoginEmail(user: Pick<UserRecord, "email" | "phon
 }
 
 function getPasswordLoginEmailCandidates(
-  user: Pick<UserRecord, "id" | "email" | "phone" | "passwordLoginEmail">
+  user: Pick<UserRecord, "id" | "email" | "phone" | "passwordLoginEmail">,
+  authUserByPhone?: PasswordLoginAuthUser | null
 ) {
+  const normalizedPhone = normalizePhone(user.phone || authUserByPhone?.phoneNumber || "");
   const candidates = [
     normalizeEmail(user.passwordLoginEmail),
-    buildPasswordLoginEmail(normalizePhone(user.phone) || user.id),
+    normalizeEmail(authUserByPhone?.email),
+    buildPasswordLoginEmail(normalizedPhone || user.id || authUserByPhone?.uid || ""),
   ];
   const accountEmail = normalizeEmail(user.email);
   if (accountEmail && !candidates.includes(accountEmail)) {
@@ -358,6 +367,17 @@ async function rememberPasswordLoginEmailForUser(userId: string, passwordLoginEm
     },
     { merge: true }
   );
+}
+
+async function getAuthUserByPhone(phone: string): Promise<PasswordLoginAuthUser | null> {
+  const e164Phone = toE164Phone(phone);
+  if (!e164Phone) {
+    return null;
+  }
+
+  return getAdminAuth()
+    .getUserByPhoneNumber(e164Phone)
+    .catch(() => null);
 }
 
 async function exchangeCustomToken(customToken: string) {
@@ -391,6 +411,15 @@ async function exchangeCustomToken(customToken: string) {
   return payload.idToken;
 }
 
+function buildIdentityToolkitReferer() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.kisankamai.com";
+  try {
+    return `${new URL(siteUrl).origin}/login`;
+  } catch {
+    return "https://www.kisankamai.com/login";
+  }
+}
+
 async function exchangePasswordLogin(email: string, password: string) {
   const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY;
   if (!apiKey) {
@@ -401,7 +430,7 @@ async function exchangePasswordLogin(email: string, password: string) {
     `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Referer: buildIdentityToolkitReferer() },
       body: JSON.stringify({ email, password, returnSecureToken: true }),
       cache: "no-store",
     }
@@ -759,12 +788,21 @@ export async function loginWithIdentifier(identifier: string, password: string) 
 }
 
 export async function loginWithPhone(phone: string, password: string) {
-  const user = await findUserByPhone(phone);
+  const normalizedPhone = normalizePhone(phone);
+  if (!normalizedPhone) {
+    return null;
+  }
+
+  const [userByPhone, authUserByPhone] = await Promise.all([
+    findUserByPhone(normalizedPhone),
+    getAuthUserByPhone(normalizedPhone),
+  ]);
+  const user = userByPhone || (authUserByPhone?.uid ? await getUserRecordById(authUserByPhone.uid) : null);
   if (!user) {
     return null;
   }
 
-  for (const passwordLoginEmail of getPasswordLoginEmailCandidates(user)) {
+  for (const passwordLoginEmail of getPasswordLoginEmailCandidates(user, authUserByPhone)) {
     try {
       const idToken = await exchangePasswordLogin(passwordLoginEmail, password);
       await rememberPasswordLoginEmailForUser(user.id, passwordLoginEmail);

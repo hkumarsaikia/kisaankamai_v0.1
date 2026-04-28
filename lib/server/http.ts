@@ -16,6 +16,41 @@ class HttpError extends Error {
   }
 }
 
+function isLoopbackHostname(hostname: string) {
+  return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
+}
+
+function parseOrigin(value?: string | null) {
+  if (!value) {
+    return null;
+  }
+
+  try {
+    return new URL(value);
+  } catch {
+    return null;
+  }
+}
+
+function areSameOriginForMutation(left: string, right: string) {
+  const leftUrl = parseOrigin(left);
+  const rightUrl = parseOrigin(right);
+  if (!leftUrl || !rightUrl) {
+    return false;
+  }
+
+  if (leftUrl.origin === rightUrl.origin) {
+    return true;
+  }
+
+  return (
+    leftUrl.protocol === rightUrl.protocol &&
+    leftUrl.port === rightUrl.port &&
+    isLoopbackHostname(leftUrl.hostname) &&
+    isLoopbackHostname(rightUrl.hostname)
+  );
+}
+
 export function ensureSameOrigin(request: NextRequest) {
   const origin = request.headers.get("origin");
   if (!origin) {
@@ -26,9 +61,9 @@ export function ensureSameOrigin(request: NextRequest) {
     request.nextUrl.origin,
     process.env.NEXT_PUBLIC_SITE_URL,
     process.env.NEXT_PUBLIC_APP_URL,
-  ].filter(Boolean);
+  ].filter((value): value is string => Boolean(value));
 
-  if (!allowedOrigins.includes(origin)) {
+  if (!allowedOrigins.some((allowedOrigin) => areSameOriginForMutation(origin, allowedOrigin))) {
     throw new HttpError(403, "Cross-origin form submissions are not allowed.");
   }
 }
