@@ -24,8 +24,8 @@ npm run verify
 
 ## Archived Reference
 
-- The previous Windows-root reference and local generated artifacts live under `old/`.
-- Cross-agent handoff files are archived there for now and should not be restored unless explicitly requested.
+- The previous Windows-root reference and local generated artifacts were removed after the Ubuntu rebuild.
+- Cross-agent handoff files are not part of the active root app.
 
 ## Repo Notes
 

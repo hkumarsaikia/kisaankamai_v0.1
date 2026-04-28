@@ -128,6 +128,110 @@ const faqs = [
   },
 ] as const;
 
+const homeRegisterSteps = [
+  {
+    icon: "search",
+    number: "1",
+    title: { en: "Search or List", mr: "शोधा किंवा सूचीबद्ध करा" },
+    description: {
+      en: "Find equipment or publish your available machine.",
+      mr: "उपकरण शोधा किंवा तुमचे उपलब्ध मशीन प्रकाशित करा.",
+    },
+  },
+  {
+    icon: "event_available",
+    number: "2",
+    title: { en: "Book and Manage", mr: "बुक करा आणि व्यवस्थापित करा" },
+    description: {
+      en: "Send requests and coordinate timing directly.",
+      mr: "विनंती पाठवा आणि वेळ थेट ठरवा.",
+    },
+  },
+  {
+    icon: "agriculture",
+    number: "3",
+    title: { en: "Use and Earn", mr: "वापरा आणि कमवा" },
+    description: {
+      en: "Rent locally or earn from idle equipment.",
+      mr: "स्थानिक भाडे घ्या किंवा रिकाम्या उपकरणातून कमवा.",
+    },
+  },
+  {
+    icon: "verified_user",
+    number: "4",
+    title: { en: "Verified Support", mr: "पडताळलेला सपोर्ट" },
+    description: {
+      en: "Stay connected with owner-managed rental support.",
+      mr: "मालक-व्यवस्थापित भाडे सपोर्टशी जोडलेले रहा.",
+    },
+  },
+] as const;
+
+function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: string) => string }) {
+  return (
+    <aside
+      className="relative w-full max-w-[430px] overflow-hidden rounded-[2rem] border border-white/15 bg-primary-container p-7 text-white shadow-[0_30px_80px_-35px_rgba(0,0,0,0.7)] lg:justify-self-end"
+      aria-label={langText("Kisan Kamai registration tile", "किसान कमाई नोंदणी टाइल")}
+    >
+      <div className="relative z-10">
+        <div className="mb-6 flex justify-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-white/20 bg-white/10">
+            <span className="material-symbols-outlined text-4xl text-lime-300">agriculture</span>
+          </div>
+        </div>
+
+        <div className="mb-8 text-center">
+          <h2 className="text-3xl font-black leading-tight tracking-tight md:text-4xl">
+            {langText("Rent, List & Grow", "भाडे घ्या, सूचीबद्ध करा आणि वाढा")}
+            <span className="mt-1 block text-2xl font-semibold text-white/90">
+              {langText("with Confidence", "विश्वासाने")}
+            </span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-xs text-sm leading-6 text-white/65">
+            {langText(
+              "Trusted farm equipment access across Northern Maharashtra.",
+              "उत्तर महाराष्ट्रात विश्वासार्ह कृषी उपकरणांची उपलब्धता."
+            )}
+          </p>
+        </div>
+
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+          {homeRegisterSteps.map((step) => (
+            <div key={step.number} className="flex items-start gap-3">
+              <div className="relative shrink-0">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10">
+                  <span className="material-symbols-outlined text-xl text-white">{step.icon}</span>
+                </div>
+                <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-secondary-container text-[10px] font-black text-secondary">
+                  {step.number}
+                </span>
+              </div>
+              <div>
+                <h3 className="text-sm font-black">{langText(step.title.en, step.title.mr)}</h3>
+                <p className="mt-1 text-[11px] leading-4 text-white/55">
+                  {langText(step.description.en, step.description.mr)}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <Link
+          href="/register"
+          className="block w-full rounded-2xl bg-secondary-container px-6 py-4 text-center text-lg font-black text-secondary shadow-[0_16px_35px_-24px_rgba(0,0,0,0.7)] transition-all hover:brightness-105 active:scale-[0.98]"
+        >
+          {langText("Register Now", "आता नोंदणी करा")}
+        </Link>
+
+        <div className="mt-6 flex items-center justify-center gap-2 text-sm font-semibold text-white/55">
+          <span className="material-symbols-outlined text-xl text-lime-300">verified</span>
+          <span>{langText("Secure. Reliable. Built for Farmers.", "सुरक्षित. विश्वासार्ह. शेतकऱ्यांसाठी बनवलेले.")}</span>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
 export default function Home() {
   const { t, langText } = useLanguage();
   const router = useSmoothRouter();
@@ -195,8 +299,8 @@ export default function Home() {
               <SharedIcon name="chevron-right" className="h-6 w-6" />
             </button>
           </div>
-          <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center w-full">
-            <div className="text-white">
+          <div className="relative z-10 mx-auto grid w-full max-w-7xl items-center gap-10 px-6 py-28 md:py-20 lg:grid-cols-[minmax(0,1.08fr)_minmax(320px,0.72fr)]">
+            <div className="max-w-2xl text-white lg:justify-self-start">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-6 mt-16 lg:mt-0">
                 <span className="w-2 h-2 bg-secondary rounded-full transform dark:bg-amber-400"></span>
                 <span className="text-sm font-label font-bold uppercase tracking-widest">
@@ -240,6 +344,7 @@ export default function Home() {
                 </button>
               </div>
             </div>
+            <HomeRegisterTile langText={langText} />
           </div>
         </section>
 

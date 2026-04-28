@@ -113,6 +113,7 @@ export interface PaymentRecord {
 
 export type SubmissionType =
   | "support-request"
+  | "feature-request"
   | "callback-request"
   | "feedback"
   | "owner-application"

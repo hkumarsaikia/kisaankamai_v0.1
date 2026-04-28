@@ -204,7 +204,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
 
   const supportRequests = sortDescendingByDate(
     data.submissions.filter((submission) =>
-      ["support-request", "callback-request", "partner-inquiry", "owner-application"].includes(submission.type)
+      ["support-request", "feature-request", "callback-request", "partner-inquiry", "owner-application"].includes(submission.type)
     ),
     "createdAt"
   ).map((submission) => {
@@ -215,13 +215,15 @@ export function buildOperationalWorkbookRows(data, options = {}) {
       submission_type: submission.type,
       user_id: submission.userId || "",
       category: payload.category || "",
+      subject: payload.subject || payload.title || "",
+      urgency: payload.urgency || "",
       full_name: payload.fullName || "",
       phone: payload.phone || payload.mobileNumber || "",
       email: payload.email || "",
       source_path: payload.sourcePath || "",
-      location: payload.location || "",
+      location: payload.location || payload.village || "",
       equipment_needed: payload.equipmentNeeded || "",
-      message: payload.message || "",
+      message: payload.message || payload.description || "",
       payload_json: safeJson(payload),
     };
   });

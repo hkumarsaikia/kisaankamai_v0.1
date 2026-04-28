@@ -123,3 +123,23 @@ test("support page uses a deep dark-mode call CTA instead of the light secondary
   assert.match(support, /kk-deep-cta/);
   assert.doesNotMatch(support, /rounded-2xl bg-secondary px-10/);
 });
+
+test("home hero includes the compact register tile without unsupported payout copy", async () => {
+  const home = await readSource("../app/page.tsx");
+
+  assert.match(home, /HomeRegisterTile/);
+  assert.match(home, /href="\/register"/);
+  assert.match(home, /Register Now/);
+  assert.match(home, /Rent, List & Grow/);
+  assert.doesNotMatch(home, /Secure Payouts/);
+});
+
+test("feature request dark mode controls and CTA use readable contrast", async () => {
+  const featureRequest = await readSource("../app/feature-request/page.tsx");
+
+  assert.doesNotMatch(featureRequest, /has-\[:checked\]:bg-\[#eaf1ee\]/);
+  assert.doesNotMatch(featureRequest, /bg-primary-container[^"']*text-on-primary/);
+  assert.match(featureRequest, /has-\[:checked\]:bg-primary-container/);
+  assert.match(featureRequest, /has-\[:checked\]:text-white/);
+  assert.match(featureRequest, /Submit Feature Request/);
+});

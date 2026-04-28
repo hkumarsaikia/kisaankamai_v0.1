@@ -69,4 +69,5 @@ Those preserved tabs are not rebuilt from Firebase because they are append-only 
 
 - The live server mirror now writes richer row shapes, typed numeric cells, stronger headers, filters, and status-based conditional styling.
 - `booking_requests` is now a first-class sheet instead of being lost inside generic submission payloads.
+- `feature-request` submissions are visible in `support_requests` with subject, urgency, location, and message columns plus the full payload JSON.
 - `saved_items` is backfilled from Firestore even though the live runtime does not currently append every saved-item toggle into Sheets.

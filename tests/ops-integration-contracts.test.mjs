@@ -83,7 +83,9 @@ test("Ubuntu project-local install policy is documented and npm cache is local",
   assert.match(setupSource, /Ubuntu 26\.04 LTS/);
   assert.match(setupSource, /PUPPETEER_SKIP_DOWNLOAD=true npm ci/);
   assert.match(setupSource, /PUPPETEER_EXECUTABLE_PATH=\/usr\/bin\/google-chrome/);
-  assert.match(readmeSource, /old\/windows-root-reference/);
+  assert.doesNotMatch(readmeSource, /old\/windows-root-reference/);
+  assert.doesNotMatch(readmeSource, /old\/windows-local-artifacts/);
+  assert.doesNotMatch(setupSource, /archived under `old\/`/);
   assert.doesNotMatch(readmeSource, /cross-agent:/);
 });
 

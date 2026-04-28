@@ -1,24 +1,34 @@
 "use client";
 
+import { type FormEvent, useState } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 
 const featureHighlights = [
   {
     icon: "build",
     title: { en: "Better Tools for Farmers", mr: "शेतकऱ्यांसाठी अधिक चांगली साधने" },
-    description: "Customized search and filters for crops and soils.",
+    description: {
+      en: "Customized search and filters for crops and soils.",
+      mr: "पिके आणि मातीसाठी उपयुक्त शोध आणि फिल्टर.",
+    },
     cacheKey: "feature-request.highlight.tools",
   },
   {
     icon: "calendar_today",
     title: { en: "Smarter Booking", mr: "अधिक स्मार्ट बुकिंग" },
-    description: "Live availability and seasonal machine booking tools.",
+    description: {
+      en: "Live availability and seasonal machine booking tools.",
+      mr: "लाईव्ह उपलब्धता आणि हंगामी मशीन बुकिंग साधने.",
+    },
     cacheKey: "feature-request.highlight.booking",
   },
   {
     icon: "map",
     title: { en: "Expanded Coverage", mr: "वाढलेले कव्हरेज" },
-    description: "Bringing heavy machines directly to your village.",
+    description: {
+      en: "Bringing heavy machines directly to your village.",
+      mr: "जड मशीन थेट तुमच्या गावापर्यंत आणण्यासाठी मदत.",
+    },
     cacheKey: "feature-request.highlight.coverage",
   },
 ];
@@ -42,8 +52,73 @@ const urgencyOptions = [
   },
 ];
 
+const initialFormState = {
+  fullName: "",
+  phone: "",
+  role: "",
+  location: "",
+  category: "",
+  title: "",
+  description: "",
+  urgency: "season",
+  contactMe: false,
+};
+
 export default function FeatureRequestPage() {
-  const { langText, text } = useLanguage();
+  const { langText } = useLanguage();
+  const [formState, setFormState] = useState(initialFormState);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const updateField = <K extends keyof typeof formState>(field: K, value: (typeof formState)[K]) => {
+    setFormState((current) => ({ ...current, [field]: value }));
+    setError("");
+    setStatusMessage("");
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError("");
+    setStatusMessage("");
+
+    try {
+      const response = await fetch("/api/forms/feature-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          fullName: formState.fullName,
+          phone: formState.phone,
+          role: formState.role,
+          location: formState.location,
+          category: formState.category,
+          title: formState.title,
+          description: formState.description,
+          urgency: formState.urgency,
+          contactMe: formState.contactMe,
+          sourcePath: "/feature-request",
+        }),
+      });
+      const payload = (await response.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
+
+      if (!response.ok || !payload?.ok) {
+        throw new Error(payload?.error || langText("Could not submit your feature request.", "तुमची फीचर विनंती सबमिट करता आली नाही."));
+      }
+
+      setFormState(initialFormState);
+      setStatusMessage(langText("Submitted. Thank you for sharing your idea.", "सबमिट झाले. तुमची कल्पना शेअर केल्याबद्दल धन्यवाद."));
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : langText("Could not submit your feature request.", "तुमची फीचर विनंती सबमिट करता आली नाही."));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-x-hidden bg-[#f9fbfa] dark:bg-slate-950">
@@ -67,9 +142,10 @@ export default function FeatureRequestPage() {
                       )}
                     </h1>
                     <h2 className="text-sm font-normal leading-normal text-white @[480px]:text-base">
-                      {text("Help us build the future of Kisan Kamai. We review every serious request from our community of farmers and owners.", {
-                        cacheKey: "feature-request.hero-copy",
-                      })}
+                      {langText(
+                        "Help us build the future of Kisan Kamai. We review every serious request from our community of farmers and owners.",
+                        "किसान कमाईचे भविष्य घडवण्यासाठी मदत करा. शेतकरी आणि मालकांकडून आलेली प्रत्येक महत्त्वाची विनंती आम्ही तपासतो."
+                      )}
                     </h2>
                   </div>
                 </div>
@@ -82,9 +158,10 @@ export default function FeatureRequestPage() {
                   {langText("Why Request a Feature?", "नवीन सुविधा का सुचवावी?")}
                 </h1>
                 <p className="max-w-[720px] text-base font-normal leading-normal text-[#101816] dark:text-slate-300">
-                  {text("Your ideas help us improve our platform for everyone in the farming community.", {
-                    cacheKey: "feature-request.why-copy",
-                  })}
+                  {langText(
+                    "Your ideas help us improve our platform for everyone in the farming community.",
+                    "तुमच्या कल्पना शेती समुदायातील सर्वांसाठी आमचे व्यासपीठ अधिक चांगले करण्यात मदत करतात."
+                  )}
                 </p>
               </div>
 
@@ -99,7 +176,7 @@ export default function FeatureRequestPage() {
                         {langText(item.title.en, item.title.mr)}
                       </h2>
                       <p className="text-sm font-normal leading-normal text-[#5c8a7a] dark:text-emerald-300/70">
-                        {text(item.description, { cacheKey: item.cacheKey })}
+                        {langText(item.description.en, item.description.mr)}
                       </p>
                     </div>
                   </div>
@@ -113,7 +190,7 @@ export default function FeatureRequestPage() {
 
             <div className="w-full px-4 pb-12">
               <div className="rounded-xl border border-outline-variant bg-surface p-6 shadow-sm md:p-8">
-                <form className="flex flex-col gap-6">
+                <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="flex flex-col gap-2">
                       <label className="font-label text-sm font-medium text-on-surface-variant">
@@ -123,6 +200,10 @@ export default function FeatureRequestPage() {
                         className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         placeholder={langText("Enter your name", "तुमचे नाव टाका")}
                         type="text"
+                        value={formState.fullName}
+                        onChange={(event) => updateField("fullName", event.target.value)}
+                        disabled={isSubmitting}
+                        required
                       />
                     </div>
                     <div className="flex flex-col gap-2">
@@ -133,6 +214,10 @@ export default function FeatureRequestPage() {
                         className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         placeholder="+91"
                         type="tel"
+                        value={formState.phone}
+                        onChange={(event) => updateField("phone", event.target.value)}
+                        disabled={isSubmitting}
+                        required
                       />
                     </div>
                   </div>
@@ -145,7 +230,10 @@ export default function FeatureRequestPage() {
                       <div className="relative">
                         <select
                           className="h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
-                          defaultValue=""
+                          value={formState.role}
+                          onChange={(event) => updateField("role", event.target.value)}
+                          disabled={isSubmitting}
+                          required
                         >
                           <option disabled value="">
                             {langText("Select your role", "तुमची भूमिका निवडा")}
@@ -168,6 +256,10 @@ export default function FeatureRequestPage() {
                         className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         placeholder={langText("e.g. Sangli, Satara", "उदा. सांगली, सातारा")}
                         type="text"
+                        value={formState.location}
+                        onChange={(event) => updateField("location", event.target.value)}
+                        disabled={isSubmitting}
+                        required
                       />
                     </div>
                   </div>
@@ -181,7 +273,10 @@ export default function FeatureRequestPage() {
                     <div className="relative">
                       <select
                         className="h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
-                        defaultValue=""
+                        value={formState.category}
+                        onChange={(event) => updateField("category", event.target.value)}
+                        disabled={isSubmitting}
+                        required
                       >
                         <option disabled value="">
                           {langText("What area does this relate to?", "ही सुविधा कोणत्या भागाशी संबंधित आहे?")}
@@ -208,6 +303,10 @@ export default function FeatureRequestPage() {
                       className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                       placeholder={langText("Brief summary of your idea", "तुमच्या कल्पनेचा थोडक्यात सारांश")}
                       type="text"
+                      value={formState.title}
+                      onChange={(event) => updateField("title", event.target.value)}
+                      disabled={isSubmitting}
+                      required
                     />
                   </div>
 
@@ -222,6 +321,10 @@ export default function FeatureRequestPage() {
                         "ही सुविधा तुमच्या दैनंदिन शेती किंवा व्यवसाय कामकाजात कशी मदत करेल?"
                       )}
                       rows={4}
+                      value={formState.description}
+                      onChange={(event) => updateField("description", event.target.value)}
+                      disabled={isSubmitting}
+                      required
                     />
                   </div>
 
@@ -233,19 +336,21 @@ export default function FeatureRequestPage() {
                       {urgencyOptions.map((option) => (
                         <label
                           key={option.value}
-                          className="has-[:checked]:border-primary-container has-[:checked]:bg-[#eaf1ee] relative flex cursor-pointer rounded-lg border border-outline-variant bg-surface p-4 transition-colors hover:bg-surface-container-low"
+                          className="has-[:checked]:border-primary-container has-[:checked]:bg-primary-container has-[:checked]:text-white relative flex cursor-pointer rounded-lg border border-outline-variant bg-surface p-4 text-on-surface transition-colors hover:bg-surface-container-low"
                         >
                           <input
-                            defaultChecked={option.defaultChecked}
                             className="peer sr-only"
                             name="urgency"
                             type="radio"
                             value={option.value}
+                            checked={formState.urgency === option.value}
+                            onChange={() => updateField("urgency", option.value)}
+                            disabled={isSubmitting}
                           />
                           <div className="flex items-center gap-3">
-                            <span className="material-symbols-outlined text-outline peer-checked:text-primary-container">{option.icon}</span>
+                            <span className="material-symbols-outlined text-outline peer-checked:text-white">{option.icon}</span>
                             <div>
-                              <p className="text-sm font-medium text-on-surface">
+                              <p className="text-sm font-medium text-current">
                                 {langText(option.label.en, option.label.mr)}
                               </p>
                             </div>
@@ -260,6 +365,9 @@ export default function FeatureRequestPage() {
                       className="size-5 cursor-pointer rounded border-outline-variant text-primary-container focus:ring-primary-container"
                       id="contact_me"
                       type="checkbox"
+                      checked={formState.contactMe}
+                      onChange={(event) => updateField("contactMe", event.target.checked)}
+                      disabled={isSubmitting}
                     />
                     <label className="cursor-pointer select-none text-sm text-on-surface-variant" htmlFor="contact_me">
                       {langText(
@@ -269,30 +377,37 @@ export default function FeatureRequestPage() {
                     </label>
                   </div>
 
+                  {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
+                  {statusMessage ? <p className="text-sm font-semibold text-primary">{statusMessage}</p> : null}
+
                   <div className="flex justify-end pt-4">
                     <button
-                      className="flex h-12 w-full items-center justify-center rounded-lg bg-primary-container px-6 text-base font-bold tracking-wide text-on-primary transition-colors hover:bg-[#0e2a21] sm:w-auto sm:min-w-[160px]"
-                      type="button"
+                      className="flex h-12 w-full items-center justify-center rounded-lg bg-primary-container px-6 text-base font-bold tracking-wide text-white transition-colors hover:bg-[#0e2a21] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-[160px]"
+                      type="submit"
+                      disabled={isSubmitting}
                     >
-                      {langText("Submit Feature Request", "फीचर विनंती सबमिट करा")}
+                      {isSubmitting
+                        ? langText("Submitting...", "सबमिट होत आहे...")
+                        : langText("Submit Feature Request", "फीचर विनंती सबमिट करा")}
                     </button>
                   </div>
                 </form>
               </div>
             </div>
 
-            <div className="relative w-full overflow-hidden rounded-[1.5rem] bg-primary-container px-4 py-20 text-on-primary">
+            <div className="relative w-full overflow-hidden rounded-[1.5rem] bg-primary-container px-4 py-20 text-white">
               <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-6 text-center">
                 <span className="material-symbols-outlined mb-2 text-5xl text-inverse-primary">handshake</span>
                 <h2 className="text-3xl font-black leading-tight tracking-tight md:text-4xl">
-                  {text("Help us build the future of farm equipment access.", {
-                    cacheKey: "feature-request.cta-title",
-                  })}
+                  {langText(
+                    "Help us shape the future of farm equipment access.",
+                    "शेती उपकरणांच्या उपलब्धतेचे भविष्य घडवण्यासाठी मदत करा."
+                  )}
                 </h2>
                 <p className="text-lg font-medium text-inverse-primary md:text-xl">
                   {langText(
-                    "Help us shape the future of farm equipment access.",
-                    "शेती उपकरणांच्या उपलब्धतेचे भविष्य घडवण्यासाठी आम्हाला मदत करा."
+                    "Every serious request is reviewed by the Kisan Kamai team.",
+                    "प्रत्येक महत्त्वाची विनंती किसान कमाई टीम तपासते."
                   )}
                 </p>
               </div>

@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "title": "Kisan Kamai Operational Mirror",
   "sourceOfTruth": "Firebase",
   "mirrorPolicy": "Google Sheets is a best-effort operational mirror only and must never block Firebase writes.",
@@ -187,6 +187,8 @@
         { "key": "submission_type", "header": "Submission Type", "width": 150, "type": "text" },
         { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
         { "key": "category", "header": "Category", "width": 150, "type": "text" },
+        { "key": "subject", "header": "Subject", "width": 220, "type": "text" },
+        { "key": "urgency", "header": "Urgency", "width": 130, "type": "text" },
         { "key": "full_name", "header": "Full Name", "width": 220, "type": "text" },
         { "key": "phone", "header": "Phone", "width": 150, "type": "text" },
         { "key": "email", "header": "Email", "width": 240, "type": "text" },

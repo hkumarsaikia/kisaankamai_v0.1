@@ -108,6 +108,32 @@ test("feature request source removes the requested sections from the imported pa
   assert.match(source, /Share Your Idea/);
 });
 
+test("feature request page submits to Firestore-backed form API and avoids duplicate CTA copy", async () => {
+  const [pageSource, apiSource, validationSource, typesSource, mirrorSource, backfillSource, workbookManifest] = await Promise.all([
+    readFile(new URL("../app/feature-request/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/forms/feature-request/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/validation/forms.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/local-data/types.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/sheets-mirror.ts", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/lib/operational-data.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../data/operational-sheets-workbook.json", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(pageSource, /handleSubmit/);
+  assert.match(pageSource, /\/api\/forms\/feature-request/);
+  assert.match(pageSource, /Submitted/);
+  assert.match(apiSource, /featureRequestSchema/);
+  assert.match(apiSource, /type:\s*"feature-request"/);
+  assert.match(validationSource, /featureRequestSchema/);
+  assert.match(typesSource, /"feature-request"/);
+  assert.match(mirrorSource, /submission\.type === "feature-request"/);
+  assert.match(backfillSource, /"feature-request"/);
+  assert.match(workbookManifest, /"key": "subject"/);
+  assert.match(workbookManifest, /"key": "urgency"/);
+  assert.equal((pageSource.match(/Help us shape the future of farm equipment access\./g) || []).length, 1);
+  assert.equal((pageSource.match(/Help us build the future of farm equipment access\./g) || []).length, 0);
+});
+
 test("shared dropdown and translation-cleanup pages avoid inline bilingual slash labels", async () => {
   const [dropdownSource, forgotSource, verifySource, newPasswordSource, detailSource, featureRequestSource, feedbackSource] =
     await Promise.all([

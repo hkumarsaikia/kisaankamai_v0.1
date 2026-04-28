@@ -71,7 +71,7 @@ Generated logs belong in `logs/runtime/`.
 
 ## Archived Reference
 
-The old Windows-root snapshot, previous generated folders, and cross-agent handoff subtree are archived under `old/`. Do not restore them into the active root unless explicitly requested.
+The old Windows-root snapshot, previous generated folders, and cross-agent handoff subtree were removed after the Ubuntu rebuild. Do not restore them into the active root unless explicitly requested.
 
 ## Sheets Operations
 
@@ -109,5 +109,6 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
 - `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details.
+- `/feature-request` is a live public form. Keep it wired to `/api/forms/feature-request`, the `feature-request` submission type, and the shared Firestore-backed submission pipeline.
 - Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.
 - Dark-mode public imagery should preserve the same image color as light mode. Avoid full-page wash overlays on public hero/category imagery; auth/OTP screens still use the shared `kk-auth-*` classes. Keep `tests/dark-mode-visual-contracts.test.mjs` updated when a new public route gets a dark-mode visual contract.

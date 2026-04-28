@@ -137,6 +137,22 @@ export const supportRequestSchema = z
   })
   .strict();
 
+export const featureRequestSchema = z
+  .object({
+    fullName: z.string().trim().min(2, "Enter your full name.").max(120),
+    phone: tenDigitPhone,
+    role: z.enum(["farmer", "owner", "partner", "visitor"]),
+    location: z.string().trim().min(2, "Enter your village or district.").max(160),
+    category: z
+      .enum(["discovery", "machine_types", "booking", "payments", "support", "trust", "other"]),
+    title: z.string().trim().min(4, "Enter a short feature title.").max(160),
+    description: z.string().trim().min(10, "Describe your idea.").max(2500),
+    urgency: z.enum(["immediate", "season", "future"]).default("season"),
+    contactMe: z.boolean().optional().default(false),
+    sourcePath: z.string().trim().min(1).max(120).default("/feature-request"),
+  })
+  .strict();
+
 export const bookingRequestSchema = z
   .object({
     sourcePath: z.string().trim().min(1).max(120),

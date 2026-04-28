@@ -29,6 +29,7 @@ Current workspace behavior to know while validating `npm run dev`:
 - successful booking submissions redirect back into `/renter-profile`.
 - owner listing edit buttons route into `/list-equipment?listingId=<id>`.
 - support and report are separate public flows: `/support` for help requests and `/report` for issue escalation.
+- `/feature-request` submits community feature ideas through `/api/forms/feature-request` into Firestore form submissions.
 - the public theme defaults to light mode; explicit dark-mode choices are still respected.
 - `/categories` shows the baseline equipment catalog and merges live owner-published categories into it.
 - `/rent-equipment` and equipment detail pages stay live-data only; they do not show mock equipment when Firestore has no published listings.
@@ -60,8 +61,8 @@ Runtime logs captured with the helper scripts are stored under `logs/runtime/`.
 
 Ubuntu rebuild notes:
 
-- The previous Windows/dirty-root reference is archived under `old/windows-root-reference-*`.
-- Previous installed/generated local artifacts are archived under `old/windows-local-artifacts-*`.
+- The previous Windows/dirty-root reference and generated local artifact archive were removed after the Ubuntu rebuild.
+- Do not depend on archived local files for the active root app; restore any missing behavior from tracked source or documented backups only.
 - Active installs use `.npmrc` with project-local `.cache/npm`.
 - Local Firebase CLI state and logs belong under `.firebase/` and are ignored by git.
 - The app is App Router-only; legacy `pages/_app` and `pages/_document` are not part of the active root because they trigger unnecessary hybrid fallback behavior in Next 16.
@@ -89,6 +90,7 @@ Required runtime configuration includes:
 - Session cookies are long-lived for normal use; users should remain signed in until logout or cookie expiry.
 - User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.
 - Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
+- Public feature-request, feedback, support, report, partner, and owner-application forms write to Firestore first and mirror to Sheets where configured.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
 
@@ -128,4 +130,4 @@ Runbooks:
 
 - `main` is the only long-term branch target.
 - Vendored repositories in `vendor/` are reference-only and are not runtime dependencies.
-- Cross-agent handoff files are archived in `old/` for now and are not part of the active root app.
+- Cross-agent handoff files are not part of the active root app.

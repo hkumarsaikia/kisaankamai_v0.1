@@ -131,4 +131,4 @@ Google account registration/login uses the Firebase Auth Google provider. Keep t
 
 ## Archived Reference
 
-The pre-rebuild Windows-root reference and installed/generated local artifacts are archived under `old/`. Cross-agent handoff files are also archived there and are not part of the active root app.
+The pre-rebuild Windows-root reference and installed/generated local artifacts were removed after the Ubuntu rebuild. Cross-agent handoff files are not part of the active root app.
