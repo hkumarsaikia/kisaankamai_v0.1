@@ -38,6 +38,8 @@ const SAVED_ITEMS_COLLECTION = "saved-items";
 const PAYMENTS_COLLECTION = "payments";
 const SUBMISSIONS_COLLECTION = "form-submissions";
 const AUTH_IDENTIFIERS_COLLECTION = "auth-identifiers";
+const DUPLICATE_PHONE_MESSAGE = "Account already exists. Please login with your registered mobile number.";
+const DUPLICATE_EMAIL_MESSAGE = "Account already exists. Please login with your registered phone number.";
 
 function db() {
   return getAdminDb();
@@ -169,11 +171,7 @@ export async function claimAuthIdentifier(
   const existingUserId = snapshot.exists ? (snapshot.data() as { userId?: string }).userId : "";
 
   if (existingUserId && existingUserId !== userId) {
-    throw new Error(
-      kind === "email"
-        ? "An account with this email already exists."
-        : "An account with this phone number already exists."
-    );
+    throw new Error(kind === "email" ? DUPLICATE_EMAIL_MESSAGE : DUPLICATE_PHONE_MESSAGE);
   }
 
   transaction.set(
@@ -211,11 +209,7 @@ async function reserveAuthIdentifiersForUser(
     for (const { claim, snapshot } of snapshots) {
       const existingUserId = snapshot.exists ? (snapshot.data() as { userId?: string }).userId : "";
       if (existingUserId && existingUserId !== userId) {
-        throw new Error(
-          claim.kind === "email"
-            ? "An account with this email already exists."
-            : "An account with this phone number already exists."
-        );
+        throw new Error(claim.kind === "email" ? DUPLICATE_EMAIL_MESSAGE : DUPLICATE_PHONE_MESSAGE);
       }
     }
 
@@ -253,6 +247,49 @@ export async function releaseAuthIdentifier(kind: AuthIdentifierKind, value: str
       transaction.delete(ref);
     }
   });
+}
+
+async function hasAuthIdentifier(kind: AuthIdentifierKind, value: string) {
+  const snapshot = await authIdentifiersCollection().doc(authIdentifierDocId(kind, value)).get();
+  return snapshot.exists;
+}
+
+export async function assertRegistrationIdentifiersAvailable(input: {
+  phone?: string | null;
+  email?: string | null;
+}) {
+  const phone = normalizePhone(input.phone);
+  const email = normalizeEmail(input.email);
+
+  if (!phone) {
+    throw new Error("Enter a valid 10-digit mobile number.");
+  }
+
+  const phoneInFirestore = await usersCollection().where("phone", "==", phone).limit(1).get();
+  const phoneInAuthIdentifiers = await hasAuthIdentifier("phone", phone);
+  const phoneInFirebaseAuth = await getAdminAuth()
+    .getUserByPhoneNumber(`+91${phone}`)
+    .then(() => true)
+    .catch(() => false);
+
+  if (!phoneInFirestore.empty || phoneInAuthIdentifiers || phoneInFirebaseAuth) {
+    throw new Error(DUPLICATE_PHONE_MESSAGE);
+  }
+
+  if (!email || isPlaceholderEmail(email)) {
+    return;
+  }
+
+  const emailInFirestore = await usersCollection().where("email", "==", email).limit(1).get();
+  const emailInAuthIdentifiers = await hasAuthIdentifier("email", email);
+  const emailInFirebaseAuth = await getAdminAuth()
+    .getUserByEmail(email)
+    .then(() => true)
+    .catch(() => false);
+
+  if (!emailInFirestore.empty || emailInAuthIdentifiers || emailInFirebaseAuth) {
+    throw new Error(DUPLICATE_EMAIL_MESSAGE);
+  }
 }
 
 function savedItemId(userId: string, listingId: string) {
@@ -596,6 +633,20 @@ export async function findUserByIdentifier(identifier: string) {
   return null;
 }
 
+export async function findUserByPhone(phone: string) {
+  const normalized = normalizePhone(phone);
+  if (!normalized) {
+    return null;
+  }
+
+  const snapshot = await usersCollection().where("phone", "==", normalized).limit(1).get();
+  if (!snapshot.empty) {
+    return mapUserFromFirestore(snapshot.docs[0].id, snapshot.docs[0].data() as UserRecord);
+  }
+
+  return null;
+}
+
 export async function getLocalSessionByUserId(userId: string): Promise<LocalSession | null> {
   const [authUser, userRecord, profileRecord] = await Promise.all([
     getAdminAuth().getUser(userId).catch(() => null),
@@ -672,23 +723,35 @@ export async function loginWithIdentifier(identifier: string, password: string) 
   }
 }
 
+export async function loginWithPhone(phone: string, password: string) {
+  const user = await findUserByPhone(phone);
+  if (!user) {
+    return null;
+  }
+
+  try {
+    const passwordLoginEmail = resolvePasswordLoginEmail(user);
+    if (!passwordLoginEmail) {
+      return null;
+    }
+
+    const idToken = await exchangePasswordLogin(passwordLoginEmail, password);
+    return { idToken, session: await getLocalSessionByUserId(user.id) };
+  } catch {
+    return null;
+  }
+}
+
 export async function registerLocalUser(input: RegisterInput) {
   const normalizedEmail = normalizeEmail(input.email);
   const normalizedPhone = normalizePhone(input.phone);
-  const passwordLoginEmail = normalizedEmail || buildPasswordLoginEmail(normalizedPhone || input.phone || "");
+  const passwordLoginEmail = buildPasswordLoginEmail(normalizedPhone || input.phone || "");
   const rolePreference = normalizeRolePreference(input.role);
 
-  const existingByEmail =
-    normalizedEmail && (await usersCollection().where("email", "==", normalizedEmail).limit(1).get());
-  if (normalizedEmail && existingByEmail && !existingByEmail.empty) {
-    throw new Error("An account with this email already exists.");
-  }
-
-  const existingByPhone =
-    normalizedPhone && (await usersCollection().where("phone", "==", normalizedPhone).limit(1).get());
-  if (normalizedPhone && existingByPhone && !existingByPhone.empty) {
-    throw new Error("An account with this phone number already exists.");
-  }
+  await assertRegistrationIdentifiersAvailable({
+    phone: normalizedPhone,
+    email: normalizedEmail,
+  });
 
   const timestamp = nowIso();
   const authUser = await getAdminAuth().createUser({
@@ -696,7 +759,7 @@ export async function registerLocalUser(input: RegisterInput) {
     email: passwordLoginEmail,
     phoneNumber: toE164Phone(normalizedPhone),
     password: input.password,
-    emailVerified: Boolean(normalizedEmail),
+    emailVerified: false,
   });
 
   try {
@@ -857,11 +920,11 @@ export async function createOrUpdatePasswordLoginCredential(
   const normalizedPhone = normalizePhone(input.phone || currentUser?.phone || "");
   const currentPasswordLoginEmail = currentUser ? resolvePasswordLoginEmail(currentUser) : "";
   const passwordLoginEmail =
-    normalizedEmail || currentPasswordLoginEmail || buildPasswordLoginEmail(normalizedPhone || userId);
+    currentPasswordLoginEmail || buildPasswordLoginEmail(normalizedPhone || userId);
   const timestamp = nowIso();
   const visibleEmail =
     normalizedEmail ||
-    (currentUser?.email && !isPlaceholderEmail(currentUser.email) ? currentUser.email : passwordLoginEmail);
+    (currentUser?.email && !isPlaceholderEmail(currentUser.email) ? currentUser.email : "");
   await reserveAuthIdentifiersForUser(userId, {
     email: visibleEmail,
     phone: normalizedPhone || currentUser?.phone || "",
@@ -875,7 +938,7 @@ export async function createOrUpdatePasswordLoginCredential(
   } = {
     email: passwordLoginEmail,
     password,
-    emailVerified: Boolean(normalizedEmail),
+    emailVerified: false,
   };
 
   const e164Phone = toE164Phone(normalizedPhone);
@@ -887,7 +950,7 @@ export async function createOrUpdatePasswordLoginCredential(
   await usersCollection().doc(userId).set(
     {
       id: userId,
-      email: visibleEmail,
+      email: visibleEmail || passwordLoginEmail,
       passwordLoginEmail,
       phone: normalizedPhone || currentUser?.phone || "",
       photoUrl: currentUser?.photoUrl,
@@ -976,12 +1039,7 @@ export async function updateLocalProfile(
 
   await profilesCollection().doc(userId).set(updatedProfile, { merge: true });
   const nextPasswordLoginEmail =
-    input.email !== undefined && nextEmail && !isPlaceholderEmail(nextEmail)
-      ? normalizeEmail(nextEmail)
-      : currentUser?.passwordLoginEmail || resolvePasswordLoginEmail(currentUser || {
-          email: nextEmail || "",
-          phone: nextPhone || "",
-        });
+    normalizeEmail(currentUser?.passwordLoginEmail) || buildPasswordLoginEmail(nextPhone || userId);
 
   await usersCollection().doc(userId).set(
     {
@@ -1002,9 +1060,6 @@ export async function updateLocalProfile(
   const authUpdates: { displayName?: string; email?: string; phoneNumber?: string | null; photoURL?: string | null } = {};
   if (input.fullName !== undefined) {
     authUpdates.displayName = updatedProfile.fullName;
-  }
-  if (input.email !== undefined && nextEmail && !isPlaceholderEmail(nextEmail)) {
-    authUpdates.email = nextEmail;
   }
   if (input.phone !== undefined) {
     authUpdates.phoneNumber = toE164Phone(nextPhone) || null;
@@ -1033,13 +1088,13 @@ export async function updateLocalProfile(
 }
 
 export async function resetLocalPassword(identifier: string, password: string) {
-  const user = await findUserByIdentifier(identifier);
+  const user = await findUserByPhone(identifier);
   if (!user) {
-    throw new Error("No account found for this email or phone.");
+    throw new Error("No account exists for this mobile number. Please create an account first.");
   }
 
   await createOrUpdatePasswordLoginCredential(user.id, {
-    email: isPlaceholderEmail(user.email) ? undefined : user.email,
+    email: undefined,
     phone: user.phone,
     password,
   });

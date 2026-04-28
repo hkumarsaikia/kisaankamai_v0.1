@@ -116,8 +116,6 @@ export default function ReportPage() {
             loading="lazy"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDprln7ei_-7KiHHUMhRaq3RPbGYAStHFc9k345CkGiggTfvSAe7LHkNV9H2R-yzCcb2F954B6sVfFlEyjr86aTHMksY7Pdl50EXBcMK0neZWBEFqJNEUHbanR1INlv_4BwH7QgTimp3zJS2d9oIeOrzhMu-EZxJeLof62W-9oekBbcMO53eyXg9J-WzmmncPNcu6fN3TeC1NbGqiDsyh6mQm8xeQ5ZmGwUISUiWEU1AQi7y-xWajGQWxA2QrOZp3ahSmQVe_1_HO5R"
           />
-          <div className="kk-dark-image-overlay" />
-
           <div className="relative z-10 mx-auto w-full max-w-7xl px-6 text-white">
             <h1 className="mb-4 text-4xl font-extrabold leading-tight md:text-6xl">
               {langText("Report a Problem", "समस्या कळवा")}

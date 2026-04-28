@@ -3,11 +3,8 @@ import { z } from "zod";
 const tenDigitPhone = z
   .string()
   .trim()
-  .regex(/^\d{10}$/, "Enter a valid 10-digit mobile number.");
-
-const optionalPhone = z
-  .union([z.literal(""), tenDigitPhone])
-  .transform((value) => value || undefined);
+  .transform((value) => value.replace(/\D/g, "").slice(-10))
+  .refine((value) => /^\d{10}$/.test(value), "Enter a valid 10-digit mobile number.");
 
 const sixDigitPincode = z
   .string()
@@ -25,7 +22,7 @@ const positiveNumberString = z
 
 export const loginInputSchema = z
   .object({
-    identifier: z.string().trim().min(1, "Enter your mobile number or email."),
+    phone: tenDigitPhone,
     password: z.string().min(1, "Enter your password."),
   })
   .strict();
@@ -37,7 +34,7 @@ export const registerInputSchema = z
     address: z.string().trim().min(3, "Enter your address.").max(200),
     village: z.string().trim().min(2, "Enter your city or village.").max(120),
     pincode: sixDigitPincode,
-    phone: optionalPhone,
+    phone: tenDigitPhone,
     fieldArea: z.union([positiveNumberString, z.string()]).optional(),
     password: z.string().min(6, "Password must be at least 6 characters.").max(128),
     role: z.enum(["renter", "owner", "both"]).default("renter"),
@@ -46,10 +43,6 @@ export const registerInputSchema = z
     language: z.enum(["en", "mr"]).optional(),
     idType: z.string().optional(),
     idNumber: z.string().optional(),
-  })
-  .refine((value) => Boolean(value.email || value.phone), {
-    message: "Enter at least one contact method: email or phone.",
-    path: ["email"],
   })
   .strict();
 
@@ -65,7 +58,7 @@ export const completeProfileSchema = z
 
 export const forgotPasswordContactSchema = z
   .object({
-    contact: z.string().trim().min(1, "Enter your mobile number or email."),
+    contact: z.string().trim().min(1, "Enter your registered mobile number."),
   })
   .strict();
 

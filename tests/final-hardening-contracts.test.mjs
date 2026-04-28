@@ -142,7 +142,7 @@ test("catalog pages do not ship hardcoded mock equipment detail experiences", as
   }
 });
 
-test("password reset lookup does not reveal account email or hidden phone for email identifiers", async () => {
+test("password reset lookup is phone-only and rejects unknown accounts before OTP", async () => {
   const [routeSource, pageSource, resetSource] = await Promise.all([
     readFile(new URL("../app/api/auth/password-reset/request/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/forgot-password/page.tsx", import.meta.url), "utf8"),
@@ -154,4 +154,6 @@ test("password reset lookup does not reveal account email or hidden phone for em
   assert.match(routeSource, /resolvePasswordResetPhoneInput/);
   assert.doesNotMatch(pageSource, /RESET_EMAIL_KEY/);
   assert.match(resetSource, /resolvePasswordResetPhoneInput/);
+  assert.match(resetSource, /findUserByPhone/);
+  assert.match(resetSource, /No account exists for this mobile number\. Please create an account first\./);
 });

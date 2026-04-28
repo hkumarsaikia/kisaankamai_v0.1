@@ -11,9 +11,8 @@ export default function HowItWorksPage() {
         {/* Hero Section */}
         <section className="relative min-h-[500px] flex items-center overflow-hidden bg-primary-container">
           <div className="absolute inset-0 z-0">
-            <div className="kk-dark-image-overlay z-10"></div>
             <img 
-              className="w-full h-full object-cover grayscale-[20%] brightness-[70%]" 
+              className="w-full h-full object-cover"
               alt="Modern tractor working in a vast lush green field" 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_pmsUO3wIQ354R-5js0wLwWEAY9NoXJfRWv3B2CZbgbTJhcNcmanT9Q9gErPOkKJG1Ti59VifdaS4544Ep1Q16wPoOpP8zpn_TYHpZnswbTH7GLRccvmqdOfiEMcuEjJjL-cPpkR1NUHsZI1jNual8ZO75xHEiqM8PY0MhbdTPobtsOyg7P7T3wybSbKqKjIEMUloOM0WNVu9k56_4BfzQiahkF3YqUCwJWnU_ISpsoqcngnlKSvxqtZixhDTuWCR0z94fNwf8Gxp"
             />

@@ -56,19 +56,24 @@ test("owner benefits removes the two requested hero templates", async () => {
   assert.doesNotMatch(ownerBenefitsSource, /owner-benefits\.verified_renters/);
 });
 
-test("Google new-user auth uses a registration resolver instead of unconditional session creation", async () => {
-  const [googleButtonSource, sessionHelperSource, firebaseDataSource] = await Promise.all([
-    readFile(new URL("../components/auth/GoogleAuthButton.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../lib/server/firebase-session-route.ts", import.meta.url), "utf8"),
-    readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
+test("phone-only auth disables Google registration and login flows", async () => {
+  const [loginSource, registerSource, googleResolveSource, googleRegisterSource, docsSource] = await Promise.all([
+    readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/google/resolve/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/google/register/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../docs/DEVELOPMENT.md", import.meta.url), "utf8"),
   ]);
 
-  assert.match(googleButtonSource, /\/api\/auth\/google\/resolve/);
-  assert.match(googleButtonSource, /registration_required/);
-  assert.doesNotMatch(googleButtonSource, /finishGoogleSessionFromAuth\(auth\)/);
-  assert.match(sessionHelperSource, /getExistingLocalSessionByUserId/);
-  assert.match(firebaseDataSource, /getExistingLocalSessionByUserId/);
-  assert.match(firebaseDataSource, /registerGoogleVerifiedUser/);
+  for (const source of [loginSource, registerSource]) {
+    assert.doesNotMatch(source, /GoogleAuthButton|Continue with Google|Create account with Google/);
+  }
+  for (const source of [googleResolveSource, googleRegisterSource]) {
+    assert.match(source, /Google sign-in is disabled/);
+    assert.match(source, /status:\s*410/);
+  }
+  assert.match(docsSource, /phone-only/i);
+  assert.doesNotMatch(docsSource, /Existing Google accounts|New Google accounts/);
 });
 
 test("email and phone uniqueness use identifier lock documents", async () => {

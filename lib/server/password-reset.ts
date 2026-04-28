@@ -1,7 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
-import { findUserByIdentifier } from "@/lib/server/firebase-data";
+import { findUserByIdentifier, findUserByPhone } from "@/lib/server/firebase-data";
 import { getAdminAuth } from "@/lib/server/firebase-admin";
 
 function normalizePhoneDigits(input?: string | null) {
@@ -55,6 +55,10 @@ export async function resolvePasswordResetPhoneInput(identifier: string) {
   if (!phoneE164) {
     throw new Error("Enter a valid 10-digit registered mobile number.");
   }
+  const user = await findUserByPhone(identifier);
+  if (!user) {
+    throw new Error("No account exists for this mobile number. Please create an account first.");
+  }
 
   return {
     phoneE164,
@@ -84,7 +88,7 @@ export async function completePasswordResetFromIdToken(input: {
     throw new Error("Phone verification is required before resetting the password.");
   }
 
-  const user = await findUserByIdentifier(verifiedPhone);
+  const user = await findUserByPhone(verifiedPhone);
   if (!user || user.id !== decoded.uid) {
     throw new Error("No Kisan Kamai account is linked to this verified mobile number.");
   }

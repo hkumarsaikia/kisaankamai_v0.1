@@ -37,14 +37,14 @@ Local work that exercises the Firebase-backed root runtime may require:
 
 If Firebase Admin credentials are missing, some authenticated/data-backed runtime flows will not function outside mocked/static fallbacks.
 
-Google OAuth depends on Firebase Console configuration, browser API key referrer restrictions, and the app CSP. Keep the production custom domains authorized in Firebase Auth, include the Firebase auth handler origin in the API key referrer allowlist, and keep `accounts.google.com`, `apis.google.com`, and the configured Firebase auth domain in the security headers before deploying auth-page changes.
+Auth is phone-only for public login and registration. Users register with Firebase Auth phone verification, set a password, and later sign in with the registered mobile number only. Optional email remains profile metadata and uniqueness is still reserved when provided.
 
-Google auth flow contract:
+Phone-only auth flow contract:
 
-- Existing Google accounts with an app profile sign in through `/api/auth/google/resolve`.
-- New Google accounts go to `/register/google-email`, then `/api/auth/google/register` creates the app profile from the verified Google email and profile photo.
-- After Google registration, the client signs out and returns to `/login?pleaseLogin=1`; the user signs in explicitly after the one-second prompt.
-- Manual register and profile updates must reserve identifiers in the `auth-identifiers` Firestore collection so a phone or email cannot create multiple accounts.
+- `/login` accepts a registered mobile number and password only.
+- `/register` preflights the phone and optional email before sending OTP, so duplicate contacts do not receive OTP.
+- `/api/auth/google/resolve` and `/api/auth/google/register` intentionally return HTTP 410; `/register/google-email` redirects back to `/register`.
+- Manual register and profile updates must reserve identifiers in the `auth-identifiers` Firestore collection so a phone or optional email cannot create multiple accounts.
 - Booking and listing notifications are Firebase Cloud Messaging only. Do not add MSG91/SMS code until that provider is intentionally introduced.
 
 ## Ubuntu Runtime Notes
@@ -110,4 +110,4 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
 - `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details.
 - Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.
-- Dark-mode public imagery should use `kk-dark-image-overlay`, image cards should use `kk-image-card-overlay`, and auth/OTP screens should use the shared `kk-auth-*` classes. Keep `tests/dark-mode-visual-contracts.test.mjs` updated when a new public route gets a dark-mode visual contract.
+- Dark-mode public imagery should preserve the same image color as light mode. Avoid full-page wash overlays on public hero/category imagery; auth/OTP screens still use the shared `kk-auth-*` classes. Keep `tests/dark-mode-visual-contracts.test.mjs` updated when a new public route gets a dark-mode visual contract.

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { resolvePasswordResetPhoneInput } from "@/lib/server/password-reset";
 
 const requestSchema = z.object({
-  identifier: z.string().trim().min(1, "Enter your mobile number or email."),
+  identifier: z.string().trim().min(1, "Enter your registered mobile number."),
 });
 
 export const dynamic = "force-dynamic";

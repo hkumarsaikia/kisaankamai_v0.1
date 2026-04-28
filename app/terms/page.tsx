@@ -14,11 +14,10 @@ export default function TermsAndSafetyPage() {
         <section className="relative h-[450px] flex items-center justify-center overflow-hidden bg-primary-container">
           <div className="absolute inset-0 z-0">
             <img 
-              className="w-full h-full object-cover brightness-[0.4] grayscale-[30%]" 
+              className="w-full h-full object-cover"
               alt="Lush green field in Maharashtra" 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuDltSi1i_6HGDAFLrlSUDFrky5M75B7VK9q---9vhn1fSwRcPwC0BU8GadHYCU3QjgP4FTVgy942SgO3gz_tU8U_KJyx3LLdjyjN5ytcbnWTrv4dgqodCXSESTrNyqZju3u4eAUR6-EVqm6yMpAdOdHddf398PmPbNnwSYUYFAiPeBuH1RjLNf1tHOpQWi4CLxpFk7IT9kSEtoaTgz5JR9y-gE4H3Rwidzz5gBeWnc3pHZXpWPqK3DnHfPnuwhwqSUxc6L2vc9RkGVZ"
             />
-            <div className="kk-dark-image-overlay"></div>
           </div>
           <div className="relative z-10 text-center px-6 max-w-4xl">
             <h1 className="text-4xl md:text-6xl font-black text-white mb-6 leading-tight tracking-tighter">
@@ -59,11 +58,11 @@ export default function TermsAndSafetyPage() {
             <div className="w-full lg:w-1/2">
               <div className="relative group">
                 <img 
-                  className="rounded-[2.5rem] shadow-2xl w-full h-[500px] object-cover grayscale-[10%]" 
+                  className="rounded-[2.5rem] shadow-2xl w-full h-[500px] object-cover"
                   alt="Farmer using smartphone" 
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkwAdVVVMsz8uJO_ua03geS19b-VfJGaKEbGshhu6lxqfM_Ygivz33MLfzU9bxDbQeFMAw59DNUGalG7dx6DB0JgjelwR-lo36vnjE3FjsFEZSBiovP8_i7s0bUB3XMVzF4aXBn1rCvirp3dQPh6zf0VzLQc3wVSDC9n4jPaHJURrdQO1_sJ8oaFM-iXc3dkh4j6uw-VO2w0aT4K6UAmSEqv1IU9wwJRcBgf6neGPUO-l5lHGSCtUZ54o-qx9cGRxPwbPbEBmLKzhK"
                 />
-                <div className="absolute -bottom-8 -right-8 bg-primary p-10 rounded-3xl max-w-xs shadow-2xl hidden md:block transform group-hover:-translate-y-2 transition-transform">
+                <div className="absolute -bottom-8 -right-8 hidden max-w-xs rounded-3xl border border-white/10 bg-primary-container p-10 text-white shadow-2xl transform transition-transform group-hover:-translate-y-2 md:block">
                   <span className="material-symbols-outlined text-white text-5xl mb-4" style={{ fontVariationSettings: "'FILL' 1" }}>info</span>
                   <p className="text-white font-black text-xl mb-2">{langText("Discovery Only", "केवळ संपर्क")}</p>
                   <p className="text-white/80 text-sm font-medium leading-relaxed">
@@ -184,7 +183,7 @@ export default function TermsAndSafetyPage() {
               </div>
             </div>
             <div className="md:w-1/2">
-              <div className="bg-primary p-12 rounded-[2.5rem] text-white shadow-2xl flex flex-col justify-between h-full">
+              <div className="rounded-[2.5rem] bg-primary-container p-12 text-white shadow-2xl flex flex-col justify-between h-full">
                 <div>
                    <p className="text-white/70 font-medium leading-relaxed mb-8">
                      {langText("Our support team is available Mon-Sat to help with platform usage.", "आमची टीम मदत करण्यासाठी सोमवार ते शनिवार उपलब्ध आहे.")}

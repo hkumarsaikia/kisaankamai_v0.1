@@ -133,7 +133,7 @@ async function saveListingImages(ownerUserId: string, listingId: string, files: 
   return storedPaths;
 }
 
-export async function loginAction(input: { identifier: string; password: string }): Promise<ActionResult> {
+export async function loginAction(input: { phone: string; password: string }): Promise<ActionResult> {
   return runLoggedAction("loginAction", [input], async () => {
     const parsed = loginInputSchema.safeParse(input);
     if (!parsed.success) {
@@ -141,15 +141,15 @@ export async function loginAction(input: { identifier: string; password: string 
     }
 
     try {
-      const session = await loginAndCreateSession(parsed.data.identifier, parsed.data.password);
+      const session = await loginAndCreateSession(parsed.data.phone, parsed.data.password);
       if (!session) {
-        return { ok: false, error: "Invalid email/phone or password." };
+        return { ok: false, error: "Invalid mobile number or password." };
       }
 
       await mirrorAuthEvent({
         eventType: "login",
         session,
-        identifier: parsed.data.identifier,
+        identifier: parsed.data.phone,
         outcome: "success",
         path: "/login",
       });

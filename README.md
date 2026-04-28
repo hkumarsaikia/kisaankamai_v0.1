@@ -11,9 +11,8 @@ Kisan Kamai now uses the root Next.js app as the only public frontend for `https
 The root app is the production-facing application. It owns:
 
 - Firebase Auth session-cookie auth
-- Firebase Auth Google sign-in for existing app profiles, with a Google-email registration completion page for new Google accounts
 - Firebase Auth phone verification for manual registration
-- Firebase Auth password login through one mobile-or-email identifier field
+- Firebase Auth phone-only password login for registered mobile numbers
 - Firebase Cloud Messaging web push notifications for booking and listing updates
 - Firestore-backed listings, bookings, payments, submissions, and saved items
 - Cloud Storage-backed uploads
@@ -84,9 +83,8 @@ Required runtime configuration includes:
 ## Backend Contract
 
 - Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
-- Manual registration verifies the phone number with Firebase Auth, then stores a password-backed Firebase Auth login credential. Workspace choice is handled after account creation in `/profile-selection`, not on the registration page. Users sign in with a single mobile/email identifier plus password form.
-- Google sign-in requires Firebase Auth Google provider to stay enabled and `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com` to remain authorized Firebase Auth domains. The browser API key referrer allowlist must include the production site and Firebase auth handler origins. The root CSP must continue to allow the Google/Firebase OAuth origins used by the login, register, and Google-email registration pages.
-- Existing Google users are resolved through `/api/auth/google/resolve`. New Google users are sent to `/register/google-email`; after confirmed Google email ownership, `/api/auth/google/register` creates the app profile, saves the Google profile photo URL, signs the browser back out, and redirects to login with the short "Please login" prompt.
+- Registration is phone-only for account creation. The form can store an optional email on the profile, but sign-in uses the registered mobile number plus password.
+- Google sign-in and Google registration are disabled at the application layer. The Google API routes return HTTP 410 and `/register/google-email` redirects to `/register`.
 - Account uniqueness is enforced in Firestore through `auth-identifiers`: one normalized email and one normalized phone number can belong to only one app user.
 - Session cookies are long-lived for normal use; users should remain signed in until logout or cookie expiry.
 - User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.

@@ -44,22 +44,63 @@ test("reported dark-mode problem pages do not use low-contrast primary-container
   assert.match(report, /bg-primary-container/);
 });
 
-test("public dark-mode imagery uses deep overlays instead of pale primary overlays", async () => {
-  const sources = await Promise.all(
+test("requested public dark-mode imagery preserves image color without full-page wash overlays", async () => {
+  const entries = await Promise.all(
     [
-      "../app/page.tsx",
-      "../app/about/page.tsx",
-      "../app/how-it-works/page.tsx",
-      "../app/terms/page.tsx",
-      "../app/partner/page.tsx",
-      "../app/owner-benefits/page.tsx",
-    ].map(readSource)
+      ["home", "../app/page.tsx"],
+      ["owner benefits", "../app/owner-benefits/page.tsx"],
+      ["how it works", "../app/how-it-works/page.tsx"],
+      ["terms", "../app/terms/page.tsx"],
+      ["partner", "../app/partner/page.tsx"],
+      ["report", "../app/report/page.tsx"],
+      ["support", "../app/support/page.tsx"],
+    ].map(async ([name, path]) => [name, await readSource(path)])
   );
 
-  for (const source of sources) {
-    assert.match(source, /kk-dark-image-overlay/);
-    assert.doesNotMatch(source, /from-primary\/8[05]|from-primary\/90|via-primary\/55|via-primary\/60/);
+  for (const [name, source] of entries) {
+    assert.doesNotMatch(source, /kk-dark-image-overlay/, `${name} still uses a full dark image overlay`);
+    assert.doesNotMatch(source, /kk-image-card-overlay/, `${name} still washes image cards`);
+    assert.doesNotMatch(
+      source,
+      /object-cover[^"'\n]*(brightness-\[|grayscale-\[|opacity-55|opacity-\[0\.55\])/,
+      `${name} still dims or desaturates an image directly`
+    );
   }
+});
+
+test("home trust section no longer renders decorative background circles behind the tractor image", async () => {
+  const home = await readSource("../app/page.tsx");
+
+  assert.doesNotMatch(home, /-top-10 -left-10 w-40 h-40 bg-secondary\/5 rounded-full/);
+  assert.doesNotMatch(home, /-bottom-10 -right-10 w-64 h-64 bg-primary\/5 rounded-full/);
+});
+
+test("visible route loading fallbacks are removed from public and profile routes", async () => {
+  const loadingFiles = [
+    "../app/list-equipment/loading.tsx",
+    "../app/owner-profile/loading.tsx",
+    "../app/profile-selection/loading.tsx",
+    "../app/rent-equipment/loading.tsx",
+    "../app/renter-profile/loading.tsx",
+    "../app/report/loading.tsx",
+    "../app/support/loading.tsx",
+    "../app/equipment/[id]/loading.tsx",
+  ];
+
+  const sources = await Promise.all(loadingFiles.map(readSource));
+
+  for (const source of sources) {
+    assert.doesNotMatch(source, /LoadingScreen|animate-pulse|animate-\[pulse/);
+  }
+});
+
+test("terms dark-mode support tiles use deep readable surfaces rather than pale cards", async () => {
+  const terms = await readSource("../app/terms/page.tsx");
+
+  assert.match(terms, /Discovery Only/);
+  assert.match(terms, /Go to Support Center/);
+  assert.doesNotMatch(terms, /absolute -bottom-8 -right-8 bg-primary p-10/);
+  assert.doesNotMatch(terms, /bg-primary p-12 rounded-\[2\.5rem\] text-white/);
 });
 
 test("owner benefits hero is explicitly left aligned and register content allows the global footer after the form", async () => {

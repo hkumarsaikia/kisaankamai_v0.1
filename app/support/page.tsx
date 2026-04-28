@@ -119,7 +119,6 @@ export default function SupportPage() {
             alt="Panoramic sugarcane field in Maharashtra at sunrise"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK2cmkJApn0nVehtGu1-O_Jh3H-OClLodq9_KX4xxh_OGVj2OqUEJYC-MWqpXMUvo8s6YGuo2rAKTsiptklUZYK2GXmxUasToDyjIKYgZ6d2J_Pkgub_7fiQpQNhcEv8VxQuR8hODqErTQw7TKGyWGg3m2JAGHHxB4iYLF2PqEyPLJBNp5wBelH0ryDM7vxtqJjeDkfd2rhmMS92lXx-3DhPg-r4N2sbauY7gJLOnTcq-cElZZkta36SlaL4MJEYWW9Gmijhd13vep"
           />
-          <div className="kk-dark-image-overlay" />
           <div className="relative z-10 px-6 text-center">
             <h1 className="font-headline text-4xl font-extrabold text-white md:text-6xl">
               {langText("We're here to help", "आम्ही मदतीसाठी येथे आहोत")}
@@ -135,26 +134,30 @@ export default function SupportPage() {
 
         <section className="mx-auto max-w-7xl px-6 py-16">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {supportCategories.map((category) => (
-              <button
-                key={category.value}
-                type="button"
-                onClick={() => updateField("category", category.value)}
-                className={`rounded-2xl border p-6 text-center transition-all ${
-                  formState.category === category.value
-                    ? "border-primary bg-primary-container text-on-primary-container shadow-xl"
-                    : "border-outline-variant bg-surface-container-lowest text-on-surface hover:border-surface-tint hover:shadow-xl"
-                }`}
-              >
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-container text-white">
-                  <span className="material-symbols-outlined text-3xl">{category.icon}</span>
-                </div>
-                <h3 className="font-bold">{langText(category.label.en, category.label.mr)}</h3>
-                <p className="mt-1 text-sm text-on-surface-variant dark:text-primary-fixed-dim">
-                  {langText(category.description.en, category.description.mr)}
-                </p>
-              </button>
-            ))}
+            {supportCategories.map((category) => {
+              const selected = formState.category === category.value;
+
+              return (
+                <button
+                  key={category.value}
+                  type="button"
+                  onClick={() => updateField("category", category.value)}
+                  className={`rounded-2xl border p-6 text-center transition-all ${
+                    selected
+                      ? "border-primary bg-primary-container text-white shadow-xl"
+                      : "border-outline-variant bg-surface-container-lowest text-on-surface hover:border-surface-tint hover:shadow-xl"
+                  }`}
+                >
+                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-container text-white">
+                    <span className="material-symbols-outlined text-3xl">{category.icon}</span>
+                  </div>
+                  <h3 className="font-bold">{langText(category.label.en, category.label.mr)}</h3>
+                  <p className={`mt-1 text-sm ${selected ? "text-white/85" : "text-on-surface-variant dark:text-primary-fixed-dim"}`}>
+                    {langText(category.description.en, category.description.mr)}
+                  </p>
+                </button>
+              );
+            })}
           </div>
         </section>
 
@@ -319,7 +322,6 @@ export default function SupportPage() {
             alt="Smiling Indian farmer standing in a golden wheat field at sunset"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdj-by0sXYvLBIrvGYViSBZkk5i4Nr-zEtpE0S9WPbZKTBOPq7lkgPu1oJ5sgap8nM1Ozpout85-xGpst9bAssJz0A6HWCMDQZW9VbUPBzUy2YAu5Cim_0V_X6iVIYR23J7y7yTHYhcFdbMewyoWe30Qeuu6pyKp8cn9KOnR0g5MZ6wZ5fVAW4r1gzB401zBKPEQN8uQ1fc7XctKpeopjg9mAWI-wEa2v6KvVHVibhPqq2tYH6pv4LJf7RTFlNZ1ZaBl7SN3LKuHEZ"
           />
-          <div className="kk-dark-image-overlay" />
           <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-8 px-8 py-12 md:flex-row">
             <div className="text-white">
               <h2 className="text-4xl font-extrabold">{langText("Need help right now?", "आत्ताच मदत हवी आहे का?")}</h2>

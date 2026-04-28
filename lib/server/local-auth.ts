@@ -5,7 +5,7 @@ import { getAdminAuth } from "@/lib/server/firebase-admin";
 import { captureServerException } from "@/lib/server/firebase-observability";
 import {
   getLocalSessionByUserId,
-  loginWithIdentifier,
+  loginWithPhone,
   normalizeRolePreference,
   registerLocalUser,
 } from "@/lib/server/local-data";
@@ -121,8 +121,8 @@ export async function requireSession() {
   return session;
 }
 
-export async function loginAndCreateSession(identifier: string, password: string) {
-  const result = await loginWithIdentifier(identifier, password);
+export async function loginAndCreateSession(phone: string, password: string) {
+  const result = await loginWithPhone(phone, password);
   if (!result?.idToken || !result.session) {
     return null;
   }

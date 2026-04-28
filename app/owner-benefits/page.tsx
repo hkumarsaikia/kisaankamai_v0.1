@@ -13,8 +13,7 @@ export default function OwnerBenefitsPage() {
         {/* Hero Section */}
         <section className="relative flex min-h-[716px] items-center overflow-hidden bg-primary-container">
           <div className="absolute inset-0 z-0">
-            <ContentImage className="w-full h-full object-cover opacity-55" alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
-            <div className="kk-dark-image-overlay"></div>
+            <ContentImage className="w-full h-full object-cover" alt="Cinematic wide shot of a modern red tractor in a golden wheat field during sunset in rural Maharashtra" src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
           </div>
           <div className="relative z-10 flex w-full justify-start px-6 text-left sm:px-10 lg:px-16 xl:px-24">
             <div className="max-w-3xl space-y-8">

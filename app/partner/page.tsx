@@ -132,7 +132,6 @@ export default function PartnerPage() {
                 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGvUW1pyMSm542J9EtkW-M2MoUvI42nDbcFq-GqQCvxthRJrHAny67FAM2h7NW67l95VCBjI_OieY5IsqWFCx2PZuTqesmOGOhm1OIrJtS6XF2VyuSqzgwDwdbsN6LpkKxY-1gIBGdyjtgA2Vw5paH0TH5-i_1B5fSyhI8_Q9n9dn5Fuh2xdszZ1ndnUVTFLdY08m6_u3pXFqvTXuOLVfpwuAY_EHG4IOWFEYgboIwRrqS8RTqONfFPSX_JnoqwmWO-wc4MoWg30Lf")',
             }}
           />
-          <div className="kk-dark-image-overlay" />
           <div className="relative z-10 max-w-3xl">
             <h1 className="text-4xl font-black tracking-[-0.03em] md:text-5xl lg:text-6xl">
               Expand Agricultural Access in Maharashtra

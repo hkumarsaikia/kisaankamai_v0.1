@@ -18,33 +18,52 @@ test("rent equipment routes receive merged baseline and live category summaries 
   assert.match(categorySource, /normalizeCategorySlug/);
 });
 
-test("login uses one identifier and password form with no phone OTP login branch", async () => {
-  const [loginSource, localAuthSource, firebaseDataSource] = await Promise.all([
+test("rent equipment empty states do not show owner-publish explanatory copy", async () => {
+  const viewSource = await readFile(new URL("../app/rent-equipment/RentEquipmentView.tsx", import.meta.url), "utf8");
+
+  assert.doesNotMatch(viewSource, /Public results stay empty until owners publish complete live listings with images and location details\./);
+  assert.doesNotMatch(viewSource, /When owners publish complete live listings in this category, they will appear here automatically\./);
+  assert.doesNotMatch(viewSource, /मालकांनी फोटो आणि ठिकाणाच्या तपशीलांसह पूर्ण थेट यादी प्रकाशित करेपर्यंत सार्वजनिक निकाल रिकामे राहतील/);
+  assert.doesNotMatch(viewSource, /मालकांनी या वर्गवारीतील पूर्ण थेट यादी प्रकाशित केली की ती येथे आपोआप दिसेल/);
+});
+
+test("login uses a registered mobile number and password only", async () => {
+  const [loginSource, validationSource, localAuthSource, firebaseDataSource] = await Promise.all([
     readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/validation/forms.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/local-auth.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(loginSource, /Mobile number or Email ID/);
+  assert.match(loginSource, /Mobile number/);
   assert.match(loginSource, /password/);
   assert.match(loginSource, /loginAction/);
+  assert.doesNotMatch(loginSource, /Mobile number or Email ID|Email ID|name@example\.com|Continue with Google|GoogleAuthButton/);
   assert.doesNotMatch(loginSource, /startPhoneVerification|verifyPhoneOtp|OtpVerificationForm|Phone OTP|confirmationId|otpDigits/);
+  assert.doesNotMatch(validationSource, /Enter your mobile number or email/);
   assert.match(localAuthSource, /loginAndCreateSession/);
+  assert.match(firebaseDataSource, /loginWithPhone/);
   assert.match(firebaseDataSource, /passwordLoginEmail/);
   assert.match(firebaseDataSource, /resolvePasswordLoginEmail/);
 });
 
-test("manual registration keeps Firebase phone verification and requires password-backed login", async () => {
-  const [registerSource, sessionRouteSource, typeSource] = await Promise.all([
+test("manual registration checks uniqueness before Firebase OTP and requires password-backed phone login", async () => {
+  const [registerSource, sessionRouteSource, typeSource, preflightSource] = await Promise.all([
     readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/firebase-session-route.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/local-data/types.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/register/preflight/route.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(registerSource, /startPhoneVerification/);
   assert.match(registerSource, /verifyPhoneOtp/);
   assert.match(registerSource, /password/);
   assert.match(registerSource, /finishFirebaseAuthSession/);
+  assert.match(registerSource, /\/api\/auth\/register\/preflight/);
+  assert.match(preflightSource, /assertRegistrationIdentifiersAvailable/);
+  assert.match(preflightSource, /Account already exists\. Please login with your registered mobile number\./);
+  assert.match(preflightSource, /Account already exists\. Please login with your registered phone number\./);
+  assert.doesNotMatch(registerSource, /Create account with Google|GoogleAuthButton/);
   assert.doesNotMatch(registerSource, /workspacePreference/);
   assert.doesNotMatch(registerSource, /Primary workspace|मुख्य कार्यक्षेत्र/);
   assert.doesNotMatch(registerSource, /clearServerAuthSession/);
@@ -53,20 +72,38 @@ test("manual registration keeps Firebase phone verification and requires passwor
   assert.match(typeSource, /passwordLoginEmail/);
 });
 
-test("Google auth allows Firebase OAuth origins and redirects on popup internal errors", async () => {
-  const [googleSource, nextConfigSource] = await Promise.all([
-    readFile(new URL("../components/auth/GoogleAuthButton.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../next.config.mjs", import.meta.url), "utf8"),
+test("registration district selection is limited to Maharashtra districts", async () => {
+  const [registerSource, districtSource] = await Promise.all([
+    readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/auth/india-districts.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(googleSource, /signInWithPopup/);
-  assert.match(googleSource, /signInWithRedirect/);
-  assert.match(googleSource, /getRedirectResult/);
-  assert.match(googleSource, /auth\/internal-error/);
-  assert.match(nextConfigSource, /https:\/\/apis\.google\.com/);
-  assert.match(nextConfigSource, /https:\/\/accounts\.google\.com/);
-  assert.match(nextConfigSource, /https:\/\/gokisaan\.firebaseapp\.com/);
-  assert.match(nextConfigSource, /same-origin-allow-popups/);
+  assert.match(registerSource, /MAHARASHTRA_DISTRICTS/);
+  assert.doesNotMatch(registerSource, /getIndiaDistrictSuggestions/);
+  assert.match(districtSource, /MAHARASHTRA_DISTRICTS/);
+  assert.match(districtSource, /Nashik/);
+  assert.match(districtSource, /Jalgaon/);
+  assert.match(districtSource, /Pune/);
+  assert.doesNotMatch(districtSource, /AGRA/);
+});
+
+test("Google auth entrypoints are disabled while phone-only auth is active", async () => {
+  const [loginSource, registerSource, googleResolveSource, googleRegisterSource, googleEmailPageSource] = await Promise.all([
+    readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/google/resolve/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/google/register/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/register/google-email/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  for (const source of [loginSource, registerSource]) {
+    assert.doesNotMatch(source, /GoogleAuthButton|Continue with Google|Create account with Google/);
+  }
+  for (const source of [googleResolveSource, googleRegisterSource]) {
+    assert.match(source, /Google sign-in is disabled/);
+    assert.match(source, /status:\s*410/);
+  }
+  assert.match(googleEmailPageSource, /redirect\("\/register"\)/);
 });
 
 test("login and register pages fit inside the shared header and footer shell", async () => {

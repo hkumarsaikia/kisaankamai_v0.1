@@ -176,8 +176,7 @@ export default function Home() {
                 decoding="async"
               />
             ))}
-            <div className="kk-dark-image-overlay"></div>
-            
+
             {/* Slider Controls */}
             <button 
               type="button"
@@ -260,7 +259,7 @@ export default function Home() {
               {/* Tractors */}
               <Link href="/rent-equipment?query=tractors" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("High-horsepower tractor parked in a vibrant green farm field", "हिरव्यागार शेतात उभा असलेला उच्च क्षमतेचा ट्रॅक्टर")} src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
-                <div className="kk-image-card-overlay"></div>
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.tractors")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -271,7 +270,7 @@ export default function Home() {
               {/* Harvesters */}
               <Link href="/rent-equipment?query=harvesters" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Combine harvester working through a wheat field", "गव्हाच्या शेतात काम करणारा कॉम्बाईन हार्वेस्टर")} src={assetPath("/assets/generated/harvester_action.png")} loading="lazy" decoding="async" />
-                <div className="kk-image-card-overlay"></div>
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.harvesters")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -282,7 +281,7 @@ export default function Home() {
               {/* Implements */}
               <Link href="/rent-equipment?query=implements" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Agricultural implements including a rotavator and seed drill", "रोटाव्हेटर आणि सीड ड्रिलसह कृषी अवजारे")} src={assetPath("/assets/generated/implement_4k.png")} loading="lazy" decoding="async" />
-                <div className="kk-image-card-overlay"></div>
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.implements")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -293,7 +292,7 @@ export default function Home() {
               {/* Ploughs */}
               <Link href="/rent-equipment?query=ploughs" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Plough working through prepared soil", "तयार जमिनीत चालणारा नांगर")} src={assetPath("/assets/generated/plough_4k.png")} loading="lazy" decoding="async" />
-                <div className="kk-image-card-overlay"></div>
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.ploughs")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -304,7 +303,7 @@ export default function Home() {
               {/* Sprayers */}
               <Link href="/rent-equipment?query=sprayers" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
                 <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Crop sprayer ready for field coverage", "शेतात फवारणीसाठी तयार स्प्रेयर")} src={assetPath("/assets/generated/sprayer.png")} loading="lazy" decoding="async" />
-                <div className="kk-image-card-overlay"></div>
+                <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.sprayers")}</h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity text-sm">
@@ -322,8 +321,6 @@ export default function Home() {
             <div className="grid md:grid-cols-2 gap-20 items-center">
               <div className="relative">
                 <ContentImage className="rounded-[2.5rem] shadow-2xl relative z-10" alt={langText("Indian farmer leaning against a tractor with pride", "अभिमानाने ट्रॅक्टरला टेकून उभा भारतीय शेतकरी")} src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
-                <div className="absolute -top-10 -left-10 w-40 h-40 bg-secondary/5 rounded-full -z-0"></div>
-                <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-primary/5 rounded-full -z-0"></div>
               </div>
               <div>
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-8 tracking-tight leading-tight">
@@ -458,8 +455,7 @@ export default function Home() {
         {/* Final CTA */}
         <section className="py-24 bg-primary text-white overflow-hidden relative">
           <div className="absolute inset-0 z-0">
-            <ContentImage className="w-full h-full object-cover opacity-20 grayscale" alt={langText("Tractors parked in a rural equipment yard at dusk", "संध्याकाळी ग्रामीण यंत्रसामग्रीच्या अंगणात उभे असलेले ट्रॅक्टर")} src={assetPath("/assets/generated/farm_yard.png")} loading="lazy" decoding="async" />
-            <div className="kk-dark-image-overlay"></div>
+            <ContentImage className="w-full h-full object-cover" alt={langText("Tractors parked in a rural equipment yard at dusk", "संध्याकाळी ग्रामीण यंत्रसामग्रीच्या अंगणात उभे असलेले ट्रॅक्टर")} src={assetPath("/assets/generated/farm_yard.png")} loading="lazy" decoding="async" />
           </div>
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
             <h2 className="text-5xl font-black mb-8 leading-tight">{t("home.ready_to_transform_your_farming_journey")}</h2>

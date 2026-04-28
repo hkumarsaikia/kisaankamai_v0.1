@@ -2,7 +2,6 @@
 
 import { type FormEvent, useEffect, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
-import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import { useLanguage } from "@/components/LanguageContext";
 import { loginAction } from "@/lib/actions/local-data";
 
@@ -46,7 +45,7 @@ const collageTiles = [
 
 export default function LoginPage() {
   const { langText } = useLanguage();
-  const [identifier, setIdentifier] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -74,7 +73,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const result = await loginAction({ identifier, password });
+      const result = await loginAction({ phone, password });
       if (!result.ok) {
         setError(result.error || langText("Login failed.", "लॉगिन अयशस्वी झाले."));
         return;
@@ -134,37 +133,29 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-5">
-              <GoogleAuthButton label={langText("Continue with Google", "Google सह पुढे जा")} />
-
-              <div className="flex items-center gap-4">
-                <div className="h-px flex-1 bg-outline-variant/70" />
-                <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-outline">
-                  {langText("or use your credentials", "किंवा तुमचे तपशील वापरा")}
-                </span>
-                <div className="h-px flex-1 bg-outline-variant/70" />
-              </div>
-
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-3">
                   <label
                     className="ml-1 text-[12px] font-bold uppercase tracking-[0.15em] text-outline"
-                    htmlFor="identifier"
+                    htmlFor="phone"
                   >
-                    {langText("Mobile number or Email ID", "मोबाईल नंबर किंवा ईमेल आयडी")}
+                    {langText("Mobile number", "मोबाईल नंबर")}
                   </label>
                   <div className="relative group">
                     <span className="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-xl text-outline transition-colors group-focus-within:text-primary">
-                      alternate_email
+                      call
                     </span>
                     <input
-                      id="identifier"
-                      type="text"
-                      value={identifier}
+                      id="phone"
+                      type="tel"
+                      inputMode="numeric"
+                      autoComplete="tel"
+                      value={phone}
                       onChange={(event) => {
-                        setIdentifier(event.target.value);
+                        setPhone(event.target.value);
                         setError("");
                       }}
-                      placeholder="name@example.com / +91 90000 00000"
+                      placeholder="+91 90000 00000"
                       className="kk-auth-input py-5 pl-14 pr-5"
                       disabled={isSubmitting}
                       required

@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AppLink as Link } from "@/components/AppLink";
-import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import {
   clearRecaptchaVerifier,
   finishFirebaseAuthSession,
@@ -15,7 +14,7 @@ import {
 } from "@/components/auth/firebase-auth-client";
 import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 import { useLanguage } from "@/components/LanguageContext";
-import { getIndiaDistrictSuggestions } from "@/lib/auth/india-districts";
+import { MAHARASHTRA_DISTRICTS } from "@/lib/auth/india-districts";
 import type { VerificationDocumentRecord } from "@/lib/local-data/types";
 
 type RegisterFormState = {
@@ -72,12 +71,6 @@ export default function RegisterPage() {
   const [isOtpVerified, setIsOtpVerified] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showDistrictSuggestions, setShowDistrictSuggestions] = useState(false);
-
-  const districtSuggestions = useMemo(
-    () => getIndiaDistrictSuggestions(formState.district, 12),
-    [formState.district]
-  );
 
   const authUnavailableMessage = langText(
     "Firebase registration is unavailable in this deployment. Please restore the Firebase public configuration and try again.",
@@ -104,7 +97,7 @@ export default function RegisterPage() {
     }
 
     const timer = window.setTimeout(() => {
-      router.replace("/profile-selection");
+      router.replace("/login?pleaseLogin=1");
     }, 1400);
 
     return () => window.clearTimeout(timer);
@@ -165,6 +158,25 @@ export default function RegisterPage() {
     return "";
   };
 
+  const preflightRegistration = async () => {
+    const response = await fetch("/api/auth/register/preflight", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({
+        phone: formState.phone,
+        email: formState.email,
+      }),
+    });
+    const payload = (await response.json().catch(() => null)) as
+      | { ok?: boolean; error?: string }
+      | null;
+
+    if (!response.ok || !payload?.ok) {
+      throw new Error(payload?.error || langText("Could not validate this account.", "हे खाते तपासता आले नाही."));
+    }
+  };
+
   const startVerification = async () => {
     const validationError = validateRegisterForm();
     if (validationError) {
@@ -181,6 +193,7 @@ export default function RegisterPage() {
     setError("");
 
     try {
+      await preflightRegistration();
       const verificationId = await startPhoneVerification({
         auth,
         phoneNumber: formState.phone,
@@ -249,6 +262,11 @@ export default function RegisterPage() {
           },
         },
       });
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      }).catch(() => undefined);
+      await auth.signOut().catch(() => undefined);
 
       setStage("verified");
     } catch (authError) {
@@ -316,10 +334,10 @@ export default function RegisterPage() {
                     : undefined
                 }
                 view={stage === "verified" ? "success" : stage === "verifying" ? "loading" : "entry"}
-                successTitle={langText("Account verified", "खाते पडताळले गेले")}
+                successTitle={langText("Account created", "खाते तयार झाले")}
                 successMessage={langText(
-                  "Your account is ready. Redirecting you to choose your workspace now.",
-                  "तुमचे खाते तयार झाले आहे. आता तुम्हाला कार्यक्षेत्र निवडण्यासाठी वळवले जात आहे."
+                  "Congratulation! The account has been created. You may login with your provided phone number and password.",
+                  "अभिनंदन! खाते तयार झाले आहे. तुम्ही दिलेल्या फोन नंबर आणि पासवर्डने लॉगिन करू शकता."
                 )}
               />
               <div id="kk-register-recaptcha" className="hidden" />
@@ -333,8 +351,8 @@ export default function RegisterPage() {
                   </h1>
                   <p className="text-sm font-medium text-on-surface-variant sm:text-base">
                     {langText(
-                      "Phone verification creates the account, and your password lets you sign in later with either mobile number or email.",
-                      "फोन पडताळणी खात्याची निर्मिती करते, आणि पासवर्डमुळे तुम्ही नंतर मोबाईल नंबर किंवा ईमेलने लॉगिन करू शकता."
+                      "Phone verification creates the account, and your password lets you sign in later with your mobile number.",
+                      "फोन पडताळणी खात्याची निर्मिती करते, आणि पासवर्डमुळे तुम्ही नंतर मोबाईल नंबरने लॉगिन करू शकता."
                     )}
                   </p>
                   {!auth ? <p className="text-sm font-semibold text-amber-700">{authUnavailableMessage}</p> : null}
@@ -343,17 +361,6 @@ export default function RegisterPage() {
 
               <form className="space-y-8 px-6 py-8 sm:px-10 sm:py-10" onSubmit={handleSubmit}>
                 <div id="kk-register-recaptcha" className="hidden" />
-
-                <section className="space-y-5">
-                  <GoogleAuthButton label={langText("Create account with Google", "Google सह खाते तयार करा")} />
-                  <div className="flex items-center gap-4">
-                    <div className="h-px flex-1 bg-outline-variant/70" />
-                    <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-outline">
-                      {langText("or register manually", "किंवा स्वतः नोंदणी करा")}
-                    </span>
-                    <div className="h-px flex-1 bg-outline-variant/70" />
-                  </div>
-                </section>
 
                 {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
 
@@ -463,43 +470,26 @@ export default function RegisterPage() {
                       />
                     </label>
 
-                    <label className="relative space-y-1.5">
+                    <label className="space-y-1.5">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("District", "जिल्हा")}
                       </span>
-                      <input
+                      <select
                         className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
                         value={formState.district}
-                        onChange={(event) => {
-                          updateField("district", event.target.value);
-                          setShowDistrictSuggestions(true);
-                        }}
-                        onFocus={() => setShowDistrictSuggestions(true)}
-                        onBlur={() => {
-                          window.setTimeout(() => setShowDistrictSuggestions(false), 120);
-                        }}
-                        placeholder={langText("Start typing your district", "तुमचा जिल्हा टाइप करा")}
+                        onChange={(event) => updateField("district", event.target.value)}
                         disabled={isSubmitting}
                         required
-                      />
-                      {showDistrictSuggestions && districtSuggestions.length ? (
-                        <div className="absolute z-20 mt-1 max-h-56 w-full overflow-auto rounded-2xl border border-outline-variant bg-surface-container-lowest p-2 shadow-xl">
-                          {districtSuggestions.map((district) => (
-                            <button
-                              key={district}
-                              type="button"
-                              onMouseDown={(event) => event.preventDefault()}
-                              onClick={() => {
-                                updateField("district", district);
-                                setShowDistrictSuggestions(false);
-                              }}
-                              className="block w-full rounded-xl px-3 py-2 text-left text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-low"
-                            >
-                              {district}
-                            </button>
-                          ))}
-                        </div>
-                      ) : null}
+                      >
+                        <option value="">
+                          {langText("Select your district", "तुमचा जिल्हा निवडा")}
+                        </option>
+                        {MAHARASHTRA_DISTRICTS.map((district) => (
+                          <option key={district} value={district}>
+                            {district}
+                          </option>
+                        ))}
+                      </select>
                     </label>
 
                     <label className="space-y-1.5 md:col-span-2">

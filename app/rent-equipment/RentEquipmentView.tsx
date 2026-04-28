@@ -321,17 +321,6 @@ export default function RentEquipmentView({
                     "सध्या कोणतीही थेट उपकरण यादी उपलब्ध नाही."
                   )}
             </h2>
-            <p className="text-on-surface-variant max-w-lg text-lg leading-relaxed">
-              {hasRequestedCategoryOrQuery
-                ? langText(
-                    "When owners publish complete live listings in this category, they will appear here automatically.",
-                    "मालकांनी या वर्गवारीतील पूर्ण थेट यादी प्रकाशित केली की ती येथे आपोआप दिसेल."
-                  )
-                : langText(
-                    "Public results stay empty until owners publish complete live listings with images and location details.",
-                    "मालकांनी फोटो आणि ठिकाणाच्या तपशीलांसह पूर्ण थेट यादी प्रकाशित करेपर्यंत सार्वजनिक निकाल रिकामे राहतील."
-                  )}
-            </p>
           </div>
         </section>
       </div>

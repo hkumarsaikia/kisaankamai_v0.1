@@ -63,7 +63,7 @@ export default function VerifyContactPage() {
               <div className="flex items-center gap-3">
                 <span className="material-symbols-outlined text-primary">mail</span>
                 <h2 className="text-lg font-black text-primary">
-                  {langText("Email sign-in", "ईमेल साइन-इन")}
+                  {langText("Optional email", "पर्यायी ईमेल")}
                 </h2>
               </div>
               <p className="mt-4 text-sm font-semibold text-on-surface">
@@ -74,12 +74,12 @@ export default function VerifyContactPage() {
               <p className="mt-3 text-sm leading-relaxed text-on-surface-variant">
                 {hasUsableEmail
                   ? langText(
-                      "Email/password or Google sign-in can only use the email linked to your Firebase account.",
-                      "ईमेल/पासवर्ड किंवा Google साइन-इन फक्त तुमच्या Firebase खात्याशी जोडलेल्या ईमेलवर काम करते."
+                      "Email is saved on your profile for contact and account records. Public login uses your registered mobile number.",
+                      "ईमेल तुमच्या प्रोफाइल आणि खाते नोंदीसाठी जतन केला जातो. सार्वजनिक लॉगिन तुमच्या नोंदणीकृत मोबाईल नंबरने होते."
                     )
                   : langText(
-                      "If you only registered with phone OTP, email login may not be available until you link an email later.",
-                      "जर तुम्ही फक्त फोन OTP ने नोंदणी केली असेल, तर नंतर ईमेल जोडल्याशिवाय ईमेल लॉगिन उपलब्ध नसेल."
+                      "You can add an optional email later in your profile settings. Login will still use your registered mobile number.",
+                      "तुम्ही नंतर प्रोफाइल सेटिंग्जमध्ये पर्यायी ईमेल जोडू शकता. लॉगिन तरीही नोंदणीकृत मोबाईल नंबरनेच होईल."
                     )}
               </p>
             </section>
