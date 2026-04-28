@@ -1,7 +1,11 @@
 import "server-only";
 
 import { z } from "zod";
-import { findUserByIdentifier, findUserByPhone } from "@/lib/server/firebase-data";
+import {
+  createOrUpdatePasswordLoginCredential,
+  findUserByIdentifier,
+  findUserByPhone,
+} from "@/lib/server/firebase-data";
 import { getAdminAuth } from "@/lib/server/firebase-admin";
 
 function normalizePhoneDigits(input?: string | null) {
@@ -93,7 +97,9 @@ export async function completePasswordResetFromIdToken(input: {
     throw new Error("No Kisan Kamai account is linked to this verified mobile number.");
   }
 
-  await auth.updateUser(user.id, {
+  await createOrUpdatePasswordLoginCredential(user.id, {
+    email: user.email,
+    phone: user.phone,
     password: parsed.password,
   });
 

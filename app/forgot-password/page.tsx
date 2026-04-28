@@ -117,7 +117,7 @@ export default function ForgotPasswordPage() {
         >
           <div className="kk-dark-image-overlay" />
         </div>
-        <div className="kk-auth-card relative z-10 mx-6 max-w-md p-10 text-center">
+        <div className="kk-auth-card relative z-10 mx-6 max-w-md bg-white/82 p-10 text-center shadow-2xl backdrop-blur-2xl dark:bg-surface-container-lowest/82">
           <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-primary-container/20 text-primary">
             <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
               lock_reset
@@ -134,8 +134,14 @@ export default function ForgotPasswordPage() {
         </div>
       </section>
 
-      <section className="flex w-full items-center justify-center bg-surface-container-low px-6 py-12 md:w-1/2">
-        <div className="kk-auth-card w-full max-w-md p-8 md:p-12">
+      <section className="relative flex w-full items-center justify-center overflow-hidden bg-surface-container-low px-6 py-12 md:w-1/2">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-20 blur-sm md:hidden"
+          style={{
+            backgroundImage: `url("${fieldImage}")`,
+          }}
+        />
+        <div className="kk-auth-card relative z-10 w-full max-w-md bg-white/86 p-8 shadow-2xl backdrop-blur-2xl dark:bg-surface-container-lowest/86 md:p-12">
           <div className="mb-10 text-center">
             <div className="mb-6 flex justify-center md:hidden">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-lg">

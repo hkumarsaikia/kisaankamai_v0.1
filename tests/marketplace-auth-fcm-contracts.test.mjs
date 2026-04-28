@@ -47,6 +47,31 @@ test("login uses a registered mobile number and password only", async () => {
   assert.match(firebaseDataSource, /resolvePasswordLoginEmail/);
 });
 
+test("successful registration returns to plain login without pleaseLogin query state", async () => {
+  const [loginSource, registerSource] = await Promise.all([
+    readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(loginSource, /pleaseLogin/);
+  assert.doesNotMatch(registerSource, /pleaseLogin/);
+  assert.match(registerSource, /router\.replace\("\/login"\)/);
+});
+
+test("phone password auth repairs legacy credentials and reset uses the same credential writer", async () => {
+  const [firebaseDataSource, resetSource] = await Promise.all([
+    readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/password-reset.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(firebaseDataSource, /getPasswordLoginEmailCandidates/);
+  assert.match(firebaseDataSource, /rememberPasswordLoginEmailForUser/);
+  assert.match(firebaseDataSource, /buildPasswordLoginEmail\(normalizedPhone \|\| userId\)/);
+  assert.match(firebaseDataSource, /for \(const passwordLoginEmail of getPasswordLoginEmailCandidates\(user\)\)/);
+  assert.match(resetSource, /createOrUpdatePasswordLoginCredential/);
+  assert.doesNotMatch(resetSource, /auth\.updateUser\(user\.id,\s*\{\s*password/);
+});
+
 test("manual registration checks uniqueness before Firebase OTP and requires password-backed phone login", async () => {
   const [registerSource, sessionRouteSource, typeSource, preflightSource] = await Promise.all([
     readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),

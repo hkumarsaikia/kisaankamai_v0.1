@@ -97,7 +97,7 @@ export default function RegisterPage() {
     }
 
     const timer = window.setTimeout(() => {
-      router.replace("/login?pleaseLogin=1");
+      router.replace("/login");
     }, 1400);
 
     return () => window.clearTimeout(timer);

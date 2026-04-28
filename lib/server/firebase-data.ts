@@ -317,12 +317,47 @@ export function resolvePasswordLoginEmail(user: Pick<UserRecord, "email" | "phon
     return configuredEmail;
   }
 
+  const phone = normalizePhone(user.phone);
+  if (phone) {
+    return buildPasswordLoginEmail(phone);
+  }
+
   const accountEmail = normalizeEmail(user.email);
-  if (accountEmail && !isPlaceholderEmail(accountEmail)) {
+  if (accountEmail && (!isPlaceholderEmail(accountEmail) || accountEmail.startsWith("phone."))) {
     return accountEmail;
   }
 
   return "";
+}
+
+function getPasswordLoginEmailCandidates(
+  user: Pick<UserRecord, "id" | "email" | "phone" | "passwordLoginEmail">
+) {
+  const candidates = [
+    normalizeEmail(user.passwordLoginEmail),
+    buildPasswordLoginEmail(normalizePhone(user.phone) || user.id),
+  ];
+  const accountEmail = normalizeEmail(user.email);
+  if (accountEmail && !candidates.includes(accountEmail)) {
+    candidates.push(accountEmail);
+  }
+
+  return Array.from(new Set(candidates.filter(Boolean)));
+}
+
+async function rememberPasswordLoginEmailForUser(userId: string, passwordLoginEmail: string) {
+  const normalized = normalizeEmail(passwordLoginEmail);
+  if (!normalized) {
+    return;
+  }
+
+  await usersCollection().doc(userId).set(
+    {
+      passwordLoginEmail: normalized,
+      updatedAt: nowIso(),
+    },
+    { merge: true }
+  );
 }
 
 async function exchangeCustomToken(customToken: string) {
@@ -729,17 +764,17 @@ export async function loginWithPhone(phone: string, password: string) {
     return null;
   }
 
-  try {
-    const passwordLoginEmail = resolvePasswordLoginEmail(user);
-    if (!passwordLoginEmail) {
-      return null;
+  for (const passwordLoginEmail of getPasswordLoginEmailCandidates(user)) {
+    try {
+      const idToken = await exchangePasswordLogin(passwordLoginEmail, password);
+      await rememberPasswordLoginEmailForUser(user.id, passwordLoginEmail);
+      return { idToken, session: await getLocalSessionByUserId(user.id) };
+    } catch {
+      // Try the next known credential shape before returning the generic login error.
     }
-
-    const idToken = await exchangePasswordLogin(passwordLoginEmail, password);
-    return { idToken, session: await getLocalSessionByUserId(user.id) };
-  } catch {
-    return null;
   }
+
+  return null;
 }
 
 export async function registerLocalUser(input: RegisterInput) {
@@ -918,9 +953,7 @@ export async function createOrUpdatePasswordLoginCredential(
   const currentUser = await getUserRecordById(userId);
   const normalizedEmail = normalizeEmail(input.email);
   const normalizedPhone = normalizePhone(input.phone || currentUser?.phone || "");
-  const currentPasswordLoginEmail = currentUser ? resolvePasswordLoginEmail(currentUser) : "";
-  const passwordLoginEmail =
-    currentPasswordLoginEmail || buildPasswordLoginEmail(normalizedPhone || userId);
+  const passwordLoginEmail = buildPasswordLoginEmail(normalizedPhone || userId);
   const timestamp = nowIso();
   const visibleEmail =
     normalizedEmail ||

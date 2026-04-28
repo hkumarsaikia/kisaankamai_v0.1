@@ -2,25 +2,28 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-
-const tractorImage =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuBD0_DGEYSFzGN8Nm_1mucPl_vqNMUQ_rhFe87O2_ovc7WqPZIt7nVMhzSsLFeQDwSHvbNl0k8QiWD1F5Pb_ll1X8Pr35auvPBCPVN6OaCPnAVRU2bFfz5oc2gby7cgRbQ0dajB_4YVyvZLtgSB1iPqBYvD9095M36O5L_yDz9iGZDp4SC9MMHB_otBKVdRGA0wC4J6bEElyvMGct3NdOByut9WbfLBNX78EC_Y-R61u3G3L3DXTeSWbcPiyXVp0KaJvomjVLghEX24";
+import { assetPath } from "@/lib/site";
 
 export default function PasswordResetSuccessPage() {
   const { langText, text } = useLanguage();
 
   return (
-    <div className="min-h-screen bg-background font-body text-on-background flex flex-col">
+    <div className="kk-auth-page flex flex-col bg-background font-body text-on-background">
       <main className="relative flex flex-grow items-center justify-center overflow-hidden px-6 py-28">
-        <div className="absolute inset-0 z-0 opacity-10">
-          <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-primary-container blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-secondary-container blur-3xl" />
+        <div className="absolute inset-0 z-0">
+          <img
+            alt="Farm equipment ready in a green field"
+            className="h-full w-full object-cover"
+            src={assetPath("/assets/generated/modern_farm_tech.png")}
+          />
+          <div className="kk-dark-image-overlay" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/88 via-white/72 to-primary-container/20 backdrop-blur-[2px] dark:from-surface/88 dark:via-surface/78 dark:to-primary-container/25" />
         </div>
 
         <section className="relative z-10 w-full max-w-2xl space-y-8">
-          <div className="rounded-xl border border-outline-variant/30 bg-surface-container-lowest p-8 text-center shadow-xl md:p-12">
+          <div className="kk-auth-card bg-white/86 p-8 text-center shadow-2xl backdrop-blur-2xl dark:bg-surface-container-lowest/88 md:p-12">
             <div className="mb-8 flex justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-container/10 text-primary-container">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary-container/10 text-primary">
                 <span className="material-symbols-outlined text-5xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                   check_circle
                 </span>
@@ -43,9 +46,9 @@ export default function PasswordResetSuccessPage() {
             </Link>
           </div>
 
-          <div className="rounded-xl border border-outline-variant/20 bg-surface-container-lowest/80 p-8 text-center shadow-lg backdrop-blur-sm md:p-12">
+          <div className="kk-auth-card bg-white/76 p-8 text-center shadow-xl backdrop-blur-2xl dark:bg-surface-container-lowest/78 md:p-12">
             <div className="mb-6 flex justify-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-container/5 text-primary-container">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary-container/10 text-primary">
                 <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
                   verified
                 </span>
@@ -61,10 +64,6 @@ export default function PasswordResetSuccessPage() {
             </p>
           </div>
         </section>
-
-        <div className="pointer-events-none absolute bottom-0 right-0 hidden h-full w-1/3 opacity-20 grayscale lg:block">
-          <img alt="Authentic Indian agriculture" className="h-full w-full object-cover" src={tractorImage} />
-        </div>
       </main>
     </div>
   );

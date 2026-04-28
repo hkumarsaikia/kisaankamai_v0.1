@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useEffect, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { loginAction } from "@/lib/actions/local-data";
@@ -50,18 +50,6 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
-  const [showPleaseLogin, setShowPleaseLogin] = useState(false);
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("pleaseLogin") !== "1") {
-      return;
-    }
-
-    setShowPleaseLogin(true);
-    const timer = window.setTimeout(() => setShowPleaseLogin(false), 1000);
-    return () => window.clearTimeout(timer);
-  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -89,11 +77,6 @@ export default function LoginPage() {
 
   return (
     <div className="kk-auth-page">
-      {showPleaseLogin ? (
-        <div className="fixed left-1/2 top-28 z-50 -translate-x-1/2 rounded-full bg-primary-container px-5 py-3 text-sm font-bold text-white shadow-2xl transition-opacity">
-          {langText("Please login", "कृपया लॉगिन करा")}
-        </div>
-      ) : null}
       <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 bg-primary">
         {collageTiles.slice(0, 4).map((tile) => (
           <div

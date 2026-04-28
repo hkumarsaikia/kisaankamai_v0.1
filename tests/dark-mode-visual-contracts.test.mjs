@@ -131,7 +131,33 @@ test("home hero includes the compact register tile without unsupported payout co
   assert.match(home, /href="\/register"/);
   assert.match(home, /Register Now/);
   assert.match(home, /Rent, List & Grow/);
+  assert.match(home, /bg-white/);
+  assert.match(home, /dark:bg-surface-container-lowest/);
+  assert.match(home, /max-w-\[min\(1760px,calc\(100vw-32px\)\)\]/);
+  assert.doesNotMatch(home, /max-w-7xl items-center gap-10/);
   assert.doesNotMatch(home, /Secure Payouts/);
+});
+
+test("owner benefits calculator is interactive and covers expanded equipment categories", async () => {
+  const ownerBenefits = await readSource("../app/owner-benefits/page.tsx");
+
+  assert.match(ownerBenefits, /useState/);
+  assert.match(ownerBenefits, /ownerEarningCategories/);
+  assert.match(ownerBenefits, /selectedCategory/);
+  assert.match(ownerBenefits, /monthlyEstimate/);
+  for (const category of ["Tractor", "Harvester", "Rotavator", "Seed Drill", "Plough", "Trolley", "Sprayer", "Cultivator"]) {
+    assert.match(ownerBenefits, new RegExp(category));
+  }
+});
+
+test("forgot password success page uses the shared auth visual treatment", async () => {
+  const success = await readSource("../app/forgot-password/success/page.tsx");
+
+  assert.match(success, /kk-auth-page/);
+  assert.match(success, /backdrop-blur/);
+  assert.match(success, /assets\/generated\//);
+  assert.doesNotMatch(success, /opacity-10/);
+  assert.doesNotMatch(success, /tractorImage/);
 });
 
 test("feature request dark mode controls and CTA use readable contrast", async () => {
