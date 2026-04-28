@@ -56,6 +56,29 @@ test("login uses a registered mobile number and password only", async () => {
   assert.match(firebaseDataSource, /Referer/);
   assert.match(httpSource, /isLoopbackHostname/);
   assert.match(httpSource, /areSameOriginForMutation/);
+  assert.match(httpSource, /appendKnownSiteOriginVariants/);
+  assert.match(httpSource, /kisankamai\.com/);
+  assert.match(httpSource, /www\.kisankamai\.com/);
+});
+
+test("login route returns specific phone-not-found and bad-password states", async () => {
+  const [loginSource, authLoginRouteSource, localAuthSource, firebaseDataSource] = await Promise.all([
+    readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/login/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/local-auth.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(firebaseDataSource, /loginWithPhoneDetailed/);
+  assert.match(localAuthSource, /loginAndCreateSessionDetailed/);
+  assert.match(authLoginRouteSource, /reason:\s*"not-found"/);
+  assert.match(authLoginRouteSource, /reason:\s*"invalid-password"/);
+  assert.match(authLoginRouteSource, /Please register first/);
+  assert.match(authLoginRouteSource, /Incorrect password/);
+  assert.match(loginSource, /LoginNotice/);
+  assert.match(loginSource, /REGISTER_FIRST_TOAST_MS\s*=\s*5000/);
+  assert.match(loginSource, /toast\?\.kind === "register"/);
+  assert.match(loginSource, /Incorrect password/);
 });
 
 test("successful registration returns to plain login without pleaseLogin query state", async () => {

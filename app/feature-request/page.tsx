@@ -382,10 +382,13 @@ export default function FeatureRequestPage() {
 
                   <div className="flex justify-end pt-4">
                     <button
-                      className="flex h-12 w-full items-center justify-center rounded-lg bg-primary-container px-6 text-base font-bold tracking-wide text-white transition-colors hover:bg-[#0e2a21] disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-[160px]"
+                      className="kk-flow-button flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-primary-container px-6 text-base font-bold tracking-wide text-white disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:min-w-[160px]"
                       type="submit"
                       disabled={isSubmitting}
+                      data-loading={isSubmitting ? "true" : "false"}
+                      aria-busy={isSubmitting}
                     >
+                      {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                       {isSubmitting
                         ? langText("Submitting...", "सबमिट होत आहे...")
                         : langText("Submit Feature Request", "फीचर विनंती सबमिट करा")}

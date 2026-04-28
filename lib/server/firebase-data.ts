@@ -141,6 +141,12 @@ type PasswordLoginAuthUser = {
   phoneNumber?: string | null;
 };
 
+export type PhonePasswordLoginFailureReason = "not-found" | "invalid-password";
+
+export type PhonePasswordLoginResult =
+  | { ok: true; idToken: string; session: LocalSession | null }
+  | { ok: false; reason: PhonePasswordLoginFailureReason };
+
 function normalizeAuthIdentifier(kind: AuthIdentifierKind, value?: string | null) {
   return kind === "email" ? normalizeEmail(value) : normalizePhone(value);
 }
@@ -787,10 +793,10 @@ export async function loginWithIdentifier(identifier: string, password: string) 
   }
 }
 
-export async function loginWithPhone(phone: string, password: string) {
+export async function loginWithPhoneDetailed(phone: string, password: string): Promise<PhonePasswordLoginResult> {
   const normalizedPhone = normalizePhone(phone);
   if (!normalizedPhone) {
-    return null;
+    return { ok: false, reason: "not-found" };
   }
 
   const [userByPhone, authUserByPhone] = await Promise.all([
@@ -799,20 +805,34 @@ export async function loginWithPhone(phone: string, password: string) {
   ]);
   const user = userByPhone || (authUserByPhone?.uid ? await getUserRecordById(authUserByPhone.uid) : null);
   if (!user) {
-    return null;
+    return { ok: false, reason: "not-found" };
   }
 
   for (const passwordLoginEmail of getPasswordLoginEmailCandidates(user, authUserByPhone)) {
     try {
       const idToken = await exchangePasswordLogin(passwordLoginEmail, password);
       await rememberPasswordLoginEmailForUser(user.id, passwordLoginEmail);
-      return { idToken, session: await getLocalSessionByUserId(user.id) };
+      return { ok: true, idToken, session: await getLocalSessionByUserId(user.id) };
     } catch {
       // Try the next known credential shape before returning the generic login error.
     }
   }
 
-  return null;
+  return { ok: false, reason: "invalid-password" };
+}
+
+export async function loginWithPhone(phone: string, password: string) {
+  const result = await loginWithPhoneDetailed(phone, password);
+  if (!result.ok) {
+    return null;
+  }
+
+  const { idToken, session } = result;
+  if (!session) {
+    return null;
+  }
+
+  return { idToken, session };
 }
 
 export async function registerLocalUser(input: RegisterInput) {

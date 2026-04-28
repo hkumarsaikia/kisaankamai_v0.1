@@ -208,6 +208,65 @@
     @apply bg-primary-container text-white shadow-[0_18px_40px_-22px_rgba(20,59,46,0.9)] transition-all hover:brightness-110 hover:shadow-[0_24px_48px_-26px_rgba(20,59,46,0.95)] active:scale-[0.98];
   }
 
+  .kk-flow-button {
+    @apply relative isolate overflow-hidden transition-[transform,box-shadow,filter,background-color] duration-300 ease-out;
+  }
+
+  .kk-flow-button::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateX(-120%);
+    background:
+      linear-gradient(
+        110deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.16) 38%,
+        rgba(255, 255, 255, 0.42) 50%,
+        rgba(255, 255, 255, 0.16) 62%,
+        transparent 100%
+      );
+  }
+
+  .kk-flow-button > * {
+    @apply relative z-10;
+  }
+
+  .kk-flow-button:hover,
+  .kk-flow-button:focus-visible {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+  }
+
+  .kk-flow-button:hover::after,
+  .kk-flow-button:focus-visible::after,
+  .kk-flow-button[data-loading="true"]::after {
+    animation: kk-flow-sheen 1350ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    opacity: 1;
+  }
+
+  .kk-flow-button:active {
+    transform: translateY(1px) scale(0.99);
+  }
+
+  .kk-flow-button:disabled {
+    transform: none;
+    filter: none;
+  }
+
+  .kk-flow-spinner {
+    @apply inline-block h-5 w-5 rounded-full border-2 border-white/35 border-t-white;
+    animation: kk-flow-spin 780ms linear infinite;
+  }
+
+  .kk-login-toast {
+    @apply fixed left-1/2 top-24 z-[80] flex max-w-[min(92vw,420px)] -translate-x-1/2 items-center gap-3 rounded-2xl border border-primary/20 bg-surface-container-lowest px-5 py-4 text-sm font-bold text-primary shadow-[0_22px_60px_-28px_rgba(0,0,0,0.55)] backdrop-blur-xl dark:border-white/10 dark:bg-surface-container-lowest dark:text-primary-fixed;
+    animation: kk-toast-5s 5000ms cubic-bezier(0.2, 0, 0, 1) both;
+  }
+
   .kk-input {
     @apply flex min-h-12 w-full rounded-[1.15rem] border border-outline-variant bg-surface-container-lowest px-4 py-3 text-sm font-semibold text-on-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-on-surface-variant focus:border-secondary focus:ring-2 focus:ring-secondary disabled:cursor-not-allowed disabled:opacity-60 file:mr-4 file:rounded-full file:border-0 file:bg-primary file:px-4 file:py-2 file:font-bold file:text-white;
   }
@@ -460,6 +519,38 @@
 
   .dark .kk-form-notice-success {
     @apply border-primary/30 bg-primary-container/40 text-primary-fixed;
+  }
+}
+
+@keyframes kk-flow-sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  58%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes kk-flow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes kk-toast-5s {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -10px) scale(0.98);
+  }
+  10%,
+  82% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -8px) scale(0.98);
   }
 }
 

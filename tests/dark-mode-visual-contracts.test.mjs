@@ -134,8 +134,32 @@ test("home hero includes the compact register tile without unsupported payout co
   assert.match(home, /bg-white/);
   assert.match(home, /dark:bg-surface-container-lowest/);
   assert.match(home, /max-w-\[min\(1760px,calc\(100vw-32px\)\)\]/);
+  assert.match(home, /lg:grid-cols-\[minmax\(620px,820px\)_minmax\(320px,390px\)\]/);
+  assert.match(home, /xl:gap-52/);
   assert.doesNotMatch(home, /max-w-7xl items-center gap-10/);
   assert.doesNotMatch(home, /Secure Payouts/);
+  assert.doesNotMatch(home, /Find equipment or publish your available machine/);
+  assert.doesNotMatch(home, /Send requests and coordinate timing directly/);
+  assert.doesNotMatch(home, /Rent locally or earn from idle equipment/);
+  assert.doesNotMatch(home, /Stay connected with owner-managed rental support/);
+});
+
+test("shared action controls use the refined flow animation primitives", async () => {
+  const [globals, login, register, home] = await Promise.all([
+    readSource("../app/globals.css"),
+    readSource("../app/login/page.tsx"),
+    readSource("../app/register/page.tsx"),
+    readSource("../app/page.tsx"),
+  ]);
+
+  assert.match(globals, /\.kk-flow-button/);
+  assert.match(globals, /kk-flow-sheen/);
+  assert.match(globals, /\.kk-login-toast/);
+  assert.match(globals, /kk-toast-5s/);
+  assert.match(globals, /prefers-reduced-motion/);
+  for (const source of [login, register, home]) {
+    assert.match(source, /kk-flow-button/);
+  }
 });
 
 test("owner benefits calculator is interactive and covers expanded equipment categories", async () => {

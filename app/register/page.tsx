@@ -598,10 +598,13 @@ export default function RegisterPage() {
 
                 <div className="space-y-4 border-t border-outline-variant/30 pt-8">
                   <button
-                    className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 transition-all hover:bg-primary-container disabled:cursor-not-allowed disabled:opacity-70"
+                    className="kk-flow-button group flex w-full items-center justify-center gap-3 rounded-2xl bg-primary px-6 py-5 text-lg font-bold text-white shadow-2xl shadow-primary/20 disabled:cursor-not-allowed disabled:opacity-70"
                     type="submit"
                     disabled={isSubmitting}
+                    data-loading={isSubmitting ? "true" : "false"}
+                    aria-busy={isSubmitting}
                   >
+                    {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                     <span>
                       {isSubmitting
                         ? langText("Please wait...", "कृपया प्रतीक्षा करा...")

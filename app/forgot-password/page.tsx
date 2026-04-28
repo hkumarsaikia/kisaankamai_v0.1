@@ -191,10 +191,13 @@ export default function ForgotPasswordPage() {
             {!PHONE_RESET_OTP_ENABLED && !error ? <FormNotice tone="error">{resetUnavailableMessage}</FormNotice> : null}
 
             <button
-              className="flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container py-4 text-lg font-bold text-on-primary shadow-xl shadow-primary/10 transition-all hover:shadow-primary/20 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-70"
+              className="kk-flow-button flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container py-4 text-lg font-bold text-on-primary shadow-xl shadow-primary/10 disabled:cursor-not-allowed disabled:opacity-70"
               type="submit"
               disabled={isSubmitting || !PHONE_RESET_OTP_ENABLED}
+              data-loading={isSubmitting ? "true" : "false"}
+              aria-busy={isSubmitting}
             >
+              {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
               <span>{isSubmitting ? langText("Checking account...", "खाते तपासत आहे...") : langText("Continue", "पुढे जा")}</span>
               <span className="material-symbols-outlined text-xl">send</span>
             </button>

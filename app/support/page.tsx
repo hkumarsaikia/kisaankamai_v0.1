@@ -237,12 +237,15 @@ export default function SupportPage() {
                 </div>
               ) : null}
               <button
-                className={`flex w-full items-center justify-center gap-2 rounded-xl py-4 text-lg font-bold text-white ${
+                className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl py-4 text-lg font-bold text-white ${
                   submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
                 }`}
                 type="submit"
                 disabled={isPending}
+                data-loading={isPending ? "true" : "false"}
+                aria-busy={isPending}
               >
+                {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 {submitLabel}
                 <span className="material-symbols-outlined">
                   {submitState === "success" ? "task_alt" : "send"}

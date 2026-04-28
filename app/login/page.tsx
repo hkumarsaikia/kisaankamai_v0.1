@@ -4,6 +4,8 @@ import { type FormEvent, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 
+const REGISTER_FIRST_TOAST_MS = 5000;
+
 const collageTiles = [
   {
     className: "col-span-5 row-span-6",
@@ -42,6 +44,21 @@ const collageTiles = [
   },
 ];
 
+function LoginNotice({
+  message,
+}: {
+  message: string;
+}) {
+  return (
+    <div className="kk-login-toast" role="status" aria-live="polite">
+      <span className="material-symbols-outlined text-xl" aria-hidden="true">
+        info
+      </span>
+      <span>{message}</span>
+    </div>
+  );
+}
+
 export default function LoginPage() {
   const { langText } = useLanguage();
   const [phone, setPhone] = useState("");
@@ -49,6 +66,19 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
+  const [toast, setToast] = useState<{ id: number; kind: "register"; message: string } | null>(null);
+
+  const showRegisterToast = () => {
+    const id = Date.now();
+    setToast({
+      id,
+      kind: "register",
+      message: langText("Account not found. Please register first.", "खाते सापडले नाही. कृपया आधी नोंदणी करा."),
+    });
+    window.setTimeout(() => {
+      setToast((current) => (current?.id === id ? null : current));
+    }, REGISTER_FIRST_TOAST_MS);
+  };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,9 +98,26 @@ export default function LoginPage() {
       const result = (await response.json().catch(() => null)) as {
         ok?: boolean;
         error?: string;
+        reason?: "not-found" | "invalid-password";
         redirectTo?: string;
       } | null;
       if (!result?.ok) {
+        if (result?.reason === "not-found") {
+          setError("");
+          showRegisterToast();
+          return;
+        }
+
+        if (result?.reason === "invalid-password") {
+          setError(
+            langText(
+              "Incorrect password. Please enter the correct password or use Forgot password to reset it.",
+              "पासवर्ड चुकीचा आहे. कृपया योग्य पासवर्ड टाका किंवा Forgot password वापरून तो बदला."
+            )
+          );
+          return;
+        }
+
         setError(result?.error || langText("Login failed.", "लॉगिन अयशस्वी झाले."));
         return;
       }
@@ -85,6 +132,7 @@ export default function LoginPage() {
 
   return (
     <div className="kk-auth-page">
+      {toast?.kind === "register" ? <LoginNotice message={toast.message} /> : null}
       <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 bg-primary">
         {collageTiles.slice(0, 4).map((tile) => (
           <div
@@ -205,8 +253,11 @@ export default function LoginPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="group flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-container py-5 text-lg font-bold text-white shadow-[0_12px_24px_-8px_rgba(20,59,46,0.5)] transition-all hover:-translate-y-1 hover:shadow-[0_20px_32px_-12px_rgba(20,59,46,0.6)] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:translate-y-0"
+                    data-loading={isSubmitting ? "true" : "false"}
+                    aria-busy={isSubmitting}
+                    className="kk-flow-button group flex w-full items-center justify-center gap-3 rounded-2xl bg-primary-container py-5 text-lg font-bold text-white shadow-[0_12px_24px_-8px_rgba(20,59,46,0.5)] disabled:cursor-not-allowed disabled:opacity-70"
                   >
+                    {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                     <span>
                       {isSubmitting
                         ? langText("Please wait...", "कृपया प्रतीक्षा करा...")

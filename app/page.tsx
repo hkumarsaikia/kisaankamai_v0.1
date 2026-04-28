@@ -133,57 +133,41 @@ const homeRegisterSteps = [
     icon: "search",
     number: "1",
     title: { en: "Search or List", mr: "शोधा किंवा सूचीबद्ध करा" },
-    description: {
-      en: "Find equipment or publish your available machine.",
-      mr: "उपकरण शोधा किंवा तुमचे उपलब्ध मशीन प्रकाशित करा.",
-    },
   },
   {
     icon: "event_available",
     number: "2",
     title: { en: "Book and Manage", mr: "बुक करा आणि व्यवस्थापित करा" },
-    description: {
-      en: "Send requests and coordinate timing directly.",
-      mr: "विनंती पाठवा आणि वेळ थेट ठरवा.",
-    },
   },
   {
     icon: "agriculture",
     number: "3",
     title: { en: "Use and Earn", mr: "वापरा आणि कमवा" },
-    description: {
-      en: "Rent locally or earn from idle equipment.",
-      mr: "स्थानिक भाडे घ्या किंवा रिकाम्या उपकरणातून कमवा.",
-    },
   },
   {
     icon: "verified_user",
     number: "4",
     title: { en: "Verified Support", mr: "पडताळलेला सपोर्ट" },
-    description: {
-      en: "Stay connected with owner-managed rental support.",
-      mr: "मालक-व्यवस्थापित भाडे सपोर्टशी जोडलेले रहा.",
-    },
   },
 ] as const;
 
 function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: string) => string }) {
   return (
     <aside
-      className="relative w-full max-w-[430px] overflow-hidden rounded-[2rem] border border-white/80 bg-white p-7 text-primary shadow-[0_30px_80px_-35px_rgba(0,0,0,0.7)] dark:border-white/10 dark:bg-surface-container-lowest dark:text-emerald-50 lg:justify-self-end"
+      className="relative w-full max-w-[390px] overflow-hidden rounded-[2rem] border border-white/80 bg-white p-6 text-primary shadow-[0_30px_80px_-35px_rgba(0,0,0,0.7)] dark:border-white/10 dark:bg-surface-container-lowest dark:text-emerald-50 lg:justify-self-end"
       aria-label={langText("Kisan Kamai registration tile", "किसान कमाई नोंदणी टाइल")}
     >
       <div className="relative z-10">
-        <div className="mb-6 flex justify-center">
-          <div className="flex h-16 w-16 items-center justify-center rounded-full border border-primary/15 bg-primary/10 dark:border-white/15 dark:bg-white/10">
-            <span className="material-symbols-outlined text-4xl text-primary dark:text-lime-300">agriculture</span>
+        <div className="mb-5 flex justify-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-primary/15 bg-primary/10 dark:border-white/15 dark:bg-white/10">
+            <span className="material-symbols-outlined text-3xl text-primary dark:text-lime-300">agriculture</span>
           </div>
         </div>
 
-        <div className="mb-8 text-center">
-          <h2 className="text-3xl font-black leading-tight tracking-tight md:text-4xl">
+        <div className="mb-7 text-center">
+          <h2 className="text-3xl font-black leading-tight tracking-tight">
             {langText("Rent, List & Grow", "भाडे घ्या, सूचीबद्ध करा आणि वाढा")}
-            <span className="mt-1 block text-2xl font-semibold text-primary/80 dark:text-emerald-100">
+            <span className="mt-1 block text-xl font-semibold text-primary/80 dark:text-emerald-100">
               {langText("with Confidence", "विश्वासाने")}
             </span>
           </h2>
@@ -195,11 +179,11 @@ function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: st
           </p>
         </div>
 
-        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        <div className="mb-7 grid grid-cols-2 gap-x-5 gap-y-4">
           {homeRegisterSteps.map((step) => (
             <div key={step.number} className="flex items-start gap-3">
               <div className="relative shrink-0">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/10 bg-primary/10 dark:border-white/15 dark:bg-white/10">
+                <div className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/10 bg-primary/10 dark:border-white/15 dark:bg-white/10">
                   <span className="material-symbols-outlined text-xl text-primary dark:text-emerald-50">{step.icon}</span>
                 </div>
                 <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[10px] font-black text-white dark:bg-secondary-container dark:text-secondary">
@@ -208,9 +192,6 @@ function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: st
               </div>
               <div>
                 <h3 className="text-sm font-black text-primary dark:text-emerald-50">{langText(step.title.en, step.title.mr)}</h3>
-                <p className="mt-1 text-[11px] leading-4 text-on-surface-variant dark:text-emerald-100/60">
-                  {langText(step.description.en, step.description.mr)}
-                </p>
               </div>
             </div>
           ))}
@@ -218,9 +199,9 @@ function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: st
 
         <Link
           href="/register"
-          className="block w-full rounded-2xl bg-secondary px-6 py-4 text-center text-lg font-black text-white shadow-[0_16px_35px_-24px_rgba(0,0,0,0.7)] transition-all hover:brightness-105 active:scale-[0.98] dark:bg-secondary-container dark:text-secondary"
+          className="kk-flow-button block w-full rounded-2xl bg-secondary px-6 py-4 text-center text-lg font-black text-white shadow-[0_16px_35px_-24px_rgba(0,0,0,0.7)] dark:bg-secondary-container dark:text-secondary"
         >
-          {langText("Register Now", "आता नोंदणी करा")}
+          <span className="relative z-10">{langText("Register Now", "आता नोंदणी करा")}</span>
         </Link>
 
         <div className="mt-6 flex items-center justify-center gap-2 text-sm font-semibold text-on-surface-variant dark:text-emerald-100/60">
@@ -299,7 +280,7 @@ export default function Home() {
               <SharedIcon name="chevron-right" className="h-6 w-6" />
             </button>
           </div>
-          <div className="relative z-10 mx-auto grid w-full max-w-[min(1760px,calc(100vw-32px))] items-center justify-between gap-14 px-0 py-28 md:py-20 lg:grid-cols-[minmax(520px,720px)_minmax(340px,430px)] xl:gap-28">
+          <div className="relative z-10 mx-auto grid w-full max-w-[min(1760px,calc(100vw-32px))] items-center justify-between gap-14 px-0 py-28 md:py-20 lg:grid-cols-[minmax(620px,820px)_minmax(320px,390px)] xl:gap-52 2xl:gap-64">
             <div className="max-w-2xl text-white lg:justify-self-start">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-6 mt-16 lg:mt-0">
                 <span className="w-2 h-2 bg-secondary rounded-full transform dark:bg-amber-400"></span>
@@ -338,7 +319,7 @@ export default function Home() {
                     onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                   />
                 </div>
-                <button onClick={handleSearch} className="kk-deep-cta px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-2">
+                <button onClick={handleSearch} className="kk-deep-cta kk-flow-button px-8 py-4 rounded-lg font-bold flex items-center justify-center gap-2">
                   <SharedIcon name="search" className="h-5 w-5" />
                   {t("home.search_now")}
                 </button>

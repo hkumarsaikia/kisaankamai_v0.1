@@ -285,14 +285,17 @@ export default function ReportPage() {
               ) : null}
 
               <button
-                className={`w-full rounded-xl py-4 text-lg font-bold text-white shadow-lg transition-all ${
+                className={`kk-flow-button w-full rounded-xl py-4 text-lg font-bold text-white shadow-lg ${
                   submitState === "success"
                     ? "bg-emerald-600"
-                    : "bg-primary-container hover:scale-[1.01] hover:shadow-primary-container/20 active:scale-95"
+                    : "bg-primary-container"
                 }`}
                 type="submit"
                 disabled={isPending}
+                data-loading={isPending ? "true" : "false"}
+                aria-busy={isPending}
               >
+                {isPending ? <span className="kk-flow-spinner mr-2" aria-hidden="true" /> : null}
                 {submitLabel}
               </button>
             </form>

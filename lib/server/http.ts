@@ -51,17 +51,55 @@ function areSameOriginForMutation(left: string, right: string) {
   );
 }
 
+function appendKnownSiteOriginVariants(origins: string[]) {
+  const output = new Set<string>();
+
+  for (const origin of origins) {
+    const parsed = parseOrigin(origin);
+    if (!parsed) {
+      continue;
+    }
+
+    output.add(parsed.origin);
+
+    const isApex = parsed.hostname === "kisankamai.com";
+    const isWww = parsed.hostname === "www.kisankamai.com";
+    if (isApex || isWww) {
+      parsed.hostname = isApex ? "www.kisankamai.com" : "kisankamai.com";
+      output.add(parsed.origin);
+    }
+  }
+
+  return Array.from(output);
+}
+
+function getForwardedRequestOrigins(request: NextRequest) {
+  const protocol =
+    request.headers.get("x-forwarded-proto") ||
+    request.nextUrl.protocol.replace(/:$/, "") ||
+    "https";
+  const hosts = [
+    request.headers.get("host"),
+    request.headers.get("x-forwarded-host"),
+  ].filter((value): value is string => Boolean(value));
+
+  return hosts.map((host) => `${protocol}://${host}`);
+}
+
 export function ensureSameOrigin(request: NextRequest) {
   const origin = request.headers.get("origin");
   if (!origin) {
     return;
   }
 
-  const allowedOrigins = [
-    request.nextUrl.origin,
-    process.env.NEXT_PUBLIC_SITE_URL,
-    process.env.NEXT_PUBLIC_APP_URL,
-  ].filter((value): value is string => Boolean(value));
+  const allowedOrigins = appendKnownSiteOriginVariants(
+    [
+      request.nextUrl.origin,
+      ...getForwardedRequestOrigins(request),
+      process.env.NEXT_PUBLIC_SITE_URL,
+      process.env.NEXT_PUBLIC_APP_URL,
+    ].filter((value): value is string => Boolean(value))
+  );
 
   if (!allowedOrigins.some((allowedOrigin) => areSameOriginForMutation(origin, allowedOrigin))) {
     throw new HttpError(403, "Cross-origin form submissions are not allowed.");

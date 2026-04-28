@@ -42,6 +42,9 @@ Auth is phone-only for public login and registration. Users register with Fireba
 Phone-only auth flow contract:
 
 - `/login` accepts a registered mobile number and password only.
+- Login mutations must accept the live apex and canonical hosts as the same site for writes: `https://kisankamai.com` and `https://www.kisankamai.com`. This prevents valid apex visitors from seeing `Cross-origin form submissions are not allowed.` before password validation.
+- Unknown login phone numbers return the `not-found` state and show a 5-second register-first toast. Registered phones with the wrong password return the `invalid-password` state and keep the user on `/login` with the password error visible.
+- Successful phone/password login must redirect to `/profile-selection` when profile basics are present, so the user can choose owner or renter workspace.
 - `/register` preflights the phone and optional email before sending OTP, so duplicate contacts do not receive OTP.
 - `/api/auth/google/resolve` and `/api/auth/google/register` intentionally return HTTP 410; `/register/google-email` redirects back to `/register`.
 - Manual register and profile updates must reserve identifiers in the `auth-identifiers` Firestore collection so a phone or optional email cannot create multiple accounts.
@@ -115,3 +118,4 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - Successful registration returns to plain `/login` after the success message. Do not reintroduce `/login?pleaseLogin=1` or a separate please-login query state.
 - Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.
 - Dark-mode public imagery should preserve the same image color as light mode. Avoid full-page wash overlays on public hero/category imagery; auth/OTP screens still use the shared `kk-auth-*` classes. Keep `tests/dark-mode-visual-contracts.test.mjs` updated when a new public route gets a dark-mode visual contract.
+- Primary submit/CTA controls should use the shared `kk-flow-button` and `kk-flow-spinner` animation primitives instead of one-off pulse/spinner treatments.

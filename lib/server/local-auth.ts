@@ -6,6 +6,7 @@ import { captureServerException } from "@/lib/server/firebase-observability";
 import {
   getLocalSessionByUserId,
   loginWithPhone,
+  loginWithPhoneDetailed,
   normalizeRolePreference,
   registerLocalUser,
 } from "@/lib/server/local-data";
@@ -131,6 +132,22 @@ export async function loginAndCreateSession(phone: string, password: string) {
     workspacePreference: result.session.activeWorkspace,
   });
   return result.session;
+}
+
+export async function loginAndCreateSessionDetailed(phone: string, password: string) {
+  const result = await loginWithPhoneDetailed(phone, password);
+  if (!result.ok) {
+    return result;
+  }
+
+  if (!result.idToken || !result.session) {
+    return { ok: false as const, reason: "invalid-password" as const };
+  }
+
+  await createSessionFromIdToken(result.idToken, {
+    workspacePreference: result.session.activeWorkspace,
+  });
+  return { ok: true as const, session: result.session };
 }
 
 export async function registerAndCreateSession(input: RegisterInput) {
