@@ -5,7 +5,7 @@ import { z, ZodTypeAny } from "zod";
 
 const MAX_JSON_BYTES = 64 * 1024;
 
-class HttpError extends Error {
+export class HttpError extends Error {
   status: number;
   fieldErrors?: Record<string, string[]>;
 

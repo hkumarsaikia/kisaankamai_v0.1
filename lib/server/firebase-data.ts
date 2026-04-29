@@ -524,7 +524,9 @@ function isPublicListingReady(listing: ListingRecord) {
       normalizeOptionalString(listing.description) &&
       normalizeOptionalString(listing.ownerName) &&
       normalizeOptionalString(listing.coverImage) &&
+      !listing.coverImage.includes("/assets/generated/") &&
       listing.galleryImages.length > 0 &&
+      listing.imagePaths.length > 0 &&
       listing.workTypes.length > 0 &&
       Number.isFinite(listing.pricePerHour) &&
       listing.pricePerHour > 0
@@ -544,6 +546,37 @@ function mapBookingFromFirestore(data: Partial<BookingRecord> & { id?: string })
     createdAt: data.createdAt || nowIso(),
     updatedAt: data.updatedAt || nowIso(),
   };
+}
+
+const availabilityBlockingBookingStatuses = new Set<BookingRecord["status"]>([
+  "pending",
+  "upcoming",
+  "active",
+  "confirmed",
+]);
+
+function bookingBlocksAvailability(booking: BookingRecord) {
+  return availabilityBlockingBookingStatuses.has(booking.status);
+}
+
+function normalizeBookingDate(value?: string | null) {
+  const candidate = normalizeOptionalString(value);
+  const parsedMs = Date.parse(`${candidate}T00:00:00.000Z`);
+
+  if (candidate && Number.isFinite(parsedMs)) {
+    return candidate.slice(0, 10);
+  }
+
+  return nowIso().slice(0, 10);
+}
+
+function dateRangeOverlaps(leftStart: string, leftEnd: string, rightStart: string, rightEnd: string) {
+  const firstStartMs = Date.parse(`${leftStart}T00:00:00.000Z`);
+  const firstEndMs = Date.parse(`${leftEnd}T00:00:00.000Z`);
+  const secondStartMs = Date.parse(`${rightStart}T00:00:00.000Z`);
+  const secondEndMs = Date.parse(`${rightEnd}T00:00:00.000Z`);
+
+  return firstStartMs <= secondEndMs && secondStartMs <= firstEndMs;
 }
 
 function mapPaymentFromFirestore(data: Partial<PaymentRecord> & { id?: string }): PaymentRecord {
@@ -1461,6 +1494,37 @@ export async function createBookingRecord(input: {
     throw new Error("Listing not found.");
   }
 
+  const requestedStartDate = normalizeBookingDate(input.startDate);
+  const requestedEndDate = normalizeBookingDate(input.endDate || requestedStartDate);
+
+  if (Date.parse(`${requestedEndDate}T00:00:00.000Z`) < Date.parse(`${requestedStartDate}T00:00:00.000Z`)) {
+    throw new Error("Choose an end date after the start date.");
+  }
+
+  const existingSnapshot = await bookingsCollection().where("listingId", "==", listing.id).get();
+  const activeBookings = existingSnapshot.docs
+    .map((doc) => mapBookingFromFirestore(withFirestoreId(doc.id, doc.data() as BookingRecord)))
+    .filter(bookingBlocksAvailability);
+
+  const duplicateBooking = activeBookings.find(
+    (booking) =>
+      booking.renterUserId === input.renterUserId &&
+      booking.startDate === requestedStartDate &&
+      booking.endDate === requestedEndDate
+  );
+
+  if (duplicateBooking) {
+    return duplicateBooking;
+  }
+
+  const conflictingBooking = activeBookings.find((booking) =>
+    dateRangeOverlaps(requestedStartDate, requestedEndDate, booking.startDate, booking.endDate)
+  );
+
+  if (conflictingBooking) {
+    throw new Error("This equipment already has a booking request for the selected dates. Choose another date or contact support.");
+  }
+
   const timestamp = nowIso();
   const nextBooking: BookingRecord = {
     id: createId("BK"),
@@ -1468,8 +1532,8 @@ export async function createBookingRecord(input: {
     ownerUserId: listing.ownerUserId,
     renterUserId: input.renterUserId,
     status: input.status || "pending",
-    startDate: input.startDate,
-    endDate: input.endDate,
+    startDate: requestedStartDate,
+    endDate: requestedEndDate,
     amount: input.amount,
     createdAt: timestamp,
     updatedAt: timestamp,

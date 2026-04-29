@@ -88,9 +88,12 @@ Required runtime configuration includes:
 - Google sign-in and Google registration are disabled at the application layer. The Google API routes return HTTP 410 and `/register/google-email` redirects to `/register`.
 - Account uniqueness is enforced in Firestore through `auth-identifiers`: one normalized email and one normalized phone number can belong to only one app user.
 - Session cookies are long-lived for normal use; users should remain signed in until logout or cookie expiry.
+- Browser tabs synchronize login/logout state through a local auth-sync channel, so already-open pages refresh after a session changes in another tab.
 - User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.
 - Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
-- Public feature-request, feedback, support, report, partner, and owner-application forms write to Firestore first and mirror to Sheets where configured.
+- Public feature-request, feedback, support, report, partner, and owner-application forms write to Firestore first and mirror to Sheets where configured. `/report` uses its own `report` submission type rather than being stored as a support request.
+- Auth mutations, profile completion, public forms, and bug-report submissions use Firestore-backed rate limits by IP and relevant identifier.
+- Map/satellite selection in Google Maps is persisted per browser and must not be overwritten by a hardcoded map type after the user selects satellite view.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
 

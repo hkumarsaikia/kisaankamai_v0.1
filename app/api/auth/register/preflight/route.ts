@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { withLoggedRoute } from "@/lib/server/bug-reporting";
 import { assertRegistrationIdentifiersAvailable } from "@/lib/server/firebase-data";
+import { HttpError, parseJsonBody } from "@/lib/server/http";
+import { assertRateLimit, buildAuthRateLimitRules } from "@/lib/server/rate-limit";
 
 const DUPLICATE_PHONE_MESSAGE = "Account already exists. Please login with your registered mobile number.";
 const DUPLICATE_EMAIL_MESSAGE = "Account already exists. Please login with your registered phone number.";
@@ -19,13 +22,24 @@ const preflightSchema = z.object({
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export const POST = withLoggedRoute("auth-register-preflight", async (request: NextRequest) => {
   try {
-    const payload = preflightSchema.parse(await request.json());
+    const payload = await parseJsonBody(request, preflightSchema);
+    await assertRateLimit(
+      request,
+      [
+        ...buildAuthRateLimitRules(request, "auth-register-preflight-phone", payload.phone, 5),
+        ...buildAuthRateLimitRules(request, "auth-register-preflight-email", payload.email, 5),
+      ]
+    );
     await assertRegistrationIdentifiersAvailable(payload);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
+
     const message =
       error instanceof z.ZodError
         ? error.issues[0]?.message || "Could not validate registration details."
@@ -37,4 +51,4 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ ok: false, error: message }, { status });
   }
-}
+});

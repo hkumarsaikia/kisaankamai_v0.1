@@ -97,3 +97,98 @@ test("sessions persist beyond the old five-day window and profile photos are par
   assert.match(profileMenuSource, /photoUrl/);
   assert.doesNotMatch(profileMenuSource, /aida-public\/AB6AXuAPynK0ZgVc0Xzw8MYvvIJVEOBk4/);
 });
+
+test("auth state and Google map type stay synchronized across browser tabs", async () => {
+  const [authContextSource, authSyncSource, loginSource, logoutSource, mapSource] = await Promise.all([
+    readFile(new URL("../components/AuthContext.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/client/auth-sync.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/logout/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/MapComponent.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(authSyncSource, /BroadcastChannel/);
+  assert.match(authSyncSource, /kk_auth_sync_event/);
+  assert.match(authContextSource, /subscribeToAuthSyncEvents/);
+  assert.match(authContextSource, /visibilitychange/);
+  assert.match(authContextSource, /pageshow/);
+  assert.match(authContextSource, /router\.refresh/);
+  assert.match(loginSource, /emitAuthSyncEvent\("login"\)/);
+  assert.match(logoutSource, /emitAuthSyncEvent\("logout"\)/);
+
+  assert.match(mapSource, /GOOGLE_MAP_TYPE_STORAGE_KEY/);
+  assert.match(mapSource, /onMapTypeIdChanged/);
+  assert.match(mapSource, /localStorage\.setItem\(GOOGLE_MAP_TYPE_STORAGE_KEY/);
+  assert.doesNotMatch(mapSource, /mapTypeId:\s*"terrain"/);
+});
+
+test("public listings require real owner media and no verified mock defaults", async () => {
+  const [firebaseDataSource, actionSource, editorSource, ownerRegistrationSource] = await Promise.all([
+    readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/actions/local-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/owner-profile/ListEquipmentEditorPage.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-registration/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(firebaseDataSource, /isPublicListingReady/);
+  assert.match(firebaseDataSource, /listing\.imagePaths\.length > 0/);
+  assert.match(firebaseDataSource, /!listing\.coverImage\.includes\("\/assets\/generated\/"\)/);
+  assert.match(actionSource, /Upload at least one real equipment photo before publishing a listing/);
+  assert.match(actionSource, /ownerVerified: false/);
+  assert.doesNotMatch(actionSource, /\/assets\/generated\/hero_tractor\.png/);
+  assert.doesNotMatch(actionSource, /\["Verified"\]/);
+  assert.match(editorSource, /BASE_EQUIPMENT_CATEGORIES/);
+  assert.match(ownerRegistrationSource, /redirect\("\/list-equipment"\)/);
+});
+
+test("report submissions, rate limits, and booking conflicts have backend contracts", async () => {
+  const [
+    reportPageSource,
+    reportRouteSource,
+    validationSource,
+    typeSource,
+    rateLimitSource,
+    loginRouteSource,
+    registerPreflightRouteSource,
+    passwordResetRouteSource,
+    supportRouteSource,
+    bugReportRouteSource,
+    firebaseDataSource,
+    sheetsMirrorSource,
+    operationalDataSource,
+  ] = await Promise.all([
+    readFile(new URL("../app/report/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/forms/report/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/validation/forms.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/local-data/types.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/rate-limit.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/login/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/register/preflight/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/password-reset/request/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/forms/support-request/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/bug-reports/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/sheets-mirror.ts", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/lib/operational-data.mjs", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(reportPageSource, /\/api\/forms\/report/);
+  assert.doesNotMatch(reportPageSource, /\/api\/forms\/support-request/);
+  assert.match(reportRouteSource, /reportSubmissionSchema/);
+  assert.match(reportRouteSource, /type:\s*"report"/);
+  assert.match(validationSource, /reportSubmissionSchema/);
+  assert.match(typeSource, /\|\s*"report"/);
+  assert.match(sheetsMirrorSource, /submission\.type === "report"/);
+  assert.match(operationalDataSource, /"report"/);
+
+  assert.match(rateLimitSource, /RATE_LIMITS_COLLECTION = "rate-limits"/);
+  assert.match(rateLimitSource, /HttpError\(429/);
+  for (const source of [loginRouteSource, registerPreflightRouteSource, passwordResetRouteSource, supportRouteSource, bugReportRouteSource]) {
+    assert.match(source, /assertRateLimit/);
+  }
+
+  assert.match(firebaseDataSource, /availabilityBlockingBookingStatuses/);
+  assert.match(firebaseDataSource, /dateRangeOverlaps/);
+  assert.match(firebaseDataSource, /duplicateBooking/);
+  assert.match(firebaseDataSource, /This equipment already has a booking request for the selected dates/);
+});

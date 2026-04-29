@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { ownerApplicationSchema } from "@/lib/validation/forms";
+import { reportSubmissionSchema } from "@/lib/validation/forms";
 import { withLoggedRoute } from "@/lib/server/bug-reporting";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { createSubmissionRecord } from "@/lib/server/firebase-data";
@@ -11,17 +11,14 @@ import {
 
 export const dynamic = "force-dynamic";
 
-export const POST = withLoggedRoute("forms-owner-application", async (request: NextRequest) => {
-  const payload = await parseJsonBody(request, ownerApplicationSchema);
-  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-owner-application", payload));
+export const POST = withLoggedRoute("forms-report", async (request: NextRequest) => {
+  const payload = await parseJsonBody(request, reportSubmissionSchema);
+  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-report", payload));
 
   const session = await getCurrentSession();
   const submission = await createSubmissionRecord({
-    type: "owner-application",
-    payload: {
-      ...payload,
-      sourcePath: "/list-equipment",
-    } as Record<string, unknown>,
+    type: "report",
+    payload: payload as Record<string, unknown>,
     userId: session?.user.id,
   });
 

@@ -1,7 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getOptionalFirebaseAuthClient } from "@/components/auth/firebase-auth-client";
+import { emitAuthSyncEvent, subscribeToAuthSyncEvents } from "@/lib/client/auth-sync";
 import type { LocalSession, ProfileRecord } from "@/lib/local-data/types";
 
 interface AuthContextType {
@@ -49,23 +51,42 @@ export function AuthProvider({
   children: React.ReactNode;
   initialSession: LocalSession | null;
 }) {
+  const router = useRouter();
   const [session, setSessionState] = useState<LocalSession | null>(initialSession);
   const [loading, setLoading] = useState(false);
+  const refreshInFlight = useRef<Promise<void> | null>(null);
+  const mounted = useRef(false);
 
-  const setSession = (nextSession: LocalSession | null) => {
+  const setSession = useCallback((nextSession: LocalSession | null) => {
     setSessionState(nextSession);
-  };
+  }, []);
 
-  const refreshProfile = async () => {
-    setLoading(true);
-    try {
-      setSessionState(await fetchCurrentSession());
-    } finally {
-      setLoading(false);
+  const refreshProfile = useCallback(async () => {
+    if (refreshInFlight.current) {
+      return refreshInFlight.current;
     }
-  };
 
-  const logout = async () => {
+    const refresh = (async () => {
+      setLoading(true);
+      try {
+        const nextSession = await fetchCurrentSession();
+        if (mounted.current) {
+          setSessionState(nextSession);
+          router.refresh();
+        }
+      } finally {
+        if (mounted.current) {
+          setLoading(false);
+        }
+        refreshInFlight.current = null;
+      }
+    })();
+
+    refreshInFlight.current = refresh;
+    return refresh;
+  }, [router]);
+
+  const logout = useCallback(async () => {
     setLoading(true);
     try {
       await fetch("/api/auth/logout", {
@@ -74,10 +95,42 @@ export function AuthProvider({
       });
       await getOptionalFirebaseAuthClient()?.signOut().catch(() => undefined);
       setSessionState(null);
+      emitAuthSyncEvent("logout");
+      router.refresh();
     } finally {
       setLoading(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    mounted.current = true;
+
+    const unsubscribe = subscribeToAuthSyncEvents(() => {
+      void refreshProfile();
+    });
+
+    const refreshWhenVisible = () => {
+      if (document.visibilityState !== "hidden") {
+        void refreshProfile();
+      }
+    };
+
+    const refreshOnPageShow = () => {
+      void refreshProfile();
+    };
+
+    window.addEventListener("focus", refreshWhenVisible);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    window.addEventListener("pageshow", refreshOnPageShow);
+
+    return () => {
+      mounted.current = false;
+      unsubscribe();
+      window.removeEventListener("focus", refreshWhenVisible);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+      window.removeEventListener("pageshow", refreshOnPageShow);
+    };
+  }, [refreshProfile]);
 
   const value = useMemo<AuthContextType>(
     () => ({
@@ -90,7 +143,7 @@ export function AuthProvider({
       refreshProfile,
       setSession,
     }),
-    [loading, session]
+    [loading, logout, refreshProfile, session, setSession]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

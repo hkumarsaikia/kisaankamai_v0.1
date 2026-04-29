@@ -163,6 +163,8 @@ test("report source removes the requested support and guidance copy only", async
   assert.doesNotMatch(source, /Bilingual support/);
   assert.doesNotMatch(source, /24h Response Goal/);
   assert.doesNotMatch(source, /How to make your report useful/);
+  assert.doesNotMatch(source, /\/api\/forms\/support-request/);
+  assert.match(source, /\/api\/forms\/report/);
   assert.match(source, /Direct Support/);
   assert.match(source, /Submitted/);
 });

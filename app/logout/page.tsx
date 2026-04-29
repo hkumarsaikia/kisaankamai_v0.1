@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { useAuth } from "@/components/AuthContext";
+import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { resolvePortalHref } from "@/lib/workspace-routing.js";
 
 export default function LogoutPage() {
@@ -40,6 +41,7 @@ export default function LogoutPage() {
         throw new Error("Sign out failed. Please try again.");
       }
 
+      emitAuthSyncEvent("logout");
       window.location.href = "/";
     } catch (logoutError) {
       setError(logoutError instanceof Error ? logoutError.message : "Sign out failed. Please try again.");

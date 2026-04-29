@@ -204,7 +204,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
 
   const supportRequests = sortDescendingByDate(
     data.submissions.filter((submission) =>
-      ["support-request", "feature-request", "callback-request", "partner-inquiry", "owner-application"].includes(submission.type)
+      ["support-request", "feature-request", "report", "callback-request", "partner-inquiry", "owner-application"].includes(submission.type)
     ),
     "createdAt"
   ).map((submission) => {
@@ -221,7 +221,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
       phone: payload.phone || payload.mobileNumber || "",
       email: payload.email || "",
       source_path: payload.sourcePath || "",
-      location: payload.location || payload.village || "",
+      location: payload.location || payload.village || payload.district || "",
       equipment_needed: payload.equipmentNeeded || "",
       message: payload.message || payload.description || "",
       payload_json: safeJson(payload),

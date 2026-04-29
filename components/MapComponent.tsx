@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Circle as GoogleCircle,
   GoogleMap,
@@ -13,6 +13,10 @@ import "leaflet/dist/leaflet.css";
 import { Circle as LeafletCircle, MapContainer, Marker as LeafletMarker, Popup, TileLayer, useMap } from "react-leaflet";
 
 let hasConfiguredLeafletRuntime = false;
+const GOOGLE_MAP_TYPE_STORAGE_KEY = "kk_google_map_type";
+const GOOGLE_MAP_TYPES = new Set(["roadmap", "satellite"]);
+
+type PersistedGoogleMapType = "roadmap" | "satellite";
 
 function configureLeafletRuntime() {
   if (typeof window === "undefined" || hasConfiguredLeafletRuntime) {
@@ -305,7 +309,30 @@ function GoogleMapView({
     googleMapsApiKey: apiKey,
   });
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const [mapTypeId, setMapTypeId] = useState<PersistedGoogleMapType>(() => {
+    if (typeof window === "undefined") {
+      return "roadmap";
+    }
+
+    const stored = window.localStorage.getItem(GOOGLE_MAP_TYPE_STORAGE_KEY);
+    return GOOGLE_MAP_TYPES.has(stored || "") ? (stored as PersistedGoogleMapType) : "roadmap";
+  });
   const centerObj = useMemo(() => ({ lat: center[0], lng: center[1] }), [center]);
+
+  const persistMapType = (nextMapTypeId?: string | null) => {
+    if (!GOOGLE_MAP_TYPES.has(nextMapTypeId || "")) {
+      return;
+    }
+
+    const resolved = nextMapTypeId as PersistedGoogleMapType;
+    setMapTypeId(resolved);
+    try {
+      window.localStorage.setItem(GOOGLE_MAP_TYPE_STORAGE_KEY, resolved);
+    } catch {
+      // Keep map interaction working when browser storage is unavailable.
+    }
+  };
 
   if (loadError) {
     return (
@@ -341,18 +368,23 @@ function GoogleMapView({
         center={centerObj}
         zoom={zoom}
         onLoad={(mapInstance) => {
+          mapRef.current = mapInstance;
+          mapInstance.setMapTypeId(mapTypeId);
           if (markers.length > 1) {
             const bounds = new window.google.maps.LatLngBounds();
             markers.forEach((marker) => bounds.extend({ lat: marker.lat, lng: marker.lng }));
             mapInstance.fitBounds(bounds);
           }
         }}
+        onMapTypeIdChanged={() => {
+          persistMapType(mapRef.current?.getMapTypeId());
+        }}
         options={{
           mapTypeControl: showControls,
           zoomControl: showControls,
           streetViewControl: false,
           fullscreenControl: showControls,
-          mapTypeId: "terrain",
+          mapTypeId,
         }}
       >
         {circles.map((circle, index) => (

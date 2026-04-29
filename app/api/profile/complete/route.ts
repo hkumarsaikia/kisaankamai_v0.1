@@ -5,6 +5,7 @@ import { withLoggedRoute } from "@/lib/server/bug-reporting";
 import { normalizeRolePreference, updateLocalProfile } from "@/lib/server/firebase-data";
 import { getAdminDb } from "@/lib/server/firebase-admin";
 import { parseJsonBody } from "@/lib/server/http";
+import { assertRateLimit, buildAuthRateLimitRules } from "@/lib/server/rate-limit";
 import { completeProfileSchema } from "@/lib/validation/forms";
 
 const completeProfileRequestSchema = completeProfileSchema.extend({
@@ -57,6 +58,8 @@ export const GET = withLoggedRoute("profile-complete-get", async () => {
 
 export const POST = withLoggedRoute("profile-complete", async (request: NextRequest) => {
   const payload = await parseJsonBody(request, completeProfileRequestSchema);
+  await assertRateLimit(request, buildAuthRateLimitRules(request, "profile-complete", payload.phone, 10));
+
   const session = await getCurrentSession();
 
   if (!session) {

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { withLoggedRoute } from "@/lib/server/bug-reporting";
+import { HttpError, parseJsonBody } from "@/lib/server/http";
+import { assertRateLimit, buildAuthRateLimitRules } from "@/lib/server/rate-limit";
 import { resolvePasswordResetPhoneInput } from "@/lib/server/password-reset";
 
 const requestSchema = z.object({
@@ -8,9 +11,13 @@ const requestSchema = z.object({
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export const POST = withLoggedRoute("auth-password-reset-request", async (request: NextRequest) => {
   try {
-    const payload = requestSchema.parse(await request.json());
+    const payload = await parseJsonBody(request, requestSchema);
+    await assertRateLimit(
+      request,
+      buildAuthRateLimitRules(request, "auth-password-reset-request", payload.identifier, 5)
+    );
     const target = await resolvePasswordResetPhoneInput(payload.identifier);
 
     return NextResponse.json({
@@ -19,8 +26,12 @@ export async function POST(request: NextRequest) {
       maskedPhone: target.maskedPhone,
     });
   } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
+
     const message =
       error instanceof Error ? error.message : "Could not start password reset.";
     return NextResponse.json({ ok: false, error: message }, { status: 400 });
   }
-}
+});

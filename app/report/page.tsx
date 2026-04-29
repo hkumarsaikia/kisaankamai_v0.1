@@ -72,21 +72,16 @@ export default function ReportPage() {
 
     startTransition(async () => {
       try {
-        await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
+        await postJson<{ ok: boolean; id: string }>("/api/forms/report", {
           fullName: formState.fullName,
           phone: formState.phone,
-          email: undefined,
+          role: formState.role,
+          district: formState.district,
+          bookingId: formState.bookingId,
           category: selectedCategory,
-          message: [
-            `Role: ${formState.role}`,
-            `District: ${formState.district}`,
-            formState.bookingId ? `Booking ID: ${formState.bookingId}` : "",
-            `Urgency: ${formState.urgency}`,
-            `Title: ${formState.title}`,
-            `Description: ${formState.description}`,
-          ]
-            .filter(Boolean)
-            .join("\n"),
+          title: formState.title,
+          description: formState.description,
+          urgency: formState.urgency,
           sourcePath: "/report",
         });
         setSubmitState("success");

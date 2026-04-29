@@ -130,7 +130,7 @@ export function OwnerWorkspaceOverview({
                 <h2 className="text-2xl font-bold text-primary">No new requests yet</h2>
                 <p className="mx-auto mt-2 max-w-sm text-on-surface-variant">Update your pricing or add professional photos to attract more farmers to your equipment.</p>
                 <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                  <Link href="/owner-registration" className="rounded-xl bg-primary px-8 py-3 font-bold text-white transition-all hover:shadow-lg">
+                  <Link href="/list-equipment" className="rounded-xl bg-primary px-8 py-3 font-bold text-white transition-all hover:shadow-lg">
                     Add New Listing
                   </Link>
                   <Link href="/owner-profile" className="rounded-xl border border-surface-container-highest bg-white px-8 py-3 font-bold text-primary transition-all hover:bg-surface">
@@ -246,7 +246,7 @@ export function OwnerWorkspaceOverview({
               <Row label="Village" value={village || "Not set"} />
               <Row label="Pincode" value={pincode || "Not set"} />
             </dl>
-            <Link href="/owner-registration" className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-primary-container">
+            <Link href="/list-equipment" className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-primary-container">
               <span className="material-symbols-outlined text-sm">add</span>
               Add New Listing
             </Link>

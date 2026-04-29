@@ -1,8 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { withLoggedRoute } from "@/lib/server/bug-reporting";
+import { ensureSameOrigin } from "@/lib/server/http";
 
 export const dynamic = "force-dynamic";
 
-export async function POST() {
+export const POST = withLoggedRoute("auth-google-register", async (request: NextRequest) => {
+  ensureSameOrigin(request);
   return NextResponse.json(
     {
       ok: false,
@@ -10,4 +13,4 @@ export async function POST() {
     },
     { status: 410 }
   );
-}
+});

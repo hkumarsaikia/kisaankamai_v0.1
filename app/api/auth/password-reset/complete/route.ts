@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { withLoggedRoute } from "@/lib/server/bug-reporting";
+import { HttpError, parseJsonBody } from "@/lib/server/http";
+import { assertRateLimit, buildAuthRateLimitRules } from "@/lib/server/rate-limit";
 import { completePasswordResetFromIdToken } from "@/lib/server/password-reset";
 
 const completeSchema = z.object({
@@ -10,9 +13,13 @@ const completeSchema = z.object({
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: NextRequest) {
+export const POST = withLoggedRoute("auth-password-reset-complete", async (request: NextRequest) => {
   try {
-    const payload = completeSchema.parse(await request.json());
+    const payload = await parseJsonBody(request, completeSchema);
+    await assertRateLimit(
+      request,
+      buildAuthRateLimitRules(request, "auth-password-reset-complete", payload.idToken, 8)
+    );
     const result = await completePasswordResetFromIdToken(payload);
 
     return NextResponse.json({
@@ -20,8 +27,12 @@ export async function POST(request: NextRequest) {
       uid: result.uid,
     });
   } catch (error) {
+    if (error instanceof HttpError) {
+      throw error;
+    }
+
     const message =
       error instanceof Error ? error.message : "Could not complete password reset.";
     return NextResponse.json({ ok: false, error: message }, { status: 400 });
   }
-}
+});

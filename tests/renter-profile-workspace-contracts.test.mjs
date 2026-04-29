@@ -31,7 +31,9 @@ test("renter-profile routes use the new renter booking board while preserving co
   assert.match(root, /variant="dashboard"/);
   assert.match(bookings, /RenterBookingsBoard/);
   assert.match(bookings, /variant="page"/);
-  assert.match(earnings, /redirect\("\/owner-profile\/earnings"\)/);
+  assert.doesNotMatch(earnings, /redirect\("\/owner-profile\/earnings"\)/);
+  assert.match(earnings, /Renter Activity/);
+  assert.match(earnings, /href="\/renter-profile\/bookings"/);
   assert.match(feedbackSuccess, /primaryHref="\/renter-profile"/);
   assert.match(feedbackSuccess, /secondaryHref="\/renter-profile\/bookings"/);
   assert.doesNotMatch(feedbackSuccess, /OwnerProfileViews/);

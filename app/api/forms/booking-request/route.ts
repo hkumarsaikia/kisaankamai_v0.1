@@ -8,11 +8,17 @@ import {
   getListingById,
 } from "@/lib/server/firebase-data";
 import { parseJsonBody } from "@/lib/server/http";
+import {
+  assertRateLimit,
+  buildPublicFormRateLimitRules,
+} from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export const POST = withLoggedRoute("forms-booking-request", async (request: NextRequest) => {
   const payload = await parseJsonBody(request, bookingRequestSchema);
+  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-booking-request", payload));
+
   const session = await getCurrentSession();
 
   if (!session) {

@@ -285,6 +285,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
   if (
     submission.type === "support-request" ||
     submission.type === "feature-request" ||
+    submission.type === "report" ||
     submission.type === "callback-request" ||
     submission.type === "partner-inquiry" ||
     submission.type === "owner-application"
@@ -305,7 +306,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
             phone: payload.phone || payload.mobileNumber || "",
             email: payload.email || "",
             source_path: payload.sourcePath || "",
-            location: payload.location || payload.village || "",
+            location: payload.location || payload.village || payload.district || "",
             equipment_needed: payload.equipmentNeeded || "",
             message: payload.message || payload.description || "",
             payload_json: safeJson(payload),

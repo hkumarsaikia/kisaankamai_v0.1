@@ -104,7 +104,7 @@ The public site now runs from the repo root on Firebase App Hosting.
 Required services:
 
 1. **Firebase App Hosting** targeting the repo root.
-2. **Firebase Authentication** for session-cookie backed sign-in.
+2. **Firebase Authentication** for phone verification and session-cookie backed sign-in.
 3. **Cloud Firestore** for users, profiles, listings, bookings, payments, saved items, and submissions.
 4. **Cloud Storage** for listing media uploads.
 5. Optional **Google Sheets** workbook plus service account credentials for the best-effort operational mirror.
@@ -112,7 +112,9 @@ Required services:
 7. Firebase Auth **phone test numbers** in Console for deterministic OTP validation.
 8. Firebase Cloud Messaging **Web Push VAPID key** in Console for browser notifications.
 
-Google account registration/login uses the Firebase Auth Google provider. Keep the provider enabled and keep these Authentication authorized domains present: `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com`. The Firebase browser API key referrer allowlist must include the production site and Firebase auth handler origins. The root security headers must allow the Google/Firebase OAuth origins used by Firebase Auth (`accounts.google.com`, `apis.google.com`, and the Firebase auth domain).
+Public account creation and login are phone-only. Users verify a phone number during registration, set a password, and later sign in with the registered mobile number plus password. Optional email is profile metadata only. Google sign-in and Google registration are intentionally disabled in the app; do not enable Google Auth for the public flow unless the product decision changes.
+
+Keep these Firebase Authentication authorized domains present: `kisankamai.com`, `www.kisankamai.com`, and `gokisaan.firebaseapp.com`. The Firebase browser API key referrer allowlist must include the production site and Firebase auth handler origins. Phone Auth must have the required test numbers configured for deterministic verification checks.
 
 ---
 
@@ -120,7 +122,8 @@ Google account registration/login uses the Firebase Auth Google provider. Keep t
 
 - [ ] `PUPPETEER_SKIP_DOWNLOAD=true npm ci` completed without errors.
 - [ ] Firebase environment variables and Admin credentials are set.
-- [ ] Firebase Auth Google provider is enabled and the production custom domains are authorized.
+- [ ] Firebase Auth Phone provider is enabled and the production custom domains are authorized.
+- [ ] Google sign-in/registration remains disabled unless a future product decision explicitly reverses the phone-only contract.
 - [ ] Firebase Console has fictional phone numbers configured:
   - [ ] `+91 90000 00101` with code `123456`
   - [ ] `+91 90000 00102` with code `123456`

@@ -3,6 +3,7 @@
 import { type FormEvent, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
+import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 
 const REGISTER_FIRST_TOAST_MS = 5000;
 
@@ -122,6 +123,7 @@ export default function LoginPage() {
         return;
       }
 
+      emitAuthSyncEvent("login");
       window.location.href = result.redirectTo || "/profile-selection";
     } catch (submitError) {
       setError(submitError instanceof Error ? submitError.message : langText("Login failed.", "लॉगिन अयशस्वी झाले."));

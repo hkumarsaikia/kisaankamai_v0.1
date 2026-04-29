@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import { createListingAction, updateListingAction } from "@/lib/actions/local-data";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
@@ -47,7 +48,7 @@ export function ListEquipmentEditorPage({
       ? uploadedPreviewUrls
       : listing?.galleryImages?.length
         ? listing.galleryImages
-        : ["https://placehold.co/960x720?text=Equipment+Preview"];
+        : [];
 
   useEffect(() => {
     return () => {
@@ -154,10 +155,11 @@ export function ListEquipmentEditorPage({
                     onChange={(event) => updateField("category", event.target.value)}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
                   >
-                    <option value="tractor">Tractor</option>
-                    <option value="harvester">Harvester</option>
-                    <option value="implement">Implement</option>
-                    <option value="seeder">Seeder</option>
+                    {BASE_EQUIPMENT_CATEGORIES.map((category) => (
+                      <option key={category.category} value={category.category}>
+                        {category.name}
+                      </option>
+                    ))}
                   </select>
                 </label>
                 <label className="space-y-2">
@@ -297,7 +299,7 @@ export function ListEquipmentEditorPage({
                     value={formState.tags}
                     onChange={(event) => updateField("tags", event.target.value)}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="e.g. Verified, Fuel Efficient"
+                    placeholder="e.g. Fuel efficient, Operator available"
                     type="text"
                   />
                 </label>
@@ -408,11 +410,21 @@ export function ListEquipmentEditorPage({
             <div className="sticky top-28 space-y-6 self-start">
               <div className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container-lowest shadow-xl">
                 <div className="relative aspect-[4/3]">
-                  <img
-                    className="h-full w-full object-cover"
-                    alt="Equipment live preview"
-                    src={previewImages[0]}
-                  />
+                  {previewImages[0] ? (
+                    <img
+                      className="h-full w-full object-cover"
+                      alt="Equipment live preview"
+                      src={previewImages[0]}
+                    />
+                  ) : (
+                    <div className="flex h-full w-full items-center justify-center bg-surface-container-low text-center">
+                      <div className="px-6">
+                        <span className="material-symbols-outlined text-5xl text-outline">add_photo_alternate</span>
+                        <p className="mt-3 text-sm font-bold text-on-surface">Upload a real equipment photo</p>
+                        <p className="mt-1 text-xs text-on-surface-variant">Public listings need owner-provided images.</p>
+                      </div>
+                    </div>
+                  )}
                   <div className="absolute left-4 top-4 rounded-full bg-surface-container-lowest/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary backdrop-blur font-label">
                     Live Preview
                   </div>

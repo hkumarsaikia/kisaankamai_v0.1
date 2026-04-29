@@ -4,11 +4,17 @@ import { withLoggedRoute } from "@/lib/server/bug-reporting";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { createSubmissionRecord } from "@/lib/server/firebase-data";
 import { parseJsonBody } from "@/lib/server/http";
+import {
+  assertRateLimit,
+  buildPublicFormRateLimitRules,
+} from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export const POST = withLoggedRoute("forms-callback-request", async (request: NextRequest) => {
   const payload = await parseJsonBody(request, callbackRequestSchema);
+  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-callback-request", payload));
+
   const session = await getCurrentSession();
   const submission = await createSubmissionRecord({
     type: "callback-request",

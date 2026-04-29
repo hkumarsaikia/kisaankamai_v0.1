@@ -14,6 +14,7 @@ import {
 } from "@/components/auth/firebase-auth-client";
 import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 import { useLanguage } from "@/components/LanguageContext";
+import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { MAHARASHTRA_DISTRICTS } from "@/lib/auth/india-districts";
 import type { VerificationDocumentRecord } from "@/lib/local-data/types";
 
@@ -267,6 +268,7 @@ export default function RegisterPage() {
         credentials: "include",
       }).catch(() => undefined);
       await auth.signOut().catch(() => undefined);
+      emitAuthSyncEvent("logout");
 
       setStage("verified");
     } catch (authError) {

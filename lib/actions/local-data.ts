@@ -29,6 +29,7 @@ import {
 } from "@/lib/server/local-auth";
 import { resolvePortalHref } from "@/lib/workspace-routing.js";
 import { mirrorAuthEvent } from "@/lib/server/sheets-mirror";
+import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import {
   bookingRequestSchema,
   callbackRequestSchema,
@@ -90,11 +91,27 @@ function revalidateCommonPaths() {
   safeRevalidatePath("/rent-equipment");
   safeRevalidatePath("/owner-profile");
   safeRevalidatePath("/renter-profile");
-  safeRevalidatePath("/owner-registration");
+  safeRevalidatePath("/list-equipment");
   safeRevalidatePath("/support");
   safeRevalidatePath("/feedback");
   safeRevalidatePath("/report");
   safeRevalidatePath("/coming-soon");
+}
+
+function getEquipmentCategoryName(category: string) {
+  const normalized = category.trim().toLowerCase();
+  const baseline = BASE_EQUIPMENT_CATEGORIES.find((item) => item.category === normalized);
+  if (baseline) {
+    return baseline.name;
+  }
+
+  return (
+    normalized
+      .split(/[\s-]+/)
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ") || "Equipment"
+  );
 }
 
 async function runLoggedAction<T>(
@@ -429,8 +446,16 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         return { ok: false, error: "Name, location, description, and price are required." };
       }
 
-      const categoryLabel = `${category.charAt(0).toUpperCase()}${category.slice(1)} • ${name.split(" ")[0]}`;
-      const coverImage = uploads[0]?.publicUrl || "/assets/generated/hero_tractor.png";
+      if (!uploads.length) {
+        return { ok: false, error: "Upload at least one real equipment photo before publishing a listing." };
+      }
+
+      if (!workTypes.length) {
+        return { ok: false, error: "Add at least one work type so renters know what this equipment can do." };
+      }
+
+      const categoryLabel = `${getEquipmentCategoryName(category)} • ${name.split(" ")[0]}`;
+      const coverImage = uploads[0].publicUrl;
 
       const listing = await createListingRecord({
         listingId,
@@ -449,11 +474,11 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         distanceKm: Number(formData.get("distanceKm") || 0),
         ownerName: session.profile.fullName,
         ownerLocation: `${location}, ${district}`,
-        ownerVerified: true,
+        ownerVerified: false,
         coverImage,
-        galleryImages: uploads.length ? uploads.map((upload) => upload.publicUrl) : [coverImage],
-        imagePaths: uploads.length ? uploads.map((upload) => upload.objectPath) : [],
-        tags: tags.length ? tags : ["Verified"],
+        galleryImages: uploads.map((upload) => upload.publicUrl),
+        imagePaths: uploads.map((upload) => upload.objectPath),
+        tags,
         workTypes,
         operatorIncluded: formData.get("operatorIncluded") === "on",
         availableFrom: String(formData.get("availableFrom") || "").trim() || undefined,
@@ -506,6 +531,11 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
         ? uploadedImages.map((upload) => upload.publicUrl)
         : existing.galleryImages;
       const coverImage = uploadedImages[0]?.publicUrl || existing.coverImage;
+      const nextStatus = formData.get("status") === "paused" ? "paused" : "active";
+
+      if (nextStatus === "active" && (!coverImage || !galleryImages.length || !imagePaths.length)) {
+        return { ok: false, error: "Upload at least one real equipment photo before activating this listing." };
+      }
 
       const updatedListing = await updateListingRecord(listingId, session.user.id, {
         name: String(formData.get("name") || existing.name).trim(),
@@ -522,7 +552,7 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
         imagePaths,
         galleryImages,
         coverImage,
-        status: formData.get("status") === "paused" ? "paused" : "active",
+        status: nextStatus,
         tags: String(formData.get("tags") || existing.tags.join(","))
           .split(",")
           .map((value) => value.trim())

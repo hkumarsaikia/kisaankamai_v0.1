@@ -3,12 +3,15 @@ import { withLoggedRoute } from "@/lib/server/bug-reporting";
 import { loginAndCreateSessionDetailed } from "@/lib/server/local-auth";
 import { mirrorAuthEvent } from "@/lib/server/sheets-mirror";
 import { parseJsonBody } from "@/lib/server/http";
+import { assertRateLimit, buildAuthRateLimitRules } from "@/lib/server/rate-limit";
 import { loginInputSchema } from "@/lib/validation/forms";
 
 export const dynamic = "force-dynamic";
 
 export const POST = withLoggedRoute("auth-login", async (request: NextRequest) => {
   const payload = await parseJsonBody(request, loginInputSchema);
+  await assertRateLimit(request, buildAuthRateLimitRules(request, "auth-login", payload.phone));
+
   const result = await loginAndCreateSessionDetailed(payload.phone, payload.password);
 
   if (!result.ok) {

@@ -137,6 +137,21 @@ export const supportRequestSchema = z
   })
   .strict();
 
+export const reportSubmissionSchema = z
+  .object({
+    fullName: z.string().trim().min(2, "Enter your full name.").max(120),
+    phone: tenDigitPhone,
+    role: z.enum(["Renter", "Owner"]),
+    district: z.string().trim().min(2, "Select a district.").max(120),
+    bookingId: z.string().trim().max(80).optional().or(z.literal("")),
+    category: z.string().trim().min(2, "Select a report category.").max(120),
+    title: z.string().trim().min(4, "Enter a short problem title.").max(160),
+    description: z.string().trim().min(10, "Describe what happened.").max(2500),
+    urgency: z.enum(["Low", "Medium", "High Urgent"]).default("Medium"),
+    sourcePath: z.string().trim().min(1).max(120).default("/report"),
+  })
+  .strict();
+
 export const featureRequestSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name.").max(120),
