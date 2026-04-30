@@ -57,10 +57,15 @@ test("Google Maps apply persisted map type without controlling mapTypeId on ever
 test("support page uses the provided contact form shape and removes owner support priority", async () => {
   const support = await readSource("../app/support/page.tsx");
 
+  assert.match(support, /supportHtmlCategories/);
+  assert.match(support, /bg-white\/80 backdrop-blur-xl border border-white shadow-xl/);
+  assert.match(support, /Need urgent help\?/);
+  assert.match(support, /Submit Request/);
   assert.match(support, /How can we help you today\?/);
   assert.match(support, /Need urgent help\?/);
   assert.match(support, /supportContact\.primaryContactName/);
   assert.doesNotMatch(support, /placeholder=\{langText\("Search|Search support topics/);
+  assert.doesNotMatch(support, /Search for answers/);
   assert.doesNotMatch(support, /1800-123-4567|Pune, Maharashtra/);
   assert.match(support, /Contact Us/);
   assert.match(support, /district/);
@@ -82,6 +87,10 @@ test("support page uses the provided contact form shape and removes owner suppor
 test("forgot password uses the supplied reset layout while preserving the reset API flow", async () => {
   const forgot = await readSource("../app/forgot-password/page.tsx");
 
+  assert.match(forgot, /Rooted in Trust/);
+  assert.match(forgot, /विश्वासावर आधारित/);
+  assert.match(forgot, /bg-white\/70 backdrop-blur-md/);
+  assert.match(forgot, /Contact Support/);
   assert.match(forgot, /Reset your password/);
   assert.match(forgot, /Back to Sign In/);
   assert.match(forgot, /Send Reset Code/);
@@ -110,6 +119,11 @@ test("owner benefits uses compact selectors, all Maharashtra districts, and no r
   const ownerBenefits = await readSource("../app/owner-benefits/page.tsx");
   const districtSource = await readSource("../lib/auth/india-districts.ts");
 
+  assert.match(ownerBenefits, /glass-card/);
+  assert.match(ownerBenefits, /bg-gradient-brand/);
+  assert.match(ownerBenefits, /Last Month's Earnings/);
+  assert.match(ownerBenefits, /How Much Could You Earn\?/);
+  assert.match(ownerBenefits, /Average Daily Rate/);
   assert.match(ownerBenefits, /Your Equipment, Your Growth\./);
   assert.match(ownerBenefits, /href="\/login"[\s\S]*Start Now/);
   assert.match(ownerBenefits, /earningsEstimateRef/);
@@ -300,7 +314,7 @@ test("rent equipment pages expose base search, query sort, and compact no-equipm
   assert.match(viewSource, /available-search-panel/);
   assert.match(viewSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
   assert.match(viewSource, /pb-3 md:pb-4/);
-  assert.match(viewSource, /pt-28 md:pt-32/);
+  assert.match(viewSource, /pt-32 md:pt-36/);
   assert.doesNotMatch(viewSource, /pt-24 pb-16/);
   assert.match(pageSource, /balers:\s*\["baler"\]/);
   assert.match(pageSource, /pumps:\s*\["pump"\]/);

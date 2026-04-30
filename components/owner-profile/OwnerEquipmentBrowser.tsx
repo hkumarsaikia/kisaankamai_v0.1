@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useState } from "react";
 
@@ -20,6 +21,7 @@ export function OwnerEquipmentBrowser({
 }: {
   listings: ListingSummary[];
 }) {
+  const { langText } = useLanguage();
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("distance");
 
@@ -62,29 +64,29 @@ export function OwnerEquipmentBrowser({
         <div className="grid gap-4 xl:grid-cols-[1.5fr_0.9fr_auto]">
           <label className="space-y-2">
             <span className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
-              Equipment Search
+              {langText("Equipment Search", "उपकरण शोध")}
             </span>
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-              placeholder="Search by equipment, district, HP, or tag"
+              placeholder={langText("Search by equipment, district, HP, or tag", "उपकरण, जिल्हा, HP किंवा टॅगने शोधा")}
               type="search"
             />
           </label>
 
           <label className="space-y-2">
             <span className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
-              Sort Equipment
+              {langText("Sort Equipment", "उपकरण क्रम लावा")}
             </span>
             <select
               value={sortBy}
               onChange={(event) => setSortBy(event.target.value as SortKey)}
               className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
             >
-              <option value="distance">Closest Distance</option>
-              <option value="hp-high">Highest HP</option>
-              <option value="hp-low">Lowest HP</option>
+              <option value="distance">{langText("Closest Distance", "सर्वात जवळचे अंतर")}</option>
+              <option value="hp-high">{langText("Highest HP", "सर्वाधिक HP")}</option>
+              <option value="hp-low">{langText("Lowest HP", "कमी HP")}</option>
             </select>
           </label>
 
@@ -94,7 +96,7 @@ export function OwnerEquipmentBrowser({
               className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary-container px-6 py-3 text-sm font-bold text-white"
             >
               <span className="material-symbols-outlined text-[18px]">add</span>
-              Add Listing
+              {langText("Add Listing", "लिस्टिंग जोडा")}
             </Link>
           </div>
         </div>
@@ -104,13 +106,16 @@ export function OwnerEquipmentBrowser({
         <div className="flex items-end justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-on-surface dark:text-slate-100">
-              Available Equipment{" "}
+              {langText("Available Equipment", "उपलब्ध उपकरणे")}{" "}
               <span className="font-normal text-on-surface-variant dark:text-slate-400">
-                ({filteredListings.length} Results)
+                ({filteredListings.length} {langText("Results", "निकाल")})
               </span>
             </h2>
             <p className="mt-1 text-sm text-on-surface-variant">
-              Sort your fleet by HP or distance and jump straight into edit or equipment details.
+              {langText(
+                "Sort your fleet by HP or distance and jump straight into edit or equipment details.",
+                "तुमची उपकरणे HP किंवा अंतरानुसार क्रम लावा आणि थेट संपादन किंवा तपशील उघडा."
+              )}
             </p>
           </div>
         </div>
@@ -137,7 +142,7 @@ export function OwnerEquipmentBrowser({
                         : "bg-surface-container text-on-surface"
                     }`}
                   >
-                    {listing.status === "active" ? "Active" : "Paused"}
+                    {listing.status === "active" ? langText("Active", "सक्रिय") : langText("Paused", "थांबवले")}
                   </span>
                 </div>
 
@@ -147,11 +152,11 @@ export function OwnerEquipmentBrowser({
                     <p className="mt-1 font-semibold text-on-surface">{listing.hp}</p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">Distance</p>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">{langText("Distance", "अंतर")}</p>
                     <p className="mt-1 font-semibold text-on-surface">{listing.distanceKm} km</p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">Bookings</p>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">{langText("Bookings", "बुकिंग")}</p>
                     <p className="mt-1 font-semibold text-on-surface">{listing.bookingCount}</p>
                   </div>
                 </div>
@@ -159,7 +164,7 @@ export function OwnerEquipmentBrowser({
                 <div className="flex items-center justify-between text-sm">
                   <div>
                     <p className="font-semibold text-primary-container">₹{listing.pricePerHour}/hr</p>
-                    <p className="text-on-surface-variant">{listing.rating.toFixed(1)} rating</p>
+                    <p className="text-on-surface-variant">{listing.rating.toFixed(1)} {langText("rating", "रेटिंग")}</p>
                   </div>
                   <p className="text-right text-on-surface-variant">
                     {listing.location}, {listing.district}
@@ -171,13 +176,13 @@ export function OwnerEquipmentBrowser({
                     href={`/list-equipment?listingId=${listing.id}`}
                     className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-bold text-on-surface dark:border-slate-700 dark:text-slate-100"
                   >
-                    Edit
+                    {langText("Edit", "संपादन")}
                   </Link>
                   <Link
                     href={`/owner-profile/equipment/${listing.id}`}
                     className="rounded-xl bg-primary-container px-4 py-3 text-center text-sm font-bold text-white"
                   >
-                    Details
+                    {langText("Details", "तपशील")}
                   </Link>
                 </div>
               </div>
@@ -187,9 +192,12 @@ export function OwnerEquipmentBrowser({
 
         {!filteredListings.length ? (
           <div className="rounded-[1.75rem] border border-dashed border-outline-variant bg-surface-container-low p-8 text-center">
-            <h3 className="text-2xl font-black text-primary">No equipment matched this search</h3>
+            <h3 className="text-2xl font-black text-primary">{langText("No equipment matched this search", "या शोधाशी जुळणारी उपकरणे नाहीत")}</h3>
             <p className="mt-3 text-sm text-on-surface-variant">
-              Try another keyword or sort order to find the listing you want to manage.
+              {langText(
+                "Try another keyword or sort order to find the listing you want to manage.",
+                "व्यवस्थापित करायची लिस्टिंग शोधण्यासाठी दुसरा शब्द किंवा क्रम वापरा."
+              )}
             </p>
           </div>
         ) : null}

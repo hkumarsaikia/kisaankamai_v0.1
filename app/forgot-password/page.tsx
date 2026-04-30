@@ -13,8 +13,9 @@ import {
   RESET_PHONE_E164_KEY,
   setResetStorageItem,
 } from "@/components/auth/password-reset-storage";
+import { assetPath } from "@/lib/site";
 
-const fieldImage = "/assets/generated/modern_farm_tech.png";
+const fieldImage = assetPath("/assets/generated/modern_farm_tech.png");
 
 type PasswordResetLookupResponse = {
   ok?: boolean;
@@ -25,7 +26,7 @@ type PasswordResetLookupResponse = {
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
-  const { langText, text } = useLanguage();
+  const { langText } = useLanguage();
   const [identifier, setIdentifier] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -77,7 +78,6 @@ export default function ForgotPasswordPage() {
       }
 
       clearPasswordResetStorage();
-
       const writesSucceeded = [
         setResetStorageItem(RESET_IDENTIFIER_KEY, trimmedIdentifier),
         setResetStorageItem(RESET_PHONE_E164_KEY, payload.phoneE164),
@@ -106,127 +106,99 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="kk-auth-page flex flex-1 pt-24">
-      <section className="relative hidden w-1/2 items-center justify-center overflow-hidden bg-surface-container-high md:flex">
-        <div
-          className="absolute inset-0 hidden bg-cover bg-center md:block"
-          style={{
-            backgroundImage: `url("${fieldImage}")`,
-          }}
-        >
+    <main className="kk-auth-page flex min-h-[calc(100vh-5rem)] flex-col bg-background pt-20 text-on-background md:flex-row">
+      <section className="relative hidden overflow-hidden bg-surface-container-highest md:flex md:w-1/2 lg:w-7/12">
+        <div className="absolute inset-0 z-0">
+          <img
+            alt="Cinematic shot of a sun-drenched agricultural field."
+            className="h-full w-full object-cover object-center blur-sm"
+            src={fieldImage}
+          />
           <div className="kk-dark-image-overlay" />
         </div>
-        <div className="kk-auth-card relative z-10 mx-6 max-w-md bg-white/82 p-10 text-center shadow-xl backdrop-blur-2xl dark:bg-surface-container-lowest/82">
-          <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-primary-container/20 text-primary">
+        <div className="relative z-10 mt-auto p-12 text-on-primary">
+          <div className="mb-6 flex items-center gap-3">
             <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
-              lock_reset
+              agriculture
             </span>
+            <h1 className="font-display text-3xl font-bold tracking-tight">Kisan Kamai</h1>
           </div>
-          <h2 className="font-headline text-2xl font-bold text-primary">
-            {text("Password Help", { cacheKey: "forgot-password.hero-title" })}
-          </h2>
-          <p className="mt-3 leading-relaxed text-on-surface-variant">
-            {text("Reset access through the registered email or mobile number linked to your Kisan Kamai account.", {
-              cacheKey: "forgot-password.hero-body",
-            })}
+          <p className="max-w-md text-lg leading-relaxed opacity-90">
+            {langText(
+              "Rooted in Trust. Empowering rural agriculture with modern equipment access.",
+              "विश्वासावर आधारित. आधुनिक उपकरणांसह ग्रामीण शेतीला सक्षम करणे."
+            )}
           </p>
         </div>
       </section>
 
-      <section className="relative flex w-full items-center justify-center overflow-hidden bg-surface-container-low px-6 py-12 md:w-1/2">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-20 blur-sm"
-          style={{
-            backgroundImage: `url("${fieldImage}")`,
-          }}
-        />
-        <div className="kk-auth-card relative z-10 w-full max-w-md bg-white/86 p-8 shadow-xl backdrop-blur-2xl dark:bg-surface-container-lowest/86 md:p-12">
+      <section className="relative z-10 flex w-full items-center justify-center bg-background/50 p-6 sm:p-12 md:w-1/2 lg:w-5/12">
+        <div className="kk-auth-card flex w-full max-w-md flex-col rounded-3xl border border-white/40 bg-white/70 backdrop-blur-md p-10 shadow-[0_8px_32px_0_rgba(0,37,26,0.08)] transition-all duration-300 dark:border-slate-800 dark:bg-slate-900/80 sm:p-12">
           <Link
-            className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-primary transition-all hover:underline"
+            className="mb-10 inline-flex w-max items-center text-xs font-label font-medium uppercase tracking-wider text-on-surface-variant/70 transition-all duration-300 hover:text-primary"
             href="/login"
           >
-            <span className="material-symbols-outlined text-lg">arrow_back</span>
+            <span className="material-symbols-outlined mr-1.5 text-base opacity-70">arrow_back</span>
             {langText("Back to Sign In", "साइन इनकडे परत जा")}
           </Link>
-          <div className="mb-10 text-center">
-            <div className="mb-6 flex justify-center md:hidden">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-lg">
-                <span className="material-symbols-outlined text-2xl text-on-primary">agriculture</span>
-              </div>
-            </div>
-            <h1 className="font-headline text-3xl font-extrabold leading-tight text-on-surface">
-              {langText("Reset your password", "तुमचा पासवर्ड रीसेट करा")}
-            </h1>
-            <p className="mt-4 text-base leading-relaxed text-on-surface-variant">
-              {PHONE_RESET_OTP_ENABLED
-                ? langText(
-                    "Enter your registered email or mobile number. We will send the reset OTP to the registered mobile number before allowing a password change.",
-                    "तुमचा नोंदणीकृत ईमेल किंवा मोबाईल नंबर टाका. पासवर्ड बदलण्यापूर्वी नोंदणीकृत मोबाईल नंबरवर रीसेट ओटीपी पाठवला जाईल."
-                  )
-                : resetUnavailableMessage}
+
+          <div className="mb-8">
+            <h2 className="mb-3 font-display text-4xl font-extrabold leading-none tracking-tight text-primary">
+              {langText("Reset your password", "पासवर्ड रीसेट करा")}
+            </h2>
+            <p className="max-w-[90%] text-sm leading-relaxed text-on-surface-variant">
+              {langText(
+                "Enter your registered mobile number or email address to continue the secure reset.",
+                "सुरक्षित रीसेट सुरू ठेवण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर किंवा ईमेल पत्ता प्रविष्ट करा."
+              )}
             </p>
           </div>
 
-          <form className="space-y-8" onSubmit={handleSubmit}>
-            <div className="space-y-2">
-              <label className="block px-1 text-sm font-semibold text-on-surface">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <label className="block space-y-2">
+              <span className="mb-1 block text-xs font-label font-bold uppercase tracking-widest text-on-surface/60">
                 {langText("Email or Mobile Number", "ईमेल किंवा मोबाईल नंबर")}
-              </label>
-              <div className="relative group">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <span className="material-symbols-outlined text-outline transition-colors group-focus-within:text-primary">
-                    contact_mail
-                  </span>
+              </span>
+              <div className="relative">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <span className="material-symbols-outlined text-outline-variant">contact_mail</span>
                 </div>
                 <input
-                  className="kk-auth-input block pl-12"
-                  name="contact"
-                  placeholder={langText("e.g. rahul@example.com or +91 90000 00000", "उदा. rahul@example.com किंवा +९१ ९०००० ०००००")}
+                  className="block w-full rounded-xl border border-outline-variant/40 bg-white/50 py-4 pl-10 pr-4 font-body text-on-surface shadow-sm transition-all duration-300 placeholder:text-on-surface-variant/40 focus:border-primary focus:ring-2 focus:ring-primary/10 dark:bg-slate-950 dark:text-white"
+                  id="contact-input"
+                  name="contact-input"
+                  placeholder={langText("Registered phone or user@example.com", "नोंदणीकृत फोन किंवा user@example.com")}
                   type="text"
                   value={identifier}
                   onChange={(event) => {
                     setIdentifier(event.target.value);
-                    setError("");
+                    if (error) setError("");
                   }}
-                  disabled={isSubmitting}
                 />
               </div>
-            </div>
+            </label>
 
             {error ? <FormNotice tone="error">{error}</FormNotice> : null}
-            {!PHONE_RESET_OTP_ENABLED && !error ? <FormNotice tone="error">{resetUnavailableMessage}</FormNotice> : null}
 
             <button
-              className="kk-flow-button flex w-full items-center justify-center gap-3 rounded-full bg-gradient-to-br from-primary to-primary-container py-4 text-lg font-bold text-on-primary shadow-xl shadow-primary/10 disabled:cursor-not-allowed disabled:opacity-70"
+              className="kk-flow-button mt-10 flex w-full items-center justify-center rounded-xl bg-primary px-6 py-4 text-base font-label font-semibold text-on-primary shadow-[0_4px_14px_0_rgba(0,37,26,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_0_rgba(0,37,26,0.4)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:translate-y-0"
               type="submit"
-              disabled={isSubmitting || !PHONE_RESET_OTP_ENABLED}
-              data-loading={isSubmitting ? "true" : "false"}
+              disabled={isSubmitting}
               aria-busy={isSubmitting}
             >
               {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
-              <span>{isSubmitting ? langText("Checking account...", "खाते तपासत आहे...") : langText("Send Reset Code", "रीसेट कोड पाठवा")}</span>
-              <span className="material-symbols-outlined text-xl">send</span>
+              {isSubmitting ? langText("Checking account...", "खाते तपासत आहे...") : langText("Send Reset Code", "रीसेट कोड पाठवा")}
+              <span className="material-symbols-outlined ml-3 text-sm">arrow_forward_ios</span>
             </button>
           </form>
 
-          <div className="mt-12 text-center">
-            <div className="flex items-center justify-center gap-2 text-on-surface-variant">
-              <span>{langText("Remember your password?", "तुमचा पासवर्ड आठवतोय?")}</span>
-              <Link className="font-bold text-primary transition-all hover:underline" href="/login">
-                {langText("Sign In", "साइन इन करा")}
+          <div className="mt-12 border-t border-outline-variant/20 pt-8 text-center">
+            <p className="text-sm text-on-surface-variant">
+              {langText("Need help?", "मदत हवी आहे?")}{" "}
+              <Link className="font-semibold text-primary underline decoration-primary/20 underline-offset-4 transition-colors hover:text-secondary" href="/support">
+                {langText("Contact Support", "सपोर्टशी संपर्क साधा")}
               </Link>
-            </div>
-          </div>
-
-          <div className="mt-16 border-t border-outline-variant/20 pt-8">
-            <div className="flex items-center justify-center gap-1.5 rounded-full border border-secondary-container/20 bg-secondary-container/10 px-3 py-1">
-              <span className="material-symbols-outlined text-sm text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                verified
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-on-secondary-container">
-                {langText("Reset uses your registered account contact", "रीसेट नोंदणीकृत खात्याच्या संपर्कावर आधारित आहे")}
-              </span>
-            </div>
+            </p>
           </div>
         </div>
       </section>

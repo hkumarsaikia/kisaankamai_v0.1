@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
 import type { EquipmentRecord } from "@/lib/equipment";
 import { useState } from "react";
 
@@ -16,6 +17,7 @@ export function RenterEquipmentBrowser({
 }: {
   equipment: EquipmentRecord[];
 }) {
+  const { langText } = useLanguage();
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortKey>("distance");
 
@@ -58,28 +60,28 @@ export function RenterEquipmentBrowser({
         <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
           <label className="space-y-2">
             <span className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
-              Equipment Search
+              {langText("Equipment Search", "उपकरण शोध")}
             </span>
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-              placeholder="Search tractor, location, HP, or work type"
+              placeholder={langText("Search tractor, location, HP, or work type", "ट्रॅक्टर, ठिकाण, HP किंवा कामाचा प्रकार शोधा")}
               type="search"
             />
           </label>
           <label className="space-y-2">
             <span className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
-              Sort Equipment
+              {langText("Sort Equipment", "उपकरणे क्रम लावा")}
             </span>
             <select
               value={sortBy}
               onChange={(event) => setSortBy(event.target.value as SortKey)}
               className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
             >
-              <option value="distance">Closest Distance</option>
-              <option value="hp-high">Highest HP</option>
-              <option value="hp-low">Lowest HP</option>
+              <option value="distance">{langText("Closest Distance", "सर्वात जवळचे अंतर")}</option>
+              <option value="hp-high">{langText("Highest HP", "सर्वाधिक HP")}</option>
+              <option value="hp-low">{langText("Lowest HP", "कमी HP")}</option>
             </select>
           </label>
         </div>
@@ -89,13 +91,16 @@ export function RenterEquipmentBrowser({
         <div className="flex items-end justify-between">
           <div>
             <h2 className="text-xl font-bold text-on-surface dark:text-slate-100">
-              Available Equipment{" "}
+              {langText("Available Equipment", "उपलब्ध उपकरणे")}{" "}
               <span className="font-normal text-on-surface-variant dark:text-slate-400">
-                ({filteredEquipment.length} Results)
+                ({filteredEquipment.length} {langText("Results", "निकाल")})
               </span>
             </h2>
             <p className="mt-1 text-sm text-on-surface-variant">
-              Browse by HP or distance and open the exact equipment detail page from each tile.
+              {langText(
+                "Browse by HP or distance and open the exact equipment detail page from each tile.",
+                "HP किंवा अंतरानुसार उपकरणे पहा आणि प्रत्येक टाइलमधून अचूक तपशील पान उघडा."
+              )}
             </p>
           </div>
         </div>
@@ -121,11 +126,11 @@ export function RenterEquipmentBrowser({
                     <p className="mt-1 font-semibold text-on-surface">{item.hp}</p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">Distance</p>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">{langText("Distance", "अंतर")}</p>
                     <p className="mt-1 font-semibold text-on-surface">{item.distanceKm} km</p>
                   </div>
                   <div>
-                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">Rate</p>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-on-surface-variant">{langText("Rate", "दर")}</p>
                     <p className="mt-1 font-semibold text-on-surface">₹{item.pricePerHour}</p>
                   </div>
                 </div>
@@ -134,7 +139,7 @@ export function RenterEquipmentBrowser({
                     ₹{item.pricePerHour}/hr
                   </p>
                   <Link href={`/renter-profile/equipment/${item.id}`} className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white">
-                    View Details
+                    {langText("View Details", "तपशील पहा")}
                   </Link>
                 </div>
               </div>

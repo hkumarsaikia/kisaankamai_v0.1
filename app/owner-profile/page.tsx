@@ -1,4 +1,5 @@
 import { AppLink as Link } from "@/components/AppLink";
+import { LocalizedText } from "@/components/LocalizedText";
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
 import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
@@ -37,15 +38,21 @@ export default async function OwnerProfilePage() {
       <div className="space-y-8">
         <section className="grid gap-4 md:grid-cols-3">
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">Active Listings</p>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">
+              <LocalizedText en="Active Listings" mr="सक्रिय लिस्टिंग" />
+            </p>
             <p className="mt-3 text-4xl font-black text-primary">{activeListings}</p>
           </div>
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">Open Bookings</p>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">
+              <LocalizedText en="Open Bookings" mr="खुली बुकिंग" />
+            </p>
             <p className="mt-3 text-4xl font-black text-primary">{openBookings}</p>
           </div>
           <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">Paid Earnings</p>
+            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">
+              <LocalizedText en="Paid Earnings" mr="मिळालेली कमाई" />
+            </p>
             <p className="mt-3 text-4xl font-black text-primary">₹{totalEarnings.toLocaleString("en-IN")}</p>
           </div>
         </section>
@@ -53,9 +60,14 @@ export default async function OwnerProfilePage() {
         <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
           <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="border-b border-slate-100 p-6 dark:border-slate-800">
-              <h2 className="text-2xl font-black text-primary">Recent Booking Activity</h2>
+              <h2 className="text-2xl font-black text-primary">
+                <LocalizedText en="Recent Booking Activity" mr="अलीकडील बुकिंग हालचाल" />
+              </h2>
               <p className="mt-2 text-sm text-on-surface-variant">
-                Call renters directly and inspect the linked equipment from the owner workspace.
+                <LocalizedText
+                  en="Call renters directly and inspect the linked equipment from the owner workspace."
+                  mr="मालक वर्कस्पेसमधून भाडेकरूंना थेट कॉल करा आणि संबंधित उपकरण तपासा."
+                />
               </p>
             </div>
             <div className="space-y-4 p-6">
@@ -76,10 +88,10 @@ export default async function OwnerProfilePage() {
                           {booking.listing?.name || "Equipment Booking"}
                         </h3>
                         <p className="mt-1 text-sm text-on-surface-variant dark:text-slate-400">
-                          {booking.renterProfile?.fullName || "Verified renter"}
+                          {booking.renterProfile?.fullName || <LocalizedText en="Verified renter" mr="पडताळलेला भाडेकरू" />}
                         </p>
                         <p className="mt-1 text-sm font-semibold text-primary-container">
-                          {booking.startDate} to {booking.endDate}
+                          {booking.startDate} <LocalizedText en="to" mr="ते" /> {booking.endDate}
                         </p>
                       </div>
                       <span className="rounded-full bg-primary-fixed px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-primary-container">
@@ -93,14 +105,14 @@ export default async function OwnerProfilePage() {
                       className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-on-surface dark:border-slate-700 dark:text-slate-100"
                     >
                       <span className="material-symbols-outlined text-[18px]">call</span>
-                      Call Renter
+                      <LocalizedText en="Call Renter" mr="भाडेकरूला कॉल करा" />
                     </a>
                     <Link
                       href={`/owner-profile/equipment/${booking.listing?.id || booking.listingId}`}
                       className="inline-flex items-center gap-2 rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white"
                     >
                       <span className="material-symbols-outlined text-[18px]">visibility</span>
-                      View Equipment
+                      <LocalizedText en="View Equipment" mr="उपकरण पहा" />
                     </Link>
                   </div>
                 </div>
@@ -112,13 +124,15 @@ export default async function OwnerProfilePage() {
             <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-xl font-black text-primary">Fleet Snapshot</h3>
+                  <h3 className="text-xl font-black text-primary">
+                    <LocalizedText en="Fleet Snapshot" mr="फ्लीट आढावा" />
+                  </h3>
                   <p className="mt-2 text-sm text-on-surface-variant">
-                    Review your most recent listings and jump into edit mode.
+                    <LocalizedText en="Review your most recent listings and jump into edit mode." mr="तुमच्या अलीकडील लिस्टिंग तपासा आणि संपादन सुरू करा." />
                   </p>
                 </div>
                 <Link href="/owner-profile/browse" className="text-sm font-bold text-primary-container hover:underline">
-                  View all
+                  <LocalizedText en="View all" mr="सर्व पहा" />
                 </Link>
               </div>
               <div className="mt-5 space-y-4">
@@ -140,13 +154,13 @@ export default async function OwnerProfilePage() {
                         href={`/list-equipment?listingId=${listing.id}`}
                         className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-on-surface dark:border-slate-700 dark:text-slate-100"
                       >
-                        Edit Listing
+                        <LocalizedText en="Edit Listing" mr="लिस्टिंग संपादित करा" />
                       </Link>
                       <Link
                         href={`/owner-profile/equipment/${listing.id}`}
                         className="rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white"
                       >
-                        Details
+                        <LocalizedText en="Details" mr="तपशील" />
                       </Link>
                     </div>
                   </div>

@@ -3,6 +3,7 @@
 import type { LocalSession, UserRole, VerificationDocumentRecord } from "@/lib/local-data/types";
 import { MAHARASHTRA_DISTRICTS } from "@/lib/auth/india-districts";
 import { useAuth } from "@/components/AuthContext";
+import { useLanguage } from "@/components/LanguageContext";
 import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
@@ -29,6 +30,7 @@ function labelForFamily(family: ProfileSettingsFormProps["family"]) {
 }
 
 export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProps) {
+  const { langText } = useLanguage();
   type WorkspacePreference = "owner" | "renter";
   type SettingsState = {
     fullName: string;
@@ -129,10 +131,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
 
   const submitLabel =
     submitState === "pending"
-      ? "Saving..."
+      ? langText("Saving...", "जतन करत आहे...")
       : submitState === "success"
-        ? "Saved"
-        : "Save Changes";
+        ? langText("Saved", "जतन झाले")
+        : langText("Save Changes", "बदल जतन करा");
 
   const updateField = (
     field: keyof SettingsState,
@@ -185,7 +187,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       };
 
       if (!response.ok || payload.ok === false || !payload.photoUrl) {
-        throw new Error(payload.error || "Could not update profile picture.");
+        throw new Error(payload.error || langText("Could not update profile picture.", "प्रोफाइल फोटो अपडेट करता आला नाही."));
       }
 
       setProfilePhotoUrl(payload.photoUrl);
@@ -193,7 +195,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       emitAuthSyncEvent("session-refresh");
       router.refresh();
     } catch (photoError) {
-      setError(photoError instanceof Error ? photoError.message : "Could not update profile picture.");
+      setError(photoError instanceof Error ? photoError.message : langText("Could not update profile picture.", "प्रोफाइल फोटो अपडेट करता आला नाही."));
     } finally {
       setIsPhotoUploading(false);
       if (profilePhotoInputRef.current) {
@@ -228,7 +230,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     };
 
     if (!response.ok || payload.ok === false || !payload.documents?.length) {
-      throw new Error(payload.error || "Could not upload identity documents.");
+      throw new Error(payload.error || langText("Could not upload identity documents.", "ओळख दस्तऐवज अपलोड करता आले नाहीत."));
     }
 
     const byKind = new Map(
@@ -286,7 +288,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
 
       if (!response.ok || payload.ok === false) {
         setSubmitState("error");
-        setError(payload.error || "Could not update settings.");
+        setError(payload.error || langText("Could not update settings.", "सेटिंग्ज अपडेट करता आल्या नाहीत."));
         return;
       }
 
@@ -300,7 +302,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       window.setTimeout(() => router.refresh(), 650);
       } catch (submitError) {
         setSubmitState("error");
-        setError(submitError instanceof Error ? submitError.message : "Could not update settings.");
+        setError(submitError instanceof Error ? submitError.message : langText("Could not update settings.", "सेटिंग्ज अपडेट करता आल्या नाहीत."));
       }
     });
   };
@@ -312,7 +314,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
           <div className="flex flex-col items-center gap-3 text-center">
             <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-2 border-emerald-500 bg-emerald-100 text-3xl font-black uppercase text-emerald-700 shadow-sm">
               {profilePhotoUrl ? (
-                <img src={profilePhotoUrl} alt="Profile picture preview" className="h-full w-full object-cover" />
+                <img src={profilePhotoUrl} alt={langText("Profile picture preview", "प्रोफाइल फोटो पूर्वावलोकन")} className="h-full w-full object-cover" />
               ) : (
                 (formState.fullName || session.user.name || "K")
                   .trim()
@@ -329,7 +331,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               disabled={isPhotoUploading}
               className="rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:bg-primary disabled:opacity-60"
             >
-              {isPhotoUploading ? "Uploading..." : "Change Profile Picture"}
+              {isPhotoUploading ? langText("Uploading...", "अपलोड करत आहे...") : langText("Change Profile Picture", "प्रोफाइल फोटो बदला")}
             </button>
             <input
               ref={profilePhotoInputRef}
@@ -342,10 +344,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
         </section>
 
         <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h3 className="text-xl font-bold text-primary">Personal Information</h3>
+          <h3 className="text-xl font-bold text-primary">{langText("Personal Information", "वैयक्तिक माहिती")}</h3>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Full Name</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Full Name", "पूर्ण नाव")}</span>
               <input
                 value={formState.fullName}
                 onChange={(event) => updateField("fullName", event.target.value)}
@@ -353,7 +355,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Email</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Email", "ईमेल")}</span>
               <input
                 value={formState.email}
                 readOnly
@@ -361,7 +363,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Phone</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Phone", "फोन")}</span>
               <input
                 value={formState.phone}
                 readOnly
@@ -371,7 +373,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
             </label>
             <label className="space-y-2">
               <span className="text-sm font-semibold text-on-surface">
-                Preferred Workspace
+                {langText("Preferred Workspace", "पसंतीचा वर्कस्पेस")}
               </span>
               <select
                 value={formState.rolePreference}
@@ -385,7 +387,9 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               >
                 {workspaceOptions.map((option) => (
                   <option key={option} value={option}>
-                    {option === "owner" ? "Owner Profile" : "Renter Profile"}
+                    {option === "owner"
+                      ? langText("Owner Profile", "मालक प्रोफाइल")
+                      : langText("Renter Profile", "भाडेकरू प्रोफाइल")}
                   </option>
                 ))}
               </select>
@@ -394,10 +398,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
         </section>
 
         <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h3 className="text-xl font-bold text-primary">Farm Details</h3>
+          <h3 className="text-xl font-bold text-primary">{langText("Farm Details", "शेती तपशील")}</h3>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Village</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Village", "गाव")}</span>
               <input
                 value={formState.village}
                 onChange={(event) => updateField("village", event.target.value)}
@@ -405,13 +409,13 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">District</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("District", "जिल्हा")}</span>
               <select
                 value={extraProfileState.district}
                 onChange={(event) => updateExtraField("district", event.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
               >
-                <option value="">Select district</option>
+                <option value="">{langText("Select district", "जिल्हा निवडा")}</option>
                 {MAHARASHTRA_DISTRICTS.map((district) => (
                   <option key={district} value={district}>
                     {district}
@@ -420,7 +424,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </select>
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Pincode</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Pincode", "पिनकोड")}</span>
               <input
                 value={formState.pincode}
                 onChange={(event) => updateField("pincode", event.target.value)}
@@ -428,7 +432,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               />
             </label>
             <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-semibold text-on-surface">Address</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Address", "पत्ता")}</span>
               <textarea
                 value={formState.address}
                 onChange={(event) => updateField("address", event.target.value)}
@@ -438,7 +442,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
             </label>
             <label className="space-y-2 md:col-span-2">
               <span className="text-sm font-semibold text-on-surface">
-                Field Area (acres)
+                {langText("Field Area (acres)", "शेत क्षेत्र (एकर)")}
               </span>
               <input
                 value={formState.fieldArea}
@@ -450,57 +454,59 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               />
             </label>
             <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-semibold text-on-surface">Types of Farming</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Types of Farming", "शेतीचे प्रकार")}</span>
               <input
                 value={formState.farmingTypes}
                 onChange={(event) => updateField("farmingTypes", event.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-                placeholder="e.g. Rice, Sugarcane, Grapes"
+                placeholder={langText("e.g. Rice, Sugarcane, Grapes", "उदा. तांदूळ, ऊस, द्राक्षे")}
               />
             </label>
           </div>
         </section>
 
         <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h3 className="text-xl font-bold text-primary">Identity Verification (Optional)</h3>
+          <h3 className="text-xl font-bold text-primary">{langText("Identity Verification (Optional)", "ओळख पडताळणी (ऐच्छिक)")}</h3>
           <div className="mt-6 grid gap-5 md:grid-cols-2">
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Verification Status</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Verification Status", "पडताळणी स्थिती")}</span>
               <input
-                value={extraProfileState.verificationStatus === "submitted" ? "Submitted" : "Not submitted"}
+                value={extraProfileState.verificationStatus === "submitted"
+                  ? langText("Submitted", "सबमिट झाले")
+                  : langText("Not submitted", "सबमिट केलेले नाही")}
                 readOnly
                 className="w-full rounded-2xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm text-on-surface-variant dark:border-slate-700 dark:bg-slate-950 dark:text-slate-400"
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Document Type</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Document Type", "दस्तऐवज प्रकार")}</span>
               <select
                 value={extraProfileState.verificationDocumentType}
                 onChange={(event) => updateExtraField("verificationDocumentType", event.target.value)}
                 className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
               >
-                <option value="">Select document type</option>
+                <option value="">{langText("Select document type", "दस्तऐवज प्रकार निवडा")}</option>
                 <option value="Voter ID">Voter ID</option>
                 <option value="Aadhaar Card">Aadhaar Card</option>
                 <option value="PAN Card">PAN Card</option>
                 <option value="Passport">Passport</option>
                 <option value="Driving License">Driving License</option>
-                <option value="Other">Other</option>
+                <option value="Other">{langText("Other", "इतर")}</option>
               </select>
             </label>
             {extraProfileState.verificationDocumentType === "Other" ? (
               <label className="space-y-2 md:col-span-2">
-                <span className="text-sm font-semibold text-on-surface">Specify Other Document Type</span>
+                <span className="text-sm font-semibold text-on-surface">{langText("Specify Other Document Type", "इतर दस्तऐवज प्रकार लिहा")}</span>
                 <input
                   value={customDocumentType}
                   onChange={(event) => setCustomDocumentType(event.target.value)}
                   className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-                  placeholder="Enter document type"
+                  placeholder={langText("Enter document type", "दस्तऐवज प्रकार लिहा")}
                 />
               </label>
             ) : null}
             <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-semibold text-on-surface">Document Number</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Document Number", "दस्तऐवज क्रमांक")}</span>
               <input
                 value={extraProfileState.verificationDocumentNumber}
                 onChange={(event) => updateExtraField("verificationDocumentNumber", event.target.value)}
@@ -508,7 +514,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               />
             </label>
             <label className="space-y-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-950">
-              <span className="text-sm font-semibold text-on-surface">Upload Front Page</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Upload Front Page", "समोरील पान अपलोड करा")}</span>
               <input
                 name="frontDocument"
                 type="file"
@@ -517,11 +523,11 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                 className="block w-full text-sm text-on-surface-variant file:mr-4 file:rounded-xl file:border-0 file:bg-primary-container file:px-4 file:py-2 file:text-sm file:font-bold file:text-white"
               />
               <span className="text-xs text-on-surface-variant">
-                {identityFiles.frontDocument?.name || "Accepted formats: JPG, PNG, PDF"}
+                {identityFiles.frontDocument?.name || langText("Accepted formats: JPG, PNG, PDF", "स्वीकारलेले प्रकार: JPG, PNG, PDF")}
               </span>
             </label>
             <label className="space-y-2 rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-950">
-              <span className="text-sm font-semibold text-on-surface">Upload Back Page</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Upload Back Page", "मागील पान अपलोड करा")}</span>
               <input
                 name="backDocument"
                 type="file"
@@ -530,7 +536,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                 className="block w-full text-sm text-on-surface-variant file:mr-4 file:rounded-xl file:border-0 file:bg-primary-container file:px-4 file:py-2 file:text-sm file:font-bold file:text-white"
               />
               <span className="text-xs text-on-surface-variant">
-                {identityFiles.backDocument?.name || "Accepted formats: JPG, PNG, PDF"}
+                {identityFiles.backDocument?.name || langText("Accepted formats: JPG, PNG, PDF", "स्वीकारलेले प्रकार: JPG, PNG, PDF")}
               </span>
             </label>
           </div>
@@ -544,7 +550,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                   rel="noreferrer"
                   className="flex items-center justify-between rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-primary dark:border-slate-700 dark:bg-slate-950"
                 >
-                  <span>{document.kind === "front" ? "Front Document" : "Back Document"}</span>
+                  <span>{document.kind === "front" ? langText("Front Document", "समोरील दस्तऐवज") : langText("Back Document", "मागील दस्तऐवज")}</span>
                   <span className="truncate pl-4 text-on-surface-variant">{document.name}</span>
                 </a>
               ))}
@@ -556,11 +562,13 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       <aside className="space-y-4 xl:sticky xl:top-28 xl:self-start">
         <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <h3 className="text-lg font-bold text-on-surface dark:text-slate-100">
-            Save Changes
+            {langText("Save Changes", "बदल जतन करा")}
           </h3>
           <p className="mt-2 text-sm text-on-surface-variant dark:text-slate-400">
-            Update your contact details, farm information, district, and saved
-            identity metadata from this panel.
+            {langText(
+              "Update your contact details, farm information, district, and saved identity metadata from this panel.",
+              "या पॅनेलमधून संपर्क तपशील, शेती माहिती, जिल्हा आणि जतन केलेली ओळख माहिती अपडेट करा."
+            )}
           </p>
           <button
             type="button"
@@ -589,12 +597,13 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
 
         <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <p className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant">
-            Workspace
+            {langText("Workspace", "वर्कस्पेस")}
           </p>
           <p className="mt-2 text-sm text-on-surface-variant dark:text-slate-400">
-            You are editing the {labelForFamily(family).toLowerCase()} route.
-            Saving here keeps the shared profile and verification metadata in
-            sync with the account session.
+            {langText(
+              `You are editing the ${labelForFamily(family).toLowerCase()} route. Saving here keeps the shared profile and verification metadata in sync with the account session.`,
+              `तुम्ही ${family === "owner-profile" ? "मालक प्रोफाइल" : "भाडेकरू प्रोफाइल"} मार्ग संपादित करत आहात. येथे जतन केल्याने शेअर केलेले प्रोफाइल आणि पडताळणी माहिती खात्याच्या सत्राशी समक्रमित राहते.`
+            )}
           </p>
         </div>
       </aside>

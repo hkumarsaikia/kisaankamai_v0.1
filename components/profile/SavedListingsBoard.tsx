@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
 import { toggleSavedListingAction } from "@/lib/actions/local-data";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
@@ -11,6 +12,7 @@ type SavedListingsBoardProps = {
 };
 
 export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
+  const { langText } = useLanguage();
   const router = useRouter();
   const [buttonState, setButtonState] = useState<
     Record<string, "idle" | "pending" | "success" | "error">
@@ -26,7 +28,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
       const result = await toggleSavedListingAction(listingId);
       if (!result.ok) {
         setButtonState((current) => ({ ...current, [listingId]: "error" }));
-        setError(result.error || "Could not update saved equipment.");
+        setError(result.error || langText("Could not update saved equipment.", "जतन केलेली उपकरणे अपडेट करता आली नाहीत."));
         return;
       }
 
@@ -45,7 +47,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
       for (const listing of listings) {
         const result = await toggleSavedListingAction(listing.id);
         if (!result.ok) {
-          setError(result.error || "Could not clear saved equipment.");
+          setError(result.error || langText("Could not clear saved equipment.", "जतन केलेली उपकरणे साफ करता आली नाहीत."));
           return;
         }
       }
@@ -58,10 +60,12 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <h2 className="text-3xl font-black text-primary">Saved Equipment</h2>
+          <h2 className="text-3xl font-black text-primary">{langText("Saved Equipment", "जतन केलेली उपकरणे")}</h2>
           <p className="mt-2 text-sm text-on-surface-variant dark:text-slate-400">
-            Review the machines you shortlisted and open their real equipment
-            detail pages.
+            {langText(
+              "Review the machines you shortlisted and open their real equipment detail pages.",
+              "तुम्ही जतन केलेली उपकरणे तपासा आणि त्यांची अचूक तपशील पाने उघडा."
+            )}
           </p>
         </div>
         <button
@@ -70,7 +74,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
           disabled={isPending || !listings.length}
           className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-on-surface disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
         >
-          {isPending ? "Updating..." : "Clear Saved"}
+          {isPending ? langText("Updating...", "अपडेट करत आहे...") : langText("Clear Saved", "जतन केलेले साफ करा")}
         </button>
       </div>
 
@@ -108,7 +112,9 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                     </span>
                   </button>
                   <div className="absolute right-4 top-4 rounded-full bg-primary-container px-3 py-1 text-xs font-bold text-white">
-                    {item.status === "active" ? "Ready to Book" : "Paused"}
+                    {item.status === "active"
+                      ? langText("Ready to Book", "बुकिंगसाठी तयार")
+                      : langText("Paused", "थांबवलेले")}
                   </div>
                 </div>
                 <div className="p-6">
@@ -126,7 +132,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                     </div>
                   </div>
                   <p className="mt-4 text-sm text-on-surface-variant dark:text-slate-400">
-                    {item.location}, {item.district} ({item.distanceKm} km away)
+                    {item.location}, {item.district} ({item.distanceKm} km {langText("away", "दूर")})
                   </p>
                   <div className="mt-5 flex items-center justify-between">
                     <p className="text-lg font-extrabold text-primary-container dark:text-emerald-200">
@@ -136,7 +142,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                       href={`/renter-profile/equipment/${item.id}`}
                       className="rounded-full bg-primary px-5 py-2 text-sm font-bold text-white"
                     >
-                      Details
+                      {langText("Details", "तपशील")}
                     </Link>
                   </div>
                 </div>
@@ -146,16 +152,19 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
         </section>
       ) : (
         <section className="rounded-[1.75rem] border border-dashed border-outline-variant bg-surface-container-low p-8 text-center dark:border-slate-700 dark:bg-slate-950/60">
-          <h3 className="text-2xl font-black text-primary">No saved equipment yet</h3>
+          <h3 className="text-2xl font-black text-primary">{langText("No saved equipment yet", "अजून उपकरणे जतन केलेली नाहीत")}</h3>
           <p className="mt-3 text-sm text-on-surface-variant">
-            Browse equipment and save machines you want to review later.
+            {langText(
+              "Browse equipment and save machines you want to review later.",
+              "उपकरणे शोधा आणि नंतर तपासायची उपकरणे जतन करा."
+            )}
           </p>
           <Link
             href="/renter-profile/browse"
             className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white"
           >
             <span className="material-symbols-outlined text-[18px]">search</span>
-            Browse Equipment
+            {langText("Browse Equipment", "उपकरणे शोधा")}
           </Link>
         </section>
       )}

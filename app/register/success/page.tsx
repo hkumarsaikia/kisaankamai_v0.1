@@ -1,8 +1,11 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
 
 export default function RegisterSuccessPage() {
+  const { langText } = useLanguage();
+
   return (
     <div className="min-h-screen bg-surface font-body text-on-surface flex flex-col">
       <main className="relative flex-grow overflow-hidden pt-24">
@@ -26,13 +29,14 @@ export default function RegisterSuccessPage() {
             </div>
             <div className="space-y-4">
               <h1 className="font-headline text-3xl font-extrabold leading-tight tracking-tight text-primary md:text-4xl">
-                Account Created Successfully
-                <span className="mt-2 block text-2xl font-bold md:text-3xl">खाते यशस्वीरित्या तयार केले</span>
+                {langText("Account Created Successfully", "खाते यशस्वीरित्या तयार केले")}
               </h1>
               <div className="mx-auto my-6 h-px w-24 bg-secondary-container/30" />
               <p className="mx-auto max-w-lg text-sm font-medium leading-relaxed text-on-surface-variant md:text-base">
-                Welcome to the community! Your account is now ready. Please log in to continue.
-                <span className="mt-2 block font-semibold">समुदायामध्ये तुमचे स्वागत आहे! तुमचे खाते आता तयार आहे. पुढे जाण्यासाठी कृपया लॉगिन करा.</span>
+                {langText(
+                  "Welcome to the community! Your account is now ready. Please log in to continue.",
+                  "समुदायामध्ये तुमचे स्वागत आहे! तुमचे खाते आता तयार आहे. पुढे जाण्यासाठी कृपया लॉगिन करा."
+                )}
               </p>
             </div>
 
@@ -41,11 +45,11 @@ export default function RegisterSuccessPage() {
                 href="/login"
                 className="flex min-w-[240px] items-center justify-center gap-3 rounded-xl bg-primary-container px-8 py-4 font-bold text-on-primary-container shadow-lg transition-all hover:bg-primary"
               >
-                <span className="font-headline tracking-wide">Login / लॉगिन करा</span>
+                <span className="font-headline tracking-wide">{langText("Login", "लॉगिन करा")}</span>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
               <Link href="/" className="text-sm font-semibold text-primary-container underline-offset-4 transition-all hover:underline">
-                Back to Homepage / मुख्यपृष्ठावर परत जा
+                {langText("Back to Homepage", "मुख्यपृष्ठावर परत जा")}
               </Link>
             </div>
           </div>

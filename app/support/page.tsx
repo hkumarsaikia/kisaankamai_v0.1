@@ -1,66 +1,73 @@
 "use client";
 
-import { LazyMap } from "@/components/LazyMap";
+import { type FormEvent, useEffect, useState, useTransition } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { postJson } from "@/lib/client/forms";
-import { SUPPORT_HUB_MARKERS } from "@/lib/map-data";
+import { assetPath } from "@/lib/site";
 import { supportContact } from "@/lib/support-contact";
-import { type FormEvent, useEffect, useState, useTransition } from "react";
 
-const supportCategories = [
+const supportHeroImage = assetPath("/assets/generated/farmer_handshake.png");
+
+const supportHtmlCategories = [
   {
-    icon: "key",
-    value: "Renting Equipment",
-    label: { en: "Renting Equipment", mr: "उपकरण भाड्याने घेणे" },
-    description: { en: "Find or book equipment", mr: "उपकरण शोधा किंवा बुक करा" },
+    icon: "person",
+    value: "Account",
+    title: { en: "Account", mr: "खाते" },
+    detail: { en: "Manage your profile, language preferences, and security settings.", mr: "प्रोफाइल, भाषा आणि सुरक्षा सेटिंग्ज व्यवस्थापित करा." },
+    note: { en: "Account management and security.", mr: "खाते व्यवस्थापन आणि सुरक्षा." },
+    halo: "bg-primary-fixed",
+    iconTone: "bg-primary/10 text-primary",
   },
   {
-    icon: "agriculture",
-    value: "Listing Equipment",
-    label: { en: "Listing Equipment", mr: "उपकरण सूचीबद्ध करणे" },
-    description: { en: "Publish owner equipment", mr: "मालकाची उपकरणे प्रकाशित करा" },
+    icon: "calendar_today",
+    value: "Booking Inquiry",
+    title: { en: "Bookings", mr: "बुकिंग" },
+    detail: { en: "Track active rentals, cancellations, and delivery status.", mr: "सक्रिय भाडे, रद्दीकरण आणि वितरण स्थिती तपासा." },
+    note: { en: "Booking status and delivery.", mr: "बुकिंग स्थिती आणि वितरण." },
+    halo: "bg-secondary-fixed",
+    iconTone: "bg-secondary-container/20 text-secondary",
   },
   {
-    icon: "support_agent",
+    icon: "payments",
+    value: "Payment Issue",
+    title: { en: "Payments", mr: "देयके" },
+    detail: { en: "Billing issues, refunds, and payment method support.", mr: "बिलिंग, परतावा आणि पेमेंट पद्धतीसाठी मदत." },
+    note: { en: "Payments and refunds.", mr: "देयके आणि परतावा." },
+    halo: "bg-tertiary-fixed",
+    iconTone: "bg-tertiary-container/10 text-tertiary",
+  },
+  {
+    icon: "build",
     value: "Support Issue",
-    label: { en: "Support Issue", mr: "सपोर्ट समस्या" },
-    description: { en: "General platform support", mr: "सामान्य प्लॅटफॉर्म मदत" },
-  },
-  {
-    icon: "help",
-    value: "Other",
-    label: { en: "Other", mr: "इतर" },
-    description: { en: "Anything else", mr: "इतर कोणतीही मदत" },
+    title: { en: "Platform Issues", mr: "प्लॅटफॉर्म समस्या" },
+    detail: { en: "Report bugs, app crashes, or technical difficulties.", mr: "बग, अॅप क्रॅश किंवा तांत्रिक अडचणी कळवा." },
+    note: { en: "Technical difficulties.", mr: "तांत्रिक अडचणी." },
+    halo: "bg-error-container",
+    iconTone: "bg-error-container/50 text-error",
   },
 ] as const;
 
-const regionalHubs = [
-  {
-    city: "Kalwan",
-    detail: {
-      en: "Northern Maharashtra service hub",
-      mr: "उत्तर महाराष्ट्र सेवा केंद्र",
-    },
-  },
-  {
-    city: "Mukhed",
-    detail: {
-      en: "Nanded-region support headquarters",
-      mr: "नांदेड विभाग सहाय्य मुख्यालय",
-    },
-  },
+const issueOptions = [
+  { value: "Booking Inquiry", label: { en: "Booking Inquiry", mr: "बुकिंग चौकशी" } },
+  { value: "Renting Equipment", label: { en: "Renting Equipment", mr: "उपकरण भाड्याने घेणे" } },
+  { value: "Listing Equipment", label: { en: "Listing Equipment", mr: "उपकरण सूचीबद्ध करणे" } },
+  { value: "Payment Issue", label: { en: "Payment Issue", mr: "पेमेंट समस्या" } },
+  { value: "Equipment Listing Help", label: { en: "Equipment Listing Help", mr: "उपकरण सूची मदत" } },
+  { value: "Support Issue", label: { en: "Platform Issue", mr: "प्लॅटफॉर्म समस्या" } },
+  { value: "Other", label: { en: "Other", mr: "इतर" } },
 ] as const;
 
 export default function SupportPage() {
-  const { langText } = useLanguage();
+  const { langText, text } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState("");
   const [formState, setFormState] = useState({
     fullName: "",
     phone: "",
+    email: "",
     district: "",
-    inquiryType: "Renting Equipment",
+    inquiryType: "Booking Inquiry",
     message: "",
   });
 
@@ -69,7 +76,7 @@ export default function SupportPage() {
       ? langText("Submitting...", "सबमिट करत आहे...")
       : submitState === "success"
         ? langText("Submitted", "सबमिट झाले")
-        : langText("Send Message", "संदेश पाठवा");
+        : langText("Submit Request", "विनंती सबमिट करा");
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -93,6 +100,7 @@ export default function SupportPage() {
         await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
           fullName: formState.fullName,
           phone: formState.phone,
+          email: formState.email,
           category: formState.inquiryType,
           district: formState.district,
           inquiryType: formState.inquiryType,
@@ -102,7 +110,11 @@ export default function SupportPage() {
         setSubmitState("success");
       } catch (submitError) {
         setSubmitState("error");
-        setError(submitError instanceof Error ? submitError.message : langText("Support request failed.", "सहाय्य विनंती अयशस्वी झाली."));
+        setError(
+          submitError instanceof Error
+            ? submitError.message
+            : langText("Support request failed.", "सहाय्य विनंती अयशस्वी झाली.")
+        );
       }
     });
   };
@@ -110,262 +122,225 @@ export default function SupportPage() {
   return (
     <div className="min-h-screen bg-background font-body text-on-background">
       <main className="pt-20">
-        <section className="relative flex min-h-[420px] items-center justify-center overflow-hidden">
-          <img
-            className="absolute inset-0 h-full w-full object-cover"
-            alt="Panoramic sugarcane field in Maharashtra at sunrise"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK2cmkJApn0nVehtGu1-O_Jh3H-OClLodq9_KX4xxh_OGVj2OqUEJYC-MWqpXMUvo8s6YGuo2rAKTsiptklUZYK2GXmxUasToDyjIKYgZ6d2J_Pkgub_7fiQpQNhcEv8VxQuR8hODqErTQw7TKGyWGg3m2JAGHHxB4iYLF2PqEyPLJBNp5wBelH0ryDM7vxtqJjeDkfd2rhmMS92lXx-3DhPg-r4N2sbauY7gJLOnTcq-cElZZkta36SlaL4MJEYWW9Gmijhd13vep"
-          />
-          <div className="kk-banner-image-overlay" />
-          <div className="relative z-10 px-6 text-center">
-            <h1 className="font-headline text-4xl font-extrabold text-white md:text-6xl">
+        <section className="relative flex min-h-[716px] items-center justify-center overflow-hidden bg-primary px-6">
+          <div className="absolute inset-0 z-0">
+            <img
+              alt="Lush green agricultural fields in Maharashtra"
+              className="h-full w-full object-cover object-[center_18%]"
+              src={supportHeroImage}
+            />
+            <div className="kk-banner-image-overlay" />
+          </div>
+          <div className="relative z-10 mx-auto max-w-4xl space-y-8 pt-12 text-center">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 font-label text-sm font-medium tracking-wide text-white/90 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-emerald-400" />
+              {langText("Support Center", "मदत केंद्र")}
+            </div>
+            <h1 className="font-headline text-5xl font-bold leading-tight tracking-tight text-white md:text-7xl">
               {langText("How can we help you today?", "आज आम्ही तुम्हाला कशी मदत करू शकतो?")}
             </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-lg font-semibold text-white/85">
+            <p className="mx-auto max-w-2xl text-lg leading-relaxed text-white/70 md:text-xl">
               {langText(
-                "Reach the Kisan Kamai team for rentals, listings, bookings, and account support.",
-                "भाडे, उपकरण नोंदणी, बुकिंग आणि खाते मदतीसाठी किसान कमाई टीमशी संपर्क करा."
+                "Find quick answers, explore guides, or reach out to our dedicated support team. We're here to keep your farm moving.",
+                "जलद उत्तरे मिळवा, मार्गदर्शक पहा किंवा आमच्या सपोर्ट टीमशी संपर्क साधा. तुमचे शेतीचे काम सुरळीत ठेवण्यासाठी आम्ही येथे आहोत."
               )}
             </p>
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-6 py-16">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
-            {supportCategories.map((category) => {
-              const selected = formState.inquiryType === category.value;
-
-              return (
-                <button
-                  key={category.value}
-                  type="button"
-                  onClick={() => updateField("inquiryType", category.value)}
-                  className={`kk-depth-tile rounded-2xl border p-6 text-center transition-all ${
-                    selected
-                      ? "border-primary bg-primary-container text-white shadow-xl"
-                      : "border-outline-variant bg-surface-container-lowest text-on-surface hover:border-surface-tint hover:shadow-xl"
-                  }`}
-                >
-                  <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary-container text-white">
-                    <span className="material-symbols-outlined text-3xl">{category.icon}</span>
-                  </div>
-                  <h3 className="font-bold">{langText(category.label.en, category.label.mr)}</h3>
-                  <p className={`mt-1 text-sm ${selected ? "text-white/85" : "text-on-surface-variant dark:text-primary-fixed-dim"}`}>
-                    {langText(category.description.en, category.description.mr)}
-                  </p>
-                </button>
-              );
-            })}
+        <section className="relative z-20 mx-auto -mt-16 mb-24 max-w-7xl px-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {supportHtmlCategories.map((category) => (
+              <button
+                key={category.value}
+                type="button"
+                onClick={() => updateField("inquiryType", category.value)}
+                className="group relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl border border-white shadow-xl p-8 text-left shadow-slate-200/50 transition-all duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-black/20"
+              >
+                <div className={`absolute right-0 top-0 -mr-16 -mt-16 h-32 w-32 rounded-bl-full ${category.halo} opacity-20 transition-opacity group-hover:opacity-50`} />
+                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-xl ${category.iconTone} transition-transform group-hover:scale-110`}>
+                  <span className="material-symbols-outlined text-3xl" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    {category.icon}
+                  </span>
+                </div>
+                <h3 className="mb-2 font-headline text-xl font-bold text-on-surface dark:text-white">{text(category.title)}</h3>
+                <p className="mb-4 text-sm text-on-surface-variant dark:text-slate-300">{text(category.detail)}</p>
+                <p className="text-sm text-on-surface-variant opacity-80 dark:text-slate-400">{text(category.note)}</p>
+              </button>
+            ))}
           </div>
         </section>
 
         <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-5">
-          <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-8 shadow-sm lg:col-span-3 md:p-10">
-            <h2 className="text-3xl font-extrabold text-primary">
+          <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-12 lg:col-span-3">
+            <h2 className="mb-2 font-headline text-3xl font-bold text-on-surface dark:text-white">
               {langText("Contact Us", "आमच्याशी संपर्क साधा")}
             </h2>
-            <p className="mb-8 mt-2 text-on-surface-variant">
-              {langText("Our team will contact you as soon as possible.", "आमची टीम लवकरच तुमच्याशी संपर्क साधेल.")}
+            <p className="mb-8 text-on-surface-variant dark:text-slate-300">
+              {langText("We usually respond within 24 hours.", "आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो.")}
             </p>
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <label className="space-y-2">
-                  <span className="text-sm font-semibold text-primary">{langText("Full Name", "पूर्ण नाव")}</span>
+                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
+                    {langText("Full Name", "पूर्ण नाव")}
+                  </span>
                   <input
+                    className="kk-input"
+                    required
+                    placeholder={langText("Your name", "तुमचे नाव")}
                     value={formState.fullName}
                     onChange={(event) => updateField("fullName", event.target.value)}
-                    className="kk-input"
-                    placeholder={langText("Rahul Patil", "राहुल पाटील")}
-                    type="text"
-                    required
                   />
                 </label>
                 <label className="space-y-2">
-                  <span className="text-sm font-semibold text-primary">{langText("Phone", "फोन नंबर")}</span>
+                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
+                    {langText("Phone Number", "फोन नंबर")}
+                  </span>
                   <input
-                    value={formState.phone}
-                    onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))}
                     className="kk-input"
-                    placeholder={langText("Enter 10 digit mobile number", "१० अंकी मोबाईल नंबर टाका")}
-                    type="tel"
-                    inputMode="numeric"
                     required
+                    inputMode="tel"
+                    placeholder="+91"
+                    value={formState.phone}
+                    onChange={(event) => updateField("phone", event.target.value)}
                   />
                 </label>
               </div>
-              <div className="grid gap-6 md:grid-cols-2">
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <label className="space-y-2">
-                  <span className="text-sm font-semibold text-primary">{langText("District or Taluka", "जिल्हा किंवा तालुका")}</span>
+                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
+                    {langText("Email", "ईमेल")}
+                  </span>
                   <input
+                    className="kk-input"
+                    type="email"
+                    placeholder={langText("Optional email", "पर्यायी ईमेल")}
+                    value={formState.email}
+                    onChange={(event) => updateField("email", event.target.value)}
+                  />
+                </label>
+                <label className="space-y-2">
+                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
+                    {langText("District or Taluka", "जिल्हा किंवा तालुका")}
+                  </span>
+                  <input
+                    className="kk-input"
+                    placeholder={langText("Your district", "तुमचा जिल्हा")}
                     value={formState.district}
                     onChange={(event) => updateField("district", event.target.value)}
-                    className="kk-input"
-                    placeholder={langText("e.g., Pune, Baramati", "उदा., पुणे, बारामती")}
-                    type="text"
-                    required
                   />
                 </label>
-                <label className="space-y-2">
-                  <span className="text-sm font-semibold text-primary">{langText("Inquiry Type", "चौकशी प्रकार")}</span>
-                  <select
-                    value={formState.inquiryType}
-                    onChange={(event) => updateField("inquiryType", event.target.value)}
-                    className="kk-input"
-                  >
-                    {supportCategories.map((category) => (
-                      <option key={category.value} value={category.value}>
-                        {langText(category.label.en, category.label.mr)}
-                      </option>
-                    ))}
-                  </select>
-                </label>
               </div>
-              <label className="space-y-2">
-                <span className="text-sm font-semibold text-primary">{langText("Message", "संदेश")}</span>
+
+              <label className="block space-y-2">
+                <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
+                  {langText("Issue Type", "समस्येचा प्रकार")}
+                </span>
+                <select
+                  className="kk-input"
+                  value={formState.inquiryType}
+                  onChange={(event) => updateField("inquiryType", event.target.value)}
+                >
+                  {issueOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {text(option.label)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <label className="block space-y-2">
+                <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
+                  {langText("Message", "संदेश")}
+                </span>
                 <textarea
+                  className="kk-input min-h-32"
+                  required
+                  placeholder={langText("Describe your issue in detail...", "तुमची समस्या सविस्तर लिहा...")}
                   value={formState.message}
                   onChange={(event) => updateField("message", event.target.value)}
-                  className="kk-input min-h-[150px]"
-                  placeholder={langText("Tell us how we can help...", "आम्ही कशी मदत करू शकतो ते सांगा...")}
-                  required
                 />
               </label>
-              {error ? (
-                <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
-                  {error}
-                </div>
-              ) : null}
+
+              {error ? <p className="rounded-xl bg-error-container px-4 py-3 text-sm font-semibold text-error">{error}</p> : null}
+
               <button
-                className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl py-4 text-lg font-bold text-white ${
-                  submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
-                }`}
                 type="submit"
-                disabled={isPending}
-                data-loading={isPending ? "true" : "false"}
-                aria-busy={isPending}
+                aria-label={langText("Send Message", "संदेश पाठवा")}
+                disabled={isPending || submitState === "pending"}
+                className="kk-flow-button inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-8 py-4 font-label font-medium text-on-primary transition-colors hover:bg-primary md:w-auto"
               >
-                {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                {submitState === "pending" ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                {submitState === "success" ? <span className="material-symbols-outlined text-sm">check_circle</span> : null}
                 {submitLabel}
-                <span className="material-symbols-outlined">
-                  {submitState === "success" ? "task_alt" : "send"}
-                </span>
+                <span className="material-symbols-outlined text-sm">arrow_forward</span>
               </button>
             </form>
           </div>
 
           <div className="space-y-6 lg:col-span-2">
-            <div id="direct-channels" className="rounded-3xl bg-primary-container p-8 text-white">
-              <h3 className="text-2xl font-bold">{langText("Direct Channels", "थेट संपर्क")}</h3>
-              <div className="mt-6 space-y-8">
-                <ContactLine icon="call" title={langText("Call Us", "कॉल करा")} primary={supportContact.phoneDisplay} secondary={`${supportContact.serviceHours} ${langText("Daily", "दररोज")}`} />
-                <ContactLine icon="forum" title="WhatsApp" primary={langText(`Chat with ${supportContact.primaryContactName}`, `${supportContact.primaryContactName} यांच्याशी चॅट करा`)} secondary={supportContact.whatsappDisplay} />
-                <ContactLine icon="mail" title={langText("Email", "ईमेल")} primary={supportContact.email} secondary={langText("24/48 hr response", "२४/४८ तासांत प्रतिसाद")} />
-              </div>
-            </div>
-
-          </div>
-        </section>
-
-        <section className="bg-surface-container-low px-6 py-20">
-          <div className="mx-auto flex max-w-7xl flex-col gap-12 md:flex-row md:items-center">
-            <div className="flex-1">
-              <h2 className="text-4xl font-extrabold text-primary">
-                {langText("Regional Support Hubs", "प्रादेशिक सहाय्य केंद्रे")}
+            <div className="flex h-full flex-col justify-center rounded-3xl bg-surface-container p-8 dark:bg-slate-900">
+              <h2 className="mb-6 font-headline text-2xl font-bold text-on-surface dark:text-white">
+                {langText("Need urgent help?", "तातडीची मदत हवी आहे का?")}
               </h2>
-              <p className="mt-6 text-lg leading-relaxed text-on-surface-variant">
-                {langText(
-                  "Current public support coverage is focused on Kalwan and Mukhed.",
-                  "सध्या सार्वजनिक सहाय्य कळवण आणि मुखेड भागांवर केंद्रित आहे."
-                )}
-              </p>
-              <div className="mt-8 space-y-4">
-                {regionalHubs.map((hub) => (
-                  <div key={hub.city} className="kk-depth-tile flex items-center justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6">
-                    <div>
-                      <p className="text-xl font-bold text-primary">{hub.city}</p>
-                      <p className="text-sm text-on-surface-variant">{langText(hub.detail.en, hub.detail.mr)}</p>
-                    </div>
-                    <span className="material-symbols-outlined text-secondary">chevron_right</span>
+              <div className="space-y-6">
+                <div className="kk-deep-cta flex items-start gap-4 rounded-2xl border border-surface-container-high bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-fixed">
+                    <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      call
+                    </span>
                   </div>
-                ))}
-              </div>
-            </div>
-            <div className="flex-1">
-              <div className="overflow-hidden rounded-[2.5rem] border-8 border-surface-container-lowest shadow-2xl">
-                <LazyMap
-                  center={[19.62, 75.58]}
-                  zoom={6}
-                  markers={SUPPORT_HUB_MARKERS}
-                  height="400px"
-                  className="rounded-none"
-                  showControls
-                  deferUntilVisible={false}
-                />
-              </div>
-            </div>
-          </div>
-        </section>
+                  <div>
+                    <h4 className="font-headline font-bold text-on-surface dark:text-white">
+                      {langText("Call Us", "आम्हाला कॉल करा")}
+                    </h4>
+                    <p className="mb-2 text-sm text-on-surface-variant dark:text-slate-300">
+                      {supportContact.primaryContactName} · {supportContact.serviceHours}
+                    </p>
+                    <a className="font-label text-lg font-semibold text-primary hover:underline dark:text-emerald-300" href={supportContact.phoneHref}>
+                      {supportContact.phoneDisplay}
+                    </a>
+                  </div>
+                </div>
 
-        <section className="relative flex min-h-[280px] items-center overflow-hidden">
-          <img
-            className="absolute inset-0 h-full w-full object-cover object-[center_18%]"
-            alt="Smiling Indian farmer standing in a golden wheat field at sunset"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdj-by0sXYvLBIrvGYViSBZkk5i4Nr-zEtpE0S9WPbZKTBOPq7lkgPu1oJ5sgap8nM1Ozpout85-xGpst9bAssJz0A6HWCMDQZW9VbUPBzUy2YAu5Cim_0V_X6iVIYR23J7y7yTHYhcFdbMewyoWe30Qeuu6pyKp8cn9KOnR0g5MZ6wZ5fVAW4r1gzB401zBKPEQN8uQ1fc7XctKpeopjg9mAWI-wEa2v6KvVHVibhPqq2tYH6pv4LJf7RTFlNZ1ZaBl7SN3LKuHEZ"
-          />
-          <div className="kk-banner-image-overlay" />
-          <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-8 px-8 py-12 md:flex-row">
-            <div className="text-white">
-              <h2 className="text-4xl font-extrabold">{langText("Need urgent help?", "तातडीची मदत हवी आहे का?")}</h2>
-              <p className="mt-2 text-xl text-primary-fixed-dim">
-                {langText(
-                  `Call or message ${supportContact.primaryContactName} for direct support.`,
-                  `थेट मदतीसाठी ${supportContact.primaryContactName} यांना कॉल किंवा संदेश करा.`
-                )}
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#direct-channels"
-                className="kk-deep-cta flex items-center gap-2 rounded-2xl px-10 py-5 text-lg font-bold"
-              >
-                <span className="material-symbols-outlined">call</span>
-                {langText("Call Support", "सहाय्याला कॉल करा")}
-              </a>
-              <a
-                href={supportContact.whatsappHref}
-                className="rounded-2xl bg-[#1f9d57] px-10 py-5 text-lg font-bold text-white shadow-xl transition-colors hover:bg-[#178045]"
-              >
-                WhatsApp
-              </a>
+                <div className="flex items-start gap-4 rounded-2xl border border-surface-container-high bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#1f9d57]">
+                    <span className="material-symbols-outlined text-white" style={{ fontVariationSettings: "'FILL' 1" }}>
+                      chat
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="font-headline font-bold text-on-surface dark:text-white">
+                      {langText("WhatsApp Support", "WhatsApp सपोर्ट")}
+                    </h4>
+                    <p className="mb-2 text-sm text-on-surface-variant dark:text-slate-300">
+                      {langText("Quick text assistance", "जलद मजकूर मदत")}
+                    </p>
+                    <a className="flex items-center gap-1 font-label font-semibold text-[#2E7D32] hover:underline" href={supportContact.whatsappHref}>
+                      {langText(`Chat with ${supportContact.primaryContactName}`, `${supportContact.primaryContactName} यांच्याशी चॅट करा`)}
+                      <span className="material-symbols-outlined text-sm">open_in_new</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-8 border-t border-outline-variant/30 pt-8">
+                <h4 className="mb-2 font-headline font-bold text-on-surface dark:text-white">
+                  {langText("Support Coverage", "सपोर्ट कव्हरेज")}
+                </h4>
+                <p className="text-sm leading-relaxed text-on-surface-variant dark:text-slate-300">
+                  {langText(
+                    "Support is available for equipment rentals, owner listings, payments, and account questions across current Maharashtra service areas.",
+                    "सध्याच्या महाराष्ट्र सेवा भागात उपकरण भाडे, मालक लिस्टिंग, पेमेंट आणि खाते प्रश्नांसाठी सपोर्ट उपलब्ध आहे."
+                  )}
+                </p>
+              </div>
             </div>
           </div>
         </section>
       </main>
-    </div>
-  );
-}
-
-function ContactLine({
-  icon,
-  title,
-  primary,
-  secondary,
-}: {
-  icon: string;
-  title: string;
-  primary: string;
-  secondary: string;
-}) {
-  return (
-    <div className="flex items-start gap-4">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
-        <span className="material-symbols-outlined text-white">{icon}</span>
-      </div>
-      <div>
-        <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container">{title}</p>
-        <p className="mt-1 break-words text-xl font-bold">{primary}</p>
-        <p className="text-sm text-white/70">{secondary}</p>
-      </div>
     </div>
   );
 }

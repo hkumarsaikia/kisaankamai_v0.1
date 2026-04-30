@@ -1,4 +1,5 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
+import { LocalizedText } from "@/components/LocalizedText";
 import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
@@ -51,9 +52,14 @@ export default async function OwnerProfileEarningsPage() {
         <section>
           <div className="mb-4 flex items-center justify-between gap-4">
             <div>
-              <h2 className="font-headline text-xl font-bold text-on-surface">Pricing by Equipment</h2>
+              <h2 className="font-headline text-xl font-bold text-on-surface">
+                <LocalizedText en="Pricing by Equipment" mr="उपकरणानुसार किंमत" />
+              </h2>
               <p className="mt-1 text-sm text-on-surface-variant">
-                Review pricing, rating, and booking counts for your live owner listings.
+                <LocalizedText
+                  en="Review pricing, rating, and booking counts for your live owner listings."
+                  mr="तुमच्या सक्रिय मालक लिस्टिंगसाठी किंमत, रेटिंग आणि बुकिंग संख्या तपासा."
+                />
               </p>
             </div>
           </div>
@@ -71,7 +77,9 @@ export default async function OwnerProfileEarningsPage() {
                     src={listing.coverImage}
                   />
                   <div className="absolute right-2 top-2 rounded bg-primary-container px-2 py-1 text-xs font-bold text-on-primary">
-                    {listing.status === "active" ? "Active" : "Paused"}
+                    {listing.status === "active"
+                      ? <LocalizedText en="Active" mr="सक्रिय" />
+                      : <LocalizedText en="Paused" mr="थांबवलेले" />}
                   </div>
                 </div>
                 <div className="flex flex-1 flex-col p-4">
@@ -83,17 +91,23 @@ export default async function OwnerProfileEarningsPage() {
                   <div className="mt-auto rounded-xl border border-outline-variant bg-surface-container-low p-3">
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-xs font-medium text-on-surface-variant">Listed Rate</p>
+                        <p className="text-xs font-medium text-on-surface-variant">
+                          <LocalizedText en="Listed Rate" mr="लिस्ट केलेला दर" />
+                        </p>
                         <p className="font-bold text-on-surface">
                           ₹{listing.pricePerHour.toLocaleString("en-IN")}{" "}
-                          <span className="text-sm font-normal">/ hour</span>
+                          <span className="text-sm font-normal">
+                            <LocalizedText en="/ hour" mr="प्रति तास" />
+                          </span>
                         </p>
                       </div>
                       <div className="text-right text-sm">
                         <p className="font-semibold text-primary-container">
-                          {bookingCountByListing.get(listing.id) || 0} bookings
+                          {bookingCountByListing.get(listing.id) || 0} <LocalizedText en="bookings" mr="बुकिंग" />
                         </p>
-                        <p className="text-on-surface-variant">{listing.rating.toFixed(1)} rating</p>
+                        <p className="text-on-surface-variant">
+                          {listing.rating.toFixed(1)} <LocalizedText en="rating" mr="रेटिंग" />
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -106,9 +120,14 @@ export default async function OwnerProfileEarningsPage() {
         <section className="overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest shadow-sm">
           <div className="flex items-center justify-between border-b border-outline-variant p-5">
             <div>
-              <h2 className="font-headline text-xl font-bold text-on-surface">Rental Income History</h2>
+              <h2 className="font-headline text-xl font-bold text-on-surface">
+                <LocalizedText en="Rental Income History" mr="भाडे उत्पन्न इतिहास" />
+              </h2>
               <p className="mt-1 text-sm text-on-surface-variant">
-                Completed, processing, and refunded owner payments tied to recent bookings.
+                <LocalizedText
+                  en="Completed, processing, and refunded owner payments tied to recent bookings."
+                  mr="अलीकडील बुकिंगशी जोडलेली पूर्ण, प्रक्रियेत आणि परत केलेली मालक पेमेंट्स."
+                />
               </p>
             </div>
           </div>
@@ -116,11 +135,11 @@ export default async function OwnerProfileEarningsPage() {
             <table className="w-full border-collapse text-left">
               <thead>
                 <tr className="border-b border-outline-variant bg-surface-container-low text-sm text-on-surface-variant">
-                  <th className="p-4 font-medium">Date &amp; ID</th>
-                  <th className="p-4 font-medium">Equipment</th>
-                  <th className="p-4 font-medium">Status</th>
-                  <th className="p-4 font-medium">Est. Amount</th>
-                  <th className="p-4 font-medium">Settlement Mode</th>
+                  <th className="p-4 font-medium"><LocalizedText en="Date & ID" mr="दिनांक आणि ID" /></th>
+                  <th className="p-4 font-medium"><LocalizedText en="Equipment" mr="उपकरण" /></th>
+                  <th className="p-4 font-medium"><LocalizedText en="Status" mr="स्थिती" /></th>
+                  <th className="p-4 font-medium"><LocalizedText en="Est. Amount" mr="अंदाजित रक्कम" /></th>
+                  <th className="p-4 font-medium"><LocalizedText en="Settlement Mode" mr="सेटलमेंट पद्धत" /></th>
                 </tr>
               </thead>
               <tbody className="text-sm">
@@ -140,7 +159,7 @@ export default async function OwnerProfileEarningsPage() {
                         <p className="font-medium text-on-surface">{formatPaymentDate(payment.createdAt)}</p>
                         <p className="text-xs text-on-surface-variant">#{payment.bookingId}</p>
                       </td>
-                      <td className="p-4 text-on-surface">{listing?.name || "Equipment Booking"}</td>
+                      <td className="p-4 text-on-surface">{listing?.name || <LocalizedText en="Equipment Booking" mr="उपकरण बुकिंग" />}</td>
                       <td className="p-4">
                         <span className={`inline-flex rounded-full px-2 py-1 text-xs font-bold uppercase ${paymentTone}`}>
                           {payment.status}

@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
 import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import { createListingAction, updateListingAction } from "@/lib/actions/local-data";
 import type { ListingRecord } from "@/lib/local-data/types";
@@ -26,6 +27,7 @@ export function ListEquipmentEditorPage({
   listing,
   defaultVillage = "",
 }: ListEquipmentEditorPageProps) {
+  const { langText } = useLanguage();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
@@ -130,7 +132,7 @@ export function ListEquipmentEditorPage({
 
       const result = listing ? await updateListingAction(formData) : await createListingAction(formData);
       if (!result.ok) {
-        setError(result.error || "Could not save the listing.");
+        setError(result.error || langText("Could not save the listing.", "लिस्टिंग जतन करता आली नाही."));
         setSubmitState("error");
         return;
       }
@@ -146,15 +148,15 @@ export function ListEquipmentEditorPage({
   const submitLabel =
     submitState === "pending"
       ? listing
-        ? "Saving..."
-        : "Publishing..."
+        ? langText("Saving...", "जतन करत आहे...")
+        : langText("Publishing...", "प्रकाशित करत आहे...")
       : submitState === "success"
         ? listing
-          ? "Saved"
-          : "Published"
+          ? langText("Saved", "जतन झाले")
+          : langText("Published", "प्रकाशित झाले")
         : listing
-          ? "Save Changes"
-          : "Publish Listing";
+          ? langText("Save Changes", "बदल जतन करा")
+          : langText("Publish Listing", "लिस्टिंग प्रकाशित करा");
   const currentPreviewImage = previewImages[previewImageIndex] || previewImages[0];
 
   return (
@@ -162,12 +164,20 @@ export function ListEquipmentEditorPage({
       <div className="mx-auto w-full max-w-6xl space-y-8 px-6 py-6 lg:px-10 lg:py-8">
         <div>
           <h1 className="font-headline text-3xl font-extrabold text-primary md:text-4xl">
-            {listing ? "Edit Equipment Listing" : "List New Equipment"}
+            {listing
+              ? langText("Edit Equipment Listing", "उपकरण लिस्टिंग संपादित करा")
+              : langText("List New Equipment", "नवीन उपकरण सूचीबद्ध करा")}
           </h1>
           <p className="mt-2 text-sm text-on-surface-variant">
             {listing
-              ? "Update the saved fields, availability, and live preview before saving."
-              : "Add your equipment details and keep the live preview visible while you scroll."}
+              ? langText(
+                  "Update the saved fields, availability, and live preview before saving.",
+                  "जतन करण्यापूर्वी फील्ड, उपलब्धता आणि लाइव्ह पूर्वावलोकन अपडेट करा."
+                )
+              : langText(
+                  "Add your equipment details and keep the live preview visible while you scroll.",
+                  "तुमच्या उपकरणाचे तपशील जोडा आणि स्क्रोल करताना लाइव्ह पूर्वावलोकन दिसू द्या."
+                )}
           </p>
         </div>
 
@@ -176,11 +186,11 @@ export function ListEquipmentEditorPage({
             <section className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-xl font-bold text-on-surface">
                 <span className="material-symbols-outlined text-secondary">info</span>
-                Basic Information
+                {langText("Basic Information", "मूलभूत माहिती")}
               </h2>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Equipment Type *</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Equipment Type *", "उपकरण प्रकार *")}</span>
                   <select
                     value={formState.category}
                     onChange={(event) => updateField("category", event.target.value)}
@@ -191,23 +201,23 @@ export function ListEquipmentEditorPage({
                         {category.name}
                       </option>
                     ))}
-                    <option value="other">Other</option>
+                    <option value="other">{langText("Other", "इतर")}</option>
                   </select>
                 </label>
                 {formState.category === "other" ? (
                   <label className="space-y-2">
-                    <span className="block font-label text-sm font-medium text-on-surface-variant">Other Equipment Type *</span>
+                    <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Other Equipment Type *", "इतर उपकरण प्रकार *")}</span>
                     <input
                       value={customCategory}
                       onChange={(event) => setCustomCategory(event.target.value)}
                       className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                      placeholder="Enter equipment type"
+                      placeholder={langText("Enter equipment type", "उपकरण प्रकार लिहा")}
                       type="text"
                     />
                   </label>
                 ) : null}
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Brand / Manufacturer</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Brand / Manufacturer", "ब्रँड / उत्पादक")}</span>
                   <input
                     value={formState.brand}
                     onChange={(event) => {
@@ -215,12 +225,12 @@ export function ListEquipmentEditorPage({
                       updateField("name", [event.target.value.trim(), formState.model.trim()].filter(Boolean).join(" "));
                     }}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="e.g. Mahindra"
+                    placeholder={langText("e.g. Mahindra", "उदा. महिंद्रा")}
                     type="text"
                   />
                 </label>
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Model Name *</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Model Name *", "मॉडेल नाव *")}</span>
                   <input
                     value={formState.model}
                     onChange={(event) => {
@@ -228,17 +238,17 @@ export function ListEquipmentEditorPage({
                       updateField("name", [formState.brand.trim(), event.target.value.trim()].filter(Boolean).join(" "));
                     }}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="e.g. 575 DI"
+                    placeholder={langText("e.g. 575 DI", "उदा. 575 DI")}
                     type="text"
                   />
                 </label>
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">HP / Capacity *</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("HP / Capacity *", "HP / क्षमता *")}</span>
                   <input
                     value={formState.hp}
                     onChange={(event) => updateField("hp", event.target.value)}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="e.g. 45 HP"
+                    placeholder={langText("e.g. 45 HP", "उदा. 45 HP")}
                     type="text"
                   />
                 </label>
@@ -248,11 +258,11 @@ export function ListEquipmentEditorPage({
             <section className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-xl font-bold text-on-surface">
                 <span className="material-symbols-outlined text-secondary">payments</span>
-                Pricing
+                {langText("Pricing", "किंमत")}
               </h2>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Hourly Rate (₹) *</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Hourly Rate (₹) *", "प्रति तास दर (₹) *")}</span>
                   <div className="relative">
                     <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-on-surface-variant">₹</span>
                     <input
@@ -265,7 +275,7 @@ export function ListEquipmentEditorPage({
                   </div>
                 </label>
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Minimum Hours</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Minimum Hours", "किमान तास")}</span>
                   <input
                     value={formState.minimumHours}
                     onChange={(event) => updateField("minimumHours", event.target.value)}
@@ -282,8 +292,8 @@ export function ListEquipmentEditorPage({
                     type="checkbox"
                   />
                   <div>
-                    <span className="block text-sm font-medium text-on-surface">Includes Driver/Operator</span>
-                    <span className="block text-xs text-on-surface-variant">Check this if the rate includes an operator.</span>
+                    <span className="block text-sm font-medium text-on-surface">{langText("Includes Driver/Operator", "ड्रायव्हर/ऑपरेटर समाविष्ट")}</span>
+                    <span className="block text-xs text-on-surface-variant">{langText("Check this if the rate includes an operator.", "दरात ऑपरेटर समाविष्ट असल्यास हे निवडा.")}</span>
                   </div>
                 </label>
               </div>
@@ -292,31 +302,31 @@ export function ListEquipmentEditorPage({
             <section className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-xl font-bold text-on-surface">
                 <span className="material-symbols-outlined text-secondary">location_on</span>
-                Location &amp; Service Area
+                {langText("Location & Service Area", "स्थान आणि सेवा क्षेत्र")}
               </h2>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Base Village/Town *</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Base Village/Town *", "मुख्य गाव/शहर *")}</span>
                   <input
                     value={formState.location}
                     onChange={(event) => updateField("location", event.target.value)}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="Enter base location"
+                    placeholder={langText("Enter base location", "मुख्य ठिकाण लिहा")}
                     type="text"
                   />
                 </label>
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">District *</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("District *", "जिल्हा *")}</span>
                   <input
                     value={formState.district}
                     onChange={(event) => updateField("district", event.target.value)}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="e.g. Nashik"
+                    placeholder={langText("e.g. Nashik", "उदा. नाशिक")}
                     type="text"
                   />
                 </label>
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Service Radius (km) *</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Service Radius (km) *", "सेवा त्रिज्या (कि.मी.) *")}</span>
                   <input
                     value={formState.serviceRadius}
                     onChange={(event) => updateField("serviceRadius", event.target.value)}
@@ -328,12 +338,12 @@ export function ListEquipmentEditorPage({
               </div>
               <div className="mt-6 grid gap-6">
                 <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Work Types</span>
+                  <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Work Types", "कामाचे प्रकार")}</span>
                   <input
                     value={formState.workTypes}
                     onChange={(event) => updateField("workTypes", event.target.value)}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="e.g. Ploughing, Harvesting"
+                    placeholder={langText("e.g. Ploughing, Harvesting", "उदा. नांगरणी, कापणी")}
                     type="text"
                   />
                 </label>
@@ -343,7 +353,7 @@ export function ListEquipmentEditorPage({
             <section className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-xl font-bold text-on-surface">
                 <span className="material-symbols-outlined text-secondary">calendar_month</span>
-                Availability
+                {langText("Availability", "उपलब्धता")}
               </h2>
               <div className="space-y-4">
                 <label className="flex items-center gap-3">
@@ -354,7 +364,7 @@ export function ListEquipmentEditorPage({
                     name="availability"
                     type="radio"
                   />
-                  <span className="text-sm font-medium text-on-surface">Available Now</span>
+                  <span className="text-sm font-medium text-on-surface">{langText("Available Now", "आता उपलब्ध")}</span>
                 </label>
                 <label className="flex items-center gap-3">
                   <input
@@ -364,11 +374,11 @@ export function ListEquipmentEditorPage({
                     name="availability"
                     type="radio"
                   />
-                  <span className="text-sm font-medium text-on-surface">Available from specific date</span>
+                  <span className="text-sm font-medium text-on-surface">{langText("Available from specific date", "निश्चित तारखेपासून उपलब्ध")}</span>
                 </label>
                 {formState.availabilityMode === "date" ? (
                   <label className="block space-y-2">
-                    <span className="block font-label text-sm font-medium text-on-surface-variant">Choose availability date</span>
+                    <span className="block font-label text-sm font-medium text-on-surface-variant">{langText("Choose availability date", "उपलब्धतेची तारीख निवडा")}</span>
                     <input
                       value={formState.availableFrom}
                       onChange={(event) => updateField("availableFrom", event.target.value)}
@@ -383,7 +393,7 @@ export function ListEquipmentEditorPage({
             <section className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-xl font-bold text-on-surface">
                 <span className="material-symbols-outlined text-secondary">add_photo_alternate</span>
-                Photos
+                {langText("Photos", "फोटो")}
               </h2>
               <div className="grid gap-4 md:grid-cols-3">
                 {PHOTO_SLOT_LABELS.map((slotLabel, slot) => (
@@ -392,9 +402,9 @@ export function ListEquipmentEditorPage({
                     className="block cursor-pointer rounded-xl border-2 border-dashed border-outline-variant/50 p-6 text-center transition-colors hover:bg-surface-container-low"
                   >
                     <span className="material-symbols-outlined mb-2 text-4xl text-outline">upload_file</span>
-                    <p className="font-body font-bold text-on-surface">{slotLabel}</p>
+                    <p className="font-body font-bold text-on-surface">{langText(slotLabel, `फोटो ${slot + 1}`)}</p>
                     <p className="mt-1 min-h-10 text-xs text-on-surface-variant">
-                      {fileSlots[slot]?.name || "Upload a clear equipment photo"}
+                      {fileSlots[slot]?.name || langText("Upload a clear equipment photo", "स्पष्ट उपकरण फोटो अपलोड करा")}
                     </p>
                     <input
                       className="hidden"
@@ -418,7 +428,7 @@ export function ListEquipmentEditorPage({
                 href="/owner-profile/browse"
                 className="w-full rounded-lg border border-outline px-6 py-3 text-center font-label font-medium text-on-surface-variant transition-colors hover:bg-surface-variant sm:w-auto"
               >
-                Cancel
+                {langText("Cancel", "रद्द करा")}
               </Link>
               <button
                 className={`flex w-full items-center justify-center gap-2 rounded-lg px-8 py-3 font-label font-medium text-on-primary shadow-sm transition-colors sm:w-auto ${
@@ -444,20 +454,20 @@ export function ListEquipmentEditorPage({
                   {currentPreviewImage ? (
                     <img
                       className="h-full w-full object-cover"
-                      alt="Equipment live preview"
+                      alt={langText("Equipment live preview", "उपकरण लाइव्ह पूर्वावलोकन")}
                       src={currentPreviewImage}
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-surface-container-low text-center">
                       <div className="px-6">
                         <span className="material-symbols-outlined text-5xl text-outline">add_photo_alternate</span>
-                        <p className="mt-3 text-sm font-bold text-on-surface">Upload a real equipment photo</p>
-                        <p className="mt-1 text-xs text-on-surface-variant">Public listings need owner-provided images.</p>
+                        <p className="mt-3 text-sm font-bold text-on-surface">{langText("Upload a real equipment photo", "खरा उपकरण फोटो अपलोड करा")}</p>
+                        <p className="mt-1 text-xs text-on-surface-variant">{langText("Public listings need owner-provided images.", "सार्वजनिक लिस्टिंगसाठी मालकाने दिलेले फोटो आवश्यक आहेत.")}</p>
                       </div>
                     </div>
                   )}
                   <div className="absolute left-4 top-4 rounded-full bg-surface-container-lowest/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary backdrop-blur font-label">
-                    Live Preview
+                    {langText("Live Preview", "लाइव्ह पूर्वावलोकन")}
                   </div>
                   {previewImages.length > 1 ? (
                     <>
@@ -469,7 +479,7 @@ export function ListEquipmentEditorPage({
                           )
                         }
                         className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-container-lowest/90 text-primary shadow backdrop-blur transition hover:bg-white"
-                        aria-label="Previous photo"
+                        aria-label={langText("Previous photo", "मागील फोटो")}
                       >
                         <span className="material-symbols-outlined">chevron_left</span>
                       </button>
@@ -481,7 +491,7 @@ export function ListEquipmentEditorPage({
                           )
                         }
                         className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-container-lowest/90 text-primary shadow backdrop-blur transition hover:bg-white"
-                        aria-label="Next photo"
+                        aria-label={langText("Next photo", "पुढील फोटो")}
                       >
                         <span className="material-symbols-outlined">chevron_right</span>
                       </button>
@@ -492,15 +502,15 @@ export function ListEquipmentEditorPage({
                   <div className="mb-2 flex items-start justify-between">
                     <div>
                       <p className="text-xs font-bold uppercase tracking-widest text-secondary font-label">
-                        {formState.category || "Equipment"}
+                        {formState.category || langText("Equipment", "उपकरण")}
                       </p>
                       <h3 className="font-headline text-xl font-extrabold text-primary">
-                        {[formState.brand.trim(), formState.model.trim()].filter(Boolean).join(" ") || formState.name || "Equipment Name"}
+                        {[formState.brand.trim(), formState.model.trim()].filter(Boolean).join(" ") || formState.name || langText("Equipment Name", "उपकरणाचे नाव")}
                       </h3>
                     </div>
                     <div className="text-right">
                       <p className="font-headline text-lg font-black text-primary">₹{formState.pricePerHour || "0"}</p>
-                      <p className="text-[10px] font-bold text-on-surface-variant font-label">PER HOUR</p>
+                      <p className="text-[10px] font-bold text-on-surface-variant font-label">{langText("PER HOUR", "प्रति तास")}</p>
                     </div>
                   </div>
                   <div className="mb-6 flex flex-wrap gap-2">
@@ -511,11 +521,11 @@ export function ListEquipmentEditorPage({
                     ))}
                   </div>
                   <div className="border-t border-outline-variant/30 pt-4 text-sm text-on-surface-variant">
-                    <p>{formState.location || "Location pending"}, {formState.district || "District pending"}</p>
+                    <p>{formState.location || langText("Location pending", "स्थान प्रलंबित")}, {formState.district || langText("District pending", "जिल्हा प्रलंबित")}</p>
                     <p className="mt-2">
                       {formState.availabilityMode === "date" && formState.availableFrom
-                        ? `Available from ${formState.availableFrom}`
-                        : "Available Now"}
+                        ? `${langText("Available from", "पासून उपलब्ध")} ${formState.availableFrom}`
+                        : langText("Available Now", "आता उपलब्ध")}
                     </p>
                   </div>
                 </div>

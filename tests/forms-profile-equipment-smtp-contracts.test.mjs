@@ -194,6 +194,29 @@ test("profile workspace route shells use localized titles and subtitles", async 
   }
 });
 
+test("profile workspace main content uses runtime language hooks instead of static bilingual copy", async () => {
+  const workspaceComponentFiles = [
+    "../components/owner-profile/OwnerEquipmentBrowser.tsx",
+    "../components/profile/OwnerBookingsBoard.tsx",
+    "../components/renter-profile/RenterBookingsBoard.tsx",
+    "../components/renter-profile/RenterEquipmentBrowser.tsx",
+    "../components/profile/SavedListingsBoard.tsx",
+    "../components/profile/ProfileSettingsForm.tsx",
+    "../components/profile/ProfileSupportWorkspace.tsx",
+    "../components/profile/ProfileFeedbackForm.tsx",
+    "../components/profile/ProfileFeedbackSuccessCard.tsx",
+    "../components/owner-profile/ListEquipmentEditorPage.tsx",
+    "../app/owner-profile/earnings/page.tsx",
+    "../app/renter-profile/earnings/page.tsx",
+  ];
+
+  for (const filePath of workspaceComponentFiles) {
+    const source = await readSource(filePath);
+    assert.match(source, /useLanguage|localizedText|LocalizedText|langText|text\(/, `${filePath} must use workspace localization`);
+    assert.doesNotMatch(source, />[^<>{}]*\/\s*[\u0900-\u097F][^<>{}]*</, `${filePath} must not render inline English/Marathi slash copy`);
+  }
+});
+
 test("dark-mode overlays and depth tiles avoid the requested vignette and white glare", async () => {
   const [globals, dropdown, register, forgot, verifyOtp, profileSelection, support, ownerBenefits] =
     await Promise.all([
