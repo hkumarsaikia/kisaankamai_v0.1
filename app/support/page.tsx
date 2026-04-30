@@ -48,14 +48,15 @@ const supportHtmlCategories = [
 ] as const;
 
 const issueOptions = [
-  { value: "Booking Inquiry", label: { en: "Booking Inquiry", mr: "बुकिंग चौकशी" } },
-  { value: "Renting Equipment", label: { en: "Renting Equipment", mr: "उपकरण भाड्याने घेणे" } },
-  { value: "Listing Equipment", label: { en: "Listing Equipment", mr: "उपकरण सूचीबद्ध करणे" } },
-  { value: "Payment Issue", label: { en: "Payment Issue", mr: "पेमेंट समस्या" } },
-  { value: "Equipment Listing Help", label: { en: "Equipment Listing Help", mr: "उपकरण सूची मदत" } },
-  { value: "Support Issue", label: { en: "Platform Issue", mr: "प्लॅटफॉर्म समस्या" } },
-  { value: "Other", label: { en: "Other", mr: "इतर" } },
+  "Select a category",
+  "Booking Inquiry",
+  "Payment Issue",
+  "Equipment Listing Help",
+  "Other",
 ] as const;
+
+const supportFormControlClass =
+  "w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors";
 
 export default function SupportPage() {
   const { langText, text } = useLanguage();
@@ -65,9 +66,7 @@ export default function SupportPage() {
   const [formState, setFormState] = useState({
     fullName: "",
     phone: "",
-    email: "",
-    district: "",
-    inquiryType: "Booking Inquiry",
+    inquiryType: "Select a category",
     message: "",
   });
 
@@ -100,9 +99,7 @@ export default function SupportPage() {
         await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
           fullName: formState.fullName,
           phone: formState.phone,
-          email: formState.email,
           category: formState.inquiryType,
-          district: formState.district,
           inquiryType: formState.inquiryType,
           message: formState.message,
           sourcePath: "/support",
@@ -171,98 +168,64 @@ export default function SupportPage() {
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-5">
-          <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-12 lg:col-span-3">
-            <h2 className="mb-2 font-headline text-3xl font-bold text-on-surface dark:text-white">
-              {langText("Contact Us", "आमच्याशी संपर्क साधा")}
-            </h2>
-            <p className="mb-8 text-on-surface-variant dark:text-slate-300">
-              {langText("We usually respond within 24 hours.", "आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो.")}
+        <section className="mx-auto mb-24 grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-12">
+          <div className="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-surface-container-high">
+            <h2 className="mb-2 font-headline text-3xl font-bold text-on-surface">Send us a message</h2>
+            <p className="mb-8 font-body text-on-surface-variant">
+              We usually respond within 24 hours. / आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो.
             </p>
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <label className="space-y-2">
-                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
-                    {langText("Full Name", "पूर्ण नाव")}
-                  </span>
+                <div className="space-y-2">
+                  <label className="font-label text-sm font-medium text-on-surface">Full Name</label>
                   <input
-                    className="kk-input"
+                    className={supportFormControlClass}
                     required
-                    placeholder={langText("Your name", "तुमचे नाव")}
+                    placeholder="Your name"
+                    type="text"
                     value={formState.fullName}
                     onChange={(event) => updateField("fullName", event.target.value)}
                   />
-                </label>
-                <label className="space-y-2">
-                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
-                    {langText("Phone Number", "फोन नंबर")}
-                  </span>
+                </div>
+                <div className="space-y-2">
+                  <label className="font-label text-sm font-medium text-on-surface">Phone Number</label>
                   <input
-                    className="kk-input"
+                    className={supportFormControlClass}
                     required
-                    inputMode="tel"
                     placeholder="+91"
+                    type="tel"
                     value={formState.phone}
                     onChange={(event) => updateField("phone", event.target.value)}
                   />
-                </label>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <label className="space-y-2">
-                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
-                    {langText("Email", "ईमेल")}
-                  </span>
-                  <input
-                    className="kk-input"
-                    type="email"
-                    placeholder={langText("Optional email", "पर्यायी ईमेल")}
-                    value={formState.email}
-                    onChange={(event) => updateField("email", event.target.value)}
-                  />
-                </label>
-                <label className="space-y-2">
-                  <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
-                    {langText("District or Taluka", "जिल्हा किंवा तालुका")}
-                  </span>
-                  <input
-                    className="kk-input"
-                    placeholder={langText("Your district", "तुमचा जिल्हा")}
-                    value={formState.district}
-                    onChange={(event) => updateField("district", event.target.value)}
-                  />
-                </label>
-              </div>
-
-              <label className="block space-y-2">
-                <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
-                  {langText("Issue Type", "समस्येचा प्रकार")}
-                </span>
+              <div className="space-y-2">
+                <label className="font-label text-sm font-medium text-on-surface">Issue Type</label>
                 <select
-                  className="kk-input"
+                  className={supportFormControlClass}
                   value={formState.inquiryType}
                   onChange={(event) => updateField("inquiryType", event.target.value)}
                 >
                   {issueOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {text(option.label)}
+                    <option key={option} value={option}>
+                      {option}
                     </option>
                   ))}
                 </select>
-              </label>
+              </div>
 
-              <label className="block space-y-2">
-                <span className="font-label text-sm font-medium text-on-surface dark:text-slate-100">
-                  {langText("Message", "संदेश")}
-                </span>
+              <div className="space-y-2">
+                <label className="font-label text-sm font-medium text-on-surface">Message / संदेश</label>
                 <textarea
-                  className="kk-input min-h-32"
+                  className={supportFormControlClass}
                   required
-                  placeholder={langText("Describe your issue in detail...", "तुमची समस्या सविस्तर लिहा...")}
+                  placeholder="Describe your issue in detail..."
+                  rows={4}
                   value={formState.message}
                   onChange={(event) => updateField("message", event.target.value)}
                 />
-              </label>
+              </div>
 
               {error ? <p className="rounded-xl bg-error-container px-4 py-3 text-sm font-semibold text-error">{error}</p> : null}
 
@@ -270,7 +233,7 @@ export default function SupportPage() {
                 type="submit"
                 aria-label={langText("Send Message", "संदेश पाठवा")}
                 disabled={isPending || submitState === "pending"}
-                className="kk-flow-button inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-8 py-4 font-label font-medium text-on-primary transition-colors hover:bg-primary md:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-8 py-4 font-label font-medium text-on-primary transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70 md:w-auto"
               >
                 {submitState === "pending" ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 {submitState === "success" ? <span className="material-symbols-outlined text-sm">check_circle</span> : null}
@@ -280,7 +243,7 @@ export default function SupportPage() {
             </form>
           </div>
 
-          <div className="space-y-6 lg:col-span-2">
+          <div className="space-y-6 lg:col-span-5">
             <div className="flex h-full flex-col justify-center rounded-3xl bg-surface-container p-8 dark:bg-slate-900">
               <h2 className="mb-6 font-headline text-2xl font-bold text-on-surface dark:text-white">
                 {langText("Need urgent help?", "तातडीची मदत हवी आहे का?")}

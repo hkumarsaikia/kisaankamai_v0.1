@@ -67,20 +67,21 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.doesNotMatch(support, /placeholder=\{langText\("Search|Search support topics/);
   assert.doesNotMatch(support, /Search for answers/);
   assert.doesNotMatch(support, /1800-123-4567|Pune, Maharashtra/);
-  assert.match(support, /Contact Us/);
-  assert.match(support, /district/);
+  assert.match(support, /Send us a message/);
+  assert.match(support, /We usually respond within 24 hours\. \/ आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो\./);
   assert.match(support, /inquiryType/);
-  assert.match(support, /Renting Equipment/);
-  assert.match(support, /Listing Equipment/);
-  assert.match(support, /Support Issue/);
+  assert.match(support, /Select a category/);
   assert.match(support, /Send Message/);
+  assert.match(support, /Message \/ संदेश/);
   assert.match(support, /object-\[center_18%\]|object-\[center_35%\]|object-\[center_30%\]/);
   assert.match(support, /scrollTo\(\{\s*top:\s*0/);
-  assert.match(support, /<section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-5">/);
-  assert.match(support, /rounded-3xl border border-outline-variant bg-surface-container-lowest/);
-  assert.match(support, /className="kk-input"/);
+  assert.match(support, /<section className="mx-auto mb-24 grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-12">/);
+  assert.match(support, /lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-surface-container-high/);
+  assert.match(support, /space-y-6 lg:col-span-5/);
+  assert.match(support, /w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors/);
   assert.doesNotMatch(support, /lg:order-2|lg:order-1|order-2|order-1/);
-  assert.doesNotMatch(support, /Send us a message/);
+  assert.doesNotMatch(support, /Contact Us/);
+  assert.doesNotMatch(support, /District or Taluka|Optional email/);
   assert.doesNotMatch(support, /Owner Support Priority/);
 });
 
@@ -370,7 +371,7 @@ test("global depth tiles use pointer-driven smooth 3D variables with reduced mot
 test("app source does not keep visible inline English Marathi slash labels", async () => {
   const offenders = [];
   const pattern =
-    /(Full Name|Phone|Email|Category|Message|Role|Feature Category|Submit|Contact|Support|Owner|Renter)\s*\/\s*[\u0900-\u097F]/;
+    /(Full Name|Phone|Email|Category|Role|Feature Category|Submit|Contact|Support|Owner|Renter)\s*\/\s*[\u0900-\u097F]/;
 
   for (const [file, source] of await readAppSources()) {
     if (pattern.test(source)) {

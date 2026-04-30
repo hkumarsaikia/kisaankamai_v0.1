@@ -41,7 +41,8 @@ test("support page renders one selected language without inline bilingual slash 
 
   assert.match(supportSource, /useLanguage/);
   assert.match(supportSource, /langText/);
-  assert.doesNotMatch(supportSource, /Full Name\s*\/|Phone\s*\/|Email\s*\/|Category\s*\/|Message\s*\/|What happened\?\s*\/|Mobile Number\s*\/|District\s*\/|Description\s*\//);
+  assert.match(supportSource, /Message \/ संदेश/);
+  assert.doesNotMatch(supportSource, /Full Name\s*\/|Phone\s*\/|Email\s*\/|Category\s*\/|What happened\?\s*\/|Mobile Number\s*\/|District\s*\/|Description\s*\//);
 });
 
 test("owner benefits removes the two requested hero templates", async () => {
