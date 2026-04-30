@@ -215,12 +215,22 @@
   .kk-depth-tile {
     position: relative;
     transform-style: preserve-3d;
+    --kk-depth-rotate-x: 0deg;
+    --kk-depth-rotate-y: 0deg;
+    --kk-depth-glare-x: 50%;
+    --kk-depth-glare-y: 0%;
+    --kk-depth-lift: 0px;
     will-change: transform, box-shadow, border-color;
     transition:
-      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
-      box-shadow 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
-      border-color 260ms ease,
-      background-color 260ms ease;
+      transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 300ms ease,
+      background-color 300ms ease;
+    transform:
+      perspective(900px)
+      translate3d(0, var(--kk-depth-lift), 0)
+      rotateX(var(--kk-depth-rotate-x))
+      rotateY(var(--kk-depth-rotate-y));
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.65) inset,
       0 18px 44px -34px rgba(0, 37, 26, 0.75);
@@ -236,11 +246,12 @@
     opacity: 0;
     transform: translateY(8px);
     background:
-      linear-gradient(135deg, rgba(255, 255, 255, 0.38), transparent 36%),
+      radial-gradient(circle at var(--kk-depth-glare-x) var(--kk-depth-glare-y), rgba(255, 255, 255, 0.42), transparent 34%),
+      linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent 36%),
       radial-gradient(circle at 86% 10%, rgba(255, 162, 116, 0.24), transparent 30%);
     transition:
-      opacity 260ms ease,
-      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+      opacity 360ms ease,
+      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .kk-depth-tile > * {
@@ -250,11 +261,16 @@
 
   .kk-depth-tile:hover,
   .kk-depth-tile:focus-within {
-    transform: translateY(-6px) rotateX(1.1deg) rotateY(-1.1deg);
+    --kk-depth-lift: -8px;
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.78) inset,
-      0 34px 80px -44px rgba(0, 37, 26, 0.88),
-      0 18px 40px -32px rgba(147, 74, 36, 0.5);
+      0 34px 84px -44px rgba(0, 37, 26, 0.9),
+      0 18px 42px -32px rgba(147, 74, 36, 0.48);
+  }
+
+  .kk-depth-tile:active {
+    --kk-depth-lift: -2px;
+    transition-duration: 150ms;
   }
 
   .kk-depth-tile:hover::before,

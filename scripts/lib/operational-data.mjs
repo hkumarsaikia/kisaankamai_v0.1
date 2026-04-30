@@ -158,6 +158,12 @@ export function buildOperationalWorkbookRows(data, options = {}) {
     owner_location: listing.ownerLocation || "",
     owner_verified: Boolean(listing.ownerVerified),
     cover_image: listing.coverImage || "",
+    gallery_image_1_url: Array.isArray(listing.galleryImages) ? listing.galleryImages[0] || "" : "",
+    gallery_image_2_url: Array.isArray(listing.galleryImages) ? listing.galleryImages[1] || "" : "",
+    gallery_image_3_url: Array.isArray(listing.galleryImages) ? listing.galleryImages[2] || "" : "",
+    gallery_image_1_path: Array.isArray(listing.imagePaths) ? listing.imagePaths[0] || "" : "",
+    gallery_image_2_path: Array.isArray(listing.imagePaths) ? listing.imagePaths[1] || "" : "",
+    gallery_image_3_path: Array.isArray(listing.imagePaths) ? listing.imagePaths[2] || "" : "",
     gallery_count: Array.isArray(listing.galleryImages) ? listing.galleryImages.length : 0,
     image_path_count: Array.isArray(listing.imagePaths) ? listing.imagePaths.length : 0,
     created_at: listing.createdAt || "",
@@ -273,6 +279,21 @@ export function buildOperationalWorkbookRows(data, options = {}) {
     };
   });
 
+  const newsletterSubscriptions = sortDescendingByDate(
+    data.submissions.filter((submission) => submission.type === "newsletter-subscription"),
+    "createdAt"
+  ).map((submission) => {
+    const payload = submission.payload || {};
+    return {
+      submitted_at: submission.createdAt || "",
+      submission_id: submission.id,
+      user_id: submission.userId || "",
+      email: payload.email || "",
+      source_path: payload.sourcePath || "",
+      payload_json: safeJson(payload),
+    };
+  });
+
   const bugReports = sortDescendingByDate(data.bugReports, "occurredAt").map((report) => ({
     occurred_at: report.occurredAt || "",
     bug_id: report.id,
@@ -310,6 +331,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
       saved_items: savedItems,
       support_requests: supportRequests,
       booking_requests: bookingRequests,
+      newsletter_subscriptions: newsletterSubscriptions,
       feedback,
       bug_reports: bugReports,
     },
@@ -322,6 +344,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
       saved_items: savedItems.length,
       support_requests: supportRequests.length,
       booking_requests: bookingRequests.length,
+      newsletter_subscriptions: newsletterSubscriptions.length,
       feedback: feedback.length,
       bug_reports: bugReports.length,
     },

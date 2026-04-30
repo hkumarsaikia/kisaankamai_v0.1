@@ -119,6 +119,7 @@ export type SubmissionType =
   | "feedback"
   | "owner-application"
   | "partner-inquiry"
+  | "newsletter-subscription"
   | "booking-request";
 
 export interface FormSubmissionRecord {

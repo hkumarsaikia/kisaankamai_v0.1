@@ -11,6 +11,7 @@ import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { createListingMarker } from "@/lib/map-data";
 import { DETAIL_BOOKING_LAYOUT } from "@/lib/equipment-detail-layout.js";
 import { assetPath } from "@/lib/site";
+import { normalizeCategorySlug } from "@/lib/equipment-categories";
 
 const SERVICE_FEE = 150;
 
@@ -36,6 +37,7 @@ export default function EquipmentDetailClient({
   const router = useSmoothRouter();
   const { langText, text } = useLanguage();
   const [error, setError] = useState("");
+  const [ownListingToast, setOwnListingToast] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [formState, setFormState] = useState({
     fieldLocation: "",
@@ -57,6 +59,12 @@ export default function EquipmentDetailClient({
   const ownerBadge = equipment.ownerVerified
     ? langText("Highly Trusted", "उच्च विश्वासार्ह")
     : langText("Pending verification", "पडताळणी बाकी");
+  const categoryLabel = text(equipment.categoryLabel.split("•")[0]?.trim() || "Equipment", {
+    cacheKey: `equipment.${equipment.id}.category`,
+  });
+  const categorySlug = normalizeCategorySlug(
+    equipment.category.endsWith("s") ? equipment.category : `${equipment.category}s`
+  );
 
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -83,6 +91,12 @@ export default function EquipmentDetailClient({
           return;
         }
 
+        if (result.code === "OWN_LISTING") {
+          setOwnListingToast(true);
+          window.setTimeout(() => setOwnListingToast(false), 4000);
+          return;
+        }
+
         setError(
           result.error ||
             langText(
@@ -99,6 +113,12 @@ export default function EquipmentDetailClient({
 
   return (
     <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 pb-12 pt-24 sm:px-6 lg:grid-cols-3 lg:px-8">
+      {ownListingToast ? (
+        <div className="kk-login-toast" role="status">
+          <span className="material-symbols-outlined text-primary">info</span>
+          <span>{langText("You cannot book your own listings", "तुम्ही स्वतःची लिस्टिंग बुक करू शकत नाही")}</span>
+        </div>
+      ) : null}
       <div className="space-y-8 lg:col-span-2">
         <nav className="text-sm text-on-surface-variant">
           <ol className="flex flex-wrap items-center gap-2">
@@ -111,10 +131,16 @@ export default function EquipmentDetailClient({
               <span className="material-symbols-outlined text-xs">chevron_right</span>
             </li>
             <li>
-              <Link href="/rent-equipment" className="hover:text-primary">
-                {text(equipment.categoryLabel.split("•")[0]?.trim() || "Equipment", {
-                  cacheKey: `equipment.${equipment.id}.category`,
-                })}
+              <Link href="/categories" className="hover:text-primary">
+                {langText("Categories", "वर्गवारी")}
+              </Link>
+            </li>
+            <li>
+              <span className="material-symbols-outlined text-xs">chevron_right</span>
+            </li>
+            <li>
+              <Link href={`/rent-equipment?query=${categorySlug}`} className="hover:text-primary">
+                {categoryLabel}
               </Link>
             </li>
             <li>
@@ -133,7 +159,7 @@ export default function EquipmentDetailClient({
               sizes="(min-width: 1280px) 900px, (min-width: 1024px) 66vw, 100vw"
               src={assetPath(equipment.coverImage)}
             />
-            <div className="absolute left-4 top-4 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-primary shadow">
+            <div className="absolute left-4 top-4 flex items-center gap-1 rounded-full bg-surface-container-lowest/90 px-3 py-1 text-xs font-bold text-primary shadow backdrop-blur">
               <span className="material-symbols-outlined text-sm">verified</span>
               {langText("Verified Listing", "सत्यापित लिस्टिंग")}
             </div>
@@ -216,7 +242,7 @@ export default function EquipmentDetailClient({
             ].map((item) => (
               <div
                 key={item.label}
-                className="flex flex-col items-center rounded-xl border border-outline-variant bg-white p-4 text-center shadow-sm"
+                className="kk-depth-tile flex flex-col items-center rounded-xl border border-outline-variant bg-surface-container-lowest p-4 text-center shadow-sm"
               >
                 <span className="material-symbols-outlined mb-2 text-3xl text-primary">{item.icon}</span>
                 <span className="text-sm text-on-surface-variant">{item.label}</span>
@@ -257,7 +283,7 @@ export default function EquipmentDetailClient({
 
         <section>
           <h2 className="mb-4 text-xl font-bold">{langText("Owner Detail", "मालक तपशील")}</h2>
-          <div className="flex flex-col items-center gap-6 rounded-xl border border-outline-variant bg-white p-6 shadow-sm sm:flex-row sm:items-start">
+          <div className="kk-depth-tile flex flex-col items-center gap-6 rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm sm:flex-row sm:items-start">
             <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-surface bg-surface-container text-slate-500 shadow-md">
               <span className="material-symbols-outlined text-3xl">person</span>
             </div>
@@ -272,7 +298,7 @@ export default function EquipmentDetailClient({
                   <span className="material-symbols-outlined text-sm text-amber-500">star</span>
                   <span className="font-bold">{equipment.rating.toFixed(1)}</span>
                 </div>
-                <div className="flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-3 py-1 text-green-700">
+                <div className="flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-3 py-1 text-green-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100">
                   <span className="material-symbols-outlined text-sm">workspace_premium</span>
                   <span className="font-medium">{ownerBadge}</span>
                 </div>
@@ -300,7 +326,7 @@ export default function EquipmentDetailClient({
                 deferUntilVisible={false}
               />
               {equipment.distanceKm > 0 ? (
-                <div className="pointer-events-none absolute bottom-4 left-4 rounded-lg bg-white/90 p-3 text-sm shadow-md">
+                <div className="pointer-events-none absolute bottom-4 left-4 rounded-lg bg-surface-container-lowest/90 p-3 text-sm shadow-md backdrop-blur">
                   <p className="flex items-center gap-1 font-bold text-on-surface">
                     <span className="material-symbols-outlined text-sm text-primary">near_me</span>
                     {equipment.distanceKm} {langText("km Radius", "किमी परिसर")}
@@ -312,7 +338,7 @@ export default function EquipmentDetailClient({
               ) : null}
             </div>
           ) : (
-            <div className="rounded-xl border border-outline-variant bg-white p-6 shadow-sm">
+            <div className="kk-depth-tile rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm">
               <p className="text-xs font-black uppercase tracking-[0.18em] text-secondary">
                 {langText("Map unavailable", "नकाशा उपलब्ध नाही")}
               </p>
@@ -350,7 +376,7 @@ export default function EquipmentDetailClient({
             ].map((item) => (
               <details
                 key={item.q}
-                className="group rounded-lg border border-outline-variant bg-white p-4 transition-all duration-200 hover:shadow-sm"
+                className="kk-depth-tile group rounded-lg border border-outline-variant bg-surface-container-lowest p-4 transition-all duration-200 hover:shadow-sm"
               >
                 <summary className="flex list-none cursor-pointer items-center justify-between gap-3 font-medium">
                   <span>{item.q}</span>

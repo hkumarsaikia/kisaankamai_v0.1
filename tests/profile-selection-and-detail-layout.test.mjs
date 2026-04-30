@@ -15,13 +15,18 @@ test("equipment detail exposes the compact sticky booking layout contract", asyn
     readFile(new URL("../app/equipment/[id]/EquipmentDetailClient.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.deepEqual(layout.DETAIL_BOOKING_LAYOUT, {
-    card: "sticky top-24 rounded-2xl border border-outline-variant bg-white p-5 shadow-2xl",
+  assert.equal(layout.DETAIL_BOOKING_LAYOUT.card, "lg:sticky lg:top-28 max-h-[calc(100vh-8rem)] overflow-y-auto rounded-2xl border border-outline-variant bg-surface-container-lowest p-5 shadow-2xl");
+  assert.deepEqual({
+    form: layout.DETAIL_BOOKING_LAYOUT.form,
+    fields: layout.DETAIL_BOOKING_LAYOUT.fields,
+    actions: layout.DETAIL_BOOKING_LAYOUT.actions,
+    security: layout.DETAIL_BOOKING_LAYOUT.security,
+  }, {
     form: "space-y-4",
     fields: "space-y-3",
-    actions: "space-y-3 border-t border-outline-variant bg-white pt-3",
+    actions: "space-y-3 border-t border-outline-variant bg-surface-container-lowest pt-3",
     security: "mt-4 flex items-center justify-center gap-2 text-xs text-on-surface-variant",
   });
-  assert.doesNotMatch(detailSource, /overflow-y-auto/);
-  assert.doesNotMatch(detailSource, /max-height/);
+  assert.match(detailSource, /lg:self-start/);
+  assert.match(layout.DETAIL_BOOKING_LAYOUT.card, /overflow-y-auto/);
 });

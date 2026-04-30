@@ -17,8 +17,6 @@ export const dynamic = "force-dynamic";
 
 export const POST = withLoggedRoute("forms-booking-request", async (request: NextRequest) => {
   const payload = await parseJsonBody(request, bookingRequestSchema);
-  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-booking-request", payload));
-
   const session = await getCurrentSession();
 
   if (!session) {
@@ -27,11 +25,21 @@ export const POST = withLoggedRoute("forms-booking-request", async (request: Nex
       { status: 401 }
     );
   }
+  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-booking-request", payload, {
+    authenticatedUserId: session.user.id,
+  }));
 
   const listing = payload.equipmentId ? await getListingById(payload.equipmentId) : null;
   let bookingId: string | undefined;
 
   if (listing) {
+    if (listing.ownerUserId === session.user.id) {
+      return NextResponse.json(
+        { ok: false, code: "OWN_LISTING", error: "You cannot book your own listings." },
+        { status: 409 }
+      );
+    }
+
     const approxHours = payload.approxHours || 8;
     const amount = Math.max(1, Number(approxHours)) * listing.pricePerHour;
     const startDate = payload.startDate || new Date().toISOString().slice(0, 10);

@@ -17,6 +17,7 @@ import type { ListingRecord } from "@/lib/local-data/types";
 
 type CategoryValue = "tractor" | "harvester" | "implement";
 type StatusValue = "active" | "paused";
+const MAX_LISTING_IMAGES = 3;
 
 export function OwnerListingWizard({
   listing,
@@ -48,7 +49,7 @@ export function OwnerListingWizard({
   });
 
   const imagePreviewUrls = useMemo(() => files.map((file) => URL.createObjectURL(file)), [files]);
-  const previewImages = imagePreviewUrls.length ? imagePreviewUrls : listing?.imagePaths || [];
+  const previewImages = imagePreviewUrls.length ? imagePreviewUrls : listing?.galleryImages || [];
 
   useEffect(() => {
     return () => {
@@ -318,19 +319,19 @@ export function OwnerListingWizard({
                     type="file"
                     multiple
                     accept="image/*"
-                    onChange={(event) => setFiles(Array.from(event.target.files || []))}
+                    onChange={(event) => setFiles(Array.from(event.target.files || []).slice(0, MAX_LISTING_IMAGES))}
                   />
                 </FormField>
               </div>
               <div className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-4">
                 {previewImages.length ? (
-                  previewImages.slice(0, 8).map((image, index) => (
+                  previewImages.slice(0, MAX_LISTING_IMAGES).map((image, index) => (
                     <div key={`${image}-${index}`} className="relative aspect-square overflow-hidden rounded-[1.25rem] border border-outline-variant bg-surface-container-low">
                       <Image src={image} alt={`Listing preview ${index + 1}`} fill className="object-cover" />
                     </div>
                   ))
                 ) : (
-                  Array.from({ length: 4 }).map((_, index) => (
+                  Array.from({ length: MAX_LISTING_IMAGES }).map((_, index) => (
                     <div key={index} className="flex aspect-square items-center justify-center rounded-[1.25rem] border-2 border-dashed border-outline-variant bg-surface-container-low text-on-surface-variant">
                       <span className="material-symbols-outlined text-3xl">image</span>
                     </div>

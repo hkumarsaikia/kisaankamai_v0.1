@@ -1,5 +1,5 @@
 const KISAN_KAMAI_NOTIFICATION_TO = "hkumarsaikia@gmail.com";
-const KISAN_KAMAI_FORM_SHEETS = ["support_requests", "booking_requests", "feedback"];
+const KISAN_KAMAI_FORM_SHEETS = ["support_requests", "booking_requests", "newsletter_subscriptions", "feedback"];
 const notification_email_sent_at = "Notification Email Sent At";
 
 function onOpen() {

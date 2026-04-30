@@ -13,6 +13,7 @@ export type SheetKey =
   | "saved_items"
   | "support_requests"
   | "booking_requests"
+  | "newsletter_subscriptions"
   | "feedback"
   | "bug_reports"
   | "auth_events"

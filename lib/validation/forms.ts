@@ -139,6 +139,13 @@ export const supportRequestSchema = z
   })
   .strict();
 
+export const newsletterSubscriptionSchema = z
+  .object({
+    email: z.string().trim().email("Enter a valid email address.").max(160),
+    sourcePath: z.string().trim().min(1).max(120).default("/"),
+  })
+  .strict();
+
 export const reportSubmissionSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name.").max(120),

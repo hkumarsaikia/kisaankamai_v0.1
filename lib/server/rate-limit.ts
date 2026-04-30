@@ -73,7 +73,8 @@ function stringFromPayload(value: unknown) {
 export function buildPublicFormRateLimitRules(
   request: NextRequest,
   namespace: string,
-  payload?: Record<string, unknown>
+  payload?: Record<string, unknown>,
+  options?: { authenticatedUserId?: string | null }
 ): RateLimitRule[] {
   const phone =
     stringFromPayload(payload?.phone) ||
@@ -85,7 +86,8 @@ export function buildPublicFormRateLimitRules(
     identifierRateKey("email", email) ||
     identifierRateKey("contact", stringFromPayload(payload?.fullName));
 
-  return [
+  const authenticatedUserId = options?.authenticatedUserId || null;
+  const rules: RateLimitRule[] = [
     {
       namespace: `${namespace}:ip`,
       key: clientIpRateKey(request),
@@ -95,10 +97,21 @@ export function buildPublicFormRateLimitRules(
     {
       namespace: `${namespace}:contact`,
       key: contactKey,
-      limit: 5,
+      limit: authenticatedUserId ? 15 : 10,
       windowMs: TEN_MINUTES_MS,
     },
   ];
+
+  if (authenticatedUserId) {
+    rules.push({
+      namespace: `${namespace}:forms-authenticated-user`,
+      key: identifierRateKey("user", authenticatedUserId),
+      limit: 30,
+      windowMs: TEN_MINUTES_MS,
+    });
+  }
+
+  return rules;
 }
 
 export function buildAuthRateLimitRules(

@@ -13,9 +13,11 @@ export const dynamic = "force-dynamic";
 
 export const POST = withLoggedRoute("forms-feature-request", async (request: NextRequest) => {
   const payload = await parseJsonBody(request, featureRequestSchema);
-  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-feature-request", payload));
-
   const session = await getCurrentSession();
+  await assertRateLimit(request, buildPublicFormRateLimitRules(request, "forms-feature-request", payload, {
+    authenticatedUserId: session?.user.id,
+  }));
+
   const submission = await createSubmissionRecord({
     type: "feature-request",
     payload: payload as Record<string, unknown>,

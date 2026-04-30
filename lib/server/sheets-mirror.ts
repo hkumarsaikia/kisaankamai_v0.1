@@ -64,6 +64,17 @@ function textList(value: unknown) {
   return value.map((entry) => String(entry)).join(" | ");
 }
 
+function listingImageFields(listing: ListingRecord) {
+  return {
+    gallery_image_1_url: listing.galleryImages[0] || "",
+    gallery_image_2_url: listing.galleryImages[1] || "",
+    gallery_image_3_url: listing.galleryImages[2] || "",
+    gallery_image_1_path: listing.imagePaths[0] || "",
+    gallery_image_2_path: listing.imagePaths[1] || "",
+    gallery_image_3_path: listing.imagePaths[2] || "",
+  };
+}
+
 export async function mirrorAuthEvent(input: {
   eventType: string;
   session?: LocalSession | null;
@@ -160,6 +171,7 @@ export async function mirrorListing(listing: ListingRecord, source: string) {
           owner_location: listing.ownerLocation,
           owner_verified: listing.ownerVerified,
           cover_image: listing.coverImage,
+          ...listingImageFields(listing),
           gallery_count: listing.galleryImages.length,
           image_path_count: listing.imagePaths.length,
           created_at: listing.createdAt,
@@ -294,6 +306,32 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
     return;
   }
 
+  if (submission.type === "newsletter-subscription") {
+    await appendSheetRowsSafe(
+      [
+        {
+          sheet: "newsletter_subscriptions",
+          values: sheetValues("newsletter_subscriptions", {
+            submitted_at: submission.createdAt,
+            submission_id: submission.id,
+            user_id: submission.userId || "",
+            email: payload.email || "",
+            source_path: payload.sourcePath || "/",
+            payload_json: safeJson(payload),
+            ...notificationEmailFields(),
+          }),
+        },
+      ],
+      {
+        entityType: "submission",
+        entityId: submission.id,
+        note: submission.type,
+        operation: "append-newsletter-subscription",
+      }
+    );
+    return;
+  }
+
   if (
     submission.type === "support-request" ||
     submission.type === "feature-request" ||
@@ -312,7 +350,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
             submission_type: submission.type,
             user_id: submission.userId || "",
             category: payload.category || "",
-            subject: payload.title || "",
+            subject: payload.subject || payload.title || payload.inquiryType || "",
             urgency: payload.urgency || "",
             full_name: payload.fullName || "",
             phone: payload.phone || payload.mobileNumber || "",

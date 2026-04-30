@@ -10,7 +10,7 @@ The workbook schema lives in `data/operational-sheets-workbook.json`.
 
 ## Form Email Notifications
 
-Form rows in `support_requests`, `booking_requests`, and `feedback` include:
+Form rows in `support_requests`, `booking_requests`, `newsletter_subscriptions`, and `feedback` include:
 
 - `notification_email_to`
 - `notification_email_status`
@@ -35,6 +35,11 @@ Install it on the production workbook:
 The generated email explains the source sheet, row number, row fields, and form
 details so the receiver knows where the update happened and what request needs
 attention.
+
+The homepage footer newsletter writes to the `newsletter_subscriptions` tab.
+Support, feature request, report, callback, partner, and owner application
+forms write to `support_requests`. Booking callbacks write to
+`booking_requests`. Feedback writes to `feedback`.
 
 ## Required Env
 
@@ -81,6 +86,7 @@ The operational workbook now includes:
 - `saved_items`
 - `support_requests`
 - `booking_requests`
+- `newsletter_subscriptions`
 - `feedback`
 - `bug_reports`
 - `auth_events`
@@ -90,7 +96,7 @@ The operational workbook now includes:
 
 `google-sheets-backfill.mjs` replaces the Firestore-backed tabs from live data and preserves the sheet-native log tabs:
 
-- Replaced: owners, renters, listings, bookings, payments, saved_items, support_requests, booking_requests, feedback, bug_reports
+- Replaced: owners, renters, listings, bookings, payments, saved_items, support_requests, booking_requests, newsletter_subscriptions, feedback, bug_reports
 - Preserved: auth_events, sync_audit
 
 Those preserved tabs are not rebuilt from Firebase because they are append-only operational logs that currently live in Sheets.
@@ -100,4 +106,6 @@ Those preserved tabs are not rebuilt from Firebase because they are append-only 
 - The live server mirror now writes richer row shapes, typed numeric cells, stronger headers, filters, and status-based conditional styling.
 - `booking_requests` is now a first-class sheet instead of being lost inside generic submission payloads.
 - `feature-request` submissions are visible in `support_requests` with subject, urgency, location, and message columns plus the full payload JSON.
+- Newsletter subscriptions are visible in `newsletter_subscriptions` and use the same pending/sent email notification columns as the other public forms.
+- Listings mirror the first three public gallery image URLs and their Storage paths so operations can audit exactly which owner-uploaded photos were saved.
 - `saved_items` is backfilled from Firestore even though the live runtime does not currently append every saved-item toggle into Sheets.

@@ -1494,6 +1494,10 @@ export async function createBookingRecord(input: {
     throw new Error("Listing not found.");
   }
 
+  if (listing.ownerUserId === input.renterUserId) {
+    throw new Error("You cannot book your own listings.");
+  }
+
   const requestedStartDate = normalizeBookingDate(input.startDate);
   const requestedEndDate = normalizeBookingDate(input.endDate || requestedStartDate);
 
@@ -1752,7 +1756,15 @@ export async function createSubmissionRecord(input: {
   };
 
   await submissionsCollection().doc(record.id).set(record);
-  await mirrorSubmission(record);
+  try {
+    await mirrorSubmission(record);
+  } catch (error) {
+    captureServerException(error, {
+      subsystem: "mirrorSubmission",
+      submissionId: record.id,
+      submissionType: record.type,
+    });
+  }
   return record;
 }
 

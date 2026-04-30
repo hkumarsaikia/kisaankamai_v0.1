@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "title": "Kisan Kamai Operational Mirror",
   "sourceOfTruth": "Firebase",
   "mirrorPolicy": "Google Sheets is a best-effort operational mirror only and must never block Firebase writes.",
@@ -99,6 +99,12 @@
         { "key": "owner_location", "header": "Owner Location", "width": 220, "type": "text" },
         { "key": "owner_verified", "header": "Owner Verified", "width": 130, "type": "boolean" },
         { "key": "cover_image", "header": "Cover Image", "width": 300, "type": "url" },
+        { "key": "gallery_image_1_url", "header": "Gallery Image 1 URL", "width": 300, "type": "url" },
+        { "key": "gallery_image_2_url", "header": "Gallery Image 2 URL", "width": 300, "type": "url" },
+        { "key": "gallery_image_3_url", "header": "Gallery Image 3 URL", "width": 300, "type": "url" },
+        { "key": "gallery_image_1_path", "header": "Gallery Image 1 Path", "width": 260, "type": "text" },
+        { "key": "gallery_image_2_path", "header": "Gallery Image 2 Path", "width": 260, "type": "text" },
+        { "key": "gallery_image_3_path", "header": "Gallery Image 3 Path", "width": 260, "type": "text" },
         { "key": "gallery_count", "header": "Gallery Count", "width": 120, "type": "number" },
         { "key": "image_path_count", "header": "Image Path Count", "width": 140, "type": "number" },
         { "key": "created_at", "header": "Created At", "width": 190, "type": "datetime" },
@@ -226,6 +232,27 @@
         { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
         { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
         { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
+      ]
+    },
+    {
+      "key": "newsletter_subscriptions",
+      "title": "newsletter_subscriptions",
+      "backfillMode": "replace",
+      "tabColor": "#009688",
+      "columns": [
+        { "key": "submitted_at", "header": "Submitted At", "width": 190, "type": "datetime" },
+        { "key": "submission_id", "header": "Submission ID", "width": 170, "type": "text" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "email", "header": "Email", "width": 260, "type": "text" },
+        { "key": "source_path", "header": "Source Path", "width": 180, "type": "text" },
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" },
+        { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
+        { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
+        { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" }
       ]
     },
     {

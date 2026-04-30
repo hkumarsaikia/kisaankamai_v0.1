@@ -124,6 +124,12 @@ function getCategoryDisplayName(item: EquipmentRecord) {
   return categoryLabelName || toTitleCase(item.category || "equipment");
 }
 
+function preserveBaseCoverImage(existing: EquipmentCategorySummary) {
+  return {
+    coverImage: existing.coverImage,
+  };
+}
+
 export function getCategorySummariesFromEquipment(items: EquipmentRecord[]) {
   const summaries = new Map<string, EquipmentCategorySummary>();
 
@@ -176,7 +182,7 @@ export function getMergedCategorySummariesFromEquipment(items: EquipmentRecord[]
         name: existing.name || liveCategory.name,
         category: liveCategory.category || existing.category,
         count: liveCategory.count,
-        coverImage: liveCategory.coverImage || existing.coverImage,
+        ...preserveBaseCoverImage(existing),
         sampleListingId: liveCategory.sampleListingId,
       });
       continue;

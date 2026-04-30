@@ -11,6 +11,7 @@ type ListEquipmentEditorPageProps = {
   listing?: ListingRecord | null;
   defaultVillage?: string;
 };
+const MAX_LISTING_IMAGES = 3;
 
 export function ListEquipmentEditorPage({
   listing,
@@ -45,9 +46,9 @@ export function ListEquipmentEditorPage({
   const uploadedPreviewUrls = useMemo(() => files.map((file) => URL.createObjectURL(file)), [files]);
   const previewImages =
     uploadedPreviewUrls.length > 0
-      ? uploadedPreviewUrls
+      ? uploadedPreviewUrls.slice(0, MAX_LISTING_IMAGES)
       : listing?.galleryImages?.length
-        ? listing.galleryImages
+        ? listing.galleryImages.slice(0, MAX_LISTING_IMAGES)
         : [];
 
   useEffect(() => {
@@ -370,7 +371,7 @@ export function ListEquipmentEditorPage({
                     type="file"
                     accept="image/*"
                     multiple
-                    onChange={(event) => setFiles(Array.from(event.target.files || []))}
+                    onChange={(event) => setFiles(Array.from(event.target.files || []).slice(0, MAX_LISTING_IMAGES))}
                   />
                 </label>
               </div>

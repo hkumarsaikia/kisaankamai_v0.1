@@ -48,7 +48,7 @@ Phone-only auth flow contract:
 - `/api/auth/google/resolve` and `/api/auth/google/register` intentionally return HTTP 410; `/register/google-email` redirects back to `/register`.
 - Manual register and profile updates must reserve identifiers in the `auth-identifiers` Firestore collection so a phone or optional email cannot create multiple accounts.
 - Booking and listing notifications are Firebase Cloud Messaging only. Do not add MSG91/SMS code until that provider is intentionally introduced.
-- Login, register preflight, register session creation, password reset, profile completion, public forms, and client bug reports use Firestore-backed per-IP/per-identifier rate limits. Keep new mutation routes on the same limiter unless there is a documented reason not to.
+- Login, register preflight, register session creation, password reset, profile completion, public forms, and client bug reports use Firestore-backed per-IP/per-identifier rate limits. Public form routes should pass the authenticated user id when a session exists so a logged-in user can submit multiple different forms with the same account phone.
 
 ## Ubuntu Runtime Notes
 
@@ -113,6 +113,7 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
 - `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details.
 - `/feature-request` is a live public form. Keep it wired to `/api/forms/feature-request`, the `feature-request` submission type, and the shared Firestore-backed submission pipeline.
+- The footer newsletter is a live public form. Keep it wired to `/api/forms/newsletter-subscription`, the `newsletter-subscription` submission type, and the `newsletter_subscriptions` Sheets tab.
 - The public `/report` page is removed from the site. Keep `/api/forms/report` only as a backend compatibility endpoint for existing integrations unless product explicitly removes report submissions entirely.
 - Login is phone-number and password only. Registration may collect an optional profile email, but Firebase password auth must resolve credentials from `passwordLoginEmail`, the Firebase Auth user found by phone number, the synthetic `phone.<10-digit>@kisankamai.local` address, and the visible legacy email. Successful login repairs `passwordLoginEmail` so fresh browsers keep working for older accounts.
 - Use `npm run auth:repair-password-login-emails -- --dry-run` before `npm run auth:repair-password-login-emails -- --apply` when backfilling legacy users whose password credential email exists in Firebase Auth but not in Firestore.
@@ -121,4 +122,7 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - Google Maps map/satellite selection is user state. Keep `components/MapComponent.tsx` persisting map type with `kk_google_map_type` and do not hardcode `terrain` over the user's selected view.
 - Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.
 - Public banner imagery uses the shared `kk-banner-image-overlay` treatment. Do not apply that overlay to equipment listing/product photos because renters need to inspect machine images clearly.
+- Category tiles must keep their baseline catalog images. Owner-uploaded equipment photos should only affect listing cards and equipment detail galleries.
+- Owner listing image uploads are limited to 1-3 real equipment photos. The first photo remains the cover image; all uploaded photos must remain public in logged-out and logged-in listing views.
 - Primary submit/CTA controls should use the shared `kk-flow-button` and `kk-flow-spinner` animation primitives instead of one-off pulse/spinner treatments.
+- Small tile/card surfaces should use the shared `kk-depth-tile` treatment. Pointer-driven depth is installed globally by `components/DepthMotion.tsx` and must respect reduced-motion settings.

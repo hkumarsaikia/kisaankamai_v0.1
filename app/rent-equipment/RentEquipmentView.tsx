@@ -140,7 +140,7 @@ function NoEquipmentAvailable({
   const { langText } = useLanguage();
 
   return (
-    <div className="bg-surface text-on-surface pt-24 pb-16">
+    <div className="bg-surface text-on-surface pt-20 pb-8 md:pb-10">
       <div className="mx-auto mb-12 w-full max-w-4xl px-4 md:px-8">
         <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-2 shadow-sm md:p-3">
           <SearchForm
@@ -359,7 +359,7 @@ export default function RentEquipmentView({
 
   if (view === "empty") {
     return (
-      <div className="bg-surface text-on-surface pt-24 pb-16">
+      <div className="bg-surface text-on-surface pt-20 pb-8 md:pb-10">
         <div className="max-w-7xl mx-auto px-6 mb-8">
           <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <SearchForm
@@ -507,10 +507,20 @@ export default function RentEquipmentView({
                 {langText("Search results", "शोध परिणाम")}
               </span>
             </p>
-            <button className="flex items-center gap-2 text-on-surface border border-outline-variant rounded-lg px-4 py-2 text-sm font-medium hover:bg-surface-container-low transition-colors bg-surface" type="button">
-              <span className="material-symbols-outlined text-lg">tune</span>
-              {langText("Filters", "फिल्टर्स")}
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button className="flex items-center gap-2 text-on-surface border border-outline-variant rounded-lg px-4 py-2 text-sm font-medium hover:bg-surface-container-low transition-colors bg-surface" type="button">
+                <span className="material-symbols-outlined text-lg">tune</span>
+                {langText("Filters", "फिल्टर्स")}
+              </button>
+              <button
+                className="flex items-center gap-2 text-on-surface border border-outline-variant rounded-lg px-4 py-2 text-sm font-medium hover:bg-surface-container-low transition-colors bg-surface"
+                type="button"
+                aria-label={langText("Sort results", "निकाल क्रम लावा")}
+              >
+                <span className="material-symbols-outlined text-lg">sort</span>
+                {langText("Sort", "क्रम लावा")}
+              </button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-6 pb-12">
@@ -528,6 +538,15 @@ export default function RentEquipmentView({
       <main className="mx-auto flex w-full max-w-[1200px] flex-1 px-4 py-8 sm:px-6 lg:px-8">
         <div className="w-full rounded-b-xl bg-surface-container-lowest p-8 shadow-sm">
           <div className="mb-8 flex flex-col gap-6">
+            <div className="available-search-panel rounded-xl border border-outline-variant bg-surface-container p-2 shadow-sm">
+              <SearchForm
+                location={location}
+                query={query}
+                onLocationChange={setLocation}
+                onQueryChange={setQuery}
+                className="flex flex-col gap-2 md:flex-row md:items-center"
+              />
+            </div>
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div className="flex flex-col gap-2">
                 <h1 className="font-headline text-[32px] font-bold leading-tight tracking-tight text-on-surface">
@@ -551,6 +570,7 @@ export default function RentEquipmentView({
                 <button
                   className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-on-primary transition-colors hover:bg-primary/90"
                   type="button"
+                  aria-label={langText("Sort results", "निकाल क्रम लावा")}
                 >
                   <span className="material-symbols-outlined text-[20px]">sort</span>
                   {langText("Sort", "क्रम लावा")}

@@ -379,7 +379,12 @@ export default function FeatureRequestPage() {
                   </div>
 
                   {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
-                  {statusMessage ? <p className="text-sm font-semibold text-primary">{statusMessage}</p> : null}
+                  {statusMessage ? (
+                    <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
+                      <span className="material-symbols-outlined text-[18px]">task_alt</span>
+                      {statusMessage}
+                    </p>
+                  ) : null}
 
                   <div className="flex justify-end pt-4">
                     <button

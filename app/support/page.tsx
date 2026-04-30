@@ -77,6 +77,10 @@ export default function SupportPage() {
 
   const updateField = (field: keyof typeof formState, value: string) => {
     setFormState((current) => ({ ...current, [field]: value }));
+    if (submitState !== "idle") {
+      setSubmitState("idle");
+      setError("");
+    }
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -304,7 +308,7 @@ export default function SupportPage() {
 
         <section className="relative flex min-h-[280px] items-center overflow-hidden">
           <img
-            className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
+            className="absolute inset-0 h-full w-full object-cover object-[center_30%]"
             alt="Smiling Indian farmer standing in a golden wheat field at sunset"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdj-by0sXYvLBIrvGYViSBZkk5i4Nr-zEtpE0S9WPbZKTBOPq7lkgPu1oJ5sgap8nM1Ozpout85-xGpst9bAssJz0A6HWCMDQZW9VbUPBzUy2YAu5Cim_0V_X6iVIYR23J7y7yTHYhcFdbMewyoWe30Qeuu6pyKp8cn9KOnR0g5MZ6wZ5fVAW4r1gzB401zBKPEQN8uQ1fc7XctKpeopjg9mAWI-wEa2v6KvVHVibhPqq2tYH6pv4LJf7RTFlNZ1ZaBl7SN3LKuHEZ"
           />

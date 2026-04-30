@@ -169,6 +169,152 @@ test("forms and Sheets include email automation metadata and Apps Script source"
   assert.match(docs, /hkumarsaikia@gmail\.com/);
 });
 
+test("newsletter submissions use the shared backend, Sheets, and loading success UI", async () => {
+  const [
+    footer,
+    route,
+    validation,
+    types,
+    sheetsMirror,
+    workbookManifest,
+    operationalData,
+  ] = await Promise.all([
+    readSource("../components/Footer.tsx"),
+    readSource("../app/api/forms/newsletter-subscription/route.ts"),
+    readSource("../lib/validation/forms.ts"),
+    readSource("../lib/local-data/types.ts"),
+    readSource("../lib/server/sheets-mirror.ts"),
+    readSource("../data/operational-sheets-workbook.json"),
+    readSource("../scripts/lib/operational-data.mjs"),
+  ]);
+  const appsScript = await readFile(
+    new URL("../scripts/google-sheets-apps-script/Code.gs", import.meta.url),
+    "utf8"
+  );
+
+  assert.match(footer, /postJson<\{ ok: boolean; id: string \}>\("\/api\/forms\/newsletter-subscription"/);
+  assert.match(footer, /kk-flow-spinner/);
+  assert.match(footer, /task_alt/);
+  assert.match(footer, /data-loading/);
+  assert.match(route, /newsletterSubscriptionSchema/);
+  assert.match(route, /type:\s*"newsletter-subscription"/);
+  assert.match(validation, /newsletterSubscriptionSchema/);
+  assert.match(types, /\|\s*"newsletter-subscription"/);
+  assert.match(sheetsMirror, /submission\.type === "newsletter-subscription"/);
+  assert.match(sheetsMirror, /sheet:\s*"newsletter_subscriptions"/);
+  assert.match(workbookManifest, /"newsletter_subscriptions"/);
+  assert.match(workbookManifest, /"notification_email_status"/);
+  assert.match(operationalData, /newsletter_subscriptions/);
+  assert.match(appsScript, /newsletter_subscriptions/);
+});
+
+test("public form rate limits account for authenticated users and do not block every form by reused phone", async () => {
+  const [rateLimit, supportRoute, featureRoute, feedbackRoute, partnerRoute] = await Promise.all([
+    readSource("../lib/server/rate-limit.ts"),
+    readSource("../app/api/forms/support-request/route.ts"),
+    readSource("../app/api/forms/feature-request/route.ts"),
+    readSource("../app/api/forms/feedback/route.ts"),
+    readSource("../app/api/forms/partner-inquiry/route.ts"),
+  ]);
+
+  assert.match(rateLimit, /authenticatedUserId/);
+  assert.match(rateLimit, /forms-authenticated-user/);
+  assert.match(rateLimit, /limit:\s*30/);
+  assert.doesNotMatch(rateLimit, /limit:\s*5,\s*\n\s*windowMs:\s*TEN_MINUTES_MS/);
+
+  for (const source of [supportRoute, featureRoute, feedbackRoute, partnerRoute]) {
+    assert.match(source, /getCurrentSession\(\)/);
+    assert.match(source, /authenticatedUserId:\s*session\?\.user\.id/);
+  }
+});
+
+test("category tiles keep fixed baseline images while live listings only update counts and links", async () => {
+  const categorySource = await readSource("../lib/equipment-categories.ts");
+
+  assert.match(categorySource, /preserveBaseCoverImage/);
+  assert.doesNotMatch(categorySource, /coverImage:\s*liveCategory\.coverImage\s*\|\|/);
+  assert.match(categorySource, /coverImage:\s*existing\.coverImage/);
+});
+
+test("owner listing photos are limited to three and mirrored as explicit URLs and storage paths", async () => {
+  const [actions, wizard, editor, sheetsMirror, workbookManifest, operationalData] = await Promise.all([
+    readSource("../lib/actions/local-data.ts"),
+    readSource("../components/forms/OwnerListingWizard.tsx"),
+    readSource("../components/owner-profile/ListEquipmentEditorPage.tsx"),
+    readSource("../lib/server/sheets-mirror.ts"),
+    readSource("../data/operational-sheets-workbook.json"),
+    readSource("../scripts/lib/operational-data.mjs"),
+  ]);
+
+  assert.match(actions, /MAX_LISTING_IMAGES\s*=\s*3/);
+  assert.match(actions, /Upload up to 3 listing images/);
+  assert.match(wizard, /slice\(0,\s*MAX_LISTING_IMAGES\)/);
+  assert.match(editor, /slice\(0,\s*MAX_LISTING_IMAGES\)/);
+  for (const source of [sheetsMirror, workbookManifest, operationalData]) {
+    assert.match(source, /gallery_image_1_url/);
+    assert.match(source, /gallery_image_2_url/);
+    assert.match(source, /gallery_image_3_url/);
+    assert.match(source, /gallery_image_1_path/);
+    assert.match(source, /gallery_image_2_path/);
+    assert.match(source, /gallery_image_3_path/);
+  }
+});
+
+test("rent equipment pages expose base search, query sort, and compact no-equipment spacing", async () => {
+  const viewSource = await readSource("../app/rent-equipment/RentEquipmentView.tsx");
+
+  assert.match(viewSource, /available-search-panel/);
+  assert.match(viewSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
+  assert.match(viewSource, /pb-8 md:pb-10/);
+  assert.doesNotMatch(viewSource, /pt-24 pb-16/);
+});
+
+test("equipment detail has category breadcrumbs, public three-photo gallery, dark surfaces, sticky scroll, and own-listing toast", async () => {
+  const [detailSource, layoutSource, actionSource] = await Promise.all([
+    readSource("../app/equipment/[id]/EquipmentDetailClient.tsx"),
+    readSource("../lib/equipment-detail-layout.js"),
+    readSource("../lib/actions/local-data.ts"),
+  ]);
+
+  assert.match(detailSource, /href="\/categories"/);
+  assert.match(detailSource, /rent-equipment\?query=\$\{categorySlug\}/);
+  assert.match(detailSource, /galleryImages\.slice\(0,\s*3\)/);
+  assert.match(detailSource, /ownListingToast/);
+  assert.match(detailSource, /You cannot book your own listings/);
+  assert.match(detailSource, /OWN_LISTING/);
+  assert.match(detailSource, /kk-depth-tile/);
+  assert.match(layoutSource, /bg-surface-container-lowest/);
+  assert.match(layoutSource, /max-h-\[calc\(100vh-8rem\)\]/);
+  assert.match(layoutSource, /overflow-y-auto/);
+  assert.match(actionSource, /code:\s*"OWN_LISTING"/);
+});
+
+test("profile menu is compact and the trigger has a soft 3D visual boundary", async () => {
+  const profileMenu = await readSource("../components/ProfileDropdownMenu.tsx");
+
+  assert.match(profileMenu, /kk-profile-trigger/);
+  assert.match(profileMenu, /kk-depth-tile/);
+  assert.match(profileMenu, /w-\[18rem\]/);
+  assert.match(profileMenu, /py-2/);
+  assert.doesNotMatch(profileMenu, /w-\[20rem\]/);
+  assert.doesNotMatch(profileMenu, /py-5/);
+});
+
+test("global depth tiles use pointer-driven smooth 3D variables with reduced motion guard", async () => {
+  const [globals, depthMotion, layout] = await Promise.all([
+    readSource("../app/globals.css"),
+    readSource("../components/DepthMotion.tsx"),
+    readSource("../app/layout.tsx"),
+  ]);
+
+  assert.match(globals, /--kk-depth-rotate-x/);
+  assert.match(globals, /--kk-depth-rotate-y/);
+  assert.match(globals, /--kk-depth-glare-x/);
+  assert.match(depthMotion, /pointermove/);
+  assert.match(depthMotion, /prefers-reduced-motion/);
+  assert.match(layout, /<DepthMotion\s*\/>/);
+});
+
 test("app source does not keep visible inline English Marathi slash labels", async () => {
   const offenders = [];
   const pattern =

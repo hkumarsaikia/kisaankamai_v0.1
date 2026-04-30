@@ -4,15 +4,41 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { FOOTER_MARKETPLACE_LINKS, FOOTER_TRUST_LINKS } from "@/lib/site-navigation.js";
 import { SharedIcon } from "@/components/SharedIcon";
+import { postJson } from "@/lib/client/forms";
+import { type FormEvent, useState, useTransition } from "react";
 
 export const Footer = () => {
   const { t, langText } = useLanguage();
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
+  const [message, setMessage] = useState("");
+  const [isPending, startTransition] = useTransition();
   const renderLabel = (link: { labelKey?: string; enLabel?: string; mrLabel?: string }) => {
     if (link.labelKey) {
       return t(link.labelKey as never);
     }
 
     return langText(link.enLabel || "", link.mrLabel || link.enLabel || "");
+  };
+  const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatus("pending");
+    setMessage("");
+
+    startTransition(async () => {
+      try {
+        await postJson<{ ok: boolean; id: string }>("/api/forms/newsletter-subscription", {
+          email,
+          sourcePath: "/",
+        });
+        setStatus("success");
+        setMessage(langText("Subscribed", "सदस्यता झाली"));
+        setEmail("");
+      } catch (error) {
+        setStatus("error");
+        setMessage(error instanceof Error ? error.message : langText("Subscription failed.", "सदस्यता अयशस्वी झाली."));
+      }
+    });
   };
 
   return (
@@ -106,21 +132,47 @@ export const Footer = () => {
         <div>
           <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.newsletter")}</h5>
           <p className="text-slate-400 mb-4 font-normal">{t("Footer.stay_updated_on_agricultural_trends_and_new_equipment_listings")}</p>
-          <div className="flex gap-2">
+          <form className="flex gap-2" onSubmit={handleNewsletterSubmit}>
             <input
               className="bg-slate-800 border-none rounded-lg px-4 py-2 text-white w-full focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-500 font-normal"
               placeholder={t("Footer.email")}
               type="email"
+              value={email}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                if (status !== "idle") {
+                  setStatus("idle");
+                  setMessage("");
+                }
+              }}
+              disabled={isPending}
+              required
             />
             <button
-              type="button"
+              type="submit"
               aria-label={langText("Subscribe to the newsletter", "न्यूजलेटरसाठी सदस्य व्हा")}
               title={langText("Subscribe to the newsletter", "न्यूजलेटरसाठी सदस्य व्हा")}
-              className="bg-emerald-600 text-white p-2 rounded-lg hover:bg-emerald-500 transition-colors"
+              className={`kk-flow-button flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-2 text-white transition-colors ${
+                status === "success" ? "bg-emerald-500" : "bg-emerald-600 hover:bg-emerald-500"
+              }`}
+              data-loading={isPending ? "true" : "false"}
+              aria-busy={isPending}
+              disabled={isPending}
             >
-              <SharedIcon name="send" className="h-5 w-5" />
+              {isPending ? (
+                <span className="kk-flow-spinner h-4 w-4" aria-hidden="true" />
+              ) : status === "success" ? (
+                <span className="material-symbols-outlined text-[20px]">task_alt</span>
+              ) : (
+                <SharedIcon name="send" className="h-5 w-5" />
+              )}
             </button>
-          </div>
+          </form>
+          {message ? (
+            <p className={`mt-2 text-xs font-semibold ${status === "error" ? "text-red-300" : "text-emerald-300"}`}>
+              {message}
+            </p>
+          ) : null}
           <div className="mt-6">
             <p className="text-slate-500 text-xs font-normal">{t("Footer.operating_in")}</p>
             <p className="text-white font-medium text-sm flex items-center gap-1 mt-1">

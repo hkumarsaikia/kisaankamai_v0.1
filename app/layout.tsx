@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
+import { DepthMotion } from "@/components/DepthMotion";
 import { NavigationTransitionProvider } from "@/components/NavigationTransitionProvider";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { SingleLanguageRuntime } from "@/components/SingleLanguageRuntime";
@@ -122,6 +123,7 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <LanguageProvider>
             <SingleLanguageRuntime />
+            <DepthMotion />
             <AuthProvider initialSession={initialSession}>
               <NavigationTransitionProvider>
                 <SiteChrome>

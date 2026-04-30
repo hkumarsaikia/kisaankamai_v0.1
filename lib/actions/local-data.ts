@@ -44,10 +44,11 @@ import type { RegisterInputPayload } from "@/lib/validation/forms";
 interface ActionResult {
   ok: boolean;
   error?: string;
+  code?: string;
   redirectTo?: string;
 }
 
-const MAX_LISTING_IMAGES = 8;
+const MAX_LISTING_IMAGES = 3;
 const MAX_LISTING_IMAGE_BYTES = 8 * 1024 * 1024;
 const ALLOWED_LISTING_IMAGE_TYPES = new Set([
   "image/jpeg",
@@ -129,7 +130,7 @@ async function saveListingImages(ownerUserId: string, listingId: string, files: 
   }
 
   if (validFiles.length > MAX_LISTING_IMAGES) {
-    throw new Error(`Upload up to ${MAX_LISTING_IMAGES} listing images at a time.`);
+    throw new Error("Upload up to 3 listing images at a time.");
   }
 
   for (const file of validFiles) {
@@ -669,6 +670,10 @@ export async function createBookingAction(
       const listing = parsed.data.equipmentId ? await getListingById(parsed.data.equipmentId) : null;
       if (!listing) {
         return { ok: false, error: "Equipment not found." };
+      }
+
+      if (listing.ownerUserId === session.user.id) {
+        return { ok: false, code: "OWN_LISTING", error: "You cannot book your own listings." };
       }
 
       const approxHours = parsed.data.approxHours || 8;

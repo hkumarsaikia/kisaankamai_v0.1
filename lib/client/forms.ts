@@ -15,6 +15,8 @@ export class SubmissionError extends Error {
 export async function postJson<T>(url: string, payload: unknown) {
   const response = await fetch(url, {
     method: "POST",
+    credentials: "include",
+    cache: "no-store",
     headers: {
       "Content-Type": "application/json",
     },
