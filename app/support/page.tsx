@@ -159,22 +159,22 @@ export default function SupportPage() {
           </div>
         </section>
 
-        <section className="mx-auto grid max-w-7xl items-start gap-12 px-6 py-16 lg:grid-cols-5">
-          <div className="order-2 w-full max-w-3xl rounded-2xl border border-surface-variant bg-surface-container-lowest p-8 shadow-sm lg:col-span-3 lg:order-2 md:p-10">
+        <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-5">
+          <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-8 shadow-sm lg:col-span-3 md:p-10">
             <h2 className="text-3xl font-extrabold text-primary">
               {langText("Contact Us", "आमच्याशी संपर्क साधा")}
             </h2>
             <p className="mb-8 mt-2 text-on-surface-variant">
               {langText("Our team will contact you as soon as possible.", "आमची टीम लवकरच तुमच्याशी संपर्क साधेल.")}
             </p>
-            <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid gap-6 md:grid-cols-2">
                 <label className="space-y-2">
                   <span className="text-sm font-semibold text-primary">{langText("Full Name", "पूर्ण नाव")}</span>
                   <input
                     value={formState.fullName}
                     onChange={(event) => updateField("fullName", event.target.value)}
-                    className="rounded-lg border-outline-variant bg-surface-container-low p-3 font-body text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                    className="kk-input"
                     placeholder={langText("Rahul Patil", "राहुल पाटील")}
                     type="text"
                     required
@@ -185,7 +185,7 @@ export default function SupportPage() {
                   <input
                     value={formState.phone}
                     onChange={(event) => updateField("phone", event.target.value.replace(/\D/g, "").slice(0, 10))}
-                    className="rounded-lg border-outline-variant bg-surface-container-low p-3 font-body text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                    className="kk-input"
                     placeholder={langText("Enter 10 digit mobile number", "१० अंकी मोबाईल नंबर टाका")}
                     type="tel"
                     inputMode="numeric"
@@ -199,7 +199,7 @@ export default function SupportPage() {
                   <input
                     value={formState.district}
                     onChange={(event) => updateField("district", event.target.value)}
-                    className="rounded-lg border-outline-variant bg-surface-container-low p-3 font-body text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                    className="kk-input"
                     placeholder={langText("e.g., Pune, Baramati", "उदा., पुणे, बारामती")}
                     type="text"
                     required
@@ -210,7 +210,7 @@ export default function SupportPage() {
                   <select
                     value={formState.inquiryType}
                     onChange={(event) => updateField("inquiryType", event.target.value)}
-                    className="rounded-lg border-outline-variant bg-surface-container-low p-3 font-body text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                    className="kk-input"
                   >
                     {supportCategories.map((category) => (
                       <option key={category.value} value={category.value}>
@@ -225,7 +225,7 @@ export default function SupportPage() {
                 <textarea
                   value={formState.message}
                   onChange={(event) => updateField("message", event.target.value)}
-                  className="min-h-[150px] resize-none rounded-lg border-outline-variant bg-surface-container-low p-3 font-body text-on-surface focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                  className="kk-input min-h-[150px]"
                   placeholder={langText("Tell us how we can help...", "आम्ही कशी मदत करू शकतो ते सांगा...")}
                   required
                 />
@@ -236,7 +236,7 @@ export default function SupportPage() {
                 </div>
               ) : null}
               <button
-                className={`kk-flow-button mt-4 flex w-full items-center justify-center gap-2 self-start rounded-xl px-8 py-4 text-lg font-semibold text-white md:w-auto ${
+                className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl py-4 text-lg font-bold text-white ${
                   submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
                 }`}
                 type="submit"
@@ -253,7 +253,7 @@ export default function SupportPage() {
             </form>
           </div>
 
-          <div className="order-1 space-y-6 lg:col-span-2 lg:order-1">
+          <div className="space-y-6 lg:col-span-2">
             <div id="direct-channels" className="rounded-3xl bg-primary-container p-8 text-white">
               <h3 className="text-2xl font-bold">{langText("Direct Channels", "थेट संपर्क")}</h3>
               <div className="mt-6 space-y-8">

@@ -66,6 +66,10 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.match(support, /Send Message/);
   assert.match(support, /object-\[center_18%\]|object-\[center_35%\]|object-\[center_30%\]/);
   assert.match(support, /scrollTo\(\{\s*top:\s*0/);
+  assert.match(support, /<section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-5">/);
+  assert.match(support, /rounded-3xl border border-outline-variant bg-surface-container-lowest/);
+  assert.match(support, /className="kk-input"/);
+  assert.doesNotMatch(support, /lg:order-2|lg:order-1|order-2|order-1/);
   assert.doesNotMatch(support, /Send us a message/);
   assert.doesNotMatch(support, /Owner Support Priority/);
 });
