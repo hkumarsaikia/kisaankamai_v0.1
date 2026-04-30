@@ -58,6 +58,23 @@ const config = {
         "primary-fixed-dim": "var(--color-primary-fixed-dim, #a6cfbd)",
         "surface-tint": "var(--color-surface-tint, #406657)",
         "primary-fixed": "var(--color-primary-fixed, #c2ecd9)",
+        brand: {
+          50: "#f0f5f3",
+          100: "#dbe9e3",
+          200: "#bcddce",
+          300: "#90cab4",
+          400: "#60b194",
+          500: "#3e9578",
+          600: "#2d775f",
+          700: "#265f4d",
+          800: "#214d40",
+          900: "#1c4036",
+          950: "#0e231e",
+          DEFAULT: "#143B2E",
+        },
+        accent: {
+          DEFAULT: "#10b981",
+        },
         slate: {
           950: '#1a1d21',
           900: '#23272b'

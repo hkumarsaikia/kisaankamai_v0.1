@@ -118,19 +118,33 @@ test("feature request role and select controls include Other with one custom arr
 });
 
 test("owner benefits uses compact selectors, all Maharashtra districts, and no removed tiles", async () => {
-  const ownerBenefits = await readSource("../app/owner-benefits/page.tsx");
-  const districtSource = await readSource("../lib/auth/india-districts.ts");
+  const [ownerBenefits, districtSource, globals, tailwind] = await Promise.all([
+    readSource("../app/owner-benefits/page.tsx"),
+    readSource("../lib/auth/india-districts.ts"),
+    readSource("../app/globals.css"),
+    readSource("../tailwind.config.mjs"),
+  ]);
 
   assert.match(ownerBenefits, /glass-card/);
   assert.match(ownerBenefits, /bg-gradient-brand/);
+  assert.match(globals, /\.glass-card[\s\S]*backdrop-filter:\s*blur\(12px\)/);
+  assert.match(globals, /\.bg-gradient-brand[\s\S]*linear-gradient\(135deg,\s*#143b2e 0%,\s*#265f4d 100%\)/);
+  assert.match(tailwind, /brand:\s*\{[\s\S]*DEFAULT:\s*"#143B2E"/);
   assert.match(ownerBenefits, /Last Month's Earnings/);
   assert.match(ownerBenefits, /How Much Could You Earn\?/);
   assert.match(ownerBenefits, /Average Daily Rate/);
+  assert.match(ownerBenefits, /<section className="py-24 bg-white relative">/);
+  assert.match(ownerBenefits, /glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto/);
+  assert.match(ownerBenefits, /block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm rounded-xl bg-gray-50 appearance-none font-medium/);
+  assert.match(ownerBenefits, /bg-gradient-brand rounded-2xl p-8 text-white relative overflow-hidden flex flex-col justify-center/);
+  assert.match(ownerBenefits, /text-brand-100 font-medium mb-2 uppercase tracking-wide text-sm/);
+  assert.doesNotMatch(ownerBenefits, /kk-form-section glass-card mx-auto max-w-5xl/);
   assert.match(ownerBenefits, /Your Equipment, Your Growth\./);
   assert.match(ownerBenefits, /href="\/login"[\s\S]*Start Now/);
   assert.match(ownerBenefits, /earningsEstimateRef/);
   assert.match(ownerBenefits, /scrollIntoView\(\{\s*behavior:\s*"smooth"/);
-  assert.match(ownerBenefits, /More locations coming soon\.\.\./);
+  assert.doesNotMatch(ownerBenefits, /More locations coming soon\.\.\./);
+  assert.match(ownerBenefits, /visibleDistrict/);
   assert.match(ownerBenefits, /BASE_EQUIPMENT_CATEGORIES/);
   assert.match(ownerBenefits, /<select[\s\S]*selectedCategory\.label/);
   assert.doesNotMatch(ownerBenefits, /ownerEarningCategories\.map\(\(category\) => \(\s*<button/);

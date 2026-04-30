@@ -47,7 +47,7 @@ type OwnerEarningCategory = (typeof ownerEarningCategories)[number];
 
 export default function OwnerBenefitsPage() {
   const { langText } = useLanguage();
-  const earningsEstimateRef = useRef<HTMLElement | null>(null);
+  const earningsEstimateRef = useRef<HTMLDivElement | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<OwnerEarningCategory>(ownerEarningCategories[0]);
   const [usageDays, setUsageDays] = useState(15);
   const [district, setDistrict] = useState<string>(MAHARASHTRA_DISTRICTS[0]);
@@ -62,6 +62,7 @@ export default function OwnerBenefitsPage() {
 
   const currency = (value: number) => `₹${value.toLocaleString("en-IN")}`;
   const scrollToEstimate = () => earningsEstimateRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  const visibleDistrict = district === "Ahilyanagar" ? "Ahmednagar" : district;
 
   return (
     <div className="min-h-screen bg-[#fafafa] font-body text-[#1a1a1a] dark:bg-slate-950 dark:text-slate-100">
@@ -158,30 +159,21 @@ export default function OwnerBenefitsPage() {
           </div>
         </section>
 
-        <section className="bg-white py-24 dark:bg-slate-950">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="mx-auto mb-16 max-w-3xl text-center">
-              <h2 className="mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl">
-                {langText("How Much Could You Earn?", "तुम्ही किती कमवू शकता?")}
-              </h2>
-              <p className="text-lg text-gray-600 dark:text-slate-300">
-                {langText(
-                  "Select your equipment type and see an estimate based on the local market in Maharashtra.",
-                  "उपकरणाचा प्रकार निवडा आणि महाराष्ट्रातील स्थानिक बाजारावर आधारित अंदाज पहा."
-                )}
-              </p>
+        <section className="py-24 bg-white relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How Much Could You Earn?</h2>
+              <p className="text-lg text-gray-600">Select your equipment type and see an estimate based on the local market in Maharashtra.</p>
             </div>
 
-            <div className="kk-form-section glass-card mx-auto max-w-5xl rounded-3xl border border-gray-100 bg-white/80 p-8 shadow-xl backdrop-blur-xl dark:border-slate-800 dark:bg-slate-900/80 lg:p-12">
-              <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
+            <div className="glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div className="space-y-8">
                   <div>
-                    <label className="mb-2 block text-sm font-bold text-gray-700 dark:text-slate-200">
-                      {langText("Equipment Type", "उपकरणाचा प्रकार")}
-                    </label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Equipment Type</label>
                     <div className="relative">
                       <select
-                        className="block w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-4 pr-10 text-base font-medium text-gray-900 focus:border-[#143B2E] focus:outline-none focus:ring-[#143B2E] dark:border-slate-700 dark:bg-slate-950 dark:text-white sm:text-sm"
+                        className="block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm rounded-xl bg-gray-50 appearance-none font-medium"
                         value={selectedCategory.slug}
                         onChange={(event) => {
                           const next = ownerEarningCategories.find((category) => category.slug === event.target.value);
@@ -190,95 +182,89 @@ export default function OwnerBenefitsPage() {
                       >
                         {ownerEarningCategories.map((category) => (
                           <option key={category.slug} value={category.slug}>
-                            {langText(`${category.label} - ${category.detail}`, `${category.mrLabel} - ${category.detail}`)}
+                            {category.label} - {category.detail}
                           </option>
                         ))}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                        <span className="material-symbols-outlined text-lg">expand_more</span>
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        </svg>
                       </div>
                     </div>
                   </div>
 
                   <div>
-                    <label className="mb-2 block text-sm font-bold text-gray-700 dark:text-slate-200">
-                      {langText("Operating District", "कार्यरत जिल्हा")}
-                    </label>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">Operating District</label>
                     <div className="relative">
                       <select
-                        className="max-h-64 block w-full appearance-none rounded-xl border border-gray-200 bg-gray-50 py-3 pl-4 pr-10 text-base font-medium text-gray-900 focus:border-[#143B2E] focus:outline-none focus:ring-[#143B2E] dark:border-slate-700 dark:bg-slate-950 dark:text-white sm:text-sm"
+                        className="max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm rounded-xl bg-gray-50 appearance-none font-medium"
                         value={district}
                         onChange={(event) => setDistrict(event.target.value)}
                       >
                         {MAHARASHTRA_DISTRICTS.map((districtName) => (
                           <option key={districtName} value={districtName}>
-                            {districtName}
+                            {districtName === "Ahilyanagar" ? "Ahmednagar" : districtName}
                           </option>
                         ))}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
-                        <span className="material-symbols-outlined text-lg">expand_more</span>
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        </svg>
                       </div>
                     </div>
-                    <p className="mt-2 text-xs font-semibold text-[#2d775f]">
-                      {langText("More locations coming soon...", "अधिक ठिकाणे लवकरच येत आहेत...")}
-                    </p>
                   </div>
 
                   <div>
-                    <label className="mb-4 flex justify-between text-sm font-bold text-gray-700 dark:text-slate-200">
-                      <span>{langText("Expected Usage", "अपेक्षित वापर")}</span>
-                      <span className="text-[#143B2E] dark:text-[#a6cfbd]">
-                        {usageDays} {langText("Days/Month", "दर महिन्याचे दिवस")}
-                      </span>
+                    <label className="flex justify-between text-sm font-bold text-gray-700 mb-4">
+                      <span>Expected Usage</span>
+                      <span className="text-brand">{usageDays} Days/Month</span>
                     </label>
                     <input
-                      className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-[#143B2E]"
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand"
                       max={25}
                       min={5}
                       type="range"
                       value={usageDays}
                       onChange={(event) => setUsageDays(Number(event.target.value))}
                     />
-                    <div className="mt-2 flex justify-between text-xs font-medium text-gray-500">
-                      <span>{langText("5 Days", "५ दिवस")}</span>
-                      <span>{langText("25 Days", "२५ दिवस")}</span>
+                    <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
+                      <span>5 Days</span>
+                      <span>25 Days</span>
                     </div>
                   </div>
                 </div>
 
-                <section
+                <div
                   ref={earningsEstimateRef}
                   id="earnings-estimate"
-                  className="bg-gradient-brand relative flex flex-col justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-[#143B2E] to-[#265f4d] p-8 text-white scroll-mt-28"
+                  className="bg-gradient-brand rounded-2xl p-8 text-white relative overflow-hidden flex flex-col justify-center"
                 >
-                  <div className="absolute -right-8 -top-8 h-48 w-48 rounded-full bg-white opacity-5 blur-2xl" />
-                  <p className="mb-2 text-sm font-medium uppercase tracking-wide text-[#c2ecd9]">
-                    {langText("Estimated Monthly Earnings", "अंदाजित मासिक कमाई")}
-                  </p>
-                  <h3 className="mb-6 text-4xl font-extrabold tracking-tight lg:text-5xl">
+                  <div className="absolute top-0 right-0 -mt-8 -mr-8 w-48 h-48 bg-white opacity-5 rounded-full blur-2xl" />
+                  <p className="text-brand-100 font-medium mb-2 uppercase tracking-wide text-sm">Estimated Monthly Earnings</p>
+                  <h3 className="text-4xl lg:text-5xl font-extrabold mb-6 tracking-tight">
                     {currency(monthlyEstimate.low)} - {currency(monthlyEstimate.high)}
                   </h3>
-                  <p className="mb-8 text-sm leading-relaxed text-[#f0f5f3]/80">
-                    {langText(
-                      `${selectedCategory.label} estimate based on ${usageDays} rental days for ${district}. Final rates depend on machine condition, operator, and local demand.`,
-                      `${district} जिल्ह्यात ${usageDays} भाडे दिवसांवर आधारित ${selectedCategory.mrLabel} अंदाज. अंतिम दर मशीनची स्थिती, ऑपरेटर आणि स्थानिक मागणीवर अवलंबून असतात.`
-                    )}
+                  <p className="text-brand-50/80 text-sm leading-relaxed mb-8">
+                    {selectedCategory.label} estimate based on {usageDays} rental days for {visibleDistrict}. Final rates depend on machine condition, operator, and local demand.
                   </p>
-                  <div className="mt-auto grid grid-cols-2 gap-4">
-                    <div className="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-                      <p className="mb-1 text-xs text-[#c2ecd9]">{langText("Average Daily Rate", "सरासरी दैनिक दर")}</p>
-                      <p className="text-xl font-bold">{currency(selectedCategory.rate)}</p>
+                  <div className="grid grid-cols-2 gap-4 mt-auto">
+                    <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+                      <p className="text-brand-100 text-xs mb-1">Average Daily Rate</p>
+                      <p className="font-bold text-xl">{currency(selectedCategory.rate)}</p>
                     </div>
-                    <div className="rounded-xl border border-white/10 bg-white/10 p-4 backdrop-blur-sm">
-                      <p className="mb-1 text-xs text-[#c2ecd9]">{langText("Market Demand", "बाजार मागणी")}</p>
-                      <p className="flex items-center gap-1 text-xl font-bold">
-                        {langText(selectedCategory.demand, selectedCategory.mrDemand)}
-                        <span className="material-symbols-outlined text-base text-green-400">trending_up</span>
+                    <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/10">
+                      <p className="text-brand-100 text-xs mb-1">Market Demand</p>
+                      <p className="font-bold text-xl flex items-center gap-1">
+                        {selectedCategory.demand}
+                        <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        </svg>
                       </p>
                     </div>
                   </div>
-                </section>
+                </div>
               </div>
             </div>
           </div>

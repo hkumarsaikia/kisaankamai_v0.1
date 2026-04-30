@@ -241,5 +241,5 @@ test("dark-mode overlays and depth tiles avoid the requested vignette and white 
   assert.doesNotMatch(verifyOtp, /kk-dark-image-overlay/);
   assert.match(profileSelection, /dark:bg-slate-900/);
   assert.match(support, /object-\[center_18%\]/);
-  assert.match(ownerBenefits, /kk-form-section/);
+  assert.match(ownerBenefits, /glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto/);
 });
