@@ -9,7 +9,8 @@ export default function OwnerExperience() {
         {/*  Hero Section  */}
         <section className="relative min-h-[819px] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <ContentImage alt="Equipment Owner" className="w-full h-full object-cover brightness-[0.4]" data-alt="A professional Indian farmer standing proudly next to a high-end modern green tractor in a vast sun-drenched wheat field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0zmJeaPs1dObsXyNQTGsEbQSjfDd3Z9ykBz-xrB7P0hPiFcpkwzGFOcrWyzF0eXBQcfWxCWOCdYc84KWMGrbtqqGa5q-uElB6dywQpDO3EIKlWxTZFK_cvotGftAsBHTVbmzksOQfpVpYlYlwd1tT4V_JSnYVj9cIfdJUU39NsQL6gsNfB8tQnRq9V0sydN3bqGj4rDk1oG4_Gp2YZ3O6E4HNXzWI7QByAbflUyoYR9lddSdlm7SflX6YiuIW0qPTC20y1rVWkHZD" loading="lazy" decoding="async" />
+            <ContentImage alt="Equipment Owner" className="w-full h-full object-cover" data-alt="A professional Indian farmer standing proudly next to a high-end modern green tractor in a vast sun-drenched wheat field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0zmJeaPs1dObsXyNQTGsEbQSjfDd3Z9ykBz-xrB7P0hPiFcpkwzGFOcrWyzF0eXBQcfWxCWOCdYc84KWMGrbtqqGa5q-uElB6dywQpDO3EIKlWxTZFK_cvotGftAsBHTVbmzksOQfpVpYlYlwd1tT4V_JSnYVj9cIfdJUU39NsQL6gsNfB8tQnRq9V0sydN3bqGj4rDk1oG4_Gp2YZ3O6E4HNXzWI7QByAbflUyoYR9lddSdlm7SflX6YiuIW0qPTC20y1rVWkHZD" loading="lazy" decoding="async" />
+            <div className="kk-banner-image-overlay" />
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             <div className="text-white">
@@ -24,7 +25,7 @@ export default function OwnerExperience() {
               </div>
             </div>
             {/*  Earnings Calculator Preview  */}
-            <div className="glass-panel p-8 rounded-3xl shadow-2xl">
+            <div className="kk-depth-tile glass-panel p-8 rounded-3xl shadow-2xl">
               <h3 className="text-2xl font-bold text-primary-container dark:text-primary-fixed mb-6">Estimate Your Earnings</h3>
               <div className="space-y-6">
                 <div>
@@ -107,7 +108,7 @@ export default function OwnerExperience() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 h-auto md:h-[600px]">
               {/*  Main Feature  */}
-              <div className="md:col-span-2 md:row-span-2 bg-primary-container rounded-3xl p-10 flex flex-col justify-end relative overflow-hidden group">
+              <div className="kk-depth-tile md:col-span-2 md:row-span-2 bg-primary-container rounded-3xl p-10 flex flex-col justify-end relative overflow-hidden group">
                 <ContentImage alt="Control" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="Modern high-tech control panel inside a tractor cab with GPS navigation display and ergonomic controls in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHJBC_Z8UxCrm3y2H7Jtrd4pPovGFUHy07oagxN71Bkbx5t4Mgkmk3CAAQphOzfD_ps3gGx0lM0qKPmkJsplV-i9uND8aCiC2A5EoLObg7sdgW5LEvNrorixV6CKnAaCTIg_VPkHtmwWc7-1VhEyuPQv1pObkagixXSEhfZKOZtgs87ErXmlCkcxRf7Z6yTSvvFi1oEP8-jGGJZrtpqhora9ROHTD2eSpWRNcXP2p8ZXq9KZeXmq9LetFk2SBrLG_f1RCebz2mdOXW" loading="lazy" decoding="async" />
                 <div className="relative z-10">
                   <h3 className="text-3xl font-black text-white mb-4">Total Control over Availability</h3>
@@ -115,7 +116,7 @@ export default function OwnerExperience() {
                 </div>
               </div>
               {/*  Secondary 1  */}
-              <div className="md:col-span-2 bg-surface-container rounded-3xl p-8 flex items-center gap-6 group">
+              <div className="kk-depth-tile md:col-span-2 bg-surface-container rounded-3xl p-8 flex items-center gap-6 group">
                 <div className="flex-1">
                   <h4 className="text-xl font-bold text-primary-container mb-2">Verified Community</h4>
                   <p className="text-slate-600 dark:text-slate-500">Every renter undergoes a strict KYC check. Rent with peace of mind knowing who is using your equipment.</p>

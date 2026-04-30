@@ -13,7 +13,7 @@ export default async function RenterProfileSupportPage() {
     <OwnerProfileWorkspaceShell
       family="renter-profile"
       activeTab="support"
-      title="Support / मदत"
+      title="Support"
       subtitle="Get booking help, owner support, and ticket updates in one place."
     >
       <ProfileSupportWorkspace family="renter-profile" session={session} />

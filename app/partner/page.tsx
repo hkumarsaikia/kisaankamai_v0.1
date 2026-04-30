@@ -36,24 +36,6 @@ const ecosystemCards = [
   },
 ];
 
-const nextSteps = [
-  {
-    step: "1",
-    title: "Submission Review",
-    description: "Our strategic team reviews your proposal within 2-3 business days.",
-  },
-  {
-    step: "2",
-    title: "Introductory Call",
-    description: "If aligned, we schedule a brief call to understand mutual synergies.",
-  },
-  {
-    step: "3",
-    title: "Pilot Planning",
-    description: "Develop a localized pilot integration plan for targeted districts.",
-  },
-];
-
 const reasonsToPartner = [
   {
     icon: "verified_user",
@@ -132,6 +114,7 @@ export default function PartnerPage() {
                 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuBGvUW1pyMSm542J9EtkW-M2MoUvI42nDbcFq-GqQCvxthRJrHAny67FAM2h7NW67l95VCBjI_OieY5IsqWFCx2PZuTqesmOGOhm1OIrJtS6XF2VyuSqzgwDwdbsN6LpkKxY-1gIBGdyjtgA2Vw5paH0TH5-i_1B5fSyhI8_Q9n9dn5Fuh2xdszZ1ndnUVTFLdY08m6_u3pXFqvTXuOLVfpwuAY_EHG4IOWFEYgboIwRrqS8RTqONfFPSX_JnoqwmWO-wc4MoWg30Lf")',
             }}
           />
+          <div className="kk-banner-image-overlay" />
           <div className="relative z-10 max-w-3xl">
             <h1 className="text-4xl font-black tracking-[-0.03em] md:text-5xl lg:text-6xl">
               Expand Agricultural Access in Maharashtra
@@ -172,7 +155,7 @@ export default function PartnerPage() {
             {ecosystemCards.map((card) => (
               <article
                 key={card.title}
-                className="rounded-xl border border-outline-variant/40 bg-surface-container-low p-8 shadow-sm transition-shadow hover:shadow-lg"
+                className="kk-depth-tile rounded-xl border border-outline-variant/40 bg-surface-container-low p-8 shadow-sm transition-shadow hover:shadow-lg"
               >
                 <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-lg ${card.bgClass} ${card.colorClass}`}>
                   <span className="material-symbols-outlined text-3xl">{card.icon}</span>
@@ -325,29 +308,7 @@ export default function PartnerPage() {
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="rounded-xl border border-primary-fixed-dim/30 bg-primary-container p-6 text-white shadow-sm">
-              <h3 className="flex items-center gap-2 text-xl font-bold">
-                <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>
-                  rule_folder
-                </span>
-                Next Steps
-              </h3>
-              <ol className="relative mt-5 space-y-5 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-[2px] before:bg-primary-fixed-dim/30 before:content-['']">
-                {nextSteps.map((step) => (
-                  <li key={step.step} className="relative z-10 flex gap-4">
-                    <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary-fixed text-xs font-bold text-primary">
-                      {step.step}
-                    </div>
-                    <div>
-                      <h4 className="text-base font-bold">{step.title}</h4>
-                      <p className="mt-1 text-sm text-primary-fixed-dim">{step.description}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            <div className="rounded-xl border border-outline-variant bg-surface-container-low p-6 shadow-sm">
+            <div className="kk-depth-tile rounded-xl border border-outline-variant bg-surface-container-low p-6 shadow-sm">
               <h3 className="text-lg font-bold text-on-surface">Why Partner With Us?</h3>
               <div className="mt-4 space-y-4">
                 {reasonsToPartner.map((reason) => (

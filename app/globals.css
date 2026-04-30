@@ -204,6 +204,65 @@
       linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(20, 59, 46, 0.18) 44%, rgba(20, 59, 46, 0.88) 100%);
   }
 
+  .kk-banner-image-overlay {
+    @apply absolute inset-0 pointer-events-none;
+    backdrop-filter: blur(2px);
+    background:
+      linear-gradient(90deg, rgba(0, 37, 26, 0.76) 0%, rgba(20, 59, 46, 0.54) 52%, rgba(0, 0, 0, 0.24) 100%),
+      radial-gradient(circle at 24% 42%, rgba(255, 255, 255, 0.12), transparent 36%);
+  }
+
+  .kk-depth-tile {
+    position: relative;
+    transform-style: preserve-3d;
+    will-change: transform, box-shadow, border-color;
+    transition:
+      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      border-color 260ms ease,
+      background-color 260ms ease;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.65) inset,
+      0 18px 44px -34px rgba(0, 37, 26, 0.75);
+  }
+
+  .kk-depth-tile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    opacity: 0;
+    transform: translateY(8px);
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.38), transparent 36%),
+      radial-gradient(circle at 86% 10%, rgba(255, 162, 116, 0.24), transparent 30%);
+    transition:
+      opacity 260ms ease,
+      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .kk-depth-tile > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .kk-depth-tile:hover,
+  .kk-depth-tile:focus-within {
+    transform: translateY(-6px) rotateX(1.1deg) rotateY(-1.1deg);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.78) inset,
+      0 34px 80px -44px rgba(0, 37, 26, 0.88),
+      0 18px 40px -32px rgba(147, 74, 36, 0.5);
+  }
+
+  .kk-depth-tile:hover::before,
+  .kk-depth-tile:focus-within::before {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
   .kk-deep-cta {
     @apply bg-primary-container text-white shadow-[0_18px_40px_-22px_rgba(20,59,46,0.9)] transition-all hover:brightness-110 hover:shadow-[0_24px_48px_-26px_rgba(20,59,46,0.95)] active:scale-[0.98];
   }
@@ -476,6 +535,14 @@
     @apply w-full rounded-[1.15rem] border border-outline-variant bg-surface-container-lowest py-3 pl-12 pr-4 text-sm font-semibold text-on-surface shadow-[0_20px_40px_-30px_rgba(20,59,46,0.45)] outline-none transition-all placeholder:text-on-surface-variant focus:border-secondary focus:ring-2 focus:ring-secondary;
   }
 
+  .kk-select-control {
+    background-image: none;
+  }
+
+  .kk-select-arrow {
+    font-variation-settings: "FILL" 0, "wght" 500, "GRAD" 0, "opsz" 24;
+  }
+
   .kk-form-muted-banner {
     @apply rounded-[1.2rem] border border-secondary bg-secondary-fixed px-4 py-3 text-sm font-semibold text-secondary;
   }
@@ -498,6 +565,18 @@
   .dark .kk-image-card-overlay {
     background:
       linear-gradient(180deg, rgba(12, 15, 19, 0.02) 0%, rgba(12, 15, 19, 0.34) 36%, rgba(12, 15, 19, 0.9) 100%);
+  }
+
+  .dark .kk-banner-image-overlay {
+    background:
+      linear-gradient(90deg, rgba(12, 15, 19, 0.92) 0%, rgba(20, 59, 46, 0.72) 52%, rgba(12, 15, 19, 0.56) 100%),
+      radial-gradient(circle at 24% 42%, rgba(194, 236, 217, 0.1), transparent 36%);
+  }
+
+  .dark .kk-depth-tile {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 24px 58px -42px rgba(0, 0, 0, 0.9);
   }
 
   .dark .kk-form-main-card {
@@ -669,5 +748,14 @@
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kk-depth-tile,
+  .kk-depth-tile::before,
+  .kk-depth-tile:hover,
+  .kk-depth-tile:focus-within {
+    transform: none;
   }
 }

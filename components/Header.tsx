@@ -37,7 +37,7 @@ export const Header = () => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t, langText } = useLanguage();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const mobileMenuLabel = mobileOpen
     ? langText("Close navigation menu", "नेव्हिगेशन मेनू बंद करा")
     : langText("Open navigation menu", "नेव्हिगेशन मेनू उघडा");
@@ -83,7 +83,7 @@ export const Header = () => {
             <HeaderLanguageControl className="hidden md:flex" />
 
             {/* Show Login + Register only if not logged in */}
-            {!loading && !user && (
+            {!user ? (
               <>
                 <Link
                   href="/login"
@@ -98,12 +98,12 @@ export const Header = () => {
                   {t("Header.register")}
                 </Link>
               </>
-            )}
+            ) : null}
 
             {/* Logged-in: Avatar + Dropdown */}
-            {!loading && user && (
+            {user ? (
               <ProfileDropdownMenu />
-            )}
+            ) : null}
 
             {/* Mobile hamburger */}
             <button
@@ -145,12 +145,12 @@ export const Header = () => {
                 </Link>
               );
             })}
-            {!loading && user ? (
+            {user ? (
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
                 <ProfileDropdownMenu panelMode="inline" fullWidth />
               </div>
             ) : null}
-            {!loading && !user ? (
+            {!user ? (
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
                 <Link
                   href="/login"

@@ -8,6 +8,34 @@
 
 The workbook schema lives in `data/operational-sheets-workbook.json`.
 
+## Form Email Notifications
+
+Form rows in `support_requests`, `booking_requests`, and `feedback` include:
+
+- `notification_email_to`
+- `notification_email_status`
+- `notification_email_sent_at`
+
+The live app writes `notification_email_to=hkumarsaikia@gmail.com` and
+`notification_email_status=pending`. A bound Google Sheets Apps Script then
+sends the actual email from the spreadsheet owner context, which is the only
+supported way to get the "from the sheet" sender behavior requested for this
+workflow.
+
+Apps Script source lives in `scripts/google-sheets-apps-script/Code.gs`.
+
+Install it on the production workbook:
+
+1. Open the Google Sheet from `GOOGLE_SHEET_ID`.
+2. Go to Extensions -> Apps Script.
+3. Paste `scripts/google-sheets-apps-script/Code.gs`.
+4. Run `installKisanKamaiEmailTrigger` once and approve permissions.
+5. Run `sendPendingKisanKamaiNotifications` once to flush pending rows.
+
+The generated email explains the source sheet, row number, row fields, and form
+details so the receiver knows where the update happened and what request needs
+attention.
+
 ## Required Env
 
 - `GOOGLE_SHEET_ID`
@@ -21,6 +49,8 @@ Local tooling now prefers the App Hosting `GOOGLE_SHEET_ID` from `apphosting.yam
 ## Commands
 
 Bootstrap the workbook structure, headers, filters, widths, and conditional rules:
+It also applies frozen headers, banding, tab colors, row height, and typed
+numeric/date formatting.
 
 ```bash
 npm run sheets:bootstrap

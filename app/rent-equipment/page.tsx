@@ -108,7 +108,7 @@ export default async function RentEquipmentPage({
   });
   const view = items.length > 0 ? requestedView : "empty";
 
-  const visibleItems = view === "available" ? items : view === "empty" ? items : filteredItems;
+  const visibleItems = view === "available" ? items : filteredItems;
 
   return (
     <RentEquipmentView

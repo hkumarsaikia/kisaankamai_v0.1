@@ -16,6 +16,7 @@ export default function HowItWorksPage() {
               alt="Modern tractor working in a vast lush green field" 
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_pmsUO3wIQ354R-5js0wLwWEAY9NoXJfRWv3B2CZbgbTJhcNcmanT9Q9gErPOkKJG1Ti59VifdaS4544Ep1Q16wPoOpP8zpn_TYHpZnswbTH7GLRccvmqdOfiEMcuEjJjL-cPpkR1NUHsZI1jNual8ZO75xHEiqM8PY0MhbdTPobtsOyg7P7T3wybSbKqKjIEMUloOM0WNVu9k56_4BfzQiahkF3YqUCwJWnU_ISpsoqcngnlKSvxqtZixhDTuWCR0z94fNwf8Gxp"
             />
+            <div className="kk-banner-image-overlay" />
           </div>
           <div className="relative z-20 max-w-7xl mx-auto px-6 py-20 w-full text-white">
             <div className="max-w-2xl">
@@ -53,7 +54,7 @@ export default function HowItWorksPage() {
                 { icon: "contact_support", title: ["Contact owner", "मालकाशी संपर्क साधा"], desc: ["Call the owner directly through the platform to discuss availability and pricing.", "उपलब्धता आणि किमतीबद्दल चर्चा करण्यासाठी थेट मालकाशी संपर्क साधा."] },
                 { icon: "handshake", title: ["Finalize directly", "थेट व्यवहार पूर्ण करा"], desc: ["Meet in person, verify the machine, and complete the transaction without middle-men.", "प्रत्यक्ष भेटा, मशीन तपासा आणि मध्यस्थाशिवाय व्यवहार पूर्ण करा."] },
               ].map((step, idx) => (
-                  <div key={idx} className="relative group p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm hover:shadow-xl transition-all duration-300">
+                  <div key={idx} className="kk-depth-tile relative group p-8 bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm hover:shadow-xl transition-all duration-300">
                   <div className="absolute -top-4 -left-4 w-12 h-12 bg-primary-container text-white flex items-center justify-center rounded-full font-black text-xl shadow-lg ring-4 ring-surface">
                     {idx + 1}
                   </div>
@@ -102,7 +103,7 @@ export default function HowItWorksPage() {
                   { step: "03", title: ["Receive requests", "विनंत्या मिळवा"], desc: ["Farmers will see your listing and contact you via phone directly.", "शेतकरी तुमची नोंदणी पाहतील आणि थेट फोनद्वारे संपर्क साधतील."] },
                   { step: "04", title: ["Discuss terms directly", "थेट चर्चा करा"], desc: ["Negotiate price, duration, and delivery directly with the renter.", "किंमत आणि कालावधीबद्दल थेट ग्राहकाशी चर्चा करा."] }
                 ].map((item, i) => (
-                  <div key={i} className="p-8 bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant hover:border-secondary transition-colors group">
+                  <div key={i} className="kk-depth-tile p-8 bg-surface-container-lowest rounded-3xl shadow-sm border border-outline-variant hover:border-secondary transition-colors group">
                     <span className="text-secondary font-black text-lg mb-2 block tracking-tight group-hover:translate-x-1 transition-transform">{langText("Step " + item.step, "टप्पा " + item.step)}</span>
                     <h4 className="text-xl font-black text-primary mb-2 line-clamp-1">{langText(item.title[0], item.title[1])}</h4>
                     <p className="text-on-surface-variant text-sm font-medium">{langText(item.desc[0], item.desc[1])}</p>
@@ -131,7 +132,7 @@ export default function HowItWorksPage() {
                 { icon: "fact_check", title: ["Transparent details", "पारदर्शक तपशील"], desc: ["Get clear specs and photos before you call.", "कॉल करण्यापूर्वी स्पष्ट फोटो आणि माहिती मिळवा."] },
                 { icon: "foundation", title: ["Built for Maharashtra", "महाराष्ट्रासाठी खास"], desc: ["Designed specifically for local agricultural needs.", "स्थानिक शेतीच्या गरजांसाठी खास तयार केलेले."] }
               ].map((card, i) => (
-                <div key={i} className="p-8 bg-surface-container-lowest border border-outline-variant/60 rounded-3xl text-center hover:bg-primary-container/5 transition-colors">
+                <div key={i} className="kk-depth-tile p-8 bg-surface-container-lowest border border-outline-variant/60 rounded-3xl text-center hover:bg-primary-container/5 transition-colors">
                   <div className="w-16 h-16 bg-primary-container/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary">
                     <span className="material-symbols-outlined text-4xl">{card.icon}</span>
                   </div>

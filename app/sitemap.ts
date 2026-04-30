@@ -20,7 +20,6 @@ const STATIC_ROUTES = [
   "/profile-selection",
   "/register",
   "/rent-equipment",
-  "/report",
   "/renter-profile",
   "/support",
   "/terms",

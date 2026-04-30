@@ -126,6 +126,62 @@ function SearchForm({
   );
 }
 
+function NoEquipmentAvailable({
+  location,
+  query,
+  onLocationChange,
+  onQueryChange,
+}: {
+  location: string;
+  query: string;
+  onLocationChange: (value: string) => void;
+  onQueryChange: (value: string) => void;
+}) {
+  const { langText } = useLanguage();
+
+  return (
+    <div className="bg-surface text-on-surface pt-24 pb-16">
+      <div className="mx-auto mb-12 w-full max-w-4xl px-4 md:px-8">
+        <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-2 shadow-sm md:p-3">
+          <SearchForm
+            location={location}
+            query={query}
+            onLocationChange={onLocationChange}
+            onQueryChange={onQueryChange}
+            buttonLabel={{ en: "Update Search", mr: "शोध अपडेट करा" }}
+            className="flex flex-col gap-3 md:flex-row"
+          />
+        </div>
+      </div>
+
+      <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 text-center md:px-8">
+        <div className="pointer-events-none absolute -z-10 flex items-center justify-center opacity-5">
+          <span className="material-symbols-outlined text-[260px] text-primary">agriculture</span>
+        </div>
+        <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-outline-variant/30 bg-surface-container-low shadow-sm">
+          <span className="material-symbols-outlined text-4xl text-secondary">search_off</span>
+        </div>
+        <h1 className="mb-4 font-headline text-4xl font-bold tracking-tight text-on-surface md:text-5xl">
+          {langText("No equipment available right now", "सध्या कोणतीही उपकरणे उपलब्ध नाहीत")}
+        </h1>
+        <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-on-surface-variant">
+          {langText(
+            "We could not find exact matches for your search in the selected area. Inventory changes daily, and our support team can help locate what you need manually.",
+            "निवडलेल्या भागात तुमच्या शोधाशी जुळणारी उपकरणे सापडली नाहीत. यादी दररोज बदलते आणि आमची सपोर्ट टीम तुम्हाला आवश्यक उपकरण शोधण्यात मदत करू शकते."
+          )}
+        </p>
+        <Link
+          href="/support"
+          className="kk-flow-button inline-flex items-center gap-3 rounded-xl bg-primary-container px-8 py-4 text-lg font-bold text-white shadow-md transition-all hover:bg-primary hover:shadow-lg"
+        >
+          <span className="material-symbols-outlined">support_agent</span>
+          <span>{langText("Call Our Expert Support", "तज्ञ सपोर्टला कॉल करा")}</span>
+        </Link>
+      </section>
+    </div>
+  );
+}
+
 function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compact?: boolean }) {
   const { langText, text } = useLanguage();
   const locationLabel = [item.location, item.district, item.state].filter(Boolean).join(", ");
@@ -292,38 +348,12 @@ export default function RentEquipmentView({
 
   if (!items.length) {
     return (
-      <div className="bg-surface text-on-surface pt-24 pb-16">
-        <div className="max-w-7xl mx-auto px-6 mb-8">
-          <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
-            <SearchForm
-              location={location}
-              query={query}
-              onLocationChange={setLocation}
-              onQueryChange={setQuery}
-              className="flex flex-col md:flex-row gap-4 items-center"
-            />
-          </div>
-        </div>
-
-        <section className="max-w-7xl mx-auto px-6 mb-12">
-          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
-            <div className="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mb-6">
-              <SharedIcon name="agriculture" className="h-16 w-16 text-primary opacity-35" />
-            </div>
-            <h2 className="text-2xl md:text-3xl font-extrabold text-primary mb-4 font-headline">
-              {hasRequestedCategoryOrQuery
-                ? langText(
-                    "Equipment does not exist for this category yet.",
-                    "या वर्गवारीसाठी अजून उपकरण उपलब्ध नाही."
-                  )
-                : langText(
-                    "No live equipment listings are available right now.",
-                    "सध्या कोणतीही थेट उपकरण यादी उपलब्ध नाही."
-                  )}
-            </h2>
-          </div>
-        </section>
-      </div>
+      <NoEquipmentAvailable
+        location={location}
+        query={query}
+        onLocationChange={setLocation}
+        onQueryChange={setQuery}
+      />
     );
   }
 

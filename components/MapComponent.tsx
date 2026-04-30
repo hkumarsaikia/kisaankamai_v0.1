@@ -18,6 +18,31 @@ const GOOGLE_MAP_TYPES = new Set(["roadmap", "satellite"]);
 
 type PersistedGoogleMapType = "roadmap" | "satellite";
 
+function isPersistedGoogleMapType(value?: string | null): value is PersistedGoogleMapType {
+  return GOOGLE_MAP_TYPES.has(value || "");
+}
+
+function readStoredGoogleMapType(): PersistedGoogleMapType {
+  if (typeof window === "undefined") {
+    return "roadmap";
+  }
+
+  try {
+    const stored = window.localStorage.getItem(GOOGLE_MAP_TYPE_STORAGE_KEY);
+    return isPersistedGoogleMapType(stored) ? stored : "roadmap";
+  } catch {
+    return "roadmap";
+  }
+}
+
+function applyGoogleMapType(map: google.maps.Map | null, nextMapTypeId: PersistedGoogleMapType) {
+  if (!map || map.getMapTypeId() === nextMapTypeId) {
+    return;
+  }
+
+  map.setMapTypeId(nextMapTypeId);
+}
+
 function configureLeafletRuntime() {
   if (typeof window === "undefined" || hasConfiguredLeafletRuntime) {
     return;
@@ -310,29 +335,34 @@ function GoogleMapView({
   });
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
-  const [mapTypeId, setMapTypeId] = useState<PersistedGoogleMapType>(() => {
-    if (typeof window === "undefined") {
-      return "roadmap";
-    }
-
-    const stored = window.localStorage.getItem(GOOGLE_MAP_TYPE_STORAGE_KEY);
-    return GOOGLE_MAP_TYPES.has(stored || "") ? (stored as PersistedGoogleMapType) : "roadmap";
-  });
   const centerObj = useMemo(() => ({ lat: center[0], lng: center[1] }), [center]);
 
   const persistMapType = (nextMapTypeId?: string | null) => {
-    if (!GOOGLE_MAP_TYPES.has(nextMapTypeId || "")) {
+    if (!isPersistedGoogleMapType(nextMapTypeId)) {
       return;
     }
 
-    const resolved = nextMapTypeId as PersistedGoogleMapType;
-    setMapTypeId(resolved);
     try {
-      window.localStorage.setItem(GOOGLE_MAP_TYPE_STORAGE_KEY, resolved);
+      window.localStorage.setItem(GOOGLE_MAP_TYPE_STORAGE_KEY, nextMapTypeId);
     } catch {
       // Keep map interaction working when browser storage is unavailable.
     }
   };
+
+  useEffect(() => {
+    applyGoogleMapType(mapRef.current, readStoredGoogleMapType());
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key !== GOOGLE_MAP_TYPE_STORAGE_KEY || !isPersistedGoogleMapType(event.newValue)) {
+        return;
+      }
+
+      applyGoogleMapType(mapRef.current, event.newValue);
+    };
+
+    window.addEventListener("storage", handleStorage);
+    return () => window.removeEventListener("storage", handleStorage);
+  }, []);
 
   if (loadError) {
     return (
@@ -369,7 +399,7 @@ function GoogleMapView({
         zoom={zoom}
         onLoad={(mapInstance) => {
           mapRef.current = mapInstance;
-          mapInstance.setMapTypeId(mapTypeId);
+          mapInstance.setMapTypeId(readStoredGoogleMapType());
           if (markers.length > 1) {
             const bounds = new window.google.maps.LatLngBounds();
             markers.forEach((marker) => bounds.extend({ lat: marker.lat, lng: marker.lng }));
@@ -384,7 +414,6 @@ function GoogleMapView({
           zoomControl: showControls,
           streetViewControl: false,
           fullscreenControl: showControls,
-          mapTypeId,
         }}
       >
         {circles.map((circle, index) => (

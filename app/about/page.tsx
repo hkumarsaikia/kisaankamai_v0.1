@@ -57,7 +57,7 @@ export default function AboutPage() {
             priority
             className="object-cover"
           />
-          <div className="kk-dark-image-overlay" />
+          <div className="kk-banner-image-overlay" />
           <div className="relative z-10 mx-auto w-full max-w-7xl px-6">
             <div className="max-w-3xl">
               <h1 className="font-headline text-5xl font-extrabold leading-tight tracking-tight text-white md:text-7xl">
@@ -131,7 +131,7 @@ export default function AboutPage() {
           <SectionTitle title={{ en: "Core Values", mr: "आमची मूल्ये" }} />
           <div className="grid gap-12 md:grid-cols-3">
             {values.map((value) => (
-              <div key={value.cacheKey} className="text-center">
+              <div key={value.cacheKey} className="kk-depth-tile rounded-3xl p-6 text-center">
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface-container-high text-primary">
                   <span className="material-symbols-outlined text-4xl">{value.icon}</span>
                 </div>
@@ -161,7 +161,7 @@ export default function AboutPage() {
             {team.map((person) => (
               <div
                 key={person}
-                className="rounded-2xl border border-outline-variant/30 bg-surface-container-low px-4 py-8 text-center"
+                className="kk-depth-tile rounded-2xl border border-outline-variant/30 bg-surface-container-low px-4 py-8 text-center"
               >
                 <h4 className="text-lg font-bold">{person}</h4>
               </div>
@@ -187,7 +187,7 @@ function PurposeCard({
   const { langText } = useLanguage();
 
   return (
-    <div className={`flex flex-col gap-6 rounded-[1.5rem] p-10 ${dark ? "bg-primary-container text-on-primary-container" : "border border-outline-variant/30 bg-surface-container-low"}`}>
+    <div className={`kk-depth-tile flex flex-col gap-6 rounded-[1.5rem] p-10 ${dark ? "bg-primary-container text-on-primary-container" : "border border-outline-variant/30 bg-surface-container-low"}`}>
       <div className={`flex h-16 w-16 items-center justify-center rounded-xl ${dark ? "bg-on-primary-container text-primary-container" : "bg-primary-container text-on-primary-container"}`}>
         <span className="material-symbols-outlined text-4xl">{icon}</span>
       </div>

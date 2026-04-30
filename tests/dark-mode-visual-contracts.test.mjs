@@ -31,20 +31,17 @@ test("auth and OTP pages use shared dark-aware surfaces instead of white glass p
 });
 
 test("reported dark-mode problem pages do not use low-contrast primary-container text on dark surfaces", async () => {
-  const [report, rentView] = await Promise.all([
-    readSource("../app/report/page.tsx"),
+  const [rentView, support] = await Promise.all([
     readSource("../app/rent-equipment/RentEquipmentView.tsx"),
+    readSource("../app/support/page.tsx"),
   ]);
 
-  for (const source of [report, rentView]) {
+  for (const source of [rentView, support]) {
     assert.doesNotMatch(source, /text-primary-container/);
   }
-
-  assert.doesNotMatch(report, /bg-secondary-fixed\/30/);
-  assert.match(report, /bg-primary-container/);
 });
 
-test("requested public dark-mode imagery preserves image color without full-page wash overlays", async () => {
+test("requested public banner imagery uses one shared overlay while product imagery stays clear", async () => {
   const entries = await Promise.all(
     [
       ["home", "../app/page.tsx"],
@@ -52,20 +49,24 @@ test("requested public dark-mode imagery preserves image color without full-page
       ["how it works", "../app/how-it-works/page.tsx"],
       ["terms", "../app/terms/page.tsx"],
       ["partner", "../app/partner/page.tsx"],
-      ["report", "../app/report/page.tsx"],
       ["support", "../app/support/page.tsx"],
     ].map(async ([name, path]) => [name, await readSource(path)])
   );
+  const rentView = await readSource("../app/rent-equipment/RentEquipmentView.tsx");
+  const globals = await readSource("../app/globals.css");
 
   for (const [name, source] of entries) {
-    assert.doesNotMatch(source, /kk-dark-image-overlay/, `${name} still uses a full dark image overlay`);
-    assert.doesNotMatch(source, /kk-image-card-overlay/, `${name} still washes image cards`);
+    assert.match(source, /kk-banner-image-overlay/, `${name} does not use the shared banner overlay`);
     assert.doesNotMatch(
       source,
       /object-cover[^"'\n]*(brightness-\[|grayscale-\[|opacity-55|opacity-\[0\.55\])/,
       `${name} still dims or desaturates an image directly`
     );
   }
+
+  assert.match(globals, /\.kk-banner-image-overlay/);
+  assert.match(globals, /backdrop-filter:\s*blur\(2px\)|backdrop-blur/);
+  assert.doesNotMatch(rentView, /kk-banner-image-overlay/);
 });
 
 test("home trust section no longer renders decorative background circles behind the tractor image", async () => {
@@ -82,7 +83,6 @@ test("visible route loading fallbacks are removed from public and profile routes
     "../app/profile-selection/loading.tsx",
     "../app/rent-equipment/loading.tsx",
     "../app/renter-profile/loading.tsx",
-    "../app/report/loading.tsx",
     "../app/support/loading.tsx",
     "../app/equipment/[id]/loading.tsx",
   ];
@@ -128,14 +128,18 @@ test("home hero includes the compact register tile without unsupported payout co
   const home = await readSource("../app/page.tsx");
 
   assert.match(home, /HomeRegisterTile/);
-  assert.match(home, /href="\/register"/);
+  assert.match(home, /useAuth/);
+  assert.match(home, /activeWorkspace/);
+  assert.match(home, /resolvePortalHref/);
+  assert.match(home, /registerHref/);
+  assert.doesNotMatch(home, /href="\/register"/);
   assert.match(home, /Register Now/);
   assert.match(home, /Rent, List & Grow/);
   assert.match(home, /bg-white/);
   assert.match(home, /dark:bg-surface-container-lowest/);
-  assert.match(home, /max-w-\[min\(1760px,calc\(100vw-32px\)\)\]/);
-  assert.match(home, /lg:grid-cols-\[minmax\(620px,820px\)_minmax\(320px,390px\)\]/);
-  assert.match(home, /xl:gap-52/);
+  assert.match(home, /max-w-\[min\(1480px,calc\(100vw-48px\)\)\]/);
+  assert.match(home, /lg:grid-cols-\[minmax\(560px,760px\)_minmax\(320px,390px\)\]/);
+  assert.doesNotMatch(home, /xl:gap-52/);
   assert.doesNotMatch(home, /max-w-7xl items-center gap-10/);
   assert.doesNotMatch(home, /Secure Payouts/);
   assert.doesNotMatch(home, /Find equipment or publish your available machine/);

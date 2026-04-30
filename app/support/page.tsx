@@ -5,44 +5,32 @@ import { useLanguage } from "@/components/LanguageContext";
 import { postJson } from "@/lib/client/forms";
 import { SUPPORT_HUB_MARKERS } from "@/lib/map-data";
 import { supportContact } from "@/lib/support-contact";
-import { type FormEvent, useState, useTransition } from "react";
+import { type FormEvent, useEffect, useState, useTransition } from "react";
 
 const supportCategories = [
   {
     icon: "key",
-    value: "Rental Inquiry",
-    label: { en: "Rent", mr: "भाडे" },
+    value: "Renting Equipment",
+    label: { en: "Renting Equipment", mr: "उपकरण भाड्याने घेणे" },
     description: { en: "Find or book equipment", mr: "उपकरण शोधा किंवा बुक करा" },
   },
   {
     icon: "agriculture",
-    value: "Equipment Listing",
-    label: { en: "List", mr: "नोंदणी" },
+    value: "Listing Equipment",
+    label: { en: "Listing Equipment", mr: "उपकरण सूचीबद्ध करणे" },
     description: { en: "Publish owner equipment", mr: "मालकाची उपकरणे प्रकाशित करा" },
   },
   {
-    icon: "calendar_month",
-    value: "Booking Support",
-    label: { en: "Bookings", mr: "बुकिंग" },
-    description: { en: "Booking dates and changes", mr: "बुकिंग तारीख आणि बदल" },
-  },
-  {
-    icon: "payments",
-    value: "Payment Issue",
-    label: { en: "Payments", mr: "देयके" },
-    description: { en: "Payment or pricing help", mr: "पेमेंट किंवा किंमत मदत" },
-  },
-  {
-    icon: "local_shipping",
-    value: "Machine Delivery",
-    label: { en: "Machine", mr: "मशीन" },
-    description: { en: "Delivery and coordination", mr: "वितरण आणि समन्वय" },
+    icon: "support_agent",
+    value: "Support Issue",
+    label: { en: "Support Issue", mr: "सपोर्ट समस्या" },
+    description: { en: "General platform support", mr: "सामान्य प्लॅटफॉर्म मदत" },
   },
   {
     icon: "help",
-    value: "Technical Support",
-    label: { en: "General", mr: "सामान्य" },
-    description: { en: "General platform support", mr: "सामान्य प्लॅटफॉर्म मदत" },
+    value: "Other",
+    label: { en: "Other", mr: "इतर" },
+    description: { en: "Anything else", mr: "इतर कोणतीही मदत" },
   },
 ] as const;
 
@@ -71,8 +59,8 @@ export default function SupportPage() {
   const [formState, setFormState] = useState({
     fullName: "",
     phone: "",
-    email: "",
-    category: "Rental Inquiry",
+    district: "",
+    inquiryType: "Renting Equipment",
     message: "",
   });
 
@@ -81,7 +69,11 @@ export default function SupportPage() {
       ? langText("Submitting...", "सबमिट करत आहे...")
       : submitState === "success"
         ? langText("Submitted", "सबमिट झाले")
-        : langText("Submit Request", "विनंती सबमिट करा");
+        : langText("Send Message", "संदेश पाठवा");
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  }, []);
 
   const updateField = (field: keyof typeof formState, value: string) => {
     setFormState((current) => ({ ...current, [field]: value }));
@@ -97,8 +89,9 @@ export default function SupportPage() {
         await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
           fullName: formState.fullName,
           phone: formState.phone,
-          email: formState.email || undefined,
-          category: formState.category,
+          category: formState.inquiryType,
+          district: formState.district,
+          inquiryType: formState.inquiryType,
           message: formState.message,
           sourcePath: "/support",
         });
@@ -119,6 +112,7 @@ export default function SupportPage() {
             alt="Panoramic sugarcane field in Maharashtra at sunrise"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK2cmkJApn0nVehtGu1-O_Jh3H-OClLodq9_KX4xxh_OGVj2OqUEJYC-MWqpXMUvo8s6YGuo2rAKTsiptklUZYK2GXmxUasToDyjIKYgZ6d2J_Pkgub_7fiQpQNhcEv8VxQuR8hODqErTQw7TKGyWGg3m2JAGHHxB4iYLF2PqEyPLJBNp5wBelH0ryDM7vxtqJjeDkfd2rhmMS92lXx-3DhPg-r4N2sbauY7gJLOnTcq-cElZZkta36SlaL4MJEYWW9Gmijhd13vep"
           />
+          <div className="kk-banner-image-overlay" />
           <div className="relative z-10 px-6 text-center">
             <h1 className="font-headline text-4xl font-extrabold text-white md:text-6xl">
               {langText("We're here to help", "आम्ही मदतीसाठी येथे आहोत")}
@@ -135,14 +129,14 @@ export default function SupportPage() {
         <section className="mx-auto max-w-7xl px-6 py-16">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
             {supportCategories.map((category) => {
-              const selected = formState.category === category.value;
+              const selected = formState.inquiryType === category.value;
 
               return (
                 <button
                   key={category.value}
                   type="button"
-                  onClick={() => updateField("category", category.value)}
-                  className={`rounded-2xl border p-6 text-center transition-all ${
+                  onClick={() => updateField("inquiryType", category.value)}
+                  className={`kk-depth-tile rounded-2xl border p-6 text-center transition-all ${
                     selected
                       ? "border-primary bg-primary-container text-white shadow-xl"
                       : "border-outline-variant bg-surface-container-lowest text-on-surface hover:border-surface-tint hover:shadow-xl"
@@ -164,7 +158,7 @@ export default function SupportPage() {
         <section className="mx-auto grid max-w-7xl gap-12 px-6 py-16 lg:grid-cols-5">
           <div className="rounded-3xl border border-outline-variant bg-surface-container-lowest p-8 shadow-sm lg:col-span-3 md:p-10">
             <h2 className="text-3xl font-extrabold text-primary">
-              {langText("Send us a message", "आम्हाला संदेश पाठवा")}
+              {langText("Contact Us", "आमच्याशी संपर्क साधा")}
             </h2>
             <p className="mb-8 mt-2 text-on-surface-variant">
               {langText("Our team will contact you as soon as possible.", "आमची टीम लवकरच तुमच्याशी संपर्क साधेल.")}
@@ -197,20 +191,21 @@ export default function SupportPage() {
               </div>
               <div className="grid gap-6 md:grid-cols-2">
                 <label className="space-y-2">
-                  <span className="text-sm font-semibold text-primary">{langText("Email", "ईमेल")}</span>
+                  <span className="text-sm font-semibold text-primary">{langText("District or Taluka", "जिल्हा किंवा तालुका")}</span>
                   <input
-                    value={formState.email}
-                    onChange={(event) => updateField("email", event.target.value)}
+                    value={formState.district}
+                    onChange={(event) => updateField("district", event.target.value)}
                     className="kk-input"
-                    placeholder="name@example.com"
-                    type="email"
+                    placeholder={langText("e.g., Pune, Baramati", "उदा., पुणे, बारामती")}
+                    type="text"
+                    required
                   />
                 </label>
                 <label className="space-y-2">
-                  <span className="text-sm font-semibold text-primary">{langText("Category", "वर्गवारी")}</span>
+                  <span className="text-sm font-semibold text-primary">{langText("Inquiry Type", "चौकशी प्रकार")}</span>
                   <select
-                    value={formState.category}
-                    onChange={(event) => updateField("category", event.target.value)}
+                    value={formState.inquiryType}
+                    onChange={(event) => updateField("inquiryType", event.target.value)}
                     className="kk-input"
                   >
                     {supportCategories.map((category) => (
@@ -264,18 +259,6 @@ export default function SupportPage() {
               </div>
             </div>
 
-            <div className="rounded-3xl bg-tertiary-container p-8 text-white">
-              <div className="mb-4 flex items-center gap-3">
-                <span className="material-symbols-outlined text-tertiary-fixed">verified_user</span>
-                <h4 className="text-lg font-bold">{langText("Owner Support Priority", "मालकांसाठी प्राधान्य सहाय्य")}</h4>
-              </div>
-              <p className="text-sm leading-relaxed text-white/80">
-                {langText(
-                  "Equipment owners can use this channel for listing, maintenance, and deployment coordination.",
-                  "उपकरण मालक नोंदणी, देखभाल आणि वितरण समन्वयासाठी हा संपर्क वापरू शकतात."
-                )}
-              </p>
-            </div>
           </div>
         </section>
 
@@ -293,7 +276,7 @@ export default function SupportPage() {
               </p>
               <div className="mt-8 space-y-4">
                 {regionalHubs.map((hub) => (
-                  <div key={hub.city} className="flex items-center justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6">
+                  <div key={hub.city} className="kk-depth-tile flex items-center justify-between rounded-2xl border border-outline-variant bg-surface-container-lowest p-6">
                     <div>
                       <p className="text-xl font-bold text-primary">{hub.city}</p>
                       <p className="text-sm text-on-surface-variant">{langText(hub.detail.en, hub.detail.mr)}</p>
@@ -321,10 +304,11 @@ export default function SupportPage() {
 
         <section className="relative flex min-h-[280px] items-center overflow-hidden">
           <img
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-[center_35%]"
             alt="Smiling Indian farmer standing in a golden wheat field at sunset"
             src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdj-by0sXYvLBIrvGYViSBZkk5i4Nr-zEtpE0S9WPbZKTBOPq7lkgPu1oJ5sgap8nM1Ozpout85-xGpst9bAssJz0A6HWCMDQZW9VbUPBzUy2YAu5Cim_0V_X6iVIYR23J7y7yTHYhcFdbMewyoWe30Qeuu6pyKp8cn9KOnR0g5MZ6wZ5fVAW4r1gzB401zBKPEQN8uQ1fc7XctKpeopjg9mAWI-wEa2v6KvVHVibhPqq2tYH6pv4LJf7RTFlNZ1ZaBl7SN3LKuHEZ"
           />
+          <div className="kk-banner-image-overlay" />
           <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-8 px-8 py-12 md:flex-row">
             <div className="text-white">
               <h2 className="text-4xl font-extrabold">{langText("Need help right now?", "आत्ताच मदत हवी आहे का?")}</h2>

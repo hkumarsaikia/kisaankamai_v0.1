@@ -36,17 +36,12 @@ test("categories keep a baseline catalog while merging live owner listing catego
   assert.doesNotMatch(categoriesPageSource, /No live categories yet/);
 });
 
-test("support and report pages render one selected language without inline bilingual slash labels", async () => {
-  const [supportSource, reportSource] = await Promise.all([
-    readFile(new URL("../app/support/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/report/page.tsx", import.meta.url), "utf8"),
-  ]);
+test("support page renders one selected language without inline bilingual slash labels", async () => {
+  const supportSource = await readFile(new URL("../app/support/page.tsx", import.meta.url), "utf8");
 
-  for (const source of [supportSource, reportSource]) {
-    assert.match(source, /useLanguage/);
-    assert.match(source, /langText/);
-    assert.doesNotMatch(source, /Full Name\s*\/|Phone\s*\/|Email\s*\/|Category\s*\/|Message\s*\/|What happened\?\s*\/|Mobile Number\s*\/|District\s*\/|Description\s*\//);
-  }
+  assert.match(supportSource, /useLanguage/);
+  assert.match(supportSource, /langText/);
+  assert.doesNotMatch(supportSource, /Full Name\s*\/|Phone\s*\/|Email\s*\/|Category\s*\/|Message\s*\/|What happened\?\s*\/|Mobile Number\s*\/|District\s*\/|Description\s*\//);
 });
 
 test("owner benefits removes the two requested hero templates", async () => {
@@ -141,9 +136,8 @@ test("public listings require real owner media and no verified mock defaults", a
   assert.match(ownerRegistrationSource, /redirect\("\/list-equipment"\)/);
 });
 
-test("report submissions, rate limits, and booking conflicts have backend contracts", async () => {
+test("report API compatibility, rate limits, and booking conflicts have backend contracts", async () => {
   const [
-    reportPageSource,
     reportRouteSource,
     validationSource,
     typeSource,
@@ -157,7 +151,6 @@ test("report submissions, rate limits, and booking conflicts have backend contra
     sheetsMirrorSource,
     operationalDataSource,
   ] = await Promise.all([
-    readFile(new URL("../app/report/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/api/forms/report/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/validation/forms.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/local-data/types.ts", import.meta.url), "utf8"),
@@ -172,8 +165,6 @@ test("report submissions, rate limits, and booking conflicts have backend contra
     readFile(new URL("../scripts/lib/operational-data.mjs", import.meta.url), "utf8"),
   ]);
 
-  assert.match(reportPageSource, /\/api\/forms\/report/);
-  assert.doesNotMatch(reportPageSource, /\/api\/forms\/support-request/);
   assert.match(reportRouteSource, /reportSubmissionSchema/);
   assert.match(reportRouteSource, /type:\s*"report"/);
   assert.match(validationSource, /reportSubmissionSchema/);

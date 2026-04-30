@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-20T18:02:10.971Z",
+  "generatedAt": "2026-04-30T06:30:49.678Z",
   "summary": {
     "totalRoutes": 54,
     "sharedSurfaces": 4,
@@ -22,7 +22,7 @@
             "origins": [
               {
                 "file": "app/page.tsx",
-                "line": 122,
+                "line": 348,
                 "raw": "/categories",
                 "context": "href"
               }
@@ -33,43 +33,43 @@
             "origins": [
               {
                 "file": "app/page.tsx",
-                "line": 128,
+                "line": 354,
                 "raw": "/rent-equipment?query=tractors",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 139,
+                "line": 365,
                 "raw": "/rent-equipment?query=harvesters",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 150,
+                "line": 376,
                 "raw": "/rent-equipment?query=implements",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 161,
+                "line": 387,
                 "raw": "/rent-equipment?query=ploughs",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 172,
+                "line": 398,
                 "raw": "/rent-equipment?query=sprayers",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 380,
+                "line": 559,
                 "raw": "/rent-equipment",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 38,
+                "line": 252,
                 "raw": "/rent-equipment?location=${encodeURIComponent(searchLocation)}&query=${encodeURIComponent(searchQuery)}",
                 "context": "router"
               }
@@ -80,7 +80,7 @@
             "origins": [
               {
                 "file": "app/page.tsx",
-                "line": 249,
+                "line": 477,
                 "raw": "/support",
                 "context": "href"
               }
@@ -95,7 +95,7 @@
             "context": "router",
             "origin": {
               "file": "app/page.tsx",
-              "line": 38,
+              "line": 252,
               "raw": "/rent-equipment?location=${encodeURIComponent(searchLocation)}&query=${encodeURIComponent(searchQuery)}",
               "context": "router"
             }
@@ -222,10 +222,33 @@
         "group": "public",
         "sourceFile": "app/list-equipment/page.tsx",
         "sharedSurfaces": [],
-        "internalDestinations": [],
+        "internalDestinations": [
+          {
+            "path": "/login",
+            "origins": [
+              {
+                "file": "app/list-equipment/page.tsx",
+                "line": 15,
+                "raw": "/login",
+                "context": "redirect"
+              }
+            ]
+          }
+        ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": []
+        "redirects": [
+          {
+            "target": "/login",
+            "context": "redirect",
+            "origin": {
+              "file": "app/list-equipment/page.tsx",
+              "line": 15,
+              "raw": "/login",
+              "context": "redirect"
+            }
+          }
+        ]
       },
       {
         "path": "/logout",
@@ -239,13 +262,13 @@
             "origins": [
               {
                 "file": "app/logout/page.tsx",
-                "line": 43,
+                "line": 45,
                 "raw": "/",
                 "context": "href"
               },
               {
                 "file": "app/logout/page.tsx",
-                "line": 43,
+                "line": 45,
                 "raw": "/",
                 "context": "window"
               }
@@ -260,7 +283,7 @@
             "context": "window",
             "origin": {
               "file": "app/logout/page.tsx",
-              "line": 43,
+              "line": 45,
               "raw": "/",
               "context": "window"
             }
@@ -335,7 +358,7 @@
             "origins": [
               {
                 "file": "app/partner/page.tsx",
-                "line": 152,
+                "line": 134,
                 "raw": "/how-it-works",
                 "context": "href"
               }
@@ -379,17 +402,6 @@
             }
           }
         ]
-      },
-      {
-        "path": "/report",
-        "label": "Report",
-        "group": "public",
-        "sourceFile": "app/report/page.tsx",
-        "sharedSurfaces": [],
-        "internalDestinations": [],
-        "unresolvedDestinations": [],
-        "externalDestinations": [],
-        "redirects": []
       },
       {
         "path": "/terms",
@@ -456,10 +468,33 @@
         "group": "discovery",
         "sourceFile": "app/catalog/[slug]/page.tsx",
         "sharedSurfaces": [],
-        "internalDestinations": [],
+        "internalDestinations": [
+          {
+            "path": "/rent-equipment",
+            "origins": [
+              {
+                "file": "app/catalog/[slug]/page.tsx",
+                "line": 27,
+                "raw": "/rent-equipment?query=${encodeURIComponent(slug)}",
+                "context": "redirect"
+              }
+            ]
+          }
+        ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": []
+        "redirects": [
+          {
+            "target": "/rent-equipment",
+            "context": "redirect",
+            "origin": {
+              "file": "app/catalog/[slug]/page.tsx",
+              "line": 27,
+              "raw": "/rent-equipment?query=${encodeURIComponent(slug)}",
+              "context": "redirect"
+            }
+          }
+        ]
       },
       {
         "path": "/catalog/[slug]/gallery",
@@ -473,16 +508,27 @@
             "origins": [
               {
                 "file": "app/catalog/[slug]/gallery/page.tsx",
-                "line": 201,
-                "raw": "/rent-equipment?query=tractor",
-                "context": "href"
+                "line": 27,
+                "raw": "/rent-equipment?query=${encodeURIComponent(slug)}",
+                "context": "redirect"
               }
             ]
           }
         ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": []
+        "redirects": [
+          {
+            "target": "/rent-equipment",
+            "context": "redirect",
+            "origin": {
+              "file": "app/catalog/[slug]/gallery/page.tsx",
+              "line": 27,
+              "raw": "/rent-equipment?query=${encodeURIComponent(slug)}",
+              "context": "redirect"
+            }
+          }
+        ]
       },
       {
         "path": "/categories",
@@ -496,8 +542,8 @@
             "origins": [
               {
                 "file": "app/categories/page.tsx",
-                "line": 35,
-                "raw": "/rent-equipment?query=${cat.id}",
+                "line": 28,
+                "raw": "/rent-equipment?query=${category.slug}",
                 "context": "href"
               }
             ]
@@ -583,7 +629,7 @@
             "origins": [
               {
                 "file": "app/forgot-password/page.tsx",
-                "line": 44,
+                "line": 97,
                 "raw": "/forgot-password/verify-otp",
                 "context": "router"
               }
@@ -594,7 +640,7 @@
             "origins": [
               {
                 "file": "app/forgot-password/page.tsx",
-                "line": 133,
+                "line": 209,
                 "raw": "/login",
                 "context": "href"
               }
@@ -609,7 +655,7 @@
             "context": "router",
             "origin": {
               "file": "app/forgot-password/page.tsx",
-              "line": 44,
+              "line": 97,
               "raw": "/forgot-password/verify-otp",
               "context": "router"
             }
@@ -628,7 +674,7 @@
             "origins": [
               {
                 "file": "app/forgot-password/new-password/page.tsx",
-                "line": 32,
+                "line": 39,
                 "raw": "/forgot-password",
                 "context": "router"
               }
@@ -639,7 +685,7 @@
             "origins": [
               {
                 "file": "app/forgot-password/new-password/page.tsx",
-                "line": 71,
+                "line": 100,
                 "raw": "/forgot-password/success",
                 "context": "router"
               }
@@ -650,7 +696,13 @@
             "origins": [
               {
                 "file": "app/forgot-password/new-password/page.tsx",
-                "line": 37,
+                "line": 44,
+                "raw": "/forgot-password/verify-otp",
+                "context": "router"
+              },
+              {
+                "file": "app/forgot-password/new-password/page.tsx",
+                "line": 68,
                 "raw": "/forgot-password/verify-otp",
                 "context": "router"
               }
@@ -661,7 +713,7 @@
             "origins": [
               {
                 "file": "app/forgot-password/new-password/page.tsx",
-                "line": 193,
+                "line": 223,
                 "raw": "/login",
                 "context": "href"
               }
@@ -676,7 +728,7 @@
             "context": "router",
             "origin": {
               "file": "app/forgot-password/new-password/page.tsx",
-              "line": 32,
+              "line": 39,
               "raw": "/forgot-password",
               "context": "router"
             }
@@ -686,7 +738,17 @@
             "context": "router",
             "origin": {
               "file": "app/forgot-password/new-password/page.tsx",
-              "line": 37,
+              "line": 44,
+              "raw": "/forgot-password/verify-otp",
+              "context": "router"
+            }
+          },
+          {
+            "target": "/forgot-password/verify-otp",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/new-password/page.tsx",
+              "line": 68,
               "raw": "/forgot-password/verify-otp",
               "context": "router"
             }
@@ -696,7 +758,7 @@
             "context": "router",
             "origin": {
               "file": "app/forgot-password/new-password/page.tsx",
-              "line": 71,
+              "line": 100,
               "raw": "/forgot-password/success",
               "context": "router"
             }
@@ -715,7 +777,7 @@
             "origins": [
               {
                 "file": "app/forgot-password/success/page.tsx",
-                "line": 39,
+                "line": 42,
                 "raw": "/login",
                 "context": "href"
               }
@@ -738,13 +800,13 @@
             "origins": [
               {
                 "file": "app/forgot-password/verify-otp/page.tsx",
-                "line": 107,
+                "line": 56,
                 "raw": "/forgot-password",
-                "context": "href"
+                "context": "router"
               },
               {
                 "file": "app/forgot-password/verify-otp/page.tsx",
-                "line": 31,
+                "line": 198,
                 "raw": "/forgot-password",
                 "context": "router"
               }
@@ -755,7 +817,7 @@
             "origins": [
               {
                 "file": "app/forgot-password/verify-otp/page.tsx",
-                "line": 77,
+                "line": 164,
                 "raw": "/forgot-password/new-password",
                 "context": "router"
               }
@@ -770,7 +832,7 @@
             "context": "router",
             "origin": {
               "file": "app/forgot-password/verify-otp/page.tsx",
-              "line": 31,
+              "line": 56,
               "raw": "/forgot-password",
               "context": "router"
             }
@@ -780,8 +842,18 @@
             "context": "router",
             "origin": {
               "file": "app/forgot-password/verify-otp/page.tsx",
-              "line": 77,
+              "line": 164,
               "raw": "/forgot-password/new-password",
+              "context": "router"
+            }
+          },
+          {
+            "target": "/forgot-password",
+            "context": "router",
+            "origin": {
+              "file": "app/forgot-password/verify-otp/page.tsx",
+              "line": 198,
+              "raw": "/forgot-password",
               "context": "router"
             }
           }
@@ -799,7 +871,7 @@
             "origins": [
               {
                 "file": "app/login/page.tsx",
-                "line": 127,
+                "line": 216,
                 "raw": "/forgot-password",
                 "context": "href"
               }
@@ -810,7 +882,7 @@
             "origins": [
               {
                 "file": "app/login/page.tsx",
-                "line": 174,
+                "line": 275,
                 "raw": "/register",
                 "context": "href"
               }
@@ -899,16 +971,67 @@
             "origins": [
               {
                 "file": "app/register/page.tsx",
-                "line": 293,
+                "line": 622,
                 "raw": "/login",
                 "context": "href"
+              },
+              {
+                "file": "app/register/page.tsx",
+                "line": 101,
+                "raw": "/login",
+                "context": "router"
               }
             ]
           }
         ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": []
+        "redirects": [
+          {
+            "target": "/login",
+            "context": "router",
+            "origin": {
+              "file": "app/register/page.tsx",
+              "line": 101,
+              "raw": "/login",
+              "context": "router"
+            }
+          }
+        ]
+      },
+      {
+        "path": "/register/google-email",
+        "label": "Register / Google Email",
+        "group": "auth",
+        "sourceFile": "app/register/google-email/page.tsx",
+        "sharedSurfaces": [],
+        "internalDestinations": [
+          {
+            "path": "/register",
+            "origins": [
+              {
+                "file": "app/register/google-email/page.tsx",
+                "line": 4,
+                "raw": "/register",
+                "context": "redirect"
+              }
+            ]
+          }
+        ],
+        "unresolvedDestinations": [],
+        "externalDestinations": [],
+        "redirects": [
+          {
+            "target": "/register",
+            "context": "redirect",
+            "origin": {
+              "file": "app/register/google-email/page.tsx",
+              "line": 4,
+              "raw": "/register",
+              "context": "redirect"
+            }
+          }
+        ]
       },
       {
         "path": "/register/success",
@@ -956,8 +1079,19 @@
             "origins": [
               {
                 "file": "app/verify-contact/page.tsx",
-                "line": 29,
+                "line": 116,
                 "raw": "/complete-profile",
+                "context": "href"
+              }
+            ]
+          },
+          {
+            "path": "/login",
+            "origins": [
+              {
+                "file": "app/verify-contact/page.tsx",
+                "line": 122,
+                "raw": "/login",
                 "context": "href"
               }
             ]
@@ -967,8 +1101,19 @@
             "origins": [
               {
                 "file": "app/verify-contact/page.tsx",
-                "line": 26,
+                "line": 113,
                 "raw": "/profile-selection",
+                "context": "href"
+              }
+            ]
+          },
+          {
+            "path": "/register",
+            "origins": [
+              {
+                "file": "app/verify-contact/page.tsx",
+                "line": 125,
+                "raw": "/register",
                 "context": "href"
               }
             ]
@@ -1164,12 +1309,12 @@
         "sharedSurfaces": [],
         "internalDestinations": [
           {
-            "path": "/profile-selection",
+            "path": "/list-equipment",
             "origins": [
               {
                 "file": "app/owner-registration/page.tsx",
-                "line": 20,
-                "raw": "/profile-selection",
+                "line": 4,
+                "raw": "/list-equipment",
                 "context": "redirect"
               }
             ]
@@ -1179,12 +1324,12 @@
         "externalDestinations": [],
         "redirects": [
           {
-            "target": "/profile-selection",
+            "target": "/list-equipment",
             "context": "redirect",
             "origin": {
               "file": "app/owner-registration/page.tsx",
-              "line": 20,
-              "raw": "/profile-selection",
+              "line": 4,
+              "raw": "/list-equipment",
               "context": "redirect"
             }
           }
@@ -1233,31 +1378,31 @@
         "sharedSurfaces": [],
         "internalDestinations": [
           {
-            "path": "/owner-profile/earnings",
+            "path": "/renter-profile/bookings",
             "origins": [
               {
                 "file": "app/renter-profile/earnings/page.tsx",
-                "line": 4,
-                "raw": "/owner-profile/earnings",
-                "context": "redirect"
+                "line": 24,
+                "raw": "/renter-profile/bookings",
+                "context": "href"
+              }
+            ]
+          },
+          {
+            "path": "/renter-profile/browse",
+            "origins": [
+              {
+                "file": "app/renter-profile/earnings/page.tsx",
+                "line": 30,
+                "raw": "/renter-profile/browse",
+                "context": "href"
               }
             ]
           }
         ],
         "unresolvedDestinations": [],
         "externalDestinations": [],
-        "redirects": [
-          {
-            "target": "/owner-profile/earnings",
-            "context": "redirect",
-            "origin": {
-              "file": "app/renter-profile/earnings/page.tsx",
-              "line": 4,
-              "raw": "/owner-profile/earnings",
-              "context": "redirect"
-            }
-          }
-        ]
+        "redirects": []
       },
       {
         "path": "/renter-profile/feedback",

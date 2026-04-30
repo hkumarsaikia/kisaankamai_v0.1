@@ -21,7 +21,7 @@ test("single-language runtime does not mutate the DOM after first paint", async 
   assert.doesNotMatch(source, /attributeFilter/);
 });
 
-test("profile dropdown keeps owner and renter labels and descriptions aligned to the corrected routes", async () => {
+test("profile dropdown keeps profile routes but removes private email, status, and descriptive subcopy", async () => {
   const [dropdownSource, manualMessagesSource] = await Promise.all([
     readFile(new URL("../components/ProfileDropdownMenu.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/i18n.manual.ts", import.meta.url), "utf8"),
@@ -30,8 +30,10 @@ test("profile dropdown keeps owner and renter labels and descriptions aligned to
   assert.match(dropdownSource, /resolvePortalHref\("owner"\)/);
   assert.match(dropdownSource, /resolvePortalHref\("renter"\)/);
   assert.match(dropdownSource, /t\("header.dropdown.renter_profile"\)/);
-  assert.match(dropdownSource, /t\("header.desc.manage_your_fleet"\)/);
-  assert.match(dropdownSource, /t\("header.desc.your_bookings_and_equipment"\)/);
+  assert.doesNotMatch(dropdownSource, /Verified Owner|header\.profile\.verified_owner/);
+  assert.doesNotMatch(dropdownSource, /user\?\.email|profile\?\.email|test@kisankamai\.com/);
+  assert.doesNotMatch(dropdownSource, /t\("header.desc.manage_your_fleet"\)/);
+  assert.doesNotMatch(dropdownSource, /t\("header.desc.your_bookings_and_equipment"\)/);
   assert.match(manualMessagesSource, /"header.dropdown.renter_profile": "Renter Profile"/);
   assert.match(manualMessagesSource, /"header.dropdown.renter_profile": "भाडेकरू प्रोफाइल"/);
 });

@@ -20,6 +20,16 @@ type SheetColumnManifest = {
 const SHEET_COLUMN_KEYS = new Map(
   (workbookManifest.sheets as SheetColumnManifest[]).map((sheet) => [sheet.key, sheet.columns.map((column) => column.key)])
 );
+const FORM_NOTIFICATION_EMAIL_TO = "hkumarsaikia@gmail.com";
+const PENDING_NOTIFICATION_STATUS = "pending";
+
+function notificationEmailFields() {
+  return {
+    notification_email_to: FORM_NOTIFICATION_EMAIL_TO,
+    notification_email_status: PENDING_NOTIFICATION_STATUS,
+    notification_email_sent_at: "",
+  };
+}
 
 function sheetValues(sheet: SheetKey, row: Record<string, unknown>) {
   const columnKeys = SHEET_COLUMN_KEYS.get(sheet);
@@ -235,6 +245,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
             mobile_number: payload.mobileNumber || payload.phone || "",
             message: payload.message || "",
             payload_json: safeJson(payload),
+            ...notificationEmailFields(),
           }),
         },
       ],
@@ -269,6 +280,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
             phone: payload.phone || "",
             source_path: payload.sourcePath || "",
             payload_json: safeJson(payload),
+            ...notificationEmailFields(),
           }),
         },
       ],
@@ -310,6 +322,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
             equipment_needed: payload.equipmentNeeded || "",
             message: payload.message || payload.description || "",
             payload_json: safeJson(payload),
+            ...notificationEmailFields(),
           }),
         },
       ],

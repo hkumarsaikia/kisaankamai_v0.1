@@ -128,13 +128,14 @@ export default function FeatureRequestPage() {
             <div className="@container">
               <div className="@[480px]:p-4">
                 <div
-                  className="flex min-h-[480px] flex-col items-center justify-center gap-6 bg-cover bg-center bg-no-repeat p-4 @[480px]:gap-8 @[480px]:rounded-lg"
+                  className="relative flex min-h-[480px] flex-col items-center justify-center gap-6 overflow-hidden bg-cover bg-center bg-no-repeat p-4 @[480px]:gap-8 @[480px]:rounded-lg"
                   style={{
                     backgroundImage:
-                      'linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfj3_OKbru5os0rJzvKTDBDPpW5_BDrHKJtMrwajXYlumzwab5Z__wadjMlQdVbb8uf7L5CwdWIwDaGy1GZ8xwM6H048tyctq1v9AH-k-LRlHgHJ4ZwUpl4fCx2NKyok6w0SEfKcew6jWxd3TNlI0B7pBfQ96HJygxBfhLqnnVLjFz0bLV40BoBhcUAA6OAg106L3tbMtBuCmln-pc_oDHK9tk9oUBgAy7J7oFEWxGN9Z5a-V6RK5xL2ueooEKNrog6WV37etzGekm")',
+                      'url("https://lh3.googleusercontent.com/aida-public/AB6AXuCfj3_OKbru5os0rJzvKTDBDPpW5_BDrHKJtMrwajXYlumzwab5Z__wadjMlQdVbb8uf7L5CwdWIwDaGy1GZ8xwM6H048tyctq1v9AH-k-LRlHgHJ4ZwUpl4fCx2NKyok6w0SEfKcew6jWxd3TNlI0B7pBfQ96HJygxBfhLqnnVLjFz0bLV40BoBhcUAA6OAg106L3tbMtBuCmln-pc_oDHK9tk9oUBgAy7J7oFEWxGN9Z5a-V6RK5xL2ueooEKNrog6WV37etzGekm")',
                   }}
                 >
-                  <div className="flex flex-col gap-2 text-center">
+                  <div className="kk-banner-image-overlay" />
+                  <div className="relative z-10 flex flex-col gap-2 text-center">
                     <h1 className="text-4xl font-black leading-tight tracking-[-0.033em] text-white @[480px]:text-5xl">
                       {langText(
                         "Tell us what feature would help your farming most",
@@ -167,7 +168,7 @@ export default function FeatureRequestPage() {
 
               <div className="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-0">
                 {featureHighlights.map((item) => (
-                  <div key={item.cacheKey} className="flex flex-1 flex-col gap-3 rounded-lg border border-[#d4e2de] bg-[#f9fbfa] p-4 dark:border-slate-800 dark:bg-slate-900/50">
+                  <div key={item.cacheKey} className="kk-depth-tile flex flex-1 flex-col gap-3 rounded-lg border border-[#d4e2de] bg-[#f9fbfa] p-4 dark:border-slate-800 dark:bg-slate-900/50">
                     <div className="text-[#101816] dark:text-emerald-400">
                       <span className="material-symbols-outlined text-4xl">{item.icon}</span>
                     </div>
@@ -229,7 +230,7 @@ export default function FeatureRequestPage() {
                       </label>
                       <div className="relative">
                         <select
-                          className="h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                          className="kk-select-control h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface bg-none px-4 pr-12 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                           value={formState.role}
                           onChange={(event) => updateField("role", event.target.value)}
                           disabled={isSubmitting}
@@ -241,9 +242,9 @@ export default function FeatureRequestPage() {
                           <option value="farmer">{langText("Farmer", "शेतकरी")}</option>
                           <option value="owner">{langText("Equipment Owner", "उपकरण मालक")}</option>
                           <option value="partner">{langText("Partner", "भागीदार")}</option>
-                          <option value="visitor">{langText("Visitor", "इतर")}</option>
+                          <option value="other">{langText("Other", "इतर")}</option>
                         </select>
-                        <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-outline">
+                        <span className="kk-select-arrow material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-outline">
                           expand_more
                         </span>
                       </div>
@@ -272,7 +273,7 @@ export default function FeatureRequestPage() {
                     </label>
                     <div className="relative">
                       <select
-                        className="h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+                        className="kk-select-control h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface bg-none px-4 pr-12 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         value={formState.category}
                         onChange={(event) => updateField("category", event.target.value)}
                         disabled={isSubmitting}
@@ -289,7 +290,7 @@ export default function FeatureRequestPage() {
                         <option value="trust">{langText("Trust and Safety", "विश्वास आणि सुरक्षा")}</option>
                         <option value="other">{langText("Other", "इतर")}</option>
                       </select>
-                      <span className="material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-outline">
+                      <span className="kk-select-arrow material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-outline">
                         expand_more
                       </span>
                     </div>

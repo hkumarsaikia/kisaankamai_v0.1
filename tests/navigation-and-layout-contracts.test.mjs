@@ -48,7 +48,7 @@ test("footer sections include only the approved marketplace and trust routes", a
 
   assert.deepEqual(
     navigation.FOOTER_TRUST_LINKS.map(({ href }) => href),
-    ["/about", "/terms", "/partner", "/report"]
+    ["/about", "/terms", "/partner"]
   );
 });
 
@@ -156,17 +156,20 @@ test("shared dropdown and translation-cleanup pages avoid inline bilingual slash
 });
 
 test("report source removes the requested support and guidance copy only", async () => {
-  const source = await readFile(new URL("../app/report/page.tsx", import.meta.url), "utf8");
+  const { access } = await import("node:fs/promises");
 
-  assert.doesNotMatch(source, /Support Center/);
-  assert.doesNotMatch(source, /Safety matters/);
-  assert.doesNotMatch(source, /Bilingual support/);
-  assert.doesNotMatch(source, /24h Response Goal/);
-  assert.doesNotMatch(source, /How to make your report useful/);
-  assert.doesNotMatch(source, /\/api\/forms\/support-request/);
-  assert.match(source, /\/api\/forms\/report/);
-  assert.match(source, /Direct Support/);
-  assert.match(source, /Submitted/);
+  await assert.rejects(
+    access(new URL("../app/report/page.tsx", import.meta.url)),
+    /ENOENT/
+  );
+
+  const [navigationSource, sitemapSource] = await Promise.all([
+    readFile(new URL("../lib/site-navigation.js", import.meta.url), "utf8"),
+    readFile(new URL("../app/sitemap.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.doesNotMatch(navigationSource, /href:\s*"\/report"/);
+  assert.doesNotMatch(sitemapSource, /\/report/);
 });
 
 test("list equipment page keeps the owner workspace shell and sticky live preview layout", async () => {
@@ -208,7 +211,27 @@ test("list equipment redirects unauthenticated requests before the streaming fal
   assert.equal(guestResponse.status, 307);
   assert.equal(guestResponse.headers.get("location"), "https://www.kisankamai.com/login");
   assert.equal(authenticatedResponse.headers.get("x-middleware-next"), "1");
-  assert.deepEqual(config.matcher, ["/list-equipment"]);
+
+  const loggedInLoginResponse = proxy(
+    new NextRequest("https://www.kisankamai.com/login", {
+      headers: {
+        cookie: "kisan_kamai_session=test-session; kisan_kamai_workspace=owner",
+      },
+    })
+  );
+  const loggedInRegisterResponse = proxy(
+    new NextRequest("https://www.kisankamai.com/register", {
+      headers: {
+        cookie: "kisan_kamai_session=test-session; kisan_kamai_workspace=renter",
+      },
+    })
+  );
+
+  assert.equal(loggedInLoginResponse.status, 307);
+  assert.equal(loggedInLoginResponse.headers.get("location"), "https://www.kisankamai.com/owner-profile");
+  assert.equal(loggedInRegisterResponse.status, 307);
+  assert.equal(loggedInRegisterResponse.headers.get("location"), "https://www.kisankamai.com/renter-profile");
+  assert.deepEqual(config.matcher, ["/list-equipment", "/login", "/register", "/register/:path*", "/forgot-password/:path*"]);
 });
 
 test("base rent-equipment source keeps the avail-eq style controls and pagination", async () => {
@@ -229,6 +252,9 @@ test("no-results rent-equipment templates no longer contain the trust and safety
   assert.doesNotMatch(viewSource, /Trust &amp; Safety|Trust & Safety/);
   assert.doesNotMatch(resultsSource, /Trust &amp; Safety|Trust & Safety/);
   assert.match(viewSource, /href="\/support"|router\.push\("\/support"\)/);
+  assert.match(viewSource, /No equipment available right now/);
+  assert.match(viewSource, /Call Our Expert Support/);
+  assert.match(viewSource, /support_agent/);
 });
 
 test("about and terms pages remove only the requested heading blocks", async () => {

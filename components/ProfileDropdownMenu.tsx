@@ -28,7 +28,7 @@ export function ProfileDropdownMenu({
 }: ProfileDropdownMenuProps) {
   const pathname = usePathname();
   const { user, profile, activeWorkspace } = useAuth();
-  const { t, langText, text } = useLanguage();
+  const { t, langText } = useLanguage();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -65,10 +65,10 @@ export function ProfileDropdownMenu({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const displayName = user?.name || profile?.fullName || "Ramesh Kumar";
+  const displayName = user?.name || profile?.fullName || "Kisan Kamai User";
   const avatarAlt = langText(
-    "User profile avatar with premium trust badge",
-    "प्रिमियम विश्वास बॅज असलेला वापरकर्ता प्रोफाइल अवतार"
+    "User profile avatar",
+    "वापरकर्ता प्रोफाइल अवतार"
   );
   const photoUrl = user?.photoUrl || profile?.photoUrl || "";
   const initials = displayName
@@ -115,9 +115,6 @@ export function ProfileDropdownMenu({
             <span className="block truncate font-headline text-sm font-semibold leading-tight text-on-surface dark:text-slate-100">
               {displayName}
             </span>
-            <span className="mt-0.5 block truncate font-label text-xs font-light tracking-wide text-on-surface-variant dark:text-slate-400">
-              {text("Verified Owner", { cacheKey: "header.profile.verified_owner" })}
-            </span>
           </span>
         ) : null}
         <span
@@ -150,9 +147,6 @@ export function ProfileDropdownMenu({
               <p className="truncate text-lg font-bold text-slate-900 dark:text-slate-100">
                 {displayName}
               </p>
-              <p className="truncate text-sm text-slate-500 dark:text-slate-400">
-                {user?.email || profile?.email || "test@kisankamai.com"}
-              </p>
             </div>
           </div>
 
@@ -173,9 +167,6 @@ export function ProfileDropdownMenu({
                   <span className="block text-sm font-semibold text-slate-800 transition-colors group-hover:text-primary dark:text-slate-200">
                     {t("header.dropdown.owner_profile")}
                   </span>
-                  <span className="block text-xs text-slate-500 dark:text-slate-400">
-                    {t("header.desc.manage_your_fleet")}
-                  </span>
                 </span>
               </Link>
 
@@ -190,9 +181,6 @@ export function ProfileDropdownMenu({
                 <span>
                   <span className="block text-sm font-semibold text-slate-800 transition-colors group-hover:text-primary dark:text-slate-200">
                     {t("header.dropdown.renter_profile")}
-                  </span>
-                  <span className="block text-xs text-slate-500 dark:text-slate-400">
-                    {t("header.desc.your_bookings_and_equipment")}
                   </span>
                 </span>
               </Link>

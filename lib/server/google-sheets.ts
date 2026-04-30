@@ -60,6 +60,7 @@ type SpreadsheetStateEntry = {
   columnCount: number;
   conditionalRuleCount: number;
   hasBasicFilter: boolean;
+  bandedRangeIds: number[];
 };
 
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
@@ -365,10 +366,11 @@ async function getSpreadsheetState() {
       };
       conditionalFormats?: unknown[];
       basicFilter?: object;
+      bandedRanges?: Array<{ bandedRangeId?: number }>;
     }>;
   }>(
     `?fields=${encodeURIComponent(
-      "sheets(properties(sheetId,title,gridProperties(frozenRowCount,columnCount)),conditionalFormats,basicFilter)"
+      "sheets(properties(sheetId,title,gridProperties(frozenRowCount,columnCount)),conditionalFormats,basicFilter,bandedRanges(bandedRangeId))"
     )}`
   );
 
@@ -381,6 +383,9 @@ async function getSpreadsheetState() {
         columnCount: sheet.properties?.gridProperties?.columnCount || 0,
         conditionalRuleCount: Array.isArray(sheet.conditionalFormats) ? sheet.conditionalFormats.length : 0,
         hasBasicFilter: Boolean(sheet.basicFilter),
+        bandedRangeIds: (sheet.bandedRanges || [])
+          .map((banding) => banding.bandedRangeId)
+          .filter((bandedRangeId): bandedRangeId is number => typeof bandedRangeId === "number"),
       }))
       .filter((sheet): sheet is SpreadsheetStateEntry => Boolean(sheet.title && sheet.sheetId !== undefined))
       .map((sheet) => [sheet.title, sheet])
@@ -502,6 +507,56 @@ async function ensureWorkbookStructure() {
         },
       });
     }
+
+    formatRequests.push({
+      updateDimensionProperties: {
+        range: {
+          sheetId: sheetState.sheetId,
+          dimension: "ROWS",
+          startIndex: 0,
+          endIndex: 1,
+        },
+        properties: {
+          pixelSize: 42,
+        },
+        fields: "pixelSize",
+      },
+    });
+
+    for (const bandingId of sheetState.bandedRangeIds) {
+      formatRequests.push({
+        deleteBanding: {
+          bandedRangeId: bandingId,
+        },
+      });
+    }
+
+    formatRequests.push({
+      addBanding: {
+        bandedRange: {
+          range: {
+            sheetId: sheetState.sheetId,
+            startRowIndex: 0,
+            startColumnIndex: 0,
+            endColumnIndex: definition.columns.length,
+          },
+          rowProperties: {
+            headerColorStyle: {
+              rgbColor: hexToRgbColor(definition.tabColor),
+            },
+            firstBandColorStyle: {
+              rgbColor: hexToRgbColor("#FFFFFF"),
+            },
+            secondBandColorStyle: {
+              rgbColor: hexToRgbColor("#F4F7F3"),
+            },
+            footerColorStyle: {
+              rgbColor: hexToRgbColor("#E7EFE8"),
+            },
+          },
+        },
+      },
+    });
 
     formatRequests.push(
       {

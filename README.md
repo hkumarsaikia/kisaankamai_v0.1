@@ -28,7 +28,7 @@ Current workspace behavior to know while validating `npm run dev`:
 - `/list-equipment` is protected by the root `proxy.js` guard before App Router rendering, then re-verified server-side with the Firebase session cookie.
 - successful booking submissions redirect back into `/renter-profile`.
 - owner listing edit buttons route into `/list-equipment?listingId=<id>`.
-- support and report are separate public flows: `/support` for help requests and `/report` for issue escalation.
+- `/support` is the public contact/help flow. The old public `/report` page is removed from navigation and sitemap.
 - `/feature-request` submits community feature ideas through `/api/forms/feature-request` into Firestore form submissions.
 - the public theme defaults to light mode; explicit dark-mode choices are still respected.
 - `/categories` shows the baseline equipment catalog and merges live owner-published categories into it.
@@ -91,7 +91,7 @@ Required runtime configuration includes:
 - Browser tabs synchronize login/logout state through a local auth-sync channel, so already-open pages refresh after a session changes in another tab.
 - User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.
 - Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
-- Public feature-request, feedback, support, report, partner, and owner-application forms write to Firestore first and mirror to Sheets where configured. `/report` uses its own `report` submission type rather than being stored as a support request.
+- Public feature-request, feedback, support, partner, and owner-application forms write to Firestore first and mirror to Sheets where configured. The legacy `/api/forms/report` endpoint remains available for backend compatibility, but there is no public `/report` page.
 - Auth mutations, profile completion, public forms, and bug-report submissions use Firestore-backed rate limits by IP and relevant identifier.
 - Map/satellite selection in Google Maps is persisted per browser and must not be overwritten by a hardcoded map type after the user selects satellite view.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.

@@ -196,7 +196,10 @@
         { "key": "location", "header": "Location", "width": 180, "type": "text" },
         { "key": "equipment_needed", "header": "Equipment Needed", "width": 200, "type": "text" },
         { "key": "message", "header": "Message", "width": 320, "type": "text" },
-        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" }
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" },
+        { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
+        { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
+        { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
       ]
     },
     {
@@ -219,7 +222,10 @@
         { "key": "field_size", "header": "Field Size", "width": 120, "type": "number" },
         { "key": "phone", "header": "Phone", "width": 150, "type": "text" },
         { "key": "source_path", "header": "Source Path", "width": 180, "type": "text" },
-        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" }
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" },
+        { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
+        { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
+        { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
       ]
     },
     {
@@ -239,7 +245,10 @@
         { "key": "full_name", "header": "Full Name", "width": 220, "type": "text" },
         { "key": "mobile_number", "header": "Mobile Number", "width": 160, "type": "text" },
         { "key": "message", "header": "Message", "width": 320, "type": "text" },
-        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" }
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" },
+        { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
+        { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
+        { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
       ],
       "conditionalRules": [
         { "columnKey": "rating", "type": "NUMBER_GREATER_THAN_EQ", "value": "4", "background": "#E6F4EA", "foreground": "#137333" },

@@ -30,7 +30,7 @@ export const loginInputSchema = z
 export const registerInputSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name.").max(120),
-    email: optionalEmail,
+    email: optionalEmail.optional(),
     address: z.string().trim().min(3, "Enter your address.").max(200),
     village: z.string().trim().min(2, "Enter your city or village.").max(120),
     pincode: sixDigitPincode,
@@ -95,7 +95,7 @@ export const feedbackSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name.").max(120),
     mobileNumber: tenDigitPhone,
-    email: optionalEmail,
+    email: optionalEmail.optional(),
     role: z.enum(["farmer", "owner", "partner", "visitor"]),
     category: z.string().trim().min(2, "Select a feedback category.").max(80),
     subject: z.string().trim().min(4, "Enter a subject.").max(160),
@@ -130,8 +130,10 @@ export const supportRequestSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name.").max(120),
     phone: tenDigitPhone,
-    email: optionalEmail,
+    email: optionalEmail.optional(),
     category: z.string().trim().min(2, "Select a category.").max(120),
+    district: z.string().trim().min(2, "Enter your district or taluka.").max(160).optional().or(z.literal("")),
+    inquiryType: z.string().trim().min(2, "Select an inquiry type.").max(120).optional(),
     message: z.string().trim().min(10, "Describe how we can help.").max(2500),
     sourcePath: z.string().trim().min(1).max(120),
   })
@@ -156,7 +158,7 @@ export const featureRequestSchema = z
   .object({
     fullName: z.string().trim().min(2, "Enter your full name.").max(120),
     phone: tenDigitPhone,
-    role: z.enum(["farmer", "owner", "partner", "visitor"]),
+    role: z.enum(["farmer", "owner", "partner", "other"]),
     location: z.string().trim().min(2, "Enter your village or district.").max(160),
     category: z
       .enum(["discovery", "machine_types", "booking", "payments", "support", "trust", "other"]),

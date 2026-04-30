@@ -55,7 +55,6 @@ test("site contact pages route through the approved contact details and remove l
   const sources = await Promise.all(
     [
       "../app/support/page.tsx",
-      "../app/report/page.tsx",
       "../app/coming-soon/page.tsx",
       "../app/partner/page.tsx",
       "../app/terms/page.tsx",
@@ -79,7 +78,6 @@ test("root app no longer ships old demo phone placeholders or outdated faq conta
     [
       "../app/forgot-password/page.tsx",
       "../app/register/page.tsx",
-      "../app/report/page.tsx",
       "../app/support/page.tsx",
       "../components/renter-profile/RenterProfileViews.tsx",
       "../lib/i18n.auto.ts",

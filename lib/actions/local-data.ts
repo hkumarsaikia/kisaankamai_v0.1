@@ -94,7 +94,6 @@ function revalidateCommonPaths() {
   safeRevalidatePath("/list-equipment");
   safeRevalidatePath("/support");
   safeRevalidatePath("/feedback");
-  safeRevalidatePath("/report");
   safeRevalidatePath("/coming-soon");
 }
 

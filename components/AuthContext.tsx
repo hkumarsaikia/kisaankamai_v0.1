@@ -11,6 +11,7 @@ interface AuthContextType {
   profile: ProfileRecord | null;
   activeWorkspace: LocalSession["activeWorkspace"] | null;
   loading: boolean;
+  refreshing: boolean;
   isProfileComplete: boolean;
   logout: () => Promise<void>;
   refreshProfile: () => Promise<void>;
@@ -22,6 +23,7 @@ const AuthContext = createContext<AuthContextType>({
   profile: null,
   activeWorkspace: null,
   loading: false,
+  refreshing: false,
   isProfileComplete: false,
   logout: async () => {},
   refreshProfile: async () => {},
@@ -53,7 +55,8 @@ export function AuthProvider({
 }) {
   const router = useRouter();
   const [session, setSessionState] = useState<LocalSession | null>(initialSession);
-  const [loading, setLoading] = useState(false);
+  const [authBusy, setAuthBusy] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const refreshInFlight = useRef<Promise<void> | null>(null);
   const mounted = useRef(false);
 
@@ -67,7 +70,7 @@ export function AuthProvider({
     }
 
     const refresh = (async () => {
-      setLoading(true);
+      setRefreshing(true);
       try {
         const nextSession = await fetchCurrentSession();
         if (mounted.current) {
@@ -76,7 +79,7 @@ export function AuthProvider({
         }
       } finally {
         if (mounted.current) {
-          setLoading(false);
+          setRefreshing(false);
         }
         refreshInFlight.current = null;
       }
@@ -87,7 +90,7 @@ export function AuthProvider({
   }, [router]);
 
   const logout = useCallback(async () => {
-    setLoading(true);
+    setAuthBusy(true);
     try {
       await fetch("/api/auth/logout", {
         method: "POST",
@@ -98,7 +101,7 @@ export function AuthProvider({
       emitAuthSyncEvent("logout");
       router.refresh();
     } finally {
-      setLoading(false);
+      setAuthBusy(false);
     }
   }, [router]);
 
@@ -137,13 +140,14 @@ export function AuthProvider({
       user: session?.user || null,
       profile: session?.profile || null,
       activeWorkspace: session?.activeWorkspace || null,
-      loading,
+      loading: authBusy,
+      refreshing,
       isProfileComplete: Boolean(session?.profile?.phone && session.profile?.pincode),
       logout,
       refreshProfile,
       setSession,
     }),
-    [loading, logout, refreshProfile, session, setSession]
+    [authBusy, logout, refreshProfile, refreshing, session, setSession]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

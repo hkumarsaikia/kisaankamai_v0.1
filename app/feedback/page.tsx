@@ -36,7 +36,7 @@ export default function FeedbackPage() {
               alt="Vibrant green agricultural field in Maharashtra with a modern tractor working the soil"
               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfj3_OKbru5os0rJzvKTDBDPpW5_BDrHKJtMrwajXYlumzwab5Z__wadjMlQdVbb8uf7L5CwdWIwDaGy1GZ8xwM6H048tyctq1v9AH-k-LRlHgHJ4ZwUpl4fCx2NKyok6w0SEfKcew6jWxd3TNlI0B7pBfQ96HJygxBfhLqnnVLjFz0bLV40BoBhcUAA6OAg106L3tbMtBuCmln-pc_oDHK9tk9oUBgAy7J7oFEWxGN9Z5a-V6RK5xL2ueooEKNrog6WV37etzGekm"
             />
-            <div className="absolute inset-0 bg-black/30" />
+            <div className="kk-banner-image-overlay" />
           </div>
           <div className="relative z-10 max-w-4xl mx-auto px-6 text-center text-white">
             <h1 className="text-4xl md:text-5xl font-black mb-6 leading-tight tracking-tight">
@@ -68,7 +68,7 @@ export default function FeedbackPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {featureHighlights.map((item) => (
-                <div key={item.cacheKey} className="flex flex-col gap-4 p-6 rounded-2xl border border-[#d4e2de] dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+                <div key={item.cacheKey} className="kk-depth-tile flex flex-col gap-4 p-6 rounded-2xl border border-[#d4e2de] dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
                   <div className="w-12 h-12 bg-[#eaf1ee] dark:bg-emerald-950 flex items-center justify-center rounded-xl text-primary dark:text-emerald-400">
                     <span className="material-symbols-outlined text-2xl">{item.icon}</span>
                   </div>

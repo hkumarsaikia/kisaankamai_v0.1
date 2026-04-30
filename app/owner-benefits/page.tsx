@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { ContentImage } from "@/components/ContentImage";
 import { useLanguage } from "@/components/LanguageContext";
+import { MAHARASHTRA_DISTRICTS } from "@/lib/auth/india-districts";
 import { assetPath } from "@/lib/site";
 
 const ownerEarningCategories = [
@@ -80,26 +81,13 @@ const ownerEarningCategories = [
   },
 ] as const;
 
-const ownerDistricts = [
-  "Nashik",
-  "Jalgaon",
-  "Dhule",
-  "Nandurbar",
-  "Ahmednagar",
-  "Chhatrapati Sambhajinagar",
-  "Pune",
-  "Satara",
-  "Sangli",
-  "Kolhapur",
-] as const;
-
 type OwnerEarningCategory = (typeof ownerEarningCategories)[number];
 
 export default function OwnerBenefitsPage() {
   const { t, langText } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<OwnerEarningCategory>(ownerEarningCategories[0]);
   const [usageDays, setUsageDays] = useState(15);
-  const [district, setDistrict] = useState<string>(ownerDistricts[0]);
+  const [district, setDistrict] = useState<string>(MAHARASHTRA_DISTRICTS[0]);
 
   const monthlyEstimate = useMemo(() => {
     const base = selectedCategory.rate * usageDays;
@@ -123,8 +111,7 @@ export default function OwnerBenefitsPage() {
               loading="lazy"
               decoding="async"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+            <div className="kk-banner-image-overlay" />
           </div>
           <div className="relative z-10 flex w-full justify-start px-6 text-left sm:px-10 lg:px-16 xl:px-24">
             <div className="max-w-3xl space-y-8">
@@ -160,37 +147,26 @@ export default function OwnerBenefitsPage() {
                   <label className="mb-4 block text-sm font-bold uppercase tracking-wider text-primary dark:text-emerald-400">
                     {t("owner-benefits.equipment_type")}
                   </label>
-                  <div className="space-y-3">
-                    {ownerEarningCategories.map((category) => {
-                      const active = category.label === selectedCategory.label;
-                      return (
-                        <button
-                          key={category.label}
-                          type="button"
-                          onClick={() => setSelectedCategory(category)}
-                          className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition-colors ${
-                            active
-                              ? "border-primary bg-primary text-white"
-                              : "border-outline-variant bg-surface-container-lowest text-on-surface-variant hover:border-primary/60 hover:text-primary"
-                          }`}
-                        >
-                          <span className="flex items-center gap-3">
-                            <span className="material-symbols-outlined">{category.icon}</span>
-                            <span>
-                              <span className="block font-bold">{langText(category.label, category.mrLabel)}</span>
-                              <span className={`text-xs ${active ? "text-white/75" : "text-on-surface-variant"}`}>
-                                {category.detail}
-                              </span>
-                            </span>
-                          </span>
-                          {active ? (
-                            <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>
-                              check_circle
-                            </span>
-                          ) : null}
-                        </button>
-                      );
-                    })}
+                  <div className="relative">
+                    <select
+                      className="kk-select-control w-full appearance-none rounded-xl border border-outline-variant bg-surface-container-lowest bg-none px-4 py-3 pr-12 text-on-surface focus:border-primary focus:ring-primary"
+                      value={selectedCategory.label}
+                      onChange={(event) => {
+                        const nextCategory = ownerEarningCategories.find((category) => category.label === event.target.value);
+                        if (nextCategory) {
+                          setSelectedCategory(nextCategory);
+                        }
+                      }}
+                    >
+                      {ownerEarningCategories.map((category) => (
+                        <option key={category.label} value={category.label}>
+                          {langText(category.label, category.mrLabel)} - {category.detail}
+                        </option>
+                      ))}
+                    </select>
+                    <span className="kk-select-arrow material-symbols-outlined pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-outline">
+                      expand_more
+                    </span>
                   </div>
                 </div>
 
@@ -198,17 +174,22 @@ export default function OwnerBenefitsPage() {
                   <label className="mb-4 block text-sm font-bold uppercase tracking-wider text-primary dark:text-emerald-400">
                     {t("owner-benefits.operational_district")}
                   </label>
-                  <select
-                    className="w-full rounded-xl border-outline-variant bg-surface-container-lowest py-3 text-on-surface focus:border-primary focus:ring-primary"
-                    value={district}
-                    onChange={(event) => setDistrict(event.target.value)}
-                  >
-                    {ownerDistricts.map((item) => (
-                      <option key={item} value={item}>
+                  <div className="max-h-64 overflow-y-auto rounded-xl border border-outline-variant bg-surface-container-lowest p-2">
+                    {MAHARASHTRA_DISTRICTS.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => setDistrict(item)}
+                        className={`block w-full rounded-lg px-4 py-2 text-left text-sm font-bold transition-colors ${
+                          district === item
+                            ? "bg-primary text-white"
+                            : "text-on-surface-variant hover:bg-surface-container-low hover:text-primary"
+                        }`}
+                      >
                         {item}
-                      </option>
+                      </button>
                     ))}
-                  </select>
+                  </div>
                 </div>
 
                 <div>
@@ -232,12 +213,12 @@ export default function OwnerBenefitsPage() {
               </div>
 
               <div className="grid grid-cols-1 gap-6 lg:col-span-2">
-                <div className="relative flex flex-col justify-between overflow-hidden rounded-3xl bg-primary-container p-10 text-white">
+                <div className="kk-depth-tile relative flex flex-col justify-between overflow-hidden rounded-3xl bg-primary-container p-8 text-white md:p-10">
                   <div className="relative z-10">
                     <span className="text-sm font-bold uppercase tracking-widest text-emerald-200">
                       {t("owner-benefits.estimated_monthly_earnings")}
                     </span>
-                    <div className="mb-2 mt-4 text-5xl font-extrabold md:text-6xl">
+                    <div className="mb-2 mt-4 text-[clamp(2rem,5vw,4rem)] font-extrabold leading-tight">
                       {currency(monthlyEstimate.low)} - {currency(monthlyEstimate.high)}
                     </div>
                     <p className="max-w-xl text-emerald-100">
@@ -270,19 +251,6 @@ export default function OwnerBenefitsPage() {
                   <span className="material-symbols-outlined absolute -bottom-8 -right-8 text-[200px] text-white opacity-5">
                     payments
                   </span>
-                </div>
-
-                <div className="grid gap-4 md:grid-cols-3">
-                  {[
-                    [t("owner-benefits.platform_fee"), t("owner-benefits.transparent_10_commission_only_when_you_earn_no_hidden_listing_charges")],
-                    [t("owner-benefits.safe_handoff_protocol"), t("owner-benefits.digital_checklist_and_photo_verification_at_both_pickup_and_return_ensures_your_equipment_s_condition_is_documented")],
-                    [t("owner-benefits.your_machine_is_our_priority"), langText("Owner-managed terms keep pricing, availability, and machine use clear before every rental.", "प्रत्येक भाड्यापूर्वी दर, उपलब्धता आणि मशीनचा वापर स्पष्ट राहतो.")],
-                  ].map(([title, body]) => (
-                    <div key={title} className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6">
-                      <h3 className="font-headline text-lg font-bold text-primary dark:text-emerald-50">{title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-on-surface-variant">{body}</p>
-                    </div>
-                  ))}
                 </div>
               </div>
             </div>
