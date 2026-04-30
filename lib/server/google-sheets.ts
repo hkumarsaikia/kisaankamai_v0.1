@@ -60,6 +60,7 @@ type SpreadsheetStateEntry = {
   columnCount: number;
   conditionalRuleCount: number;
   hasBasicFilter: boolean;
+  hasTable: boolean;
   bandedRangeIds: number[];
 };
 
@@ -367,10 +368,11 @@ async function getSpreadsheetState() {
       conditionalFormats?: unknown[];
       basicFilter?: object;
       bandedRanges?: Array<{ bandedRangeId?: number }>;
+      tables?: Array<{ tableId?: string }>;
     }>;
   }>(
     `?fields=${encodeURIComponent(
-      "sheets(properties(sheetId,title,gridProperties(frozenRowCount,columnCount)),conditionalFormats,basicFilter,bandedRanges(bandedRangeId))"
+      "sheets(properties(sheetId,title,gridProperties(frozenRowCount,columnCount)),conditionalFormats,basicFilter,bandedRanges(bandedRangeId),tables(tableId))"
     )}`
   );
 
@@ -383,6 +385,7 @@ async function getSpreadsheetState() {
         columnCount: sheet.properties?.gridProperties?.columnCount || 0,
         conditionalRuleCount: Array.isArray(sheet.conditionalFormats) ? sheet.conditionalFormats.length : 0,
         hasBasicFilter: Boolean(sheet.basicFilter),
+        hasTable: Array.isArray(sheet.tables) && sheet.tables.length > 0,
         bandedRangeIds: (sheet.bandedRanges || [])
           .map((banding) => banding.bandedRangeId)
           .filter((bandedRangeId): bandedRangeId is number => typeof bandedRangeId === "number"),
@@ -522,6 +525,21 @@ async function ensureWorkbookStructure() {
         fields: "pixelSize",
       },
     });
+
+    if (!sheetState.hasBasicFilter && !sheetState.hasTable) {
+      formatRequests.push({
+        setBasicFilter: {
+          filter: {
+            range: {
+              sheetId: sheetState.sheetId,
+              startRowIndex: 0,
+              startColumnIndex: 0,
+              endColumnIndex: definition.columns.length,
+            },
+          },
+        },
+      });
+    }
 
     for (const bandingId of sheetState.bandedRangeIds) {
       formatRequests.push({

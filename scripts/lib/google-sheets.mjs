@@ -154,7 +154,7 @@ async function sheetsFetch(path, init = {}, overrides = {}) {
 
 async function getSpreadsheetState(overrides = {}) {
   const fields =
-    "sheets(properties(sheetId,title,gridProperties(frozenRowCount,columnCount)),conditionalFormats,basicFilter)";
+    "sheets(properties(sheetId,title,gridProperties(frozenRowCount,columnCount)),conditionalFormats,basicFilter,bandedRanges(bandedRangeId),tables(tableId))";
   const payload = await sheetsFetch(`?fields=${encodeURIComponent(fields)}`, undefined, overrides);
 
   return new Map(
@@ -166,6 +166,10 @@ async function getSpreadsheetState(overrides = {}) {
         columnCount: sheet.properties?.gridProperties?.columnCount || 0,
         conditionalRuleCount: Array.isArray(sheet.conditionalFormats) ? sheet.conditionalFormats.length : 0,
         hasBasicFilter: Boolean(sheet.basicFilter),
+        hasTable: Array.isArray(sheet.tables) && sheet.tables.length > 0,
+        bandedRangeIds: (sheet.bandedRanges || [])
+          .map((banding) => banding.bandedRangeId)
+          .filter((bandedRangeId) => typeof bandedRangeId === "number"),
       }))
       .filter((sheet) => sheet.title && Number.isInteger(sheet.sheetId))
       .map((sheet) => [sheet.title, sheet])
@@ -393,6 +397,71 @@ export async function ensureWorkbookStructure(overrides = {}) {
       });
     }
 
+    requests.push({
+      updateDimensionProperties: {
+        range: {
+          sheetId: sheetState.sheetId,
+          dimension: "ROWS",
+          startIndex: 0,
+          endIndex: 1,
+        },
+        properties: {
+          pixelSize: 42,
+        },
+        fields: "pixelSize",
+      },
+    });
+
+    if (!sheetState.hasBasicFilter && !sheetState.hasTable) {
+      requests.push({
+        setBasicFilter: {
+          filter: {
+            range: {
+              sheetId: sheetState.sheetId,
+              startRowIndex: 0,
+              startColumnIndex: 0,
+              endColumnIndex: definition.columns.length,
+            },
+          },
+        },
+      });
+    }
+
+    for (const bandingId of sheetState.bandedRangeIds || []) {
+      requests.push({
+        deleteBanding: {
+          bandedRangeId: bandingId,
+        },
+      });
+    }
+
+    requests.push({
+      addBanding: {
+        bandedRange: {
+          range: {
+            sheetId: sheetState.sheetId,
+            startRowIndex: 0,
+            startColumnIndex: 0,
+            endColumnIndex: definition.columns.length,
+          },
+          rowProperties: {
+            headerColorStyle: {
+              rgbColor: hexToRgbColor(definition.tabColor),
+            },
+            firstBandColorStyle: {
+              rgbColor: hexToRgbColor("#FFFFFF"),
+            },
+            secondBandColorStyle: {
+              rgbColor: hexToRgbColor("#F4F7F3"),
+            },
+            footerColorStyle: {
+              rgbColor: hexToRgbColor("#E7EFE8"),
+            },
+          },
+        },
+      },
+    });
+
     requests.push(
       {
         repeatCell: {
@@ -607,7 +676,7 @@ export async function verifyWorkbookStructure(overrides = {}) {
       exists: Boolean(sheetState),
       headerMatch: JSON.stringify(headers) === JSON.stringify(definition.headers),
       frozenRowMatch: (sheetState?.frozenRowCount || 0) === 1,
-      filterPresent: Boolean(sheetState?.hasBasicFilter),
+      filterPresent: Boolean(sheetState?.hasBasicFilter || sheetState?.hasTable),
       conditionalRuleCount,
       expectedConditionalRuleCount: expectedRuleCount,
       conditionalRuleMatch: conditionalRuleCount >= expectedRuleCount,
@@ -616,7 +685,7 @@ export async function verifyWorkbookStructure(overrides = {}) {
 
   return {
     ok: sheetChecks.every(
-      (check) => check.exists && check.headerMatch && check.frozenRowMatch && check.conditionalRuleMatch
+      (check) => check.exists && check.headerMatch && check.frozenRowMatch && check.filterPresent && check.conditionalRuleMatch
     ),
     manifestVersion: workbookManifest.version,
     spreadsheetId: getGoogleSheetConfig(overrides).spreadsheetId,
