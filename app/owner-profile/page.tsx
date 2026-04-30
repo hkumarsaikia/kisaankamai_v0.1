@@ -1,5 +1,6 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
+import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
 import { supportContact } from "@/lib/support-contact";
@@ -27,8 +28,11 @@ export default async function OwnerProfilePage() {
     <OwnerProfileWorkspaceShell
       family="owner-profile"
       activeTab="dashboard"
-      title="Owner Profile"
-      subtitle="Review bookings, equipment performance, and earnings without leaving the owner workspace."
+      title={localizedText("Owner Profile", "मालक प्रोफाइल")}
+      subtitle={localizedText(
+        "Review bookings, equipment performance, and earnings without leaving the owner workspace.",
+        "मालक वर्कस्पेस न सोडता बुकिंग, उपकरण कामगिरी आणि कमाई तपासा."
+      )}
     >
       <div className="space-y-8">
         <section className="grid gap-4 md:grid-cols-3">

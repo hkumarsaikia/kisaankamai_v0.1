@@ -89,6 +89,9 @@ test("profile settings use supplied structures, uploads, readonly phone, distric
 
   assert.match(settings, /Change Profile Picture/);
   assert.match(settings, /profilePhotoInputRef/);
+  assert.match(settings, /useAuth/);
+  assert.match(settings, /emitAuthSyncEvent\("session-refresh"\)/);
+  assert.match(settings, /refreshProfile\(\)/);
   assert.doesNotMatch(settings, /aria-label="Upload or change profile picture"/);
   assert.match(settings, /readOnly[\s\S]*Phone/);
   assert.match(settings, /MAHARASHTRA_DISTRICTS/);
@@ -160,6 +163,35 @@ test("equipment detail supports workspace chrome, sticky booking panel, and unau
   assert.match(renterBrowser, /\/renter-profile\/equipment\/\$\{item\.id\}/);
   assert.match(ownerBookings, /\/owner-profile\/equipment\/\$\{listing\?\.id \|\| booking\.listingId\}/);
   assert.match(renterBookings, /\/renter-profile\/equipment\/\$\{listing\?\.id \|\| booking\.listingId\}/);
+});
+
+test("profile workspace route shells use localized titles and subtitles", async () => {
+  const workspacePages = [
+    "../app/owner-profile/page.tsx",
+    "../app/owner-profile/browse/page.tsx",
+    "../app/owner-profile/bookings/page.tsx",
+    "../app/owner-profile/earnings/page.tsx",
+    "../app/owner-profile/settings/page.tsx",
+    "../app/owner-profile/feedback/page.tsx",
+    "../app/owner-profile/support/page.tsx",
+    "../app/renter-profile/page.tsx",
+    "../app/renter-profile/browse/page.tsx",
+    "../app/renter-profile/bookings/page.tsx",
+    "../app/renter-profile/saved/page.tsx",
+    "../app/renter-profile/settings/page.tsx",
+    "../app/renter-profile/feedback/page.tsx",
+    "../app/renter-profile/support/page.tsx",
+  ];
+
+  for (const filePath of workspacePages) {
+    const source = await readSource(filePath);
+    assert.match(source, /localizedText/);
+    assert.match(source, /title=\{localizedText\(/);
+    assert.match(source, /subtitle=\{localizedText\(/);
+    assert.doesNotMatch(source, /title="[^"]+"/);
+    assert.doesNotMatch(source, /subtitle="[^"]+"/);
+    assert.doesNotMatch(source, /\/\s*[\u0900-\u097F]/);
+  }
 });
 
 test("dark-mode overlays and depth tiles avoid the requested vignette and white glare", async () => {

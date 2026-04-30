@@ -119,7 +119,7 @@ export default function SupportPage() {
           <div className="kk-banner-image-overlay" />
           <div className="relative z-10 px-6 text-center">
             <h1 className="font-headline text-4xl font-extrabold text-white md:text-6xl">
-              {langText("We're here to help", "आम्ही मदतीसाठी येथे आहोत")}
+              {langText("How can we help you today?", "आज आम्ही तुम्हाला कशी मदत करू शकतो?")}
             </h1>
             <p className="mx-auto mt-4 max-w-2xl text-lg font-semibold text-white/85">
               {langText(
@@ -315,9 +315,12 @@ export default function SupportPage() {
           <div className="kk-banner-image-overlay" />
           <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-8 px-8 py-12 md:flex-row">
             <div className="text-white">
-              <h2 className="text-4xl font-extrabold">{langText("Need help right now?", "आत्ताच मदत हवी आहे का?")}</h2>
+              <h2 className="text-4xl font-extrabold">{langText("Need urgent help?", "तातडीची मदत हवी आहे का?")}</h2>
               <p className="mt-2 text-xl text-primary-fixed-dim">
-                {langText("Call or message our support team.", "आमच्या सहाय्य टीमला कॉल किंवा संदेश करा.")}
+                {langText(
+                  `Call or message ${supportContact.primaryContactName} for direct support.`,
+                  `थेट मदतीसाठी ${supportContact.primaryContactName} यांना कॉल किंवा संदेश करा.`
+                )}
               </p>
             </div>
             <div className="flex flex-wrap gap-4">

@@ -1,4 +1,5 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
+import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
 
@@ -40,8 +41,11 @@ export default async function OwnerProfileEarningsPage() {
     <OwnerProfileWorkspaceShell
       family="owner-profile"
       activeTab="earnings"
-      title="Pricing & Earnings"
-      subtitle="Track listed rates, booking estimates, and completed rental income."
+      title={localizedText("Pricing & Earnings", "किंमत आणि कमाई")}
+      subtitle={localizedText(
+        "Track listed rates, booking estimates, and completed rental income.",
+        "लिस्ट केलेले दर, बुकिंग अंदाज आणि पूर्ण झालेली भाडे कमाई ट्रॅक करा."
+      )}
     >
       <div className="space-y-8">
         <section>

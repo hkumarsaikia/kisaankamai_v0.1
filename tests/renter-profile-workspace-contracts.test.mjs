@@ -26,7 +26,7 @@ test("renter-profile routes use the new renter booking board while preserving co
     readFile(new URL("../app/renter-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(root, /title="Renter Profile"/);
+  assert.match(root, /title=\{localizedText\("Renter Profile", "भाडेकरू प्रोफाइल"\)\}/);
   assert.match(root, /RenterBookingsBoard/);
   assert.match(root, /variant="dashboard"/);
   assert.match(bookings, /RenterBookingsBoard/);

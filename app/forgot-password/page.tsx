@@ -123,7 +123,7 @@ export default function ForgotPasswordPage() {
             </span>
           </div>
           <h2 className="font-headline text-2xl font-bold text-primary">
-            {text("Secure Access", { cacheKey: "forgot-password.hero-title" })}
+            {text("Password Help", { cacheKey: "forgot-password.hero-title" })}
           </h2>
           <p className="mt-3 leading-relaxed text-on-surface-variant">
             {text("Reset access through the registered email or mobile number linked to your Kisan Kamai account.", {
@@ -141,6 +141,13 @@ export default function ForgotPasswordPage() {
           }}
         />
         <div className="kk-auth-card relative z-10 w-full max-w-md bg-white/86 p-8 shadow-xl backdrop-blur-2xl dark:bg-surface-container-lowest/86 md:p-12">
+          <Link
+            className="mb-8 inline-flex items-center gap-2 text-sm font-bold text-primary transition-all hover:underline"
+            href="/login"
+          >
+            <span className="material-symbols-outlined text-lg">arrow_back</span>
+            {langText("Back to Sign In", "साइन इनकडे परत जा")}
+          </Link>
           <div className="mb-10 text-center">
             <div className="mb-6 flex justify-center md:hidden">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-lg">
@@ -148,7 +155,7 @@ export default function ForgotPasswordPage() {
               </div>
             </div>
             <h1 className="font-headline text-3xl font-extrabold leading-tight text-on-surface">
-              {langText("Forgot Password", "पासवर्ड विसरलात")}
+              {langText("Reset your password", "तुमचा पासवर्ड रीसेट करा")}
             </h1>
             <p className="mt-4 text-base leading-relaxed text-on-surface-variant">
               {PHONE_RESET_OTP_ENABLED
@@ -197,7 +204,7 @@ export default function ForgotPasswordPage() {
               aria-busy={isSubmitting}
             >
               {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
-              <span>{isSubmitting ? langText("Checking account...", "खाते तपासत आहे...") : langText("Continue", "पुढे जा")}</span>
+              <span>{isSubmitting ? langText("Checking account...", "खाते तपासत आहे...") : langText("Send Reset Code", "रीसेट कोड पाठवा")}</span>
               <span className="material-symbols-outlined text-xl">send</span>
             </button>
           </form>

@@ -1,5 +1,6 @@
 import { OwnerEquipmentBrowser } from "@/components/owner-profile/OwnerEquipmentBrowser";
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
+import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings, getOwnerListings } from "@/lib/server/local-data";
 
@@ -29,8 +30,11 @@ export default async function OwnerProfileBrowsePage() {
     <OwnerProfileWorkspaceShell
       family="owner-profile"
       activeTab="browse"
-      title="My Equipment"
-      subtitle="Review your live listings, sort by HP or distance, and open edit or detail flows safely."
+      title={localizedText("My Equipment", "माझी उपकरणे")}
+      subtitle={localizedText(
+        "Review your live listings, sort by HP or distance, and open edit or detail flows safely.",
+        "तुमच्या सक्रिय लिस्टिंग तपासा, HP किंवा अंतरानुसार क्रम लावा आणि संपादन किंवा तपशील सुरक्षितपणे उघडा."
+      )}
     >
       <OwnerEquipmentBrowser listings={listingSummaries} />
     </OwnerProfileWorkspaceShell>

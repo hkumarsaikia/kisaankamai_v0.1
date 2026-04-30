@@ -1,5 +1,6 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
 import { SavedListingsBoard } from "@/components/profile/SavedListingsBoard";
+import { localizedText } from "@/lib/i18n";
 import { getRenterSavedListings } from "@/lib/server/firebase-data";
 import { getCurrentSession } from "@/lib/server/local-auth";
 
@@ -11,8 +12,11 @@ export default async function RenterProfileSavedPage() {
     <OwnerProfileWorkspaceShell
       family="renter-profile"
       activeTab="saved"
-      title="Saved Equipment"
-      subtitle="Review the machines you shortlisted for future bookings"
+      title={localizedText("Saved Equipment", "जतन केलेली उपकरणे")}
+      subtitle={localizedText(
+        "Review the machines you shortlisted for future bookings.",
+        "भविष्यातील बुकिंगसाठी जतन केलेली उपकरणे तपासा."
+      )}
     >
       <SavedListingsBoard listings={listings} />
     </OwnerProfileWorkspaceShell>

@@ -16,6 +16,12 @@ const QUERY_ALIASES: Record<string, string[]> = {
   sprayers: ["sprayer"],
   seeder: ["seeder", "seed drill"],
   seeders: ["seeder", "seed drill"],
+  thresher: ["thresher"],
+  threshers: ["thresher"],
+  pump: ["pump"],
+  pumps: ["pump"],
+  baler: ["baler"],
+  balers: ["baler"],
   trolley: ["trolley"],
   trolleys: ["trolley"],
 };

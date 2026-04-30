@@ -57,6 +57,11 @@ test("Google Maps apply persisted map type without controlling mapTypeId on ever
 test("support page uses the provided contact form shape and removes owner support priority", async () => {
   const support = await readSource("../app/support/page.tsx");
 
+  assert.match(support, /How can we help you today\?/);
+  assert.match(support, /Need urgent help\?/);
+  assert.match(support, /supportContact\.primaryContactName/);
+  assert.doesNotMatch(support, /placeholder=\{langText\("Search|Search support topics/);
+  assert.doesNotMatch(support, /1800-123-4567|Pune, Maharashtra/);
   assert.match(support, /Contact Us/);
   assert.match(support, /district/);
   assert.match(support, /inquiryType/);
@@ -72,6 +77,20 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.doesNotMatch(support, /lg:order-2|lg:order-1|order-2|order-1/);
   assert.doesNotMatch(support, /Send us a message/);
   assert.doesNotMatch(support, /Owner Support Priority/);
+});
+
+test("forgot password uses the supplied reset layout while preserving the reset API flow", async () => {
+  const forgot = await readSource("../app/forgot-password/page.tsx");
+
+  assert.match(forgot, /Reset your password/);
+  assert.match(forgot, /Back to Sign In/);
+  assert.match(forgot, /Send Reset Code/);
+  assert.match(forgot, /\/api\/auth\/password-reset\/request/);
+  assert.match(forgot, /router\.push\("\/forgot-password\/verify-otp"\)/);
+  assert.match(forgot, /fieldImage/);
+  assert.match(forgot, /blur-sm/);
+  assert.doesNotMatch(forgot, /Secure Access/);
+  assert.doesNotMatch(forgot, /Continue", "पुढे जा"/);
 });
 
 test("feature request role and select controls include Other with one custom arrow", async () => {
@@ -91,6 +110,12 @@ test("owner benefits uses compact selectors, all Maharashtra districts, and no r
   const ownerBenefits = await readSource("../app/owner-benefits/page.tsx");
   const districtSource = await readSource("../lib/auth/india-districts.ts");
 
+  assert.match(ownerBenefits, /Your Equipment, Your Growth\./);
+  assert.match(ownerBenefits, /href="\/login"[\s\S]*Start Now/);
+  assert.match(ownerBenefits, /earningsEstimateRef/);
+  assert.match(ownerBenefits, /scrollIntoView\(\{\s*behavior:\s*"smooth"/);
+  assert.match(ownerBenefits, /More locations coming soon\.\.\./);
+  assert.match(ownerBenefits, /BASE_EQUIPMENT_CATEGORIES/);
   assert.match(ownerBenefits, /<select[\s\S]*selectedCategory\.label/);
   assert.doesNotMatch(ownerBenefits, /ownerEarningCategories\.map\(\(category\) => \(\s*<button/);
   assert.match(ownerBenefits, /MAHARASHTRA_DISTRICTS/);
@@ -267,12 +292,19 @@ test("owner listing photos are limited to three and mirrored as explicit URLs an
 });
 
 test("rent equipment pages expose base search, query sort, and compact no-equipment spacing", async () => {
-  const viewSource = await readSource("../app/rent-equipment/RentEquipmentView.tsx");
+  const [viewSource, pageSource] = await Promise.all([
+    readSource("../app/rent-equipment/RentEquipmentView.tsx"),
+    readSource("../app/rent-equipment/page.tsx"),
+  ]);
 
   assert.match(viewSource, /available-search-panel/);
   assert.match(viewSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
   assert.match(viewSource, /pb-3 md:pb-4/);
+  assert.match(viewSource, /pt-28 md:pt-32/);
   assert.doesNotMatch(viewSource, /pt-24 pb-16/);
+  assert.match(pageSource, /balers:\s*\["baler"\]/);
+  assert.match(pageSource, /pumps:\s*\["pump"\]/);
+  assert.match(pageSource, /threshers:\s*\["thresher"\]/);
 });
 
 test("equipment detail has category breadcrumbs, public three-photo gallery, dark surfaces, sticky scroll, and own-listing toast", async () => {

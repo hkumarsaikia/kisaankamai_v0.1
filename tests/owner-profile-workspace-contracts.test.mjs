@@ -27,13 +27,13 @@ test("owner-profile routes use the new owner dashboard, equipment browser, earni
     readFile(new URL("../app/owner-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
   ]);
 
-  assert.match(root, /title="Owner Profile"/);
+  assert.match(root, /title=\{localizedText\("Owner Profile", "मालक प्रोफाइल"\)\}/);
   assert.match(root, /getOwnerListings/);
   assert.match(root, /getOwnerBookings/);
   assert.match(root, /getOwnerPayments/);
   assert.match(browse, /OwnerEquipmentBrowser/);
-  assert.match(browse, /title="My Equipment"/);
-  assert.match(earnings, /Pricing & Earnings/);
+  assert.match(browse, /title=\{localizedText\("My Equipment", "माझी उपकरणे"\)\}/);
+  assert.match(earnings, /localizedText\("Pricing & Earnings", "किंमत आणि कमाई"\)/);
   assert.match(earnings, /getOwnerPayments/);
   assert.match(earnings, /activeTab="earnings"/);
   assert.match(saved, /redirect\("\/owner-profile\/browse"\)/);

@@ -2,6 +2,8 @@
 
 import type { LocalSession, UserRole, VerificationDocumentRecord } from "@/lib/local-data/types";
 import { MAHARASHTRA_DISTRICTS } from "@/lib/auth/india-districts";
+import { useAuth } from "@/components/AuthContext";
+import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 
@@ -42,6 +44,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
 
   const formId = `${family}-settings-form`;
   const router = useRouter();
+  const { refreshProfile } = useAuth();
   const profilePhotoInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
   const [isPhotoUploading, setIsPhotoUploading] = useState(false);
@@ -186,6 +189,8 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       }
 
       setProfilePhotoUrl(payload.photoUrl);
+      await refreshProfile();
+      emitAuthSyncEvent("session-refresh");
       router.refresh();
     } catch (photoError) {
       setError(photoError instanceof Error ? photoError.message : "Could not update profile picture.");
