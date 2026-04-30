@@ -108,9 +108,10 @@ Required services:
 3. **Cloud Firestore** for users, profiles, listings, bookings, payments, saved items, and submissions.
 4. **Cloud Storage** for listing media uploads.
 5. Optional **Google Sheets** workbook plus service account credentials for the best-effort operational mirror.
-6. Optional **Sentry** DSNs for production observability.
-7. Firebase Auth **phone test numbers** in Console for deterministic OTP validation.
-8. Firebase Cloud Messaging **Web Push VAPID key** in Console for browser notifications.
+6. Gmail SMTP credentials exposed to App Hosting as `KK_SMTP_USER` and `KK_SMTP_PASSWORD` secrets when live form notification emails are required.
+7. Optional **Sentry** DSNs for production observability.
+8. Firebase Auth **phone test numbers** in Console for deterministic OTP validation.
+9. Firebase Cloud Messaging **Web Push VAPID key** in Console for browser notifications.
 
 Public account creation and login are phone-only. Users verify a phone number during registration, set a password, and later sign in with the registered mobile number plus password. Optional email is profile metadata only. Google sign-in and Google registration are intentionally disabled in the app; do not enable Google Auth for the public flow unless the product decision changes.
 

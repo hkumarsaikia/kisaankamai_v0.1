@@ -34,6 +34,7 @@
         { "key": "address", "header": "Address", "width": 260, "type": "text" },
         { "key": "pincode", "header": "Pincode", "width": 120, "type": "text" },
         { "key": "field_area_acres", "header": "Field Area Acres", "width": 140, "type": "number" },
+        { "key": "farming_types", "header": "Farming Types", "width": 220, "type": "text" },
         { "key": "source", "header": "Source", "width": 160, "type": "text" },
         { "key": "record_state", "header": "Record State", "width": 120, "type": "text" }
       ],
@@ -60,6 +61,7 @@
         { "key": "address", "header": "Address", "width": 260, "type": "text" },
         { "key": "pincode", "header": "Pincode", "width": 120, "type": "text" },
         { "key": "field_area_acres", "header": "Field Area Acres", "width": 140, "type": "number" },
+        { "key": "farming_types", "header": "Farming Types", "width": 220, "type": "text" },
         { "key": "source", "header": "Source", "width": 160, "type": "text" },
         { "key": "record_state", "header": "Record State", "width": 120, "type": "text" }
       ],
@@ -206,6 +208,12 @@
         { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
         { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
         { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
       ]
     },
     {
@@ -232,6 +240,12 @@
         { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
         { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
         { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
       ]
     },
     {
@@ -252,7 +266,34 @@
       ],
       "conditionalRules": [
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" }
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
+      ]
+    },
+    {
+      "key": "coming_soon_notifications",
+      "title": "coming_soon_notifications",
+      "backfillMode": "replace",
+      "tabColor": "#2F7D64",
+      "columns": [
+        { "key": "submitted_at", "header": "Submitted At", "width": 190, "type": "datetime" },
+        { "key": "submission_id", "header": "Submission ID", "width": 170, "type": "text" },
+        { "key": "user_id", "header": "User ID", "width": 150, "type": "text" },
+        { "key": "contact", "header": "Contact", "width": 260, "type": "text" },
+        { "key": "email", "header": "Email", "width": 260, "type": "text" },
+        { "key": "phone", "header": "Phone", "width": 160, "type": "text" },
+        { "key": "source_path", "header": "Source Path", "width": 180, "type": "text" },
+        { "key": "payload_json", "header": "Payload JSON", "width": 360, "type": "json" },
+        { "key": "notification_email_to", "header": "Notification Email To", "width": 230, "type": "text" },
+        { "key": "notification_email_status", "header": "Notification Email Status", "width": 170, "type": "text" },
+        { "key": "notification_email_sent_at", "header": "Notification Email Sent At", "width": 190, "type": "datetime" }
+      ],
+      "conditionalRules": [
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
       ]
     },
     {
@@ -280,7 +321,11 @@
       "conditionalRules": [
         { "columnKey": "rating", "type": "NUMBER_GREATER_THAN_EQ", "value": "4", "background": "#E6F4EA", "foreground": "#137333" },
         { "columnKey": "rating", "type": "NUMBER_LESS_THAN_EQ", "value": "2", "background": "#FCE8E6", "foreground": "#C5221F" },
-        { "columnKey": "contact_me", "type": "TEXT_EQ", "value": "TRUE", "background": "#FFF4E5", "foreground": "#9C6500" }
+        { "columnKey": "contact_me", "type": "TEXT_EQ", "value": "TRUE", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
       ]
     },
     {

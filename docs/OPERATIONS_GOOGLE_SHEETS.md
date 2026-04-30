@@ -10,21 +10,26 @@ The workbook schema lives in `data/operational-sheets-workbook.json`.
 
 ## Form Email Notifications
 
-Form rows in `support_requests`, `booking_requests`, `newsletter_subscriptions`, and `feedback` include:
+Form rows in `support_requests`, `booking_requests`, `newsletter_subscriptions`,
+`coming_soon_notifications`, and `feedback` include:
 
 - `notification_email_to`
 - `notification_email_status`
 - `notification_email_sent_at`
 
 The live app writes `notification_email_to=hkumarsaikia@gmail.com` and
-`notification_email_status=pending`. A bound Google Sheets Apps Script then
-sends the actual email from the spreadsheet owner context, which is the only
-supported way to get the "from the sheet" sender behavior requested for this
-workflow.
+`notification_email_status=pending`, then sends the notification directly from
+the backend with Gmail SMTP when `KK_SMTP_USER` and `KK_SMTP_PASSWORD` are
+configured. After a send attempt, the app updates the mirrored row status to
+`sent`, `email_failed`, or `email_config_missing`.
+
+The bound Google Sheets Apps Script remains as a fallback/manual flush path for
+pending rows. It is not the primary live website email sender.
 
 Apps Script source lives in `scripts/google-sheets-apps-script/Code.gs`.
 
-Install it on the production workbook:
+Install or refresh it on the production workbook when the fallback menu is
+needed:
 
 1. Open the Google Sheet from `GOOGLE_SHEET_ID`.
 2. Go to Extensions -> Apps Script.
@@ -37,15 +42,22 @@ details so the receiver knows where the update happened and what request needs
 attention.
 
 The homepage footer newsletter writes to the `newsletter_subscriptions` tab.
-Support, feature request, report, callback, partner, and owner application
-forms write to `support_requests`. Booking callbacks write to
-`booking_requests`. Feedback writes to `feedback`.
+The `/coming-soon` notify form writes to `coming_soon_notifications`. Support,
+feature request, report, callback, partner, and owner application forms write
+to `support_requests`. Booking callbacks write to `booking_requests`. Feedback
+writes to `feedback`.
 
 ## Required Env
 
 - `GOOGLE_SHEET_ID`
 - `GOOGLE_SERVICE_ACCOUNT_EMAIL`
 - `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`
+- `KK_FORM_NOTIFICATION_TO`
+- `KK_SMTP_HOST`
+- `KK_SMTP_PORT`
+- `KK_SMTP_SECURE`
+- `KK_SMTP_USER`
+- `KK_SMTP_PASSWORD`
 
 The scripts also accept `--sheet-id` when you need to override the env workbook.
 
@@ -87,6 +99,7 @@ The operational workbook now includes:
 - `support_requests`
 - `booking_requests`
 - `newsletter_subscriptions`
+- `coming_soon_notifications`
 - `feedback`
 - `bug_reports`
 - `auth_events`
@@ -96,7 +109,7 @@ The operational workbook now includes:
 
 `google-sheets-backfill.mjs` replaces the Firestore-backed tabs from live data and preserves the sheet-native log tabs:
 
-- Replaced: owners, renters, listings, bookings, payments, saved_items, support_requests, booking_requests, newsletter_subscriptions, feedback, bug_reports
+- Replaced: owners, renters, listings, bookings, payments, saved_items, support_requests, booking_requests, newsletter_subscriptions, coming_soon_notifications, feedback, bug_reports
 - Preserved: auth_events, sync_audit
 
 Those preserved tabs are not rebuilt from Firebase because they are append-only operational logs that currently live in Sheets.
@@ -107,5 +120,6 @@ Those preserved tabs are not rebuilt from Firebase because they are append-only 
 - `booking_requests` is now a first-class sheet instead of being lost inside generic submission payloads.
 - `feature-request` submissions are visible in `support_requests` with subject, urgency, location, and message columns plus the full payload JSON.
 - Newsletter subscriptions are visible in `newsletter_subscriptions` and use the same pending/sent email notification columns as the other public forms.
+- Coming-soon notify requests are visible in `coming_soon_notifications` and use the backend SMTP notification flow.
 - Listings mirror the first three public gallery image URLs and their Storage paths so operations can audit exactly which owner-uploaded photos were saved.
 - `saved_items` is backfilled from Firestore even though the live runtime does not currently append every saved-item toggle into Sheets.

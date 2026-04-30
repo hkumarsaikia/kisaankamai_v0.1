@@ -92,7 +92,7 @@ export default async function OwnerProfilePage() {
                       Call Renter
                     </a>
                     <Link
-                      href={`/equipment/${booking.listing?.id || booking.listingId}`}
+                      href={`/owner-profile/equipment/${booking.listing?.id || booking.listingId}`}
                       className="inline-flex items-center gap-2 rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white"
                     >
                       <span className="material-symbols-outlined text-[18px]">visibility</span>
@@ -139,7 +139,7 @@ export default async function OwnerProfilePage() {
                         Edit Listing
                       </Link>
                       <Link
-                        href={`/equipment/${listing.id}`}
+                        href={`/owner-profile/equipment/${listing.id}`}
                         className="rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white"
                       >
                         Details

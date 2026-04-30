@@ -142,7 +142,7 @@ export default function OwnerBenefitsPage() {
             </div>
 
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-              <div className="space-y-8 rounded-3xl border border-outline-variant bg-surface-container-lowest p-8 shadow-sm lg:col-span-1">
+              <div className="kk-form-section space-y-8 p-8 lg:col-span-1">
                 <div>
                   <label className="mb-4 block text-sm font-bold uppercase tracking-wider text-primary dark:text-emerald-400">
                     {t("owner-benefits.equipment_type")}

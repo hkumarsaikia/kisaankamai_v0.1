@@ -64,7 +64,7 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.match(support, /Listing Equipment/);
   assert.match(support, /Support Issue/);
   assert.match(support, /Send Message/);
-  assert.match(support, /object-\[center_35%\]|object-\[center_30%\]/);
+  assert.match(support, /object-\[center_18%\]|object-\[center_35%\]|object-\[center_30%\]/);
   assert.match(support, /scrollTo\(\{\s*top:\s*0/);
   assert.doesNotMatch(support, /Send us a message/);
   assert.doesNotMatch(support, /Owner Support Priority/);
@@ -265,7 +265,7 @@ test("rent equipment pages expose base search, query sort, and compact no-equipm
 
   assert.match(viewSource, /available-search-panel/);
   assert.match(viewSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
-  assert.match(viewSource, /pb-8 md:pb-10/);
+  assert.match(viewSource, /pb-3 md:pb-4/);
   assert.doesNotMatch(viewSource, /pt-24 pb-16/);
 });
 
@@ -284,8 +284,8 @@ test("equipment detail has category breadcrumbs, public three-photo gallery, dar
   assert.match(detailSource, /OWN_LISTING/);
   assert.match(detailSource, /kk-depth-tile/);
   assert.match(layoutSource, /bg-surface-container-lowest/);
-  assert.match(layoutSource, /max-h-\[calc\(100vh-8rem\)\]/);
-  assert.match(layoutSource, /overflow-y-auto/);
+  assert.match(layoutSource, /lg:max-h-none/);
+  assert.doesNotMatch(layoutSource, /overflow-y-auto/);
   assert.match(actionSource, /code:\s*"OWN_LISTING"/);
 });
 

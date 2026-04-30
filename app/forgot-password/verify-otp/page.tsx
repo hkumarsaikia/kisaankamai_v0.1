@@ -182,7 +182,7 @@ export default function VerifyOtpPage() {
           className="h-full w-full object-cover grayscale-[10%] brightness-[90%]"
           src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
         />
-        <div className="kk-dark-image-overlay" />
+        <div className="absolute inset-0 bg-primary-container/55" />
       </div>
 
       <main className="relative z-10 flex min-h-screen items-center justify-center">

@@ -180,7 +180,7 @@ export function RenterBookingsBoard({
               const status = mapBookingStatus(booking.status);
               const actionState = buttonState[booking.id] || "idle";
               const isCancelling = actionState === "pending" || isPending;
-              const detailsHref = `/equipment/${listing?.id || booking.listingId}`;
+              const detailsHref = `/renter-profile/equipment/${listing?.id || booking.listingId}`;
               const ownerPhone = ownerProfile?.phone || supportContact.phoneE164;
               const ownerName = ownerProfile?.fullName || listing?.ownerName || "Verified Owner";
               const canCancel = booking.status !== "cancelled" && booking.status !== "completed";

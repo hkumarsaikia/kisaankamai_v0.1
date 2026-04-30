@@ -15,6 +15,15 @@ const optionalEmail = z
   .union([z.literal(""), z.string().trim().email("Enter a valid email address.")])
   .transform((value) => value || undefined);
 
+const emailOrPhoneContact = z
+  .string()
+  .trim()
+  .min(1, "Enter your email address or mobile number.")
+  .refine((value) => {
+    const digits = value.replace(/\D/g, "").slice(-10);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{10}$/.test(digits);
+  }, "Enter a valid email address or 10-digit mobile number.");
+
 const positiveNumberString = z
   .union([z.string(), z.number()])
   .transform((value) => Number(value))
@@ -52,6 +61,7 @@ export const completeProfileSchema = z
     pincode: sixDigitPincode,
     village: z.string().trim().max(120).optional().or(z.literal("")),
     address: z.string().trim().max(200).optional().or(z.literal("")),
+    farmingTypes: z.string().trim().max(240).optional().or(z.literal("")),
     role: z.enum(["renter", "owner", "both"]).default("renter"),
   })
   .strict();
@@ -143,6 +153,13 @@ export const newsletterSubscriptionSchema = z
   .object({
     email: z.string().trim().email("Enter a valid email address.").max(160),
     sourcePath: z.string().trim().min(1).max(120).default("/"),
+  })
+  .strict();
+
+export const comingSoonNotifySchema = z
+  .object({
+    contact: emailOrPhoneContact,
+    sourcePath: z.string().trim().min(1).max(120).default("/coming-soon"),
   })
   .strict();
 

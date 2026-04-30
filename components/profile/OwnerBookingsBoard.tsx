@@ -174,7 +174,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
               const renter = booking.renterProfile;
               const status = mapBookingStatus(booking.status);
               const actionState = buttonState[booking.id] || "idle";
-              const detailsHref = `/equipment/${listing?.id || booking.listingId}`;
+              const detailsHref = `/owner-profile/equipment/${listing?.id || booking.listingId}`;
               const renterPhone = renter?.phone || supportContact.phoneE164;
               const renterName = renter?.fullName || "Verified Renter";
               const canApprove = booking.status === "pending";

@@ -1,6 +1,7 @@
 "use client";
 
 import { postJson } from "@/lib/client/forms";
+import { useLanguage } from "@/components/LanguageContext";
 import type { LocalSession } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -11,23 +12,26 @@ type ProfileFeedbackFormProps = {
 };
 
 const OWNER_CATEGORIES = [
-  "Fleet Workflow",
-  "Bookings",
-  "Pricing & Earnings",
-  "Profile Experience",
+  { value: "Fleet Workflow", label: { en: "Fleet Workflow", mr: "फ्लीट वर्कफ्लो" } },
+  { value: "Bookings", label: { en: "Bookings", mr: "बुकिंग्ज" } },
+  { value: "Pricing & Earnings", label: { en: "Pricing & Earnings", mr: "किंमत आणि कमाई" } },
+  { value: "Profile Experience", label: { en: "Profile Experience", mr: "प्रोफाइल अनुभव" } },
+  { value: "Other", label: { en: "Other", mr: "इतर" } },
 ];
 
 const RENTER_CATEGORIES = [
-  "Equipment Search",
-  "Bookings",
-  "Saved Equipment",
-  "Profile Experience",
+  { value: "Equipment Search", label: { en: "Equipment Search", mr: "उपकरण शोध" } },
+  { value: "Bookings", label: { en: "Bookings", mr: "बुकिंग्ज" } },
+  { value: "Saved Equipment", label: { en: "Saved Equipment", mr: "जतन केलेली उपकरणे" } },
+  { value: "Profile Experience", label: { en: "Profile Experience", mr: "प्रोफाइल अनुभव" } },
+  { value: "Other", label: { en: "Other", mr: "इतर" } },
 ];
 
 export function ProfileFeedbackForm({
   family,
   session,
 }: ProfileFeedbackFormProps) {
+  const { langText } = useLanguage();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [submitState, setSubmitState] = useState<
@@ -41,7 +45,7 @@ export function ProfileFeedbackForm({
     mobileNumber: session.profile.phone || session.user.phone || "",
     email: session.profile.email || session.user.email || "",
     role: family === "owner-profile" ? "owner" : "farmer",
-    category: categories[0],
+    category: categories[0].value,
     subject: "",
     message: "",
     rating: 5,
@@ -50,10 +54,10 @@ export function ProfileFeedbackForm({
 
   const submitLabel =
     submitState === "pending"
-      ? "Submitting..."
+      ? langText("Submitting...", "सबमिट करत आहे...")
       : submitState === "success"
-        ? "Submitted"
-        : "Submit Feedback";
+        ? langText("Submitted", "सबमिट झाले")
+        : langText("Submit Feedback", "अभिप्राय सबमिट करा");
 
   const updateField = (field: keyof typeof formState, value: string | number | boolean) => {
     setFormState((current) => ({ ...current, [field]: value }));
@@ -93,7 +97,7 @@ export function ProfileFeedbackForm({
         setError(
           submitError instanceof Error
             ? submitError.message
-            : "Could not submit feedback."
+            : langText("Could not submit feedback.", "अभिप्राय सबमिट करता आला नाही.")
         );
       }
     });
@@ -106,9 +110,12 @@ export function ProfileFeedbackForm({
           <span className="material-symbols-outlined text-3xl">rate_review</span>
         </div>
         <div>
-          <h2 className="text-3xl font-black text-primary">Share Feedback</h2>
+          <h2 className="text-3xl font-black text-primary">{langText("Share Feedback", "अभिप्राय शेअर करा")}</h2>
           <p className="mt-2 text-sm text-on-surface-variant">
-            Tell us what would improve this workspace and the next release.
+            {langText(
+              "Tell us what would improve this workspace and the next release.",
+              "हा वर्कस्पेस आणि पुढील रिलीज सुधारण्यासाठी काय हवे ते सांगा."
+            )}
           </p>
         </div>
       </div>
@@ -116,74 +123,77 @@ export function ProfileFeedbackForm({
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid gap-5 md:grid-cols-2">
           <label className="space-y-2">
-            <span className="text-sm font-semibold text-on-surface">Full Name</span>
+            <span className="text-sm font-semibold text-on-surface">{langText("Full Name", "पूर्ण नाव")}</span>
             <input
               value={formState.fullName}
               onChange={(event) => updateField("fullName", event.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              className="kk-input"
             />
           </label>
           <label className="space-y-2">
-            <span className="text-sm font-semibold text-on-surface">Mobile Number</span>
+            <span className="text-sm font-semibold text-on-surface">{langText("Mobile Number", "मोबाईल नंबर")}</span>
             <input
               value={formState.mobileNumber}
               onChange={(event) => updateField("mobileNumber", event.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              className="kk-input"
             />
           </label>
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-semibold text-on-surface">Email</span>
+            <span className="text-sm font-semibold text-on-surface">{langText("Email", "ईमेल")}</span>
             <input
               value={formState.email}
               onChange={(event) => updateField("email", event.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              className="kk-input"
             />
           </label>
           <label className="space-y-2">
-            <span className="text-sm font-semibold text-on-surface">Category</span>
+            <span className="text-sm font-semibold text-on-surface">{langText("Category", "वर्ग")}</span>
             <select
               value={formState.category}
               onChange={(event) => updateField("category", event.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              className="kk-input"
             >
               {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
+                <option key={category.value} value={category.value}>
+                  {langText(category.label.en, category.label.mr)}
                 </option>
               ))}
             </select>
           </label>
           <label className="space-y-2">
-            <span className="text-sm font-semibold text-on-surface">Rating</span>
+            <span className="text-sm font-semibold text-on-surface">{langText("Rating", "रेटिंग")}</span>
             <select
               value={String(formState.rating)}
               onChange={(event) => updateField("rating", Number(event.target.value))}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+              className="kk-input"
             >
               {[5, 4, 3, 2, 1].map((rating) => (
                 <option key={rating} value={rating}>
-                  {rating} Star{rating === 1 ? "" : "s"}
+                  {rating} {langText(`Star${rating === 1 ? "" : "s"}`, "स्टार")}
                 </option>
               ))}
             </select>
           </label>
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-semibold text-on-surface">Subject</span>
+            <span className="text-sm font-semibold text-on-surface">{langText("Subject", "विषय")}</span>
             <input
               value={formState.subject}
               onChange={(event) => updateField("subject", event.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-              placeholder="Summarize your feedback in one line"
+              className="kk-input"
+              placeholder={langText("Summarize your feedback in one line", "तुमचा अभिप्राय एका ओळीत लिहा")}
             />
           </label>
           <label className="space-y-2 md:col-span-2">
-            <span className="text-sm font-semibold text-on-surface">Feedback</span>
+            <span className="text-sm font-semibold text-on-surface">{langText("Feedback", "अभिप्राय")}</span>
             <textarea
               value={formState.message}
               onChange={(event) => updateField("message", event.target.value)}
               rows={6}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-              placeholder="Tell us what is working, what is missing, or what should change."
+              className="kk-input"
+              placeholder={langText(
+                "Tell us what is working, what is missing, or what should change.",
+                "काय चांगले आहे, काय कमी आहे किंवा काय बदलायला हवे ते सांगा."
+              )}
             />
           </label>
         </div>
@@ -195,7 +205,7 @@ export function ProfileFeedbackForm({
             type="checkbox"
             className="h-5 w-5 accent-primary"
           />
-          Contact me if the team needs more detail.
+          {langText("Contact me if the team needs more detail.", "टीमला अधिक माहिती हवी असल्यास माझ्याशी संपर्क साधा.")}
         </label>
 
         {error ? (
@@ -207,10 +217,13 @@ export function ProfileFeedbackForm({
         <button
           type="submit"
           disabled={isPending}
-          className={`inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white ${
+          className={`kk-flow-button inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white ${
             submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
           }`}
+          data-loading={isPending ? "true" : "false"}
+          aria-busy={isPending}
         >
+          {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
           <span className="material-symbols-outlined text-[18px]">
             {submitState === "success" ? "task_alt" : "send"}
           </span>

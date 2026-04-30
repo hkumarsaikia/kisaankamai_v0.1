@@ -14,6 +14,7 @@ export type SheetKey =
   | "support_requests"
   | "booking_requests"
   | "newsletter_subscriptions"
+  | "coming_soon_notifications"
   | "feedback"
   | "bug_reports"
   | "auth_events"
@@ -52,6 +53,13 @@ type SheetDefinition = {
   columns: WorkbookColumn[];
   conditionalRules?: WorkbookConditionalRule[];
   headers: string[];
+};
+
+export type SheetAppendResult = {
+  sheet: SheetKey;
+  title: string;
+  updatedRange: string;
+  rowNumber?: number;
 };
 
 type SpreadsheetStateEntry = {
@@ -190,6 +198,16 @@ function getHeaderRange(definition: SheetDefinition) {
 
 function getAppendRange(definition: SheetDefinition) {
   return `${definition.title}!A:${getSheetEndColumn(definition)}`;
+}
+
+function getCellRange(definition: SheetDefinition, columnIndex: number, rowNumber: number) {
+  const column = columnToA1(columnIndex);
+  return `${definition.title}!${column}${rowNumber}`;
+}
+
+function extractRowNumber(updatedRange: string) {
+  const match = updatedRange.match(/![A-Z]+(\d+):/);
+  return match ? Number(match[1]) : undefined;
 }
 
 function groupColumnWidths(columns: WorkbookColumn[]) {
@@ -687,7 +705,7 @@ async function ensureSheetsReady() {
   await sheetGlobals.__kkSheetsReady;
 }
 
-export async function appendSheetRow(sheet: SheetKey, row: unknown[]) {
+export async function appendSheetRow(sheet: SheetKey, row: unknown[]): Promise<SheetAppendResult | undefined> {
   if (!isSheetsEnabled()) {
     return;
   }
@@ -695,12 +713,59 @@ export async function appendSheetRow(sheet: SheetKey, row: unknown[]) {
   await ensureSheetsReady();
   const definition = getSheetDefinition(sheet);
 
-  await sheetsFetch(`/values/${encodeURIComponent(getAppendRange(definition))}:append?valueInputOption=RAW`, {
+  const result = await sheetsFetch<{
+    updates?: {
+      updatedRange?: string;
+    };
+  }>(`/values/${encodeURIComponent(getAppendRange(definition))}:append?valueInputOption=RAW`, {
     method: "POST",
     body: JSON.stringify({
       values: [row.map(sanitizeCell)],
     }),
   });
+
+  const updatedRange = result?.updates?.updatedRange || "";
+
+  return {
+    sheet,
+    title: definition.title,
+    updatedRange,
+    rowNumber: updatedRange ? extractRowNumber(updatedRange) : undefined,
+  };
+}
+
+export async function updateSheetCell(sheet: SheetKey, columnKey: string, rowNumber: number, value: unknown) {
+  if (!isSheetsEnabled() || rowNumber < 2) {
+    return;
+  }
+
+  await ensureSheetsReady();
+  const definition = getSheetDefinition(sheet);
+  const columnIndex = definition.columns.findIndex((column) => column.key === columnKey);
+  if (columnIndex < 0) {
+    return;
+  }
+
+  await sheetsFetch(`/values/${encodeURIComponent(getCellRange(definition, columnIndex, rowNumber))}?valueInputOption=RAW`, {
+    method: "PUT",
+    body: JSON.stringify({
+      range: getCellRange(definition, columnIndex, rowNumber),
+      majorDimension: "ROWS",
+      values: [[sanitizeCell(value)]],
+    }),
+  });
+}
+
+export async function updateNotificationEmailStatus(
+  sheet: SheetKey,
+  rowNumber: number,
+  status: "pending" | "sent" | "email_failed" | "email_config_missing",
+  sentAt?: string
+) {
+  await updateSheetCell(sheet, "notification_email_status", rowNumber, status);
+  if (sentAt !== undefined) {
+    await updateSheetCell(sheet, "notification_email_sent_at", rowNumber, sentAt);
+  }
 }
 
 export async function recordSheetAudit(
@@ -731,21 +796,27 @@ export async function recordSheetAudit(
 export async function appendSheetRowsSafe(
   rows: Array<{ sheet: SheetKey; values: unknown[] }>,
   audit?: { entityType: string; entityId: string; note?: string; operation?: string; details?: unknown }
-) {
+): Promise<SheetAppendResult[]> {
   // Sheets is an operational mirror only. Firebase remains the write of record,
   // so mirroring failures must never block a successful primary write path.
   if (!isSheetsEnabled() || !rows.length) {
-    return;
+    return [];
   }
 
   try {
+    const results: SheetAppendResult[] = [];
     for (const row of rows) {
-      await appendSheetRow(row.sheet, row.values);
+      const result = await appendSheetRow(row.sheet, row.values);
+      if (result) {
+        results.push(result);
+      }
     }
 
     if (audit) {
       await recordSheetAudit(audit.entityType, audit.entityId, "success", audit.note, audit.operation, audit.details);
     }
+
+    return results;
   } catch (error) {
     console.error("Could not mirror rows to Google Sheets:", error);
     if (audit) {
@@ -758,5 +829,6 @@ export async function appendSheetRowsSafe(
         audit.details
       );
     }
+    return [];
   }
 }

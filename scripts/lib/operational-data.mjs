@@ -125,6 +125,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
       address: profile.address || "",
       pincode: profile.pincode || "",
       field_area_acres: Number(profile.fieldArea || 0),
+      farming_types: profile.farmingTypes || "",
       source: sourceLabel,
       record_state: "live",
     };
@@ -294,6 +295,26 @@ export function buildOperationalWorkbookRows(data, options = {}) {
     };
   });
 
+  const comingSoonNotifications = sortDescendingByDate(
+    data.submissions.filter((submission) => submission.type === "coming-soon-notify"),
+    "createdAt"
+  ).map((submission) => {
+    const payload = submission.payload || {};
+    const contact = String(payload.contact || "");
+    const phoneDigits = contact.replace(/\D/g, "").slice(-10);
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+    return {
+      submitted_at: submission.createdAt || "",
+      submission_id: submission.id,
+      user_id: submission.userId || "",
+      contact,
+      email: isEmail ? contact : "",
+      phone: !isEmail && /^\d{10}$/.test(phoneDigits) ? phoneDigits : "",
+      source_path: payload.sourcePath || "/coming-soon",
+      payload_json: safeJson(payload),
+    };
+  });
+
   const bugReports = sortDescendingByDate(data.bugReports, "occurredAt").map((report) => ({
     occurred_at: report.occurredAt || "",
     bug_id: report.id,
@@ -332,6 +353,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
       support_requests: supportRequests,
       booking_requests: bookingRequests,
       newsletter_subscriptions: newsletterSubscriptions,
+      coming_soon_notifications: comingSoonNotifications,
       feedback,
       bug_reports: bugReports,
     },
@@ -345,6 +367,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
       support_requests: supportRequests.length,
       booking_requests: bookingRequests.length,
       newsletter_subscriptions: newsletterSubscriptions.length,
+      coming_soon_notifications: comingSoonNotifications.length,
       feedback: feedback.length,
       bug_reports: bugReports.length,
     },

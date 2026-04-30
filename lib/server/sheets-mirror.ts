@@ -10,7 +10,7 @@ import type {
   ProfileRecord,
 } from "@/lib/local-data/types";
 import type { BugReportRecord } from "@/lib/bug-reporting/types";
-import { appendSheetRowsSafe, type SheetKey } from "@/lib/server/google-sheets";
+import { appendSheetRowsSafe, type SheetAppendResult, type SheetKey } from "@/lib/server/google-sheets";
 
 type SheetColumnManifest = {
   key: SheetKey;
@@ -128,6 +128,7 @@ export async function mirrorProfile(input: {
       address: input.profile.address,
       pincode: input.profile.pincode,
       field_area_acres: Number(input.profile.fieldArea || 0),
+      farming_types: input.profile.farmingTypes || "",
       source: input.source,
       record_state: "live",
     }),
@@ -236,11 +237,11 @@ export async function mirrorBookingAndPayment(booking: BookingRecord, payment?: 
   });
 }
 
-export async function mirrorSubmission(submission: FormSubmissionRecord) {
+export async function mirrorSubmission(submission: FormSubmissionRecord): Promise<SheetAppendResult[]> {
   const payload = submission.payload || {};
 
   if (submission.type === "feedback") {
-    await appendSheetRowsSafe(
+    return appendSheetRowsSafe(
       [
         {
           sheet: "feedback",
@@ -268,11 +269,10 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
         operation: "append-feedback",
       }
     );
-    return;
   }
 
   if (submission.type === "booking-request") {
-    await appendSheetRowsSafe(
+    return appendSheetRowsSafe(
       [
         {
           sheet: "booking_requests",
@@ -303,11 +303,10 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
         operation: "append-booking-request",
       }
     );
-    return;
   }
 
   if (submission.type === "newsletter-subscription") {
-    await appendSheetRowsSafe(
+    return appendSheetRowsSafe(
       [
         {
           sheet: "newsletter_subscriptions",
@@ -329,7 +328,37 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
         operation: "append-newsletter-subscription",
       }
     );
-    return;
+  }
+
+  if (submission.type === "coming-soon-notify") {
+    const contact = String(payload.contact || "").trim();
+    const phoneDigits = contact.replace(/\D/g, "").slice(-10);
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact);
+
+    return appendSheetRowsSafe(
+      [
+        {
+          sheet: "coming_soon_notifications",
+          values: sheetValues("coming_soon_notifications", {
+            submitted_at: submission.createdAt,
+            submission_id: submission.id,
+            user_id: submission.userId || "",
+            contact,
+            email: isEmail ? contact : "",
+            phone: !isEmail && /^\d{10}$/.test(phoneDigits) ? phoneDigits : "",
+            source_path: payload.sourcePath || "/coming-soon",
+            payload_json: safeJson(payload),
+            ...notificationEmailFields(),
+          }),
+        },
+      ],
+      {
+        entityType: "submission",
+        entityId: submission.id,
+        note: submission.type,
+        operation: "append-coming-soon-notify",
+      }
+    );
   }
 
   if (
@@ -340,7 +369,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
     submission.type === "partner-inquiry" ||
     submission.type === "owner-application"
   ) {
-    await appendSheetRowsSafe(
+    return appendSheetRowsSafe(
       [
         {
           sheet: "support_requests",
@@ -372,6 +401,8 @@ export async function mirrorSubmission(submission: FormSubmissionRecord) {
       }
     );
   }
+
+  return [];
 }
 
 export async function mirrorBugReport(report: BugReportRecord) {

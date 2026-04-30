@@ -94,7 +94,7 @@ export function ProfileDropdownMenu({
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className={`kk-profile-trigger kk-depth-tile flex items-center gap-3 rounded-full border border-white/55 bg-white/75 px-2 py-2 pr-4 text-left shadow-[0_14px_36px_-22px_rgba(15,23,42,0.6)] backdrop-blur-xl transition hover:bg-white/95 dark:border-white/10 dark:bg-[rgba(24,28,34,0.78)] dark:shadow-[0_16px_38px_-22px_rgba(0,0,0,0.85)] ${triggerClassName}`}
+        className={`kk-profile-trigger kk-depth-tile flex items-center gap-3 rounded-full border border-white/55 bg-white/75 px-2 py-2 pr-4 text-left shadow-[0_14px_36px_-22px_rgba(15,23,42,0.6)] backdrop-blur-xl transition hover:bg-white/95 dark:border-white/10 dark:bg-[rgba(24,28,34,0.78)] dark:shadow-[0_18px_44px_-28px_rgba(0,0,0,0.72)] ${triggerClassName}`}
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={t("header.aria.my_profile")}

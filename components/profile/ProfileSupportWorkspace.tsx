@@ -1,6 +1,7 @@
 "use client";
 
 import { postJson } from "@/lib/client/forms";
+import { useLanguage } from "@/components/LanguageContext";
 import type { LocalSession } from "@/lib/local-data/types";
 import { supportContact } from "@/lib/support-contact";
 import { useState, useTransition } from "react";
@@ -11,23 +12,26 @@ type ProfileSupportWorkspaceProps = {
 };
 
 const OWNER_CATEGORIES = [
-  "Listing Help",
-  "Booking Request",
-  "Payout Question",
-  "Verification Issue",
+  { value: "Listing Help", label: { en: "Listing Help", mr: "लिस्टिंग मदत" } },
+  { value: "Booking Request", label: { en: "Booking Request", mr: "बुकिंग विनंती" } },
+  { value: "Payout Question", label: { en: "Payout Question", mr: "पेआउट प्रश्न" } },
+  { value: "Verification Issue", label: { en: "Verification Issue", mr: "पडताळणी समस्या" } },
+  { value: "Other", label: { en: "Other", mr: "इतर" } },
 ];
 
 const RENTER_CATEGORIES = [
-  "Booking Help",
-  "Equipment Issue",
-  "Payment Question",
-  "Cancellation Support",
+  { value: "Booking Help", label: { en: "Booking Help", mr: "बुकिंग मदत" } },
+  { value: "Equipment Issue", label: { en: "Equipment Issue", mr: "उपकरण समस्या" } },
+  { value: "Payment Question", label: { en: "Payment Question", mr: "पेमेंट प्रश्न" } },
+  { value: "Cancellation Support", label: { en: "Cancellation Support", mr: "रद्दीकरण मदत" } },
+  { value: "Other", label: { en: "Other", mr: "इतर" } },
 ];
 
 export function ProfileSupportWorkspace({
   family,
   session,
 }: ProfileSupportWorkspaceProps) {
+  const { langText } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const [submitState, setSubmitState] = useState<
     "idle" | "pending" | "success" | "error"
@@ -39,16 +43,16 @@ export function ProfileSupportWorkspace({
     fullName: session.profile.fullName || session.user.name || "",
     phone: session.profile.phone || session.user.phone || "",
     email: session.profile.email || session.user.email || "",
-    category: categories[0],
+    category: categories[0].value,
     message: "",
   });
 
   const submitLabel =
     submitState === "pending"
-      ? "Submitting..."
+      ? langText("Submitting...", "सबमिट करत आहे...")
       : submitState === "success"
-        ? "Submitted"
-        : "Submit Request";
+        ? langText("Submitted", "सबमिट झाले")
+        : langText("Submit Request", "विनंती सबमिट करा");
 
   const updateField = (field: keyof typeof formState, value: string) => {
     setFormState((current) => ({ ...current, [field]: value }));
@@ -81,7 +85,7 @@ export function ProfileSupportWorkspace({
         setError(
           submitError instanceof Error
             ? submitError.message
-            : "Support request failed."
+            : langText("Support request failed.", "सपोर्ट विनंती अयशस्वी झाली.")
         );
       }
     });
@@ -90,68 +94,75 @@ export function ProfileSupportWorkspace({
   return (
     <div className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
       <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <h2 className="text-2xl font-black text-primary">Support Request</h2>
+        <h2 className="text-2xl font-black text-primary">
+          {langText("Support Request", "सपोर्ट विनंती")}
+        </h2>
         <p className="mt-2 text-sm text-on-surface-variant">
-          Use the workspace support form for booking, listing, verification, and
-          payout issues.
+          {langText(
+            "Use the workspace support form for booking, listing, verification, and payout issues.",
+            "बुकिंग, लिस्टिंग, पडताळणी आणि पेआउट समस्यांसाठी वर्कस्पेस सपोर्ट फॉर्म वापरा."
+          )}
         </p>
 
         <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
           <div className="grid gap-5 md:grid-cols-2">
             <label className="space-y-2">
               <span className="text-sm font-semibold text-on-surface">
-                Full Name
+                {langText("Full Name", "पूर्ण नाव")}
               </span>
               <input
                 value={formState.fullName}
                 onChange={(event) => updateField("fullName", event.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+                className="kk-input"
               />
             </label>
             <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">Phone</span>
+              <span className="text-sm font-semibold text-on-surface">{langText("Phone", "फोन")}</span>
               <input
                 value={formState.phone}
                 onChange={(event) => updateField("phone", event.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+                className="kk-input"
               />
             </label>
             <label className="space-y-2 md:col-span-2">
               <span className="text-sm font-semibold text-on-surface">
-                Email
+                {langText("Email", "ईमेल")}
               </span>
               <input
                 value={formState.email}
                 onChange={(event) => updateField("email", event.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+                className="kk-input"
               />
             </label>
             <label className="space-y-2 md:col-span-2">
               <span className="text-sm font-semibold text-on-surface">
-                Category
+                {langText("Category", "वर्ग")}
               </span>
               <select
                 value={formState.category}
                 onChange={(event) => updateField("category", event.target.value)}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
+                className="kk-input"
               >
                 {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
+                  <option key={category.value} value={category.value}>
+                    {langText(category.label.en, category.label.mr)}
                   </option>
                 ))}
               </select>
             </label>
             <label className="space-y-2 md:col-span-2">
               <span className="text-sm font-semibold text-on-surface">
-                Issue Details
+                {langText("Issue Details", "समस्येचा तपशील")}
               </span>
               <textarea
                 value={formState.message}
                 onChange={(event) => updateField("message", event.target.value)}
                 rows={6}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-                placeholder="Describe the problem clearly so the support team can help quickly."
+                className="kk-input"
+                placeholder={langText(
+                  "Describe the problem clearly so the support team can help quickly.",
+                  "सपोर्ट टीमला त्वरीत मदत करता यावी म्हणून समस्या स्पष्टपणे लिहा."
+                )}
               />
             </label>
           </div>
@@ -165,10 +176,13 @@ export function ProfileSupportWorkspace({
           <button
             type="submit"
             disabled={isPending}
-            className={`inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white ${
+            className={`kk-flow-button inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white ${
               submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
             }`}
+            data-loading={isPending ? "true" : "false"}
+            aria-busy={isPending}
           >
+            {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
             <span className="material-symbols-outlined text-[18px]">
               {submitState === "success" ? "task_alt" : "send"}
             </span>
@@ -179,17 +193,17 @@ export function ProfileSupportWorkspace({
 
       <div className="space-y-5">
         <section className="rounded-[1.75rem] bg-primary-container p-6 text-white shadow-sm">
-          <h3 className="text-xl font-black">Direct Channels</h3>
+          <h3 className="text-xl font-black">{langText("Direct Channels", "थेट संपर्क")}</h3>
           <div className="mt-5 space-y-4">
             <a
               href={supportContact.phoneHref}
               className="block rounded-2xl bg-white/10 p-4 transition hover:bg-white/15"
             >
               <p className="text-xs font-black uppercase tracking-[0.2em] text-primary-fixed">
-                Call Support
+                {langText("Call Support", "सपोर्टला कॉल करा")}
               </p>
               <p className="mt-1 text-lg font-bold">{supportContact.phoneDisplay}</p>
-              <p className="text-sm text-white/75">{supportContact.serviceHours} Daily</p>
+              <p className="text-sm text-white/75">{supportContact.serviceHours} {langText("Daily", "दररोज")}</p>
             </a>
             <a
               href={supportContact.whatsappHref}
@@ -198,20 +212,12 @@ export function ProfileSupportWorkspace({
               <p className="text-xs font-black uppercase tracking-[0.2em] text-white/80">
                 WhatsApp
               </p>
-              <p className="mt-1 text-lg font-bold">Chat with {supportContact.primaryContactName}</p>
+              <p className="mt-1 text-lg font-bold">
+                {langText(`Chat with ${supportContact.primaryContactName}`, `${supportContact.primaryContactName} यांच्याशी चॅट करा`)}
+              </p>
               <p className="text-sm text-white/75">{supportContact.whatsappDisplay}</p>
             </a>
           </div>
-        </section>
-
-        <section className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h3 className="text-lg font-bold text-on-surface dark:text-slate-100">
-            Fastest Path
-          </h3>
-          <p className="mt-2 text-sm text-on-surface-variant dark:text-slate-400">
-            Phone support is best for urgent booking, cancellation, and machine
-            dispatch issues. Use the form when you need a documented follow-up.
-          </p>
         </section>
       </div>
     </div>

@@ -85,7 +85,7 @@ export default function ProfileSelectionPage() {
           <button
             onClick={() => handleWorkspaceSelect("owner")}
             disabled={isPending}
-            className={`group relative overflow-hidden bg-white/85 backdrop-blur-xl border border-white/40 rounded-[2.5rem] p-10 text-left transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:bg-white disabled:opacity-70 ${
+            className={`kk-depth-tile group relative overflow-hidden rounded-[2.5rem] border border-white/40 bg-white/90 p-10 text-left shadow-sm backdrop-blur-xl transition-all duration-500 hover:bg-white disabled:opacity-70 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-900 ${
               activeWorkspace === "owner" ? "ring-4 ring-primary-container/30" : ""
             }`}
           >
@@ -98,7 +98,7 @@ export default function ProfileSelectionPage() {
               <h2 className="text-3xl font-black font-headline text-primary mb-3">
                 {langText("I am an Owner", "मी मालक आहे")}
               </h2>
-              <p className="text-on-surface-variant font-medium leading-relaxed mb-8 text-lg">
+              <p className="text-on-surface-variant font-medium leading-relaxed mb-8 text-lg dark:text-slate-300">
                 {langText("Manage listings, check bookings, and track your farming earnings.", "सूची व्यवस्थापित करा, बुकिंग तपासा आणि तुमची शेतीची कमाई ट्रॅक करा.")}
               </p>
               <div className="mt-auto flex items-center justify-between">
@@ -123,7 +123,7 @@ export default function ProfileSelectionPage() {
           <button
             onClick={() => handleWorkspaceSelect("renter")}
             disabled={isPending}
-            className={`group relative overflow-hidden bg-white/85 backdrop-blur-xl border border-white/40 rounded-[2.5rem] p-10 text-left transition-all duration-500 hover:scale-[1.03] hover:shadow-2xl hover:bg-white disabled:opacity-70 ${
+            className={`kk-depth-tile group relative overflow-hidden rounded-[2.5rem] border border-white/40 bg-white/90 p-10 text-left shadow-sm backdrop-blur-xl transition-all duration-500 hover:bg-white disabled:opacity-70 dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-900 ${
               activeWorkspace === "renter" ? "ring-4 ring-secondary/30" : ""
             }`}
           >
@@ -136,7 +136,7 @@ export default function ProfileSelectionPage() {
               <h2 className="text-3xl font-black font-headline text-secondary mb-3">
                 {langText("I am a Renter", "मी भाडेकरी आहे")}
               </h2>
-              <p className="text-on-surface-variant font-medium leading-relaxed mb-8 text-lg">
+              <p className="text-on-surface-variant font-medium leading-relaxed mb-8 text-lg dark:text-slate-300">
                 {langText("Browse equipment, save listings, and manage your tractor bookings.", "उपकरणे ब्राउझ करा, सूची जतन करा आणि तुमचे ट्रॅक्टर बुकिंग व्यवस्थापित करा.")}
               </p>
               <div className="mt-auto flex items-center justify-between">
@@ -164,5 +164,4 @@ export default function ProfileSelectionPage() {
     </div>
   );
 }
-
 

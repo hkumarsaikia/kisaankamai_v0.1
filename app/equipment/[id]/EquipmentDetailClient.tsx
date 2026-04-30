@@ -30,14 +30,17 @@ function deriveDriveLabel(equipment: EquipmentRecord) {
 
 export default function EquipmentDetailClient({
   equipment,
+  showBreadcrumbs = true,
 }: {
   equipment: EquipmentRecord;
   relatedEquipment: EquipmentRecord[];
+  showBreadcrumbs?: boolean;
 }) {
   const router = useSmoothRouter();
   const { langText, text } = useLanguage();
   const [error, setError] = useState("");
   const [ownListingToast, setOwnListingToast] = useState(false);
+  const [loginToast, setLoginToast] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [formState, setFormState] = useState({
     fieldLocation: "",
@@ -87,7 +90,8 @@ export default function EquipmentDetailClient({
 
       if (!result.ok) {
         if (result.error === "Login required." || result.error === "Renter access required.") {
-          router.push("/login");
+          setLoginToast(true);
+          window.setTimeout(() => setLoginToast(false), 4000);
           return;
         }
 
@@ -119,7 +123,14 @@ export default function EquipmentDetailClient({
           <span>{langText("You cannot book your own listings", "तुम्ही स्वतःची लिस्टिंग बुक करू शकत नाही")}</span>
         </div>
       ) : null}
+      {loginToast ? (
+        <div className="kk-login-toast" role="status">
+          <span className="material-symbols-outlined text-primary">login</span>
+          <span>{langText("please login or register", "कृपया लॉगिन किंवा नोंदणी करा")}</span>
+        </div>
+      ) : null}
       <div className="space-y-8 lg:col-span-2">
+        {showBreadcrumbs ? (
         <nav className="text-sm text-on-surface-variant">
           <ol className="flex flex-wrap items-center gap-2">
             <li>
@@ -149,6 +160,7 @@ export default function EquipmentDetailClient({
             <li className="font-medium text-on-surface">{equipment.name}</li>
           </ol>
         </nav>
+        ) : null}
 
         <section className="space-y-4">
           <div className="relative aspect-[16/9] overflow-hidden rounded-xl bg-surface-container shadow-lg">

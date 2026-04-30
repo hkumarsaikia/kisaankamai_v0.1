@@ -4,7 +4,7 @@ import { readFile } from "node:fs/promises";
 
 const readSource = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
-test("auth and OTP pages use shared dark-aware surfaces instead of white glass panels", async () => {
+test("auth pages use shared dark-aware surfaces without the verify OTP vignette overlay", async () => {
   const [globals, login, register, forgot, verifyOtp, otpForm, googleButton] = await Promise.all([
     readSource("../app/globals.css"),
     readSource("../app/login/page.tsx"),
@@ -19,10 +19,12 @@ test("auth and OTP pages use shared dark-aware surfaces instead of white glass p
     assert.match(globals, new RegExp(className.replace(".", "\\.")));
   }
 
-  for (const source of [login, register, forgot, verifyOtp]) {
+  for (const source of [login, register, forgot]) {
     assert.match(source, /kk-auth-page/);
     assert.match(source, /kk-dark-image-overlay/);
   }
+  assert.match(verifyOtp, /kk-auth-page/);
+  assert.doesNotMatch(verifyOtp, /kk-dark-image-overlay/);
 
   assert.match(otpForm, /kk-auth-card/);
   assert.match(otpForm, /kk-otp-input/);

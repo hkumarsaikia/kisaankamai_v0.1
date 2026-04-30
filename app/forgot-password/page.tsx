@@ -14,8 +14,7 @@ import {
   setResetStorageItem,
 } from "@/components/auth/password-reset-storage";
 
-const fieldImage =
-  "https://lh3.googleusercontent.com/aida-public/AB6AXuD_KwzX0B_B6HuECBqVqnkY_--Z7oQ05aWN_4YWcakLnSg3H9G_SNmYEpfzo6Dn5oZoZsOuHGNXVjHQbSXhRZo77C2GB40pdUdHfGPhXRbPxrvi26ZcUOUjyO_aBaetrsZCE-2umNTP-E9PE_k_m6jVj3eGcmw6ic2FjUA1RJpU8qVnhyD4uFk3fdQCiwWQA6j_-sV6gU3v8D999U3P0MXhEXIuPz8jed9mTgYtyxux0p_bmtjgOQe3RGinttMll9cOxI3MTlw92uI";
+const fieldImage = "/assets/generated/modern_farm_tech.png";
 
 type PasswordResetLookupResponse = {
   ok?: boolean;
@@ -43,7 +42,7 @@ export default function ForgotPasswordPage() {
 
     const trimmedIdentifier = identifier.trim();
     if (!trimmedIdentifier) {
-      setError(langText("Enter your registered mobile number.", "तुमचा नोंदणीकृत मोबाईल नंबर टाका."));
+      setError(langText("Enter your registered email or mobile number.", "तुमचा नोंदणीकृत ईमेल किंवा मोबाईल नंबर टाका."));
       return;
     }
 
@@ -71,8 +70,8 @@ export default function ForgotPasswordPage() {
         throw new Error(
           payload.error ||
             langText(
-              "We could not start reset for that mobile number.",
-              "त्या मोबाईल नंबरसाठी रीसेट सुरू करता आला नाही."
+              "We could not start reset for that account contact.",
+              "त्या खाते संपर्कासाठी रीसेट सुरू करता आला नाही."
             )
         );
       }
@@ -117,7 +116,7 @@ export default function ForgotPasswordPage() {
         >
           <div className="kk-dark-image-overlay" />
         </div>
-        <div className="kk-auth-card relative z-10 mx-6 max-w-md bg-white/82 p-10 text-center shadow-2xl backdrop-blur-2xl dark:bg-surface-container-lowest/82">
+        <div className="kk-auth-card relative z-10 mx-6 max-w-md bg-white/82 p-10 text-center shadow-xl backdrop-blur-2xl dark:bg-surface-container-lowest/82">
           <div className="mb-6 inline-flex h-20 w-20 items-center justify-center rounded-full bg-primary-container/20 text-primary">
             <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
               lock_reset
@@ -127,7 +126,7 @@ export default function ForgotPasswordPage() {
             {text("Secure Access", { cacheKey: "forgot-password.hero-title" })}
           </h2>
           <p className="mt-3 leading-relaxed text-on-surface-variant">
-            {text("Reset access through the registered mobile number linked to your Kisan Kamai account.", {
+            {text("Reset access through the registered email or mobile number linked to your Kisan Kamai account.", {
               cacheKey: "forgot-password.hero-body",
             })}
           </p>
@@ -136,12 +135,12 @@ export default function ForgotPasswordPage() {
 
       <section className="relative flex w-full items-center justify-center overflow-hidden bg-surface-container-low px-6 py-12 md:w-1/2">
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-20 blur-sm md:hidden"
+          className="absolute inset-0 bg-cover bg-center opacity-20 blur-sm"
           style={{
             backgroundImage: `url("${fieldImage}")`,
           }}
         />
-        <div className="kk-auth-card relative z-10 w-full max-w-md bg-white/86 p-8 shadow-2xl backdrop-blur-2xl dark:bg-surface-container-lowest/86 md:p-12">
+        <div className="kk-auth-card relative z-10 w-full max-w-md bg-white/86 p-8 shadow-xl backdrop-blur-2xl dark:bg-surface-container-lowest/86 md:p-12">
           <div className="mb-10 text-center">
             <div className="mb-6 flex justify-center md:hidden">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary shadow-lg">
@@ -154,8 +153,8 @@ export default function ForgotPasswordPage() {
             <p className="mt-4 text-base leading-relaxed text-on-surface-variant">
               {PHONE_RESET_OTP_ENABLED
                 ? langText(
-                    "Enter your registered mobile number. We will send the reset OTP to that number before allowing a password change.",
-                    "तुमचा नोंदणीकृत मोबाईल नंबर टाका. पासवर्ड बदलण्यापूर्वी त्या नंबरवर रीसेट ओटीपी पाठवला जाईल."
+                    "Enter your registered email or mobile number. We will send the reset OTP to the registered mobile number before allowing a password change.",
+                    "तुमचा नोंदणीकृत ईमेल किंवा मोबाईल नंबर टाका. पासवर्ड बदलण्यापूर्वी नोंदणीकृत मोबाईल नंबरवर रीसेट ओटीपी पाठवला जाईल."
                   )
                 : resetUnavailableMessage}
             </p>
@@ -164,7 +163,7 @@ export default function ForgotPasswordPage() {
           <form className="space-y-8" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <label className="block px-1 text-sm font-semibold text-on-surface">
-                {langText("Mobile Number", "मोबाईल नंबर")}
+                {langText("Email or Mobile Number", "ईमेल किंवा मोबाईल नंबर")}
               </label>
               <div className="relative group">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
@@ -175,8 +174,8 @@ export default function ForgotPasswordPage() {
                 <input
                   className="kk-auth-input block pl-12"
                   name="contact"
-                  placeholder={langText("e.g. +91 90000 00000", "उदा. +९१ ९०००० ०००००")}
-                  type="tel"
+                  placeholder={langText("e.g. rahul@example.com or +91 90000 00000", "उदा. rahul@example.com किंवा +९१ ९०००० ०००००")}
+                  type="text"
                   value={identifier}
                   onChange={(event) => {
                     setIdentifier(event.target.value);

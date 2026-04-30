@@ -179,7 +179,7 @@ export function RenterWorkspaceOverview({
                         </p>
                       </div>
                       <div className="flex gap-2">
-                        <Link href={listingId ? `/equipment/${listingId}` : "/rent-equipment"} className="flex-1 rounded-lg bg-primary-container py-2 text-center text-xs font-bold text-white transition-opacity hover:opacity-90">
+                        <Link href={listingId ? `/renter-profile/equipment/${listingId}` : "/rent-equipment"} className="flex-1 rounded-lg bg-primary-container py-2 text-center text-xs font-bold text-white transition-opacity hover:opacity-90">
                           Track Order
                         </Link>
             <a
@@ -266,7 +266,7 @@ export function RenterWorkspaceOverview({
                             <span className="rounded-full bg-on-primary-container/10 px-2 py-0.5 text-[10px] font-bold text-primary-container">Completed</span>
                           </td>
                           <td className="px-6 py-4">
-                            <Link href={listingId ? `/equipment/${listingId}` : "/rent-equipment"} className="text-xs font-bold text-primary-container hover:underline">
+                            <Link href={listingId ? `/renter-profile/equipment/${listingId}` : "/rent-equipment"} className="text-xs font-bold text-primary-container hover:underline">
                               Re-book
                             </Link>
                           </td>

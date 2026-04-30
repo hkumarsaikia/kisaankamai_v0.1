@@ -33,6 +33,7 @@ export interface ProfileRecord {
   address: string;
   pincode: string;
   fieldArea: number;
+  farmingTypes?: string;
   rolePreference: RolePreference;
   email?: string;
   phone?: string;
@@ -120,6 +121,7 @@ export type SubmissionType =
   | "owner-application"
   | "partner-inquiry"
   | "newsletter-subscription"
+  | "coming-soon-notify"
   | "booking-request";
 
 export interface FormSubmissionRecord {

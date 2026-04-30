@@ -1,6 +1,9 @@
 const KISAN_KAMAI_NOTIFICATION_TO = "hkumarsaikia@gmail.com";
-const KISAN_KAMAI_FORM_SHEETS = ["support_requests", "booking_requests", "newsletter_subscriptions", "feedback"];
+const KISAN_KAMAI_FORM_SHEETS = ["support_requests", "booking_requests", "newsletter_subscriptions", "coming_soon_notifications", "feedback"];
 const notification_email_sent_at = "Notification Email Sent At";
+
+// Legacy fallback only. The live website sends Gmail SMTP notifications from
+// the backend when KK_SMTP_* secrets are configured.
 
 function onOpen() {
   SpreadsheetApp.getUi()

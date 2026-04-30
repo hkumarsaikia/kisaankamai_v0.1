@@ -27,6 +27,7 @@ import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { sendPushNotificationToUsers } from "@/lib/server/firebase-messaging";
 import { captureServerException } from "@/lib/server/firebase-observability";
 import { deleteStorageObject } from "@/lib/server/firebase-storage";
+import { notifyFormSubmission } from "@/lib/server/form-email-notifier";
 import { mirrorBookingAndPayment, mirrorListing, mirrorProfile, mirrorSubmission } from "@/lib/server/sheets-mirror";
 import type { RegisterInput } from "@/lib/validation/forms";
 
@@ -521,7 +522,6 @@ function isPublicListingReady(listing: ListingRecord) {
       normalizeOptionalString(listing.category) &&
       normalizeOptionalString(listing.location) &&
       normalizeOptionalString(listing.district) &&
-      normalizeOptionalString(listing.description) &&
       normalizeOptionalString(listing.ownerName) &&
       normalizeOptionalString(listing.coverImage) &&
       !listing.coverImage.includes("/assets/generated/") &&
@@ -600,6 +600,7 @@ function mapProfileFromFirestore(userId: string, data?: Partial<ProfileRecord> |
     address: data?.address || "",
     pincode: data?.pincode || "",
     fieldArea: Number(data?.fieldArea || 0),
+    farmingTypes: normalizeOptionalString(data?.farmingTypes) || undefined,
     rolePreference: normalizeRolePreference(data?.rolePreference),
     email: data?.email,
     phone: normalizePhone(data?.phone),
@@ -918,6 +919,7 @@ export async function registerLocalUser(input: RegisterInput) {
     address: input.address.trim(),
     pincode: input.pincode.trim(),
     fieldArea: Number(input.fieldArea),
+    farmingTypes: "",
     rolePreference,
     email: normalizedEmail || undefined,
     phone: normalizedPhone || undefined,
@@ -1000,6 +1002,7 @@ export async function registerGoogleVerifiedUser(input: {
     address: "",
     pincode: "",
     fieldArea: 0,
+    farmingTypes: "",
     rolePreference: "renter",
     email: normalizedEmail,
     phone: "",
@@ -1105,6 +1108,7 @@ export async function updateLocalProfile(
       | "address"
       | "pincode"
       | "fieldArea"
+      | "farmingTypes"
       | "rolePreference"
       | "email"
       | "phone"
@@ -1130,6 +1134,10 @@ export async function updateLocalProfile(
         ? currentProfile.rolePreference
         : normalizeRolePreference(input.rolePreference),
     fieldArea: input.fieldArea === undefined ? currentProfile.fieldArea : Number(input.fieldArea),
+    farmingTypes:
+      input.farmingTypes === undefined
+        ? currentProfile.farmingTypes
+        : normalizeOptionalString(input.farmingTypes) || undefined,
     district:
       input.district === undefined
         ? currentProfile.district
@@ -1757,10 +1765,14 @@ export async function createSubmissionRecord(input: {
 
   await submissionsCollection().doc(record.id).set(record);
   try {
-    await mirrorSubmission(record);
+    const mirroredRows = await mirrorSubmission(record);
+    await notifyFormSubmission({
+      submission: record,
+      mirroredRows,
+    });
   } catch (error) {
     captureServerException(error, {
-      subsystem: "mirrorSubmission",
+      subsystem: "formSubmissionSideEffects",
       submissionId: record.id,
       submissionType: record.type,
     });

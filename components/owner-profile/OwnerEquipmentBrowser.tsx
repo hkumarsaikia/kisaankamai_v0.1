@@ -174,7 +174,7 @@ export function OwnerEquipmentBrowser({
                     Edit
                   </Link>
                   <Link
-                    href={`/equipment/${listing.id}`}
+                    href={`/owner-profile/equipment/${listing.id}`}
                     className="rounded-xl bg-primary-container px-4 py-3 text-center text-sm font-bold text-white"
                   >
                     Details

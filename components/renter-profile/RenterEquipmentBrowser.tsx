@@ -133,7 +133,7 @@ export function RenterEquipmentBrowser({
                   <p className="text-lg font-extrabold text-primary-container dark:text-emerald-200">
                     ₹{item.pricePerHour}/hr
                   </p>
-                  <Link href={`/equipment/${item.id}`} className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white">
+                  <Link href={`/renter-profile/equipment/${item.id}`} className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white">
                     View Details
                   </Link>
                 </div>

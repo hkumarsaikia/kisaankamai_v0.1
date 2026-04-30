@@ -12,6 +12,15 @@ type ListEquipmentEditorPageProps = {
   defaultVillage?: string;
 };
 const MAX_LISTING_IMAGES = 3;
+const PHOTO_SLOT_LABELS = ["Photo 1", "Photo 2", "Photo 3"] as const;
+
+function normalizeCustomCategory(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "") || "other";
+}
 
 export function ListEquipmentEditorPage({
   listing,
@@ -21,7 +30,9 @@ export function ListEquipmentEditorPage({
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
-  const [files, setFiles] = useState<File[]>([]);
+  const [fileSlots, setFileSlots] = useState<Array<File | null>>([null, null, null]);
+  const [previewImageIndex, setPreviewImageIndex] = useState(0);
+  const [customCategory, setCustomCategory] = useState("");
   const [formState, setFormState] = useState({
     name: listing?.name || "",
     category: listing?.category || "tractor",
@@ -34,15 +45,14 @@ export function ListEquipmentEditorPage({
     district: listing?.district || "",
     state: listing?.state || "Maharashtra",
     serviceRadius: String(listing?.distanceKm || 0),
-    description: listing?.description || "",
     workTypes: listing?.workTypes.join(", ") || "",
-    tags: listing?.tags.join(", ") || "",
     operatorIncluded: listing?.operatorIncluded ?? true,
     availabilityMode: listing?.availableFrom ? "date" : "now",
     availableFrom: listing?.availableFrom || "",
     status: listing?.status || "active",
   });
 
+  const files = useMemo(() => fileSlots.filter((file): file is File => file instanceof File), [fileSlots]);
   const uploadedPreviewUrls = useMemo(() => files.map((file) => URL.createObjectURL(file)), [files]);
   const previewImages =
     uploadedPreviewUrls.length > 0
@@ -57,8 +67,23 @@ export function ListEquipmentEditorPage({
     };
   }, [uploadedPreviewUrls]);
 
+  useEffect(() => {
+    if (previewImageIndex >= previewImages.length) {
+      setPreviewImageIndex(0);
+    }
+  }, [previewImageIndex, previewImages.length]);
+
   const updateField = (field: keyof typeof formState, value: string | boolean) => {
     setFormState((current) => ({ ...current, [field]: value }));
+  };
+
+  const updateFileSlot = (index: number, file: File | null) => {
+    setFileSlots((current) => {
+      const next = [...current];
+      next[index] = file;
+      return next.slice(0, MAX_LISTING_IMAGES);
+    });
+    setPreviewImageIndex(index);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -77,16 +102,20 @@ export function ListEquipmentEditorPage({
         [formState.brand.trim(), formState.model.trim()].filter(Boolean).join(" ").trim();
 
       formData.set("name", equipmentName);
-      formData.set("category", formState.category.trim());
+      const categoryValue =
+        formState.category === "other"
+          ? normalizeCustomCategory(customCategory)
+          : formState.category.trim();
+
+      formData.set("category", categoryValue);
       formData.set("location", formState.location.trim());
       formData.set("district", formState.district.trim() || formState.location.trim());
       formData.set("state", formState.state.trim());
-      formData.set("description", formState.description.trim());
+      formData.set("description", "");
       formData.set("pricePerHour", formState.pricePerHour.trim());
       formData.set("hp", formState.hp.trim());
       formData.set("distanceKm", formState.serviceRadius.trim());
       formData.set("workTypes", formState.workTypes.trim());
-      formData.set("tags", formState.tags.trim());
       formData.set("status", formState.status);
       formData.set("unitLabel", "per hour");
       if (formState.operatorIncluded) {
@@ -126,6 +155,7 @@ export function ListEquipmentEditorPage({
         : listing
           ? "Save Changes"
           : "Publish Listing";
+  const currentPreviewImage = previewImages[previewImageIndex] || previewImages[0];
 
   return (
     <div className="font-body text-on-surface antialiased">
@@ -161,8 +191,21 @@ export function ListEquipmentEditorPage({
                         {category.name}
                       </option>
                     ))}
+                    <option value="other">Other</option>
                   </select>
                 </label>
+                {formState.category === "other" ? (
+                  <label className="space-y-2">
+                    <span className="block font-label text-sm font-medium text-on-surface-variant">Other Equipment Type *</span>
+                    <input
+                      value={customCategory}
+                      onChange={(event) => setCustomCategory(event.target.value)}
+                      className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
+                      placeholder="Enter equipment type"
+                      type="text"
+                    />
+                  </label>
+                ) : null}
                 <label className="space-y-2">
                   <span className="block font-label text-sm font-medium text-on-surface-variant">Brand / Manufacturer</span>
                   <input
@@ -283,7 +326,7 @@ export function ListEquipmentEditorPage({
                   />
                 </label>
               </div>
-              <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <div className="mt-6 grid gap-6">
                 <label className="space-y-2">
                   <span className="block font-label text-sm font-medium text-on-surface-variant">Work Types</span>
                   <input
@@ -291,16 +334,6 @@ export function ListEquipmentEditorPage({
                     onChange={(event) => updateField("workTypes", event.target.value)}
                     className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
                     placeholder="e.g. Ploughing, Harvesting"
-                    type="text"
-                  />
-                </label>
-                <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Tags</span>
-                  <input
-                    value={formState.tags}
-                    onChange={(event) => updateField("tags", event.target.value)}
-                    className="w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="e.g. Fuel efficient, Operator available"
                     type="text"
                   />
                 </label>
@@ -349,31 +382,28 @@ export function ListEquipmentEditorPage({
 
             <section className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-xl font-bold text-on-surface">
-                <span className="material-symbols-outlined text-secondary">description</span>
-                Description &amp; Photos
+                <span className="material-symbols-outlined text-secondary">add_photo_alternate</span>
+                Photos
               </h2>
-              <div className="space-y-6">
-                <label className="space-y-2">
-                  <span className="block font-label text-sm font-medium text-on-surface-variant">Listing Description *</span>
-                  <textarea
-                    value={formState.description}
-                    onChange={(event) => updateField("description", event.target.value)}
-                    className="min-h-[150px] w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-4 py-3 font-body text-on-surface shadow-sm focus:border-primary focus:ring-primary"
-                    placeholder="Describe equipment condition, service coverage, and any operator details."
-                  />
-                </label>
-                <label className="block cursor-pointer rounded-xl border-2 border-dashed border-outline-variant/50 p-8 text-center transition-colors hover:bg-surface-container-low">
-                  <span className="material-symbols-outlined mb-2 text-4xl text-outline">upload_file</span>
-                  <p className="font-body font-medium text-on-surface">Click to upload or drag and drop</p>
-                  <p className="mt-1 text-sm text-on-surface-variant">Upload clear photos of your equipment.</p>
-                  <input
-                    className="hidden"
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={(event) => setFiles(Array.from(event.target.files || []).slice(0, MAX_LISTING_IMAGES))}
-                  />
-                </label>
+              <div className="grid gap-4 md:grid-cols-3">
+                {PHOTO_SLOT_LABELS.map((slotLabel, slot) => (
+                  <label
+                    key={slot}
+                    className="block cursor-pointer rounded-xl border-2 border-dashed border-outline-variant/50 p-6 text-center transition-colors hover:bg-surface-container-low"
+                  >
+                    <span className="material-symbols-outlined mb-2 text-4xl text-outline">upload_file</span>
+                    <p className="font-body font-bold text-on-surface">{slotLabel}</p>
+                    <p className="mt-1 min-h-10 text-xs text-on-surface-variant">
+                      {fileSlots[slot]?.name || "Upload a clear equipment photo"}
+                    </p>
+                    <input
+                      className="hidden"
+                      type="file"
+                      accept="image/*"
+                      onChange={(event) => updateFileSlot(slot, event.target.files?.[0] || null)}
+                    />
+                  </label>
+                ))}
               </div>
             </section>
 
@@ -411,11 +441,11 @@ export function ListEquipmentEditorPage({
             <div className="sticky top-28 space-y-6 self-start">
               <div className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container-lowest shadow-xl">
                 <div className="relative aspect-[4/3]">
-                  {previewImages[0] ? (
+                  {currentPreviewImage ? (
                     <img
                       className="h-full w-full object-cover"
                       alt="Equipment live preview"
-                      src={previewImages[0]}
+                      src={currentPreviewImage}
                     />
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-surface-container-low text-center">
@@ -429,6 +459,34 @@ export function ListEquipmentEditorPage({
                   <div className="absolute left-4 top-4 rounded-full bg-surface-container-lowest/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary backdrop-blur font-label">
                     Live Preview
                   </div>
+                  {previewImages.length > 1 ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPreviewImageIndex((current) =>
+                            current <= 0 ? previewImages.length - 1 : current - 1
+                          )
+                        }
+                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-container-lowest/90 text-primary shadow backdrop-blur transition hover:bg-white"
+                        aria-label="Previous photo"
+                      >
+                        <span className="material-symbols-outlined">chevron_left</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setPreviewImageIndex((current) =>
+                            current >= previewImages.length - 1 ? 0 : current + 1
+                          )
+                        }
+                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-container-lowest/90 text-primary shadow backdrop-blur transition hover:bg-white"
+                        aria-label="Next photo"
+                      >
+                        <span className="material-symbols-outlined">chevron_right</span>
+                      </button>
+                    </>
+                  ) : null}
                 </div>
                 <div className="p-6">
                   <div className="mb-2 flex items-start justify-between">
@@ -446,7 +504,7 @@ export function ListEquipmentEditorPage({
                     </div>
                   </div>
                   <div className="mb-6 flex flex-wrap gap-2">
-                    {(formState.hp ? [formState.hp] : []).concat(formState.tags.split(",").map((item) => item.trim()).filter(Boolean).slice(0, 2)).map((tag) => (
+                    {(formState.hp ? [formState.hp] : []).concat(formState.workTypes.split(",").map((item) => item.trim()).filter(Boolean).slice(0, 2)).map((tag) => (
                       <span key={tag} className="rounded bg-primary-fixed/50 px-2 py-1 text-[10px] font-bold text-on-primary-fixed font-label">
                         {tag}
                       </span>
@@ -461,16 +519,6 @@ export function ListEquipmentEditorPage({
                     </p>
                   </div>
                 </div>
-              </div>
-
-              <div className="rounded-2xl border border-secondary-container/20 bg-secondary-fixed/30 p-6">
-                <h4 className="mb-2 flex items-center gap-2 font-headline text-sm font-bold text-on-secondary-fixed-variant">
-                  <span className="material-symbols-outlined text-lg">verified_user</span>
-                  Trust Policy
-                </h4>
-                <p className="font-body text-xs leading-relaxed text-on-secondary-fixed-variant/80">
-                  Your listing will be reviewed with the current owner workflow after you publish or save changes.
-                </p>
               </div>
             </div>
           </div>

@@ -13,6 +13,7 @@ const completeProfileRequestSchema = completeProfileSchema.extend({
   fullName: z.string().trim().min(2).max(120).optional(),
   fieldArea: z.number().nonnegative().optional(),
   district: z.string().trim().min(2).max(120).optional(),
+  farmingTypes: z.string().trim().max(240).optional(),
   verificationStatus: z.enum(["not_submitted", "submitted"]).optional(),
   verificationDocumentType: z.string().trim().max(120).optional(),
   verificationDocumentNumber: z.string().trim().max(120).optional(),
@@ -48,6 +49,7 @@ export const GET = withLoggedRoute("profile-complete-get", async () => {
     ok: true,
     profile: {
       district: rawProfile?.district || "",
+      farmingTypes: rawProfile?.farmingTypes || "",
       verificationStatus: rawProfile?.verificationStatus || "not_submitted",
       verificationDocumentType: rawProfile?.verificationDocumentType || "",
       verificationDocumentNumber: rawProfile?.verificationDocumentNumber || "",
@@ -75,6 +77,7 @@ export const POST = withLoggedRoute("profile-complete", async (request: NextRequ
     village: payload.village || session.profile.village,
     address: payload.address || session.profile.address,
     fieldArea: payload.fieldArea ?? session.profile.fieldArea,
+    farmingTypes: payload.farmingTypes,
     rolePreference: preferredWorkspace,
     district: payload.district,
     verificationStatus: payload.verificationStatus,

@@ -265,19 +265,17 @@ function Sidebar({
     <div className="flex h-full flex-col bg-white dark:bg-slate-950">
       <div className="space-y-4 px-6 py-8">
         <div>
-          <span className="text-xl font-bold text-primary">Kisan Kamai</span>
+          <Link
+            href="/"
+            onClick={onNavigate}
+            className="text-xl font-bold text-primary transition-colors hover:text-primary-container"
+          >
+            Kisan Kamai
+          </Link>
           <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
             {text(config.portalLabel)}
           </p>
         </div>
-        <Link
-          href="/"
-          onClick={onNavigate}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-surface-container-highest bg-surface-container-low px-4 py-3 text-sm font-bold text-primary transition-colors hover:bg-surface-container dark:border-slate-800 dark:bg-slate-900 dark:hover:bg-slate-800"
-        >
-          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
-          {text(localizedText("Back to Home", "मुख्यपृष्ठावर जा"))}
-        </Link>
       </div>
 
       <NavigationLinks family={family} activeTab={activeTab} onNavigate={onNavigate} />

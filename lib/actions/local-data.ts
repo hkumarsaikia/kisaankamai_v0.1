@@ -442,8 +442,8 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         .map((value) => value.trim())
         .filter(Boolean);
 
-      if (!name || !description || !location || !pricePerHour) {
-        return { ok: false, error: "Name, location, description, and price are required." };
+      if (!name || !location || !pricePerHour) {
+        return { ok: false, error: "Name, location, and price are required." };
       }
 
       if (!uploads.length) {
@@ -466,7 +466,7 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         location,
         district,
         state,
-        description,
+        description: description || `${name} is available for farm equipment rental in ${location}, ${district}.`,
         pricePerHour,
         unitLabel: String(formData.get("unitLabel") || "per hour").trim() || "per hour",
         rating: Number(formData.get("rating") || 4.8),
@@ -545,7 +545,7 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
         location: String(formData.get("location") || existing.location).trim(),
         district: String(formData.get("district") || existing.district).trim(),
         state: String(formData.get("state") || existing.state).trim(),
-        description: String(formData.get("description") || existing.description).trim(),
+        description: String(formData.get("description") || existing.description || "").trim(),
         pricePerHour: Number(formData.get("pricePerHour") || existing.pricePerHour),
         unitLabel: String(formData.get("unitLabel") || existing.unitLabel).trim(),
         hp: String(formData.get("hp") || existing.hp).trim(),

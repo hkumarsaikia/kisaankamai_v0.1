@@ -208,8 +208,7 @@
     @apply absolute inset-0 pointer-events-none;
     backdrop-filter: blur(2px);
     background:
-      linear-gradient(90deg, rgba(0, 37, 26, 0.76) 0%, rgba(20, 59, 46, 0.54) 52%, rgba(0, 0, 0, 0.24) 100%),
-      radial-gradient(circle at 24% 42%, rgba(255, 255, 255, 0.12), transparent 36%);
+      linear-gradient(90deg, rgba(0, 37, 26, 0.68) 0%, rgba(20, 59, 46, 0.48) 52%, rgba(0, 0, 0, 0.18) 100%);
   }
 
   .kk-depth-tile {
@@ -220,6 +219,7 @@
     --kk-depth-glare-x: 50%;
     --kk-depth-glare-y: 0%;
     --kk-depth-lift: 0px;
+    --kk-depth-sheen-opacity: 0;
     will-change: transform, box-shadow, border-color;
     transition:
       transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -232,7 +232,7 @@
       rotateX(var(--kk-depth-rotate-x))
       rotateY(var(--kk-depth-rotate-y));
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.65) inset,
+      0 1px 0 rgba(166, 207, 189, 0.2) inset,
       0 18px 44px -34px rgba(0, 37, 26, 0.75);
   }
 
@@ -246,9 +246,8 @@
     opacity: 0;
     transform: translateY(8px);
     background:
-      radial-gradient(circle at var(--kk-depth-glare-x) var(--kk-depth-glare-y), rgba(255, 255, 255, 0.42), transparent 34%),
-      linear-gradient(135deg, rgba(255, 255, 255, 0.3), transparent 36%),
-      radial-gradient(circle at 86% 10%, rgba(255, 162, 116, 0.24), transparent 30%);
+      linear-gradient(135deg, rgba(166, 207, 189, var(--kk-depth-sheen-opacity)), transparent 42%),
+      linear-gradient(315deg, rgba(255, 162, 116, 0.16), transparent 36%);
     transition:
       opacity 360ms ease,
       transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -262,8 +261,9 @@
   .kk-depth-tile:hover,
   .kk-depth-tile:focus-within {
     --kk-depth-lift: -8px;
+    --kk-depth-sheen-opacity: 0.2;
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.78) inset,
+      0 1px 0 rgba(166, 207, 189, 0.28) inset,
       0 34px 84px -44px rgba(0, 37, 26, 0.9),
       0 18px 42px -32px rgba(147, 74, 36, 0.48);
   }
@@ -369,15 +369,13 @@
   .kk-form-main-card {
     @apply overflow-hidden border-outline-variant bg-surface-container-lowest;
     background:
-      radial-gradient(circle at top left, rgba(244, 194, 168, 0.22), transparent 28%),
       linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(242, 246, 241, 0.96));
   }
 
   .kk-form-aside {
     @apply rounded-[1.9rem] border border-outline-variant bg-surface-container-low px-6 py-6 text-on-surface shadow-[0_28px_70px_-40px_rgba(20,59,46,0.45)] lg:sticky lg:top-28;
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(237, 243, 236, 0.98)),
-      radial-gradient(circle at top right, rgba(244, 194, 168, 0.2), transparent 35%);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(237, 243, 236, 0.98));
   }
 
   .kk-form-header {
@@ -431,8 +429,7 @@
   .kk-form-section {
     @apply overflow-hidden rounded-[1.7rem] border border-outline-variant bg-surface-container-low shadow-[0_26px_60px_-46px_rgba(20,59,46,0.4)];
     background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(237, 243, 236, 0.92)),
-      radial-gradient(circle at top right, rgba(143, 210, 174, 0.08), transparent 30%);
+      linear-gradient(180deg, rgba(255, 255, 255, 0.76), rgba(237, 243, 236, 0.92));
   }
 
   .kk-form-section + .kk-form-section {
@@ -564,7 +561,7 @@
   }
 
   .dark .kk-auth-card {
-    @apply border-outline-variant bg-surface-container-lowest/95 shadow-[0_34px_90px_-52px_rgba(0,0,0,0.95)];
+    @apply border-outline-variant bg-surface-container-lowest/95 shadow-[0_18px_52px_-42px_rgba(0,0,0,0.75)];
   }
 
   .dark .kk-auth-input,
@@ -575,7 +572,7 @@
 
   .dark .kk-dark-image-overlay {
     background:
-      linear-gradient(90deg, rgba(12, 15, 19, 0.94) 0%, rgba(20, 59, 46, 0.76) 48%, rgba(12, 15, 19, 0.68) 100%);
+      linear-gradient(90deg, rgba(12, 15, 19, 0.62) 0%, rgba(20, 59, 46, 0.48) 48%, rgba(12, 15, 19, 0.36) 100%);
   }
 
   .dark .kk-image-card-overlay {
@@ -585,26 +582,23 @@
 
   .dark .kk-banner-image-overlay {
     background:
-      linear-gradient(90deg, rgba(12, 15, 19, 0.92) 0%, rgba(20, 59, 46, 0.72) 52%, rgba(12, 15, 19, 0.56) 100%),
-      radial-gradient(circle at 24% 42%, rgba(194, 236, 217, 0.1), transparent 36%);
+      linear-gradient(90deg, rgba(12, 15, 19, 0.62) 0%, rgba(20, 59, 46, 0.48) 52%, rgba(12, 15, 19, 0.34) 100%);
   }
 
   .dark .kk-depth-tile {
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.06) inset,
+      0 1px 0 rgba(166, 207, 189, 0.08) inset,
       0 24px 58px -42px rgba(0, 0, 0, 0.9);
   }
 
   .dark .kk-form-main-card {
     background:
-      radial-gradient(circle at top left, rgba(166, 207, 189, 0.08), transparent 30%),
       linear-gradient(180deg, rgba(12, 15, 19, 0.98), rgba(25, 28, 32, 0.96));
   }
 
   .dark .kk-form-aside,
   .dark .kk-form-section {
     background:
-      radial-gradient(circle at top right, rgba(166, 207, 189, 0.08), transparent 36%),
       linear-gradient(180deg, rgba(25, 28, 32, 0.96), rgba(12, 15, 19, 0.98));
   }
 
@@ -707,15 +701,13 @@
   z-index: 0;
   isolation: isolate;
   background:
-    radial-gradient(circle at top left, rgba(20, 59, 46, 0.08), transparent 42%),
     linear-gradient(180deg, rgba(245, 248, 244, 0.98), rgba(230, 236, 229, 0.92));
   font-family: var(--font-manrope), sans-serif;
 }
 
 .dark .leaflet-container {
   background:
-    radial-gradient(circle at top left, rgba(143, 210, 174, 0.12), transparent 42%),
-    linear-gradient(180deg, rgba(10, 16, 13, 0.98), rgba(16, 24, 21, 0.94));
+    linear-gradient(180deg, rgba(10, 16, 13, 0.92), rgba(16, 24, 21, 0.88));
 }
 
 .leaflet-map-pane,

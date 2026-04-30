@@ -133,7 +133,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                       ₹{item.pricePerHour.toLocaleString("en-IN")} / {item.unitLabel}
                     </p>
                     <Link
-                      href={`/equipment/${item.id}`}
+                      href={`/renter-profile/equipment/${item.id}`}
                       className="rounded-full bg-primary px-5 py-2 text-sm font-bold text-white"
                     >
                       Details

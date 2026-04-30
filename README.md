@@ -31,6 +31,7 @@ Current workspace behavior to know while validating `npm run dev`:
 - `/support` is the public contact/help flow. The old public `/report` page is removed from navigation and sitemap.
 - `/feature-request` submits community feature ideas through `/api/forms/feature-request` into Firestore form submissions.
 - The footer newsletter submits through `/api/forms/newsletter-subscription` into Firestore and the `newsletter_subscriptions` Google Sheet.
+- `/coming-soon` notify submissions go through `/api/forms/coming-soon-notify` into Firestore and the `coming_soon_notifications` Google Sheet.
 - the public theme defaults to light mode; explicit dark-mode choices are still respected.
 - `/categories` shows the baseline equipment catalog and merges live owner-published categories into it.
 - `/rent-equipment` and equipment detail pages stay live-data only; they do not show mock equipment when Firestore has no published listings.
@@ -92,12 +93,13 @@ Required runtime configuration includes:
 - Browser tabs synchronize login/logout state through a local auth-sync channel, so already-open pages refresh after a session changes in another tab.
 - User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.
 - Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
-- Public feature-request, feedback, support, partner, owner-application, and newsletter forms write to Firestore first and mirror to Sheets where configured. The legacy `/api/forms/report` endpoint remains available for backend compatibility, but there is no public `/report` page.
+- Public feature-request, feedback, support, partner, owner-application, coming-soon notify, and newsletter forms write to Firestore first and mirror to Sheets where configured. The legacy `/api/forms/report` endpoint remains available for backend compatibility, but there is no public `/report` page.
 - Auth mutations, profile completion, public forms, and bug-report submissions use Firestore-backed rate limits by IP and relevant identifier. Logged-in public-form submissions include the authenticated user id in the limiter so reusing the account phone across forms does not block all form submission.
 - Owner listings accept up to 3 equipment photos. Those photos are saved to Cloud Storage, stored on the listing as public gallery URLs, and mirrored to Sheets as explicit URL/path columns.
 - Map/satellite selection in Google Maps is persisted per browser and must not be overwritten by a hardcoded map type after the user selects satellite view.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
+- Form email notifications are sent directly from the backend through Gmail SMTP when `KK_SMTP_*` secrets are present; the Sheets Apps Script is only a fallback/manual pending-row sender.
 
 ## Operational Tooling
 
@@ -130,6 +132,8 @@ Runbooks:
 - Final test accounts: `docs/OPERATIONS_FINAL_TEST_ACCOUNTS.md`
 - Live repo sync + Discord: `docs/OPERATIONS_LIVE_REPO_SYNC.md`
 - Deferred domain cutover: `docs/RUNBOOK_GODADDY_FIREBASE_DOMAIN_MIGRATION.md`
+
+License: MIT. See `LICENSE`.
 
 ## Repository Notes
 

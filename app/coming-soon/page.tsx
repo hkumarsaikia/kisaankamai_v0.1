@@ -1,12 +1,13 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
 import { LazyMap } from "@/components/LazyMap";
 import {
   COMING_SOON_CONTACT_PLACEHOLDER,
   COMING_SOON_NOTIFY_MODE,
 } from "@/lib/coming-soon-config.js";
 import { HOMEPAGE_MARKERS } from "@/lib/map-data";
+import { postJson } from "@/lib/client/forms";
 import { NORTHERN_MAHARASHTRA_SERVICE_AREAS } from "@/lib/service-areas.js";
 import { supportContact } from "@/lib/support-contact";
 
@@ -18,8 +19,11 @@ const trustPartners = [
 ];
 
 export default function ComingSoonPage() {
-  const [notifyState, setNotifyState] = useState<"idle" | "form" | "submitted">("idle");
+  const [notifyState, setNotifyState] = useState<"idle" | "form">("idle");
+  const [isPending, startTransition] = useTransition();
+  const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [contact, setContact] = useState("");
+  const [error, setError] = useState("");
   const resetTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -36,17 +40,32 @@ export default function ComingSoonPage() {
       return;
     }
 
-    setNotifyState("submitted");
-    setContact("");
+    setError("");
+    setSubmitState("pending");
 
-    if (resetTimeoutRef.current) {
-      window.clearTimeout(resetTimeoutRef.current);
-    }
+    startTransition(async () => {
+      try {
+        await postJson<{ ok: boolean; id: string }>("/api/forms/coming-soon-notify", {
+          contact: contact.trim(),
+          sourcePath: "/coming-soon",
+        });
+        setSubmitState("success");
+        setContact("");
 
-    resetTimeoutRef.current = window.setTimeout(() => {
-      setNotifyState("idle");
-      resetTimeoutRef.current = null;
-    }, 1400);
+        if (resetTimeoutRef.current) {
+          window.clearTimeout(resetTimeoutRef.current);
+        }
+
+        resetTimeoutRef.current = window.setTimeout(() => {
+          setSubmitState("idle");
+          setNotifyState("idle");
+          resetTimeoutRef.current = null;
+        }, 1400);
+      } catch (submitError) {
+        setSubmitState("error");
+        setError(submitError instanceof Error ? submitError.message : "Could not submit this request.");
+      }
+    });
   };
 
   return (
@@ -145,21 +164,36 @@ export default function ComingSoonPage() {
                         placeholder={COMING_SOON_CONTACT_PLACEHOLDER}
                         type="text"
                         value={contact}
-                        onChange={(event) => setContact(event.target.value)}
+                        onChange={(event) => {
+                          setContact(event.target.value);
+                          setSubmitState("idle");
+                          setError("");
+                        }}
+                        disabled={isPending}
                       />
+                      {error ? <p className="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white">{error}</p> : null}
                       <button
-                        className="kk-deep-cta w-full rounded-full py-4 font-bold"
+                        className={`kk-flow-button kk-deep-cta flex w-full items-center justify-center gap-2 rounded-full py-4 font-bold ${
+                          submitState === "success" ? "bg-emerald-600" : ""
+                        }`}
                         type="submit"
+                        disabled={isPending || submitState === "success"}
+                        data-loading={isPending ? "true" : "false"}
+                        aria-busy={isPending}
                       >
-                        Submit
+                        {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                        <span>
+                          {submitState === "pending"
+                            ? "Submitting..."
+                            : submitState === "success"
+                              ? "Submitted"
+                              : "Submit"}
+                        </span>
+                        <span className="material-symbols-outlined text-lg">
+                          {submitState === "success" ? "task_alt" : "send"}
+                        </span>
                       </button>
                     </form>
-                  ) : null}
-
-                  {notifyState === "submitted" ? (
-                    <div className="rounded-full bg-white/10 px-5 py-4 text-center font-bold text-white transition-all duration-300 ease-out animate-in fade-in zoom-in-95">
-                      Submitted
-                    </div>
                   ) : null}
                 </div>
               ) : null}
