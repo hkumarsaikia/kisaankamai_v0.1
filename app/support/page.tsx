@@ -75,7 +75,7 @@ export default function SupportPage() {
       ? langText("Submitting...", "सबमिट करत आहे...")
       : submitState === "success"
         ? langText("Submitted", "सबमिट झाले")
-        : langText("Submit Request", "विनंती सबमिट करा");
+        : "Submit Request";
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
