@@ -99,7 +99,7 @@ Required runtime configuration includes:
 - Map/satellite selection in Google Maps is persisted per browser and must not be overwritten by a hardcoded map type after the user selects satellite view.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
-- Form email notifications are sent directly from the backend through Gmail SMTP when `KK_SMTP_*` secrets are present; the Sheets Apps Script is only a fallback/manual pending-row sender.
+- Form rows mirror to Google Sheets with pending notification metadata. Email alerts are handled only by the optional bound Sheets Apps Script when the workbook owner installs and authorizes it.
 
 ## Operational Tooling
 
@@ -132,8 +132,6 @@ Runbooks:
 - Final test accounts: `docs/OPERATIONS_FINAL_TEST_ACCOUNTS.md`
 - Live repo sync + Discord: `docs/OPERATIONS_LIVE_REPO_SYNC.md`
 - Deferred domain cutover: `docs/RUNBOOK_GODADDY_FIREBASE_DOMAIN_MIGRATION.md`
-
-License: MIT. See `LICENSE`.
 
 ## Repository Notes
 

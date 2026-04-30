@@ -127,4 +127,4 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - Owner listing image uploads are limited to 1-3 real equipment photos. The first photo remains the cover image; all uploaded photos must remain public in logged-out and logged-in listing views.
 - Primary submit/CTA controls should use the shared `kk-flow-button` and `kk-flow-spinner` animation primitives instead of one-off pulse/spinner treatments.
 - Small tile/card surfaces should use the shared `kk-depth-tile` treatment. Pointer-driven depth is installed globally by `components/DepthMotion.tsx` and must respect reduced-motion settings.
-- Form notification email is backend SMTP first. Keep `KK_SMTP_*` configured for live email delivery and leave the bound Apps Script as a fallback/manual pending-row sender only.
+- Form rows mirror to Google Sheets with pending notification metadata. Keep email delivery in the bound Sheets Apps Script only when the workbook owner wants sheet-side alerts.

@@ -160,9 +160,11 @@ test("forms and Sheets include email automation metadata and Apps Script source"
   for (const source of [sheetsMirror, workbookManifest]) {
     assert.match(source, /notification_email_to/);
     assert.match(source, /notification_email_status/);
+    assert.doesNotMatch(source, /email_config_missing/);
   }
   assert.match(googleSheets, /banding|BANDING|bandedRange/i);
   assert.match(appsScript, /MailApp\.sendEmail/);
+  assert.doesNotMatch(appsScript, /KK_SMTP/);
   assert.match(appsScript, /hkumarsaikia@gmail\.com/);
   assert.match(appsScript, /notification_email_sent_at/);
   assert.match(docs, /Apps Script/);

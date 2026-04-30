@@ -212,8 +212,7 @@
       "conditionalRules": [
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" }
       ]
     },
     {
@@ -244,8 +243,7 @@
       "conditionalRules": [
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" }
       ]
     },
     {
@@ -267,8 +265,7 @@
       "conditionalRules": [
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" }
       ]
     },
     {
@@ -292,8 +289,7 @@
       "conditionalRules": [
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" }
       ]
     },
     {
@@ -324,8 +320,7 @@
         { "columnKey": "contact_me", "type": "TEXT_EQ", "value": "TRUE", "background": "#FFF4E5", "foreground": "#9C6500" },
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "pending", "background": "#FFF4E5", "foreground": "#9C6500" },
         { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "sent", "background": "#E6F4EA", "foreground": "#137333" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" },
-        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_config_missing", "background": "#E8F0FE", "foreground": "#185ABC" }
+        { "columnKey": "notification_email_status", "type": "TEXT_EQ", "value": "email_failed", "background": "#FCE8E6", "foreground": "#C5221F" }
       ]
     },
     {

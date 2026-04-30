@@ -200,11 +200,6 @@ function getAppendRange(definition: SheetDefinition) {
   return `${definition.title}!A:${getSheetEndColumn(definition)}`;
 }
 
-function getCellRange(definition: SheetDefinition, columnIndex: number, rowNumber: number) {
-  const column = columnToA1(columnIndex);
-  return `${definition.title}!${column}${rowNumber}`;
-}
-
 function extractRowNumber(updatedRange: string) {
   const match = updatedRange.match(/![A-Z]+(\d+):/);
   return match ? Number(match[1]) : undefined;
@@ -732,40 +727,6 @@ export async function appendSheetRow(sheet: SheetKey, row: unknown[]): Promise<S
     updatedRange,
     rowNumber: updatedRange ? extractRowNumber(updatedRange) : undefined,
   };
-}
-
-export async function updateSheetCell(sheet: SheetKey, columnKey: string, rowNumber: number, value: unknown) {
-  if (!isSheetsEnabled() || rowNumber < 2) {
-    return;
-  }
-
-  await ensureSheetsReady();
-  const definition = getSheetDefinition(sheet);
-  const columnIndex = definition.columns.findIndex((column) => column.key === columnKey);
-  if (columnIndex < 0) {
-    return;
-  }
-
-  await sheetsFetch(`/values/${encodeURIComponent(getCellRange(definition, columnIndex, rowNumber))}?valueInputOption=RAW`, {
-    method: "PUT",
-    body: JSON.stringify({
-      range: getCellRange(definition, columnIndex, rowNumber),
-      majorDimension: "ROWS",
-      values: [[sanitizeCell(value)]],
-    }),
-  });
-}
-
-export async function updateNotificationEmailStatus(
-  sheet: SheetKey,
-  rowNumber: number,
-  status: "pending" | "sent" | "email_failed" | "email_config_missing",
-  sentAt?: string
-) {
-  await updateSheetCell(sheet, "notification_email_status", rowNumber, status);
-  if (sentAt !== undefined) {
-    await updateSheetCell(sheet, "notification_email_sent_at", rowNumber, sentAt);
-  }
 }
 
 export async function recordSheetAudit(

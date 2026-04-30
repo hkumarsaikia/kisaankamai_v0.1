@@ -6,7 +6,7 @@ async function readSource(path) {
   return readFile(new URL(path, import.meta.url), "utf8");
 }
 
-test("coming soon notify submissions use backend, Sheets, direct SMTP, and flow-button states", async () => {
+test("coming soon notify submissions use backend, Sheets, and flow-button states without SMTP deployment blockers", async () => {
   const [
     page,
     route,
@@ -45,12 +45,11 @@ test("coming soon notify submissions use backend, Sheets, direct SMTP, and flow-
   assert.match(sheetsMirror, /sheet:\s*"coming_soon_notifications"/);
   assert.match(workbookManifest, /"coming_soon_notifications"/);
 
-  assert.match(firebaseData, /notifyFormSubmission/);
   assert.match(sheetsServer, /updatedRange/);
-  assert.match(sheetsServer, /updateNotificationEmailStatus/);
-  assert.match(packageJson, /"nodemailer"/);
-  assert.match(apphosting, /KK_SMTP_HOST/);
-  assert.match(apphosting, /KK_SMTP_PASSWORD/);
+  assert.doesNotMatch(firebaseData, /notifyFormSubmission/);
+  assert.doesNotMatch(sheetsServer, /email_config_missing/);
+  assert.doesNotMatch(packageJson, /"nodemailer"/);
+  assert.doesNotMatch(apphosting, /KK_SMTP_/);
 });
 
 test("profile support and feedback workspaces have Other category, localized copy, and shared flow buttons", async () => {

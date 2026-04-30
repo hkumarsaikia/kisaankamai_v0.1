@@ -37,15 +37,3 @@ env:
     secret: firebasePrivateKey
   - variable: GOOGLE_SHEET_ID
     value: 1OWxACnAIgjwrO88NwiXTXge5e4PLYLmX1WrO5Z8sAzU
-  - variable: KK_FORM_NOTIFICATION_TO
-    value: hkumarsaikia@gmail.com
-  - variable: KK_SMTP_HOST
-    value: smtp.gmail.com
-  - variable: KK_SMTP_PORT
-    value: "465"
-  - variable: KK_SMTP_SECURE
-    value: "true"
-  - variable: KK_SMTP_USER
-    secret: kkSmtpUser
-  - variable: KK_SMTP_PASSWORD
-    secret: kkSmtpPassword

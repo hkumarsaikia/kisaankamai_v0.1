@@ -27,7 +27,6 @@ import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { sendPushNotificationToUsers } from "@/lib/server/firebase-messaging";
 import { captureServerException } from "@/lib/server/firebase-observability";
 import { deleteStorageObject } from "@/lib/server/firebase-storage";
-import { notifyFormSubmission } from "@/lib/server/form-email-notifier";
 import { mirrorBookingAndPayment, mirrorListing, mirrorProfile, mirrorSubmission } from "@/lib/server/sheets-mirror";
 import type { RegisterInput } from "@/lib/validation/forms";
 
@@ -1765,11 +1764,7 @@ export async function createSubmissionRecord(input: {
 
   await submissionsCollection().doc(record.id).set(record);
   try {
-    const mirroredRows = await mirrorSubmission(record);
-    await notifyFormSubmission({
-      submission: record,
-      mirroredRows,
-    });
+    await mirrorSubmission(record);
   } catch (error) {
     captureServerException(error, {
       subsystem: "formSubmissionSideEffects",

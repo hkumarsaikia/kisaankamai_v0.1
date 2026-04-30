@@ -18,13 +18,9 @@ Form rows in `support_requests`, `booking_requests`, `newsletter_subscriptions`,
 - `notification_email_sent_at`
 
 The live app writes `notification_email_to=hkumarsaikia@gmail.com` and
-`notification_email_status=pending`, then sends the notification directly from
-the backend with Gmail SMTP when `KK_SMTP_USER` and `KK_SMTP_PASSWORD` are
-configured. After a send attempt, the app updates the mirrored row status to
-`sent`, `email_failed`, or `email_config_missing`.
-
-The bound Google Sheets Apps Script remains as a fallback/manual flush path for
-pending rows. It is not the primary live website email sender.
+`notification_email_status=pending`. Email delivery is handled only by the
+optional bound Google Sheets Apps Script when that script is installed and
+authorized by the workbook owner.
 
 Apps Script source lives in `scripts/google-sheets-apps-script/Code.gs`.
 
@@ -52,13 +48,6 @@ writes to `feedback`.
 - `GOOGLE_SHEET_ID`
 - `GOOGLE_SERVICE_ACCOUNT_EMAIL`
 - `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY`
-- `KK_FORM_NOTIFICATION_TO`
-- `KK_SMTP_HOST`
-- `KK_SMTP_PORT`
-- `KK_SMTP_SECURE`
-- `KK_SMTP_USER`
-- `KK_SMTP_PASSWORD`
-
 The scripts also accept `--sheet-id` when you need to override the env workbook.
 
 Local tooling now prefers the App Hosting `GOOGLE_SHEET_ID` from `apphosting.yaml` when it is present, so the repo uses the same workbook locally and in production unless you explicitly override it.
@@ -120,6 +109,6 @@ Those preserved tabs are not rebuilt from Firebase because they are append-only 
 - `booking_requests` is now a first-class sheet instead of being lost inside generic submission payloads.
 - `feature-request` submissions are visible in `support_requests` with subject, urgency, location, and message columns plus the full payload JSON.
 - Newsletter subscriptions are visible in `newsletter_subscriptions` and use the same pending/sent email notification columns as the other public forms.
-- Coming-soon notify requests are visible in `coming_soon_notifications` and use the backend SMTP notification flow.
+- Coming-soon notify requests are visible in `coming_soon_notifications` with the same pending notification columns as the other public forms.
 - Listings mirror the first three public gallery image URLs and their Storage paths so operations can audit exactly which owner-uploaded photos were saved.
 - `saved_items` is backfilled from Firestore even though the live runtime does not currently append every saved-item toggle into Sheets.
