@@ -243,12 +243,12 @@ export default function SupportPage() {
             </form>
           </div>
 
-          <div className="space-y-6 lg:col-span-5">
-            <div className="flex h-full flex-col justify-center rounded-3xl bg-surface-container p-8 dark:bg-slate-900">
-              <h2 className="mb-6 font-headline text-2xl font-bold text-on-surface dark:text-white">
+          <div className="space-y-6 self-start lg:col-span-5">
+            <div className="rounded-3xl bg-surface-container p-6 dark:bg-slate-900 md:p-7">
+              <h2 className="mb-5 font-headline text-2xl font-bold text-on-surface dark:text-white">
                 {langText("Need urgent help?", "तातडीची मदत हवी आहे का?")}
               </h2>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 <div className="kk-deep-cta flex items-start gap-4 rounded-2xl border border-surface-container-high bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-fixed">
                     <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -289,7 +289,7 @@ export default function SupportPage() {
                 </div>
               </div>
 
-              <div className="mt-8 border-t border-outline-variant/30 pt-8">
+              <div className="mt-6 border-t border-outline-variant/30 pt-6">
                 <h4 className="mb-2 font-headline font-bold text-on-surface dark:text-white">
                   {langText("Support Coverage", "सपोर्ट कव्हरेज")}
                 </h4>
