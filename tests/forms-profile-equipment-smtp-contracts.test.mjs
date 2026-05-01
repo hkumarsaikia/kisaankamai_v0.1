@@ -90,6 +90,9 @@ test("profile settings use supplied structures, uploads, readonly phone, distric
   assert.match(settings, /Change Profile Picture/);
   assert.match(settings, /profilePhotoInputRef/);
   assert.match(settings, /useAuth/);
+  assert.match(settings, /setSession/);
+  assert.match(settings, /payload\.session/);
+  assert.match(settings, /setSession\(payload\.session\)/);
   assert.match(settings, /emitAuthSyncEvent\("session-refresh"\)/);
   assert.match(settings, /refreshProfile\(\)/);
   assert.doesNotMatch(settings, /aria-label="Upload or change profile picture"/);
@@ -104,6 +107,8 @@ test("profile settings use supplied structures, uploads, readonly phone, distric
 
   assert.match(route, /assetType/);
   assert.match(route, /profile-photo/);
+  assert.match(route, /getLocalSessionByUserId/);
+  assert.match(route, /session:\s*updatedSession/);
   assert.match(route, /identity-documents/);
   assert.match(storage, /uploadProfileAsset/);
   assert.match(profileRoute, /farmingTypes/);

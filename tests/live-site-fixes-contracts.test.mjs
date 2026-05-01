@@ -95,15 +95,22 @@ test("forgot password uses the supplied reset layout while preserving the reset 
 
   assert.match(forgot, /Rooted in Trust/);
   assert.match(forgot, /विश्वासावर आधारित/);
+  assert.match(forgot, /FORGOT_PASSWORD_FIELD_IMAGE_URL/);
+  assert.match(forgot, /AB6AXuBtrpKpOlqcEms0TuLR2Z7Adfex6Rwh8IaJ8xWBtdGG3YhePE9AVa-dtcDZ1bnpsPZBumNmwZizT2jgkh1LXEQmgn5qG6TAqPfJeLL11hJ_bqN_Wy6qqRs4ciq-TKSLiKt4OUH7SWZPwv3kRRUluVn5nzxOBtDMXpbToSjH5QtQbMovjt9qxzA0eARg25_qL_zVqKqAR-JPsjPU5xQP537hR3lELCbdQwXsbuuBLWU8WBCx9r3-6fweDb0GWrn79gLC82XDEfIgo1Mp/);
+  assert.match(forgot, /A cinematic, high-resolution photograph of a sun-drenched Indian agricultural field/);
+  assert.match(forgot, /bg-gradient-to-t from-primary\/60 via-transparent to-transparent/);
   assert.match(forgot, /bg-white\/70 backdrop-blur-md/);
   assert.match(forgot, /Contact Support/);
   assert.match(forgot, /Reset your password/);
+  assert.match(forgot, /font-display text-lg font-medium text-secondary\/80/);
   assert.match(forgot, /Back to Sign In/);
   assert.match(forgot, /Send Reset Code/);
+  assert.match(forgot, /Mobile Number/);
+  assert.doesNotMatch(forgot, /Contact Details|email address|Email or Mobile Number|user@example\.com|मोबाईल किंवा ईमेल|ईमेल किंवा मोबाईल/);
   assert.match(forgot, /\/api\/auth\/password-reset\/request/);
   assert.match(forgot, /router\.push\("\/forgot-password\/verify-otp"\)/);
-  assert.match(forgot, /fieldImage/);
-  assert.match(forgot, /blur-sm/);
+  assert.doesNotMatch(forgot, /fieldImage|assetPath\(/);
+  assert.doesNotMatch(forgot, /blur-sm/);
   assert.doesNotMatch(forgot, /Secure Access/);
   assert.doesNotMatch(forgot, /Continue", "पुढे जा"/);
 });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { withLoggedRoute } from "@/lib/server/bug-reporting";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { updateLocalProfile } from "@/lib/server/firebase-data";
+import { getLocalSessionByUserId } from "@/lib/server/local-data";
 import { uploadProfileAsset } from "@/lib/server/firebase-storage";
 import { assertRateLimit, buildAuthRateLimitRules } from "@/lib/server/rate-limit";
 import type { VerificationDocumentRecord } from "@/lib/local-data/types";
@@ -51,11 +52,13 @@ export const POST = withLoggedRoute("profile-assets", async (request: NextReques
     await updateLocalProfile(session.user.id, {
       photoUrl: uploaded.publicUrl,
     });
+    const updatedSession = await getLocalSessionByUserId(session.user.id);
 
     return NextResponse.json({
       ok: true,
       photoUrl: uploaded.publicUrl,
       storagePath: uploaded.objectPath,
+      session: updatedSession,
     });
   }
 

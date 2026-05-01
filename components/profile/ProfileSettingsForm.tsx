@@ -46,7 +46,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
 
   const formId = `${family}-settings-form`;
   const router = useRouter();
-  const { refreshProfile } = useAuth();
+  const { refreshProfile, setSession } = useAuth();
   const profilePhotoInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
   const [isPhotoUploading, setIsPhotoUploading] = useState(false);
@@ -76,6 +76,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     farmingTypes: session.profile.farmingTypes || "",
     rolePreference: session.profile.rolePreference === "owner" ? "owner" : "renter",
   });
+
+  useEffect(() => {
+    setProfilePhotoUrl(session.profile.photoUrl || session.user.photoUrl || "");
+  }, [session.profile.photoUrl, session.user.photoUrl]);
 
   useEffect(() => {
     let isMounted = true;
@@ -183,6 +187,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       const payload = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         photoUrl?: string;
+        session?: LocalSession | null;
         error?: string;
       };
 
@@ -191,6 +196,9 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       }
 
       setProfilePhotoUrl(payload.photoUrl);
+      if (payload.session) {
+        setSession(payload.session);
+      }
       await refreshProfile();
       emitAuthSyncEvent("session-refresh");
       router.refresh();

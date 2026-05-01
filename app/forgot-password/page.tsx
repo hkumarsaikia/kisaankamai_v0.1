@@ -13,9 +13,11 @@ import {
   RESET_PHONE_E164_KEY,
   setResetStorageItem,
 } from "@/components/auth/password-reset-storage";
-import { assetPath } from "@/lib/site";
 
-const fieldImage = assetPath("/assets/generated/modern_farm_tech.png");
+const FORGOT_PASSWORD_FIELD_IMAGE_URL =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuBtrpKpOlqcEms0TuLR2Z7Adfex6Rwh8IaJ8xWBtdGG3YhePE9AVa-dtcDZ1bnpsPZBumNmwZizT2jgkh1LXEQmgn5qG6TAqPfJeLL11hJ_bqN_Wy6qqRs4ciq-TKSLiKt4OUH7SWZPwv3kRRUluVn5nzxOBtDMXpbToSjH5QtQbMovjt9qxzA0eARg25_qL_zVqKqAR-JPsjPU5xQP537hR3lELCbdQwXsbuuBLWU8WBCx9r3-6fweDb0GWrn79gLC82XDEfIgo1Mp";
+const FORGOT_PASSWORD_FIELD_IMAGE_DESCRIPTION =
+  "A cinematic, high-resolution photograph of a sun-drenched Indian agricultural field, likely sugarcane or tall wheat, glowing in the warm golden hour light. The mood is calm, trustworthy, and premium, reflecting a modern agritech brand identity.";
 
 type PasswordResetLookupResponse = {
   ok?: boolean;
@@ -43,7 +45,7 @@ export default function ForgotPasswordPage() {
 
     const trimmedIdentifier = identifier.trim();
     if (!trimmedIdentifier) {
-      setError(langText("Enter your registered email or mobile number.", "तुमचा नोंदणीकृत ईमेल किंवा मोबाईल नंबर टाका."));
+      setError(langText("Enter your registered mobile number.", "तुमचा नोंदणीकृत मोबाईल नंबर टाका."));
       return;
     }
 
@@ -106,15 +108,16 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <main className="kk-auth-page flex min-h-[calc(100vh-5rem)] flex-col bg-background pt-20 text-on-background md:flex-row">
+    <main className="kk-auth-page flex min-h-[calc(100svh-5rem)] flex-grow flex-col bg-background pt-20 text-on-background md:flex-row">
       <section className="relative hidden overflow-hidden bg-surface-container-highest md:flex md:w-1/2 lg:w-7/12">
         <div className="absolute inset-0 z-0">
           <img
             alt="Cinematic shot of a sun-drenched agricultural field."
-            className="h-full w-full object-cover object-center blur-sm"
-            src={fieldImage}
+            className="h-full w-full object-cover object-center"
+            data-alt={FORGOT_PASSWORD_FIELD_IMAGE_DESCRIPTION}
+            src={FORGOT_PASSWORD_FIELD_IMAGE_URL}
           />
-          <div className="kk-dark-image-overlay" />
+          <div className="kk-dark-image-overlay bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
         </div>
         <div className="relative z-10 mt-auto p-12 text-on-primary">
           <div className="mb-6 flex items-center gap-3">
@@ -126,7 +129,7 @@ export default function ForgotPasswordPage() {
           <p className="max-w-md text-lg leading-relaxed opacity-90">
             {langText(
               "Rooted in Trust. Empowering rural agriculture with modern equipment access.",
-              "विश्वासावर आधारित. आधुनिक उपकरणांसह ग्रामीण शेतीला सक्षम करणे."
+              "विश्वासावर आधारित. आधुनिक उपकरणांसह शेतीला सक्षम करणे."
             )}
           </p>
         </div>
@@ -146,10 +149,13 @@ export default function ForgotPasswordPage() {
             <h2 className="mb-3 font-display text-4xl font-extrabold leading-none tracking-tight text-primary">
               {langText("Reset your password", "पासवर्ड रीसेट करा")}
             </h2>
+            <h3 className="font-display text-lg font-medium text-secondary/80 mb-6 tracking-wide">
+              {langText("Secure account recovery", "पासवर्ड रिसेट करा")}
+            </h3>
             <p className="max-w-[90%] text-sm leading-relaxed text-on-surface-variant">
               {langText(
-                "Enter your registered mobile number or email address to continue the secure reset.",
-                "सुरक्षित रीसेट सुरू ठेवण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर किंवा ईमेल पत्ता प्रविष्ट करा."
+                "Enter your registered mobile number to continue the secure reset.",
+                "सुरक्षित रीसेट सुरू ठेवण्यासाठी तुमचा नोंदणीकृत मोबाईल नंबर प्रविष्ट करा."
               )}
             </p>
           </div>
@@ -157,18 +163,18 @@ export default function ForgotPasswordPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <label className="block space-y-2">
               <span className="mb-1 block text-xs font-label font-bold uppercase tracking-widest text-on-surface/60">
-                {langText("Email or Mobile Number", "ईमेल किंवा मोबाईल नंबर")}
+                {langText("Mobile Number", "मोबाईल नंबर")}
               </span>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span className="material-symbols-outlined text-outline-variant">contact_mail</span>
+                  <span className="material-symbols-outlined text-outline-variant">phone_iphone</span>
                 </div>
                 <input
                   className="block w-full rounded-xl border border-outline-variant/40 bg-white/50 py-4 pl-10 pr-4 font-body text-on-surface shadow-sm transition-all duration-300 placeholder:text-on-surface-variant/40 focus:border-primary focus:ring-2 focus:ring-primary/10 dark:bg-slate-950 dark:text-white"
                   id="contact-input"
                   name="contact-input"
-                  placeholder={langText("Registered phone or user@example.com", "नोंदणीकृत फोन किंवा user@example.com")}
-                  type="text"
+                  placeholder={langText("Registered mobile number", "नोंदणीकृत मोबाईल नंबर")}
+                  type="tel"
                   value={identifier}
                   onChange={(event) => {
                     setIdentifier(event.target.value);

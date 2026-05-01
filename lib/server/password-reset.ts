@@ -3,7 +3,6 @@ import "server-only";
 import { z } from "zod";
 import {
   createOrUpdatePasswordLoginCredential,
-  findUserByIdentifier,
   findUserByPhone,
 } from "@/lib/server/firebase-data";
 import { getAdminAuth } from "@/lib/server/firebase-admin";
@@ -30,25 +29,6 @@ const newPasswordSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters."),
   confirmPassword: z.string().min(6, "Confirm password is required."),
 });
-
-export async function resolvePasswordResetTarget(identifier: string) {
-  const user = await findUserByIdentifier(identifier);
-  if (!user) {
-    throw new Error("No account found for this email or phone.");
-  }
-
-  const phoneE164 = toE164(user.phone);
-  if (!phoneE164) {
-    throw new Error("This account does not have a verified mobile number for reset.");
-  }
-
-  return {
-    userId: user.id,
-    phoneE164,
-    maskedPhone: maskPhoneNumber(user.phone),
-    email: user.email,
-  };
-}
 
 export async function resolvePasswordResetPhoneInput(identifier: string) {
   if (identifier.includes("@")) {
