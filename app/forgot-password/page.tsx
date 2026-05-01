@@ -73,8 +73,8 @@ export default function ForgotPasswordPage() {
         throw new Error(
           payload.error ||
             langText(
-              "We could not start reset for that account contact.",
-              "त्या खाते संपर्कासाठी रीसेट सुरू करता आला नाही."
+              "We could not start reset for that registered mobile number.",
+              "त्या नोंदणीकृत मोबाईल नंबरसाठी रीसेट सुरू करता आला नाही."
             )
         );
       }

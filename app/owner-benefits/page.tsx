@@ -182,7 +182,7 @@ export default function OwnerBenefitsPage() {
                       >
                         {ownerEarningCategories.map((category) => (
                           <option key={category.slug} value={category.slug}>
-                            {category.label} - {category.detail}
+                            {langText(category.label, category.mrLabel)} - {category.detail}
                           </option>
                         ))}
                       </select>
@@ -214,6 +214,9 @@ export default function OwnerBenefitsPage() {
                         </svg>
                       </div>
                     </div>
+                    <p className="mt-2 text-xs font-semibold text-gray-500">
+                      {langText("More locations coming soon...", "लवकरच आणखी ठिकाणे उपलब्ध होतील...")}
+                    </p>
                   </div>
 
                   <div>
@@ -247,7 +250,7 @@ export default function OwnerBenefitsPage() {
                     {currency(monthlyEstimate.low)} - {currency(monthlyEstimate.high)}
                   </h3>
                   <p className="text-brand-50/80 text-sm leading-relaxed mb-8">
-                    {selectedCategory.label} estimate based on {usageDays} rental days for {visibleDistrict}. Final rates depend on machine condition, operator, and local demand.
+                    {langText(selectedCategory.label, selectedCategory.mrLabel)} estimate based on {usageDays} rental days for {visibleDistrict}. Final rates depend on machine condition, operator, and local demand.
                   </p>
                   <div className="grid grid-cols-2 gap-4 mt-auto">
                     <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/10">
@@ -257,7 +260,7 @@ export default function OwnerBenefitsPage() {
                     <div className="bg-white/10 rounded-xl p-4 backdrop-blur-sm border border-white/10">
                       <p className="text-brand-100 text-xs mb-1">Market Demand</p>
                       <p className="font-bold text-xl flex items-center gap-1">
-                        {selectedCategory.demand}
+                        {langText(selectedCategory.demand, selectedCategory.mrDemand)}
                         <svg className="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                         </svg>

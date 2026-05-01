@@ -141,17 +141,24 @@ test("catalog pages do not ship hardcoded mock equipment detail experiences", as
 });
 
 test("password reset lookup accepts registered mobile number only and rejects unknown accounts before OTP", async () => {
-  const [routeSource, pageSource, resetSource] = await Promise.all([
+  const [routeSource, pageSource, resetSource, storageSource, autoI18nSource] = await Promise.all([
     readFile(new URL("../app/api/auth/password-reset/request/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/forgot-password/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/password-reset.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/auth/password-reset-storage.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/i18n.auto.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(routeSource, /resolvePasswordResetPhoneInput/);
   assert.doesNotMatch(routeSource, /resolvePasswordResetTarget/);
   assert.doesNotMatch(pageSource, /RESET_EMAIL_KEY/);
   assert.match(pageSource, /Mobile Number/);
-  assert.doesNotMatch(pageSource, /Email or Mobile Number|email address|user@example\.com/);
+  assert.doesNotMatch(pageSource, /Email or Mobile Number|email address|user@example\.com|account contact/);
+  assert.doesNotMatch(storageSource, /RESET_EMAIL_KEY|registered contact|includes\("@\"\)/);
+  assert.doesNotMatch(
+    autoI18nSource,
+    /"forgot-password\.email_or_phone"|"forgot-password\.otp_is_disabled_in_this_local_phase_reset_directly_using_your_registered_email_or_phone"|Reset directly using your registered email or phone|तुमच्या नोंदणीकृत ईमेल किंवा फोनने/
+  );
   assert.match(resetSource, /resolvePasswordResetPhoneInput/);
   assert.doesNotMatch(resetSource, /findUserByIdentifier/);
   assert.match(resetSource, /findUserByPhone/);

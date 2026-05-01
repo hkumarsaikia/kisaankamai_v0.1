@@ -78,10 +78,10 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.match(support, /scrollTo\(\{\s*top:\s*0/);
   assert.match(support, /<section className="mx-auto mb-24 grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-12">/);
   assert.match(support, /lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-surface-container-high/);
-  assert.match(support, /space-y-6 self-start lg:col-span-5/);
-  assert.match(support, /rounded-3xl bg-surface-container p-6 dark:bg-slate-900 md:p-7/);
-  assert.match(support, /<div className="space-y-4">/);
-  assert.match(support, /mt-6 border-t border-outline-variant\/30 pt-6/);
+  assert.match(support, /space-y-4 self-start lg:col-span-5/);
+  assert.match(support, /rounded-3xl bg-surface-container p-5 dark:bg-slate-900 md:p-6/);
+  assert.match(support, /<div className="space-y-3">/);
+  assert.match(support, /mt-5 border-t border-outline-variant\/30 pt-5/);
   assert.doesNotMatch(support, /flex h-full flex-col justify-center rounded-3xl bg-surface-container p-8/);
   assert.match(support, /w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors/);
   assert.doesNotMatch(support, /lg:order-2|lg:order-1|order-2|order-1/);
@@ -154,7 +154,9 @@ test("owner benefits uses compact selectors, all Maharashtra districts, and no r
   assert.match(ownerBenefits, /href="\/login"[\s\S]*Start Now/);
   assert.match(ownerBenefits, /earningsEstimateRef/);
   assert.match(ownerBenefits, /scrollIntoView\(\{\s*behavior:\s*"smooth"/);
-  assert.doesNotMatch(ownerBenefits, /More locations coming soon\.\.\./);
+  assert.match(ownerBenefits, /More locations coming soon\.\.\./);
+  assert.match(ownerBenefits, /langText\("More locations coming soon\.\.\.",\s*"लवकरच आणखी ठिकाणे उपलब्ध होतील\.\.\."\)/);
+  assert.match(ownerBenefits, /Operating District[\s\S]*More locations coming soon\.\.\./);
   assert.match(ownerBenefits, /visibleDistrict/);
   assert.match(ownerBenefits, /BASE_EQUIPMENT_CATEGORIES/);
   assert.match(ownerBenefits, /<select[\s\S]*selectedCategory\.label/);
