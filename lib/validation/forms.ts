@@ -106,7 +106,7 @@ export const feedbackSchema = z
     fullName: z.string().trim().min(2, "Enter your full name.").max(120),
     mobileNumber: tenDigitPhone,
     email: optionalEmail.optional(),
-    role: z.enum(["farmer", "owner", "partner", "visitor"]),
+    role: z.enum(["farmer", "owner", "partner", "visitor", "other"]),
     category: z.string().trim().min(2, "Select a feedback category.").max(80),
     subject: z.string().trim().min(4, "Enter a subject.").max(160),
     message: z.string().trim().min(10, "Enter your feedback.").max(2500),

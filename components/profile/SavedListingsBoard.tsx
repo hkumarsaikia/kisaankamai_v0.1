@@ -61,12 +61,6 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
       <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <h2 className="text-3xl font-black text-primary">{langText("Saved Equipment", "जतन केलेली उपकरणे")}</h2>
-          <p className="mt-2 text-sm text-on-surface-variant dark:text-slate-400">
-            {langText(
-              "Review the machines you shortlisted and open their real equipment detail pages.",
-              "तुम्ही जतन केलेली उपकरणे तपासा आणि त्यांची अचूक तपशील पाने उघडा."
-            )}
-          </p>
         </div>
         <button
           type="button"
@@ -127,9 +121,12 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                         {item.categoryLabel}
                       </p>
                     </div>
-                    <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm font-bold text-on-surface dark:bg-slate-950 dark:text-slate-100">
-                      {item.rating.toFixed(1)}
-                    </div>
+                    {item.rating > 0 ? (
+                      <div className="equipment-rating-pill inline-flex items-center gap-1 rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
+                        <span className="material-symbols-outlined text-[16px]">star</span>
+                        {item.rating.toFixed(1)}
+                      </div>
+                    ) : null}
                   </div>
                   <p className="mt-4 text-sm text-on-surface-variant dark:text-slate-400">
                     {item.location}, {item.district} ({item.distanceKm} km {langText("away", "दूर")})

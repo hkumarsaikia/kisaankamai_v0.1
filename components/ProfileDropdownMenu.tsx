@@ -4,12 +4,8 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
-import {
-  resolvePortalHref,
-  resolveWorkspaceSettingsHref,
-  resolveWorkspaceSupportHref,
-} from "@/lib/workspace-routing.js";
+import { useEffect, useRef, useState } from "react";
+import { resolvePortalHref } from "@/lib/workspace-routing.js";
 
 type ProfileDropdownMenuProps = {
   className?: string;
@@ -21,7 +17,6 @@ type ProfileDropdownMenuProps = {
 
 export function ProfileDropdownMenu({
   className = "",
-  settingsHref,
   showLabel = true,
   fullWidth = false,
   panelMode = "popover",
@@ -30,29 +25,23 @@ export function ProfileDropdownMenu({
   const { user, profile, activeWorkspace } = useAuth();
   const { t, langText } = useLanguage();
   const [open, setOpen] = useState(false);
+  const [notificationsCleared, setNotificationsCleared] = useState(false);
+  const [notificationsLoading, setNotificationsLoading] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
-  const resolvedSettingsHref = useMemo(
-    () =>
-      resolveWorkspaceSettingsHref({
-        pathname: pathname || "",
-        activeWorkspace,
-        settingsHref,
-      }),
-    [activeWorkspace, pathname, settingsHref]
-  );
-  const resolvedSupportHref = useMemo(
-    () =>
-      resolveWorkspaceSupportHref({
-        pathname: pathname || "",
-        activeWorkspace,
-      }),
-    [activeWorkspace, pathname]
-  );
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    setNotificationsLoading(true);
+    const timeout = window.setTimeout(() => setNotificationsLoading(false), 300);
+    return () => window.clearTimeout(timeout);
+  }, [open]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -83,13 +72,49 @@ export function ProfileDropdownMenu({
   const panelClassName =
     panelMode === "inline"
       ? "relative mt-3 w-full"
-      : "absolute right-0 top-full mt-3 w-[18rem] max-w-[calc(100vw-1.5rem)]";
+      : "absolute right-0 top-full mt-3 w-80 max-w-[calc(100vw-1.5rem)]";
+  const notifications = notificationsCleared
+    ? []
+    : [
+        {
+          title: langText("Booking Confirmed", "बुकिंगची पुष्टी झाली"),
+          body: langText("Booking Confirmed: John Deere 5050D for Oct 24", "बुकिंग पुष्टी: २४ ऑक्टोबरसाठी John Deere 5050D"),
+          time: langText("2 mins ago", "२ मिनिटांपूर्वी"),
+          icon: "check_circle",
+          tone: "bg-green-50/50 border-green-100/50 hover:bg-green-50",
+          iconTone: "bg-green-100 text-green-600",
+        },
+        {
+          title: langText("New Request", "नवीन विनंती"),
+          body: langText("New Request: Mahindra 575 DI from Namdev P.", "नवीन विनंती: नामदेव पी. कडून Mahindra 575 DI"),
+          time: langText("1 hour ago", "१ तासापूर्वी"),
+          icon: "pending_actions",
+          tone: "bg-orange-50/50 border-orange-100/50 hover:bg-orange-50",
+          iconTone: "bg-orange-100 text-[#ec5b13]",
+        },
+        {
+          title: langText("Booking Cancelled", "बुकिंग रद्द केले"),
+          body: langText("Booking Cancelled by Renter: John Deere 5050D", "भाडेकरूने बुकिंग रद्द केले: John Deere 5050D"),
+          time: langText("3 hours ago", "३ तासांपूर्वी"),
+          icon: "cancel",
+          tone: "bg-red-50/50 border-red-100/50 hover:bg-red-50",
+          iconTone: "bg-red-100 text-red-600",
+        },
+        {
+          title: langText("Booking Cancelled", "बुकिंग रद्द केले"),
+          body: langText("Booking Cancelled by Owner: Mahindra 575 DI", "मालकाने बुकिंग रद्द केले: Mahindra 575 DI"),
+          time: langText("5 hours ago", "५ तासांपूर्वी"),
+          icon: "cancel",
+          tone: "bg-red-50/50 border-red-100/50 hover:bg-red-50",
+          iconTone: "bg-red-100 text-red-600",
+        },
+      ];
 
   return (
     <div
       ref={containerRef}
       className={`relative ${fullWidth ? "w-full" : ""} ${className}`}
-      data-settings-href={resolvedSettingsHref}
+      data-active-workspace={activeWorkspace || undefined}
     >
       <button
         type="button"
@@ -128,43 +153,43 @@ export function ProfileDropdownMenu({
 
       {open ? (
         <div
-          className={`${panelClassName} overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_70px_rgba(15,23,42,0.22)] dark:border-slate-800 dark:bg-slate-950`}
+          className={`${panelClassName} flex flex-col overflow-hidden rounded-2xl border border-white/40 bg-white/80 font-display shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90`}
           role="menu"
         >
-          <div className="flex items-center gap-3 border-b border-slate-100 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/70">
+          <div className="flex items-center gap-4 border-b border-slate-100 p-5 dark:border-slate-800">
             {photoUrl ? (
               <img
                 alt={avatarAlt}
-                className="h-11 w-11 rounded-full object-cover"
+                className="h-12 w-12 shrink-0 rounded-full bg-slate-200 object-cover"
                 src={photoUrl}
               />
             ) : (
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary-container text-sm font-black text-white">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-slate-200 text-sm font-black text-slate-700">
                 {initials}
               </span>
             )}
-            <div className="min-w-0">
-              <p className="truncate text-base font-bold text-slate-900 dark:text-slate-100">
+            <div className="flex min-w-0 flex-col">
+              <p className="truncate text-lg font-bold leading-tight text-slate-900 dark:text-slate-100">
                 {displayName}
               </p>
             </div>
           </div>
 
-          <div className="px-3 py-2">
-            <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+          <div className="py-2">
+            <h4 className="px-5 py-2 text-xs font-bold uppercase tracking-wider text-slate-400">
               {t("header.menu.profiles")}
             </h4>
-            <div className="space-y-1">
+            <div className="px-3">
               <Link
                 href={resolvePortalHref("owner")}
                 onClick={() => setOpen(false)}
-                className="group flex items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+                className="group flex w-full items-center gap-4 rounded-xl p-3 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
-                  <span className="material-symbols-outlined text-[19px]">agriculture</span>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ec5b13]/10 text-[#ec5b13] transition-colors group-hover:bg-[#ec5b13] group-hover:text-white">
+                  <span className="material-symbols-outlined">grid_view</span>
                 </span>
-                <span>
-                  <span className="block text-sm font-semibold text-slate-800 transition-colors group-hover:text-primary dark:text-slate-200">
+                <span className="flex flex-col">
+                  <span className="text-base font-semibold leading-tight text-slate-800 transition-colors group-hover:text-[#ec5b13] dark:text-slate-200">
                     {t("header.dropdown.owner_profile")}
                   </span>
                 </span>
@@ -173,13 +198,13 @@ export function ProfileDropdownMenu({
               <Link
                 href={resolvePortalHref("renter")}
                 onClick={() => setOpen(false)}
-                className="group flex items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
+                className="group mt-1 flex w-full items-center gap-4 rounded-xl p-3 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-900"
               >
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-white">
-                  <span className="material-symbols-outlined text-[19px]">grid_view</span>
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#ec5b13]/10 text-[#ec5b13] transition-colors group-hover:bg-[#ec5b13] group-hover:text-white">
+                  <span className="material-symbols-outlined">agriculture</span>
                 </span>
-                <span>
-                  <span className="block text-sm font-semibold text-slate-800 transition-colors group-hover:text-primary dark:text-slate-200">
+                <span className="flex flex-col">
+                  <span className="text-base font-semibold leading-tight text-slate-800 transition-colors group-hover:text-[#ec5b13] dark:text-slate-200">
                     {t("header.dropdown.renter_profile")}
                   </span>
                 </span>
@@ -187,40 +212,83 @@ export function ProfileDropdownMenu({
             </div>
           </div>
 
-          <div className="mx-3 h-px bg-slate-100 dark:bg-slate-800" />
-
-          <div className="px-3 py-2">
-            <h4 className="mb-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
-              {t("header.menu.account")}
-            </h4>
-            <div className="space-y-1">
-              <Link
-                href={resolvedSettingsHref}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900"
-              >
-                <span className="material-symbols-outlined text-xl text-slate-500">settings</span>
-                <span className="text-sm font-medium">{t("header.menu.settings")}</span>
-              </Link>
-              <Link
-                href={resolvedSupportHref}
-                onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-xl px-3 py-2 text-slate-700 transition-colors hover:bg-slate-50 dark:text-slate-200 dark:hover:bg-slate-900"
-              >
-                <span className="material-symbols-outlined text-xl text-slate-500">help_outline</span>
-                <span className="text-sm font-medium">{t("header.menu.help_support")}</span>
-              </Link>
+          <div className="border-t border-slate-100 py-2 dark:border-slate-800">
+            <div className="flex items-center justify-between px-5 py-3 text-xs font-bold uppercase tracking-wider text-slate-400">
+              <span>{langText("NOTIFICATIONS", "सूचना")}</span>
+              {notificationsLoading ? (
+                <span className="h-4 w-4 rounded-full border-2 border-slate-200 border-t-[#ec5b13] animate-spin" />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setNotificationsCleared(true)}
+                  disabled={!notifications.length}
+                  className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${
+                    notifications.length
+                      ? "text-slate-800 hover:text-[#ec5b13] dark:text-slate-200"
+                      : "cursor-not-allowed text-slate-300"
+                  }`}
+                >
+                  {langText("Clear All", "सर्व पुसून टाका")}
+                </button>
+              )}
             </div>
+
+            {notificationsLoading ? (
+              <div className="flex flex-col gap-2 px-3 pb-3">
+                {[0, 1].map((index) => (
+                  <div key={index} className="flex gap-4 rounded-xl border border-slate-100 bg-slate-50/50 p-3 animate-pulse dark:border-slate-800 dark:bg-slate-900/60">
+                    <div className="h-10 w-10 shrink-0 rounded-full bg-slate-200 dark:bg-slate-800" />
+                    <div className="flex flex-1 flex-col gap-2 py-1">
+                      <div className="h-3 w-3/4 rounded bg-slate-200 dark:bg-slate-800" />
+                      <div className="h-2.5 w-full rounded bg-slate-200 dark:bg-slate-800" />
+                      <div className="mt-1 h-2 w-1/4 rounded bg-slate-200 dark:bg-slate-800" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : notifications.length ? (
+              <div className="flex flex-col gap-2 px-3 pb-3">
+                {notifications.map((notification, index) => (
+                  <div
+                    key={`${notification.title}-${index}`}
+                    className={`group flex cursor-pointer gap-4 rounded-xl border p-3 transition-colors ${notification.tone}`}
+                  >
+                    <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${notification.iconTone}`}>
+                      <span className="material-symbols-outlined text-xl">{notification.icon}</span>
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-bold text-slate-800 dark:text-slate-100">{notification.title}</span>
+                      <p className="mt-0.5 text-xs text-slate-600 dark:text-slate-400">{notification.body}</p>
+                      <span className="mt-1 text-[10px] text-slate-400">{notification.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center px-3 py-6 pb-3 text-center">
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-slate-50 text-slate-400 dark:bg-slate-900">
+                  <span className="material-symbols-outlined text-2xl">done_all</span>
+                </div>
+                <span className="text-sm font-bold text-slate-700 dark:text-slate-200">
+                  {langText("All caught up!", "सर्व काही पाहिले!")}
+                </span>
+                <p className="mt-1 text-xs text-slate-500">
+                  {langText("No new notifications at the moment.", "सध्या नवीन सूचना नाहीत.")}
+                </p>
+              </div>
+            )}
           </div>
 
-          <div className="border-t border-slate-100 bg-slate-50 px-3 py-3 dark:border-slate-800 dark:bg-slate-900/70">
+          <div className="border-t border-slate-100/50 px-3 pb-3 pt-3 dark:border-slate-800">
             <Link
               href="/logout"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-2 py-1 text-red-600 transition-colors hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+              className="group flex w-full items-center gap-4 rounded-xl p-3 text-left text-red-600 transition-colors hover:bg-red-50/50 dark:text-red-400 dark:hover:bg-red-950/30"
             >
-              <span className="material-symbols-outlined text-xl">logout</span>
-              <span className="text-sm font-medium">{t("header.menu.sign_out")}</span>
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white dark:bg-red-950/40 dark:text-red-300">
+                <span className="material-symbols-outlined text-xl">logout</span>
+              </span>
+              <span className="text-sm font-bold">{t("header.menu.sign_out")}</span>
             </Link>
           </div>
         </div>

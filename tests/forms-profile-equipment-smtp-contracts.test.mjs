@@ -76,7 +76,7 @@ test("profile support and feedback workspaces have Other category, localized cop
   assert.match(shell, /href="\/"[\s\S]*Kisan Kamai/);
 });
 
-test("profile settings use supplied structures, uploads, readonly phone, district dropdown, and optional verification", async () => {
+test("profile settings use the supplied local page structure, uploads, readonly phone, and save flow", async () => {
   const [settings, route, storage, profileRoute, validation, types, workbook] = await Promise.all([
     readSource("../components/profile/ProfileSettingsForm.tsx"),
     readSource("../app/api/profile/assets/route.ts").catch(() => ""),
@@ -87,7 +87,10 @@ test("profile settings use supplied structures, uploads, readonly phone, distric
     readSource("../data/operational-sheets-workbook.json"),
   ]);
 
-  assert.match(settings, /Change Profile Picture/);
+  assert.match(settings, /Profile Photo/);
+  assert.match(settings, /Click to upload a new photo/);
+  assert.match(settings, /Public Visibility/);
+  assert.match(settings, /WhatsApp Notifications/);
   assert.match(settings, /profilePhotoInputRef/);
   assert.match(settings, /useAuth/);
   assert.match(settings, /setSession/);
@@ -95,14 +98,9 @@ test("profile settings use supplied structures, uploads, readonly phone, distric
   assert.match(settings, /setSession\(payload\.session\)/);
   assert.match(settings, /emitAuthSyncEvent\("session-refresh"\)/);
   assert.match(settings, /refreshProfile\(\)/);
-  assert.doesNotMatch(settings, /aria-label="Upload or change profile picture"/);
+  assert.match(settings, /aria-label=\{langText\("Upload or change profile photo"/);
   assert.match(settings, /readOnly[\s\S]*Phone/);
   assert.match(settings, /MAHARASHTRA_DISTRICTS/);
-  assert.match(settings, /<select[\s\S]*extraProfileState\.district/);
-  assert.match(settings, /Identity Verification \(Optional\)/);
-  assert.match(settings, /frontDocument/);
-  assert.match(settings, /backDocument/);
-  assert.match(settings, /verificationStatus:\s*"submitted"/);
   assert.match(settings, /\/api\/profile\/assets/);
 
   assert.match(route, /assetType/);
@@ -117,7 +115,7 @@ test("profile settings use supplied structures, uploads, readonly phone, distric
   assert.match(workbook, /"farming_types"/);
 });
 
-test("listing editor uses three photo slots, Other equipment type, no description or tags, and gallery arrows", async () => {
+test("listing editor uses three photo slots, Other equipment type, no description or tags, and no live preview tile", async () => {
   const [editor, actions] = await Promise.all([
     readSource("../components/owner-profile/ListEquipmentEditorPage.tsx"),
     readSource("../lib/actions/local-data.ts"),
@@ -129,9 +127,8 @@ test("listing editor uses three photo slots, Other equipment type, no descriptio
   assert.match(editor, /Photo 3/);
   assert.match(editor, /customCategory/);
   assert.match(editor, /value="other"/);
-  assert.match(editor, /previewImageIndex/);
-  assert.match(editor, /chevron_left/);
-  assert.match(editor, /chevron_right/);
+  assert.doesNotMatch(editor, /previewImageIndex/);
+  assert.doesNotMatch(editor, /chevron_left|chevron_right|Live Preview|live preview|लाइव्ह पूर्वावलोकन/);
   assert.doesNotMatch(editor, /Trust Policy/);
   assert.doesNotMatch(editor, /Description &amp; Photos/);
   assert.doesNotMatch(editor, /Listing Description \*/);
@@ -143,10 +140,11 @@ test("listing editor uses three photo slots, Other equipment type, no descriptio
 });
 
 test("equipment detail supports workspace chrome, sticky booking panel, and unauthenticated toast", async () => {
-  const [detail, layout, ownerPage, renterPage, ownerBrowser, renterBrowser, ownerBookings, renterBookings] =
+  const [detail, layout, publicPage, ownerPage, renterPage, ownerBrowser, renterBrowser, ownerBookings, renterBookings] =
     await Promise.all([
       readSource("../app/equipment/[id]/EquipmentDetailClient.tsx"),
       readSource("../lib/equipment-detail-layout.js"),
+      readSource("../app/equipment/[id]/page.tsx"),
       readSource("../app/owner-profile/equipment/[id]/page.tsx").catch(() => ""),
       readSource("../app/renter-profile/equipment/[id]/page.tsx").catch(() => ""),
       readSource("../components/owner-profile/OwnerEquipmentBrowser.tsx"),
@@ -158,6 +156,9 @@ test("equipment detail supports workspace chrome, sticky booking panel, and unau
   assert.match(detail, /showBreadcrumbs/);
   assert.match(detail, /please login or register/i);
   assert.doesNotMatch(detail, /router\.push\("\/login"\)/);
+  assert.match(publicPage, /getCurrentSession/);
+  assert.match(publicPage, /activeWorkspace/);
+  assert.match(publicPage, /redirect\(`\/\$\{session\.activeWorkspace\}-profile\/equipment\/\$\{equipment\.id\}`\)/);
   assert.match(layout, /lg:sticky/);
   assert.match(layout, /lg:max-h-none/);
   assert.match(ownerPage, /OwnerProfileWorkspaceShell/);
@@ -170,7 +171,7 @@ test("equipment detail supports workspace chrome, sticky booking panel, and unau
   assert.match(renterBookings, /\/renter-profile\/equipment\/\$\{listing\?\.id \|\| booking\.listingId\}/);
 });
 
-test("profile workspace route shells use localized titles and subtitles", async () => {
+test("profile workspace route shells use localized titles and avoid static bilingual copy", async () => {
   const workspacePages = [
     "../app/owner-profile/page.tsx",
     "../app/owner-profile/browse/page.tsx",
@@ -192,7 +193,6 @@ test("profile workspace route shells use localized titles and subtitles", async 
     const source = await readSource(filePath);
     assert.match(source, /localizedText/);
     assert.match(source, /title=\{localizedText\(/);
-    assert.match(source, /subtitle=\{localizedText\(/);
     assert.doesNotMatch(source, /title="[^"]+"/);
     assert.doesNotMatch(source, /subtitle="[^"]+"/);
     assert.doesNotMatch(source, /\/\s*[\u0900-\u097F]/);

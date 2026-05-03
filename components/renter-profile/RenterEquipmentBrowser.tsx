@@ -138,6 +138,12 @@ export function RenterEquipmentBrowser({
                   <p className="text-lg font-extrabold text-primary-container dark:text-emerald-200">
                     ₹{item.pricePerHour}/hr
                   </p>
+                  {item.rating > 0 ? (
+                    <p className="equipment-rating-pill inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
+                      <span className="material-symbols-outlined text-[15px]">star</span>
+                      {item.rating.toFixed(1)}
+                    </p>
+                  ) : null}
                   <Link href={`/renter-profile/equipment/${item.id}`} className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white">
                     {langText("View Details", "तपशील पहा")}
                   </Link>

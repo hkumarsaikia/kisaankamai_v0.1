@@ -172,7 +172,7 @@ test("report source removes the requested support and guidance copy only", async
   assert.doesNotMatch(sitemapSource, /\/report/);
 });
 
-test("list equipment page keeps the owner workspace shell and sticky live preview layout", async () => {
+test("list equipment page keeps the owner workspace shell and removes the live preview tile", async () => {
   const [pageSource, editorSource] = await Promise.all([
     readFile(new URL("../app/list-equipment/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/owner-profile/ListEquipmentEditorPage.tsx", import.meta.url), "utf8"),
@@ -181,8 +181,8 @@ test("list equipment page keeps the owner workspace shell and sticky live previe
   assert.match(pageSource, /family="owner-profile"/);
   assert.match(pageSource, /activeTab="add-listing"/);
   assert.match(pageSource, /redirect\("\/login"\)/);
-  assert.match(editorSource, /sticky top-28/);
-  assert.match(editorSource, /Live Preview/);
+  assert.doesNotMatch(editorSource, /sticky top-28/);
+  assert.doesNotMatch(editorSource, /Live Preview|live preview|लाइव्ह पूर्वावलोकन/);
   assert.match(editorSource, /Available from specific date/);
   assert.match(editorSource, /type="date"/);
   assert.doesNotMatch(pageSource, /activeWorkspace === "renter" \? "owner-profile" : "renter-profile"/);

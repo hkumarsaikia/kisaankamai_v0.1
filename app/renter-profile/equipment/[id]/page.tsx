@@ -32,7 +32,7 @@ export default async function RenterProfileEquipmentDetailPage({
       title={localizedText("Equipment Details", "उपकरण तपशील")}
       subtitle={localizedText("Review and request this machine inside the renter workspace.", "भाडेकरू वर्कस्पेसमध्ये हे उपकरण तपासा आणि विनंती करा.")}
     >
-      <EquipmentDetailClient equipment={equipment} relatedEquipment={relatedEquipment} showBreadcrumbs={false} />
+      <EquipmentDetailClient equipment={equipment} relatedEquipment={relatedEquipment} showBreadcrumbs={false} containerVariant="workspace" />
     </OwnerProfileWorkspaceShell>
   );
 }

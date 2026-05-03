@@ -191,9 +191,13 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
   });
 
   if (compact) {
+    const imageClassName = compact ? "h-36 sm:h-40 md:h-44" : "";
+    const bodyClassName = compact ? "p-4 md:p-5" : "";
+    const titleClassName = compact ? "text-lg md:text-xl" : "";
+
     return (
       <article className="flex flex-col md:flex-row bg-surface rounded-2xl border border-surface-variant shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
-        <div className="w-full md:w-2/5 lg:w-1/3 relative h-64 md:h-auto bg-surface-container-lowest">
+        <div className={`w-full md:w-2/5 lg:w-[30%] relative ${imageClassName} bg-surface-container-lowest`}>
           <ContentImage
             alt={item.name}
             className="w-full h-full object-cover object-center"
@@ -201,24 +205,30 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
           />
 
         </div>
-        <div className="flex-1 p-5 md:p-6 flex flex-col justify-between">
-          <div className="flex flex-col gap-3">
+        <div className={`flex-1 ${bodyClassName} flex flex-col justify-between`}>
+          <div className="flex flex-col gap-2.5">
             <div className="flex justify-between items-start gap-4">
               <div>
 
-                <h3 className="text-xl md:text-2xl font-bold text-on-background font-headline leading-tight">
+                <h3 className={`${titleClassName} font-bold text-on-background font-headline leading-tight`}>
                   {item.name}
                   <span className="block text-base font-medium text-on-surface-variant mt-0.5">{categoryLabel}</span>
                 </h3>
               </div>
               <div className="text-right">
-                <span className="text-2xl font-bold text-primary font-headline">₹{item.pricePerHour}</span>
+                <span className="text-xl font-bold text-primary font-headline">₹{item.pricePerHour}</span>
                 <span className="text-on-surface-variant text-sm block">
                   {langText("per hour", "प्रति तास")}
                 </span>
               </div>
             </div>
             <div className="flex flex-col gap-2 text-sm text-on-surface-variant font-label mt-2">
+              {item.rating > 0 ? (
+                <div className="equipment-rating-pill inline-flex w-fit items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
+                  <span className="material-symbols-outlined text-[15px]">star</span>
+                  {item.rating.toFixed(1)}
+                </div>
+              ) : null}
               <div className="flex items-center gap-2">
                 <SharedIcon name="location" className="h-[18px] w-[18px] text-outline" />
                 <span>{locationLabel}</span>
@@ -232,7 +242,7 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
                 </span>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2 mt-3">
+            <div className="flex flex-wrap gap-2 mt-2">
               {item.tags.slice(0, 3).map((tag) => (
                 <span key={tag} className="rounded-full bg-surface-container px-3 py-1 text-[11px] font-bold text-on-surface-variant">
                   {text(tag, { sourceLanguage: "en", cacheKey: `rent-tag-${item.id}-${tag}` })}
@@ -240,7 +250,7 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
               ))}
             </div>
           </div>
-          <div className="mt-6 flex gap-3">
+          <div className="mt-4 flex gap-3">
             <Link
               href={DETAIL_ROUTE_TEMPLATE(item.id)}
               className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-6 py-3 text-sm font-bold text-white transition-all hover:bg-primary"
@@ -265,6 +275,12 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
         <div className="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-primary font-label uppercase tracking-wider">
           {text(item.category, { sourceLanguage: "en", cacheKey: `rent-badge-${item.id}` })}
         </div>
+        {item.rating > 0 ? (
+          <div className="equipment-rating-pill absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-black text-amber-700 shadow-sm backdrop-blur dark:bg-slate-950/85 dark:text-amber-200">
+            <span className="material-symbols-outlined text-[15px]">star</span>
+            {item.rating.toFixed(1)}
+          </div>
+        ) : null}
       </div>
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="text-on-surface text-lg font-bold leading-tight font-headline mb-1 group-hover:text-primary transition-colors">{item.name}</h3>

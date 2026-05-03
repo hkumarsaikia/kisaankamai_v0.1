@@ -13,10 +13,6 @@ export default async function RenterProfileSavedPage() {
       family="renter-profile"
       activeTab="saved"
       title={localizedText("Saved Equipment", "जतन केलेली उपकरणे")}
-      subtitle={localizedText(
-        "Review the machines you shortlisted for future bookings.",
-        "भविष्यातील बुकिंगसाठी जतन केलेली उपकरणे तपासा."
-      )}
     >
       <SavedListingsBoard listings={listings} />
     </OwnerProfileWorkspaceShell>

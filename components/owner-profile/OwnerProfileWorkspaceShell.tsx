@@ -371,7 +371,7 @@ export function OwnerProfileWorkspaceShell({
         <Sidebar family={family} activeTab={activeTab} />
       </aside>
 
-      <main className={`min-h-screen ${mainContentPadding} lg:ml-64`}>
+      <main className={`flex min-h-screen flex-col ${mainContentPadding} lg:ml-64`}>
         <header className="sticky top-0 z-30 border-b border-surface-container-highest bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95">
           <div className="mx-auto flex max-w-6xl items-start justify-between gap-4 px-4 py-4 sm:px-6">
             <div className="flex min-w-0 items-start gap-3">
@@ -411,7 +411,7 @@ export function OwnerProfileWorkspaceShell({
           </div>
         </header>
 
-        <div className="mx-auto max-w-6xl px-6 pt-8">
+        <div className="mx-auto max-w-6xl px-6 pt-8 flex-1">
           {children}
         </div>
 

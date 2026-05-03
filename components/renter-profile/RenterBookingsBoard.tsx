@@ -98,10 +98,6 @@ export function RenterBookingsBoard({
   const selectedBooking =
     bookings.find((booking) => booking.id === selectedBookingId) || null;
 
-  const activeBookings = bookings.filter((booking) => mapBookingStatus(booking.status).filter === "active").length;
-  const pendingBookings = bookings.filter((booking) => mapBookingStatus(booking.status).filter === "pending").length;
-  const totalSpend = bookings.reduce((sum, booking) => sum + booking.amount, 0);
-
   const handleCancel = (bookingId: string) => {
     setErrorState((current) => ({ ...current, [bookingId]: "" }));
     setButtonState((current) => ({ ...current, [bookingId]: "pending" }));
@@ -124,23 +120,6 @@ export function RenterBookingsBoard({
 
   return (
     <div className="space-y-8">
-      {variant === "dashboard" ? (
-        <section className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-2xl border border-surface-container-highest bg-surface-container-lowest p-5 shadow-sm">
-            <p className="font-label text-sm font-medium text-on-surface-variant">{langText("Active Bookings", "सक्रिय बुकिंग")}</p>
-            <p className="mt-2 font-headline text-3xl font-bold text-on-background">{activeBookings}</p>
-          </div>
-          <div className="rounded-2xl border border-surface-container-highest bg-surface-container-lowest p-5 shadow-sm">
-            <p className="font-label text-sm font-medium text-on-surface-variant">{langText("Pending", "प्रलंबित")}</p>
-            <p className="mt-2 font-headline text-3xl font-bold text-on-background">{pendingBookings}</p>
-          </div>
-          <div className="rounded-2xl border border-surface-container-highest bg-surface-container-lowest p-5 shadow-sm">
-            <p className="font-label text-sm font-medium text-on-surface-variant">{langText("Total Booking Value", "एकूण बुकिंग मूल्य")}</p>
-            <p className="mt-2 font-headline text-3xl font-bold text-on-background">₹{totalSpend.toLocaleString("en-IN")}</p>
-          </div>
-        </section>
-      ) : null}
-
       <section className="space-y-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -151,10 +130,7 @@ export function RenterBookingsBoard({
             </h2>
             <p className="mt-2 text-sm font-medium text-on-surface-variant">
               {variant === "dashboard"
-                ? langText(
-                    "Track, cancel, call, and inspect your renter bookings from one place.",
-                    "तुमची भाडे बुकिंग एका ठिकाणाहून ट्रॅक, रद्द, कॉल आणि तपासा."
-                  )
+                ? langText("Manage your current equipment bookings.", "तुमची सध्याची उपकरण बुकिंग व्यवस्थापित करा.")
                 : langText(
                     "Manage your equipment rentals, schedules, and delivery tracking.",
                     "उपकरण भाडे, वेळापत्रक आणि डिलिव्हरी ट्रॅकिंग व्यवस्थापित करा."
@@ -201,7 +177,7 @@ export function RenterBookingsBoard({
               const isCancelling = actionState === "pending" || isPending;
               const detailsHref = `/renter-profile/equipment/${listing?.id || booking.listingId}`;
               const ownerPhone = ownerProfile?.phone || supportContact.phoneE164;
-              const ownerName = ownerProfile?.fullName || listing?.ownerName || langText("Verified Owner", "पडताळलेला मालक");
+              const ownerName = ownerProfile?.fullName || listing?.ownerName || langText("Owner", "मालक");
               const canCancel = booking.status !== "cancelled" && booking.status !== "completed";
 
               return (

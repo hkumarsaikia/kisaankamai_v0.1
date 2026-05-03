@@ -13,10 +13,6 @@ export default async function RenterProfilePage() {
       family="renter-profile"
       activeTab="dashboard"
       title={localizedText("Renter Profile", "भाडेकरू प्रोफाइल")}
-      subtitle={localizedText(
-        "Review your active schedules, booking value, and tracking updates in one renter view.",
-        "एका भाडेकरू दृश्यात सक्रिय वेळापत्रक, बुकिंग मूल्य आणि ट्रॅकिंग अपडेट तपासा."
-      )}
     >
       <RenterBookingsBoard bookings={bookings} variant="dashboard" />
     </OwnerProfileWorkspaceShell>

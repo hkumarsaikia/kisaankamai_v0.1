@@ -11,6 +11,7 @@ import { completeProfileSchema } from "@/lib/validation/forms";
 const completeProfileRequestSchema = completeProfileSchema.extend({
   jwt: z.string().optional(),
   fullName: z.string().trim().min(2).max(120).optional(),
+  email: z.string().trim().email().max(160).optional(),
   fieldArea: z.number().nonnegative().optional(),
   district: z.string().trim().min(2).max(120).optional(),
   farmingTypes: z.string().trim().max(240).optional(),
@@ -72,6 +73,7 @@ export const POST = withLoggedRoute("profile-complete", async (request: NextRequ
 
   const profileUpdate = {
     fullName: payload.fullName || session.profile.fullName,
+    email: payload.email,
     phone: payload.phone,
     pincode: payload.pincode,
     village: payload.village || session.profile.village,

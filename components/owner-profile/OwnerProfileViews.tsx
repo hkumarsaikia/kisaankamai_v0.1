@@ -106,7 +106,6 @@ const savedEquipment = [
     name: "John Deere 5050D",
     meta: "Tractor • 50 HP",
     distance: "Koregaon, Satara (4.2 km away)",
-    rating: "4.8",
     price: "₹900 / hour",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuBg6aRbteiOr_A1PwU8odbjZPzym56O_ne8tOLkhaQbv2I-bINBiFV5lCGw1mrx7uHxnycRuoSaRlT_G8bjtpHtCOxisNr4PfYtd92Y6BDflDuPiFkqOBqJfiv-7d3GOGBufO9rucHQ8PqLDK_iYDEjBaTQTAmjQEFoGuAdj-uj6GbqjH_hXpLTQr24ChJdKgf-o63S3Axtc6-8N4wqj9yym_SDTc4OVKG6EHhZD19jqsOoh6avfF62adRLK6QfM5fkxqHQRUiDcSUD",
@@ -115,7 +114,6 @@ const savedEquipment = [
     name: "Multicrop Seed Drill",
     meta: "Implement • 9 Row",
     distance: "Satara Road (11 km away)",
-    rating: "4.6",
     price: "₹800 / acre",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuA_HLz7VSN4J3FBfsFFmZMKP4-xNIgoaxhDdfeqzHQZfKVyV73fRjbpeZeqP1ql7nti2m5bFQaASrmR-ceTBMG-sXQmb7KojMkosbcfVw9sfRcglt9NMORgVWh_TG1vj0vU79-bHjDXLQAnjb8MXmh7x1CpRggdmBZHzu4-j1zm6G9wS0KWRJ89qebLOd8lCSRYn80aV9fvhL29ivtXEIe7RIv0fksRbBqBTBMXheRrz0XRX7YEXdNiOZAW_FcdLf79sWVi9PT1HTCd",
@@ -124,7 +122,6 @@ const savedEquipment = [
     name: "Kubota Harvester DC-68G",
     meta: "Harvester • Diesel",
     distance: "Karad (21 km away)",
-    rating: "4.9",
     price: "₹2,200 / hour",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCSZX-mOsMuIEggPZWypkGDd9h8d-B5TiXfMslfVJg8xO8-NMTQWUAU0wFieneSJ0vgQbuMk9dmVIZFRzvBLNJck-88KEX5KOa7hXLa5F9llVguI5jJDDCsbfaO9Qv5qpd9pL1H21tFTLPvOl3H-toiOZfYcqLjJGTD76fk12FItJG37moN9W438EuNOnu50V3AQzr8ibacy46ACpocN4WVp1ic7jXUUvL2EgcTbzjF_YZDDE8UEqN8B50rd4wf7gvFDrjyYJiAJSHL",
@@ -551,9 +548,6 @@ export function OwnerProfileSavedContent() {
                 <div>
                   <h3 className="text-xl font-bold text-on-surface dark:text-slate-100">{item.name}</h3>
                   <p className="mt-1 text-sm text-on-surface-variant dark:text-slate-400">{item.meta}</p>
-                </div>
-                <div className="rounded-xl bg-slate-50 px-3 py-2 text-sm font-bold text-on-surface dark:bg-slate-950 dark:text-slate-100">
-                  {item.rating}
                 </div>
               </div>
               <p className="mt-4 text-sm text-on-surface-variant dark:text-slate-400">{item.distance}</p>

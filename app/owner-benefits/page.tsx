@@ -45,6 +45,13 @@ const ownerEarningCategories = [
 
 type OwnerEarningCategory = (typeof ownerEarningCategories)[number];
 
+const ownerBenefitsSelectStyle = {
+  appearance: "none",
+  WebkitAppearance: "none",
+  MozAppearance: "none",
+  backgroundImage: "none",
+} as const;
+
 export default function OwnerBenefitsPage() {
   const { langText } = useLanguage();
   const earningsEstimateRef = useRef<HTMLDivElement | null>(null);
@@ -173,7 +180,8 @@ export default function OwnerBenefitsPage() {
                     <label className="block text-base font-bold text-gray-700 mb-2">Equipment Type</label>
                     <div className="relative">
                       <select
-                        className="block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
+                        className="kk-owner-benefits-select block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
+                        style={ownerBenefitsSelectStyle}
                         value={selectedCategory.slug}
                         onChange={(event) => {
                           const next = ownerEarningCategories.find((category) => category.slug === event.target.value);
@@ -186,7 +194,7 @@ export default function OwnerBenefitsPage() {
                           </option>
                         ))}
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                      <div className="kk-owner-benefits-select-arrow pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                         </svg>
@@ -198,7 +206,8 @@ export default function OwnerBenefitsPage() {
                     <label className="block text-base font-bold text-gray-700 mb-2">Operating District</label>
                     <div className="relative">
                       <select
-                        className="max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
+                        className="kk-owner-benefits-select max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
+                        style={ownerBenefitsSelectStyle}
                         value={district}
                         onChange={(event) => setDistrict(event.target.value)}
                       >
@@ -208,7 +217,7 @@ export default function OwnerBenefitsPage() {
                           </option>
                         ))}
                       </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                      <div className="kk-owner-benefits-select-arrow pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                         </svg>

@@ -11,20 +11,13 @@ type ProfileSupportWorkspaceProps = {
   session: LocalSession;
 };
 
-const OWNER_CATEGORIES = [
-  { value: "Listing Help", label: { en: "Listing Help", mr: "लिस्टिंग मदत" } },
-  { value: "Booking Request", label: { en: "Booking Request", mr: "बुकिंग विनंती" } },
-  { value: "Payout Question", label: { en: "Payout Question", mr: "पेआउट प्रश्न" } },
-  { value: "Verification Issue", label: { en: "Verification Issue", mr: "पडताळणी समस्या" } },
-  { value: "Other", label: { en: "Other", mr: "इतर" } },
-];
-
-const RENTER_CATEGORIES = [
-  { value: "Booking Help", label: { en: "Booking Help", mr: "बुकिंग मदत" } },
-  { value: "Equipment Issue", label: { en: "Equipment Issue", mr: "उपकरण समस्या" } },
-  { value: "Payment Question", label: { en: "Payment Question", mr: "पेमेंट प्रश्न" } },
-  { value: "Cancellation Support", label: { en: "Cancellation Support", mr: "रद्दीकरण मदत" } },
-  { value: "Other", label: { en: "Other", mr: "इतर" } },
+const SUPPORT_CATEGORIES = [
+  { value: "listing", label: { en: "Listing Help", mr: "लिस्टिंग मदत" } },
+  { value: "booking", label: { en: "Booking Help", mr: "बुकिंग मदत" } },
+  { value: "verification", label: { en: "Verification", mr: "पडताळणी" } },
+  { value: "payout", label: { en: "Payout Issue", mr: "पेआउट समस्या" } },
+  { value: "general", label: { en: "General Support", mr: "सामान्य सपोर्ट" } },
+  { value: "other", label: { en: "Other", mr: "इतर" } },
 ];
 
 export function ProfileSupportWorkspace({
@@ -33,17 +26,13 @@ export function ProfileSupportWorkspace({
 }: ProfileSupportWorkspaceProps) {
   const { langText } = useLanguage();
   const [isPending, startTransition] = useTransition();
-  const [submitState, setSubmitState] = useState<
-    "idle" | "pending" | "success" | "error"
-  >("idle");
+  const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState("");
-  const categories =
-    family === "owner-profile" ? OWNER_CATEGORIES : RENTER_CATEGORIES;
   const [formState, setFormState] = useState({
     fullName: session.profile.fullName || session.user.name || "",
     phone: session.profile.phone || session.user.phone || "",
     email: session.profile.email || session.user.email || "",
-    category: categories[0].value,
+    category: "",
     message: "",
   });
 
@@ -72,7 +61,7 @@ export function ProfileSupportWorkspace({
           fullName: formState.fullName,
           phone: formState.phone,
           email: formState.email || undefined,
-          category: formState.category,
+          category: formState.category || "general",
           message: formState.message,
           sourcePath:
             family === "owner-profile"
@@ -92,134 +81,161 @@ export function ProfileSupportWorkspace({
   };
 
   return (
-    <div className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
-      <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <h2 className="text-2xl font-black text-primary">
-          {langText("Support Request", "सपोर्ट विनंती")}
-        </h2>
-        <p className="mt-2 text-sm text-on-surface-variant">
-          {langText(
-            "Use the workspace support form for booking, listing, verification, and payout issues.",
-            "बुकिंग, लिस्टिंग, पडताळणी आणि पेआउट समस्यांसाठी वर्कस्पेस सपोर्ट फॉर्म वापरा."
-          )}
-        </p>
+    <main className="flex min-h-[calc(100vh-8rem)] w-full items-center justify-center py-10 md:py-14">
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-0 pb-10">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <div className="bg-surface-container-lowest rounded-2xl shadow-xl p-6 md:p-10 border border-outline-variant/30 backdrop-blur-sm">
+              <h2 className="mb-6 flex items-center gap-2 font-headline text-2xl font-bold text-primary-container">
+                <span className="material-symbols-outlined text-secondary">edit_document</span>
+                {langText("Submit a Request", "विनंती सबमिट करा")}
+              </h2>
 
-        <form className="mt-6 space-y-5" onSubmit={handleSubmit}>
-          <div className="grid gap-5 md:grid-cols-2">
-            <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">
-                {langText("Full Name", "पूर्ण नाव")}
-              </span>
-              <input
-                value={formState.fullName}
-                onChange={(event) => updateField("fullName", event.target.value)}
-                className="kk-input"
-              />
-            </label>
-            <label className="space-y-2">
-              <span className="text-sm font-semibold text-on-surface">{langText("Phone", "फोन")}</span>
-              <input
-                value={formState.phone}
-                onChange={(event) => updateField("phone", event.target.value)}
-                className="kk-input"
-              />
-            </label>
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-semibold text-on-surface">
-                {langText("Email", "ईमेल")}
-              </span>
-              <input
-                value={formState.email}
-                onChange={(event) => updateField("email", event.target.value)}
-                className="kk-input"
-              />
-            </label>
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-semibold text-on-surface">
-                {langText("Category", "वर्ग")}
-              </span>
-              <select
-                value={formState.category}
-                onChange={(event) => updateField("category", event.target.value)}
-                className="kk-input"
-              >
-                {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {langText(category.label.en, category.label.mr)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="space-y-2 md:col-span-2">
-              <span className="text-sm font-semibold text-on-surface">
-                {langText("Issue Details", "समस्येचा तपशील")}
-              </span>
-              <textarea
-                value={formState.message}
-                onChange={(event) => updateField("message", event.target.value)}
-                rows={6}
-                className="kk-input"
-                placeholder={langText(
-                  "Describe the problem clearly so the support team can help quickly.",
-                  "सपोर्ट टीमला त्वरीत मदत करता यावी म्हणून समस्या स्पष्टपणे लिहा."
-                )}
-              />
-            </label>
+              <form className="space-y-6" onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <label className="space-y-2">
+                    <span className="block font-label text-sm font-semibold text-on-surface">
+                      {langText("Full Name", "पूर्ण नाव")}
+                    </span>
+                    <input
+                      className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+                      placeholder={langText("Enter your full name", "तुमचे पूर्ण नाव प्रविष्ट करा")}
+                      value={formState.fullName}
+                      onChange={(event) => updateField("fullName", event.target.value)}
+                      type="text"
+                    />
+                  </label>
+
+                  <label className="space-y-2">
+                    <span className="block font-label text-sm font-semibold text-on-surface">
+                      {langText("Phone Number", "फोन नंबर")}
+                    </span>
+                    <input
+                      className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+                      placeholder="+91 XXXXX XXXXX"
+                      value={formState.phone}
+                      onChange={(event) => updateField("phone", event.target.value)}
+                      type="tel"
+                    />
+                  </label>
+                </div>
+
+                <label className="space-y-2 block">
+                  <span className="block font-label text-sm font-semibold text-on-surface">
+                    {langText("Email Address", "ईमेल पत्ता")}
+                  </span>
+                  <input
+                    className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+                    placeholder="your.email@example.com"
+                    value={formState.email}
+                    onChange={(event) => updateField("email", event.target.value)}
+                    type="email"
+                  />
+                </label>
+
+                <label className="space-y-2 block">
+                  <span className="block font-label text-sm font-semibold text-on-surface">
+                    {langText("Issue Category", "समस्येचा प्रकार")}
+                  </span>
+                  <div className="relative">
+                    <select
+                      className="w-full appearance-none rounded-lg border-outline-variant bg-surface-bright px-4 py-3 pr-12 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+                      value={formState.category}
+                      onChange={(event) => updateField("category", event.target.value)}
+                    >
+                      <option value="">{langText("Select a category", "प्रकार निवडा")}</option>
+                      {SUPPORT_CATEGORIES.map((category) => (
+                        <option key={category.value} value={category.value}>
+                          {langText(category.label.en, category.label.mr)}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 pr-3 text-outline">
+                      <span className="material-symbols-outlined">expand_more</span>
+                    </div>
+                  </div>
+                </label>
+
+                <label className="space-y-2 block">
+                  <span className="block font-label text-sm font-semibold text-on-surface">
+                    {langText("Issue Details", "समस्येचा तपशील")}
+                  </span>
+                  <textarea
+                    className="w-full resize-none rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+                    placeholder={langText("Please describe your issue in detail.", "कृपया आपल्या समस्येचे सविस्तर वर्णन करा.")}
+                    rows={5}
+                    value={formState.message}
+                    onChange={(event) => updateField("message", event.target.value)}
+                  />
+                </label>
+
+                {error ? (
+                  <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
+                    {error}
+                  </div>
+                ) : null}
+
+                <div className="pt-2">
+                  <button
+                    className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-4 text-lg font-bold text-on-primary shadow-md transition-all hover:shadow-lg md:w-auto ${
+                      submitState === "success" ? "bg-emerald-600" : "bg-primary-container hover:bg-primary"
+                    }`}
+                    type="submit"
+                    disabled={isPending}
+                    data-loading={isPending ? "true" : "false"}
+                    aria-busy={isPending}
+                  >
+                    {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                    {submitLabel}
+                    <span className="material-symbols-outlined ml-1">
+                      {submitState === "success" ? "task_alt" : "send"}
+                    </span>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
 
-          {error ? (
-            <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
-              {error}
+          <div className="space-y-6 lg:col-span-1">
+            <div className="group rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-6 shadow-lg transition-colors hover:border-secondary/30">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10 transition-colors group-hover:bg-secondary/20">
+                <span className="material-symbols-outlined text-3xl text-secondary">call</span>
+              </div>
+              <h3 className="mb-1 font-headline text-xl font-bold text-on-surface">
+                {langText("Call Support", "कॉल सपोर्ट")}
+              </h3>
+              <p className="mb-4 text-sm text-on-surface-variant">
+                {langText("Available 8 AM to 8 PM.", "सकाळी ८ ते रात्री ८ उपलब्ध.")}
+              </p>
+              <a
+                className="flex items-center gap-2 text-2xl font-bold text-primary-container transition-colors hover:text-primary"
+                href={supportContact.phoneHref}
+              >
+                {supportContact.phoneDisplay}
+              </a>
             </div>
-          ) : null}
 
-          <button
-            type="submit"
-            disabled={isPending}
-            className={`kk-flow-button inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-bold text-white ${
-              submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
-            }`}
-            data-loading={isPending ? "true" : "false"}
-            aria-busy={isPending}
-          >
-            {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
-            <span className="material-symbols-outlined text-[18px]">
-              {submitState === "success" ? "task_alt" : "send"}
-            </span>
-            {submitLabel}
-          </button>
-        </form>
-      </div>
-
-      <div className="space-y-5">
-        <section className="rounded-[1.75rem] bg-primary-container p-6 text-white shadow-sm">
-          <h3 className="text-xl font-black">{langText("Direct Channels", "थेट संपर्क")}</h3>
-          <div className="mt-5 space-y-4">
-            <a
-              href={supportContact.phoneHref}
-              className="block rounded-2xl bg-white/10 p-4 transition hover:bg-white/15"
-            >
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-primary-fixed">
-                {langText("Call Support", "सपोर्टला कॉल करा")}
-              </p>
-              <p className="mt-1 text-lg font-bold">{supportContact.phoneDisplay}</p>
-              <p className="text-sm text-white/75">{supportContact.serviceHours} {langText("Daily", "दररोज")}</p>
-            </a>
-            <a
-              href={supportContact.whatsappHref}
-              className="block rounded-2xl bg-[#1f9d57] p-4 transition hover:bg-[#19864a]"
-            >
-              <p className="text-xs font-black uppercase tracking-[0.2em] text-white/80">
-                WhatsApp
-              </p>
-              <p className="mt-1 text-lg font-bold">
+            <div className="group rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-6 shadow-lg transition-colors hover:border-[#25D366]/30">
+              <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366]/10 transition-colors group-hover:bg-[#25D366]/20">
+                <span className="material-symbols-outlined text-3xl text-[#25D366]">chat</span>
+              </div>
+              <h3 className="mb-1 font-headline text-xl font-bold text-on-surface">
+                {langText("WhatsApp Help", "व्हॉट्सॲप मदत")}
+              </h3>
+              <p className="mb-4 text-sm text-on-surface-variant">
                 {langText(`Chat with ${supportContact.primaryContactName}`, `${supportContact.primaryContactName} यांच्याशी चॅट करा`)}
               </p>
-              <p className="text-sm text-white/75">{supportContact.whatsappDisplay}</p>
-            </a>
+              <a
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#25D366] px-6 py-3 font-bold text-[#25D366] transition-all hover:bg-[#25D366] hover:text-white"
+                href={supportContact.whatsappHref}
+              >
+                <span className="material-symbols-outlined">forum</span>
+                {langText("Message on WhatsApp", "WhatsApp वर संदेश पाठवा")}
+              </a>
+            </div>
           </div>
-        </section>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

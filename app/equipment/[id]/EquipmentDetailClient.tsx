@@ -31,10 +31,12 @@ function deriveDriveLabel(equipment: EquipmentRecord) {
 export default function EquipmentDetailClient({
   equipment,
   showBreadcrumbs = true,
+  containerVariant = "public",
 }: {
   equipment: EquipmentRecord;
   relatedEquipment: EquipmentRecord[];
   showBreadcrumbs?: boolean;
+  containerVariant?: "public" | "workspace";
 }) {
   const router = useSmoothRouter();
   const { langText, text } = useLanguage();
@@ -71,9 +73,6 @@ export default function EquipmentDetailClient({
   const estimatedBase = equipment.pricePerHour * estimatedHours;
   const estimatedTotal = estimatedBase + SERVICE_FEE;
   const driveLabel = deriveDriveLabel(equipment);
-  const ownerBadge = equipment.ownerVerified
-    ? langText("Highly Trusted", "उच्च विश्वासार्ह")
-    : langText("Pending verification", "पडताळणी बाकी");
   const categoryLabel = text(equipment.categoryLabel.split("•")[0]?.trim() || "Equipment", {
     cacheKey: `equipment.${equipment.id}.category`,
   });
@@ -81,6 +80,14 @@ export default function EquipmentDetailClient({
     equipment.category.endsWith("s") ? equipment.category : `${equipment.category}s`
   );
   const selectedGalleryImage = displayGalleryImages[selectedImageIndex] || equipment.coverImage;
+  const containerClassName =
+    containerVariant === "workspace"
+      ? DETAIL_BOOKING_LAYOUT.workspaceContainer
+      : DETAIL_BOOKING_LAYOUT.publicContainer;
+  const bookingCardClassName =
+    containerVariant === "workspace"
+      ? DETAIL_BOOKING_LAYOUT.workspaceCard
+      : DETAIL_BOOKING_LAYOUT.card;
 
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -130,7 +137,7 @@ export default function EquipmentDetailClient({
   };
 
   return (
-    <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 pb-12 pt-24 sm:px-6 lg:grid-cols-3 lg:px-8">
+    <div className={containerClassName}>
       {ownListingToast ? (
         <div className="kk-login-toast" role="status">
           <span className="material-symbols-outlined text-primary">info</span>
@@ -219,10 +226,12 @@ export default function EquipmentDetailClient({
             <span className="text-sm font-semibold uppercase tracking-wider text-primary">
               {equipment.categoryLabel}
             </span>
-            <div className="flex items-center text-sm font-medium">
-              <span className="material-symbols-outlined mr-1 text-lg text-amber-500">star</span>
-              {equipment.rating.toFixed(1)}
-            </div>
+            {equipment.rating > 0 ? (
+              <div className="equipment-rating-pill flex items-center text-sm font-medium">
+                <span className="material-symbols-outlined mr-1 text-lg text-amber-500">star</span>
+                {equipment.rating.toFixed(1)}
+              </div>
+            ) : null}
           </div>
 
           <div>
@@ -253,13 +262,6 @@ export default function EquipmentDetailClient({
                 value: equipment.operatorIncluded
                   ? langText("Included", "समाविष्ट")
                   : langText("Optional", "ऐच्छिक"),
-              },
-              {
-                icon: "verified",
-                label: langText("Condition", "स्थिती"),
-                value: equipment.ownerVerified
-                  ? langText("Verified owner", "सत्यापित मालक")
-                  : langText("Verification pending", "पडताळणी बाकी"),
               },
               {
                 icon: "settings",
@@ -327,24 +329,7 @@ export default function EquipmentDetailClient({
             <div className="flex-grow text-center sm:text-left">
               <div className="mb-1 flex items-center justify-center gap-2 sm:justify-start">
                 <h3 className="text-xl font-bold">{equipment.ownerName}</h3>
-                {equipment.ownerVerified ? <span className="material-symbols-outlined text-blue-500">verified</span> : null}
               </div>
-              <p className="mb-3 text-on-surface-variant">{equipment.ownerLocation}</p>
-              <div className="mb-4 flex flex-wrap justify-center gap-4 text-sm sm:justify-start">
-                <div className="flex items-center gap-1 rounded-full bg-surface-container px-3 py-1">
-                  <span className="material-symbols-outlined text-sm text-amber-500">star</span>
-                  <span className="font-bold">{equipment.rating.toFixed(1)}</span>
-                </div>
-                <div className="flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-3 py-1 text-green-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-100">
-                  <span className="material-symbols-outlined text-sm">workspace_premium</span>
-                  <span className="font-medium">{ownerBadge}</span>
-                </div>
-              </div>
-              {equipment.ownerLocation ? (
-                <p className="text-sm text-on-surface-variant">
-                  {langText("Listing location", "लिस्टिंग ठिकाण")}: {equipment.ownerLocation}
-                </p>
-              ) : null}
             </div>
           </div>
         </section>
@@ -429,7 +414,7 @@ export default function EquipmentDetailClient({
       </div>
 
       <div className="relative lg:col-span-1 lg:self-start">
-        <div className={DETAIL_BOOKING_LAYOUT.card}>
+        <div className={bookingCardClassName}>
           <div className="mb-4 flex items-end justify-between border-b border-outline-variant pb-3">
             <div>
               <span className="text-3xl font-bold text-on-surface">{formatCurrency(equipment.pricePerHour)}</span>

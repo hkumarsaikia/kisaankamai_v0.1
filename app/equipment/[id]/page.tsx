@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import EquipmentDetailClient from "./EquipmentDetailClient";
 import { getEquipmentById, getEquipmentList } from "@/lib/server/equipment";
+import { getCurrentSession } from "@/lib/server/local-auth";
 import { getSiteUrl } from "@/lib/runtime";
 import { assetPath } from "@/lib/site";
 
@@ -60,6 +61,11 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 
   if (!equipment) {
     notFound();
+  }
+
+  const session = await getCurrentSession();
+  if (session) {
+    redirect(`/${session.activeWorkspace}-profile/equipment/${equipment.id}`);
   }
 
   const relatedEquipment = (await getEquipmentList())

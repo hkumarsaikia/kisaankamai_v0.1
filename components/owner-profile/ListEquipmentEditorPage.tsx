@@ -6,7 +6,7 @@ import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import { createListingAction, updateListingAction } from "@/lib/actions/local-data";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 
 type ListEquipmentEditorPageProps = {
   listing?: ListingRecord | null;
@@ -33,7 +33,6 @@ export function ListEquipmentEditorPage({
   const [error, setError] = useState("");
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [fileSlots, setFileSlots] = useState<Array<File | null>>([null, null, null]);
-  const [previewImageIndex, setPreviewImageIndex] = useState(0);
   const [customCategory, setCustomCategory] = useState("");
   const [formState, setFormState] = useState({
     name: listing?.name || "",
@@ -55,25 +54,6 @@ export function ListEquipmentEditorPage({
   });
 
   const files = useMemo(() => fileSlots.filter((file): file is File => file instanceof File), [fileSlots]);
-  const uploadedPreviewUrls = useMemo(() => files.map((file) => URL.createObjectURL(file)), [files]);
-  const previewImages =
-    uploadedPreviewUrls.length > 0
-      ? uploadedPreviewUrls.slice(0, MAX_LISTING_IMAGES)
-      : listing?.galleryImages?.length
-        ? listing.galleryImages.slice(0, MAX_LISTING_IMAGES)
-        : [];
-
-  useEffect(() => {
-    return () => {
-      uploadedPreviewUrls.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [uploadedPreviewUrls]);
-
-  useEffect(() => {
-    if (previewImageIndex >= previewImages.length) {
-      setPreviewImageIndex(0);
-    }
-  }, [previewImageIndex, previewImages.length]);
 
   const updateField = (field: keyof typeof formState, value: string | boolean) => {
     setFormState((current) => ({ ...current, [field]: value }));
@@ -85,7 +65,6 @@ export function ListEquipmentEditorPage({
       next[index] = file;
       return next.slice(0, MAX_LISTING_IMAGES);
     });
-    setPreviewImageIndex(index);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -157,7 +136,6 @@ export function ListEquipmentEditorPage({
         : listing
           ? langText("Save Changes", "बदल जतन करा")
           : langText("Publish Listing", "लिस्टिंग प्रकाशित करा");
-  const currentPreviewImage = previewImages[previewImageIndex] || previewImages[0];
 
   return (
     <div className="font-body text-on-surface antialiased">
@@ -171,18 +149,18 @@ export function ListEquipmentEditorPage({
           <p className="mt-2 text-sm text-on-surface-variant">
             {listing
               ? langText(
-                  "Update the saved fields, availability, and live preview before saving.",
-                  "जतन करण्यापूर्वी फील्ड, उपलब्धता आणि लाइव्ह पूर्वावलोकन अपडेट करा."
+                  "Update the saved fields, availability, and photo slots before saving.",
+                  "जतन करण्यापूर्वी फील्ड, उपलब्धता आणि फोटो स्लॉट अपडेट करा."
                 )
               : langText(
-                  "Add your equipment details and keep the live preview visible while you scroll.",
-                  "तुमच्या उपकरणाचे तपशील जोडा आणि स्क्रोल करताना लाइव्ह पूर्वावलोकन दिसू द्या."
+                  "Add equipment details, pricing, service area, and three listing photos.",
+                  "उपकरण तपशील, किंमत, सेवा क्षेत्र आणि तीन लिस्टिंग फोटो जोडा."
                 )}
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-          <div className="space-y-8 lg:col-span-2">
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-8">
+          <div className="space-y-8">
             <section className="rounded-2xl border border-outline-variant/30 bg-surface-container-lowest p-8 shadow-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-xl font-bold text-on-surface">
                 <span className="material-symbols-outlined text-secondary">info</span>
@@ -447,91 +425,6 @@ export function ListEquipmentEditorPage({
             </div>
           </div>
 
-          <div className="lg:col-span-1">
-            <div className="sticky top-28 space-y-6 self-start">
-              <div className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-surface-container-lowest shadow-xl">
-                <div className="relative aspect-[4/3]">
-                  {currentPreviewImage ? (
-                    <img
-                      className="h-full w-full object-cover"
-                      alt={langText("Equipment live preview", "उपकरण लाइव्ह पूर्वावलोकन")}
-                      src={currentPreviewImage}
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-surface-container-low text-center">
-                      <div className="px-6">
-                        <span className="material-symbols-outlined text-5xl text-outline">add_photo_alternate</span>
-                        <p className="mt-3 text-sm font-bold text-on-surface">{langText("Upload a real equipment photo", "खरा उपकरण फोटो अपलोड करा")}</p>
-                        <p className="mt-1 text-xs text-on-surface-variant">{langText("Public listings need owner-provided images.", "सार्वजनिक लिस्टिंगसाठी मालकाने दिलेले फोटो आवश्यक आहेत.")}</p>
-                      </div>
-                    </div>
-                  )}
-                  <div className="absolute left-4 top-4 rounded-full bg-surface-container-lowest/90 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary backdrop-blur font-label">
-                    {langText("Live Preview", "लाइव्ह पूर्वावलोकन")}
-                  </div>
-                  {previewImages.length > 1 ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setPreviewImageIndex((current) =>
-                            current <= 0 ? previewImages.length - 1 : current - 1
-                          )
-                        }
-                        className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-container-lowest/90 text-primary shadow backdrop-blur transition hover:bg-white"
-                        aria-label={langText("Previous photo", "मागील फोटो")}
-                      >
-                        <span className="material-symbols-outlined">chevron_left</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setPreviewImageIndex((current) =>
-                            current >= previewImages.length - 1 ? 0 : current + 1
-                          )
-                        }
-                        className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface-container-lowest/90 text-primary shadow backdrop-blur transition hover:bg-white"
-                        aria-label={langText("Next photo", "पुढील फोटो")}
-                      >
-                        <span className="material-symbols-outlined">chevron_right</span>
-                      </button>
-                    </>
-                  ) : null}
-                </div>
-                <div className="p-6">
-                  <div className="mb-2 flex items-start justify-between">
-                    <div>
-                      <p className="text-xs font-bold uppercase tracking-widest text-secondary font-label">
-                        {formState.category || langText("Equipment", "उपकरण")}
-                      </p>
-                      <h3 className="font-headline text-xl font-extrabold text-primary">
-                        {[formState.brand.trim(), formState.model.trim()].filter(Boolean).join(" ") || formState.name || langText("Equipment Name", "उपकरणाचे नाव")}
-                      </h3>
-                    </div>
-                    <div className="text-right">
-                      <p className="font-headline text-lg font-black text-primary">₹{formState.pricePerHour || "0"}</p>
-                      <p className="text-[10px] font-bold text-on-surface-variant font-label">{langText("PER HOUR", "प्रति तास")}</p>
-                    </div>
-                  </div>
-                  <div className="mb-6 flex flex-wrap gap-2">
-                    {(formState.hp ? [formState.hp] : []).concat(formState.workTypes.split(",").map((item) => item.trim()).filter(Boolean).slice(0, 2)).map((tag) => (
-                      <span key={tag} className="rounded bg-primary-fixed/50 px-2 py-1 text-[10px] font-bold text-on-primary-fixed font-label">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="border-t border-outline-variant/30 pt-4 text-sm text-on-surface-variant">
-                    <p>{formState.location || langText("Location pending", "स्थान प्रलंबित")}, {formState.district || langText("District pending", "जिल्हा प्रलंबित")}</p>
-                    <p className="mt-2">
-                      {formState.availabilityMode === "date" && formState.availableFrom
-                        ? `${langText("Available from", "पासून उपलब्ध")} ${formState.availableFrom}`
-                        : langText("Available Now", "आता उपलब्ध")}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </form>
       </div>
     </div>

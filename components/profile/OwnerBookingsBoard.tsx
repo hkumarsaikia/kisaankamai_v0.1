@@ -7,7 +7,7 @@ import { updateBookingStatusAction } from "@/lib/actions/local-data";
 import type { BookingRecord, ListingRecord, ProfileRecord } from "@/lib/local-data/types";
 import { supportContact } from "@/lib/support-contact";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 
 type BookingWithDetails = BookingRecord & {
   listing: ListingRecord | null;
@@ -85,15 +85,6 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
   const selectedBooking =
     bookings.find((booking) => booking.id === selectedBookingId) || null;
 
-  const summary = useMemo(
-    () => ({
-      pending: bookings.filter((booking) => mapBookingStatus(booking.status).filter === "pending").length,
-      active: bookings.filter((booking) => mapBookingStatus(booking.status).filter === "active").length,
-      earnings: bookings.reduce((sum, booking) => sum + booking.amount, 0),
-    }),
-    [bookings]
-  );
-
   const runStatusUpdate = (bookingId: string, nextStatus: "confirmed" | "cancelled") => {
     setErrorState((current) => ({ ...current, [bookingId]: "" }));
     setButtonState((current) => ({ ...current, [bookingId]: "pending" }));
@@ -116,21 +107,6 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
 
   return (
     <div className="space-y-8">
-      <section className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-2xl border border-surface-container-highest bg-surface-container-lowest p-5 shadow-sm">
-          <p className="font-label text-sm font-medium text-on-surface-variant">{langText("Pending Requests", "प्रलंबित विनंत्या")}</p>
-          <p className="mt-2 font-headline text-3xl font-bold text-on-background">{summary.pending}</p>
-        </div>
-        <div className="rounded-2xl border border-surface-container-highest bg-surface-container-lowest p-5 shadow-sm">
-          <p className="font-label text-sm font-medium text-on-surface-variant">{langText("Active Jobs", "सक्रिय कामे")}</p>
-          <p className="mt-2 font-headline text-3xl font-bold text-on-background">{summary.active}</p>
-        </div>
-        <div className="rounded-2xl border border-surface-container-highest bg-surface-container-lowest p-5 shadow-sm">
-          <p className="font-label text-sm font-medium text-on-surface-variant">{langText("Booking Value", "बुकिंग मूल्य")}</p>
-          <p className="mt-2 font-headline text-3xl font-bold text-on-background">₹{summary.earnings.toLocaleString("en-IN")}</p>
-        </div>
-      </section>
-
       <section className="space-y-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
@@ -191,7 +167,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
               const actionState = buttonState[booking.id] || "idle";
               const detailsHref = `/owner-profile/equipment/${listing?.id || booking.listingId}`;
               const renterPhone = renter?.phone || supportContact.phoneE164;
-              const renterName = renter?.fullName || langText("Verified Renter", "पडताळलेला भाडेकरू");
+              const renterName = renter?.fullName || langText("Renter", "भाडेकरू");
               const canApprove = booking.status === "pending";
               const canDecline = booking.status === "pending" || booking.status === "confirmed";
 

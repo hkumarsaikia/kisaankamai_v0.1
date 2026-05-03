@@ -402,15 +402,20 @@ test("equipment detail has category breadcrumbs, public selectable three-photo g
   assert.match(nextConfig, /https:\/\/storage\.googleapis\.com/);
 });
 
-test("profile menu is compact and the trigger has a soft 3D visual boundary", async () => {
+test("profile menu uses the supplied dropdown states and the trigger has a soft 3D visual boundary", async () => {
   const profileMenu = await readSource("../components/ProfileDropdownMenu.tsx");
 
   assert.match(profileMenu, /kk-profile-trigger/);
   assert.match(profileMenu, /kk-depth-tile/);
-  assert.match(profileMenu, /w-\[18rem\]/);
+  assert.match(profileMenu, /w-80/);
+  assert.match(profileMenu, /NOTIFICATIONS/);
+  assert.match(profileMenu, /Clear All/);
+  assert.match(profileMenu, /All caught up!/);
+  assert.match(profileMenu, /animate-pulse/);
   assert.match(profileMenu, /py-2/);
   assert.doesNotMatch(profileMenu, /w-\[20rem\]/);
   assert.doesNotMatch(profileMenu, /py-5/);
+  assert.doesNotMatch(profileMenu, /header\.menu\.settings|header\.menu\.help_support/);
 });
 
 test("global depth tiles use pointer-driven smooth 3D variables with reduced motion guard", async () => {
