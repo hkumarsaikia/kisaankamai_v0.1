@@ -170,10 +170,10 @@ export default function OwnerBenefitsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div className="space-y-8">
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Equipment Type</label>
+                    <label className="block text-base font-bold text-gray-700 mb-2">Equipment Type</label>
                     <div className="relative">
                       <select
-                        className="block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm rounded-xl bg-gray-50 appearance-none font-medium"
+                        className="block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
                         value={selectedCategory.slug}
                         onChange={(event) => {
                           const next = ownerEarningCategories.find((category) => category.slug === event.target.value);
@@ -195,10 +195,10 @@ export default function OwnerBenefitsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">Operating District</label>
+                    <label className="block text-base font-bold text-gray-700 mb-2">Operating District</label>
                     <div className="relative">
                       <select
-                        className="max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm rounded-xl bg-gray-50 appearance-none font-medium"
+                        className="max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
                         value={district}
                         onChange={(event) => setDistrict(event.target.value)}
                       >
@@ -214,13 +214,13 @@ export default function OwnerBenefitsPage() {
                         </svg>
                       </div>
                     </div>
-                    <p className="mt-2 text-xs font-semibold text-gray-500">
+                    <p className="mt-2 text-sm font-semibold text-gray-500">
                       {langText("More locations coming soon...", "लवकरच आणखी ठिकाणे उपलब्ध होतील...")}
                     </p>
                   </div>
 
                   <div>
-                    <label className="flex justify-between text-sm font-bold text-gray-700 mb-4">
+                    <label className="flex justify-between text-base font-bold text-gray-700 mb-4">
                       <span>Expected Usage</span>
                       <span className="text-brand">{usageDays} Days/Month</span>
                     </label>
@@ -232,7 +232,7 @@ export default function OwnerBenefitsPage() {
                       value={usageDays}
                       onChange={(event) => setUsageDays(Number(event.target.value))}
                     />
-                    <div className="flex justify-between text-xs text-gray-500 mt-2 font-medium">
+                    <div className="flex justify-between text-sm text-gray-500 mt-2 font-medium">
                       <span>5 Days</span>
                       <span>25 Days</span>
                     </div>

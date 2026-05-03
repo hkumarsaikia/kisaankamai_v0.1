@@ -45,6 +45,8 @@ function buildCsp() {
       "https://maps.gstatic.com",
       "https://www.google.com",
       "https://placehold.co",
+      "https://firebasestorage.googleapis.com",
+      "https://storage.googleapis.com",
     ])}`,
     `font-src ${joinSources([
       "'self'",

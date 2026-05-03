@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useMemo, useState, useTransition } from "react";
+import { FormEvent, useEffect, useMemo, useState, useTransition } from "react";
 import { createBookingAction } from "@/lib/actions/local-data";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
@@ -42,8 +42,10 @@ export default function EquipmentDetailClient({
   const [ownListingToast, setOwnListingToast] = useState(false);
   const [loginToast, setLoginToast] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [formState, setFormState] = useState({
     fieldLocation: "",
+    fieldPincode: "",
     workType: equipment.workTypes[0] || "",
     startDate: new Date().toISOString().slice(0, 10),
     approxHours: "4",
@@ -54,6 +56,16 @@ export default function EquipmentDetailClient({
     () => createListingMarker(equipment.name, equipment.location, equipment.district),
     [equipment.name, equipment.location, equipment.district]
   );
+  const displayGalleryImages = useMemo(
+    () => Array.from(new Set([equipment.coverImage, ...equipment.galleryImages].filter(Boolean))).slice(0, 3),
+    [equipment.coverImage, equipment.galleryImages]
+  );
+
+  useEffect(() => {
+    if (selectedImageIndex >= displayGalleryImages.length) {
+      setSelectedImageIndex(0);
+    }
+  }, [displayGalleryImages.length, selectedImageIndex]);
 
   const estimatedHours = Math.max(1, Number(formState.approxHours) || 1);
   const estimatedBase = equipment.pricePerHour * estimatedHours;
@@ -68,6 +80,7 @@ export default function EquipmentDetailClient({
   const categorySlug = normalizeCategorySlug(
     equipment.category.endsWith("s") ? equipment.category : `${equipment.category}s`
   );
+  const selectedGalleryImage = displayGalleryImages[selectedImageIndex] || equipment.coverImage;
 
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -79,6 +92,7 @@ export default function EquipmentDetailClient({
         equipmentId: equipment.id,
         equipmentName: equipment.name,
         fieldLocation: formState.fieldLocation,
+        fieldPincode: formState.fieldPincode,
         workType: formState.workType,
         approxHours: formState.approxHours,
         phone: formState.phone,
@@ -169,7 +183,7 @@ export default function EquipmentDetailClient({
               className="object-cover"
               fill
               sizes="(min-width: 1280px) 900px, (min-width: 1024px) 66vw, 100vw"
-              src={assetPath(equipment.coverImage)}
+              src={assetPath(selectedGalleryImage)}
             />
             <div className="absolute left-4 top-4 flex items-center gap-1 rounded-full bg-surface-container-lowest/90 px-3 py-1 text-xs font-bold text-primary shadow backdrop-blur">
               <span className="material-symbols-outlined text-sm">verified</span>
@@ -178,11 +192,14 @@ export default function EquipmentDetailClient({
           </div>
 
           <div className="grid grid-cols-3 gap-4">
-            {equipment.galleryImages.slice(0, 3).map((image, index) => (
-              <div
+            {displayGalleryImages.map((image, index) => (
+              <button
                 key={`${image}-${index}`}
+                type="button"
+                onClick={() => setSelectedImageIndex(index)}
+                aria-label={langText(`Show photo ${index + 1}`, `फोटो ${index + 1} दाखवा`)}
                 className={`relative aspect-[4/3] overflow-hidden rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] ${
-                  index === 0 ? "border-2 border-primary" : "opacity-80 hover:opacity-100"
+                  index === selectedImageIndex ? "border-2 border-primary" : "opacity-80 hover:opacity-100"
                 }`}
               >
                 <Image
@@ -192,7 +209,7 @@ export default function EquipmentDetailClient({
                   sizes="(min-width: 768px) 180px, 30vw"
                   src={assetPath(image)}
                 />
-              </div>
+              </button>
             ))}
           </div>
         </section>
@@ -296,9 +313,17 @@ export default function EquipmentDetailClient({
         <section>
           <h2 className="mb-4 text-xl font-bold">{langText("Owner Detail", "मालक तपशील")}</h2>
           <div className="kk-depth-tile flex flex-col items-center gap-6 rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm sm:flex-row sm:items-start">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-surface bg-surface-container text-slate-500 shadow-md">
-              <span className="material-symbols-outlined text-3xl">person</span>
-            </div>
+            {equipment.ownerPhotoUrl ? (
+              <img
+                alt={langText("Owner profile photo", "मालकाचा प्रोफाइल फोटो")}
+                className="h-24 w-24 rounded-full border-4 border-surface bg-surface-container object-cover shadow-md"
+                src={equipment.ownerPhotoUrl}
+              />
+            ) : (
+              <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-surface bg-surface-container text-slate-500 shadow-md">
+                <span className="material-symbols-outlined text-3xl">person</span>
+              </div>
+            )}
             <div className="flex-grow text-center sm:text-left">
               <div className="mb-1 flex items-center justify-center gap-2 sm:justify-start">
                 <h3 className="text-xl font-bold">{equipment.ownerName}</h3>
@@ -427,6 +452,28 @@ export default function EquipmentDetailClient({
                     placeholder={langText("Enter village or landmark", "गाव किंवा खूणचिन्ह टाका")}
                     value={formState.fieldLocation}
                     onChange={(event) => setFormState((current) => ({ ...current, fieldLocation: event.target.value }))}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="mb-1 block text-sm font-medium text-on-surface">
+                  {langText("Field Pincode", "शेताचा पिनकोड")}
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3 top-3 text-on-surface-variant">pin_drop</span>
+                  <input
+                    className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 pl-10 focus:border-primary focus:ring-primary"
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    placeholder={langText("Enter 6-digit pincode", "६ अंकी पिनकोड टाका")}
+                    value={formState.fieldPincode}
+                    onChange={(event) =>
+                      setFormState((current) => ({
+                        ...current,
+                        fieldPincode: event.target.value.replace(/\D/g, "").slice(0, 6),
+                      }))
+                    }
                   />
                 </div>
               </div>

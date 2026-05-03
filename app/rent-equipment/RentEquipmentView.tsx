@@ -140,8 +140,8 @@ function NoEquipmentAvailable({
   const { langText } = useLanguage();
 
   return (
-    <div className="bg-surface text-on-surface pt-32 md:pt-36 pb-3 md:pb-4">
-      <div className="mx-auto mb-12 w-full max-w-4xl px-4 md:px-8">
+    <div className="bg-surface text-on-surface pt-20 md:pt-20 pb-3 md:pb-4">
+      <div className="mx-auto mb-8 w-full max-w-4xl px-4 md:px-8">
         <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-2 shadow-sm md:p-3">
           <SearchForm
             location={location}
@@ -359,8 +359,8 @@ export default function RentEquipmentView({
 
   if (view === "empty") {
     return (
-      <div className="bg-surface text-on-surface pt-32 pb-8 md:pt-36 md:pb-10">
-        <div className="max-w-7xl mx-auto px-6 mb-8">
+      <div className="bg-surface text-on-surface pt-20 pb-8 md:pt-20 md:pb-10">
+        <div className="max-w-7xl mx-auto px-6 mb-6">
           <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <SearchForm
               location={location}
@@ -462,8 +462,8 @@ export default function RentEquipmentView({
 
   if (view === "query-category") {
     return (
-      <div className="bg-background text-on-background antialiased min-h-screen flex flex-col pt-32 md:pt-36">
-        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6">
+      <div className="bg-background text-on-background antialiased min-h-screen flex flex-col pt-20 md:pt-20">
+        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-6 flex flex-col gap-6">
           <div className="flex flex-col gap-4">
             <h1 className="text-2xl md:text-3xl font-bold text-on-background font-headline tracking-tight">
               {title}
@@ -534,8 +534,8 @@ export default function RentEquipmentView({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background pt-32 text-on-background antialiased md:pt-36">
-      <main className="mx-auto flex w-full max-w-[1200px] flex-1 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen flex-col bg-background pt-20 text-on-background antialiased md:pt-20">
+      <main className="mx-auto flex w-full max-w-[1200px] flex-1 px-4 py-0 sm:px-6 lg:px-8">
         <div className="w-full rounded-b-xl bg-surface-container-lowest p-8 shadow-sm">
           <div className="mb-8 flex flex-col gap-6">
             <div className="available-search-panel rounded-xl border border-outline-variant bg-surface-container p-2 shadow-sm">

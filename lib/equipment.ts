@@ -16,6 +16,7 @@ export interface EquipmentRecord {
   ownerName: string;
   ownerLocation: string;
   ownerVerified: boolean;
+  ownerPhotoUrl?: string;
   coverImage: string;
   galleryImages: string[];
   tags: string[];

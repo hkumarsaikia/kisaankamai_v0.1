@@ -111,7 +111,7 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 ## Public Data Contract
 
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
-- `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details.
+- `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details. Keep the search panels compact below the fixed header on the base, query, and empty-state variants.
 - `/feature-request` is a live public form. Keep it wired to `/api/forms/feature-request`, the `feature-request` submission type, and the shared Firestore-backed submission pipeline.
 - The footer newsletter is a live public form. Keep it wired to `/api/forms/newsletter-subscription`, the `newsletter-subscription` submission type, and the `newsletter_subscriptions` Sheets tab.
 - `/coming-soon` notify submissions are live public form submissions. Keep them wired to `/api/forms/coming-soon-notify`, the `coming-soon-notify` submission type, and the `coming_soon_notifications` Sheets tab.
@@ -125,12 +125,13 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - Use `npm run auth:repair-password-login-emails -- --dry-run` before `npm run auth:repair-password-login-emails -- --apply` when backfilling legacy users whose password credential email exists in Firebase Auth but not in Firestore.
 - Successful registration returns to plain `/login` after the success message. Do not reintroduce `/login?pleaseLogin=1` or a separate please-login query state.
 - Auth state must synchronize across tabs with `lib/client/auth-sync.ts` so a successful login/logout refreshes already-open public pages in the same browser profile.
-- Profile photo uploads must return and apply the refreshed session immediately, then broadcast `session-refresh`, so the header dropdown and owner/renter workspace chrome update without requiring logout/login.
+- Profile photo uploads must return and apply the refreshed session immediately, then broadcast `session-refresh`, so the header dropdown and owner/renter workspace chrome update without requiring logout/login. Public equipment detail owner cards should read the latest owner profile/user `photoUrl` instead of relying on a stale listing snapshot.
 - Google Maps map/satellite selection is user state. Keep `components/MapComponent.tsx` persisting map type with `kk_google_map_type` and do not hardcode `terrain` over the user's selected view.
 - Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.
 - Public banner imagery uses the shared `kk-banner-image-overlay` treatment. Do not apply that overlay to equipment listing/product photos because renters need to inspect machine images clearly.
 - Category tiles must keep their baseline catalog images. Owner-uploaded equipment photos should only affect listing cards and equipment detail galleries.
-- Owner listing image uploads are limited to 1-3 real equipment photos. The first photo remains the cover image; all uploaded photos must remain public in logged-out and logged-in listing views.
+- Owner listing image uploads are limited to 1-3 real equipment photos. The first photo remains the cover image; all uploaded photos must remain public in logged-out and logged-in listing views, and equipment detail thumbnails must allow switching the main photo.
+- Equipment detail booking requests collect field location and optional field pincode in the public form. Mirror the pincode as `field_pincode` in `booking_requests` while keeping older API callers compatible.
 - Primary submit/CTA controls should use the shared `kk-flow-button` and `kk-flow-spinner` animation primitives instead of one-off pulse/spinner treatments.
 - Small tile/card surfaces should use the shared `kk-depth-tile` treatment. Pointer-driven depth is installed globally by `components/DepthMotion.tsx` and must respect reduced-motion settings.
 - Form rows mirror to Google Sheets with pending notification metadata. Keep email delivery in the bound Sheets Apps Script only when the workbook owner wants sheet-side alerts.

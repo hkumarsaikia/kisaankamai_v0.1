@@ -146,7 +146,10 @@ test("owner benefits uses compact selectors, all Maharashtra districts, and no r
   assert.match(ownerBenefits, /Average Daily Rate/);
   assert.match(ownerBenefits, /<section className="py-24 bg-white relative">/);
   assert.match(ownerBenefits, /glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto/);
-  assert.match(ownerBenefits, /block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm rounded-xl bg-gray-50 appearance-none font-medium/);
+  assert.match(ownerBenefits, /block text-base font-bold text-gray-700 mb-2/);
+  assert.match(ownerBenefits, /block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium/);
+  assert.doesNotMatch(ownerBenefits, /focus:border-brand sm:text-sm rounded-xl/);
+  assert.match(ownerBenefits, /flex justify-between text-sm text-gray-500 mt-2 font-medium/);
   assert.match(ownerBenefits, /bg-gradient-brand rounded-2xl p-8 text-white relative overflow-hidden flex flex-col justify-center/);
   assert.match(ownerBenefits, /text-brand-100 font-medium mb-2 uppercase tracking-wide text-sm/);
   assert.doesNotMatch(ownerBenefits, /kk-form-section glass-card mx-auto max-w-5xl/);
@@ -343,31 +346,60 @@ test("rent equipment pages expose base search, query sort, and compact no-equipm
   assert.match(viewSource, /available-search-panel/);
   assert.match(viewSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
   assert.match(viewSource, /pb-3 md:pb-4/);
-  assert.match(viewSource, /pt-32 md:pt-36/);
+  assert.match(viewSource, /pt-20 md:pt-20/);
+  assert.match(viewSource, /py-0 sm:px-6 lg:px-8/);
+  assert.match(viewSource, /py-5 md:py-6/);
+  assert.doesNotMatch(viewSource, /pt-32 md:pt-36/);
   assert.doesNotMatch(viewSource, /pt-24 pb-16/);
   assert.match(pageSource, /balers:\s*\["baler"\]/);
   assert.match(pageSource, /pumps:\s*\["pump"\]/);
   assert.match(pageSource, /threshers:\s*\["thresher"\]/);
 });
 
-test("equipment detail has category breadcrumbs, public three-photo gallery, dark surfaces, sticky scroll, and own-listing toast", async () => {
-  const [detailSource, layoutSource, actionSource] = await Promise.all([
+test("equipment detail has category breadcrumbs, public selectable three-photo gallery, pincode booking, owner photo, dark surfaces, sticky scroll, and own-listing toast", async () => {
+  const [detailSource, layoutSource, actionSource, validationSource, sheetsMirror, workbookManifest, operationalData, equipmentTypes, firebaseData, nextConfig] = await Promise.all([
     readSource("../app/equipment/[id]/EquipmentDetailClient.tsx"),
     readSource("../lib/equipment-detail-layout.js"),
     readSource("../lib/actions/local-data.ts"),
+    readSource("../lib/validation/forms.ts"),
+    readSource("../lib/server/sheets-mirror.ts"),
+    readSource("../data/operational-sheets-workbook.json"),
+    readSource("../scripts/lib/operational-data.mjs"),
+    readSource("../lib/equipment.ts"),
+    readSource("../lib/server/firebase-data.ts"),
+    readSource("../next.config.mjs"),
   ]);
 
   assert.match(detailSource, /href="\/categories"/);
   assert.match(detailSource, /rent-equipment\?query=\$\{categorySlug\}/);
-  assert.match(detailSource, /galleryImages\.slice\(0,\s*3\)/);
+  assert.match(detailSource, /displayGalleryImages/);
+  assert.match(detailSource, /setSelectedImageIndex/);
+  assert.match(detailSource, /selectedGalleryImage/);
+  assert.match(detailSource, /Array\.from\(new Set\(\[equipment\.coverImage,\s*\.\.\.equipment\.galleryImages\]/);
+  assert.match(detailSource, /slice\(0,\s*3\)/);
+  assert.match(detailSource, /fieldPincode/);
+  assert.match(detailSource, /Field Pincode/);
+  assert.match(detailSource, /replace\(\/\\D\/g,\s*""\)\.slice\(0,\s*6\)/);
   assert.match(detailSource, /ownListingToast/);
   assert.match(detailSource, /You cannot book your own listings/);
   assert.match(detailSource, /OWN_LISTING/);
   assert.match(detailSource, /kk-depth-tile/);
+  assert.match(detailSource, /equipment\.ownerPhotoUrl/);
+  assert.match(detailSource, /alt=\{langText\("Owner profile photo"/);
   assert.match(layoutSource, /bg-surface-container-lowest/);
   assert.match(layoutSource, /lg:max-h-none/);
   assert.doesNotMatch(layoutSource, /overflow-y-auto/);
   assert.match(actionSource, /code:\s*"OWN_LISTING"/);
+  assert.match(detailSource, /fieldPincode:\s*formState\.fieldPincode/);
+  assert.match(validationSource, /fieldPincode/);
+  for (const source of [sheetsMirror, workbookManifest, operationalData]) {
+    assert.match(source, /field_pincode/);
+  }
+  assert.match(equipmentTypes, /ownerPhotoUrl\?: string/);
+  assert.match(firebaseData, /ownerPhotoUrl/);
+  assert.match(firebaseData, /profileByUserId/);
+  assert.match(nextConfig, /https:\/\/firebasestorage\.googleapis\.com/);
+  assert.match(nextConfig, /https:\/\/storage\.googleapis\.com/);
 });
 
 test("profile menu is compact and the trigger has a soft 3D visual boundary", async () => {

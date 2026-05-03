@@ -284,6 +284,7 @@ export async function mirrorSubmission(submission: FormSubmissionRecord): Promis
             equipment_id: payload.equipmentId || "",
             equipment_name: payload.equipmentName || "",
             field_location: payload.fieldLocation || "",
+            field_pincode: payload.fieldPincode || "",
             work_type: payload.workType || "",
             start_date: payload.startDate || "",
             duration: payload.duration || "",

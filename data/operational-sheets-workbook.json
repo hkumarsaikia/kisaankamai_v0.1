@@ -228,6 +228,7 @@
         { "key": "equipment_id", "header": "Equipment ID", "width": 140, "type": "text" },
         { "key": "equipment_name", "header": "Equipment Name", "width": 240, "type": "text" },
         { "key": "field_location", "header": "Field Location", "width": 180, "type": "text" },
+        { "key": "field_pincode", "header": "Field Pincode", "width": 130, "type": "text" },
         { "key": "work_type", "header": "Work Type", "width": 160, "type": "text" },
         { "key": "start_date", "header": "Start Date", "width": 140, "type": "date" },
         { "key": "duration", "header": "Duration", "width": 140, "type": "text" },

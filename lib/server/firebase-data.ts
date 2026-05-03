@@ -1231,7 +1231,16 @@ export async function resetLocalPassword(identifier: string, password: string) {
   });
 }
 
-export function listingToEquipmentRecord(listing: ListingRecord): EquipmentRecord {
+export function listingToEquipmentRecord(
+  listing: ListingRecord,
+  ownerProfile?: ProfileRecord | null,
+  ownerUser?: UserRecord | null
+): EquipmentRecord {
+  const ownerPhotoUrl =
+    normalizeOptionalString(ownerProfile?.photoUrl) ||
+    normalizeOptionalString(ownerUser?.photoUrl) ||
+    undefined;
+
   return {
     id: listing.id,
     slug: listing.slug,
@@ -1250,6 +1259,7 @@ export function listingToEquipmentRecord(listing: ListingRecord): EquipmentRecor
     ownerName: listing.ownerName,
     ownerLocation: listing.ownerLocation,
     ownerVerified: listing.ownerVerified,
+    ownerPhotoUrl,
     coverImage: listing.coverImage,
     galleryImages: listing.galleryImages,
     tags: listing.tags,
@@ -1261,8 +1271,15 @@ export function listingToEquipmentRecord(listing: ListingRecord): EquipmentRecor
 export async function getPublicEquipmentList() {
   noStore();
   try {
-    const listings = dedupePublicListings((await listAllListings()).filter(isPublicListingReady));
-    return listings.map(listingToEquipmentRecord);
+    const [allListings, profiles] = await Promise.all([
+      listAllListings(),
+      listAllProfiles(),
+    ]);
+    const profileByUserId = new Map(profiles.map((profile) => [profile.userId, profile]));
+    const listings = dedupePublicListings(allListings.filter(isPublicListingReady));
+    return listings.map((listing) =>
+      listingToEquipmentRecord(listing, profileByUserId.get(listing.ownerUserId))
+    );
   } catch (error) {
     captureServerException(error, { subsystem: "getPublicEquipmentList" });
     return [];
@@ -1273,7 +1290,11 @@ export async function getPublicEquipmentById(id: string) {
   try {
     const listing = await getListingById(id);
     if (listing && isPublicListingReady(listing)) {
-      return listingToEquipmentRecord(listing);
+      const [ownerProfile, ownerUser] = await Promise.all([
+        getProfileRecordById(listing.ownerUserId),
+        getExistingUserRecordById(listing.ownerUserId),
+      ]);
+      return listingToEquipmentRecord(listing, ownerProfile, ownerUser);
     }
   } catch (error) {
     captureServerException(error, { subsystem: "getPublicEquipmentById", listingId: id });

@@ -22,6 +22,18 @@ npm run verify
 - Start `npm run dev:public` before `npm run tunnel:public` when you need a shareable tunnel URL for the local app.
 - Treat `npm run verify` as the default root-app validation pass.
 
+## Local HTML Page Replacement
+
+When a local HTML file is provided to replace a live website page, treat that HTML file as the design authority, not just a visual reference.
+
+Port the exact structure, typography, colors, spacing, cards, forms, backgrounds, images, animations, and visual states from the supplied local HTML.
+
+Only adapt the minimum required for React/Next.js, routing, auth, i18n, backend form submission, accessibility, and the shared site header/footer when explicitly required.
+
+Do not redesign, normalize, simplify, restyle, or substitute the local HTML design with the existing site design system unless explicitly requested.
+
+Verify the implemented page visually against the supplied local HTML, not only by checking text, routes, or functional markers.
+
 ## Archived Reference
 
 - The previous Windows-root reference and local generated artifacts were removed after the Ubuntu rebuild.
