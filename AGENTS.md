@@ -42,3 +42,4 @@ Verify the implemented page visually against the supplied local HTML, not only b
 ## Repo Notes
 
 - `vendor/` is reference-only and should not be edited for product changes.
+- Use `/home/hkuma/Work/kisan_kamai` as the canonical working checkout. Do not create or continue work in `~/.config/superpowers/worktrees/kisan_kamai/...` unless explicitly requested by the user. If an old worktree must be removed, first verify it is clean and that its branch has no commits missing from `main`.
