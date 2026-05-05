@@ -140,8 +140,8 @@ function NoEquipmentAvailable({
   const { langText } = useLanguage();
 
   return (
-    <div className="bg-surface text-on-surface pt-20 md:pt-20 pb-3 md:pb-4">
-      <div className="mx-auto mb-8 w-full max-w-4xl px-4 md:px-8">
+    <div className="bg-surface text-on-surface pt-[5.5rem] md:pt-[5.5rem] pb-0">
+      <div className="mx-auto mb-6 w-full max-w-4xl px-4 md:px-8">
         <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-2 shadow-sm md:p-3">
           <SearchForm
             location={location}
@@ -154,7 +154,7 @@ function NoEquipmentAvailable({
         </div>
       </div>
 
-      <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pb-2 text-center md:px-8">
+      <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pb-0 text-center md:px-8">
         <div className="pointer-events-none absolute -z-10 flex items-center justify-center opacity-5">
           <span className="material-symbols-outlined text-[260px] text-primary">agriculture</span>
         </div>
@@ -164,7 +164,7 @@ function NoEquipmentAvailable({
         <h1 className="mb-4 font-headline text-4xl font-bold tracking-tight text-on-surface md:text-5xl">
           {langText("No equipment available right now", "सध्या कोणतीही उपकरणे उपलब्ध नाहीत")}
         </h1>
-        <p className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-on-surface-variant">
+        <p className="mx-auto mb-7 max-w-2xl text-lg leading-relaxed text-on-surface-variant">
           {langText(
             "We could not find exact matches for your search in the selected area. Inventory changes daily, and our support team can help locate what you need manually.",
             "निवडलेल्या भागात तुमच्या शोधाशी जुळणारी उपकरणे सापडली नाहीत. यादी दररोज बदलते आणि आमची सपोर्ट टीम तुम्हाला आवश्यक उपकरण शोधण्यात मदत करू शकते."
@@ -197,10 +197,10 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
 
     return (
       <article className="flex flex-col md:flex-row bg-surface rounded-2xl border border-surface-variant shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
-        <div className={`w-full md:w-2/5 lg:w-[30%] relative ${imageClassName} bg-surface-container-lowest`}>
+        <div className={`equipment-card-media-frame w-full md:w-2/5 lg:w-[30%] relative ${imageClassName} bg-surface-container-lowest p-2.5 md:p-3`}>
           <ContentImage
             alt={item.name}
-            className="w-full h-full object-cover object-center"
+            className="h-full w-full rounded-xl object-cover object-center shadow-sm transition-transform duration-300 group-hover:scale-[1.015]"
             src={assetPath(item.coverImage)}
           />
 

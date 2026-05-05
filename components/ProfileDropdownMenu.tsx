@@ -119,7 +119,7 @@ export function ProfileDropdownMenu({
       <button
         type="button"
         onClick={() => setOpen((current) => !current)}
-        className={`kk-profile-trigger kk-depth-tile flex items-center gap-3 rounded-full border border-white/55 bg-white/75 px-2 py-2 pr-4 text-left shadow-[0_14px_36px_-22px_rgba(15,23,42,0.6)] backdrop-blur-xl transition hover:bg-white/95 dark:border-white/10 dark:bg-[rgba(24,28,34,0.78)] dark:shadow-[0_18px_44px_-28px_rgba(0,0,0,0.72)] ${triggerClassName}`}
+        className={`kk-profile-trigger kk-depth-tile flex items-center gap-3 rounded-full border border-slate-200 bg-white px-2 py-2 pr-4 text-left shadow-[0_14px_36px_-22px_rgba(15,23,42,0.6)] transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:shadow-[0_18px_44px_-28px_rgba(0,0,0,0.72)] ${triggerClassName}`}
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={t("header.aria.my_profile")}
@@ -153,7 +153,8 @@ export function ProfileDropdownMenu({
 
       {open ? (
         <div
-          className={`${panelClassName} flex flex-col overflow-hidden rounded-2xl border border-white/40 bg-white/80 font-display shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/90`}
+          className={`${panelClassName} flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white font-display shadow-2xl dark:border-slate-800 dark:bg-slate-950`}
+          data-opaque-profile-menu
           role="menu"
         >
           <div className="flex items-center gap-4 border-b border-slate-100 p-5 dark:border-slate-800">

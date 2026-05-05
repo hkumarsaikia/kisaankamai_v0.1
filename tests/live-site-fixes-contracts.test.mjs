@@ -338,15 +338,19 @@ test("owner listing photos are limited to three and mirrored as explicit URLs an
 });
 
 test("rent equipment pages expose base search, query sort, and compact no-equipment spacing", async () => {
-  const [viewSource, pageSource] = await Promise.all([
+  const [viewSource, pageSource, siteChromeSource, siteChromeRoutesSource] = await Promise.all([
     readSource("../app/rent-equipment/RentEquipmentView.tsx"),
     readSource("../app/rent-equipment/page.tsx"),
+    readSource("../components/SiteChrome.tsx"),
+    readSource("../lib/site-chrome-routes.js"),
   ]);
 
   assert.match(viewSource, /available-search-panel/);
   assert.match(viewSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
-  assert.match(viewSource, /pb-3 md:pb-4/);
-  assert.match(viewSource, /pt-20 md:pt-20/);
+  assert.match(viewSource, /pb-0/);
+  assert.match(viewSource, /pt-\[5\.5rem\] md:pt-\[5\.5rem\]/);
+  assert.match(viewSource, /equipment-card-media-frame/);
+  assert.match(viewSource, /p-2\.5 md:p-3/);
   assert.match(viewSource, /py-0 sm:px-6 lg:px-8/);
   assert.match(viewSource, /py-5 md:py-6/);
   assert.doesNotMatch(viewSource, /pt-32 md:pt-36/);
@@ -354,6 +358,8 @@ test("rent equipment pages expose base search, query sort, and compact no-equipm
   assert.match(pageSource, /balers:\s*\["baler"\]/);
   assert.match(pageSource, /pumps:\s*\["pump"\]/);
   assert.match(pageSource, /threshers:\s*\["thresher"\]/);
+  assert.match(siteChromeSource, /pathname\.startsWith\("\/rent-equipment"\)/);
+  assert.match(siteChromeRoutesSource, /pathname === "\/rent-equipment"/);
 });
 
 test("equipment detail has category breadcrumbs, public selectable three-photo gallery, pincode booking, owner photo, dark surfaces, sticky scroll, and own-listing toast", async () => {
@@ -407,15 +413,28 @@ test("profile menu uses the supplied dropdown states and the trigger has a soft 
 
   assert.match(profileMenu, /kk-profile-trigger/);
   assert.match(profileMenu, /kk-depth-tile/);
+  assert.match(profileMenu, /data-opaque-profile-menu/);
   assert.match(profileMenu, /w-80/);
   assert.match(profileMenu, /NOTIFICATIONS/);
   assert.match(profileMenu, /Clear All/);
   assert.match(profileMenu, /All caught up!/);
   assert.match(profileMenu, /animate-pulse/);
   assert.match(profileMenu, /py-2/);
+  assert.doesNotMatch(profileMenu, /bg-white\/80|bg-white\/75|backdrop-blur-xl/);
   assert.doesNotMatch(profileMenu, /w-\[20rem\]/);
   assert.doesNotMatch(profileMenu, /py-5/);
   assert.doesNotMatch(profileMenu, /header\.menu\.settings|header\.menu\.help_support/);
+});
+
+test("terms page renders one language at a time without generated mixed Marathi English copy", async () => {
+  const termsSource = await readSource("../app/terms/page.tsx");
+
+  assert.match(termsSource, /langText\("Rule #1", "नियम #१"\)/);
+  assert.match(termsSource, /We do not process payments\./);
+  assert.match(termsSource, /आम्ही ऑनलाइन पेमेंट प्रक्रिया करत नाही\./);
+  assert.doesNotMatch(termsSource, /"आम्ही "\s*\+\s*text/);
+  assert.doesNotMatch(termsSource, />\s*"आमची भूमिका/);
+  assert.doesNotMatch(termsSource, /नो ऑनलाइन पेमेंट/);
 });
 
 test("global depth tiles use pointer-driven smooth 3D variables with reduced motion guard", async () => {

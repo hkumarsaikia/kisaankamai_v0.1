@@ -6,6 +6,24 @@ import { supportContact } from "@/lib/support-contact";
 
 export default function TermsAndSafetyPage() {
   const { langText } = useLanguage();
+  const platformLimitations = [
+    {
+      en: "We do not process payments.",
+      mr: "आम्ही ऑनलाइन पेमेंट प्रक्रिया करत नाही.",
+    },
+    {
+      en: "We do not guarantee machine performance.",
+      mr: "आम्ही मशीनच्या कामगिरीची हमी देत नाही.",
+    },
+    {
+      en: "We do not manage logistics.",
+      mr: "आम्ही वाहतूक किंवा लॉजिस्टिक्स व्यवस्थापित करत नाही.",
+    },
+    {
+      en: "We do not arbitrate financial disputes.",
+      mr: "आम्ही आर्थिक वादांचा निवाडा करत नाही.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-surface font-body text-on-surface selection:bg-primary-container selection:text-white">
@@ -38,7 +56,7 @@ export default function TermsAndSafetyPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               { icon: "handshake", color: "emerald", title: ["Direct Dealing", "थेट व्यवहार"], desc: ["Deal directly with the person who owns or needs the machine. No middlemen.", "मालक किंवा ग्राहकाशी थेट व्यवहार करा. मध्यस्थ नाही."] },
-              { icon: "payment", color: "orange", title: ["No Online Payment", "नो ऑनलाइन पेमेंट"], desc: ["Kisan Kamai never asks for or processes payments online. Handle money directly.", "आम्ही ऑनलाइन पेमेंट स्वीकारत नाही. थेट पैसे द्या."] },
+              { icon: "payment", color: "orange", title: ["No Online Payment", "ऑनलाइन पेमेंट नाही"], desc: ["Kisan Kamai never asks for or processes payments online. Handle money directly.", "किसान कमाई ऑनलाइन पेमेंट मागत नाही किंवा प्रक्रिया करत नाही. पैशांचा व्यवहार थेट करा."] },
               { icon: "verified_user", color: "blue", title: ["Verify Before Deal", "तपासा आणि निवडा"], desc: ["Always verify identity and machine condition before finalizing any agreement.", "प्रत्यक्ष भेटून आणि मशीन तपासूनच व्यवहार निश्चित करा."] },
               { icon: "gavel", color: "purple", title: ["Responsible Use", "जबाबदार वापर"], desc: ["Misuse of the platform or abusive language will lead to permanent removal.", "प्लॅटफॉर्मचा गैरवापर केल्यास खाते कायमचे बंद केले जाईल."] }
             ].map((card, i) => (
@@ -84,20 +102,18 @@ export default function TermsAndSafetyPage() {
                   )}
                 </p>
                 <div className="space-y-4 pt-4">
-                  {[
-                    "We do not process payments.",
-                    "We do not guarantee machine performance.",
-                    "We do not manage logistics.",
-                    "We do not arbitrate financial disputes."
-                  ].map((text, i) => (
+                  {platformLimitations.map((item, i) => (
                     <div key={i} className="flex items-center gap-4 text-primary font-bold">
                       <span className="material-symbols-outlined text-secondary font-black">block</span>
-                      <span>{langText(text, "आम्ही " + text)}</span>
+                      <span>{langText(item.en, item.mr)}</span>
                     </div>
                   ))}
                 </div>
                 <div className="bg-surface-container-low p-8 rounded-3xl border-l-[6px] border-primary italic text-primary leading-relaxed font-black">
-                  "आमची भूमिका केवळ शेतकरी आणि अवजारे मालकांना एकमेकांशी जोडण्याची आहे. आर्थिक व्यवहारांची जबाबदारी वापरकर्त्यांची असेल."
+                  {langText(
+                    '"Our role is limited to connecting farmers and equipment owners. Users are responsible for their own financial transactions."',
+                    '"आमची भूमिका केवळ शेतकरी आणि अवजारे मालकांना एकमेकांशी जोडण्याची आहे. आर्थिक व्यवहारांची जबाबदारी वापरकर्त्यांची असेल."'
+                  )}
                 </div>
               </div>
             </div>
@@ -114,7 +130,9 @@ export default function TermsAndSafetyPage() {
                   {langText("Essential Safety Checklist", "सुरक्षिततेची पडताळणी यादी")}
                 </h2>
                 <div className="p-8 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
-                  <p className="text-sm font-black uppercase tracking-widest text-secondary-container mb-4">Rule #1</p>
+                  <p className="text-sm font-black uppercase tracking-widest text-secondary-container mb-4">
+                    {langText("Rule #1", "नियम #१")}
+                  </p>
                   <p className="font-black text-2xl leading-tight">
                     {langText("Never pay advance before seeing the machine.", "मशीन पाहण्यापूर्वी चुकूनही आगाऊ पैसे देऊ नका.")}
                   </p>

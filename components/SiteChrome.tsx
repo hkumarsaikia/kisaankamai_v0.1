@@ -7,6 +7,7 @@ import { shouldHideSiteChrome } from "@/lib/site-chrome-routes";
 
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() || "";
+  const compactContentMain = pathname.startsWith("/rent-equipment");
 
   if (shouldHideSiteChrome(pathname)) {
     return <>{children}</>;
@@ -15,7 +16,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className="flex-grow">{children}</main>
+      <main className={compactContentMain ? "" : "flex-grow"}>{children}</main>
       <Footer />
     </>
   );
