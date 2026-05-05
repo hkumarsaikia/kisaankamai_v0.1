@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Once a live repo URL exists, use the repo sync script to compare the current workspace against that remote branch, optionally push the current `HEAD` into a named `live` remote, and record the result into the operational workbook and Discord.
+Use the repo sync script only when there is a confirmed secondary GitHub repo that must mirror the canonical source repo. The active Firebase App Hosting backend is connected to `hkumarsaikia/kisaankamai_v0.1`, so the normal release path pushes `origin/main` and deploys that commit.
 
 ## Repo Sync
 
@@ -52,28 +52,21 @@ When Sheets is configured, that data is written into `workbook_meta` and a repo 
 Recommended publish order:
 
 1. Commit and push the working repo.
-2. Sync the live frontend repo.
-3. Create the Firebase App Hosting rollout from the deployed commit.
-4. Verify the deployed/live runtime health.
-5. Send the Discord live-update notification.
+2. Create the Firebase App Hosting rollout from the pushed `origin/main` commit.
+3. Verify the deployed/live runtime health.
+4. Send the Discord live-update notification.
 
 Current Kisan Kamai targets:
 
 ```bash
 git push origin main
-GH_TOKEN="$GITHUB_MCP_PAT_KISAANKAMAI" npm run repo:sync-live -- \
-  --repo-url "https://github.com/kisaankamai/kisankamai" \
-  --branch main \
-  --push \
-  --notify \
-  --discord-channel github
 firebase apphosting:rollouts:create kisankamai-web-backend \
   --git-commit "<commit-sha>" \
   --project gokisaan \
   --force
 ```
 
-Only run the rollout command after `npm run verify` and the launch gate checks pass locally. If the live repo sync or Firebase rollout fails, do not send a success Discord message; send a warning with the failed command and output summary.
+Only run the rollout command after `npm run verify` and the launch gate checks pass locally. If the Firebase rollout fails, do not send a success Discord message; send a warning with the failed command and output summary. Do not add an unverified secondary mirror to the release path.
 
 ## Discord Helper
 
