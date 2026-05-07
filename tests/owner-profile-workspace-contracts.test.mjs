@@ -28,9 +28,9 @@ test("owner-profile routes use the new owner dashboard, equipment browser, earni
   ]);
 
   assert.match(root, /title=\{localizedText\("Owner Profile", "मालक प्रोफाइल"\)\}/);
-  assert.match(root, /getOwnerListings/);
   assert.match(root, /getOwnerBookings/);
-  assert.match(root, /getOwnerPayments/);
+  assert.match(root, /Recent Booking Activity/);
+  assert.doesNotMatch(root, /getOwnerListings|getOwnerPayments|Active Listings|Open Bookings|Paid Earnings|Fleet Snapshot/);
   assert.match(browse, /OwnerEquipmentBrowser/);
   assert.match(browse, /title=\{localizedText\("My Equipment", "माझी उपकरणे"\)\}/);
   assert.match(earnings, /localizedText\("Pricing & Earnings", "किंमत आणि कमाई"\)/);

@@ -13,10 +13,6 @@ export default async function OwnerProfileBookingsPage() {
       family="owner-profile"
       activeTab="bookings"
       title={localizedText("Bookings", "बुकिंग")}
-      subtitle={localizedText(
-        "Manage incoming rental requests and recently completed jobs.",
-        "येणाऱ्या भाडे विनंत्या आणि अलीकडे पूर्ण झालेली कामे व्यवस्थापित करा."
-      )}
     >
       <OwnerBookingsBoard bookings={bookings} />
     </OwnerProfileWorkspaceShell>

@@ -26,12 +26,6 @@ export function OwnerEquipmentBrowser({
                 ({listings.length} {langText("Results", "निकाल")})
               </span>
             </h2>
-            <p className="mt-1 text-sm text-on-surface-variant">
-              {langText(
-                "Sort your fleet by HP or distance and jump straight into edit or equipment details.",
-                "तुमची उपकरणे HP किंवा अंतरानुसार क्रम लावा आणि थेट संपादन किंवा तपशील उघडा."
-              )}
-            </p>
           </div>
         </div>
 

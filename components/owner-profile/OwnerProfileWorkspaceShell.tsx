@@ -411,7 +411,7 @@ export function OwnerProfileWorkspaceShell({
           </div>
         </header>
 
-        <div className="mx-auto max-w-6xl px-6 pt-8 flex-1">
+        <div className="mx-auto w-full min-w-0 max-w-6xl flex-1 px-4 pt-4 sm:px-6 sm:pt-8">
           {children}
         </div>
 

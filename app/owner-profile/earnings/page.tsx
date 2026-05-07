@@ -43,10 +43,6 @@ export default async function OwnerProfileEarningsPage() {
       family="owner-profile"
       activeTab="earnings"
       title={localizedText("Pricing & Earnings", "किंमत आणि कमाई")}
-      subtitle={localizedText(
-        "Track listed rates, booking estimates, and completed rental income.",
-        "लिस्ट केलेले दर, बुकिंग अंदाज आणि पूर्ण झालेली भाडे कमाई ट्रॅक करा."
-      )}
     >
       <div className="space-y-8">
         <section>
@@ -55,20 +51,14 @@ export default async function OwnerProfileEarningsPage() {
               <h2 className="font-headline text-xl font-bold text-on-surface">
                 <LocalizedText en="Pricing by Equipment" mr="उपकरणानुसार किंमत" />
               </h2>
-              <p className="mt-1 text-sm text-on-surface-variant">
-                <LocalizedText
-                  en="Review pricing, rating, and booking counts for your live owner listings."
-                  mr="तुमच्या सक्रिय मालक लिस्टिंगसाठी किंमत, रेटिंग आणि बुकिंग संख्या तपासा."
-                />
-              </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             {pricingCards.map((listing) => (
               <div
                 key={listing.id}
-                className="flex flex-col overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest"
+                className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest"
               >
                 <div className="relative h-32 bg-surface-container-high">
                   <img
@@ -82,26 +72,26 @@ export default async function OwnerProfileEarningsPage() {
                       : <LocalizedText en="Paused" mr="थांबवलेले" />}
                   </div>
                 </div>
-                <div className="flex flex-1 flex-col p-4">
-                  <h3 className="text-lg font-bold text-on-surface">{listing.name}</h3>
-                  <p className="mb-4 flex items-center gap-1 text-sm text-on-surface-variant">
+                <div className="flex min-w-0 flex-1 flex-col p-4">
+                  <h3 className="break-words text-lg font-bold text-on-surface">{listing.name}</h3>
+                  <p className="mb-4 flex min-w-0 items-center gap-1 break-words text-sm text-on-surface-variant">
                     <span className="material-symbols-outlined text-[16px]">location_on</span>
                     {listing.location}, {listing.district}
                   </p>
-                  <div className="mt-auto rounded-xl border border-outline-variant bg-surface-container-low p-3">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
+                  <div className="mt-auto min-w-0 rounded-xl border border-outline-variant bg-surface-container-low p-3">
+                    <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="min-w-0">
                         <p className="text-xs font-medium text-on-surface-variant">
                           <LocalizedText en="Listed Rate" mr="लिस्ट केलेला दर" />
                         </p>
-                        <p className="font-bold text-on-surface">
+                        <p className="break-words font-bold text-on-surface">
                           ₹{listing.pricePerHour.toLocaleString("en-IN")}{" "}
                           <span className="text-sm font-normal">
                             <LocalizedText en="/ hour" mr="प्रति तास" />
                           </span>
                         </p>
                       </div>
-                      <div className="text-right text-sm">
+                      <div className="text-sm sm:text-right">
                         <p className="font-semibold text-primary-container">
                           {bookingCountByListing.get(listing.id) || 0} <LocalizedText en="bookings" mr="बुकिंग" />
                         </p>
@@ -123,12 +113,6 @@ export default async function OwnerProfileEarningsPage() {
               <h2 className="font-headline text-xl font-bold text-on-surface">
                 <LocalizedText en="Rental Income History" mr="भाडे उत्पन्न इतिहास" />
               </h2>
-              <p className="mt-1 text-sm text-on-surface-variant">
-                <LocalizedText
-                  en="Completed, processing, and refunded owner payments tied to recent bookings."
-                  mr="अलीकडील बुकिंगशी जोडलेली पूर्ण, प्रक्रियेत आणि परत केलेली मालक पेमेंट्स."
-                />
-              </p>
             </div>
           </div>
           <div className="overflow-x-auto">

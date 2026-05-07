@@ -31,10 +31,6 @@ export default async function OwnerProfileBrowsePage() {
       family="owner-profile"
       activeTab="browse"
       title={localizedText("My Equipment", "माझी उपकरणे")}
-      subtitle={localizedText(
-        "Review your live listings, sort by HP or distance, and open edit or detail flows safely.",
-        "तुमच्या सक्रिय लिस्टिंग तपासा, HP किंवा अंतरानुसार क्रम लावा आणि संपादन किंवा तपशील सुरक्षितपणे उघडा."
-      )}
     >
       <OwnerEquipmentBrowser listings={listingSummaries} />
     </OwnerProfileWorkspaceShell>

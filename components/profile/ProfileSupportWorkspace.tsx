@@ -81,9 +81,9 @@ export function ProfileSupportWorkspace({
   };
 
   return (
-    <main className="flex min-h-[calc(100vh-8rem)] w-full items-center justify-center py-10 md:py-14">
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-0 pb-10">
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+    <main className="flex w-full items-start justify-center pb-16 pt-0">
+      <div className="relative z-10 mx-auto w-full max-w-5xl px-0">
+        <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <div className="bg-surface-container-lowest rounded-2xl shadow-xl p-6 md:p-10 border border-outline-variant/30 backdrop-blur-sm">
               <h2 className="mb-6 flex items-center gap-2 font-headline text-2xl font-bold text-primary-container">
@@ -196,7 +196,7 @@ export function ProfileSupportWorkspace({
             </div>
           </div>
 
-          <div className="space-y-6 lg:col-span-1">
+          <div className="space-y-6 lg:sticky lg:top-24 lg:col-span-1">
             <div className="group rounded-2xl border border-outline-variant/20 bg-surface-container-lowest p-6 shadow-lg transition-colors hover:border-secondary/30">
               <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-secondary/10 transition-colors group-hover:bg-secondary/20">
                 <span className="material-symbols-outlined text-3xl text-secondary">call</span>

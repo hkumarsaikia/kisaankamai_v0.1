@@ -236,15 +236,11 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
   };
 
   return (
-    <main className="mx-auto max-w-4xl px-0 pb-24 pt-2 font-body text-on-background">
-      <div className="mb-10 text-center md:text-left">
-        <h1 className="mb-3 font-headline text-3xl font-bold tracking-tight text-primary md:text-4xl">
-          {langText("Profile Settings", "प्रोफाइल सेटिंग्ज")}
-        </h1>
-      </div>
-
-      <form id={formId} onSubmit={handleSubmit}>
-        <div className="mb-8 rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
+    <main className="w-full pb-16 font-body text-on-background">
+      <h2 className="sr-only">{langText("Profile Settings", "प्रोफाइल सेटिंग्ज")}</h2>
+      <form id={formId} className="grid gap-8 xl:grid-cols-[20rem_minmax(0,1fr)] xl:items-start" onSubmit={handleSubmit}>
+        <aside className="space-y-8 xl:sticky xl:top-24">
+          <div className="rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
           <h2 className="mb-6 font-headline text-xl font-bold text-on-surface">
             {langText("Profile Photo", "प्रोफाइल फोटो")}
           </h2>
@@ -286,203 +282,210 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               {langText("Click to upload a new photo. Minimum 400x400px.", "नवीन फोटो अपलोड करण्यासाठी क्लिक करा. किमान 400x400px.")}
             </p>
           </div>
-        </div>
-
-        <div className="mb-8 rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
-          <h2 className="mb-6 border-b border-surface-container pb-4 font-headline text-xl font-bold text-on-surface">
-            {langText("Personal Information", "वैयक्तिक माहिती")}
-          </h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <label className="col-span-1 md:col-span-2">
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Full Name", "पूर्ण नाव")}</span>
-              <input
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                type="text"
-                value={formState.fullName}
-                onChange={(event) => updateField("fullName", event.target.value)}
-              />
-            </label>
-            <label>
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Phone Number", "फोन नंबर")}</span>
-              <input
-                className="w-full cursor-not-allowed rounded-xl border border-outline-variant bg-surface-container-low px-5 py-4 text-on-surface opacity-60 shadow-sm transition-all"
-                type="tel"
-                value={formState.phone}
-                readOnly
-                aria-label="Phone"
-              />
-            </label>
-            <label>
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Email Address", "ईमेल पत्ता")}</span>
-              <input
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                type="email"
-                value={formState.email}
-                onChange={(event) => updateField("email", event.target.value)}
-              />
-            </label>
-            <label className="col-span-1 md:col-span-2">
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Address", "पत्ता")}</span>
-              <textarea
-                className="h-28 w-full resize-none rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                value={formState.address}
-                onChange={(event) => updateField("address", event.target.value)}
-              />
-            </label>
           </div>
-        </div>
 
-        <div className="mb-8 rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
-          <h2 className="mb-6 border-b border-surface-container pb-4 font-headline text-xl font-bold text-on-surface">
-            {langText("Farm Details", "शेतीची माहिती")}
-          </h2>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <label>
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Village", "गाव")}</span>
-              <input
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                value={formState.village}
-                onChange={(event) => updateField("village", event.target.value)}
-                type="text"
-              />
-            </label>
-            <label>
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("District", "जिल्हा")}</span>
-              <select
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                value={formState.district}
-                onChange={(event) => updateField("district", event.target.value)}
-              >
-                <option value="">{langText("Select district", "जिल्हा निवडा")}</option>
-                {MAHARASHTRA_DISTRICTS.map((district) => (
-                  <option key={district} value={district}>
-                    {district}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label>
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Pincode", "पिनकोड")}</span>
-              <input
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                value={formState.pincode}
-                onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
-                inputMode="numeric"
-                type="text"
-              />
-            </label>
-            <label>
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Farm Size (Acres)", "शेतीचे क्षेत्र (एकर)")}</span>
-              <input
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                type="number"
-                value={formState.fieldArea}
-                onChange={(event) => updateField("fieldArea", event.target.value)}
-              />
-            </label>
-            <label>
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Primary Crop", "मुख्य पीक")}</span>
-              <input
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                placeholder={langText("Enter primary crop", "मुख्य पीक प्रविष्ट करा")}
-                type="text"
-                value={formState.farmingTypes}
-                onChange={(event) => updateField("farmingTypes", event.target.value)}
-              />
-            </label>
-            <label className="col-span-1 md:col-span-2">
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Equipment Owned", "मालकीची उपकरणे")}</span>
-              <input
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                placeholder={langText("e.g. Tractor (50 HP), Rotavator", "उदा. ट्रॅक्टर (५० HP), रोटाव्हेटर")}
-                type="text"
-                value={formState.equipmentOwned}
-                onChange={(event) => updateField("equipmentOwned", event.target.value)}
-              />
-            </label>
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
-          <h2 className="mb-6 border-b border-surface-container pb-4 font-headline text-xl font-bold text-on-surface">
-            {langText("Account Settings", "खाते सेटिंग्ज")}
-          </h2>
-          <div className="space-y-6">
-            <div className="flex items-center justify-between rounded-2xl border border-outline-variant bg-surface-bright p-5 shadow-sm transition-colors hover:border-primary/30">
-              <div className="pr-6">
-                <p className="mb-1 text-base font-bold text-on-surface">{langText("Public Visibility", "सार्वजनिक दृश्यमानता")}</p>
-                <p className="text-sm leading-relaxed text-on-surface-variant">
-                  {langText("Allow others to see your profile when you list equipment.", "तुम्ही उपकरणे सूचीबद्ध करता तेव्हा इतरांना तुमचे प्रोफाइल पाहण्याची अनुमती द्या.")}
-                </p>
+          <div className="rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
+            <h2 className="mb-6 border-b border-surface-container pb-4 font-headline text-xl font-bold text-on-surface">
+              {langText("Account Settings", "खाते सेटिंग्ज")}
+            </h2>
+            <div className="space-y-5">
+              <div className="rounded-2xl border border-outline-variant bg-surface-bright p-5 shadow-sm transition-colors hover:border-primary/30">
+                <div className="mb-4">
+                  <p className="mb-1 text-base font-bold text-on-surface">{langText("Public Visibility", "सार्वजनिक दृश्यमानता")}</p>
+                  <p className="text-sm leading-relaxed text-on-surface-variant">
+                    {langText("Allow others to see your profile when you list equipment.", "तुम्ही उपकरणे सूचीबद्ध करता तेव्हा इतरांना तुमचे प्रोफाइल पाहण्याची अनुमती द्या.")}
+                  </p>
+                </div>
+                <label className="relative inline-flex cursor-pointer items-center">
+                  <input
+                    checked={formState.publicVisibility}
+                    onChange={(event) => updateField("publicVisibility", event.target.checked)}
+                    className="peer sr-only"
+                    type="checkbox"
+                  />
+                  <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
+                </label>
               </div>
-              <label className="relative inline-flex shrink-0 cursor-pointer items-center">
-                <input
-                  checked={formState.publicVisibility}
-                  onChange={(event) => updateField("publicVisibility", event.target.checked)}
-                  className="peer sr-only"
-                  type="checkbox"
-                />
-                <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
+
+              <div className="rounded-2xl border border-outline-variant bg-surface-bright p-5 shadow-sm transition-colors hover:border-primary/30">
+                <div className="mb-4">
+                  <p className="mb-1 text-base font-bold text-on-surface">{langText("WhatsApp Notifications", "व्हॉट्सॲप सूचना")}</p>
+                  <p className="text-sm leading-relaxed text-on-surface-variant">
+                    {langText("Receive instant booking requests and updates via WhatsApp.", "व्हॉट्सॲप द्वारे त्वरित बुकिंग विनंत्या आणि अद्यतने प्राप्त करा.")}
+                  </p>
+                </div>
+                <label className="relative inline-flex cursor-pointer items-center">
+                  <input
+                    checked={formState.whatsappNotifications}
+                    onChange={(event) => updateField("whatsappNotifications", event.target.checked)}
+                    className="peer sr-only"
+                    type="checkbox"
+                  />
+                  <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
+                </label>
+              </div>
+
+              <label className="block">
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Preferred Workspace", "पसंतीचा वर्कस्पेस")}</span>
+                <select
+                  value={formState.rolePreference}
+                  onChange={(event) => updateField("rolePreference", event.target.value as WorkspacePreference)}
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                >
+                  {workspaceOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option === "owner"
+                        ? langText("Owner Profile", "मालक प्रोफाइल")
+                        : langText("Renter Profile", "भाडेकरू प्रोफाइल")}
+                    </option>
+                  ))}
+                </select>
               </label>
             </div>
-            <div className="flex items-center justify-between rounded-2xl border border-outline-variant bg-surface-bright p-5 shadow-sm transition-colors hover:border-primary/30">
-              <div className="pr-6">
-                <p className="mb-1 text-base font-bold text-on-surface">{langText("WhatsApp Notifications", "व्हॉट्सॲप सूचना")}</p>
-                <p className="text-sm leading-relaxed text-on-surface-variant">
-                  {langText("Receive instant booking requests and updates via WhatsApp.", "व्हॉट्सॲप द्वारे त्वरित बुकिंग विनंत्या आणि अद्यतने प्राप्त करा.")}
-                </p>
-              </div>
-              <label className="relative inline-flex shrink-0 cursor-pointer items-center">
+          </div>
+        </aside>
+
+        <div className="space-y-8">
+          <div className="rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
+            <h2 className="mb-6 border-b border-surface-container pb-4 font-headline text-xl font-bold text-on-surface">
+              {langText("Personal Information", "वैयक्तिक माहिती")}
+            </h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <label className="col-span-1 md:col-span-2">
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Full Name", "पूर्ण नाव")}</span>
                 <input
-                  checked={formState.whatsappNotifications}
-                  onChange={(event) => updateField("whatsappNotifications", event.target.checked)}
-                  className="peer sr-only"
-                  type="checkbox"
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  type="text"
+                  value={formState.fullName}
+                  onChange={(event) => updateField("fullName", event.target.value)}
                 />
-                <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
+              </label>
+              <label>
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Phone Number", "फोन नंबर")}</span>
+                <input
+                  className="w-full cursor-not-allowed rounded-xl border border-outline-variant bg-surface-container-low px-5 py-4 text-on-surface opacity-60 shadow-sm transition-all"
+                  type="tel"
+                  value={formState.phone}
+                  readOnly
+                  aria-label="Phone"
+                />
+              </label>
+              <label>
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Email Address", "ईमेल पत्ता")}</span>
+                <input
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  type="email"
+                  value={formState.email}
+                  onChange={(event) => updateField("email", event.target.value)}
+                />
+              </label>
+              <label className="col-span-1 md:col-span-2">
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Address", "पत्ता")}</span>
+                <textarea
+                  className="h-28 w-full resize-none rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  value={formState.address}
+                  onChange={(event) => updateField("address", event.target.value)}
+                />
               </label>
             </div>
-            <label className="block">
-              <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Preferred Workspace", "पसंतीचा वर्कस्पेस")}</span>
-              <select
-                value={formState.rolePreference}
-                onChange={(event) => updateField("rolePreference", event.target.value as WorkspacePreference)}
-                className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-              >
-                {workspaceOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option === "owner"
-                      ? langText("Owner Profile", "मालक प्रोफाइल")
-                      : langText("Renter Profile", "भाडेकरू प्रोफाइल")}
-                  </option>
-                ))}
-              </select>
-            </label>
           </div>
 
-          {error ? (
-            <div className="mt-6 rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
-              {error}
+          <div className="rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
+            <h2 className="mb-6 border-b border-surface-container pb-4 font-headline text-xl font-bold text-on-surface">
+              {langText("Farm Details", "शेतीची माहिती")}
+            </h2>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <label>
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Village", "गाव")}</span>
+                <input
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  value={formState.village}
+                  onChange={(event) => updateField("village", event.target.value)}
+                  type="text"
+                />
+              </label>
+              <label>
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("District", "जिल्हा")}</span>
+                <select
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  value={formState.district}
+                  onChange={(event) => updateField("district", event.target.value)}
+                >
+                  <option value="">{langText("Select district", "जिल्हा निवडा")}</option>
+                  {MAHARASHTRA_DISTRICTS.map((district) => (
+                    <option key={district} value={district}>
+                      {district}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Pincode", "पिनकोड")}</span>
+                <input
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  value={formState.pincode}
+                  onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
+                  inputMode="numeric"
+                  type="text"
+                />
+              </label>
+              <label>
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Farm Size (Acres)", "शेतीचे क्षेत्र (एकर)")}</span>
+                <input
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  type="number"
+                  value={formState.fieldArea}
+                  onChange={(event) => updateField("fieldArea", event.target.value)}
+                />
+              </label>
+              <label>
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Primary Crop", "मुख्य पीक")}</span>
+                <input
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  placeholder={langText("Enter primary crop", "मुख्य पीक प्रविष्ट करा")}
+                  type="text"
+                  value={formState.farmingTypes}
+                  onChange={(event) => updateField("farmingTypes", event.target.value)}
+                />
+              </label>
+              <label className="col-span-1 md:col-span-2">
+                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Equipment Owned", "मालकीची उपकरणे")}</span>
+                <input
+                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+                  placeholder={langText("e.g. Tractor (50 HP), Rotavator", "उदा. ट्रॅक्टर (५० HP), रोटाव्हेटर")}
+                  type="text"
+                  value={formState.equipmentOwned}
+                  onChange={(event) => updateField("equipmentOwned", event.target.value)}
+                />
+              </label>
             </div>
-          ) : null}
+          </div>
 
-          <div className="mt-10 flex items-center justify-between border-t border-surface-container pt-8">
-            <button
-              className="rounded-xl px-4 py-2 text-sm font-bold text-on-surface-variant transition-colors hover:bg-error/5 hover:text-error"
-              type="button"
-              onClick={() => router.refresh()}
-            >
-              {langText("Discard Changes", "बदल रद्द करा")}
-            </button>
-            <button
-              className={`rounded-xl px-10 py-3.5 font-bold text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
-                submitState === "success" ? "bg-emerald-600" : "bg-primary hover:bg-primary/90"
-              }`}
-              type="submit"
-              disabled={isPending}
-            >
-              {submitLabel}
-            </button>
+          <div className="rounded-3xl border border-surface-container/50 bg-surface-container-lowest p-6 shadow-[0_8px_30px_rgb(0,0,0,0.04)] md:p-8">
+            {error ? (
+              <div className="mb-6 rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
+                {error}
+              </div>
+            ) : null}
+
+            <div className="flex flex-col gap-3 border-t border-surface-container pt-6 sm:flex-row sm:items-center sm:justify-between">
+              <button
+                className="rounded-xl px-4 py-2 text-sm font-bold text-on-surface-variant transition-colors hover:bg-error/5 hover:text-error"
+                type="button"
+                onClick={() => router.refresh()}
+              >
+                {langText("Discard Changes", "बदल रद्द करा")}
+              </button>
+              <button
+                className={`rounded-xl px-10 py-3.5 font-bold text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
+                  submitState === "success" ? "bg-emerald-600" : "bg-primary hover:bg-primary/90"
+                }`}
+                type="submit"
+                disabled={isPending}
+              >
+                {submitLabel}
+              </button>
+            </div>
           </div>
         </div>
       </form>

@@ -15,10 +15,6 @@ export default async function OwnerProfileFeedbackPage() {
       family="owner-profile"
       activeTab="feedback"
       title={localizedText("Feedback", "अभिप्राय")}
-      subtitle={localizedText(
-        "Share ideas that would improve the owner profile and fleet workflow.",
-        "मालक प्रोफाइल आणि फ्लीट वर्कफ्लो सुधारण्यासाठी तुमच्या कल्पना शेअर करा."
-      )}
     >
       <ProfileFeedbackForm family="owner-profile" session={session} />
     </OwnerProfileWorkspaceShell>

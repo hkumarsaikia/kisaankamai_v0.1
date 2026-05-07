@@ -38,7 +38,89 @@ test("owner bookings, saved equipment, settings, and owner browse remove request
   assert.doesNotMatch(ownerBrowser, /setQuery|setSortBy|SortKey/);
   assert.match(workspaceShell, /flex min-h-screen flex-col/);
   assert.match(workspaceShell, /<main className=\{`flex min-h-screen flex-col/);
-  assert.match(workspaceShell, /<div className="mx-auto max-w-6xl px-6 pt-8 flex-1/);
+  assert.match(workspaceShell, /<div className="mx-auto w-full min-w-0 max-w-6xl flex-1 px-4 pt-4 sm:px-6 sm:pt-8/);
+});
+
+test("owner workspace removes requested dashboard copy, tracking actions, and old owner subtitles", async () => {
+  const [
+    ownerDashboard,
+    ownerBrowsePage,
+    ownerBrowser,
+    ownerBookingsPage,
+    ownerBookings,
+    ownerEarnings,
+    ownerFeedbackPage,
+    ownerSupportPage,
+    legacyOwnerViews,
+  ] = await Promise.all([
+    readSource("../app/owner-profile/page.tsx"),
+    readSource("../app/owner-profile/browse/page.tsx"),
+    readSource("../components/owner-profile/OwnerEquipmentBrowser.tsx"),
+    readSource("../app/owner-profile/bookings/page.tsx"),
+    readSource("../components/profile/OwnerBookingsBoard.tsx"),
+    readSource("../app/owner-profile/earnings/page.tsx"),
+    readSource("../app/owner-profile/feedback/page.tsx"),
+    readSource("../app/owner-profile/support/page.tsx"),
+    readSource("../components/owner-profile/OwnerProfileViews.tsx"),
+  ]);
+
+  for (const source of [
+    ownerDashboard,
+    ownerBrowsePage,
+    ownerBrowser,
+    ownerBookingsPage,
+    ownerBookings,
+    ownerEarnings,
+    ownerFeedbackPage,
+    ownerSupportPage,
+    legacyOwnerViews,
+  ]) {
+    assert.doesNotMatch(source, /Active Listings|Open Bookings|Paid Earnings|Fleet Snapshot/);
+    assert.doesNotMatch(source, /Call renters directly and inspect the linked equipment from the owner workspace\./);
+    assert.doesNotMatch(source, /Review your most recent listings and jump into edit mode\./);
+    assert.doesNotMatch(source, /Sort your fleet by HP or distance and jump straight into edit or equipment details\./);
+    assert.doesNotMatch(source, /Review your live listings, sort by HP or distance, and open edit or detail flows safely\./);
+    assert.doesNotMatch(source, /Manage incoming rental requests and recently completed jobs\./);
+    assert.doesNotMatch(source, /Review incoming bookings, approve or decline them, and keep call and tracking actions on the same page\./);
+    assert.doesNotMatch(source, /Manage Equipment/);
+    assert.doesNotMatch(source, /Track listed rates, booking estimates, and completed rental income\./);
+    assert.doesNotMatch(source, /Review pricing, rating, and booking counts for your live owner listings\./);
+    assert.doesNotMatch(source, /Completed, processing, and refunded owner payments tied to recent bookings\./);
+    assert.doesNotMatch(source, /Share ideas that would improve the owner profile and fleet workflow\./);
+    assert.doesNotMatch(source, /Get owner help for listing, booking, and verification issues\./);
+  }
+
+  assert.doesNotMatch(ownerDashboard, /getOwnerPayments|activeListings|openBookings|totalEarnings/);
+  assert.doesNotMatch(ownerBookings, /TrackingOrderModal|selectedBookingId|setSelectedBookingId|langText\("Track"|>\s*Track\s*</);
+  assert.doesNotMatch(legacyOwnerViews, /Track Order|actionThree:\s*"Track"|Track all your confirmed/);
+});
+
+test("owner workspace forms use compact aesthetically balanced layouts", async () => {
+  const [settings, feedback, support, earnings] = await Promise.all([
+    readSource("../components/profile/ProfileSettingsForm.tsx"),
+    readSource("../components/profile/ProfileFeedbackForm.tsx"),
+    readSource("../components/profile/ProfileSupportWorkspace.tsx"),
+    readSource("../app/owner-profile/earnings/page.tsx"),
+  ]);
+
+  assert.match(settings, /xl:grid-cols-\[20rem_minmax\(0,1fr\)\]/);
+  assert.match(settings, /xl:sticky xl:top-24/);
+  assert.match(settings, /space-y-8/);
+  assert.doesNotMatch(settings, /mx-auto max-w-4xl px-0 pb-24 pt-2/);
+
+  assert.match(feedback, /mx-auto w-full max-w-4xl/);
+  assert.match(feedback, /rounded-\[2rem\]/);
+  assert.match(feedback, /lg:p-10/);
+  assert.doesNotMatch(feedback, /min-h-\[calc\(100vh-8rem\)\]/);
+
+  assert.match(support, /items-start/);
+  assert.match(support, /max-w-5xl/);
+  assert.match(support, /lg:sticky lg:top-24/);
+  assert.doesNotMatch(support, /min-h-\[calc\(100vh-8rem\)\]/);
+
+  assert.match(earnings, /min-w-0/);
+  assert.match(earnings, /break-words/);
+  assert.match(earnings, /sm:flex-row/);
 });
 
 test("profile dropdown account links are removed while profile and sign out remain", async () => {

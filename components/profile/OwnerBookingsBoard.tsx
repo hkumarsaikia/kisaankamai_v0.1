@@ -2,7 +2,6 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-import { TrackingOrderModal } from "@/components/workspace/TrackingOrderModal";
 import { updateBookingStatusAction } from "@/lib/actions/local-data";
 import type { BookingRecord, ListingRecord, ProfileRecord } from "@/lib/local-data/types";
 import { supportContact } from "@/lib/support-contact";
@@ -72,7 +71,6 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
   const { langText } = useLanguage();
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
-  const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
   const [buttonState, setButtonState] = useState<Record<string, "idle" | "pending" | "success" | "error">>({});
   const [errorState, setErrorState] = useState<Record<string, string>>({});
   const [isPending, startTransition] = useTransition();
@@ -81,9 +79,6 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
     activeFilter === "all"
       ? bookings
       : bookings.filter((booking) => mapBookingStatus(booking.status).filter === activeFilter);
-
-  const selectedBooking =
-    bookings.find((booking) => booking.id === selectedBookingId) || null;
 
   const runStatusUpdate = (bookingId: string, nextStatus: "confirmed" | "cancelled") => {
     setErrorState((current) => ({ ...current, [bookingId]: "" }));
@@ -111,20 +106,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <h2 className="font-headline text-3xl font-extrabold text-primary">{langText("Booking Requests", "बुकिंग विनंत्या")}</h2>
-            <p className="mt-2 text-sm font-medium text-on-surface-variant">
-              {langText(
-                "Review incoming bookings, approve or decline them, and keep call and tracking actions on the same page.",
-                "आलेली बुकिंग तपासा, मंजूर किंवा नकार द्या आणि कॉल व ट्रॅकिंग कृती एकाच पानावर ठेवा."
-              )}
-            </p>
           </div>
-          <Link
-            href="/owner-profile/browse"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white"
-          >
-            <span className="material-symbols-outlined text-[18px]">agriculture</span>
-            {langText("Manage Equipment", "उपकरणे व्यवस्थापित करा")}
-          </Link>
         </div>
 
         <div className="flex flex-wrap gap-2 border-b border-outline-variant/50 pb-2">
@@ -225,17 +207,10 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
                       </div>
                     ) : null}
 
-                    <div className="grid grid-cols-2 gap-2">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedBookingId(booking.id)}
-                        className="rounded-xl bg-primary-container px-3 py-2.5 text-xs font-bold text-white transition-colors hover:bg-primary"
-                      >
-                        {langText("Track", "ट्रॅक")}
-                      </button>
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
                       <Link
                         href={detailsHref}
-                        className="rounded-xl border border-outline-variant px-3 py-2.5 text-center text-xs font-bold text-on-surface transition-colors hover:bg-surface-container"
+                        className="rounded-xl bg-primary-container px-3 py-2.5 text-center text-xs font-bold text-white transition-colors hover:bg-primary"
                       >
                         {langText("Details", "तपशील")}
                       </Link>
@@ -290,31 +265,6 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
           </div>
         )}
       </section>
-
-      <TrackingOrderModal
-        open={Boolean(selectedBooking)}
-        equipmentName={selectedBooking?.listing?.name || langText("Equipment Booking", "उपकरण बुकिंग")}
-        bookingLabel={selectedBooking ? `${langText("Booking", "बुकिंग")} ${selectedBooking.id}` : ""}
-        statusLabel={selectedBooking ? langText(
-          mapBookingStatus(selectedBooking.status).badge,
-          {
-            Pending: "प्रलंबित",
-            Confirmed: "पुष्टी",
-            Active: "सक्रिय",
-            Completed: "पूर्ण",
-            Cancelled: "रद्द",
-          }[mapBookingStatus(selectedBooking.status).badge] || mapBookingStatus(selectedBooking.status).badge
-        ) : ""}
-        scheduledLabel={
-          selectedBooking
-            ? `${langText("Scheduled for", "नियोजित")} ${formatDateRange(selectedBooking.startDate, selectedBooking.endDate)}`
-            : ""
-        }
-        operatorIncluded={selectedBooking?.listing?.operatorIncluded}
-        contactPhone={selectedBooking?.renterProfile?.phone || null}
-        contactLabel={langText("Call Renter", "भाडेकरूला कॉल करा")}
-        onClose={() => setSelectedBookingId(null)}
-      />
     </div>
   );
 }

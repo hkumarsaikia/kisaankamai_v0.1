@@ -15,7 +15,7 @@ const dashboardBookings = [
     statusClass: "bg-emerald-100 text-emerald-800",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuCsrECKKQV6KB_aVIhfGHU3NZwr5wbps7eMTfSgp3Dc4-876XTdR4DbxF7YBY-ycJ8Kw4oUtSmp9b5hxUytx7Or0jc1nJbrDTCxJdTpGvrJDYkSdVNLWAD0KZ7A-fGGn9JnlvTy5z91YaL6NtvxvQSjJfAsKW8m6AHUBYuW89y4QU0I5AsCVanqidLzR3PsorIuvhrpegJHEG7jDlqWzZqbpvcVxrXhLB3FFIKT-DPLWWEAgHOMgfFt9mj58vuZgAT-7dvbWJCj0BuM",
-    primaryAction: "Track Order",
+    primaryAction: "View Details",
     primaryClass: "bg-primary-container text-white hover:opacity-90",
   },
   {
@@ -27,7 +27,7 @@ const dashboardBookings = [
     statusClass: "bg-amber-100 text-amber-800",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB15SM3BX-16G88tZAvSYZYdz0_bLrzpiV9cAgBeo-OK3eHbVR5j6gboV7V8rAx_T07weF70XbDfjHxGn1EGdex1lVzhXvOi6Zf0qLlX1y0xsiz6lEWSqHxbmHlb_p-mS3-Ny3dRWd2egnv5bip0dF5bgG-_46ii0CZE68yWICuUUl4ZlYviYvHMgJDv8f7v0Ci_If4I0FSQ5iqLn_z6NWuyojonf3gSUoQA3-dt-48MkyBJ0lEYYKla4vfHLUlX21X6WVWOJ-sfGRv",
-    primaryAction: "Track Order",
+    primaryAction: "View Details",
     primaryClass: "border border-primary-container text-primary-container hover:bg-emerald-50",
   },
 ];
@@ -85,7 +85,7 @@ const ownerBookings = [
     status: "Confirmed",
     actionOne: "Call Owner",
     actionTwo: "Cancel",
-    actionThree: "Track",
+    actionThree: "Details",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuBg6aRbteiOr_A1PwU8odbjZPzym56O_ne8tOLkhaQbv2I-bINBiFV5lCGw1mrx7uHxnycRuoSaRlT_G8bjtpHtCOxisNr4PfYtd92Y6BDflDuPiFkqOBqJfiv-7d3GOGBufO9rucHQ8PqLDK_iYDEjBaTQTAmjQEFoGuAdj-uj6GbqjH_hXpLTQr24ChJdKgf-o63S3Axtc6-8N4wqj9yym_SDTc4OVKG6EHhZD19jqsOoh6avfF62adRLK6QfM5fkxqHQRUiDcSUD",
   },
@@ -95,7 +95,7 @@ const ownerBookings = [
     status: "Active",
     actionOne: "Call Owner",
     actionTwo: "Details",
-    actionThree: "Track",
+    actionThree: "Details",
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB15SM3BX-16G88tZAvSYZYdz0_bLrzpiV9cAgBeo-OK3eHbVR5j6gboV7V8rAx_T07weF70XbDfjHxGn1EGdex1lVzhXvOi6Zf0qLlX1y0xsiz6lEWSqHxbmHlb_p-mS3-Ny3dRWd2egnv5bip0dF5bgG-_46ii0CZE68yWICuUUl4ZlYviYvHMgJDv8f7v0Ci_If4I0FSQ5iqLn_z6NWuyojonf3gSUoQA3-dt-48MkyBJ0lEYYKla4vfHLUlX21X6WVWOJ-sfGRv",
   },
@@ -418,7 +418,7 @@ export function OwnerProfileBookingsContent() {
           <div>
             <h2 className="text-3xl font-black text-primary">My Bookings / माझे बुकिंग्ज</h2>
             <p className="mt-2 text-sm text-on-surface-variant">
-              Track all your confirmed, active, and recently completed machine rentals.
+              Review confirmed, active, and recently completed machine rentals.
             </p>
           </div>
           <Link

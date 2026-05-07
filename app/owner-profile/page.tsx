@@ -3,27 +3,13 @@ import { LocalizedText } from "@/components/LocalizedText";
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
 import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
-import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
+import { getOwnerBookings } from "@/lib/server/local-data";
 import { supportContact } from "@/lib/support-contact";
 
 export default async function OwnerProfilePage() {
   const session = await getCurrentSession();
-  const [listings, bookings, payments] = session
-    ? await Promise.all([
-        getOwnerListings(session.user.id),
-        getOwnerBookings(session.user.id),
-        getOwnerPayments(session.user.id),
-      ])
-    : [[], [], []];
-
-  const activeListings = listings.filter((listing) => listing.status === "active").length;
-  const openBookings = bookings.filter((booking) =>
-    ["pending", "confirmed", "upcoming", "active"].includes(booking.status)
-  ).length;
-  const totalEarnings = payments.reduce(
-    (sum, payment) => sum + (payment.status === "paid" ? payment.amount : 0),
-    0
-  );
+  const bookings = session ? await getOwnerBookings(session.user.id) : [];
+  const recentBookings = bookings.slice(0, 4);
 
   return (
     <OwnerProfileWorkspaceShell
@@ -35,43 +21,33 @@ export default async function OwnerProfilePage() {
         "मालक वर्कस्पेस न सोडता बुकिंग, उपकरण कामगिरी आणि कमाई तपासा."
       )}
     >
-      <div className="space-y-8">
-        <section className="grid gap-4 md:grid-cols-3">
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-              <LocalizedText en="Active Listings" mr="सक्रिय लिस्टिंग" />
-            </p>
-            <p className="mt-3 text-4xl font-black text-primary">{activeListings}</p>
-          </div>
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-              <LocalizedText en="Open Bookings" mr="खुली बुकिंग" />
-            </p>
-            <p className="mt-3 text-4xl font-black text-primary">{openBookings}</p>
-          </div>
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-              <LocalizedText en="Paid Earnings" mr="मिळालेली कमाई" />
-            </p>
-            <p className="mt-3 text-4xl font-black text-primary">₹{totalEarnings.toLocaleString("en-IN")}</p>
-          </div>
-        </section>
-
-        <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-          <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div className="border-b border-slate-100 p-6 dark:border-slate-800">
-              <h2 className="text-2xl font-black text-primary">
-                <LocalizedText en="Recent Booking Activity" mr="अलीकडील बुकिंग हालचाल" />
-              </h2>
-              <p className="mt-2 text-sm text-on-surface-variant">
-                <LocalizedText
-                  en="Call renters directly and inspect the linked equipment from the owner workspace."
-                  mr="मालक वर्कस्पेसमधून भाडेकरूंना थेट कॉल करा आणि संबंधित उपकरण तपासा."
-                />
-              </p>
+      <div className="space-y-6">
+        <section className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="flex flex-col gap-4 border-b border-slate-100 p-6 dark:border-slate-800 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-2xl font-black text-primary">
+              <LocalizedText en="Recent Booking Activity" mr="अलीकडील बुकिंग हालचाल" />
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              <Link
+                href="/owner-profile/browse"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-on-surface transition-colors hover:bg-surface-container dark:border-slate-700 dark:text-slate-100"
+              >
+                <span className="material-symbols-outlined text-[18px]">agriculture</span>
+                <LocalizedText en="My Equipment" mr="माझी उपकरणे" />
+              </Link>
+              <Link
+                href="/list-equipment"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white transition-opacity hover:opacity-90"
+              >
+                <span className="material-symbols-outlined text-[18px]">add</span>
+                <LocalizedText en="Add Listing" mr="लिस्टिंग जोडा" />
+              </Link>
             </div>
-            <div className="space-y-4 p-6">
-              {bookings.slice(0, 3).map((booking) => (
+          </div>
+
+          <div className="space-y-4 p-6">
+            {recentBookings.length ? (
+              recentBookings.map((booking) => (
                 <div
                   key={booking.id}
                   className="rounded-[1.5rem] border border-slate-200 bg-surface-container-low p-4 dark:border-slate-800 dark:bg-slate-950/60"
@@ -116,57 +92,28 @@ export default async function OwnerProfilePage() {
                     </Link>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="space-y-5">
-            <div className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-xl font-black text-primary">
-                    <LocalizedText en="Fleet Snapshot" mr="फ्लीट आढावा" />
-                  </h3>
-                  <p className="mt-2 text-sm text-on-surface-variant">
-                    <LocalizedText en="Review your most recent listings and jump into edit mode." mr="तुमच्या अलीकडील लिस्टिंग तपासा आणि संपादन सुरू करा." />
-                  </p>
+              ))
+            ) : (
+              <div className="rounded-[1.5rem] border border-dashed border-outline-variant bg-surface-container-low p-8 text-center">
+                <h3 className="text-2xl font-black text-primary">
+                  <LocalizedText en="No booking activity yet" mr="अजून बुकिंग हालचाल नाही" />
+                </h3>
+                <div className="mt-5 flex flex-wrap justify-center gap-3">
+                  <Link
+                    href="/owner-profile/browse"
+                    className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-on-surface dark:border-slate-700 dark:text-slate-100"
+                  >
+                    <LocalizedText en="View Equipment" mr="उपकरणे पहा" />
+                  </Link>
+                  <Link
+                    href="/owner-profile/support"
+                    className="rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white"
+                  >
+                    <LocalizedText en="Contact Support" mr="सपोर्टशी संपर्क" />
+                  </Link>
                 </div>
-                <Link href="/owner-profile/browse" className="text-sm font-bold text-primary-container hover:underline">
-                  <LocalizedText en="View all" mr="सर्व पहा" />
-                </Link>
               </div>
-              <div className="mt-5 space-y-4">
-                {listings.slice(0, 3).map((listing) => (
-                  <div key={listing.id} className="rounded-2xl bg-surface-container-low p-4">
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="font-bold text-on-surface">{listing.name}</p>
-                        <p className="mt-1 text-sm text-on-surface-variant">
-                          {listing.location}, {listing.district}
-                        </p>
-                      </div>
-                      <span className="rounded-full bg-primary-fixed px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-primary-container">
-                        {listing.status}
-                      </span>
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      <Link
-                        href={`/list-equipment?listingId=${listing.id}`}
-                        className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-bold text-on-surface dark:border-slate-700 dark:text-slate-100"
-                      >
-                        <LocalizedText en="Edit Listing" mr="लिस्टिंग संपादित करा" />
-                      </Link>
-                      <Link
-                        href={`/owner-profile/equipment/${listing.id}`}
-                        className="rounded-xl bg-primary-container px-4 py-2 text-sm font-bold text-white"
-                      >
-                        <LocalizedText en="Details" mr="तपशील" />
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            )}
           </div>
         </section>
       </div>

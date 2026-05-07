@@ -100,9 +100,9 @@ export function ProfileFeedbackForm({
   };
 
   return (
-    <main className="flex min-h-[calc(100vh-8rem)] w-full items-center justify-center py-8 md:py-12">
-      <div className="mx-auto w-full max-w-3xl">
-        <div className="rounded-2xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm md:p-8">
+    <main className="w-full pb-16 pt-2">
+      <div className="mx-auto w-full max-w-4xl">
+        <div className="rounded-[2rem] border border-outline-variant bg-surface-container-lowest p-6 shadow-sm md:p-8 lg:p-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <label>

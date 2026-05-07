@@ -15,10 +15,6 @@ export default async function OwnerProfileSupportPage() {
       family="owner-profile"
       activeTab="support"
       title={localizedText("Support", "सपोर्ट")}
-      subtitle={localizedText(
-        "Get owner help for listing, booking, and verification issues.",
-        "लिस्टिंग, बुकिंग आणि पडताळणी समस्यांसाठी मालक मदत मिळवा."
-      )}
     >
       <ProfileSupportWorkspace family="owner-profile" session={session} />
     </OwnerProfileWorkspaceShell>
