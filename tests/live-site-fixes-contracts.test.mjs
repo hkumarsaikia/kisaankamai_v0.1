@@ -54,6 +54,20 @@ test("Google Maps apply persisted map type without controlling mapTypeId on ever
   assert.doesNotMatch(mapSource, /options=\{\{[\s\S]*mapTypeId,/);
 });
 
+test("global sentence copy is justified on desktop and mobile while controls stay readable", async () => {
+  const globals = await readSource("../app/globals.css");
+
+  assert.match(globals, /:is\(p,\s*li,\s*dd,\s*figcaption,\s*blockquote,\s*\.kk-justify-copy\)/);
+  assert.match(globals, /text-align:\s*justify/);
+  assert.match(globals, /text-align-last:\s*start/);
+  assert.match(globals, /text-justify:\s*inter-word/);
+  assert.match(globals, /hyphens:\s*auto/);
+  assert.match(globals, /@media\s*\(\s*max-width:\s*767px\s*\)/);
+  assert.match(globals, /:is\(\s*nav,\s*header,\s*button,/);
+  assert.match(globals, /input,\s*textarea,\s*select,\s*label/);
+  assert.match(globals, /text-align:\s*start/);
+});
+
 test("support page uses the provided contact form shape and removes owner support priority", async () => {
   const support = await readSource("../app/support/page.tsx");
 

@@ -123,6 +123,95 @@
   html.lang-en body {
     font-family: var(--font-manrope), sans-serif;
   }
+
+  :is(
+    main,
+    article,
+    section,
+    aside,
+    footer,
+    .kk-page,
+    .kk-panel,
+    .kk-panel-muted,
+    .kk-card,
+    .kk-card-muted,
+    [class*="page"],
+    [class*="profile"],
+    [class*="workspace"]
+  ) :is(p, li, dd, figcaption, blockquote, .kk-justify-copy) {
+    text-align: justify;
+    text-align-last: start;
+    text-justify: inter-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
+  :is(
+    nav,
+    header,
+    button,
+    a[role="button"],
+    input,
+    textarea,
+    select,
+    label,
+    summary,
+    .material-symbols-outlined,
+    .kk-flow-button,
+    .kk-profile-trigger,
+    .kk-form-label,
+    .kk-form-error,
+    .kk-form-hint,
+    .kk-form-actions
+  ),
+  :is(
+    nav,
+    header,
+    input,
+    textarea,
+    select,
+    label,
+    summary,
+    .material-symbols-outlined,
+    .kk-form-label,
+    .kk-form-error,
+    .kk-form-hint,
+    .kk-form-actions
+  ) :is(p, li, dd, figcaption, blockquote, .kk-justify-copy) {
+    text-align: start;
+    text-align-last: auto;
+    hyphens: manual;
+    overflow-wrap: normal;
+  }
+
+  :is(button, a[role="button"], .kk-flow-button, .kk-profile-trigger) {
+    text-align: center;
+    text-align-last: auto;
+  }
+
+  @media (max-width: 767px) {
+    :is(
+      main,
+      article,
+      section,
+      aside,
+      footer,
+      .kk-page,
+      .kk-panel,
+      .kk-panel-muted,
+      .kk-card,
+      .kk-card-muted,
+      [class*="page"],
+      [class*="profile"],
+      [class*="workspace"]
+    ) :is(p, li, dd, figcaption, blockquote, .kk-justify-copy) {
+      text-align: justify;
+      text-align-last: start;
+      text-justify: inter-word;
+      hyphens: auto;
+      overflow-wrap: break-word;
+    }
+  }
 }
 
 @layer utilities {
