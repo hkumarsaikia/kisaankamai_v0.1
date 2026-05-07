@@ -29,6 +29,13 @@ import { captureServerException } from "@/lib/server/firebase-observability";
 import { deleteStorageObject } from "@/lib/server/firebase-storage";
 import { mirrorBookingAndPayment, mirrorListing, mirrorProfile, mirrorSubmission } from "@/lib/server/sheets-mirror";
 import type { RegisterInput } from "@/lib/validation/forms";
+export {
+  NOTIFICATIONS_COLLECTION,
+  createUserNotifications,
+  getUnreadNotificationsForUser,
+  markAllNotificationsRead,
+  markNotificationRead,
+} from "@/lib/server/notification-inbox";
 
 const USERS_COLLECTION = "users";
 const PROFILES_COLLECTION = "profiles";

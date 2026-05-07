@@ -24,6 +24,39 @@ npm run firebase:rules:dry-run
 npm run launch:gate
 ```
 
+## Hardware-Tuned Local Commands
+
+The root npm scripts run through `scripts/hardware-tuned-runner.mjs` so local
+checks can use this machine efficiently without treating the CPU as disposable.
+On this device the runner detects the AMD Ryzen 5 5600H as 12 logical threads
+and the NVIDIA GeForce GTX 1650 as the fixed NVIDIA GPU path for browser-capable
+work. CPU work defaults to `KK_CPU_MODE=balanced`, which leaves system headroom
+while still parallelizing independent checks.
+
+The runner is process-local. It does not change global CPU governors, BIOS
+settings, kernel settings, or permanent power policy. For system health it sets
+bounded Node memory, `UV_THREADPOOL_SIZE`, Node test concurrency, cached ESLint,
+and Linux `nice`/`ionice` priority wrappers when available. For GPU routing it
+sets fixed NVIDIA PRIME render offload variables, Chrome/Puppeteer executable
+paths, and Chrome GPU flags including GPU rasterization and disabled software
+rasterizer fallback.
+
+Useful overrides:
+
+```bash
+KK_CPU_MODE=performance npm run verify   # more workers, for short focused runs
+KK_CPU_MODE=eco npm run dev              # lower pressure while multitasking
+KK_MAX_WORKERS=6 npm run test:contracts  # explicit worker cap
+KK_DISABLE_NICE=1 npm run build          # disable nice/ionice wrapping
+KK_VERIFY_SEQUENTIAL=1 npm run verify    # old sequential verification shape
+```
+
+Chrome/Puppeteer checks should keep using the project npm scripts or the same
+environment variables when launched manually. Browser automation must use the
+fixed NVIDIA GPU route where this local machine controls the browser process.
+Build, lint, typecheck, Firebase CLI, and Sheets verification remain CPU/network
+bound even though they inherit the same GPU environment.
+
 ## Firebase Requirements
 
 Local work that exercises the Firebase-backed root runtime may require:
@@ -47,7 +80,7 @@ Phone-only auth flow contract:
 - `/register` preflights the phone and optional email before sending OTP, so duplicate contacts do not receive OTP.
 - `/api/auth/google/resolve` and `/api/auth/google/register` intentionally return HTTP 410; `/register/google-email` redirects back to `/register`.
 - Manual register and profile updates must reserve identifiers in the `auth-identifiers` Firestore collection so a phone or optional email cannot create multiple accounts.
-- Booking and listing notifications are Firebase Cloud Messaging only. Do not add MSG91/SMS code until that provider is intentionally introduced.
+- Booking and listing notifications are written to the Firestore notification inbox and delivered through Firebase Cloud Messaging when the user has enabled browser push. Do not add third-party phone-message providers until one is intentionally introduced.
 - Login, register preflight, register session creation, password reset, profile completion, public forms, and client bug reports use Firestore-backed per-IP/per-identifier rate limits. Public form routes should pass the authenticated user id when a session exists so a logged-in user can submit multiple different forms with the same account phone.
 
 ## Ubuntu Runtime Notes
@@ -59,7 +92,7 @@ Phone-only auth flow contract:
 - Next.js 16 builds with Turbopack after removing legacy Pages Router stubs.
 - Protected pre-render route checks use the Next.js 16 `proxy.js` file convention; `/list-equipment` still performs server-side session verification after the proxy cookie-presence guard.
 - Puppeteer browser download is disabled; use `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome`.
-- NVIDIA GPU acceleration can be used for Chrome/Playwright rendering checks, but build, lint, typecheck, and Firebase verification are CPU-bound.
+- NVIDIA GPU routing is fixed for Chrome/Puppeteer rendering checks through the root runner, but build, lint, typecheck, Firebase verification, and Sheets verification remain CPU/network-bound.
 
 ## Logs
 
@@ -121,7 +154,7 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - `/forgot-password` is an auth flow, not a public form. Keep the supplied `/home/hkuma/Documents/forgetpassword.html` reset layout, cinematic field image, glass form card, and local overlay treatment wired to `/api/auth/password-reset/request` and the existing OTP/new-password routes instead of adding Sheets submissions. Password reset starts from the registered mobile number only; do not reintroduce email reset lookup in the page copy or server resolver.
 - Owner and renter workspace route shells must pass `localizedText(...)` titles and subtitles, and main workspace components must use runtime language hooks (`langText(...)` or `LocalizedText`) for visible copy. Do not render inline English/Marathi slash labels in workspace bodies.
 - Workspace support, feedback, and settings pages intentionally port `/home/hkuma/Documents/profile-support.html`, `/home/hkuma/Documents/profile_feedback.html`, and `/home/hkuma/Documents/profile-settings.html` into the shared owner/renter workspace shell. Preserve those supplied structures when editing the forms.
-- The profile dropdown intentionally ports `/home/hkuma/Documents/profile_dropdown.html` states. Keep the compact profile rows, notification loading/empty/default states, and sign-out row; do not reintroduce Settings or Help rows in that menu.
+- The profile dropdown intentionally ports `/home/hkuma/Documents/profile_dropdown.html` states. Keep the compact profile rows, notification loading/empty/default states, and sign-out row; do not reintroduce Settings or Help rows in that menu. The dropdown notification area is backed by the Firestore notification inbox through `/api/notifications`, `/api/notifications/read-all`, and `/api/notifications/[id]/read`; do not restore fake sample notifications or local-only clear state.
 - The public `/report` page is removed from the site. Keep `/api/forms/report` only as a backend compatibility endpoint for existing integrations unless product explicitly removes report submissions entirely.
 - Login is phone-number and password only. Registration may collect an optional profile email, but Firebase password auth must resolve credentials from `passwordLoginEmail`, the Firebase Auth user found by phone number, the synthetic `phone.<10-digit>@kisankamai.local` address, and the visible legacy email. Successful login repairs `passwordLoginEmail` so fresh browsers keep working for older accounts.
 - Use `npm run auth:repair-password-login-emails -- --dry-run` before `npm run auth:repair-password-login-emails -- --apply` when backfilling legacy users whose password credential email exists in Firebase Auth but not in Firestore.

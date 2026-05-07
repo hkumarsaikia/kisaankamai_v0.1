@@ -21,6 +21,16 @@ npm run verify
 - Runtime logs from the helper scripts live under `logs/runtime/`.
 - Start `npm run dev:public` before `npm run tunnel:public` when you need a shareable tunnel URL for the local app.
 - Treat `npm run verify` as the default root-app validation pass.
+- Root npm commands are hardware-tuned through `scripts/hardware-tuned-runner.mjs`.
+  The runner auto-detects CPU/RAM, uses cacheable checks where safe, and leaves
+  system headroom instead of permanently changing global CPU policy.
+- Browser-capable commands must prefer the fixed NVIDIA GPU path. The runner
+  exports PRIME render offload variables, Chrome/Puppeteer executable paths, and
+  Chrome GPU flags for the NVIDIA dGPU by default.
+- Use `KK_CPU_MODE=balanced` by default. Use `KK_CPU_MODE=performance` only for
+  short local bursts, `KK_CPU_MODE=eco` when keeping the desktop very responsive,
+  `KK_MAX_WORKERS=<n>` for an explicit worker cap, and `KK_DISABLE_NICE=1` only
+  when process priority lowering gets in the way.
 
 ## Local HTML Page Replacement
 

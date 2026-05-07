@@ -29,9 +29,10 @@ test("Discord tooling supports env-driven multi-webhook channels", async () => {
 });
 
 test("Firebase launch gate does not require Sentry", async () => {
-  const [packageSource, appHostingSource] = await Promise.all([
+  const [packageSource, appHostingSource, runnerSource] = await Promise.all([
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../apphosting.yaml", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/hardware-tuned-runner.mjs", import.meta.url), "utf8"),
   ]);
   const packageJson = JSON.parse(packageSource);
 
@@ -42,8 +43,12 @@ test("Firebase launch gate does not require Sentry", async () => {
   );
   assert.equal(
     packageJson.scripts["launch:gate"],
-    "npm run verify && npm run firebase:preflight && npm run firebase:rules:dry-run && npm run sheets:verify"
+    "node scripts/hardware-tuned-runner.mjs launch:gate"
   );
+  assert.match(runnerSource, /runLaunchGate/);
+  assert.match(runnerSource, /firebase-preflight\.mjs/);
+  assert.match(runnerSource, /firestore,storage/);
+  assert.match(runnerSource, /google-sheets-verify\.mjs/);
   assert.equal(packageJson.scripts["sentry:gate"], undefined);
   assert.doesNotMatch(appHostingSource, /SENTRY_/);
   assert.doesNotMatch(appHostingSource, /sentryDsn|nextPublicSentryDsn|sentryAuthToken|sentryOrg|sentryProject/);

@@ -133,8 +133,8 @@ test("profile dropdown account links are removed while profile and sign out rema
   assert.match(dropdown, /Clear All/);
   assert.match(dropdown, /All caught up!/);
   assert.match(dropdown, /animate-pulse/);
-  assert.match(dropdown, /Booking Confirmed/);
-  assert.match(dropdown, /New Request/);
+  assert.match(dropdown, /\/api\/notifications/);
+  assert.match(dropdown, /markNotificationRead/);
   assert.doesNotMatch(dropdown, /resolvedSettingsHref|resolvedSupportHref/);
   assert.doesNotMatch(dropdown, /header\.menu\.settings|header\.menu\.help_support/);
   assert.doesNotMatch(dropdown, /settings<\/span>|help_outline/);

@@ -3,6 +3,7 @@ import "server-only";
 import { getMessaging } from "firebase-admin/messaging";
 import { getAdminApp, getAdminDb } from "@/lib/server/firebase-admin";
 import { captureServerException } from "@/lib/server/firebase-observability";
+import { createUserNotifications } from "@/lib/server/notification-inbox";
 
 type NotificationPayload = {
   userIds: string[];
@@ -86,6 +87,21 @@ async function pruneInvalidTokens(invalidTokens: Array<{ userId: string; token: 
 }
 
 export async function sendPushNotificationToUsers(payload: NotificationPayload) {
+  await createUserNotifications({
+    userIds: payload.userIds,
+    title: payload.title,
+    body: payload.body,
+    href: payload.link,
+    data: payload.data,
+  }).catch((error) => {
+    captureServerException(error, {
+      userIds: payload.userIds,
+      title: payload.title,
+      link: payload.link,
+      source: "notification-inbox",
+    });
+  });
+
   const tokenOwners = await loadTokenOwners(payload.userIds);
   if (!tokenOwners.length) {
     return { attempted: 0, successCount: 0, failureCount: 0 };

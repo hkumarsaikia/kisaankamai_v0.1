@@ -112,6 +112,21 @@ export interface PaymentRecord {
   createdAt: string;
 }
 
+export type NotificationTone = "success" | "warning" | "danger" | "info" | "neutral";
+
+export interface NotificationRecord {
+  id: string;
+  userId: string;
+  title: string;
+  body: string;
+  href?: string;
+  icon?: string;
+  tone?: NotificationTone;
+  data?: Record<string, string>;
+  readAt?: string;
+  createdAt: string;
+}
+
 export type SubmissionType =
   | "support-request"
   | "feature-request"

@@ -67,6 +67,14 @@ export const metadata: Metadata = {
   description: DEFAULT_SHARE_DESCRIPTION,
   applicationName: SITE_NAME,
   manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      {
+        url: "/assets/generated/hero_tractor.png",
+        type: "image/png",
+      },
+    ],
+  },
   alternates: {
     canonical: "/",
   },
