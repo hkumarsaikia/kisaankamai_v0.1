@@ -88,7 +88,7 @@ test("profile settings use the supplied local page structure, uploads, readonly 
   ]);
 
   assert.match(settings, /Profile Photo/);
-  assert.match(settings, /Click to upload a new photo/);
+  assert.doesNotMatch(settings, /Click to upload a new photo|Minimum 400x400px/);
   assert.match(settings, /Public Visibility/);
   assert.match(settings, /WhatsApp Notifications/);
   assert.match(settings, /profilePhotoInputRef/);

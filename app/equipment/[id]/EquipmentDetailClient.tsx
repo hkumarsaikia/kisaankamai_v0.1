@@ -96,11 +96,11 @@ export default function EquipmentDetailClient({
       : DETAIL_BOOKING_LAYOUT.card;
   const workspaceContentClassName =
     containerVariant === "workspace"
-      ? "order-2 space-y-8 lg:order-1 lg:col-span-2"
+      ? "order-2 space-y-6 lg:order-1 lg:col-span-2 lg:space-y-8"
       : "space-y-8 lg:col-span-2";
   const workspaceBookingClassName =
     containerVariant === "workspace"
-      ? "relative order-1 lg:order-2 lg:col-span-1 lg:self-start"
+      ? "relative order-1 mb-2 lg:order-2 lg:col-span-1 lg:mb-0 lg:self-start"
       : "relative lg:col-span-1 lg:self-start";
 
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
@@ -325,22 +325,6 @@ export default function EquipmentDetailClient({
                   {langText("Equipment Owner", "उपकरण मालक")}
                 </p>
                 <h3 className="mt-2 text-2xl font-black text-on-surface">{equipment.ownerName}</h3>
-                {equipment.ownerLocation ? (
-                  <p className="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold text-on-surface-variant sm:justify-start">
-                    <span className="material-symbols-outlined text-base text-primary">location_on</span>
-                    {equipment.ownerLocation}
-                  </p>
-                ) : null}
-                <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
-                  <span className="rounded-full bg-white/75 px-3 py-1 text-xs font-bold text-primary shadow-sm dark:bg-slate-950/70">
-                    {equipment.operatorIncluded
-                      ? langText("Operator included", "ऑपरेटर समाविष्ट")
-                      : langText("Operator optional", "ऑपरेटर ऐच्छिक")}
-                  </span>
-                  <span className="rounded-full bg-white/75 px-3 py-1 text-xs font-bold text-primary shadow-sm dark:bg-slate-950/70">
-                    {equipment.district}
-                  </span>
-                </div>
               </div>
             </div>
           </div>
@@ -427,7 +411,7 @@ export default function EquipmentDetailClient({
 
       <div className={workspaceBookingClassName}>
         <div className={bookingCardClassName}>
-          <div className="mb-4 flex items-end justify-between border-b border-outline-variant pb-3">
+          <div className="mb-4 flex flex-col gap-3 border-b border-outline-variant pb-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <span className="text-3xl font-bold text-on-surface">{formatCurrency(equipment.pricePerHour)}</span>
               <span className="text-on-surface-variant"> / {equipment.unitLabel}</span>
@@ -450,7 +434,10 @@ export default function EquipmentDetailClient({
             </span>
           </div>
 
-          <h3 className="mb-3 text-lg font-bold">{langText("Book this Equipment", "हे उपकरण बुक करा")}</h3>
+          <h3 className="mb-3 flex items-center gap-2 text-lg font-bold text-on-surface">
+            <span className="material-symbols-outlined text-primary">event_available</span>
+            {langText("Book this Equipment", "हे उपकरण बुक करा")}
+          </h3>
 
           <form className={DETAIL_BOOKING_LAYOUT.form} onSubmit={handleBookingRequest}>
             <div className={DETAIL_BOOKING_LAYOUT.fields}>
@@ -489,25 +476,6 @@ export default function EquipmentDetailClient({
                     }
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-on-surface">
-                  {langText("Work Type", "कामाचा प्रकार")}
-                </label>
-                <select
-                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 focus:border-primary focus:ring-primary"
-                  value={formState.workType}
-                  onChange={(event) => setFormState((current) => ({ ...current, workType: event.target.value }))}
-                >
-                  {equipment.workTypes.map((workType) => (
-                    <option key={workType}>
-                      {text(workType, {
-                        cacheKey: `equipment.${equipment.id}.workType.${workType}`,
-                      })}
-                    </option>
-                  ))}
-                </select>
               </div>
 
               <div>

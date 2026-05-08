@@ -261,9 +261,6 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                 onChange={(event) => void handleProfilePhotoChange(event.target.files?.[0] || null)}
               />
             </div>
-            <p className="text-center text-sm font-medium text-on-surface-variant">
-              {langText("Click to upload a new photo. Minimum 400x400px.", "नवीन फोटो अपलोड करण्यासाठी क्लिक करा. किमान 400x400px.")}
-            </p>
           </div>
           </div>
 
