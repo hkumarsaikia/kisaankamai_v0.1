@@ -15,7 +15,7 @@ const SUPPORT_CATEGORIES = [
   { value: "listing", label: { en: "Listing Help", mr: "लिस्टिंग मदत" } },
   { value: "booking", label: { en: "Booking Help", mr: "बुकिंग मदत" } },
   { value: "verification", label: { en: "Verification", mr: "पडताळणी" } },
-  { value: "payout", label: { en: "Payout Issue", mr: "पेआउट समस्या" } },
+  { value: "pricing", label: { en: "Pricing & Settlement", mr: "किंमत आणि थेट व्यवहार" } },
   { value: "general", label: { en: "General Support", mr: "सामान्य सपोर्ट" } },
   { value: "other", label: { en: "Other", mr: "इतर" } },
 ];

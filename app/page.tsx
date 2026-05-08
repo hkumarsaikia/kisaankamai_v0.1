@@ -113,8 +113,8 @@ const faqs = [
       "तातडीच्या बिघाडासाठी मालकांनी प्रतिसाद देणे अपेक्षित आहे. २ तासांच्या आत Kisan Kamai ला कळवा, आम्ही पुढील उपलब्ध तोडगा समन्वयित करू.",
   },
   {
-    questionEn: "Are there any hidden service charges?",
-    questionMr: "काही लपवलेले सेवा शुल्क आहे का?",
+    questionEn: "Are there any hidden charges?",
+    questionMr: "काही लपवलेले अतिरिक्त खर्च आहेत का?",
     answerEn:
       "No. The booking price shown to you is the expected payable amount, including equipment cost and any clearly stated operator charge.",
     answerMr:
@@ -124,9 +124,9 @@ const faqs = [
     questionEn: "How can I pay for my rental?",
     questionMr: "भाड्याचे पेमेंट मी कसे करू?",
     answerEn:
-      "Available payment methods depend on the owner and booking flow. Follow the booking instructions shown for the selected listing.",
+      "Confirm the final amount with the owner and settle directly offline. Kisan Kamai only records the booking request and owner-listed estimate.",
     answerMr:
-      "उपलब्ध पेमेंट पद्धती मालक आणि बुकिंग प्रक्रियेवर अवलंबून असतात. निवडलेल्या लिस्टिंगवर दाखवलेल्या सूचनांनुसार पुढे जा.",
+      "अंतिम रक्कम मालकाशी निश्चित करा आणि ऑफलाइन थेट व्यवहार करा. Kisan Kamai फक्त बुकिंग विनंती आणि मालकाने दिलेला अंदाज नोंदवते.",
   },
 ] as const;
 

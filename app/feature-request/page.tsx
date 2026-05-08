@@ -285,7 +285,7 @@ export default function FeatureRequestPage() {
                         <option value="discovery">{langText("Discovery and Search", "शोध आणि शोधयंत्र")}</option>
                         <option value="machine_types">{langText("New Machine Types", "नवीन मशीन प्रकार")}</option>
                         <option value="booking">{langText("Booking and Scheduling", "बुकिंग आणि वेळापत्रक")}</option>
-                        <option value="payments">{langText("Payments and Pricing", "पेमेंट्स आणि किंमत")}</option>
+                        <option value="payments">{langText("Pricing & Settlement", "किंमत आणि थेट व्यवहार")}</option>
                         <option value="support">{langText("Support and Help", "मदत आणि सपोर्ट")}</option>
                         <option value="trust">{langText("Trust and Safety", "विश्वास आणि सुरक्षा")}</option>
                         <option value="other">{langText("Other", "इतर")}</option>

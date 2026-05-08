@@ -69,7 +69,6 @@ const recommendedEquipment = [
 export function RenterWorkspaceOverview({
   renterName,
   bookings,
-  payments,
   savedListings,
 }: {
   renterName: string;
@@ -94,9 +93,9 @@ export function RenterWorkspaceOverview({
       : bookingView === "upcoming"
         ? langText("Upcoming Bookings", "आगामी बुकिंग्ज")
         : langText("Recent History", "अलीकडील व्यवहार");
-  const totalSpent = payments.reduce((sum, payment) => sum + payment.amount, 0);
-  const paidAmount = payments.filter((payment) => payment.status === "paid").reduce((sum, payment) => sum + payment.amount, 0);
-  const upcomingAmount = Math.max(totalSpent - paidAmount, 0);
+  const totalBookingValue = bookings.reduce((sum, booking) => sum + booking.amount, 0);
+  const completedBookingValue = completedBookings.reduce((sum, booking) => sum + booking.amount, 0);
+  const activeBookingValue = Math.max(totalBookingValue - completedBookingValue, 0);
 
   return (
     <div className="space-y-8">
@@ -316,18 +315,18 @@ export function RenterWorkspaceOverview({
           </section>
 
           <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm">
-            <h3 className="mb-1 font-bold text-on-surface">Spending Summary</h3>
+            <h3 className="mb-1 font-bold text-on-surface">Booking Value Summary</h3>
             <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Current account</p>
             <div className="mb-4">
-              <p className="text-3xl font-extrabold text-primary-container">₹{totalSpent.toLocaleString("en-IN")}</p>
-              <p className="text-xs font-medium text-on-surface-variant">Estimated spend recorded so far</p>
+              <p className="text-3xl font-extrabold text-primary-container">₹{totalBookingValue.toLocaleString("en-IN")}</p>
+              <p className="text-xs font-medium text-on-surface-variant">Owner-listed estimates recorded so far</p>
             </div>
             <div className="space-y-3">
-              <ProgressRow label="Paid" value={paidAmount} total={Math.max(totalSpent, 1)} tone="bg-primary-container" />
-              <ProgressRow label="Upcoming" value={upcomingAmount} total={Math.max(totalSpent, 1)} tone="bg-secondary-container" />
+              <ProgressRow label="Completed" value={completedBookingValue} total={Math.max(totalBookingValue, 1)} tone="bg-primary-container" />
+              <ProgressRow label="Active" value={activeBookingValue} total={Math.max(totalBookingValue, 1)} tone="bg-secondary-container" />
             </div>
             <Link href="/renter-profile" className="mt-6 block rounded-xl border border-outline-variant py-2.5 text-center text-xs font-bold transition-colors hover:bg-surface-container">
-              View Payments
+              View Bookings
             </Link>
           </section>
 

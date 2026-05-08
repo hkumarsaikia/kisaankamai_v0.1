@@ -102,7 +102,7 @@ export interface SavedItemRecord {
   createdAt: string;
 }
 
-export type PaymentStatus = "paid" | "processing" | "refunded";
+export type PaymentStatus = BookingStatus | "paid" | "processing" | "refunded";
 
 export interface PaymentRecord {
   id: string;

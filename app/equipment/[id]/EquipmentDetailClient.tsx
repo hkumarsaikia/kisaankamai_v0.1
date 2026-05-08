@@ -17,8 +17,6 @@ import { DETAIL_BOOKING_LAYOUT } from "@/lib/equipment-detail-layout.js";
 import { assetPath } from "@/lib/site";
 import { normalizeCategorySlug } from "@/lib/equipment-categories";
 
-const SERVICE_FEE = 150;
-
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -75,7 +73,6 @@ export default function EquipmentDetailClient({
 
   const estimatedHours = Math.max(1, Number(formState.approxHours) || 1);
   const estimatedBase = equipment.pricePerHour * estimatedHours;
-  const estimatedTotal = estimatedBase + SERVICE_FEE;
   const driveLabel = deriveDriveLabel(equipment);
   const categoryLabel = text(equipment.categoryLabel.split("•")[0]?.trim() || "Equipment", {
     cacheKey: `equipment.${equipment.id}.category`,
@@ -538,18 +535,14 @@ export default function EquipmentDetailClient({
                   </span>
                   <span>{formatCurrency(estimatedBase)}</span>
                 </div>
-                <div className="mb-2 flex justify-between text-sm">
-                  <span className="text-on-surface-variant">{langText("Service Fee", "सेवा शुल्क")}</span>
-                  <span>{formatCurrency(SERVICE_FEE)}</span>
-                </div>
                 <div className="mt-2 flex justify-between border-t border-outline-variant pt-2 text-base font-bold">
-                  <span>{langText("Total Estimated", "एकूण अंदाजित")}</span>
-                  <span>{formatCurrency(estimatedTotal)}</span>
+                  <span>{langText("Estimated Rental Value", "अंदाजित भाडे मूल्य")}</span>
+                  <span>{formatCurrency(estimatedBase)}</span>
                 </div>
                 <p className="mt-2 text-center text-[11px] text-on-surface-variant">
                   {langText(
-                    "You won't be charged yet. Payment handled locally.",
-                    "तुमच्याकडून अजून शुल्क घेतले जाणार नाही. पेमेंट स्थानिक पातळीवर होईल."
+                    "Kisan Kamai does not collect money. Settle directly with the owner after confirming the work.",
+                    "Kisan Kamai पैसे गोळा करत नाही. काम निश्चित केल्यानंतर मालकाशी थेट व्यवहार करा."
                   )}
                 </p>
               </div>

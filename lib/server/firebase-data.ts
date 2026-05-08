@@ -33,6 +33,7 @@ import type { RegisterInput } from "@/lib/validation/forms";
 export {
   NOTIFICATIONS_COLLECTION,
   createUserNotifications,
+  getUnreadNotificationInbox,
   getUnreadNotificationsForUser,
   markAllNotificationsRead,
   markNotificationRead,
@@ -601,8 +602,8 @@ function mapPaymentFromFirestore(data: Partial<PaymentRecord> & { id?: string })
     ownerUserId: data.ownerUserId || "",
     renterUserId: data.renterUserId || "",
     amount: Number(data.amount || 0),
-    status: data.status || "processing",
-    method: data.method || "Manual Confirmation",
+    status: data.status || "pending",
+    method: data.method || "Direct Settlement",
     createdAt: data.createdAt || nowIso(),
   };
 }
@@ -1600,8 +1601,8 @@ export async function createBookingRecord(input: {
     ownerUserId: listing.ownerUserId,
     renterUserId: input.renterUserId,
     amount: input.amount,
-    status: "processing",
-    method: renterSession?.user.phone ? "Phone Confirmation" : "Manual Confirmation",
+    status: paymentStatusForBookingStatus(nextBooking.status),
+    method: "Direct Settlement",
     createdAt: timestamp,
   };
 
@@ -1621,15 +1622,7 @@ export async function createBookingRecord(input: {
 }
 
 function paymentStatusForBookingStatus(status: BookingRecord["status"]): PaymentRecord["status"] {
-  if (status === "completed") {
-    return "paid";
-  }
-
-  if (status === "cancelled") {
-    return "refunded";
-  }
-
-  return "processing";
+  return status;
 }
 
 function bookingStatusLabel(status: BookingRecord["status"]) {

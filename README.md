@@ -14,7 +14,7 @@ The root app is the production-facing application. It owns:
 - Firebase Auth phone verification for manual registration
 - Firebase Auth phone-only password login for registered mobile numbers
 - Firebase Cloud Messaging web push notifications for booking and listing updates
-- Firestore-backed listings, bookings, payments, submissions, and saved items
+- Firestore-backed listings, bookings, offline booking-value records, submissions, and saved items
 - Cloud Storage-backed uploads
 - Google Sheets mirroring for admin/reporting visibility only
 - public routes, owner flows, and renter flows
@@ -87,14 +87,15 @@ Required runtime configuration includes:
 
 ## Backend Contract
 
-- Firebase is the source of truth for authentication, profiles, listings, bookings, payments, submissions, saved items, and bug reports.
+- Firebase is the source of truth for authentication, profiles, listings, bookings, offline booking-value records, submissions, saved items, and bug reports.
 - Registration is phone-only for account creation. The form can store an optional email on the profile, but sign-in uses the registered mobile number plus password.
 - Google sign-in and Google registration are disabled at the application layer. The Google API routes return HTTP 410 and `/register/google-email` redirects to `/register`.
 - Account uniqueness is enforced in Firestore through `auth-identifiers`: one normalized email and one normalized phone number can belong to only one app user.
 - Session cookies are long-lived for normal use; users should remain signed in until logout or cookie expiry.
 - Browser tabs synchronize login/logout state through a local auth-sync channel, so already-open pages refresh after a session changes in another tab.
 - User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.
-- Booking and listing notifications use Firebase Cloud Messaging only. MSG91/SMS provider integration is intentionally deferred.
+- Booking and listing notifications persist to the Firestore inbox first, show the total unread badge in the profile dropdown, refresh while the user is active, and use Firebase Cloud Messaging for optional browser push. MSG91/SMS provider integration is intentionally deferred.
+- Legacy `payments` storage and Sheets tabs are compatibility mirrors for offline booking-value estimates only. New rows must use booking statuses, `Direct Settlement`, and booking-value source labels because Kisan Kamai does not collect, refund, or settle money.
 - Public feature-request, feedback, support, partner, owner-application, coming-soon notify, and newsletter forms write to Firestore first and mirror to Sheets where configured. The legacy `/api/forms/report` endpoint remains available for backend compatibility, but there is no public `/report` page.
 - Auth mutations, profile completion, public forms, and bug-report submissions use Firestore-backed rate limits by IP and relevant identifier. Logged-in public-form submissions include the authenticated user id in the limiter so reusing the account phone across forms does not block all form submission.
 - Owner listings accept up to 3 equipment photos. Those photos can be removed before submit, are saved to Cloud Storage, stored on the listing as public gallery URLs, and mirrored to Sheets as explicit URL/path columns.

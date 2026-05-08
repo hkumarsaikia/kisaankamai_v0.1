@@ -43,7 +43,8 @@ test("owner-profile routes use the new owner dashboard, equipment browser, earni
   assert.match(browse, /OwnerEquipmentBrowser/);
   assert.match(browse, /title=\{localizedText\("My Equipment", "माझी उपकरणे"\)\}/);
   assert.match(earnings, /localizedText\("Pricing & Earnings", "किंमत आणि कमाई"\)/);
-  assert.match(earnings, /getOwnerPayments/);
+  assert.match(earnings, /getOwnerBookings/);
+  assert.doesNotMatch(earnings, /getOwnerPayments/);
   assert.match(earnings, /activeTab="earnings"/);
   assert.match(saved, /redirect\("\/owner-profile\/browse"\)/);
   assert.match(feedbackSuccess, /primaryHref="\/owner-profile"/);
@@ -62,6 +63,6 @@ test("owner earnings content uses the revenue panel and owner-family links", asy
   assert.match(viewsSource, /href: "\/owner-profile\/bookings"/);
   assert.match(viewsSource, /successHref="\/owner-profile\/feedback\/success"/);
   assert.match(viewsSource, /<Link href="\/owner-profile"/);
-  assert.match(panelSource, /langText\("Earnings", "कमाई"\)/);
-  assert.match(panelSource, /booking-linked earnings/);
+  assert.match(panelSource, /langText\("Booking Value", "बुकिंग मूल्य"\)/);
+  assert.match(panelSource, /booking-linked estimates/);
 });

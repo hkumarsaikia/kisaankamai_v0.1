@@ -45,7 +45,6 @@ export function OwnerWorkspaceOverview({
   pincode,
   listings,
   bookings,
-  payments,
 }: {
   ownerName: string;
   village?: string | null;
@@ -67,9 +66,9 @@ export function OwnerWorkspaceOverview({
       : requestView === "upcoming"
         ? upcomingRequests
         : completedBookings;
-  const revenueInFlow = payments
-    .filter((payment) => payment.status === "paid" || payment.status === "processing")
-    .reduce((sum, payment) => sum + payment.amount, 0);
+  const bookingValueInFlow = bookings
+    .filter((booking) => booking.status !== "cancelled")
+    .reduce((sum, booking) => sum + booking.amount, 0);
 
   return (
     <div className="space-y-10">
@@ -221,14 +220,14 @@ export function OwnerWorkspaceOverview({
 
           <section className="relative overflow-hidden rounded-2xl bg-primary-container p-6 text-white shadow-lg">
             <div className="relative z-10">
-              <span className="text-[10px] font-black uppercase tracking-widest text-on-primary-container">Estimated Earnings</span>
-              <div className="mt-1 text-3xl font-extrabold">₹{revenueInFlow.toLocaleString("en-IN")}</div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-on-primary-container">Estimated Booking Value</span>
+              <div className="mt-1 text-3xl font-extrabold">₹{bookingValueInFlow.toLocaleString("en-IN")}</div>
               <div className="mt-4 flex items-center gap-2 text-xs font-medium text-on-primary-container">
                 <span className="material-symbols-outlined text-sm">trending_up</span>
-                {payments.length} payment records
+                {bookings.length} booking requests
               </div>
             </div>
-            <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-[120px] text-white/10">payments</span>
+            <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-[120px] text-white/10">request_quote</span>
           </section>
 
           <section className="rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">

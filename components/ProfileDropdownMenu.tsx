@@ -19,10 +19,12 @@ type ProfileDropdownMenuProps = {
 type NotificationApiResponse = {
   ok?: boolean;
   notifications?: NotificationRecord[];
+  unreadCount?: number;
   error?: string;
 };
 
 const PROFILE_DROPDOWN_EXIT_MS = 170;
+const PROFILE_NOTIFICATIONS_REFRESH_MS = 60_000;
 
 const notificationToneClass: Record<NotificationTone, { row: string; icon: string }> = {
   success: {
@@ -88,6 +90,7 @@ export function ProfileDropdownMenu({
   const [panelMounted, setPanelMounted] = useState(false);
   const [panelVisible, setPanelVisible] = useState(false);
   const [notifications, setNotifications] = useState<NotificationRecord[]>([]);
+  const [notificationTotalCount, setNotificationTotalCount] = useState(0);
   const [notificationsLoading, setNotificationsLoading] = useState(false);
   const [notificationsError, setNotificationsError] = useState(false);
   const [notificationsClearing, setNotificationsClearing] = useState(false);
@@ -126,13 +129,16 @@ export function ProfileDropdownMenu({
     }, PROFILE_DROPDOWN_EXIT_MS);
   }, [clearTimers]);
 
-  const loadNotifications = useCallback(async () => {
+  const loadNotifications = useCallback(async (options: { silent?: boolean } = {}) => {
     if (!user) {
       setNotifications([]);
+      setNotificationTotalCount(0);
       return;
     }
 
-    setNotificationsLoading(true);
+    if (!options.silent) {
+      setNotificationsLoading(true);
+    }
     setNotificationsError(false);
     try {
       const response = await fetch("/api/notifications", {
@@ -142,6 +148,7 @@ export function ProfileDropdownMenu({
 
       if (response.status === 401) {
         setNotifications([]);
+        setNotificationTotalCount(0);
         return;
       }
 
@@ -150,21 +157,32 @@ export function ProfileDropdownMenu({
       }
 
       const payload = (await response.json()) as NotificationApiResponse;
-      setNotifications(Array.isArray(payload.notifications) ? payload.notifications : []);
+      const nextNotifications = Array.isArray(payload.notifications) ? payload.notifications : [];
+      const nextCount = Number.isFinite(Number(payload.unreadCount))
+        ? Math.max(Number(payload.unreadCount), nextNotifications.length)
+        : nextNotifications.length;
+      setNotifications(nextNotifications);
+      setNotificationTotalCount(nextCount);
     } catch {
       setNotificationsError(true);
     } finally {
-      setNotificationsLoading(false);
+      if (!options.silent) {
+        setNotificationsLoading(false);
+      }
     }
   }, [user]);
 
   const clearAllNotifications = useCallback(async () => {
-    if (!notifications.length || notificationsClearing) {
+    if (!notificationTotalCount || notificationsClearing) {
       return;
     }
 
     setNotificationsClearing(true);
     setNotificationsError(false);
+    const previousNotifications = notifications;
+    const previousCount = notificationTotalCount;
+    setNotifications([]);
+    setNotificationTotalCount(0);
     try {
       const response = await fetch("/api/notifications/read-all", {
         method: "POST",
@@ -175,22 +193,49 @@ export function ProfileDropdownMenu({
         throw new Error("Could not clear notifications.");
       }
 
-      setNotifications([]);
     } catch {
+      setNotifications(previousNotifications);
+      setNotificationTotalCount(previousCount);
       setNotificationsError(true);
     } finally {
       setNotificationsClearing(false);
     }
-  }, [notifications.length, notificationsClearing]);
+  }, [notificationTotalCount, notifications, notificationsClearing]);
+
+  const revertNotificationRead = useCallback((notification: NotificationRecord) => {
+    setNotifications((current) =>
+      current.some((item) => item.id === notification.id)
+        ? current
+        : [notification, ...current].sort((left, right) => right.createdAt.localeCompare(left.createdAt))
+    );
+    setNotificationTotalCount((current) => Math.max(current + 1, 1));
+  }, []);
 
   const markNotificationRead = useCallback(async (notificationId: string) => {
-    setNotifications((current) => current.filter((notification) => notification.id !== notificationId));
-    await fetch(`/api/notifications/${encodeURIComponent(notificationId)}/read`, {
-      method: "POST",
-      credentials: "include",
-      keepalive: true,
-    }).catch(() => undefined);
-  }, []);
+    let removedNotification: NotificationRecord | undefined;
+    setNotifications((current) => {
+      removedNotification = current.find((notification) => notification.id === notificationId);
+      return current.filter((notification) => notification.id !== notificationId);
+    });
+    setNotificationTotalCount((current) => Math.max(0, current - 1));
+
+    try {
+      const response = await fetch(`/api/notifications/${encodeURIComponent(notificationId)}/read`, {
+        method: "POST",
+        credentials: "include",
+        keepalive: true,
+      });
+
+      if (!response.ok) {
+        throw new Error("Could not mark notification as read.");
+      }
+    } catch {
+      if (removedNotification) {
+        revertNotificationRead(removedNotification);
+      }
+      setNotificationsError(true);
+    }
+  }, [revertNotificationRead]);
 
   useEffect(() => {
     closeMenu();
@@ -207,6 +252,33 @@ export function ProfileDropdownMenu({
 
     void loadNotifications();
   }, [panelMounted, panelVisible, loadNotifications]);
+
+  useEffect(() => {
+    if (!user) {
+      setNotifications([]);
+      setNotificationTotalCount(0);
+      return;
+    }
+
+    void loadNotifications({ silent: true });
+    const refreshId = window.setInterval(() => {
+      void loadNotifications({ silent: true });
+    }, PROFILE_NOTIFICATIONS_REFRESH_MS);
+
+    const refreshWhenVisible = () => {
+      if (document.visibilityState === "visible") {
+        void loadNotifications({ silent: true });
+      }
+    };
+
+    window.addEventListener("focus", refreshWhenVisible);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    return () => {
+      window.clearInterval(refreshId);
+      window.removeEventListener("focus", refreshWhenVisible);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, [user, loadNotifications]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -235,6 +307,8 @@ export function ProfileDropdownMenu({
     panelMode === "inline"
       ? "relative mt-3 w-full"
       : "absolute right-0 top-full mt-3 w-[min(74vw,23.5rem)] max-w-[calc(100vw-1.5rem)] sm:w-[23rem] lg:w-[23.5rem]";
+  const unreadCount = notificationTotalCount;
+  const unreadCountLabel = unreadCount > 9 ? "9+" : String(unreadCount);
 
   useEffect(() => {
     setAvatarError(false);
@@ -249,7 +323,7 @@ export function ProfileDropdownMenu({
       <button
         type="button"
         onClick={() => (panelOpen ? closeMenu() : openMenu())}
-        className={`kk-profile-trigger kk-depth-tile flex items-center gap-3 rounded-full border border-emerald-900/10 bg-white px-2 py-2 pr-4 text-left shadow-[0_16px_42px_-26px_rgba(15,23,42,0.72)] transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:shadow-[0_20px_52px_-34px_rgba(0,0,0,0.8)] ${triggerClassName}`}
+        className={`kk-profile-trigger kk-depth-tile relative flex items-center gap-3 rounded-full border border-emerald-900/10 bg-white px-2 py-2 pr-4 text-left shadow-[0_16px_42px_-26px_rgba(15,23,42,0.72)] transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:shadow-[0_20px_52px_-34px_rgba(0,0,0,0.8)] ${triggerClassName}`}
         aria-expanded={panelOpen}
         aria-haspopup="menu"
         aria-label={t("header.aria.my_profile")}
@@ -280,6 +354,14 @@ export function ProfileDropdownMenu({
         >
           expand_more
         </span>
+        {unreadCount ? (
+          <span
+            className="kk-profile-notification-badge absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-[#ec5b13] px-1 text-[10px] font-black leading-none text-white shadow-md dark:border-slate-900"
+            aria-label={langText("Unread notifications", "न वाचलेल्या सूचना")}
+          >
+            {unreadCountLabel}
+          </span>
+        ) : null}
       </button>
 
       {panelMounted ? (
@@ -352,9 +434,9 @@ export function ProfileDropdownMenu({
                 <button
                   type="button"
                   onClick={() => void clearAllNotifications()}
-                  disabled={!notifications.length}
+                  disabled={!unreadCount}
                   className={`text-[10px] font-bold uppercase tracking-wider transition-colors ${
-                    notifications.length
+                    unreadCount
                       ? "text-slate-800 hover:text-[#ec5b13] dark:text-slate-200"
                       : "cursor-not-allowed text-slate-300 dark:text-slate-700"
                   }`}

@@ -134,7 +134,7 @@ const supportSummary = [
     detail: "Booking #BK-2194 • John Deere 5050D",
   },
   {
-    title: "Resolved payment clarification",
+    title: "Resolved direct-settlement clarification",
     detail: "Ticket #SP-102 • Updated yesterday",
   },
 ];
@@ -696,7 +696,7 @@ export function OwnerProfileSupportContent() {
       <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {[
           ["assignment_late", "Booking Issue"],
-          ["payments", "Payment Help"],
+          ["handshake", "Pricing & Settlement"],
           ["person", "Account Help"],
           ["verified_user", "Verification Help"],
         ].map(([icon, label]) => (

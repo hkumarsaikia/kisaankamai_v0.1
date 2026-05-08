@@ -154,16 +154,25 @@ export async function createUserNotifications(input: CreateUserNotificationInput
 }
 
 export async function getUnreadNotificationsForUser(userId: string, limit = 8) {
+  const inbox = await getUnreadNotificationInbox(userId, limit);
+  return inbox.notifications;
+}
+
+export async function getUnreadNotificationInbox(userId: string, limit = 8) {
   if (!userId) {
-    return [];
+    return { notifications: [], unreadCount: 0 };
   }
 
   const snapshot = await notificationsCollection().where("userId", "==", userId).get();
-  return snapshot.docs
+  const notifications = snapshot.docs
     .map((doc) => mapNotificationFromFirestore(withFirestoreId(doc.id, doc.data() as Partial<NotificationRecord>)))
     .filter((notification) => !notification.readAt)
-    .sort((left, right) => right.createdAt.localeCompare(left.createdAt))
-    .slice(0, Math.max(1, limit));
+    .sort((left, right) => right.createdAt.localeCompare(left.createdAt));
+
+  return {
+    notifications: notifications.slice(0, Math.max(1, limit)),
+    unreadCount: notifications.length,
+  };
 }
 
 export async function markAllNotificationsRead(userId: string) {

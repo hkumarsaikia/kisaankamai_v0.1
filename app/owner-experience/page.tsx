@@ -59,7 +59,7 @@ export default function OwnerExperience() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-wrap justify-center gap-12 md:gap-24 items-center opacity-70 grayscale hover:grayscale-0 transition-all font-bold text-slate-500">
               <div className="flex items-center gap-2"><span className="material-symbols-outlined">verified_user</span> Verified Renters</div>
-              <div className="flex items-center gap-2"><span className="material-symbols-outlined">payments</span> Secure Payments</div>
+              <div className="flex items-center gap-2"><span className="material-symbols-outlined">handshake</span> Direct Settlement</div>
               <div className="flex items-center gap-2"><span className="material-symbols-outlined">shield_with_heart</span> Damage Support</div>
               <div className="flex items-center gap-2"><span className="material-symbols-outlined">support_agent</span> 24/7 Assistance</div>
             </div>
@@ -97,8 +97,8 @@ export default function OwnerExperience() {
                 <div className="w-16 h-16 bg-tertiary-container text-on-tertiary-container rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-tertiary/20">
                   <span className="material-symbols-outlined text-3xl">account_balance_wallet</span>
                 </div>
-                <h4 className="text-xl font-bold mb-3">3. Get Paid Safely</h4>
-                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">Funds are collected upfront and released directly to your bank account after the service is completed successfully.</p>
+                <h4 className="text-xl font-bold mb-3">3. Coordinate Directly</h4>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">Confirm the final rental value with the renter and settle offline after the service details are agreed.</p>
               </div>
             </div>
           </div>

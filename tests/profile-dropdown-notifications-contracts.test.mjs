@@ -35,7 +35,8 @@ test("profile dropdown uses a Firestore-backed notification inbox instead of sam
   assert.match(firebaseMessaging, /sendEachForMulticast/);
 
   assert.match(listRoute, /getCurrentSession/);
-  assert.match(listRoute, /getUnreadNotificationsForUser/);
+  assert.match(listRoute, /getUnreadNotificationInbox/);
+  assert.match(listRoute, /unreadCount: inbox\.unreadCount/);
   assert.match(readAllRoute, /markAllNotificationsRead/);
   assert.match(readOneRoute, /markNotificationRead/);
 

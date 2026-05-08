@@ -207,7 +207,7 @@ export async function mirrorBookingAndPayment(booking: BookingRecord, payment?: 
         amount: booking.amount,
         created_at: booking.createdAt,
         updated_at: booking.updatedAt,
-        source: payment ? "booking+payment" : "booking",
+        source: payment ? "booking+settlement-estimate" : "booking",
       }),
     },
   ];
@@ -225,7 +225,7 @@ export async function mirrorBookingAndPayment(booking: BookingRecord, payment?: 
         status: payment.status,
         method: payment.method,
         created_at: payment.createdAt,
-        source: "booking-payment",
+        source: "booking-value-estimate",
       }),
     });
   }
@@ -233,7 +233,7 @@ export async function mirrorBookingAndPayment(booking: BookingRecord, payment?: 
   await appendSheetRowsSafe(rows, {
     entityType: "booking",
     entityId: booking.id,
-    note: payment ? "booking+payment" : "booking",
+    note: payment ? "booking+settlement-estimate" : "booking",
     operation: "append-booking",
   });
 }

@@ -28,11 +28,11 @@ const supportHtmlCategories = [
     iconTone: "bg-secondary-container/20 text-secondary",
   },
   {
-    icon: "payments",
-    value: "Payment Issue",
-    title: { en: "Payments", mr: "देयके" },
-    detail: { en: "Billing issues, refunds, and payment method support.", mr: "बिलिंग, परतावा आणि पेमेंट पद्धतीसाठी मदत." },
-    note: { en: "Payments and refunds.", mr: "देयके आणि परतावा." },
+    icon: "handshake",
+    value: "Pricing & Settlement",
+    title: { en: "Pricing & Settlement", mr: "किंमत आणि थेट व्यवहार" },
+    detail: { en: "Owner-listed rates, direct settlement, and Offline settlement coordination guidance.", mr: "मालकाने दिलेले दर, थेट व्यवहार आणि ऑफलाइन समन्वय मार्गदर्शन." },
+    note: { en: "Direct owner-renter settlement.", mr: "मालक आणि भाडेकरू यांच्यात थेट व्यवहार." },
     halo: "bg-tertiary-fixed",
     iconTone: "bg-tertiary-container/10 text-tertiary",
   },
@@ -50,7 +50,7 @@ const supportHtmlCategories = [
 const issueOptions = [
   "Select a category",
   "Booking Inquiry",
-  "Payment Issue",
+  "Pricing & Settlement",
   "Equipment Listing Help",
   "Other",
 ] as const;
@@ -295,8 +295,8 @@ export default function SupportPage() {
                 </h4>
                 <p className="text-sm leading-relaxed text-on-surface-variant dark:text-slate-300">
                   {langText(
-                    "Support is available for equipment rentals, owner listings, payments, and account questions across current Maharashtra service areas.",
-                    "सध्याच्या महाराष्ट्र सेवा भागात उपकरण भाडे, मालक लिस्टिंग, पेमेंट आणि खाते प्रश्नांसाठी सपोर्ट उपलब्ध आहे."
+                    "Support is available for equipment rentals, owner listings, pricing, direct settlement, and account questions across current Maharashtra service areas.",
+                    "सध्याच्या महाराष्ट्र सेवा भागात उपकरण भाडे, मालक लिस्टिंग, किंमत, थेट व्यवहार आणि खाते प्रश्नांसाठी सपोर्ट उपलब्ध आहे."
                   )}
                 </p>
               </div>

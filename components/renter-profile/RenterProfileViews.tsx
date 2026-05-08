@@ -95,7 +95,7 @@ const supportTickets = [
     detail: "Ticket #OW-301 • Awaiting documents",
   },
   {
-    title: "Resolved payout question",
+    title: "Resolved direct-settlement question",
     detail: "Ticket #OW-277 • Closed yesterday",
   },
 ];
@@ -503,7 +503,7 @@ export function RenterProfileSupportContent() {
         {[
           ["event_busy", "Booking Issue"],
           ["inventory_2", "Listing Issue"],
-          ["payments", "Earnings Help"],
+          ["handshake", "Pricing & Settlement"],
           ["verified_user", "Verification"],
         ].map(([icon, label]) => (
           <div
@@ -639,32 +639,32 @@ const earningsPayments = [
   {
     id: "pay_1",
     amount: 12800,
-    method: "Bank Transfer",
-    status: "paid",
+    method: "Direct Settlement",
+    status: "completed",
     createdAt: "2026-04-12T09:20:00.000Z",
     bookingId: "BK-4821",
   },
   {
     id: "pay_2",
     amount: 5400,
-    method: "UPI",
-    status: "paid",
+    method: "Direct Settlement",
+    status: "completed",
     createdAt: "2026-04-14T16:45:00.000Z",
     bookingId: "BK-4838",
   },
   {
     id: "pay_3",
     amount: 3200,
-    method: "Bank Transfer",
-    status: "processing",
+    method: "Direct Settlement",
+    status: "pending",
     createdAt: "2026-04-16T11:15:00.000Z",
     bookingId: "BK-4845",
   },
   {
     id: "pay_4",
     amount: 1800,
-    method: "UPI",
-    status: "refunded",
+    method: "Direct Settlement",
+    status: "cancelled",
     createdAt: "2026-04-17T08:10:00.000Z",
     bookingId: "BK-4851",
   },

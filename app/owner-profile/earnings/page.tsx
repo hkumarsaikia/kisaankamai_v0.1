@@ -3,9 +3,9 @@ import { LocalizedText } from "@/components/LocalizedText";
 import { getVisibleEquipmentRating } from "@/lib/equipment";
 import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
-import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
+import { getOwnerBookings, getOwnerListings } from "@/lib/server/local-data";
 
-function formatPaymentDate(value: string) {
+function formatBookingDate(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
     return value;
@@ -18,18 +18,47 @@ function formatPaymentDate(value: string) {
   }).format(date);
 }
 
+function bookingStatusLabel(status: string) {
+  switch (status) {
+    case "confirmed":
+      return <LocalizedText en="Confirmed" mr="पुष्टी झाले" />;
+    case "active":
+      return <LocalizedText en="Active" mr="सक्रिय" />;
+    case "upcoming":
+      return <LocalizedText en="Scheduled" mr="नियोजित" />;
+    case "completed":
+      return <LocalizedText en="Completed" mr="पूर्ण झाले" />;
+    case "cancelled":
+      return <LocalizedText en="Cancelled" mr="रद्द झाले" />;
+    default:
+      return <LocalizedText en="Pending" mr="प्रलंबित" />;
+  }
+}
+
+function bookingStatusTone(status: string) {
+  switch (status) {
+    case "completed":
+    case "confirmed":
+    case "active":
+      return "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200";
+    case "cancelled":
+      return "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-200";
+    default:
+      return "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-200";
+  }
+}
+
 export default async function OwnerProfileEarningsPage() {
   const session = await getCurrentSession();
-  const [payments, listings, bookings] = session
+  const [listings, bookings] = session
     ? await Promise.all([
-        getOwnerPayments(session.user.id),
         getOwnerListings(session.user.id),
         getOwnerBookings(session.user.id),
       ])
-    : [[], [], []];
+    : [[], []];
 
   const pricingCards = listings.slice(0, 3);
-  const paymentRows = payments.slice(0, 6);
+  const bookingRows = bookings.slice(0, 6);
   const bookingCountByListing = new Map<string, number>();
 
   for (const booking of bookings) {
@@ -97,7 +126,7 @@ export default async function OwnerProfileEarningsPage() {
                       </div>
                       <div className="text-sm sm:text-right">
                         <p className="font-semibold text-primary-container">
-                          {bookingCountByListing.get(listing.id) || 0} <LocalizedText en="bookings" mr="बुकिंग" />
+                          {bookingCountByListing.get(listing.id) || 0} <LocalizedText en="booking requests" mr="बुकिंग विनंत्या" />
                         </p>
                         {visibleRating ? (
                           <p className="equipment-rating-pill mt-1 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
@@ -116,12 +145,22 @@ export default async function OwnerProfileEarningsPage() {
         </section>
 
         <section className="overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest shadow-sm">
-          <div className="flex items-center justify-between border-b border-outline-variant p-5">
+          <div className="flex flex-col gap-3 border-b border-outline-variant p-5 sm:flex-row sm:items-start sm:justify-between">
             <div>
               <h2 className="font-headline text-xl font-bold text-on-surface">
-                <LocalizedText en="Rental Income History" mr="भाडे उत्पन्न इतिहास" />
+                <LocalizedText en="Booking Value History" mr="बुकिंग मूल्य इतिहास" />
               </h2>
+              <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-on-surface-variant">
+                <LocalizedText
+                  en="Kisan Kamai does not collect or process payments. These values are owner-listed estimates and are settled directly between owner and renter."
+                  mr="किसान कमाई पैसे घेत नाही किंवा पेमेंट प्रक्रिया करत नाही. ही मूल्ये मालकाने दिलेली अंदाजित रक्कम आहेत आणि व्यवहार मालक व भाडेकरू थेट करतात."
+                />
+              </p>
             </div>
+            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-primary-container/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-primary">
+              <span className="material-symbols-outlined text-[16px]">handshake</span>
+              <LocalizedText en="Direct Settlement" mr="थेट व्यवहार" />
+            </span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
@@ -130,43 +169,43 @@ export default async function OwnerProfileEarningsPage() {
                   <th className="p-4 font-medium"><LocalizedText en="Date & ID" mr="दिनांक आणि ID" /></th>
                   <th className="p-4 font-medium"><LocalizedText en="Equipment" mr="उपकरण" /></th>
                   <th className="p-4 font-medium"><LocalizedText en="Status" mr="स्थिती" /></th>
-                  <th className="p-4 font-medium"><LocalizedText en="Est. Amount" mr="अंदाजित रक्कम" /></th>
-                  <th className="p-4 font-medium"><LocalizedText en="Settlement Mode" mr="सेटलमेंट पद्धत" /></th>
+                  <th className="p-4 font-medium"><LocalizedText en="Estimated Rental Value" mr="अंदाजित भाडे मूल्य" /></th>
+                  <th className="p-4 font-medium"><LocalizedText en="Coordination" mr="समन्वय" /></th>
                 </tr>
               </thead>
               <tbody className="text-sm">
-                {paymentRows.map((payment) => {
-                  const booking = bookings.find((entry) => entry.id === payment.bookingId);
+                {bookingRows.map((booking) => {
                   const listing = booking?.listing;
-                  const paymentTone =
-                    payment.status === "paid"
-                      ? "bg-primary-fixed text-on-primary-fixed"
-                      : payment.status === "refunded"
-                        ? "bg-error-container text-error"
-                        : "bg-secondary-fixed text-on-secondary-fixed";
 
                   return (
-                    <tr key={payment.id} className="border-b border-outline-variant last:border-b-0">
+                    <tr key={booking.id} className="border-b border-outline-variant last:border-b-0">
                       <td className="p-4">
-                        <p className="font-medium text-on-surface">{formatPaymentDate(payment.createdAt)}</p>
-                        <p className="text-xs text-on-surface-variant">#{payment.bookingId}</p>
+                        <p className="font-medium text-on-surface">{formatBookingDate(booking.createdAt)}</p>
+                        <p className="text-xs text-on-surface-variant">#{booking.id}</p>
                       </td>
                       <td className="p-4 text-on-surface">{listing?.name || <LocalizedText en="Equipment Booking" mr="उपकरण बुकिंग" />}</td>
                       <td className="p-4">
-                        <span className={`inline-flex rounded-full px-2 py-1 text-xs font-bold uppercase ${paymentTone}`}>
-                          {payment.status}
+                        <span className={`inline-flex rounded-full px-2 py-1 text-xs font-bold uppercase ${bookingStatusTone(booking.status)}`}>
+                          {bookingStatusLabel(booking.status)}
                         </span>
                       </td>
-                      <td className="p-4 font-bold text-on-surface">₹{payment.amount.toLocaleString("en-IN")}</td>
+                      <td className="p-4 font-bold text-on-surface">₹{booking.amount.toLocaleString("en-IN")}</td>
                       <td className="p-4">
                         <span className="inline-flex items-center gap-1 rounded bg-surface-container px-2 py-1 text-xs font-medium text-on-surface-variant">
                           <span className="material-symbols-outlined text-[14px]">handshake</span>
-                          {payment.method}
+                          <LocalizedText en="Offline settlement" mr="ऑफलाइन व्यवहार" />
                         </span>
                       </td>
                     </tr>
                   );
                 })}
+                {!bookingRows.length ? (
+                  <tr>
+                    <td className="p-6 text-sm font-medium text-on-surface-variant" colSpan={5}>
+                      <LocalizedText en="No booking value records yet." mr="अद्याप बुकिंग मूल्य नोंदी नाहीत." />
+                    </td>
+                  </tr>
+                ) : null}
               </tbody>
             </table>
           </div>
