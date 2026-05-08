@@ -6,7 +6,11 @@ import { createBookingAction } from "@/lib/actions/local-data";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { LazyMap } from "@/components/LazyMap";
-import { getVisibleEquipmentRating, type EquipmentRecord } from "@/lib/equipment";
+import {
+  getEquipmentAvailability,
+  getVisibleEquipmentRating,
+  type EquipmentRecord,
+} from "@/lib/equipment";
 import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { createListingMarker } from "@/lib/map-data";
 import { DETAIL_BOOKING_LAYOUT } from "@/lib/equipment-detail-layout.js";
@@ -81,6 +85,7 @@ export default function EquipmentDetailClient({
   );
   const selectedGalleryImage = displayGalleryImages[selectedImageIndex] || equipment.coverImage;
   const visibleRating = getVisibleEquipmentRating(equipment);
+  const availability = getEquipmentAvailability(equipment);
   const containerClassName =
     containerVariant === "workspace"
       ? DETAIL_BOOKING_LAYOUT.workspaceContainer
@@ -89,10 +94,23 @@ export default function EquipmentDetailClient({
     containerVariant === "workspace"
       ? DETAIL_BOOKING_LAYOUT.workspaceCard
       : DETAIL_BOOKING_LAYOUT.card;
+  const workspaceContentClassName =
+    containerVariant === "workspace"
+      ? "order-2 space-y-8 lg:order-1 lg:col-span-2"
+      : "space-y-8 lg:col-span-2";
+  const workspaceBookingClassName =
+    containerVariant === "workspace"
+      ? "relative order-1 lg:order-2 lg:col-span-1 lg:self-start"
+      : "relative lg:col-span-1 lg:self-start";
 
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+
+    if (!availability.available) {
+      setError(langText("This equipment is not available for booking right now.", "हे उपकरण सध्या बुकिंगसाठी उपलब्ध नाही."));
+      return;
+    }
 
     startTransition(async () => {
       const result = await createBookingAction({
@@ -151,7 +169,7 @@ export default function EquipmentDetailClient({
           <span>{langText("please login or register", "कृपया लॉगिन किंवा नोंदणी करा")}</span>
         </div>
       ) : null}
-      <div className="space-y-8 lg:col-span-2">
+      <div className={workspaceContentClassName}>
         {showBreadcrumbs ? (
         <nav className="text-sm text-on-surface-variant">
           <ol className="flex flex-wrap items-center gap-2">
@@ -287,49 +305,42 @@ export default function EquipmentDetailClient({
         <hr className="border-outline-variant" />
 
         <section>
-          <h2 className="mb-4 text-xl font-bold">{langText("Features & Inclusions", "वैशिष्ट्ये आणि समावेश")}</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {equipment.tags.slice(0, 4).map((tag) => (
-              <div key={tag} className="flex items-start gap-3">
-                <span className="material-symbols-outlined text-primary">check_circle</span>
-                <div>
-                  <p className="font-medium">{text(tag, { cacheKey: `equipment.${equipment.id}.tag.${tag}` })}</p>
-                  <p className="text-sm text-on-surface-variant">
-                    {langText("Available for", "यासाठी उपलब्ध")}{" "}
-                    {equipment.workTypes
-                      .map((workType) =>
-                        text(workType, {
-                          cacheKey: `equipment.${equipment.id}.workType.${workType}`,
-                        })
-                      )
-                      .join(", ")}
-                    .
-                  </p>
+          <h2 className="mb-4 text-xl font-bold">{langText("Owner Details", "मालक तपशील")}</h2>
+          <div className="kk-owner-detail-card kk-depth-tile relative overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary-container/10 via-surface-container-lowest to-secondary-container/10 p-6 shadow-sm">
+            <div className="absolute right-0 top-0 h-28 w-28 -translate-y-10 translate-x-10 rounded-full bg-secondary/15 blur-2xl" />
+            <div className="relative flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+              {equipment.ownerPhotoUrl ? (
+                <img
+                  alt={langText("Owner profile photo", "मालकाचा प्रोफाइल फोटो")}
+                  className="h-24 w-24 shrink-0 rounded-2xl border-4 border-white bg-surface-container object-cover shadow-lg dark:border-slate-900"
+                  src={equipment.ownerPhotoUrl}
+                />
+              ) : (
+                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-surface-container text-slate-500 shadow-lg dark:border-slate-900">
+                  <span className="material-symbols-outlined text-3xl">person</span>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <hr className="border-outline-variant" />
-
-        <section>
-          <h2 className="mb-4 text-xl font-bold">{langText("Owner Detail", "मालक तपशील")}</h2>
-          <div className="kk-depth-tile flex flex-col items-center gap-6 rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm sm:flex-row sm:items-start">
-            {equipment.ownerPhotoUrl ? (
-              <img
-                alt={langText("Owner profile photo", "मालकाचा प्रोफाइल फोटो")}
-                className="h-24 w-24 rounded-full border-4 border-surface bg-surface-container object-cover shadow-md"
-                src={equipment.ownerPhotoUrl}
-              />
-            ) : (
-              <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-surface bg-surface-container text-slate-500 shadow-md">
-                <span className="material-symbols-outlined text-3xl">person</span>
-              </div>
-            )}
-            <div className="flex-grow text-center sm:text-left">
-              <div className="mb-1 flex items-center justify-center gap-2 sm:justify-start">
-                <h3 className="text-xl font-bold">{equipment.ownerName}</h3>
+              )}
+              <div className="flex-grow text-center sm:text-left">
+                <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">
+                  {langText("Equipment Owner", "उपकरण मालक")}
+                </p>
+                <h3 className="mt-2 text-2xl font-black text-on-surface">{equipment.ownerName}</h3>
+                {equipment.ownerLocation ? (
+                  <p className="mt-2 inline-flex items-center justify-center gap-2 text-sm font-semibold text-on-surface-variant sm:justify-start">
+                    <span className="material-symbols-outlined text-base text-primary">location_on</span>
+                    {equipment.ownerLocation}
+                  </p>
+                ) : null}
+                <div className="mt-4 flex flex-wrap justify-center gap-2 sm:justify-start">
+                  <span className="rounded-full bg-white/75 px-3 py-1 text-xs font-bold text-primary shadow-sm dark:bg-slate-950/70">
+                    {equipment.operatorIncluded
+                      ? langText("Operator included", "ऑपरेटर समाविष्ट")
+                      : langText("Operator optional", "ऑपरेटर ऐच्छिक")}
+                  </span>
+                  <span className="rounded-full bg-white/75 px-3 py-1 text-xs font-bold text-primary shadow-sm dark:bg-slate-950/70">
+                    {equipment.district}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -414,13 +425,29 @@ export default function EquipmentDetailClient({
         </section>
       </div>
 
-      <div className="relative lg:col-span-1 lg:self-start">
+      <div className={workspaceBookingClassName}>
         <div className={bookingCardClassName}>
           <div className="mb-4 flex items-end justify-between border-b border-outline-variant pb-3">
             <div>
               <span className="text-3xl font-bold text-on-surface">{formatCurrency(equipment.pricePerHour)}</span>
               <span className="text-on-surface-variant"> / {equipment.unitLabel}</span>
             </div>
+            <span
+              className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-black ${
+                availability.available
+                  ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-200"
+                  : "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-200"
+              }`}
+            >
+              <span
+                className={`h-2.5 w-2.5 rounded-full ${
+                  availability.available ? "bg-emerald-500" : "bg-red-500"
+                }`}
+              />
+              {availability.available
+                ? langText("Available", "उपलब्ध")
+                : langText("Not available", "उपलब्ध नाही")}
+            </span>
           </div>
 
           <h3 className="mb-3 text-lg font-bold">{langText("Book this Equipment", "हे उपकरण बुक करा")}</h3>
@@ -557,10 +584,14 @@ export default function EquipmentDetailClient({
 
               <button
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-white shadow-md transition hover:bg-primary-container"
-                disabled={isPending}
+                disabled={isPending || !availability.available}
                 type="submit"
               >
-                {isPending ? langText("Submitting...", "सबमिट होत आहे...") : langText("Book Now", "आता बुक करा")}
+                {!availability.available
+                  ? langText("Currently unavailable", "सध्या उपलब्ध नाही")
+                  : isPending
+                    ? langText("Submitting...", "सबमिट होत आहे...")
+                    : langText("Book Now", "आता बुक करा")}
               </button>
             </div>
           </form>

@@ -5,6 +5,7 @@ import { unlink } from "node:fs/promises";
 import path from "node:path";
 import { unstable_noStore as noStore } from "next/cache";
 import {
+  isEquipmentCurrentlyAvailable,
   sanitizeEquipmentDescription,
   type EquipmentRecord,
 } from "@/lib/equipment";
@@ -526,7 +527,7 @@ function mapListingFromFirestore(data: Partial<ListingRecord> & { id?: string })
 
 function isPublicListingReady(listing: ListingRecord) {
   return Boolean(
-    listing.status === "active" &&
+    (listing.status === "active" || listing.status === "paused") &&
       normalizeOptionalString(listing.id) &&
       normalizeOptionalString(listing.name) &&
       normalizeOptionalString(listing.category) &&
@@ -541,6 +542,10 @@ function isPublicListingReady(listing: ListingRecord) {
       Number.isFinite(listing.pricePerHour) &&
       listing.pricePerHour > 0
   );
+}
+
+export function isListingBookable(listing: Pick<ListingRecord, "status" | "availableFrom">) {
+  return isEquipmentCurrentlyAvailable(listing);
 }
 
 function mapBookingFromFirestore(data: Partial<BookingRecord> & { id?: string }): BookingRecord {
@@ -1277,6 +1282,8 @@ export function listingToEquipmentRecord(
     tags: listing.tags,
     workTypes: listing.workTypes,
     operatorIncluded: listing.operatorIncluded,
+    availableFrom: listing.availableFrom,
+    status: listing.status,
   };
 }
 
@@ -1536,6 +1543,10 @@ export async function createBookingRecord(input: {
 
   if (listing.ownerUserId === input.renterUserId) {
     throw new Error("You cannot book your own listings.");
+  }
+
+  if (!isListingBookable(listing)) {
+    throw new Error("This equipment is not available for booking right now.");
   }
 
   const requestedStartDate = normalizeBookingDate(input.startDate);

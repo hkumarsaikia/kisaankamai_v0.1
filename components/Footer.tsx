@@ -42,7 +42,7 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="bg-slate-900 dark:bg-black w-full py-16 border-t border-slate-800">
+    <footer className="kk-site-footer w-full border-t border-slate-800 bg-slate-900 py-16 text-left dark:bg-black">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
         <div className="col-span-1 md:col-span-1">
           <Link 

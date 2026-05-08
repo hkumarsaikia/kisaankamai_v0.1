@@ -1,12 +1,12 @@
 "use client";
 
-import type { LocalSession, UserRole } from "@/lib/local-data/types";
+import type { LocalSession } from "@/lib/local-data/types";
 import { MAHARASHTRA_DISTRICTS } from "@/lib/auth/india-districts";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 type ProfileSettingsFormProps = {
   family: "owner-profile" | "renter-profile";
@@ -14,7 +14,6 @@ type ProfileSettingsFormProps = {
 };
 
 type SubmitState = "idle" | "pending" | "success" | "error";
-type WorkspacePreference = "owner" | "renter";
 
 type SettingsState = {
   fullName: string;
@@ -27,7 +26,6 @@ type SettingsState = {
   fieldArea: string;
   farmingTypes: string;
   equipmentOwned: string;
-  rolePreference: WorkspacePreference;
   publicVisibility: boolean;
   whatsappNotifications: boolean;
 };
@@ -69,7 +67,6 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     fieldArea: String(session.profile.fieldArea || ""),
     farmingTypes: session.profile.farmingTypes || "",
     equipmentOwned: "",
-    rolePreference: session.profile.rolePreference === "owner" ? "owner" : "renter",
     publicVisibility: true,
     whatsappNotifications: true,
   });
@@ -116,17 +113,6 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     };
   }, []);
 
-  const workspaceOptions = useMemo(
-    () =>
-      Array.from(
-        new Set<UserRole>([
-          family === "owner-profile" ? "owner" : "renter",
-          ...session.user.roles,
-        ])
-      ),
-    [family, session.user.roles]
-  );
-
   const submitLabel =
     submitState === "pending"
       ? langText("Saving...", "जतन करत आहे...")
@@ -134,10 +120,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
         ? langText("Saved", "जतन झाले")
         : langText("Save Changes", "बदल जतन करा");
 
-  const updateField = (
-    field: keyof SettingsState,
-    value: string | boolean | WorkspacePreference
-  ) => {
+  const updateField = (field: keyof SettingsState, value: string | boolean) => {
     setFormState((current) => ({ ...current, [field]: value }));
     if (submitState !== "idle") {
       setSubmitState("idle");
@@ -211,7 +194,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
             pincode: formState.pincode.replace(/\D/g, "").slice(0, 6),
             fieldArea: Number(formState.fieldArea || 0),
             farmingTypes: [formState.farmingTypes.trim(), formState.equipmentOwned.trim()].filter(Boolean).join(" | "),
-            role: formState.rolePreference,
+            role: family === "owner-profile" ? "owner" : "renter",
             district: formState.district.trim() || undefined,
           }),
         });
@@ -324,23 +307,6 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                   <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
                 </label>
               </div>
-
-              <label className="block">
-                <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Preferred Workspace", "पसंतीचा वर्कस्पेस")}</span>
-                <select
-                  value={formState.rolePreference}
-                  onChange={(event) => updateField("rolePreference", event.target.value as WorkspacePreference)}
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
-                >
-                  {workspaceOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option === "owner"
-                        ? langText("Owner Profile", "मालक प्रोफाइल")
-                        : langText("Renter Profile", "भाडेकरू प्रोफाइल")}
-                    </option>
-                  ))}
-                </select>
-              </label>
             </div>
           </div>
         </aside>

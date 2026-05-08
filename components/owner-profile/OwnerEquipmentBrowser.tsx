@@ -2,7 +2,7 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-import { getVisibleEquipmentRating } from "@/lib/equipment";
+import { getEquipmentAvailability, getVisibleEquipmentRating } from "@/lib/equipment";
 import type { ListingRecord } from "@/lib/local-data/types";
 
 type ListingSummary = ListingRecord & {
@@ -33,13 +33,25 @@ export function OwnerEquipmentBrowser({
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {listings.map((listing) => {
             const visibleRating = getVisibleEquipmentRating(listing);
+            const availability = getEquipmentAvailability(listing);
 
             return (
               <article
                 key={listing.id}
                 className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
               >
-              <img src={listing.coverImage} alt={listing.name} className="aspect-[4/3] w-full object-cover" />
+              <div className="relative">
+                <span
+                  className={`equipment-availability-dot absolute right-4 top-4 z-10 inline-flex h-4 w-4 rounded-full border-2 border-white shadow-lg ring-4 ${
+                    availability.available
+                      ? "bg-emerald-500 ring-emerald-500/20"
+                      : "bg-red-500 ring-red-500/20"
+                  }`}
+                  aria-label={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                  title={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                />
+                <img src={listing.coverImage} alt={listing.name} className="aspect-[4/3] w-full object-cover" />
+              </div>
               <div className="space-y-4 p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>

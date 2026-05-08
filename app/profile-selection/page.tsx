@@ -69,9 +69,9 @@ export default function ProfileSelectionPage() {
         </nav>
       </header>
 
-      <main className="relative z-10 flex-grow px-6 pb-20 pt-32 flex flex-col items-center justify-center">
-        <div className="text-center mb-16 max-w-2xl">
-          <h1 className="text-4xl md:text-5xl font-extrabold font-headline mb-4 tracking-tight text-white drop-shadow-lg">
+      <main className="relative z-10 flex flex-grow flex-col items-center justify-center px-6 pb-20 pt-32">
+        <div className="kk-profile-selection-hero-copy mb-16 max-w-5xl text-center">
+          <h1 className="mx-auto max-w-4xl text-balance text-4xl font-extrabold font-headline mb-4 leading-tight tracking-tight text-white drop-shadow-lg md:text-5xl">
             {langText("Welcome back, ", "स्वागत आहे, ")}
             <span className="text-primary-fixed">{user.name || user.phone}</span>
           </h1>
@@ -164,4 +164,3 @@ export default function ProfileSelectionPage() {
     </div>
   );
 }
-

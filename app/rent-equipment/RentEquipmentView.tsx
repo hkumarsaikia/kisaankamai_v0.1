@@ -11,9 +11,15 @@ import { DETAIL_ROUTE_TEMPLATE } from "@/lib/discovery-routes";
 import { createHubCirclesFromEquipment, createListingMarkersFromEquipment } from "@/lib/map-data";
 import { assetPath } from "@/lib/site";
 import { normalizeCategorySlug, type EquipmentCategorySummary } from "@/lib/equipment-categories";
-import { getVisibleEquipmentRating, type EquipmentRecord } from "@/lib/equipment";
+import {
+  getEquipmentAvailability,
+  getVisibleEquipmentRating,
+  sortEquipmentByAvailabilityPriceDistance,
+  type EquipmentRecord,
+} from "@/lib/equipment";
 
 type RentEquipmentViewMode = "available" | "query-category" | "empty";
+type SortKey = "availability" | "price-asc" | "distance";
 
 type LocalizedLabel = {
   en: string;
@@ -126,6 +132,64 @@ function SearchForm({
   );
 }
 
+function SortControl({
+  sortBy,
+  onSortChange,
+  variant = "surface",
+}: {
+  sortBy: SortKey;
+  onSortChange: (value: SortKey) => void;
+  variant?: "surface" | "primary";
+}) {
+  const { langText } = useLanguage();
+  const isPrimary = variant === "primary";
+
+  return (
+    <label
+      className={`relative inline-flex items-center gap-2 rounded-lg text-sm font-medium transition-colors ${
+        isPrimary
+          ? "bg-primary text-on-primary hover:bg-primary/90"
+          : "border border-outline-variant bg-surface text-on-surface hover:bg-surface-container-low"
+      }`}
+    >
+      <span className="material-symbols-outlined pointer-events-none absolute left-4 text-lg">sort</span>
+      <select
+        value={sortBy}
+        onChange={(event) => onSortChange(event.target.value as SortKey)}
+        aria-label={langText("Sort results", "निकाल क्रम लावा")}
+        className={`h-10 cursor-pointer appearance-none rounded-lg bg-transparent py-2 pl-11 pr-9 text-sm font-medium outline-none ${
+          isPrimary ? "text-on-primary" : "text-on-surface"
+        }`}
+      >
+        <option value="availability">{langText("Availability", "उपलब्धता")}</option>
+        <option value="price-asc">{langText("Price lowest to highest", "किंमत कमी ते जास्त")}</option>
+        <option value="distance">{langText("Distance", "अंतर")}</option>
+      </select>
+      <span className="material-symbols-outlined pointer-events-none absolute right-3 text-base">expand_more</span>
+    </label>
+  );
+}
+
+function AvailabilityDot({ item }: { item: EquipmentRecord }) {
+  const { langText } = useLanguage();
+  const availability = getEquipmentAvailability(item);
+  const label = availability.available
+    ? langText("Available", "उपलब्ध")
+    : langText("Not available", "उपलब्ध नाही");
+
+  return (
+    <span
+      className={`equipment-availability-dot absolute right-3 top-3 z-10 inline-flex h-4 w-4 rounded-full border-2 border-white shadow-lg ring-4 ${
+        availability.available
+          ? "bg-emerald-500 ring-emerald-500/20"
+          : "bg-red-500 ring-red-500/20"
+      }`}
+      aria-label={label}
+      title={label}
+    />
+  );
+}
+
 function NoEquipmentAvailable({
   location,
   query,
@@ -199,6 +263,7 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
     return (
       <article className="flex flex-col md:flex-row bg-surface rounded-2xl border border-surface-variant shadow-sm overflow-hidden hover:shadow-md transition-shadow group">
         <div className={`equipment-card-media-frame w-full md:w-2/5 lg:w-[30%] relative ${imageClassName} bg-surface-container-lowest p-2.5 md:p-3`}>
+          <AvailabilityDot item={item} />
           <ContentImage
             alt={item.name}
             className="h-full w-full rounded-xl object-cover object-center shadow-sm transition-transform duration-300 group-hover:scale-[1.015]"
@@ -268,12 +333,13 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
   return (
     <article className="flex flex-col bg-surface rounded-xl overflow-hidden border border-surface-variant hover:shadow-md transition-shadow group">
       <div className="relative w-full aspect-square bg-surface-container-high overflow-hidden">
+        <AvailabilityDot item={item} />
         <ContentImage
           alt={item.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           src={assetPath(item.coverImage)}
         />
-        <div className="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-primary font-label uppercase tracking-wider">
+        <div className="absolute left-3 top-3 rounded bg-surface-container-lowest/90 px-2 py-1 font-label text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm">
           {text(item.category, { sourceLanguage: "en", cacheKey: `rent-badge-${item.id}` })}
         </div>
         {visibleRating ? (
@@ -326,17 +392,26 @@ export default function RentEquipmentView({
   const [location, setLocation] = useState(initialLocation);
   const [query, setQuery] = useState(initialQuery);
   const [availablePage, setAvailablePage] = useState(1);
+  const [sortBy, setSortBy] = useState<SortKey>("availability");
   const activeCategorySlug = normalizeCategorySlug(initialQuery);
   const inventoryMarkers = useMemo(() => createListingMarkersFromEquipment(items), [items]);
   const inventoryCircles = useMemo(() => createHubCirclesFromEquipment(items), [items]);
   const availablePageSize = 8;
   const hasRequestedCategoryOrQuery = Boolean(initialQuery.trim());
-  const availableTotalPages = Math.max(1, Math.ceil(items.length / availablePageSize));
+  const sortedItems = useMemo(
+    () => sortEquipmentByAvailabilityPriceDistance(items, sortBy),
+    [items, sortBy]
+  );
+  const availableTotalPages = Math.max(1, Math.ceil(sortedItems.length / availablePageSize));
   const activeAvailablePage = Math.min(availablePage, availableTotalPages);
-  const paginatedAvailableItems = items.slice(
+  const paginatedAvailableItems = sortedItems.slice(
     (activeAvailablePage - 1) * availablePageSize,
     activeAvailablePage * availablePageSize
   );
+  const handleSortChange = (value: SortKey) => {
+    setSortBy(value);
+    setAvailablePage(1);
+  };
   const title = useMemo(() => {
     if (view === "available") {
       return langText("Available equipment", "उपलब्ध उपकरणे");
@@ -529,19 +604,12 @@ export default function RentEquipmentView({
                 <span className="material-symbols-outlined text-lg">tune</span>
                 {langText("Filters", "फिल्टर्स")}
               </button>
-              <button
-                className="flex items-center gap-2 text-on-surface border border-outline-variant rounded-lg px-4 py-2 text-sm font-medium hover:bg-surface-container-low transition-colors bg-surface"
-                type="button"
-                aria-label={langText("Sort results", "निकाल क्रम लावा")}
-              >
-                <span className="material-symbols-outlined text-lg">sort</span>
-                {langText("Sort", "क्रम लावा")}
-              </button>
+              <SortControl sortBy={sortBy} onSortChange={handleSortChange} />
             </div>
           </div>
 
           <div className="flex flex-col gap-6 pb-12">
-            {items.map((item) => (
+            {sortedItems.map((item) => (
               <EquipmentCard key={item.id} item={item} compact />
             ))}
           </div>
@@ -584,14 +652,7 @@ export default function RentEquipmentView({
                   <span className="material-symbols-outlined text-[20px]">filter_list</span>
                   {langText("Filters", "फिल्टर्स")}
                 </button>
-                <button
-                  className="flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-on-primary transition-colors hover:bg-primary/90"
-                  type="button"
-                  aria-label={langText("Sort results", "निकाल क्रम लावा")}
-                >
-                  <span className="material-symbols-outlined text-[20px]">sort</span>
-                  {langText("Sort", "क्रम लावा")}
-                </button>
+                <SortControl sortBy={sortBy} onSortChange={handleSortChange} variant="primary" />
               </div>
             </div>
           </div>

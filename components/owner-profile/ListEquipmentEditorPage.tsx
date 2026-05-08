@@ -6,7 +6,7 @@ import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import { createListingAction, updateListingAction } from "@/lib/actions/local-data";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 
 type ListEquipmentEditorPageProps = {
   listing?: ListingRecord | null;
@@ -14,6 +14,7 @@ type ListEquipmentEditorPageProps = {
 };
 const MAX_LISTING_IMAGES = 3;
 const PHOTO_SLOT_LABELS = ["Photo 1", "Photo 2", "Photo 3"] as const;
+type AvailabilityMode = "now" | "date" | "unavailable";
 
 function normalizeCustomCategory(value: string) {
   return value
@@ -48,15 +49,42 @@ export function ListEquipmentEditorPage({
     serviceRadius: String(listing?.distanceKm || 0),
     workTypes: listing?.workTypes.join(", ") || "",
     operatorIncluded: listing?.operatorIncluded ?? true,
-    availabilityMode: listing?.availableFrom ? "date" : "now",
+    availabilityMode: (listing?.status === "paused"
+      ? "unavailable"
+      : listing?.availableFrom
+        ? "date"
+        : "now") as AvailabilityMode,
     availableFrom: listing?.availableFrom || "",
     status: listing?.status || "active",
   });
 
   const files = useMemo(() => fileSlots.filter((file): file is File => file instanceof File), [fileSlots]);
+  const objectPreviewUrls = useMemo(
+    () => fileSlots.map((file) => (file ? URL.createObjectURL(file) : "")),
+    [fileSlots]
+  );
+
+  useEffect(() => {
+    return () => {
+      objectPreviewUrls.forEach((url) => {
+        if (url) {
+          URL.revokeObjectURL(url);
+        }
+      });
+    };
+  }, [objectPreviewUrls]);
 
   const updateField = (field: keyof typeof formState, value: string | boolean) => {
     setFormState((current) => ({ ...current, [field]: value }));
+  };
+
+  const updateAvailabilityMode = (availabilityMode: AvailabilityMode) => {
+    setFormState((current) => ({
+      ...current,
+      availabilityMode,
+      status: availabilityMode === "unavailable" ? "paused" : "active",
+      availableFrom: availabilityMode === "date" ? current.availableFrom : "",
+    }));
   };
 
   const updateFileSlot = (index: number, file: File | null) => {
@@ -65,6 +93,10 @@ export function ListEquipmentEditorPage({
       next[index] = file;
       return next.slice(0, MAX_LISTING_IMAGES);
     });
+  };
+
+  const removePhotoSlot = (index: number) => {
+    updateFileSlot(index, null);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -97,7 +129,8 @@ export function ListEquipmentEditorPage({
       formData.set("hp", formState.hp.trim());
       formData.set("distanceKm", formState.serviceRadius.trim());
       formData.set("workTypes", formState.workTypes.trim());
-      formData.set("status", formState.status);
+      formData.set("status", formState.availabilityMode === "unavailable" ? "paused" : "active");
+      formData.set("availabilityMode", formState.availabilityMode);
       formData.set("unitLabel", "per hour");
       if (formState.operatorIncluded) {
         formData.set("operatorIncluded", "on");
@@ -337,7 +370,7 @@ export function ListEquipmentEditorPage({
                 <label className="flex items-center gap-3">
                   <input
                     checked={formState.availabilityMode === "now"}
-                    onChange={() => updateField("availabilityMode", "now")}
+                    onChange={() => updateAvailabilityMode("now")}
                     className="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary"
                     name="availability"
                     type="radio"
@@ -347,12 +380,22 @@ export function ListEquipmentEditorPage({
                 <label className="flex items-center gap-3">
                   <input
                     checked={formState.availabilityMode === "date"}
-                    onChange={() => updateField("availabilityMode", "date")}
+                    onChange={() => updateAvailabilityMode("date")}
                     className="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary"
                     name="availability"
                     type="radio"
                   />
                   <span className="text-sm font-medium text-on-surface">{langText("Available from specific date", "निश्चित तारखेपासून उपलब्ध")}</span>
+                </label>
+                <label className="flex items-center gap-3">
+                  <input
+                    checked={formState.availabilityMode === "unavailable"}
+                    onChange={() => updateAvailabilityMode("unavailable")}
+                    className="h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary"
+                    name="availability"
+                    type="radio"
+                  />
+                  <span className="text-sm font-medium text-on-surface">{langText("Temporarily unavailable", "तात्पुरते उपलब्ध नाही")}</span>
                 </label>
                 {formState.availabilityMode === "date" ? (
                   <label className="block space-y-2">
@@ -374,24 +417,51 @@ export function ListEquipmentEditorPage({
                 {langText("Photos", "फोटो")}
               </h2>
               <div className="grid gap-4 md:grid-cols-3">
-                {PHOTO_SLOT_LABELS.map((slotLabel, slot) => (
-                  <label
-                    key={slot}
-                    className="block cursor-pointer rounded-xl border-2 border-dashed border-outline-variant/50 p-6 text-center transition-colors hover:bg-surface-container-low"
-                  >
-                    <span className="material-symbols-outlined mb-2 text-4xl text-outline">upload_file</span>
-                    <p className="font-body font-bold text-on-surface">{langText(slotLabel, `फोटो ${slot + 1}`)}</p>
-                    <p className="mt-1 min-h-10 text-xs text-on-surface-variant">
-                      {fileSlots[slot]?.name || langText("Upload a clear equipment photo", "स्पष्ट उपकरण फोटो अपलोड करा")}
-                    </p>
-                    <input
-                      className="hidden"
-                      type="file"
-                      accept="image/*"
-                      onChange={(event) => updateFileSlot(slot, event.target.files?.[0] || null)}
-                    />
-                  </label>
-                ))}
+                {PHOTO_SLOT_LABELS.map((slotLabel, slot) => {
+                  const previewUrl = objectPreviewUrls[slot];
+
+                  return (
+                    <div key={slot} className="relative">
+                      <label className="block cursor-pointer overflow-hidden rounded-xl border-2 border-dashed border-outline-variant/50 bg-surface-container-lowest text-center transition-colors hover:bg-surface-container-low">
+                        <span className="sr-only">{langText(slotLabel, `फोटो ${slot + 1}`)}</span>
+                        {previewUrl ? (
+                          <img
+                            src={previewUrl}
+                            alt={fileSlots[slot]?.name || langText(slotLabel, `फोटो ${slot + 1}`)}
+                            className="h-44 w-full object-cover"
+                          />
+                        ) : (
+                          <span className="flex h-44 flex-col items-center justify-center p-6">
+                            <span className="material-symbols-outlined mb-2 text-4xl text-outline">upload_file</span>
+                            <span className="font-body font-bold text-on-surface">{langText(slotLabel, `फोटो ${slot + 1}`)}</span>
+                            <span className="mt-1 text-xs text-on-surface-variant">
+                              {langText("Upload a clear equipment photo", "स्पष्ट उपकरण फोटो अपलोड करा")}
+                            </span>
+                          </span>
+                        )}
+                        <input
+                          className="hidden"
+                          type="file"
+                          accept="image/*"
+                          onChange={(event) => updateFileSlot(slot, event.target.files?.[0] || null)}
+                        />
+                      </label>
+                      {fileSlots[slot] ? (
+                        <button
+                          type="button"
+                          onClick={() => removePhotoSlot(slot)}
+                          aria-label={langText(`Remove ${slotLabel}`, `फोटो ${slot + 1} काढा`)}
+                          className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-950/75 text-white shadow-lg backdrop-blur transition-colors hover:bg-red-600"
+                        >
+                          <span className="material-symbols-outlined text-lg">close</span>
+                        </button>
+                      ) : null}
+                      <p className="mt-2 truncate text-xs font-semibold text-on-surface-variant">
+                        {fileSlots[slot]?.name || langText("No photo selected", "फोटो निवडलेला नाही")}
+                      </p>
+                    </div>
+                  );
+                })}
               </div>
             </section>
 

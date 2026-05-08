@@ -207,16 +207,16 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
                       </div>
                     ) : null}
 
-                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                    <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-3">
                       <Link
                         href={detailsHref}
-                        className="rounded-xl bg-primary-container px-3 py-2.5 text-center text-xs font-bold text-white transition-colors hover:bg-primary"
+                        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary-container px-3 py-2.5 text-center text-xs font-bold text-white transition-colors hover:bg-primary"
                       >
                         {langText("Details", "तपशील")}
                       </Link>
                       <a
                         href={`tel:${renterPhone}`}
-                        className="flex items-center justify-center gap-1 rounded-xl border border-outline-variant px-3 py-2.5 text-xs font-bold text-on-surface transition-colors hover:bg-surface-container"
+                        className="flex min-h-11 items-center justify-center gap-1 rounded-xl border border-outline-variant px-3 py-2.5 text-xs font-bold text-on-surface transition-colors hover:bg-surface-container"
                       >
                         <span className="material-symbols-outlined text-sm">call</span>
                         {langText("Call", "कॉल")}
@@ -225,7 +225,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
                         type="button"
                         onClick={() => runStatusUpdate(booking.id, canApprove ? "confirmed" : "cancelled")}
                         disabled={isPending || (!canApprove && !canDecline)}
-                        className={`rounded-xl px-3 py-2.5 text-xs font-bold transition-colors ${
+                        className={`min-h-11 rounded-xl px-3 py-2.5 text-xs font-bold transition-colors ${
                           actionState === "success"
                             ? "bg-emerald-600 text-white"
                             : canApprove

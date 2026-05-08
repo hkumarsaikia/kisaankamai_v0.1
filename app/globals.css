@@ -212,6 +212,21 @@
       overflow-wrap: break-word;
     }
   }
+
+  .kk-profile-selection-hero-copy,
+  .kk-profile-selection-hero-copy :is(h1, h2, p, span) {
+    text-align: center;
+    text-align-last: center;
+    hyphens: manual;
+  }
+
+  .kk-site-footer,
+  .kk-site-footer :is(h1, h2, h3, h4, h5, h6, p, li, dd, figcaption, blockquote, a, span) {
+    text-align: start;
+    text-align-last: auto;
+    hyphens: manual;
+    overflow-wrap: normal;
+  }
 }
 
 @layer utilities {

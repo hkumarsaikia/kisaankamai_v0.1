@@ -2,15 +2,15 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-import { getVisibleEquipmentRating, type EquipmentRecord } from "@/lib/equipment";
+import {
+  getEquipmentAvailability,
+  getVisibleEquipmentRating,
+  sortEquipmentByAvailabilityPriceDistance,
+  type EquipmentRecord,
+} from "@/lib/equipment";
 import { useState } from "react";
 
-type SortKey = "distance" | "hp-high" | "hp-low";
-
-function parseHpValue(hp: string) {
-  const match = hp.match(/(\d+(\.\d+)?)/);
-  return match ? Number(match[1]) : 0;
-}
+type SortKey = "availability" | "price-asc" | "distance";
 
 export function RenterEquipmentBrowser({
   equipment,
@@ -19,40 +19,29 @@ export function RenterEquipmentBrowser({
 }) {
   const { langText } = useLanguage();
   const [query, setQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortKey>("distance");
+  const [sortBy, setSortBy] = useState<SortKey>("availability");
 
   const normalizedQuery = query.trim().toLowerCase();
-  const filteredEquipment = equipment
-    .filter((item) => {
-      if (!normalizedQuery) {
-        return true;
-      }
+  const filteredMatches = equipment.filter((item) => {
+    if (!normalizedQuery) {
+      return true;
+    }
 
-      const searchableText = [
-        item.name,
-        item.categoryLabel,
-        item.location,
-        item.district,
-        item.hp,
-        ...item.tags,
-        ...item.workTypes,
-      ]
-        .join(" ")
-        .toLowerCase();
+    const searchableText = [
+      item.name,
+      item.categoryLabel,
+      item.location,
+      item.district,
+      item.hp,
+      ...item.tags,
+      ...item.workTypes,
+    ]
+      .join(" ")
+      .toLowerCase();
 
-      return searchableText.includes(normalizedQuery);
-    })
-    .sort((left, right) => {
-      if (sortBy === "hp-high") {
-        return parseHpValue(right.hp) - parseHpValue(left.hp);
-      }
-
-      if (sortBy === "hp-low") {
-        return parseHpValue(left.hp) - parseHpValue(right.hp);
-      }
-
-      return left.distanceKm - right.distanceKm;
-    });
+    return searchableText.includes(normalizedQuery);
+  });
+  const filteredEquipment = sortEquipmentByAvailabilityPriceDistance(filteredMatches, sortBy);
 
   return (
     <div className="space-y-8">
@@ -79,9 +68,9 @@ export function RenterEquipmentBrowser({
               onChange={(event) => setSortBy(event.target.value as SortKey)}
               className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
             >
-              <option value="distance">{langText("Closest Distance", "सर्वात जवळचे अंतर")}</option>
-              <option value="hp-high">{langText("Highest HP", "सर्वाधिक HP")}</option>
-              <option value="hp-low">{langText("Lowest HP", "कमी HP")}</option>
+              <option value="availability">{langText("Availability", "उपलब्धता")}</option>
+              <option value="price-asc">{langText("Price lowest to highest", "किंमत कमी ते जास्त")}</option>
+              <option value="distance">{langText("Distance", "अंतर")}</option>
             </select>
           </label>
         </div>
@@ -98,8 +87,8 @@ export function RenterEquipmentBrowser({
             </h2>
             <p className="mt-1 text-sm text-on-surface-variant">
               {langText(
-                "Browse by HP or distance and open the exact equipment detail page from each tile.",
-                "HP किंवा अंतरानुसार उपकरणे पहा आणि प्रत्येक टाइलमधून अचूक तपशील पान उघडा."
+                "Browse by availability, price, or distance and open the exact equipment detail page from each tile.",
+                "उपलब्धता, किंमत किंवा अंतरानुसार उपकरणे पहा आणि प्रत्येक टाइलमधून अचूक तपशील पान उघडा."
               )}
             </p>
           </div>
@@ -108,13 +97,25 @@ export function RenterEquipmentBrowser({
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {filteredEquipment.map((item) => {
             const visibleRating = getVisibleEquipmentRating(item);
+            const availability = getEquipmentAvailability(item);
 
             return (
               <article
                 key={item.id}
                 className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
               >
-              <img src={item.coverImage} alt={item.name} className="aspect-square w-full object-cover" />
+              <div className="relative">
+                <span
+                  className={`equipment-availability-dot absolute right-4 top-4 z-10 inline-flex h-4 w-4 rounded-full border-2 border-white shadow-lg ring-4 ${
+                    availability.available
+                      ? "bg-emerald-500 ring-emerald-500/20"
+                      : "bg-red-500 ring-red-500/20"
+                  }`}
+                  aria-label={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                  title={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                />
+                <img src={item.coverImage} alt={item.name} className="aspect-square w-full object-cover" />
+              </div>
               <div className="space-y-3 p-5">
                 <div className="space-y-1">
                   <h3 className="text-lg font-bold text-on-surface dark:text-slate-100">{item.name}</h3>

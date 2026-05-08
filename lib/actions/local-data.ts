@@ -9,6 +9,7 @@ import {
   createSubmissionRecord,
   deleteListingRecord,
   getListingById,
+  isListingBookable,
   notifyListingChanged,
   normalizeRolePreference,
   removeLocalUploadIfExists,
@@ -56,6 +57,45 @@ const ALLOWED_LISTING_IMAGE_TYPES = new Set([
   "image/webp",
   "image/avif",
 ]);
+
+type ListingAvailabilityMode = "now" | "date" | "unavailable";
+
+function normalizeListingAvailabilityMode(value: FormDataEntryValue | null): ListingAvailabilityMode {
+  const mode = String(value || "").trim();
+  if (mode === "date" || mode === "unavailable") {
+    return mode;
+  }
+
+  return "now";
+}
+
+function resolveListingAvailability(
+  formData: FormData,
+  existing?: { status?: "active" | "paused"; availableFrom?: string }
+) {
+  const explicitMode = formData.get("availabilityMode");
+
+  if (explicitMode === null && existing) {
+    return {
+      status: formData.get("status") === "paused" ? "paused" : existing.status || "active",
+      availableFrom:
+        String(formData.get("availableFrom") || "").trim() || existing.availableFrom || undefined,
+    };
+  }
+
+  const availabilityMode = normalizeListingAvailabilityMode(explicitMode);
+  if (availabilityMode === "unavailable") {
+    return { status: "paused" as const, availableFrom: undefined };
+  }
+
+  return {
+    status: "active" as const,
+    availableFrom:
+      availabilityMode === "date"
+        ? String(formData.get("availableFrom") || "").trim() || undefined
+        : undefined,
+  };
+}
 
 function finishFormAction(result: ActionResult): void {
   if (!result.ok) {
@@ -441,6 +481,7 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         .split(",")
         .map((value) => value.trim())
         .filter(Boolean);
+      const availability = resolveListingAvailability(formData);
 
       if (!name || !location || !pricePerHour) {
         return { ok: false, error: "Name, location, and price are required." };
@@ -482,8 +523,8 @@ export async function createListingAction(formData: FormData): Promise<ActionRes
         tags,
         workTypes,
         operatorIncluded: formData.get("operatorIncluded") === "on",
-        availableFrom: String(formData.get("availableFrom") || "").trim() || undefined,
-        status: formData.get("status") === "paused" ? "paused" : "active",
+        availableFrom: availability.availableFrom,
+        status: availability.status,
       });
 
       await notifyListingChanged({ listing, action: listing.status === "active" ? "created" : "paused" });
@@ -532,7 +573,8 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
         ? uploadedImages.map((upload) => upload.publicUrl)
         : existing.galleryImages;
       const coverImage = uploadedImages[0]?.publicUrl || existing.coverImage;
-      const nextStatus = formData.get("status") === "paused" ? "paused" : "active";
+      const availability = resolveListingAvailability(formData, existing);
+      const nextStatus = availability.status;
 
       if (nextStatus === "active" && (!coverImage || !galleryImages.length || !imagePaths.length)) {
         return { ok: false, error: "Upload at least one real equipment photo before activating this listing." };
@@ -562,8 +604,7 @@ export async function updateListingAction(formData: FormData): Promise<ActionRes
           .split(",")
           .map((value) => value.trim())
           .filter(Boolean),
-        availableFrom:
-          String(formData.get("availableFrom") || "").trim() || existing.availableFrom || undefined,
+        availableFrom: availability.availableFrom,
         operatorIncluded:
           formData.get("operatorIncluded") === null
             ? existing.operatorIncluded
@@ -675,6 +716,10 @@ export async function createBookingAction(
 
       if (listing.ownerUserId === session.user.id) {
         return { ok: false, code: "OWN_LISTING", error: "You cannot book your own listings." };
+      }
+
+      if (!isListingBookable(listing)) {
+        return { ok: false, error: "This equipment is not available for booking right now." };
       }
 
       const approxHours = parsed.data.approxHours || 8;

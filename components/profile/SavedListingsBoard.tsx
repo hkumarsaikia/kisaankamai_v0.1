@@ -3,7 +3,7 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { toggleSavedListingAction } from "@/lib/actions/local-data";
-import { getVisibleEquipmentRating } from "@/lib/equipment";
+import { getEquipmentAvailability, getVisibleEquipmentRating } from "@/lib/equipment";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -84,6 +84,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
           {listings.map((item) => {
             const state = buttonState[item.id] || "idle";
             const visibleRating = getVisibleEquipmentRating(item);
+            const availability = getEquipmentAvailability(item);
             return (
               <article
                 key={item.id}
@@ -112,6 +113,15 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                       ? langText("Ready to Book", "बुकिंगसाठी तयार")
                       : langText("Paused", "थांबवलेले")}
                   </div>
+                  <span
+                    className={`equipment-availability-dot absolute right-4 top-14 z-10 inline-flex h-4 w-4 rounded-full border-2 border-white shadow-lg ring-4 ${
+                      availability.available
+                        ? "bg-emerald-500 ring-emerald-500/20"
+                        : "bg-red-500 ring-red-500/20"
+                    }`}
+                    aria-label={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                    title={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                  />
                 </div>
                 <div className="p-6">
                   <div className="flex items-start justify-between gap-4">

@@ -32,10 +32,6 @@ export default async function ListEquipmentPage({
         listing ? "Edit Listing" : "Add New Listing",
         listing ? "लिस्टिंग संपादित करा" : "नवीन लिस्टिंग जोडा"
       )}
-      subtitle={localizedText(
-        "Use the guided listing flow to publish equipment details, pricing, service area, and photos.",
-        "उपकरण तपशील, किंमत, सेवा क्षेत्र आणि फोटो प्रकाशित करण्यासाठी मार्गदर्शित लिस्टिंग फ्लो वापरा."
-      )}
     >
       <ListEquipmentEditorPage listing={listing} defaultVillage={session?.profile.village || ""} />
     </OwnerProfileWorkspaceShell>
