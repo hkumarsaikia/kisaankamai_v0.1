@@ -20,7 +20,7 @@ const SHEET_DEFINITIONS = [
   {
     key: "listings",
     title: "listings",
-    headers: ["timestamp", "seed_batch_id", "source", "listing_id", "owner_uid", "slug", "name", "category", "category_label", "location", "district", "state", "price_per_hour", "unit_label", "hp", "distance_km", "rating", "status", "operator_included", "available_from", "cover_image", "gallery_count", "tags", "work_types", "created_at", "updated_at"],
+    headers: ["timestamp", "seed_batch_id", "source", "listing_id", "owner_uid", "slug", "name", "category", "category_label", "location", "district", "state", "price_per_hour", "unit_label", "hp", "distance_km", "rating", "rating_count", "status", "operator_included", "available_from", "cover_image", "gallery_count", "tags", "work_types", "created_at", "updated_at"],
     tabColor: { red: 0.71, green: 0.47, blue: 0.13 },
   },
   {

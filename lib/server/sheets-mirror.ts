@@ -163,6 +163,7 @@ export async function mirrorListing(listing: ListingRecord, source: string) {
           unit_label: listing.unitLabel,
           operator_included: listing.operatorIncluded,
           rating: listing.rating,
+          rating_count: listing.ratingCount || 0,
           hp: listing.hp,
           distance_km: listing.distanceKm,
           available_from: listing.availableFrom || "",

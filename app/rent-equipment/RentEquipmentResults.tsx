@@ -4,6 +4,7 @@ import { LazyMap } from "@/components/LazyMap";
 import { createHubCirclesFromEquipment, createListingMarkersFromEquipment } from "@/lib/map-data";
 import { getEquipmentList } from "@/lib/server/equipment";
 import { assetPath } from "@/lib/site";
+import { getVisibleEquipmentRating } from "@/lib/equipment";
 
 const QUERY_ALIASES: Record<string, string[]> = {
   tractor: ["tractor"],
@@ -75,6 +76,8 @@ function ResultCard({
 }: {
   item: Awaited<ReturnType<typeof getEquipmentList>>[number];
 }) {
+  const visibleRating = getVisibleEquipmentRating(item);
+
   return (
     <article className="group overflow-hidden rounded-2xl border border-surface-variant bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800/50 dark:bg-slate-900/40">
       <div className="relative aspect-square overflow-hidden bg-surface-container-high dark:bg-slate-900/60">
@@ -88,9 +91,12 @@ function ResultCard({
         <div className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] text-secondary shadow-sm dark:bg-slate-950/85 dark:text-emerald-300">
           {item.categoryLabel}
         </div>
-        <div className="absolute right-3 top-3 rounded-full bg-white/90 px-3 py-1 text-xs font-black text-primary shadow-sm dark:bg-slate-950/85 dark:text-white">
-          {item.rating.toFixed(1)}
-        </div>
+        {visibleRating ? (
+          <div className="equipment-rating-pill absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-xs font-black text-primary shadow-sm dark:bg-slate-950/85 dark:text-white">
+            <span className="material-symbols-outlined text-[15px] text-amber-500">star</span>
+            {visibleRating.value.toFixed(1)}
+          </div>
+        ) : null}
       </div>
 
       <div className="flex h-full flex-col p-5">

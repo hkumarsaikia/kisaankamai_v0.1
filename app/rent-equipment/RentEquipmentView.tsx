@@ -11,7 +11,7 @@ import { DETAIL_ROUTE_TEMPLATE } from "@/lib/discovery-routes";
 import { createHubCirclesFromEquipment, createListingMarkersFromEquipment } from "@/lib/map-data";
 import { assetPath } from "@/lib/site";
 import { normalizeCategorySlug, type EquipmentCategorySummary } from "@/lib/equipment-categories";
-import type { EquipmentRecord } from "@/lib/equipment";
+import { getVisibleEquipmentRating, type EquipmentRecord } from "@/lib/equipment";
 
 type RentEquipmentViewMode = "available" | "query-category" | "empty";
 
@@ -185,6 +185,7 @@ function NoEquipmentAvailable({
 function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compact?: boolean }) {
   const { langText, text } = useLanguage();
   const locationLabel = [item.location, item.district, item.state].filter(Boolean).join(", ");
+  const visibleRating = getVisibleEquipmentRating(item);
   const categoryLabel = text(item.categoryLabel, {
     sourceLanguage: "en",
     cacheKey: `rent-category-${item.id}`,
@@ -223,10 +224,10 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
               </div>
             </div>
             <div className="flex flex-col gap-2 text-sm text-on-surface-variant font-label mt-2">
-              {item.rating > 0 ? (
+              {visibleRating ? (
                 <div className="equipment-rating-pill inline-flex w-fit items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
                   <span className="material-symbols-outlined text-[15px]">star</span>
-                  {item.rating.toFixed(1)}
+                  {visibleRating.value.toFixed(1)}
                 </div>
               ) : null}
               <div className="flex items-center gap-2">
@@ -275,10 +276,10 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
         <div className="absolute top-3 right-3 bg-surface-container-lowest/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold text-primary font-label uppercase tracking-wider">
           {text(item.category, { sourceLanguage: "en", cacheKey: `rent-badge-${item.id}` })}
         </div>
-        {item.rating > 0 ? (
+        {visibleRating ? (
           <div className="equipment-rating-pill absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-black text-amber-700 shadow-sm backdrop-blur dark:bg-slate-950/85 dark:text-amber-200">
             <span className="material-symbols-outlined text-[15px]">star</span>
-            {item.rating.toFixed(1)}
+            {visibleRating.value.toFixed(1)}
           </div>
         ) : null}
       </div>

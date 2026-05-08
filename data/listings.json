@@ -12,7 +12,7 @@
     "description": "A high-capacity combine harvester ideal for peak harvest windows where fast turnaround matters.",
     "pricePerHour": 2500,
     "unitLabel": "per hour",
-    "rating": 4.7,
+    "rating": 0,
     "hp": "100 HP",
     "distanceKm": 8.5,
     "ownerName": "Sangli Agri-Hub",
@@ -40,7 +40,8 @@
     "operatorIncluded": true,
     "status": "active",
     "createdAt": "2024-10-16T10:00:00.000Z",
-    "updatedAt": "2024-10-16T10:00:00.000Z"
+    "updatedAt": "2024-10-16T10:00:00.000Z",
+    "ratingCount": 0
   },
   {
     "id": "4",
@@ -55,7 +56,7 @@
     "description": "A dependable tractor for daily field work with good fuel efficiency and strong pulling power.",
     "pricePerHour": 750,
     "unitLabel": "per hour",
-    "rating": 4.8,
+    "rating": 0,
     "hp": "48 HP",
     "distanceKm": 2.1,
     "ownerName": "Suresh Jadhav",
@@ -84,7 +85,8 @@
     "operatorIncluded": true,
     "status": "active",
     "createdAt": "2024-10-18T10:00:00.000Z",
-    "updatedAt": "2024-10-18T10:00:00.000Z"
+    "updatedAt": "2024-10-18T10:00:00.000Z",
+    "ratingCount": 0
   },
   {
     "id": "5",
@@ -99,7 +101,7 @@
     "description": "A premium tractor listing with verified operator support, strong PTO output, and regional owner coverage.",
     "pricePerHour": 850,
     "unitLabel": "per hour",
-    "rating": 4.9,
+    "rating": 0,
     "hp": "55 HP",
     "distanceKm": 15,
     "ownerName": "Sanjay Patil",
@@ -130,6 +132,7 @@
     "operatorIncluded": true,
     "status": "active",
     "createdAt": "2024-10-19T10:00:00.000Z",
-    "updatedAt": "2024-10-19T10:00:00.000Z"
+    "updatedAt": "2024-10-19T10:00:00.000Z",
+    "ratingCount": 0
   }
 ]

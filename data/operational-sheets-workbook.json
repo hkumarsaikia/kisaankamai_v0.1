@@ -92,6 +92,7 @@
         { "key": "unit_label", "header": "Unit Label", "width": 120, "type": "text" },
         { "key": "operator_included", "header": "Operator Included", "width": 150, "type": "boolean" },
         { "key": "rating", "header": "Rating", "width": 110, "type": "number" },
+        { "key": "rating_count", "header": "Rating Count", "width": 130, "type": "number" },
         { "key": "hp", "header": "HP", "width": 100, "type": "text" },
         { "key": "distance_km", "header": "Distance KM", "width": 120, "type": "number" },
         { "key": "available_from", "header": "Available From", "width": 150, "type": "date" },

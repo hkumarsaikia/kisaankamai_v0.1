@@ -2,6 +2,7 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
+import { getVisibleEquipmentRating } from "@/lib/equipment";
 import type { ListingRecord } from "@/lib/local-data/types";
 
 type ListingSummary = ListingRecord & {
@@ -30,11 +31,14 @@ export function OwnerEquipmentBrowser({
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {listings.map((listing) => (
-            <article
-              key={listing.id}
-              className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
-            >
+          {listings.map((listing) => {
+            const visibleRating = getVisibleEquipmentRating(listing);
+
+            return (
+              <article
+                key={listing.id}
+                className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
+              >
               <img src={listing.coverImage} alt={listing.name} className="aspect-[4/3] w-full object-cover" />
               <div className="space-y-4 p-5">
                 <div className="flex items-start justify-between gap-3">
@@ -73,10 +77,10 @@ export function OwnerEquipmentBrowser({
                 <div className="flex items-center justify-between text-sm">
                   <div>
                     <p className="font-semibold text-primary-container">₹{listing.pricePerHour}/hr</p>
-                    {listing.rating > 0 ? (
+                    {visibleRating ? (
                       <p className="equipment-rating-pill mt-1 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
                         <span className="material-symbols-outlined text-[15px]">star</span>
-                        {listing.rating.toFixed(1)}
+                        {visibleRating.value.toFixed(1)}
                       </p>
                     ) : null}
                   </div>
@@ -100,8 +104,9 @@ export function OwnerEquipmentBrowser({
                   </Link>
                 </div>
               </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
 
         {!listings.length ? (

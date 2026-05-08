@@ -3,6 +3,7 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { toggleSavedListingAction } from "@/lib/actions/local-data";
+import { getVisibleEquipmentRating } from "@/lib/equipment";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -82,6 +83,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
         <section className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {listings.map((item) => {
             const state = buttonState[item.id] || "idle";
+            const visibleRating = getVisibleEquipmentRating(item);
             return (
               <article
                 key={item.id}
@@ -121,10 +123,10 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                         {item.categoryLabel}
                       </p>
                     </div>
-                    {item.rating > 0 ? (
+                    {visibleRating ? (
                       <div className="equipment-rating-pill inline-flex items-center gap-1 rounded-xl bg-amber-50 px-3 py-2 text-sm font-bold text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
                         <span className="material-symbols-outlined text-[16px]">star</span>
-                        {item.rating.toFixed(1)}
+                        {visibleRating.value.toFixed(1)}
                       </div>
                     ) : null}
                   </div>

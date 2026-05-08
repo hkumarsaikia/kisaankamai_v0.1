@@ -2,7 +2,7 @@
 
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
-import type { EquipmentRecord } from "@/lib/equipment";
+import { getVisibleEquipmentRating, type EquipmentRecord } from "@/lib/equipment";
 import { useState } from "react";
 
 type SortKey = "distance" | "hp-high" | "hp-low";
@@ -106,11 +106,14 @@ export function RenterEquipmentBrowser({
         </div>
 
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {filteredEquipment.map((item) => (
-            <article
-              key={item.id}
-              className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
-            >
+          {filteredEquipment.map((item) => {
+            const visibleRating = getVisibleEquipmentRating(item);
+
+            return (
+              <article
+                key={item.id}
+                className="overflow-hidden rounded-[1.5rem] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
+              >
               <img src={item.coverImage} alt={item.name} className="aspect-square w-full object-cover" />
               <div className="space-y-3 p-5">
                 <div className="space-y-1">
@@ -138,10 +141,10 @@ export function RenterEquipmentBrowser({
                   <p className="text-lg font-extrabold text-primary-container dark:text-emerald-200">
                     ₹{item.pricePerHour}/hr
                   </p>
-                  {item.rating > 0 ? (
+                  {visibleRating ? (
                     <p className="equipment-rating-pill inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
                       <span className="material-symbols-outlined text-[15px]">star</span>
-                      {item.rating.toFixed(1)}
+                      {visibleRating.value.toFixed(1)}
                     </p>
                   ) : null}
                   <Link href={`/renter-profile/equipment/${item.id}`} className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white">
@@ -149,8 +152,9 @@ export function RenterEquipmentBrowser({
                   </Link>
                 </div>
               </div>
-            </article>
-          ))}
+              </article>
+            );
+          })}
         </div>
       </section>
     </div>

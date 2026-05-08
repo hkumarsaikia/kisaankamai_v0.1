@@ -1,5 +1,6 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
 import { LocalizedText } from "@/components/LocalizedText";
+import { getVisibleEquipmentRating } from "@/lib/equipment";
 import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings, getOwnerListings, getOwnerPayments } from "@/lib/server/local-data";
@@ -55,11 +56,14 @@ export default async function OwnerProfileEarningsPage() {
           </div>
 
           <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {pricingCards.map((listing) => (
-              <div
-                key={listing.id}
-                className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest"
-              >
+            {pricingCards.map((listing) => {
+              const visibleRating = getVisibleEquipmentRating(listing);
+
+              return (
+                <div
+                  key={listing.id}
+                  className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest"
+                >
                 <div className="relative h-32 bg-surface-container-high">
                   <img
                     alt={listing.name}
@@ -95,15 +99,19 @@ export default async function OwnerProfileEarningsPage() {
                         <p className="font-semibold text-primary-container">
                           {bookingCountByListing.get(listing.id) || 0} <LocalizedText en="bookings" mr="बुकिंग" />
                         </p>
-                        <p className="text-on-surface-variant">
-                          {listing.rating.toFixed(1)} <LocalizedText en="rating" mr="रेटिंग" />
-                        </p>
+                        {visibleRating ? (
+                          <p className="equipment-rating-pill mt-1 inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200">
+                            <span className="material-symbols-outlined text-[15px]">star</span>
+                            {visibleRating.value.toFixed(1)}
+                          </p>
+                        ) : null}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 

@@ -150,6 +150,7 @@ export function buildOperationalWorkbookRows(data, options = {}) {
     unit_label: listing.unitLabel || "",
     operator_included: Boolean(listing.operatorIncluded),
     rating: Number(listing.rating || 0),
+    rating_count: Number(listing.ratingCount || listing.reviewCount || listing.ratingsCount || 0),
     hp: listing.hp || "",
     distance_km: Number(listing.distanceKm || 0),
     available_from: listing.availableFrom || "",

@@ -178,11 +178,11 @@ test("owner and renter rating surfaces are removed, equipment rating remains sco
   ]);
 
   assert.match(rentView, /equipment-rating-pill/);
-  assert.match(rentView, /item\.rating > 0/);
+  assert.match(rentView, /getVisibleEquipmentRating/);
   assert.match(ownerBrowser, /equipment-rating-pill/);
   assert.match(renterBrowser, /equipment-rating-pill/);
   assert.match(savedBoard, /equipment-rating-pill/);
-  assert.match(earnings, /listing\.rating\.toFixed\(1\)/);
+  assert.match(earnings, /getVisibleEquipmentRating/);
 
   assert.doesNotMatch(detail, /Highly Trusted|Pending verification|workspace_premium|Listing location/);
   assert.doesNotMatch(detail, /Owner profile rating|owner rating/i);
@@ -199,6 +199,7 @@ test("rent equipment query cards are compact and retain equipment ratings", asyn
   assert.match(source, /compact \? "p-4 md:p-5"/);
   assert.match(source, /compact \? "text-lg md:text-xl"/);
   assert.match(source, /equipment-rating-pill/);
+  assert.match(source, /getVisibleEquipmentRating/);
   assert.doesNotMatch(source, /h-64 md:h-auto/);
   assert.doesNotMatch(source, /text-xl md:text-2xl/);
 });
@@ -212,10 +213,56 @@ test("equipment detail removes owner trust metadata and reduces workspace detail
   ]);
 
   assert.doesNotMatch(detail, /ownerBadge|Pending verification|Listing location|workspace_premium/);
-  assert.match(detail, /equipment\.rating > 0/);
+  assert.match(detail, /getVisibleEquipmentRating/);
   assert.match(layout, /workspaceContainer/);
   assert.match(ownerPage, /containerVariant="workspace"/);
   assert.match(renterPage, /containerVariant="workspace"/);
+});
+
+test("equipment rating stars require real review counts and fixture ratings are not faked", async () => {
+  const [
+    equipmentSource,
+    rentView,
+    rentResults,
+    detail,
+    ownerBrowser,
+    renterBrowser,
+    savedBoard,
+    earnings,
+    listingAction,
+    seedFixtures,
+  ] = await Promise.all([
+    readSource("../lib/equipment.ts"),
+    readSource("../app/rent-equipment/RentEquipmentView.tsx"),
+    readSource("../app/rent-equipment/RentEquipmentResults.tsx"),
+    readSource("../app/equipment/[id]/EquipmentDetailClient.tsx"),
+    readSource("../components/owner-profile/OwnerEquipmentBrowser.tsx"),
+    readSource("../components/renter-profile/RenterEquipmentBrowser.tsx"),
+    readSource("../components/profile/SavedListingsBoard.tsx"),
+    readSource("../app/owner-profile/earnings/page.tsx"),
+    readSource("../lib/actions/local-data.ts"),
+    readSource("../data/listings.json"),
+  ]);
+
+  assert.match(equipmentSource, /function getEquipmentRatingCount/);
+  assert.match(equipmentSource, /function getVisibleEquipmentRating/);
+
+  for (const source of [rentView, rentResults, detail, ownerBrowser, renterBrowser, savedBoard, earnings]) {
+    assert.match(source, /getVisibleEquipmentRating/);
+    assert.doesNotMatch(source, /\.rating\s*>\s*0/);
+  }
+
+  assert.doesNotMatch(listingAction, /rating:\s*Number\(formData\.get\("rating"\)\s*\|\|\s*4\.8\)/);
+
+  const listings = JSON.parse(seedFixtures);
+  for (const listing of listings) {
+    const rating = Number(listing.rating || 0);
+    const ratingCount = Number(listing.ratingCount || listing.reviewCount || listing.ratingsCount || 0);
+    assert.ok(
+      rating === 0 || ratingCount > 0,
+      `${listing.id} must not carry a visible fixture rating without a real rating count`
+    );
+  }
 });
 
 test("profile support feedback and settings components port the supplied local HTML visual systems", async () => {

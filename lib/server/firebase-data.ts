@@ -502,6 +502,10 @@ function mapListingFromFirestore(data: Partial<ListingRecord> & { id?: string })
     pricePerHour: Number(data.pricePerHour || 0),
     unitLabel: data.unitLabel || "per hour",
     rating: Number(data.rating || 0),
+    ratingCount: Math.max(
+      0,
+      Number(data.ratingCount || data.reviewCount || data.ratingsCount || 0)
+    ),
     hp: normalizeOptionalString(data.hp),
     distanceKm: Number(data.distanceKm || 0),
     ownerName,
@@ -1261,6 +1265,7 @@ export function listingToEquipmentRecord(
     pricePerHour: listing.pricePerHour,
     unitLabel: listing.unitLabel,
     rating: listing.rating,
+    ratingCount: listing.ratingCount || 0,
     hp: listing.hp,
     distanceKm: listing.distanceKm,
     ownerName: listing.ownerName,

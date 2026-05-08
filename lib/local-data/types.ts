@@ -61,6 +61,9 @@ export interface ListingRecord {
   pricePerHour: number;
   unitLabel: string;
   rating: number;
+  ratingCount?: number;
+  reviewCount?: number;
+  ratingsCount?: number;
   hp: string;
   distanceKm: number;
   ownerName: string;

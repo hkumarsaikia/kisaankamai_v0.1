@@ -6,7 +6,7 @@ import { createBookingAction } from "@/lib/actions/local-data";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { LazyMap } from "@/components/LazyMap";
-import type { EquipmentRecord } from "@/lib/equipment";
+import { getVisibleEquipmentRating, type EquipmentRecord } from "@/lib/equipment";
 import { useSmoothRouter } from "@/lib/client/useSmoothRouter";
 import { createListingMarker } from "@/lib/map-data";
 import { DETAIL_BOOKING_LAYOUT } from "@/lib/equipment-detail-layout.js";
@@ -80,6 +80,7 @@ export default function EquipmentDetailClient({
     equipment.category.endsWith("s") ? equipment.category : `${equipment.category}s`
   );
   const selectedGalleryImage = displayGalleryImages[selectedImageIndex] || equipment.coverImage;
+  const visibleRating = getVisibleEquipmentRating(equipment);
   const containerClassName =
     containerVariant === "workspace"
       ? DETAIL_BOOKING_LAYOUT.workspaceContainer
@@ -226,10 +227,10 @@ export default function EquipmentDetailClient({
             <span className="text-sm font-semibold uppercase tracking-wider text-primary">
               {equipment.categoryLabel}
             </span>
-            {equipment.rating > 0 ? (
+            {visibleRating ? (
               <div className="equipment-rating-pill flex items-center text-sm font-medium">
                 <span className="material-symbols-outlined mr-1 text-lg text-amber-500">star</span>
-                {equipment.rating.toFixed(1)}
+                {visibleRating.value.toFixed(1)}
               </div>
             ) : null}
           </div>
