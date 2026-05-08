@@ -32,8 +32,11 @@ test("owner-profile routes use the new owner dashboard, equipment browser, earni
   assert.match(root, /Recent Booking Activity/);
   assert.match(root, /owner-dashboard-booking-card/);
   assert.match(root, /owner-dashboard-booking-image/);
+  assert.match(root, /owner-dashboard-booking-actions/);
   assert.match(root, /md:grid-cols-2 xl:grid-cols-3/);
-  assert.match(root, /aspect-\[0\.95\]/);
+  assert.match(root, /formatDashboardDateRange/);
+  assert.match(root, /min-h-\[24\.5rem\]/);
+  assert.doesNotMatch(root, /aspect-\[0\.95\]/);
   assert.doesNotMatch(root, /sm:grid-cols-\[4\.5rem_minmax\(0,1fr\)_auto\]/);
   assert.doesNotMatch(root, /h-20 w-20|h-32 w-full/);
   assert.doesNotMatch(root, /getOwnerListings|getOwnerPayments|Active Listings|Open Bookings|Paid Earnings|Fleet Snapshot/);

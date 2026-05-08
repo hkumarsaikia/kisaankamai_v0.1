@@ -6,6 +6,23 @@ import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings } from "@/lib/server/local-data";
 import { supportContact } from "@/lib/support-contact";
 
+function formatDashboardDateRange(startDate: string, endDate: string) {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const formatter = new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "short",
+  });
+
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
+    return `${startDate} - ${endDate}`;
+  }
+
+  const formattedStart = formatter.format(start);
+  const formattedEnd = formatter.format(end);
+  return formattedStart === formattedEnd ? formattedStart : `${formattedStart} - ${formattedEnd}`;
+}
+
 export default async function OwnerProfilePage() {
   const session = await getCurrentSession();
   const bookings = session ? await getOwnerBookings(session.user.id) : [];
@@ -50,7 +67,7 @@ export default async function OwnerProfilePage() {
               recentBookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="owner-dashboard-booking-card flex aspect-[0.95] min-h-[22rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-surface-container-lowest shadow-sm transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-primary/25 hover:shadow-lg dark:border-slate-800 dark:bg-slate-950/60"
+                  className="owner-dashboard-booking-card flex min-h-[24.5rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-surface-container-lowest shadow-sm transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-primary/25 hover:shadow-lg dark:border-slate-800 dark:bg-slate-950/60"
                 >
                   <div className="relative h-40 shrink-0 overflow-hidden bg-surface-container sm:h-44">
                     <img
@@ -78,8 +95,8 @@ export default async function OwnerProfilePage() {
                         <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">
                           <LocalizedText en="Dates" mr="तारखा" />
                         </p>
-                        <p className="mt-1 text-sm font-semibold text-on-background">
-                          {booking.startDate} <LocalizedText en="to" mr="ते" /> {booking.endDate}
+                        <p className="mt-1 whitespace-nowrap text-sm font-semibold text-on-background">
+                          {formatDashboardDateRange(booking.startDate, booking.endDate)}
                         </p>
                       </div>
                       <div>
@@ -92,7 +109,7 @@ export default async function OwnerProfilePage() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="owner-dashboard-booking-actions grid grid-cols-2 gap-2 pt-1">
                       <a
                         href={`tel:${booking.renterProfile?.phone || supportContact.phoneE164}`}
                         className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-white/70 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-900"
