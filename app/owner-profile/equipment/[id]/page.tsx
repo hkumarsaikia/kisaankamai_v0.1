@@ -32,7 +32,13 @@ export default async function OwnerProfileEquipmentDetailPage({
       title={localizedText("Equipment Details", "उपकरण तपशील")}
       subtitle={localizedText("Review this listing inside the owner workspace.", "ही लिस्टिंग मालक वर्कस्पेसमध्ये तपासा.")}
     >
-      <EquipmentDetailClient equipment={equipment} relatedEquipment={relatedEquipment} showBreadcrumbs={false} containerVariant="workspace" />
+      <EquipmentDetailClient
+        equipment={equipment}
+        relatedEquipment={relatedEquipment}
+        showBreadcrumbs={false}
+        containerVariant="workspace"
+        currentUserId={session.user.id}
+      />
     </OwnerProfileWorkspaceShell>
   );
 }

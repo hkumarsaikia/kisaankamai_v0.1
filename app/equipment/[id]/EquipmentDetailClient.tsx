@@ -34,11 +34,13 @@ export default function EquipmentDetailClient({
   equipment,
   showBreadcrumbs = true,
   containerVariant = "public",
+  currentUserId = null,
 }: {
   equipment: EquipmentRecord;
   relatedEquipment: EquipmentRecord[];
   showBreadcrumbs?: boolean;
   containerVariant?: "public" | "workspace";
+  currentUserId?: string | null;
 }) {
   const router = useSmoothRouter();
   const { langText, text } = useLanguage();
@@ -83,6 +85,7 @@ export default function EquipmentDetailClient({
   const selectedGalleryImage = displayGalleryImages[selectedImageIndex] || equipment.coverImage;
   const visibleRating = getVisibleEquipmentRating(equipment);
   const availability = getEquipmentAvailability(equipment);
+  const isOwnListing = Boolean(currentUserId && equipment.ownerUserId === currentUserId);
   const containerClassName =
     containerVariant === "workspace"
       ? DETAIL_BOOKING_LAYOUT.workspaceContainer
@@ -103,6 +106,12 @@ export default function EquipmentDetailClient({
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setError("");
+
+    if (isOwnListing) {
+      setOwnListingToast(true);
+      window.setTimeout(() => setOwnListingToast(false), 4000);
+      return;
+    }
 
     if (!availability.available) {
       setError(langText("This equipment is not available for booking right now.", "हे उपकरण सध्या बुकिंगसाठी उपलब्ध नाही."));
@@ -551,13 +560,13 @@ export default function EquipmentDetailClient({
 
               <button
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-white shadow-md transition hover:bg-primary-container"
-                disabled={isPending || !availability.available}
+                disabled={isPending || (!availability.available && !isOwnListing)}
                 type="submit"
               >
-                {!availability.available
-                  ? langText("Currently unavailable", "सध्या उपलब्ध नाही")
-                  : isPending
-                    ? langText("Submitting...", "सबमिट होत आहे...")
+                {isPending
+                  ? langText("Submitting...", "सबमिट होत आहे...")
+                  : !availability.available && !isOwnListing
+                    ? langText("Currently unavailable", "सध्या उपलब्ध नाही")
                     : langText("Book Now", "आता बुक करा")}
               </button>
             </div>

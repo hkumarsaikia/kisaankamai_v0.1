@@ -14,6 +14,7 @@ export interface EquipmentRecord {
   ratingCount: number;
   hp: string;
   distanceKm: number;
+  ownerUserId: string;
   ownerName: string;
   ownerLocation: string;
   ownerVerified: boolean;

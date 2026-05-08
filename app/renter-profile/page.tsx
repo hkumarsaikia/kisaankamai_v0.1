@@ -13,6 +13,10 @@ export default async function RenterProfilePage() {
       family="renter-profile"
       activeTab="dashboard"
       title={localizedText("Renter Profile", "भाडेकरू प्रोफाइल")}
+      subtitle={localizedText(
+        "Find, track, and manage equipment bookings from your renter workspace.",
+        "भाडेकरू वर्कस्पेसमधून उपकरणे शोधा, बुकिंग ट्रॅक करा आणि व्यवस्थापित करा."
+      )}
     >
       <RenterBookingsBoard bookings={bookings} variant="dashboard" />
     </OwnerProfileWorkspaceShell>

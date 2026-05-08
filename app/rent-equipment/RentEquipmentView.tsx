@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { ContentImage } from "@/components/ContentImage";
+import { EquipmentSortMenu, type EquipmentSortKey } from "@/components/equipment/EquipmentSortMenu";
 import { useLanguage } from "@/components/LanguageContext";
 import { LazyMap } from "@/components/LazyMap";
 import { SharedIcon } from "@/components/SharedIcon";
@@ -19,7 +20,7 @@ import {
 } from "@/lib/equipment";
 
 type RentEquipmentViewMode = "available" | "query-category" | "empty";
-type SortKey = "availability" | "price-asc" | "distance";
+type SortKey = EquipmentSortKey;
 
 type LocalizedLabel = {
   en: string;
@@ -141,33 +142,7 @@ function SortControl({
   onSortChange: (value: SortKey) => void;
   variant?: "surface" | "primary";
 }) {
-  const { langText } = useLanguage();
-  const isPrimary = variant === "primary";
-
-  return (
-    <label
-      className={`relative inline-flex items-center gap-2 rounded-lg text-sm font-medium transition-colors ${
-        isPrimary
-          ? "bg-primary text-on-primary hover:bg-primary/90"
-          : "border border-outline-variant bg-surface text-on-surface hover:bg-surface-container-low"
-      }`}
-    >
-      <span className="material-symbols-outlined pointer-events-none absolute left-4 text-lg">sort</span>
-      <select
-        value={sortBy}
-        onChange={(event) => onSortChange(event.target.value as SortKey)}
-        aria-label={langText("Sort results", "निकाल क्रम लावा")}
-        className={`h-10 cursor-pointer appearance-none rounded-lg bg-transparent py-2 pl-11 pr-9 text-sm font-medium outline-none ${
-          isPrimary ? "text-on-primary" : "text-on-surface"
-        }`}
-      >
-        <option value="availability">{langText("Availability", "उपलब्धता")}</option>
-        <option value="price-asc">{langText("Price lowest to highest", "किंमत कमी ते जास्त")}</option>
-        <option value="distance">{langText("Distance", "अंतर")}</option>
-      </select>
-      <span className="material-symbols-outlined pointer-events-none absolute right-3 text-base">expand_more</span>
-    </label>
-  );
+  return <EquipmentSortMenu sortBy={sortBy} onSortChange={onSortChange} variant={variant} />;
 }
 
 function AvailabilityDot({ item }: { item: EquipmentRecord }) {

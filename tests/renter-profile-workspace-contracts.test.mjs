@@ -27,6 +27,8 @@ test("renter-profile routes use the new renter booking board while preserving co
   ]);
 
   assert.match(root, /title=\{localizedText\("Renter Profile", "भाडेकरू प्रोफाइल"\)\}/);
+  assert.match(root, /subtitle=\{localizedText\(/);
+  assert.match(root, /Find, track, and manage equipment bookings from your renter workspace\./);
   assert.match(root, /RenterBookingsBoard/);
   assert.match(root, /variant="dashboard"/);
   assert.match(bookings, /RenterBookingsBoard/);
@@ -37,6 +39,57 @@ test("renter-profile routes use the new renter booking board while preserving co
   assert.match(feedbackSuccess, /primaryHref="\/renter-profile"/);
   assert.match(feedbackSuccess, /secondaryHref="\/renter-profile\/bookings"/);
   assert.doesNotMatch(feedbackSuccess, /OwnerProfileViews/);
+});
+
+test("renter workspace removes requested helper copy from pages and boards", async () => {
+  const [
+    supportPage,
+    feedbackPage,
+    settingsPage,
+    savedBoard,
+    bookingsPage,
+    bookingsBoard,
+    browsePage,
+    browseBoard,
+    rootPage,
+  ] = await Promise.all([
+    readFile(new URL("../app/renter-profile/support/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/renter-profile/feedback/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/renter-profile/settings/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/profile/SavedListingsBoard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/renter-profile/bookings/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/renter-profile/RenterBookingsBoard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/renter-profile/browse/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/renter-profile/RenterEquipmentBrowser.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/renter-profile/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  const combined = [
+    supportPage,
+    feedbackPage,
+    settingsPage,
+    savedBoard,
+    bookingsPage,
+    bookingsBoard,
+    browsePage,
+    browseBoard,
+    rootPage,
+  ].join("\n");
+
+  [
+    "Get booking help, owner support, and ticket updates in one place.",
+    "Tell us what would improve your renter experience.",
+    "Manage your account and preferences.",
+    "Browse equipment and save machines you want to review later.",
+    "Manage active, pending, completed, and cancelled rentals with inline tracking.",
+    "My Bookings Manage your equipment rentals, schedules, and delivery tracking.",
+    "Manage your equipment rentals, schedules, and delivery tracking.",
+    "Explore nearby machines and sort the catalog by HP or distance before opening details.",
+    "Browse by availability, price, or distance and open the exact equipment detail page from each tile.",
+    "Manage your current equipment bookings.",
+  ].forEach((copy) => {
+    assert.doesNotMatch(combined, new RegExp(copy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  });
 });
 
 test("renter-style views keep renter-family links and saved equipment flows", async () => {

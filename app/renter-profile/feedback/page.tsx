@@ -15,10 +15,6 @@ export default async function RenterProfileFeedbackPage() {
       family="renter-profile"
       activeTab="feedback"
       title={localizedText("Feedback", "अभिप्राय")}
-      subtitle={localizedText(
-        "Tell us what would improve your renter experience.",
-        "तुमचा भाडेकरू अनुभव सुधारण्यासाठी काय मदत होईल ते सांगा."
-      )}
     >
       <ProfileFeedbackForm family="renter-profile" session={session} />
     </OwnerProfileWorkspaceShell>

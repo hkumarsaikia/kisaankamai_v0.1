@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { EquipmentSortMenu, type EquipmentSortKey } from "@/components/equipment/EquipmentSortMenu";
 import { useLanguage } from "@/components/LanguageContext";
 import {
   getEquipmentAvailability,
@@ -10,8 +11,6 @@ import {
 } from "@/lib/equipment";
 import { useState } from "react";
 
-type SortKey = "availability" | "price-asc" | "distance";
-
 export function RenterEquipmentBrowser({
   equipment,
 }: {
@@ -19,7 +18,7 @@ export function RenterEquipmentBrowser({
 }) {
   const { langText } = useLanguage();
   const [query, setQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortKey>("availability");
+  const [sortBy, setSortBy] = useState<EquipmentSortKey>("availability");
 
   const normalizedQuery = query.trim().toLowerCase();
   const filteredMatches = equipment.filter((item) => {
@@ -44,40 +43,37 @@ export function RenterEquipmentBrowser({
   const filteredEquipment = sortEquipmentByAvailabilityPriceDistance(filteredMatches, sortBy);
 
   return (
-    <div className="space-y-8">
-      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        <div className="grid gap-4 xl:grid-cols-[1.4fr_1fr]">
-          <label className="space-y-2">
-            <span className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
-              {langText("Equipment Search", "उपकरण शोध")}
+    <div className="space-y-7">
+      <section className="rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-5">
+        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+          <label className="block min-w-0">
+            <span className="mb-2 block text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
+              {langText("Search Equipment", "उपकरणे शोधा")}
             </span>
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-              placeholder={langText("Search tractor, location, HP, or work type", "ट्रॅक्टर, ठिकाण, HP किंवा कामाचा प्रकार शोधा")}
-              type="search"
-            />
+            <div className="relative">
+              <span className="material-symbols-outlined pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[20px] text-on-surface-variant">
+                search
+              </span>
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                className="h-12 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 pl-12 text-sm font-semibold text-on-surface outline-none transition-colors focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/15 dark:border-slate-700 dark:bg-slate-950 dark:focus:bg-slate-900"
+                placeholder={langText("Search tractor, location, HP, or work type", "ट्रॅक्टर, ठिकाण, HP किंवा कामाचा प्रकार शोधा")}
+                type="search"
+              />
+            </div>
           </label>
-          <label className="space-y-2">
-            <span className="text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
+          <div className="min-w-0">
+            <span className="mb-2 block text-xs font-black uppercase tracking-[0.2em] text-on-surface-variant dark:text-slate-400">
               {langText("Sort Equipment", "उपकरणे क्रम लावा")}
             </span>
-            <select
-              value={sortBy}
-              onChange={(event) => setSortBy(event.target.value as SortKey)}
-              className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm dark:border-slate-700 dark:bg-slate-950"
-            >
-              <option value="availability">{langText("Availability", "उपलब्धता")}</option>
-              <option value="price-asc">{langText("Price lowest to highest", "किंमत कमी ते जास्त")}</option>
-              <option value="distance">{langText("Distance", "अंतर")}</option>
-            </select>
-          </label>
+            <EquipmentSortMenu sortBy={sortBy} onSortChange={setSortBy} className="w-full justify-stretch lg:w-auto" />
+          </div>
         </div>
       </section>
 
       <section className="space-y-5">
-        <div className="flex items-end justify-between">
+        <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="text-xl font-bold text-on-surface dark:text-slate-100">
               {langText("Available Equipment", "उपलब्ध उपकरणे")}{" "}
@@ -85,12 +81,6 @@ export function RenterEquipmentBrowser({
                 ({filteredEquipment.length} {langText("Results", "निकाल")})
               </span>
             </h2>
-            <p className="mt-1 text-sm text-on-surface-variant">
-              {langText(
-                "Browse by availability, price, or distance and open the exact equipment detail page from each tile.",
-                "उपलब्धता, किंमत किंवा अंतरानुसार उपकरणे पहा आणि प्रत्येक टाइलमधून अचूक तपशील पान उघडा."
-              )}
-            </p>
           </div>
         </div>
 

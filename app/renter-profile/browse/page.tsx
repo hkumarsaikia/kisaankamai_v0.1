@@ -11,10 +11,6 @@ export default async function RenterProfileBrowsePage() {
       family="renter-profile"
       activeTab="browse"
       title={localizedText("Browse Equipment", "उपकरणे शोधा")}
-      subtitle={localizedText(
-        "Explore nearby machines and sort the catalog by HP or distance before opening details.",
-        "तपशील उघडण्यापूर्वी जवळची उपकरणे पहा आणि HP किंवा अंतरानुसार क्रम लावा."
-      )}
     >
       <RenterEquipmentBrowser equipment={equipment} />
     </OwnerProfileWorkspaceShell>

@@ -113,3 +113,21 @@ test("profile dropdown exposes unread notification count, refreshes inbox, and r
   assert.match(inbox, /notifications\.slice\(0, Math\.max\(1, limit\)\)/);
   assert.match(inbox, /unreadCount: notifications\.length/);
 });
+
+test("booking cancellation and decline updates create clear inbox notifications for the opposite party", async () => {
+  const firebaseData = await readSource("../lib/server/firebase-data.ts");
+  const messaging = await readSource("../lib/server/firebase-messaging.ts");
+  const inbox = await readSource("../lib/server/notification-inbox.ts");
+
+  assert.match(firebaseData, /previousStatus: booking\.status/);
+  assert.match(firebaseData, /Booking declined/);
+  assert.match(firebaseData, /Booking cancelled/);
+  assert.match(firebaseData, /userIds: \[input\.booking\.renterUserId\]/);
+  assert.match(firebaseData, /userIds: \[input\.booking\.ownerUserId\]/);
+  assert.match(firebaseData, /status: input\.booking\.status/);
+  assert.match(firebaseData, /workspace: "renter"/);
+  assert.match(firebaseData, /workspace: "owner"/);
+  assert.match(messaging, /createUserNotifications/);
+  assert.match(inbox, /status === "cancelled"/);
+  assert.match(inbox, /return "danger"/);
+});

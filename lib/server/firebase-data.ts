@@ -1274,6 +1274,7 @@ export function listingToEquipmentRecord(
     ratingCount: listing.ratingCount || 0,
     hp: listing.hp,
     distanceKm: listing.distanceKm,
+    ownerUserId: listing.ownerUserId,
     ownerName: listing.ownerName,
     ownerLocation: listing.ownerLocation,
     ownerVerified: listing.ownerVerified,
@@ -1676,16 +1677,30 @@ async function notifyBookingCreated(input: {
 
 async function notifyBookingStatusChanged(input: {
   booking: BookingRecord;
+  previousStatus: BookingRecord["status"];
   listingName: string;
   actorRole: "owner" | "renter";
 }) {
   const statusLabel = bookingStatusLabel(input.booking.status);
 
   if (input.actorRole === "owner") {
+    const ownerDeclinedPendingRequest =
+      input.booking.status === "cancelled" && input.previousStatus === "pending";
+    const ownerCancelledBooking =
+      input.booking.status === "cancelled" && !ownerDeclinedPendingRequest;
+
     await sendPushNotificationToUsers({
       userIds: [input.booking.renterUserId],
-      title: `Booking ${statusLabel}`,
-      body: `Your booking for ${input.listingName} is now ${input.booking.status}.`,
+      title: ownerDeclinedPendingRequest
+        ? "Booking declined"
+        : ownerCancelledBooking
+          ? "Booking cancelled"
+          : `Booking ${statusLabel}`,
+      body: ownerDeclinedPendingRequest
+        ? `Your request for ${input.listingName} was declined by the owner.`
+        : ownerCancelledBooking
+          ? `The owner cancelled your booking for ${input.listingName}.`
+          : `Your booking for ${input.listingName} is now ${input.booking.status}.`,
       link: "/renter-profile/bookings",
       data: {
         bookingId: input.booking.id,
@@ -1699,7 +1714,7 @@ async function notifyBookingStatusChanged(input: {
 
   await sendPushNotificationToUsers({
     userIds: [input.booking.ownerUserId],
-    title: "Booking cancelled",
+    title: "Booking cancelled by renter",
     body: `A renter cancelled the booking for ${input.listingName}.`,
     link: "/owner-profile/bookings",
     data: {
@@ -1754,6 +1769,7 @@ export async function updateBookingStatus(
   const listing = await getListingById(updated.listingId);
   await notifyBookingStatusChanged({
     booking: updated,
+    previousStatus: booking.status,
     listingName: listing?.name || "your equipment",
     actorRole: ownerCanUpdate ? "owner" : "renter",
   });

@@ -162,12 +162,6 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
       ) : (
         <section className="rounded-[1.75rem] border border-dashed border-outline-variant bg-surface-container-low p-8 text-center dark:border-slate-700 dark:bg-slate-950/60">
           <h3 className="text-2xl font-black text-primary">{langText("No saved equipment yet", "अजून उपकरणे जतन केलेली नाहीत")}</h3>
-          <p className="mt-3 text-sm text-on-surface-variant">
-            {langText(
-              "Browse equipment and save machines you want to review later.",
-              "उपकरणे शोधा आणि नंतर तपासायची उपकरणे जतन करा."
-            )}
-          </p>
           <Link
             href="/renter-profile/browse"
             className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white"

@@ -128,14 +128,6 @@ export function RenterBookingsBoard({
                 ? langText("Booking Overview", "बुकिंग आढावा")
                 : langText("My Bookings", "माझी बुकिंग")}
             </h2>
-            <p className="mt-2 text-sm font-medium text-on-surface-variant">
-              {variant === "dashboard"
-                ? langText("Manage your current equipment bookings.", "तुमची सध्याची उपकरण बुकिंग व्यवस्थापित करा.")
-                : langText(
-                    "Manage your equipment rentals, schedules, and delivery tracking.",
-                    "उपकरण भाडे, वेळापत्रक आणि डिलिव्हरी ट्रॅकिंग व्यवस्थापित करा."
-                  )}
-            </p>
           </div>
           <Link
             href="/renter-profile/browse"

@@ -15,10 +15,6 @@ export default async function RenterProfileSettingsPage() {
       family="renter-profile"
       activeTab="settings"
       title={localizedText("Settings", "सेटिंग्ज")}
-      subtitle={localizedText(
-        "Manage your account and preferences.",
-        "तुमचे खाते आणि प्राधान्ये व्यवस्थापित करा."
-      )}
     >
       <ProfileSettingsForm family="renter-profile" session={session} />
     </OwnerProfileWorkspaceShell>

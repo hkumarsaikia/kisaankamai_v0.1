@@ -13,10 +13,6 @@ export default async function RenterProfileBookingsPage() {
       family="renter-profile"
       activeTab="bookings"
       title={localizedText("My Bookings", "माझी बुकिंग")}
-      subtitle={localizedText(
-        "Manage active, pending, completed, and cancelled rentals with inline tracking.",
-        "इनलाइन ट्रॅकिंगसह सक्रिय, प्रलंबित, पूर्ण आणि रद्द भाडे व्यवस्थापित करा."
-      )}
     >
       <RenterBookingsBoard bookings={bookings} variant="page" />
     </OwnerProfileWorkspaceShell>

@@ -352,15 +352,17 @@ test("owner listing photos are limited to three and mirrored as explicit URLs an
 });
 
 test("rent equipment pages expose base search, query sort, and compact no-equipment spacing", async () => {
-  const [viewSource, pageSource, siteChromeSource, siteChromeRoutesSource] = await Promise.all([
+  const [viewSource, sortMenuSource, pageSource, siteChromeSource, siteChromeRoutesSource] = await Promise.all([
     readSource("../app/rent-equipment/RentEquipmentView.tsx"),
+    readSource("../components/equipment/EquipmentSortMenu.tsx"),
     readSource("../app/rent-equipment/page.tsx"),
     readSource("../components/SiteChrome.tsx"),
     readSource("../lib/site-chrome-routes.js"),
   ]);
 
   assert.match(viewSource, /available-search-panel/);
-  assert.match(viewSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
+  assert.match(viewSource, /EquipmentSortMenu/);
+  assert.match(sortMenuSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
   assert.match(viewSource, /pb-0/);
   assert.match(viewSource, /pt-\[5\.5rem\] md:pt-\[5\.5rem\]/);
   assert.match(viewSource, /equipment-card-media-frame/);
