@@ -234,7 +234,7 @@ export function ProfileDropdownMenu({
   const panelClassName =
     panelMode === "inline"
       ? "relative mt-3 w-full"
-      : "absolute right-0 top-full mt-3 w-[min(92vw,30rem)] max-w-[calc(100vw-1.5rem)] sm:w-[28rem] lg:w-[30rem]";
+      : "absolute right-0 top-full mt-3 w-[min(90vw,28rem)] max-w-[calc(100vw-1.5rem)] sm:w-[26.5rem] lg:w-[28rem]";
 
   useEffect(() => {
     setAvatarError(false);

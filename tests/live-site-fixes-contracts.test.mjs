@@ -428,15 +428,15 @@ test("profile menu uses the supplied dropdown states and the trigger has a soft 
   assert.match(profileMenu, /kk-profile-trigger/);
   assert.match(profileMenu, /kk-depth-tile/);
   assert.match(profileMenu, /data-opaque-profile-menu/);
-  assert.match(profileMenu, /w-\[min\(92vw,30rem\)\]/);
-  assert.match(profileMenu, /lg:w-\[30rem\]/);
+  assert.match(profileMenu, /w-\[min\(90vw,28rem\)\]/);
+  assert.match(profileMenu, /lg:w-\[28rem\]/);
   assert.match(profileMenu, /NOTIFICATIONS/);
   assert.match(profileMenu, /Clear All/);
   assert.match(profileMenu, /All caught up!/);
   assert.match(profileMenu, /animate-pulse/);
   assert.match(profileMenu, /py-2/);
   assert.doesNotMatch(profileMenu, /bg-white\/80|bg-white\/75|backdrop-blur-xl/);
-  assert.doesNotMatch(profileMenu, /\bw-80\b|w-\[20rem\]/);
+  assert.doesNotMatch(profileMenu, /\bw-80\b|w-\[20rem\]|w-\[min\(92vw,30rem\)\]/);
   assert.doesNotMatch(profileMenu, /py-5/);
   assert.doesNotMatch(profileMenu, /header\.menu\.settings|header\.menu\.help_support/);
 });
