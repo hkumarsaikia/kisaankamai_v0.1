@@ -18,6 +18,8 @@ type OwnerBookingsBoardProps = {
   bookings: BookingWithDetails[];
 };
 
+type BookingActionState = "idle" | "pending" | "success" | "error";
+
 const FILTERS: Array<{ key: FilterKey; label: string }> = [
   { key: "all", label: "All Bookings" },
   { key: "pending", label: "Pending" },
@@ -66,11 +68,15 @@ function countFilter(bookings: BookingWithDetails[], filter: FilterKey) {
   return bookings.filter((booking) => mapBookingStatus(booking.status).filter === filter).length;
 }
 
+function actionStateKey(bookingId: string, nextStatus: "confirmed" | "cancelled") {
+  return `${bookingId}:${nextStatus}`;
+}
+
 export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
   const { langText } = useLanguage();
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
-  const [buttonState, setButtonState] = useState<Record<string, "idle" | "pending" | "success" | "error">>({});
+  const [buttonState, setButtonState] = useState<Record<string, BookingActionState>>({});
   const [errorState, setErrorState] = useState<Record<string, string>>({});
   const [isPending, startTransition] = useTransition();
 
@@ -80,13 +86,14 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
       : bookings.filter((booking) => mapBookingStatus(booking.status).filter === activeFilter);
 
   const runStatusUpdate = (bookingId: string, nextStatus: "confirmed" | "cancelled") => {
+    const key = actionStateKey(bookingId, nextStatus);
     setErrorState((current) => ({ ...current, [bookingId]: "" }));
-    setButtonState((current) => ({ ...current, [bookingId]: "pending" }));
+    setButtonState((current) => ({ ...current, [key]: "pending" }));
 
     startTransition(async () => {
       const result = await updateBookingStatusAction(bookingId, nextStatus);
       if (!result.ok) {
-        setButtonState((current) => ({ ...current, [bookingId]: "error" }));
+        setButtonState((current) => ({ ...current, [key]: "error" }));
         setErrorState((current) => ({
           ...current,
           [bookingId]: result.error || langText("Could not update this booking.", "हे बुकिंग अपडेट करता आले नाही."),
@@ -94,7 +101,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
         return;
       }
 
-      setButtonState((current) => ({ ...current, [bookingId]: "success" }));
+      setButtonState((current) => ({ ...current, [key]: "success" }));
       window.setTimeout(() => router.refresh(), 650);
     });
   };
@@ -145,11 +152,11 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
               const listing = booking.listing;
               const renter = booking.renterProfile;
               const status = mapBookingStatus(booking.status);
-              const actionState = buttonState[booking.id] || "idle";
               const renterPhone = renter?.phone || supportContact.phoneE164;
               const renterName = renter?.fullName || langText("Renter", "भाडेकरू");
-              const canApprove = booking.status === "pending";
-              const canDecline = booking.status === "pending" || booking.status === "confirmed";
+              const canActOnPending = booking.status === "pending";
+              const approveState = buttonState[actionStateKey(booking.id, "confirmed")] || "idle";
+              const declineState = buttonState[actionStateKey(booking.id, "cancelled")] || "idle";
 
               return (
                 <article
@@ -205,7 +212,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
                       </div>
                     ) : null}
 
-                    <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2">
+                    <div className={`grid grid-cols-1 items-stretch gap-2 ${canActOnPending ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
                       <a
                         href={`tel:${renterPhone}`}
                         className="flex min-h-11 items-center justify-center gap-1 rounded-xl border border-outline-variant px-3 py-2.5 text-xs font-bold text-on-surface transition-colors hover:bg-surface-container"
@@ -213,32 +220,48 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
                         <span className="material-symbols-outlined text-sm">call</span>
                         {langText("Call", "कॉल")}
                       </a>
-                      <button
-                        type="button"
-                        onClick={() => runStatusUpdate(booking.id, canApprove ? "confirmed" : "cancelled")}
-                        disabled={isPending || (!canApprove && !canDecline)}
-                        className={`min-h-11 rounded-xl px-3 py-2.5 text-xs font-bold transition-colors ${
-                          actionState === "success"
-                            ? "bg-emerald-600 text-white"
-                            : canApprove
-                              ? "bg-emerald-600 text-white hover:bg-emerald-700"
-                              : canDecline
-                                ? "border border-error text-error hover:bg-error-container"
-                                : "cursor-not-allowed border border-outline-variant bg-surface-container text-on-surface-variant"
-                        }`}
-                      >
-                        {actionState === "pending"
-                          ? langText("Updating...", "अपडेट करत आहे...")
-                          : actionState === "success"
-                            ? canApprove
+                      {canActOnPending ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => runStatusUpdate(booking.id, "confirmed")}
+                            disabled={isPending}
+                            className="owner-bookings-approve-button inline-flex min-h-11 items-center justify-center gap-1 rounded-xl bg-emerald-600 px-3 py-2.5 text-xs font-bold text-white transition-colors hover:bg-emerald-700 disabled:cursor-wait disabled:opacity-70"
+                          >
+                            {approveState === "pending" ? (
+                              <span className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white animate-spin" />
+                            ) : (
+                              <span className="material-symbols-outlined text-sm">check</span>
+                            )}
+                            {approveState === "success"
                               ? langText("Approved", "मंजूर")
-                              : langText("Declined", "नाकारले")
-                            : canApprove
-                              ? langText("Approve", "मंजूर करा")
-                              : canDecline
-                                ? langText("Decline", "नकार द्या")
-                                : langText("Closed", "बंद")}
-                      </button>
+                              : approveState === "pending"
+                                ? langText("Approving", "मंजूर करत आहे")
+                                : langText("Approve", "मंजूर करा")}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => runStatusUpdate(booking.id, "cancelled")}
+                            disabled={isPending}
+                            className="owner-bookings-decline-button inline-flex min-h-11 items-center justify-center gap-1 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-xs font-bold text-red-700 transition-colors hover:bg-red-100 disabled:cursor-wait disabled:opacity-70 dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-200"
+                          >
+                            {declineState === "pending" ? (
+                              <span className="h-4 w-4 rounded-full border-2 border-red-300 border-t-red-700 animate-spin dark:border-red-300/30 dark:border-t-red-100" />
+                            ) : (
+                              <span className="material-symbols-outlined text-sm">close</span>
+                            )}
+                            {declineState === "success"
+                              ? langText("Declined", "नाकारले")
+                              : declineState === "pending"
+                                ? langText("Declining", "नाकारत आहे")
+                                : langText("Decline", "नकार द्या")}
+                          </button>
+                        </>
+                      ) : (
+                        <span className="inline-flex min-h-11 items-center justify-center rounded-xl border border-outline-variant bg-surface-container px-3 py-2.5 text-xs font-bold text-on-surface-variant">
+                          {langText("Closed", "बंद")}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </article>

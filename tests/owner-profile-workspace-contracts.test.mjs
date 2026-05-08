@@ -19,8 +19,9 @@ test("owner-profile workspace shell exposes owner-style navigation with earnings
 });
 
 test("owner-profile routes use the new owner dashboard, equipment browser, earnings views, and owner-only redirects", async () => {
-  const [root, browse, earnings, saved, feedbackSuccess] = await Promise.all([
+  const [root, activity, browse, earnings, saved, feedbackSuccess] = await Promise.all([
     readFile(new URL("../app/owner-profile/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/profile/OwnerRecentBookingActivity.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/browse/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/earnings/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/saved/page.tsx", import.meta.url), "utf8"),
@@ -29,13 +30,12 @@ test("owner-profile routes use the new owner dashboard, equipment browser, earni
 
   assert.match(root, /title=\{localizedText\("Owner Profile", "मालक प्रोफाइल"\)\}/);
   assert.match(root, /getOwnerBookings/);
-  assert.match(root, /Recent Booking Activity/);
-  assert.match(root, /owner-dashboard-booking-card/);
-  assert.match(root, /owner-dashboard-booking-image/);
-  assert.match(root, /owner-dashboard-booking-actions/);
-  assert.match(root, /md:grid-cols-2 xl:grid-cols-3/);
-  assert.match(root, /formatDashboardDateRange/);
-  assert.match(root, /min-h-\[24\.5rem\]/);
+  assert.match(root, /OwnerRecentBookingActivity/);
+  assert.match(activity, /Recent Booking Activity/);
+  assert.match(activity, /md:grid-cols-2 xl:grid-cols-3/);
+  assert.doesNotMatch(root, /owner-dashboard-booking-card/);
+  assert.doesNotMatch(root, /formatDashboardDateRange/);
+  assert.doesNotMatch(root, /min-h-\[24\.5rem\]/);
   assert.doesNotMatch(root, /aspect-\[0\.95\]/);
   assert.doesNotMatch(root, /sm:grid-cols-\[4\.5rem_minmax\(0,1fr\)_auto\]/);
   assert.doesNotMatch(root, /h-20 w-20|h-32 w-full/);
@@ -45,11 +45,31 @@ test("owner-profile routes use the new owner dashboard, equipment browser, earni
   assert.match(earnings, /localizedText\("Pricing & Earnings", "किंमत आणि कमाई"\)/);
   assert.match(earnings, /getOwnerBookings/);
   assert.doesNotMatch(earnings, /getOwnerPayments/);
+  assert.doesNotMatch(earnings, /Kisan Kamai does not collect or process payments/);
+  assert.doesNotMatch(earnings, /<LocalizedText en="Direct Settlement"/);
   assert.match(earnings, /activeTab="earnings"/);
   assert.match(saved, /redirect\("\/owner-profile\/browse"\)/);
   assert.match(feedbackSuccess, /primaryHref="\/owner-profile"/);
   assert.match(feedbackSuccess, /secondaryHref="\/owner-profile\/browse"/);
   assert.doesNotMatch(feedbackSuccess, /RenterProfileViews/);
+});
+
+test("owner dashboard recent booking activity can decline pending requests and reflect cancelled state", async () => {
+  const [root, activity] = await Promise.all([
+    readFile(new URL("../app/owner-profile/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/profile/OwnerRecentBookingActivity.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(root, /<OwnerRecentBookingActivity bookings=\{recentBookings\}/);
+  assert.match(activity, /"use client"/);
+  assert.match(activity, /updateBookingStatusAction/);
+  assert.match(activity, /setLocalBookings/);
+  assert.match(activity, /nextStatus: "confirmed" \| "cancelled"/);
+  assert.match(activity, /owner-dashboard-decline-button/);
+  assert.match(activity, /owner-dashboard-approve-button/);
+  assert.match(activity, /booking\.status === "pending"/);
+  assert.match(activity, /status: nextStatus/);
+  assert.match(activity, /router\.refresh/);
 });
 
 test("owner earnings content uses the revenue panel and owner-family links", async () => {

@@ -145,22 +145,10 @@ export default async function OwnerProfileEarningsPage() {
         </section>
 
         <section className="overflow-hidden rounded-2xl border border-outline-variant bg-surface-container-lowest shadow-sm">
-          <div className="flex flex-col gap-3 border-b border-outline-variant p-5 sm:flex-row sm:items-start sm:justify-between">
-            <div>
-              <h2 className="font-headline text-xl font-bold text-on-surface">
-                <LocalizedText en="Booking Value History" mr="बुकिंग मूल्य इतिहास" />
-              </h2>
-              <p className="mt-2 max-w-3xl text-sm font-medium leading-6 text-on-surface-variant">
-                <LocalizedText
-                  en="Kisan Kamai does not collect or process payments. These values are owner-listed estimates and are settled directly between owner and renter."
-                  mr="किसान कमाई पैसे घेत नाही किंवा पेमेंट प्रक्रिया करत नाही. ही मूल्ये मालकाने दिलेली अंदाजित रक्कम आहेत आणि व्यवहार मालक व भाडेकरू थेट करतात."
-                />
-              </p>
-            </div>
-            <span className="inline-flex w-fit items-center gap-2 rounded-full bg-primary-container/10 px-3 py-2 text-xs font-black uppercase tracking-[0.12em] text-primary">
-              <span className="material-symbols-outlined text-[16px]">handshake</span>
-              <LocalizedText en="Direct Settlement" mr="थेट व्यवहार" />
-            </span>
+          <div className="border-b border-outline-variant p-5">
+            <h2 className="font-headline text-xl font-bold text-on-surface">
+              <LocalizedText en="Booking Value History" mr="बुकिंग मूल्य इतिहास" />
+            </h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">

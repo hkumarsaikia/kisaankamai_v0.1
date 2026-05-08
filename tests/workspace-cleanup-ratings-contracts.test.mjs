@@ -95,6 +95,23 @@ test("owner workspace removes requested dashboard copy, tracking actions, and ol
   assert.doesNotMatch(legacyOwnerViews, /Track Order|actionThree:\s*"Track"|Track all your confirmed/);
 });
 
+test("owner booking cards expose separate approve and decline controls for pending requests", async () => {
+  const [ownerBookings, ownerActivity] = await Promise.all([
+    readSource("../components/profile/OwnerBookingsBoard.tsx"),
+    readSource("../components/profile/OwnerRecentBookingActivity.tsx"),
+  ]);
+
+  for (const source of [ownerBookings, ownerActivity]) {
+    assert.match(source, /owner-[a-z-]+approve-button/);
+    assert.match(source, /owner-[a-z-]+decline-button/);
+    assert.match(source, /booking\.status === "pending"/);
+    assert.match(source, /runStatusUpdate\(booking\.id, "confirmed"\)/);
+    assert.match(source, /runStatusUpdate\(booking\.id, "cancelled"\)/);
+  }
+
+  assert.doesNotMatch(ownerBookings, /onClick=\{\(\) => runStatusUpdate\(booking\.id, canApprove \? "confirmed" : "cancelled"\)\}/);
+});
+
 test("owner workspace forms use compact aesthetically balanced layouts", async () => {
   const [settings, feedback, support, earnings] = await Promise.all([
     readSource("../components/profile/ProfileSettingsForm.tsx"),

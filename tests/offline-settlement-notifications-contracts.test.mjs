@@ -11,14 +11,14 @@ test("owner earnings presents booking value and direct offline settlement, not p
 
   assert.match(earnings, /Booking Value History/);
   assert.match(earnings, /Estimated Rental Value/);
-  assert.match(earnings, /Direct Settlement/);
-  assert.match(earnings, /Kisan Kamai does not collect or process payments/);
   assert.match(earnings, /bookingStatusLabel/);
   assert.match(earnings, /bookingStatusTone/);
   assert.match(earnings, /booking\.status/);
   assert.match(earnings, /booking requests/);
 
   assert.doesNotMatch(earnings, /Rental Income History/);
+  assert.doesNotMatch(earnings, /Kisan Kamai does not collect or process payments/);
+  assert.doesNotMatch(earnings, /<LocalizedText en="Direct Settlement"/);
   assert.doesNotMatch(earnings, /Settlement Mode/);
   assert.doesNotMatch(earnings, /Phone Confirmation|Manual Confirmation/);
   assert.doesNotMatch(earnings, /paymentTone/);
