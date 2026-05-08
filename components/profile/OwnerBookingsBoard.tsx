@@ -1,6 +1,5 @@
 "use client";
 
-import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { updateBookingStatusAction } from "@/lib/actions/local-data";
 import type { BookingRecord, ListingRecord, ProfileRecord } from "@/lib/local-data/types";
@@ -147,7 +146,6 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
               const renter = booking.renterProfile;
               const status = mapBookingStatus(booking.status);
               const actionState = buttonState[booking.id] || "idle";
-              const detailsHref = `/owner-profile/equipment/${listing?.id || booking.listingId}`;
               const renterPhone = renter?.phone || supportContact.phoneE164;
               const renterName = renter?.fullName || langText("Renter", "भाडेकरू");
               const canApprove = booking.status === "pending";
@@ -207,13 +205,7 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
                       </div>
                     ) : null}
 
-                    <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-3">
-                      <Link
-                        href={detailsHref}
-                        className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary-container px-3 py-2.5 text-center text-xs font-bold text-white transition-colors hover:bg-primary"
-                      >
-                        {langText("Details", "तपशील")}
-                      </Link>
+                    <div className="grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2">
                       <a
                         href={`tel:${renterPhone}`}
                         className="flex min-h-11 items-center justify-center gap-1 rounded-xl border border-outline-variant px-3 py-2.5 text-xs font-bold text-on-surface transition-colors hover:bg-surface-container"

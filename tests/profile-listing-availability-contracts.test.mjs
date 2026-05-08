@@ -21,11 +21,14 @@ test("profile selection and footer override global justified copy where centered
   assert.match(globals, /\.kk-site-footer/);
 });
 
-test("owner booking details action uses the same button alignment contract as sibling actions", async () => {
+test("owner booking cards remove Details action and keep two aligned actions", async () => {
   const source = await readSource("../components/profile/OwnerBookingsBoard.tsx");
 
-  assert.match(source, /grid grid-cols-1 items-stretch/);
-  assert.match(source, /inline-flex min-h-11 items-center justify-center/);
+  assert.match(source, /grid grid-cols-1 items-stretch gap-2 sm:grid-cols-2/);
+  assert.match(source, /min-h-11 items-center justify-center/);
+  assert.doesNotMatch(source, /detailsHref/);
+  assert.doesNotMatch(source, /langText\("Details", "तपशील"\)/);
+  assert.doesNotMatch(source, /href=\{detailsHref\}/);
 });
 
 test("profile settings removes preferred workspace editing from the settings form", async () => {

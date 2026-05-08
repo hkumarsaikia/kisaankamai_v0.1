@@ -167,7 +167,7 @@ test("equipment detail supports workspace chrome, sticky booking panel, and unau
   assert.match(renterPage, /showBreadcrumbs=\{false\}/);
   assert.match(ownerBrowser, /\/owner-profile\/equipment\/\$\{listing\.id\}/);
   assert.match(renterBrowser, /\/renter-profile\/equipment\/\$\{item\.id\}/);
-  assert.match(ownerBookings, /\/owner-profile\/equipment\/\$\{listing\?\.id \|\| booking\.listingId\}/);
+  assert.doesNotMatch(ownerBookings, /\/owner-profile\/equipment\/\$\{listing\?\.id \|\| booking\.listingId\}/);
   assert.match(renterBookings, /\/renter-profile\/equipment\/\$\{listing\?\.id \|\| booking\.listingId\}/);
 });
 

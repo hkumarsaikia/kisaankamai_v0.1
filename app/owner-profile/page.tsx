@@ -45,19 +45,25 @@ export default async function OwnerProfilePage() {
             </div>
           </div>
 
-          <div className="grid gap-3 p-4 sm:p-5">
+          <div className="grid gap-5 p-4 sm:p-5 md:grid-cols-2 xl:grid-cols-3">
             {recentBookings.length ? (
               recentBookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="owner-dashboard-booking-card rounded-2xl border border-slate-200 bg-surface-container-low/80 p-3 shadow-sm transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-md dark:border-slate-800 dark:bg-slate-950/60 sm:p-4"
+                  className="owner-dashboard-booking-card flex aspect-[0.95] min-h-[22rem] flex-col overflow-hidden rounded-2xl border border-slate-200 bg-surface-container-lowest shadow-sm transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-1 hover:border-primary/25 hover:shadow-lg dark:border-slate-800 dark:bg-slate-950/60"
                 >
-                  <div className="grid gap-3 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-center">
+                  <div className="relative h-40 shrink-0 overflow-hidden bg-surface-container sm:h-44">
                     <img
                       src={booking.listing?.coverImage || "https://placehold.co/320x240?text=Equipment"}
                       alt={booking.listing?.name || "Equipment"}
-                      className="h-20 w-20 rounded-2xl object-cover shadow-sm"
+                      className="owner-dashboard-booking-image h-full w-full object-cover"
                     />
+                    <span className="absolute right-3 top-3 inline-flex items-center justify-center rounded-full bg-primary-fixed px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-primary-container shadow-sm">
+                      {booking.status}
+                    </span>
+                  </div>
+
+                  <div className="flex min-h-0 flex-1 flex-col justify-between gap-4 p-4">
                     <div className="min-w-0">
                       <h3 className="truncate text-base font-bold text-on-surface dark:text-slate-100">
                         {booking.listing?.name || "Equipment Booking"}
@@ -65,30 +71,42 @@ export default async function OwnerProfilePage() {
                       <p className="mt-1 truncate text-sm text-on-surface-variant dark:text-slate-400">
                         {booking.renterProfile?.fullName || <LocalizedText en="Verified renter" mr="पडताळलेला भाडेकरू" />}
                       </p>
-                      <p className="mt-1 text-sm font-semibold text-primary-container">
-                        {booking.startDate} <LocalizedText en="to" mr="ते" /> {booking.endDate}
-                      </p>
                     </div>
-                    <div className="flex flex-wrap gap-2 sm:flex-col sm:items-end">
-                      <span className="inline-flex items-center justify-center rounded-full bg-primary-fixed px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-primary-container">
-                        {booking.status}
-                      </span>
-                      <div className="flex flex-wrap gap-2 sm:justify-end">
-                        <a
-                          href={`tel:${booking.renterProfile?.phone || supportContact.phoneE164}`}
-                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-white/70 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-900 sm:text-sm"
-                        >
-                          <span className="material-symbols-outlined text-[18px]">call</span>
-                          <LocalizedText en="Call Renter" mr="भाडेकरूला कॉल करा" />
-                        </a>
-                        <Link
-                          href={`/owner-profile/equipment/${booking.listing?.id || booking.listingId}`}
-                          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-xs font-bold text-white transition-opacity hover:opacity-90 sm:text-sm"
-                        >
-                          <span className="material-symbols-outlined text-[18px]">visibility</span>
-                          <LocalizedText en="View Equipment" mr="उपकरण पहा" />
-                        </Link>
+
+                    <div className="grid grid-cols-2 gap-3 rounded-xl bg-surface-container-low p-3">
+                      <div>
+                        <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">
+                          <LocalizedText en="Dates" mr="तारखा" />
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-on-background">
+                          {booking.startDate} <LocalizedText en="to" mr="ते" /> {booking.endDate}
+                        </p>
                       </div>
+                      <div>
+                        <p className="font-label text-[10px] uppercase tracking-[0.18em] text-on-surface-variant">
+                          <LocalizedText en="Total" mr="एकूण" />
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-on-background">
+                          ₹{booking.amount.toLocaleString("en-IN")}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2">
+                      <a
+                        href={`tel:${booking.renterProfile?.phone || supportContact.phoneE164}`}
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-on-surface transition-colors hover:bg-white/70 dark:border-slate-700 dark:text-slate-100 dark:hover:bg-slate-900"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">call</span>
+                        <LocalizedText en="Call" mr="कॉल" />
+                      </a>
+                      <Link
+                        href={`/owner-profile/equipment/${booking.listing?.id || booking.listingId}`}
+                        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-xs font-bold text-white transition-opacity hover:opacity-90"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">visibility</span>
+                        <LocalizedText en="View" mr="पहा" />
+                      </Link>
                     </div>
                   </div>
                 </div>
