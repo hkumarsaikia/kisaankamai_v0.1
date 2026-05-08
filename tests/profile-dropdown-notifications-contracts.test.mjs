@@ -74,13 +74,13 @@ test("profile dropdown has smooth opaque panel states for desktop and mobile", a
 test("profile dropdown popover gives real notifications a balanced readable layout", async () => {
   const dropdown = await readSource("../components/ProfileDropdownMenu.tsx");
 
-  assert.match(dropdown, /w-\[min\(90vw,28rem\)\]/);
-  assert.match(dropdown, /sm:w-\[26\.5rem\]/);
-  assert.match(dropdown, /lg:w-\[28rem\]/);
+  assert.match(dropdown, /w-\[min\(76vw,25rem\)\]/);
+  assert.match(dropdown, /sm:w-\[24rem\]/);
+  assert.match(dropdown, /lg:w-\[25rem\]/);
   assert.match(dropdown, /line-clamp-2 text-sm font-bold/);
   assert.match(dropdown, /line-clamp-3 text-xs/);
   assert.doesNotMatch(dropdown, /\bw-80\b/);
-  assert.doesNotMatch(dropdown, /w-\[min\(92vw,30rem\)\]/);
+  assert.doesNotMatch(dropdown, /w-\[min\((8[06]|9[02])vw,(26|28|30)rem\)\]/);
   assert.doesNotMatch(dropdown, /block truncate text-sm font-bold/);
 });
 
