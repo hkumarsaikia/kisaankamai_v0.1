@@ -325,6 +325,12 @@ export default function EquipmentDetailClient({
                   {langText("Equipment Owner", "उपकरण मालक")}
                 </p>
                 <h3 className="mt-2 text-2xl font-black text-on-surface">{equipment.ownerName}</h3>
+                {equipment.ownerLocation ? (
+                  <div className="kk-owner-location-row mt-4 inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-primary/10 bg-white/75 px-3.5 py-2 text-sm font-bold text-on-surface-variant shadow-sm backdrop-blur dark:border-emerald-400/15 dark:bg-slate-950/70 sm:justify-start">
+                    <span className="material-symbols-outlined text-base text-primary">location_on</span>
+                    <span className="truncate">{equipment.ownerLocation}</span>
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

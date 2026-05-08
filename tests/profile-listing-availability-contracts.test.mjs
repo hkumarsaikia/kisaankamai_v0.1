@@ -97,7 +97,8 @@ test("equipment detail workspace mobile layout prioritizes booking and removes f
   assert.doesNotMatch(detail, /Work Type|कामाचा प्रकार/);
   assert.doesNotMatch(detail, /Operator included|Operator optional|ऑपरेटर समाविष्ट|ऑपरेटर ऐच्छिक/);
   assert.doesNotMatch(detail, />\s*\{equipment\.district\}\s*<\/span>/);
-  assert.doesNotMatch(detail, /equipment\.ownerLocation/);
+  assert.match(detail, /kk-owner-location-row/);
+  assert.match(detail, /equipment\.ownerLocation/);
   assert.match(actions, /isListingBookable/);
   assert.match(serverData, /isListingBookable/);
   assert.match(serverData, /This equipment is not available for booking right now\./);
