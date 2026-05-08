@@ -234,7 +234,7 @@ export function ProfileDropdownMenu({
   const panelClassName =
     panelMode === "inline"
       ? "relative mt-3 w-full"
-      : "absolute right-0 top-full mt-3 w-80 max-w-[calc(100vw-1.5rem)]";
+      : "absolute right-0 top-full mt-3 w-[min(92vw,30rem)] max-w-[calc(100vw-1.5rem)] sm:w-[28rem] lg:w-[30rem]";
 
   useEffect(() => {
     setAvatarError(false);
@@ -379,7 +379,7 @@ export function ProfileDropdownMenu({
                   ))}
                 </div>
               ) : notifications.length ? (
-                <div className="flex max-h-[22rem] flex-col gap-2 overflow-y-auto px-3 pb-3">
+                <div className="flex max-h-[24rem] flex-col gap-2.5 overflow-y-auto px-3.5 pb-4">
                   {notifications.map((notification) => {
                     const classes = notificationClasses(notification.tone);
                     const content = (
@@ -388,10 +388,10 @@ export function ProfileDropdownMenu({
                           <span className="material-symbols-outlined text-xl">{notification.icon || "notifications"}</span>
                         </div>
                         <div className="min-w-0 flex-1 text-left">
-                          <span className="block truncate text-sm font-bold text-slate-800 dark:text-slate-100">
+                          <span className="line-clamp-2 text-sm font-bold leading-5 text-slate-800 dark:text-slate-100">
                             {notification.title}
                           </span>
-                          <p className="mt-0.5 line-clamp-2 text-xs leading-5 text-slate-600 dark:text-slate-400">
+                          <p className="mt-1 line-clamp-3 text-xs leading-5 text-slate-600 dark:text-slate-400">
                             {notification.body}
                           </p>
                           <span className="mt-1 block text-[10px] font-bold uppercase tracking-wide text-slate-400">
@@ -409,7 +409,7 @@ export function ProfileDropdownMenu({
                           void markNotificationRead(notification.id);
                           closeMenu();
                         }}
-                        className={`kk-profile-notification-row group flex gap-3 rounded-xl border p-3 ${classes.row}`}
+                        className={`kk-profile-notification-row group flex items-start gap-3.5 rounded-2xl border p-3.5 ${classes.row}`}
                       >
                         {content}
                       </Link>
@@ -418,7 +418,7 @@ export function ProfileDropdownMenu({
                         key={notification.id}
                         type="button"
                         onClick={() => void markNotificationRead(notification.id)}
-                        className={`kk-profile-notification-row group flex w-full gap-3 rounded-xl border p-3 ${classes.row}`}
+                        className={`kk-profile-notification-row group flex w-full items-start gap-3.5 rounded-2xl border p-3.5 ${classes.row}`}
                       >
                         {content}
                       </button>
