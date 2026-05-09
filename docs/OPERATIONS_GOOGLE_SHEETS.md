@@ -106,6 +106,7 @@ Those preserved tabs are not rebuilt from Firebase because they are append-only 
 ## Notes
 
 - The live server mirror now writes richer row shapes, typed numeric cells, stronger headers, filters, and status-based conditional styling.
+- Booking rows mirror the server-accepted booking status after the shared transition guard runs. Sheets must not be treated as an authority for editing booking state.
 - `booking_requests` is now a first-class sheet instead of being lost inside generic submission payloads.
 - `feature-request` submissions are visible in `support_requests` with subject, urgency, location, and message columns plus the full payload JSON.
 - Newsletter subscriptions are visible in `newsletter_subscriptions` and use the same pending/sent email notification columns as the other public forms.

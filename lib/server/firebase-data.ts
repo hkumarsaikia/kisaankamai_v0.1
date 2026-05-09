@@ -571,6 +571,47 @@ const availabilityBlockingBookingStatuses = new Set<BookingRecord["status"]>([
   "confirmed",
 ]);
 
+type BookingTransitionActor = "owner" | "renter";
+
+const ALLOWED_BOOKING_STATUS_TRANSITIONS: Record<
+  BookingTransitionActor,
+  Record<BookingRecord["status"], BookingRecord["status"][]>
+> = {
+  owner: {
+    pending: ["confirmed", "cancelled"],
+    confirmed: ["active", "completed", "cancelled"],
+    upcoming: ["active", "completed", "cancelled"],
+    active: ["completed", "cancelled"],
+    completed: [],
+    cancelled: [],
+  },
+  renter: {
+    pending: ["cancelled"],
+    confirmed: ["cancelled"],
+    upcoming: ["cancelled"],
+    active: ["cancelled"],
+    completed: [],
+    cancelled: [],
+  },
+};
+
+function assertAllowedBookingStatusTransition(input: {
+  actorRole: BookingTransitionActor;
+  currentStatus: BookingRecord["status"];
+  nextStatus: BookingRecord["status"];
+}) {
+  if (input.currentStatus === input.nextStatus) {
+    return;
+  }
+
+  const allowedNextStatuses =
+    ALLOWED_BOOKING_STATUS_TRANSITIONS[input.actorRole][input.currentStatus] || [];
+
+  if (!allowedNextStatuses.includes(input.nextStatus)) {
+    throw new Error("This booking status change is not allowed.");
+  }
+}
+
 function bookingBlocksAvailability(booking: BookingRecord) {
   return availabilityBlockingBookingStatuses.has(booking.status);
 }
@@ -1744,6 +1785,17 @@ export async function updateBookingStatus(
     throw new Error("Booking not found.");
   }
 
+  const actorRole = ownerCanUpdate ? "owner" : "renter";
+  assertAllowedBookingStatusTransition({
+    actorRole,
+    currentStatus: booking.status,
+    nextStatus: status,
+  });
+
+  if (booking.status === status) {
+    return booking;
+  }
+
   const updated = {
     ...booking,
     status,
@@ -1771,7 +1823,7 @@ export async function updateBookingStatus(
     booking: updated,
     previousStatus: booking.status,
     listingName: listing?.name || "your equipment",
-    actorRole: ownerCanUpdate ? "owner" : "renter",
+    actorRole,
   });
 
   return updated;

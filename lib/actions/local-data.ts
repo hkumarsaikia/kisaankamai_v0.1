@@ -40,6 +40,7 @@ import {
   registerInputSchema,
   supportRequestSchema,
 } from "@/lib/validation/forms";
+import type { BookingRecord } from "@/lib/local-data/types";
 import type { RegisterInputPayload } from "@/lib/validation/forms";
 
 interface ActionResult {
@@ -777,7 +778,7 @@ export async function toggleSavedListingFormAction(listingId: string, formData: 
 
 export async function updateBookingStatusAction(
   bookingId: string,
-  status: "pending" | "upcoming" | "active" | "confirmed" | "completed" | "cancelled"
+  status: BookingRecord["status"]
 ): Promise<ActionResult> {
   return runLoggedAction("updateBookingStatusAction", [bookingId, status], async () => {
     const session = await getCurrentSession();
@@ -797,7 +798,7 @@ export async function updateBookingStatusAction(
 
 export async function updateBookingStatusFormAction(
   bookingId: string,
-  status: "pending" | "upcoming" | "active" | "confirmed" | "completed" | "cancelled",
+  status: BookingRecord["status"],
   formData: FormData
 ): Promise<void> {
   void formData;

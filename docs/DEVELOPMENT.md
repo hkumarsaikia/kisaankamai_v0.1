@@ -8,6 +8,7 @@ Current stack: Next.js 16, React 19, Tailwind CSS 4, TypeScript 6, ESLint 9, and
 
 ```bash
 PUPPETEER_SKIP_DOWNLOAD=true npm ci
+python3 -m pip install -r requirements.txt
 npm run dev
 ```
 
@@ -23,6 +24,14 @@ npm run firebase:preflight
 npm run firebase:rules:dry-run
 npm run launch:gate
 ```
+
+Optional AI/code-review pass for scoped local diffs:
+
+```bash
+coderabbit review --agent -t uncommitted -c AGENTS.md
+```
+
+If the working tree has unrelated untracked generated folders, exclude them locally with `.git/info/exclude` or review a committed branch/PR so the review service does not exceed file-count limits.
 
 ## Hardware-Tuned Local Commands
 
@@ -92,6 +101,7 @@ Phone-only auth flow contract:
 - Next.js 16 builds with Turbopack after removing legacy Pages Router stubs.
 - Protected pre-render route checks use the Next.js 16 `proxy.js` file convention; `/list-equipment` still performs server-side session verification after the proxy cookie-presence guard.
 - Puppeteer browser download is disabled; use `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome`.
+- Puppeteer is intentionally a `devDependency`. Do not move it back into production dependencies; browser automation and smoke checks are tooling, not runtime.
 - NVIDIA GPU routing is fixed for Chrome/Puppeteer rendering checks through the root runner, but build, lint, typecheck, Firebase verification, and Sheets verification remain CPU/network-bound.
 
 ## Logs
@@ -141,6 +151,19 @@ The latest local summaries are written to `logs/runtime/final-test-accounts/`.
 
 Run `npm run launch:gate` before any production deploy. It runs the standard root verification, validates Firebase/App Hosting config, compiles Firestore and Storage rules with a dry run, and verifies the operational workbook.
 
+## Bug-Fix Evidence Bundles
+
+Timestamped bug-fix records live under `docs/bug-fixes/<timestamp>-<slug>/`.
+Use these bundles for operational evidence that should travel with the repo:
+
+- root-cause notes
+- changed-file manifests
+- generated artifact copies when useful for review
+- verification command summaries
+- CodeRabbit or manual review summaries
+
+Do not move canonical runtime files into a bug-fix bundle. Source files, generated docs used by tests, and package lockfiles must remain in their expected project paths; the bundle may contain timestamped copies or notes.
+
 ## Public Data Contract
 
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
@@ -154,6 +177,7 @@ Run `npm run launch:gate` before any production deploy. It runs the standard roo
 - `/owner-benefits` is a client-side owner earnings calculator. The calculator does not create backend, Firestore, or Sheets rows unless a real form is added later; it should use the shared equipment category source, Maharashtra district list, and the local HTML calculator treatment including the `More locations coming soon...` location note.
 - `/support` is a live public form. Keep the visible page aligned with the current support content and primary contact, keep the contact form visually aligned with `/home/hkuma/Documents/support.html`, keep the urgent-help panel compact, and keep submissions wired to `/api/forms/support-request`, the `support-request` submission type, and the `support_requests` Sheets tab.
 - `/owner-profile/earnings` is an offline booking-value view, not a payment-processing ledger. Show owner-listed rates, booking request counts, booking statuses, estimated rental values, and direct/offline settlement language only. Do not show platform payment states such as processing, paid out, refunded, payout, billing, or settlement handled by Kisan Kamai. Legacy `payments` storage and Sheets tabs are compatibility mirrors for booking values only; new mirror rows must use booking statuses, `Direct Settlement`, and booking-value source labels.
+- Booking status changes must stay guarded in the server data layer. Keep tests covering terminal states and actor-specific transitions whenever owner/renter booking actions change.
 - `/forgot-password` is an auth flow, not a public form. Keep the supplied `/home/hkuma/Documents/forgetpassword.html` reset layout, cinematic field image, glass form card, and local overlay treatment wired to `/api/auth/password-reset/request` and the existing OTP/new-password routes instead of adding Sheets submissions. Password reset starts from the registered mobile number only; do not reintroduce email reset lookup in the page copy or server resolver.
 - Owner and renter workspace route shells must pass `localizedText(...)` titles and subtitles, and main workspace components must use runtime language hooks (`langText(...)` or `LocalizedText`) for visible copy. Do not render inline English/Marathi slash labels in workspace bodies.
 - Workspace support, feedback, and settings pages intentionally port `/home/hkuma/Documents/profile-support.html`, `/home/hkuma/Documents/profile_feedback.html`, and `/home/hkuma/Documents/profile-settings.html` into the shared owner/renter workspace shell. Preserve those supplied structures when editing the forms.

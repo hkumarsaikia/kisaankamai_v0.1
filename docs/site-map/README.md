@@ -23,6 +23,7 @@ This generates:
 - internal destinations and programmatic redirects
 - unresolved internal references
 - external destinations
+- dynamic template destinations sanitized for documentation display, for example dynamic telephone links become stable placeholders instead of raw template text
 
 Current route conventions reflected by the generated sitemap:
 
@@ -38,3 +39,5 @@ Current route conventions reflected by the generated sitemap:
 The old graph viewer has been retired. There is no longer any graph canvas, inspector, filters, journey lens model, `viewer.js`, `annotations.js`, or generated `map-data.js`.
 
 Open `docs/site-map/index.html` directly in a browser to inspect the static sitemap.
+
+Timestamped copies of generated sitemap artifacts may also appear inside `docs/bug-fixes/<timestamp>/generated/site-map/` when a bug-fix record needs immutable review evidence. The canonical generated files remain in this folder.

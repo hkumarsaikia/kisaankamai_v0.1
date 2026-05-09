@@ -131,3 +131,20 @@ test("booking cancellation and decline updates create clear inbox notifications 
   assert.match(inbox, /status === "cancelled"/);
   assert.match(inbox, /return "danger"/);
 });
+
+test("booking status transitions are constrained by actor and current status", async () => {
+  const [firebaseData, actions] = await Promise.all([
+    readSource("../lib/server/firebase-data.ts"),
+    readSource("../lib/actions/local-data.ts"),
+  ]);
+
+  assert.match(firebaseData, /ALLOWED_BOOKING_STATUS_TRANSITIONS/);
+  assert.match(firebaseData, /assertAllowedBookingStatusTransition/);
+  assert.match(firebaseData, /cancelled:\s*\[\]/);
+  assert.match(firebaseData, /completed:\s*\[\]/);
+  assert.match(firebaseData, /const actorRole = ownerCanUpdate \? "owner" : "renter"/);
+  assert.match(firebaseData, /assertAllowedBookingStatusTransition\(\{\s*actorRole,\s*currentStatus: booking\.status,\s*nextStatus: status,\s*\}\)/);
+  assert.match(firebaseData, /if \(booking\.status === status\) \{\s*return booking;\s*\}/);
+  assert.doesNotMatch(actions, /status: "pending" \| "upcoming" \| "active" \| "confirmed" \| "completed" \| "cancelled"/);
+  assert.match(actions, /status: BookingRecord\["status"\]/);
+});

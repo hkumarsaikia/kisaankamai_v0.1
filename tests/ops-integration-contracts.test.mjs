@@ -94,6 +94,34 @@ test("Ubuntu project-local install policy is documented and npm cache is local",
   assert.doesNotMatch(readmeSource, /cross-agent:/);
 });
 
+test("browser automation stays dev-only and local credential guides are ignored", async () => {
+  const [packageSource, gitignoreSource] = await Promise.all([
+    readFile(new URL("../package.json", import.meta.url), "utf8"),
+    readFile(new URL("../.gitignore", import.meta.url), "utf8"),
+  ]);
+  const packageJson = JSON.parse(packageSource);
+
+  assert.equal(packageJson.dependencies.puppeteer, undefined);
+  assert.match(packageJson.devDependencies.puppeteer, /^\^24\./);
+  assert.match(gitignoreSource, /FINAL_TEST_ACCOUNT_LOGIN_GUIDE\.md/);
+});
+
+test("generated site-map artifacts are current and do not render raw template expressions", async () => {
+  const [siteMapJsonSource, siteMapHtmlSource, generatorSource] = await Promise.all([
+    readFile(new URL("../docs/site-map/site-map-data.json", import.meta.url), "utf8"),
+    readFile(new URL("../docs/site-map/index.html", import.meta.url), "utf8"),
+    readFile(new URL("../docs/site-map/generate-site-map.mjs", import.meta.url), "utf8"),
+  ]);
+  const siteMapData = JSON.parse(siteMapJsonSource);
+
+  assert.doesNotMatch(siteMapJsonSource, /\$\{/);
+  assert.doesNotMatch(siteMapHtmlSource, /\$\{/);
+  assert.match(generatorSource, /normalizeExternalDestination/);
+  assert.match(generatorSource, /dynamic-tel/);
+  assert.equal(typeof siteMapData.generatedAt, "string");
+  assert.ok(new Date(siteMapData.generatedAt).getTime() >= Date.UTC(2026, 4, 8));
+});
+
 test("Next 16 root app uses App Router-only Turbopack build and ESM configs", async () => {
   const [packageSource, buildSource, globalsSource, setupSource] = await Promise.all([
     readFile(new URL("../package.json", import.meta.url), "utf8"),

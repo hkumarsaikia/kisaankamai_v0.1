@@ -188,6 +188,40 @@ function classifySurface(host) {
   return "custom-domain";
 }
 
+function normalizeTemplateForDisplay(value) {
+  return value.replace(/\$\{[^}]+\}/g, "{dynamic}");
+}
+
+function stripTrailingWhitespace(value) {
+  return value.replace(/[ \t]+$/gm, "");
+}
+
+function normalizeExternalDestination(raw) {
+  if (raw.includes("${")) {
+    if (raw.startsWith("tel:")) {
+      return { href: "dynamic-tel", host: "tel" };
+    }
+
+    if (raw.startsWith("mailto:")) {
+      return { href: "dynamic-mailto", host: "mailto" };
+    }
+
+    return { href: "dynamic-external-url", host: "dynamic" };
+  }
+
+  let host = "";
+  try {
+    host = new URL(raw).host;
+  } catch {
+    host = raw.startsWith("mailto:") ? "mailto" : raw.startsWith("tel:") ? "tel" : "";
+  }
+
+  return {
+    href: normalizeTemplateForDisplay(raw),
+    host,
+  };
+}
+
 function extractDestinations(text, existingRoutes, filePath) {
   const internal = new Map();
   const external = new Map();
@@ -207,36 +241,32 @@ function extractDestinations(text, existingRoutes, filePath) {
     while ((match = regex.exec(text)) !== null) {
       const raw = match[1].trim();
       if (!raw || raw === "#" || isAssetLike(raw)) continue;
+      const rawForDisplay = normalizeTemplateForDisplay(raw);
       const origin = {
         file: toPosix(path.relative(ROOT_DIR, filePath)),
         line: lineNumber(text, match.index),
-        raw,
+        raw: rawForDisplay,
         context,
       };
 
       if (/^(mailto:|tel:|https?:\/\/)/i.test(raw)) {
-        if (!external.has(raw)) {
-          let host = "";
-          try {
-            host = new URL(raw).host;
-          } catch {
-            host = raw.startsWith("mailto:") ? "mailto" : raw.startsWith("tel:") ? "tel" : "";
-          }
-          external.set(raw, {
-            href: raw,
-            host,
-            accessSurface: classifySurface(host),
+        const destination = normalizeExternalDestination(raw);
+        if (!external.has(destination.href)) {
+          external.set(destination.href, {
+            href: destination.href,
+            host: destination.host,
+            accessSurface: classifySurface(destination.host),
             origins: [origin],
           });
         } else {
-          external.get(raw).origins.push(origin);
+          external.get(destination.href).origins.push(origin);
         }
         continue;
       }
 
       if (!raw.startsWith("/")) continue;
       const resolvedPath = resolveInternalPath(raw, existingRoutes);
-      const normalized = normalizeRoute(raw);
+      const normalized = normalizeRoute(rawForDisplay);
 
       if (context !== "href") {
         redirects.push({ target: resolvedPath || normalized, context, origin });
@@ -518,7 +548,7 @@ const html = `<!doctype html>
 </html>`;
 
 fs.writeFileSync(JSON_OUTPUT, `${JSON.stringify(data, null, 2)}\n`, "utf8");
-fs.writeFileSync(HTML_OUTPUT, html, "utf8");
+fs.writeFileSync(HTML_OUTPUT, `${stripTrailingWhitespace(html)}\n`, "utf8");
 
 console.log(`Generated ${toPosix(path.relative(ROOT_DIR, JSON_OUTPUT))}`);
 console.log(`Generated ${toPosix(path.relative(ROOT_DIR, HTML_OUTPUT))}`);

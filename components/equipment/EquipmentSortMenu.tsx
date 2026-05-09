@@ -103,6 +103,7 @@ export function EquipmentSortMenu({
         id={menuId}
         role="listbox"
         aria-label={langText("Sort results", "निकाल क्रम लावा")}
+        aria-hidden={!open}
         className={`absolute right-0 top-[calc(100%+0.5rem)] z-40 w-[min(21rem,calc(100vw-2rem))] origin-top-right rounded-2xl border border-emerald-100 bg-white p-2 shadow-2xl shadow-emerald-950/15 outline-none transition-[opacity,transform] duration-200 dark:border-slate-700 dark:bg-slate-950 dark:shadow-black/30 ${
           open ? "pointer-events-auto scale-100 opacity-100" : "pointer-events-none scale-95 opacity-0"
         }`}
@@ -115,6 +116,7 @@ export function EquipmentSortMenu({
               type="button"
               role="option"
               aria-selected={active}
+              tabIndex={open ? 0 : -1}
               onClick={() => {
                 onSortChange(option.value);
                 setOpen(false);

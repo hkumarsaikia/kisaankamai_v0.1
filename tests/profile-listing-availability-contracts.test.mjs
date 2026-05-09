@@ -83,6 +83,8 @@ test("public and workspace equipment tiles use real listing availability for sor
   assert.match(sortMenu, /Nearest equipment first/);
   assert.match(sortMenu, /transition-\[opacity,transform\]/);
   assert.match(sortMenu, /aria-expanded=\{open\}/);
+  assert.match(sortMenu, /aria-hidden=\{!open\}/);
+  assert.match(sortMenu, /tabIndex=\{open \? 0 : -1\}/);
   assert.match(firebaseData, /status:\s*listing\.status/);
   assert.match(firebaseData, /availableFrom:\s*listing\.availableFrom/);
   assert.doesNotMatch(firebaseData, /listing\.status === "active" &&/);

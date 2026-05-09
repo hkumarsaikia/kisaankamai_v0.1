@@ -49,6 +49,12 @@ Verify the implemented page visually against the supplied local HTML, not only b
 - The previous Windows-root reference and local generated artifacts were removed after the Ubuntu rebuild.
 - Cross-agent handoff files are not part of the active root app.
 
+## Bug-Fix Evidence
+
+- Keep timestamped bug-fix records under `docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/`.
+- Do not move canonical source, lockfiles, generated docs used by tests, or runtime config into those folders; store review notes, manifests, verification summaries, and copied artifacts there.
+- Do not commit local credential guides, OTP notes, passwords, or webhook secrets. `FINAL_TEST_ACCOUNT_LOGIN_GUIDE.md` is local-only and ignored.
+
 ## Repo Notes
 
 - `vendor/` is reference-only and should not be edited for product changes.

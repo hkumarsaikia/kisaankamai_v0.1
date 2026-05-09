@@ -9,6 +9,11 @@ The final test account tooling creates two deletable Firebase Auth + Firestore a
 
 The account plan lives in `data/final-test-accounts-manifest.json`.
 
+Do not commit real passwords or OTP notes. The local helper guide
+`FINAL_TEST_ACCOUNT_LOGIN_GUIDE.md` is intentionally ignored by Git; keep
+actual credentials in local-only files, password manager notes, or runtime logs
+under `logs/runtime/final-test-accounts/`.
+
 ## Seed
 
 ```bash

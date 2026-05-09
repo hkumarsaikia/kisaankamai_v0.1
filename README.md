@@ -42,6 +42,7 @@ Useful commands:
 
 ```bash
 PUPPETEER_SKIP_DOWNLOAD=true npm ci
+python3 -m pip install -r requirements.txt
 npm run dev
 npm run lint
 npm run typecheck
@@ -59,6 +60,7 @@ npm run seed:final-test-accounts -- --owner-password "<password>" --renter-passw
 npm run cleanup:final-test-accounts
 npm run pause:mock-listings -- --dry-run
 npm run pause:mock-listings
+coderabbit review --agent -t uncommitted -c AGENTS.md
 ```
 
 Runtime logs captured with the helper scripts are stored under `logs/runtime/`.
@@ -72,6 +74,7 @@ Ubuntu rebuild notes:
 - The app is App Router-only; legacy `pages/_app` and `pages/_document` are not part of the active root because they trigger unnecessary hybrid fallback behavior in Next 16.
 - Tailwind/PostCSS config is ESM: `tailwind.config.mjs` and `postcss.config.mjs`.
 - Use `PUPPETEER_SKIP_DOWNLOAD=true npm ci` on Ubuntu so Puppeteer does not download browser binaries into dependency folders; use `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome` for browser checks.
+- Puppeteer is dev-only browser automation tooling. It must stay out of production dependencies.
 - NVIDIA GPU acceleration is only useful for browser rendering/profiling work, not for lint/typecheck/build.
 
 ## Firebase App Hosting
@@ -96,6 +99,7 @@ Required runtime configuration includes:
 - User profile updates keep the session/profile record, Firebase Auth display name, email, phone, and photo URL aligned where Firebase allows it.
 - Booking and listing notifications persist to the Firestore inbox first, show the total unread badge in the profile dropdown, refresh while the user is active, and use Firebase Cloud Messaging for optional browser push. MSG91/SMS provider integration is intentionally deferred.
 - Legacy `payments` storage and Sheets tabs are compatibility mirrors for offline booking-value estimates only. New rows must use booking statuses, `Direct Settlement`, and booking-value source labels because Kisan Kamai does not collect, refund, or settle money.
+- Booking status changes are guarded server-side by an actor/current-status transition matrix. UI buttons are not the security boundary.
 - Public feature-request, feedback, support, partner, owner-application, coming-soon notify, and newsletter forms write to Firestore first and mirror to Sheets where configured. The legacy `/api/forms/report` endpoint remains available for backend compatibility, but there is no public `/report` page.
 - Auth mutations, profile completion, public forms, and bug-report submissions use Firestore-backed rate limits by IP and relevant identifier. Logged-in public-form submissions include the authenticated user id in the limiter so reusing the account phone across forms does not block all form submission.
 - Owner listings accept up to 3 equipment photos. Those photos can be removed before submit, are saved to Cloud Storage, stored on the listing as public gallery URLs, and mirrored to Sheets as explicit URL/path columns.
@@ -135,6 +139,7 @@ Runbooks:
 - Final test accounts: `docs/OPERATIONS_FINAL_TEST_ACCOUNTS.md`
 - Live repo sync + Discord: `docs/OPERATIONS_LIVE_REPO_SYNC.md`
 - Deferred domain cutover: `docs/RUNBOOK_GODADDY_FIREBASE_DOMAIN_MIGRATION.md`
+- Timestamped bug-fix evidence: `docs/bug-fixes/`
 
 ## Repository Notes
 

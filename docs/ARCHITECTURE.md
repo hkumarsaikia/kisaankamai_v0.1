@@ -18,6 +18,7 @@ The root app is the only public runtime.
 - Registration does not choose an owner/renter workspace inline. New users complete auth/profile creation first, then choose the active workspace through `/profile-selection`.
 - Optional email is profile metadata and uniqueness-reserved when provided; it is not a public login credential.
 - Public equipment and category pages are generated from complete active Firestore listings only; archived seed/mock listings must stay paused or absent from the public active query set.
+- Booking status mutations are centralized in the server data layer and checked against an actor/current-status transition matrix. Owners can progress or cancel eligible owned bookings, renters can cancel eligible own bookings, and terminal states such as `completed` and `cancelled` cannot be moved back into active states by crafted client/server-action calls.
 - Booking and listing update notifications first persist unread inbox records in Firestore, then use Firebase Cloud Messaging for browser push delivery when the user has enabled device notifications. The profile dropdown shows the total unread count, refreshes the inbox while the session is active, and marks records read through the notification APIs. Phone-message providers are not part of the active runtime yet.
 - Google Sheets mirroring is intentional. It runs after Firebase persistence for admin/reporting visibility and must remain best-effort.
 - A Google Sheets outage or misconfiguration must not block a successful Firebase-backed write path.
@@ -27,6 +28,7 @@ The root app is the only public runtime.
 - `lib/server/local-auth.ts` is the server auth facade used by the root app.
 - `lib/server/local-data.ts` is the root data facade and currently re-exports the Firebase-backed implementation.
 - Root API routes and server actions now assume the server runtime only.
+- UI affordances such as approve/decline buttons must mirror server permissions, but server mutations remain the source of authorization and state-transition truth.
 
 ## Deployment Shape
 

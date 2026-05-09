@@ -42,7 +42,7 @@ This document provides setup instructions for the active Kisan Kamai root app. T
 
 ## 🐧 Ubuntu / Linux Setup
 
-Ubuntu requires specific system-level libraries to run the **Puppeteer** profiler agent correctly.
+Ubuntu requires specific system-level libraries to run Chromium-based browser automation and profiling checks correctly. Puppeteer is dev-only tooling in this repo, not a production runtime dependency.
 
 ### 1. Install Node.js
 Use the project-selected user-level Node runtime. The current Ubuntu workspace has Node `v24.15.0` and npm `11.12.1`.
@@ -56,7 +56,7 @@ PUPPETEER_SKIP_DOWNLOAD=true npm ci
 
 The repo tracks `.npmrc` so npm cache stays project-local under `.cache/npm`. Use `PUPPETEER_SKIP_DOWNLOAD=true` during install so browser binaries are not downloaded into dependency folders.
 
-### 2. Install Puppeteer System Dependencies
+### 2. Install Browser Automation System Dependencies
 > [!IMPORTANT]
 > Failure to install these libraries will cause Chromium-based browser checks to fail when launching in headless mode on Ubuntu.
 
@@ -79,6 +79,8 @@ Kisan Kamai uses system Chrome for Puppeteer/browser checks on Ubuntu:
 export PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 ```
 
+Keep `PUPPETEER_SKIP_DOWNLOAD=true` during install and keep Puppeteer in `devDependencies`. Production deployment should not depend on Puppeteer.
+
 ### 3. Python
 
 Use pyenv Python 3.12.10 for project scripts. Do not install Python packages into the OS Python.
@@ -87,9 +89,10 @@ Use pyenv Python 3.12.10 for project scripts. Do not install Python packages int
 python3 -m venv venv
 . venv/bin/activate
 python --version
+python -m pip install -r requirements.txt
 ```
 
-Only install Python packages into this venv when a project script actually requires them.
+`requirements.txt` is intentionally present even when no third-party Python packages are required. Only add pinned packages there when a tracked Python script actually requires them.
 
 ### 4. NVIDIA GPU
 
@@ -131,6 +134,7 @@ Keep these Firebase Authentication authorized domains present: `kisankamai.com`,
 - [ ] `npm run dev` starts the server on port 3000.
 - [ ] `npm run verify` passes.
 - [ ] `npm run launch:gate` passes.
+- [ ] `npm ls puppeteer --omit=dev` shows no production Puppeteer dependency before release.
 
 ## Archived Reference
 

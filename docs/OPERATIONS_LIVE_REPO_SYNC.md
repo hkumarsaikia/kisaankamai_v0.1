@@ -56,6 +56,20 @@ Recommended publish order:
 3. Verify the deployed/live runtime health.
 4. Send the Discord live-update notification.
 
+Recommended pre-push quality gate for bug-fix releases:
+
+```bash
+node --test tests/offline-settlement-notifications-contracts.test.mjs tests/profile-listing-availability-contracts.test.mjs tests/ops-integration-contracts.test.mjs
+npm run verify
+git diff --check
+coderabbit review --agent -t uncommitted -c AGENTS.md
+npm audit --omit=dev --audit-level=high
+```
+
+If the change has a timestamped evidence bundle, link
+`docs/bug-fixes/<timestamp>-<slug>/README.md` in the release note or Discord
+summary.
+
 Current Kisan Kamai targets:
 
 ```bash

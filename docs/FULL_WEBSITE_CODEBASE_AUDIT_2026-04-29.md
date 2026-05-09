@@ -9,6 +9,15 @@ Scope: root Next.js app, public pages, auth flows, owner/renter workspaces, API 
 
 This file was originally created as a report-only audit. The implementation follow-up below records the fixes made after the follow-up request to address the issues in this report.
 
+2026-05-08 follow-up:
+
+- Booking status transitions are now guarded server-side by actor and current status in the Firebase data layer.
+- Sort dropdown options are no longer keyboard-focusable while the animated dropdown is closed.
+- Puppeteer is now dev-only browser automation tooling, with high production transitive advisories reduced through narrow npm overrides.
+- `FINAL_TEST_ACCOUNT_LOGIN_GUIDE.md` is ignored so local credential notes are not accidentally committed.
+- Static site-map artifacts were regenerated and dynamic template destinations are sanitized before docs rendering.
+- Timestamped evidence for this review-driven hardening lives in `docs/bug-fixes/2026-05-08-235352-IST-code-review-hardening/`.
+
 The findings below are based on static source inspection of the current checkout. I did not run `npm run dev`, `npm run verify`, browser smoke tests, Firebase emulators, Firebase production checks, or live website checks during this pass.
 
 ## Implementation Follow-up
@@ -138,7 +147,7 @@ Observed versions in `package.json`:
 - Firebase client SDK: `^12.12.1`
 - Firebase Admin: `^13.8.0`
 - ESLint: `^9.39.4`
-- Puppeteer: `^24.42.0`
+- Puppeteer: `^24.42.0` in `devDependencies` only
 - Sentry Next.js: `^10.50.0`
 
 Observed scripts:
@@ -157,7 +166,7 @@ Upgrade/update notes:
 - I did not query npm registries in this audit, so I cannot confirm whether these are the latest available versions today.
 - The stack is already very modern. The higher-risk upgrade work is not "upgrade everything"; it is keeping Next 16, React 19, Tailwind 4, Firebase 12/13, and TypeScript 6 contract tests passing together.
 - The Sentry dependency should be intentionally kept or removed. Right now the repo says Sentry is optional, but the app still wraps Next config with Sentry when build env is configured.
-- Puppeteer should continue using system Chrome on Ubuntu with `PUPPETEER_SKIP_DOWNLOAD=true` as documented.
+- Puppeteer should continue using system Chrome on Ubuntu with `PUPPETEER_SKIP_DOWNLOAD=true` as documented and must remain out of production dependencies.
 
 ## Route Inventory and Status
 
@@ -451,7 +460,7 @@ Issues:
 
 - No availability conflict check was found. Multiple renters can request the same equipment for the same date.
 - No booking idempotency key was found. Duplicate clicks/network retries can create duplicate requests.
-- No state-machine guard was found beyond allowed status values. Some status transitions may be semantically invalid but still allowed.
+- Resolved 2026-05-08: booking status transitions are now guarded by an actor/current-status matrix before Firestore writes.
 - No owner approval SLA, expiry, or reminder flow was found.
 - UI and backend amount calculation need alignment on service fee/no-fee policy.
 
@@ -649,13 +658,12 @@ Gaps:
 
 - `components/auth/GoogleAuthButton.tsx` still contains Google popup logic.
 - `registerGoogleVerifiedUser()` still exists in `lib/server/firebase-data.ts`.
-- `docs/SETUP.md` still says Google provider should be enabled and configured.
-- `docs/DEVELOPMENT.md` has both an old Firebase requirement line about Google provider and a later correct phone-only contract.
+- Resolved in docs: `docs/SETUP.md` and `docs/DEVELOPMENT.md` now state that Google sign-in/registration is disabled and the public auth flow is phone-only.
 
 Recommendation:
 
 - Either fully remove legacy Google code/docs or explicitly label them as archived disabled code.
-- Update `docs/SETUP.md` so future setup does not re-enable Google auth by mistake.
+- Keep setup/development docs aligned so future setup does not re-enable Google auth by mistake.
 
 ## Notifications Audit
 
@@ -820,10 +828,9 @@ Good:
 
 Docs that need correction:
 
-- `docs/SETUP.md` still says Google account registration/login uses Firebase Auth Google provider and asks setup operators to enable it.
-- `docs/DEVELOPMENT.md` has an early Firebase requirement line saying Google provider is enabled when testing Google login/register, then later correctly says auth is phone-only.
-- Generated site-map docs still include routes like `/owner-registration` and `/renter-profile/earnings`; if those routes are kept, their product status must be clarified.
-- Docs should explain which pages are production routes, compatibility routes, or deprecated routes.
+- Resolved in later docs: `docs/SETUP.md` and `docs/DEVELOPMENT.md` now describe phone-only auth and disabled Google sign-in/registration.
+- Generated site-map docs are regenerated from current `app/**/page.tsx` routes and sanitize dynamic template expressions before rendering.
+- Continue keeping production, compatibility, and deprecated route status explicit in `README.md`, `docs/DEVELOPMENT.md`, and generated site-map docs.
 
 ## Test Coverage Audit
 
@@ -1014,7 +1021,7 @@ Blocked or intentionally not attempted:
 4. Align owner listing categories with `lib/equipment-categories.ts`.
 5. Fix `/renter-profile/earnings`.
 6. Convert `/report` into a dedicated report submission type.
-7. Apply shared mutation protections to all auth/reset/register/session endpoints.
+7. Keep shared mutation protections and booking transition guards covered by contract tests.
 8. Add rate limiting for login/register/reset/public forms.
 9. Update Google auth docs and remove/mark legacy Google code.
 10. Add browser E2E tests for register, login, profile selection, list equipment, rent booking, and password reset.

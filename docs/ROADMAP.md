@@ -4,6 +4,7 @@
 
 - Root app is the canonical live site on Firebase App Hosting.
 - Remove obsolete parallel surfaces and keep the root app as the only supported frontend runtime.
+- Keep CodeRabbit/manual review hardening fixes documented in timestamped `docs/bug-fixes/` bundles when they affect operational behavior.
 
 ## Near-Term Priorities
 
@@ -11,3 +12,4 @@
 - Finish route-by-route UI cleanup for language consistency and dark-mode readability.
 - Keep owner/renter flows and listing/booking actions aligned with the Firebase-backed root runtime.
 - Reduce residual duplicated or legacy code paths inside the root app and operational tooling.
+- Continue reducing dependency audit surface without forced downgrades of core runtime packages.
