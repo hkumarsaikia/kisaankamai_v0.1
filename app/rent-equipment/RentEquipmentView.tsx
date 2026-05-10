@@ -619,9 +619,9 @@ export default function RentEquipmentView({
                   )}
                 </p>
               </div>
-              <div className="flex gap-4">
+              <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-4">
                 <button
-                  className="flex items-center gap-2 rounded-lg bg-surface-container px-4 py-2 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high"
+                  className="flex items-center justify-center gap-2 rounded-lg bg-surface-container px-4 py-2 text-sm font-medium text-on-surface transition-colors hover:bg-surface-container-high"
                   type="button"
                 >
                   <span className="material-symbols-outlined text-[20px]">filter_list</span>

@@ -241,6 +241,7 @@ test("base rent-equipment source keeps the avail-eq style controls and paginatio
   assert.match(source, /Sort/);
   assert.match(source, /chevron_left/);
   assert.match(source, /chevron_right/);
+  assert.match(source, /flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:gap-4/);
 });
 
 test("no-results rent-equipment templates no longer contain the trust and safety section", async () => {
@@ -320,4 +321,22 @@ test("homepage and coming soon share the same northern maharashtra service-area 
   );
   assert.match(homeSource, /NORTHERN_MAHARASHTRA_SERVICE_AREAS/);
   assert.match(comingSoonSource, /NORTHERN_MAHARASHTRA_SERVICE_AREAS/);
+});
+
+test("mobile workspace chrome prevents justified header text and bottom nav overlap", async () => {
+  const [globalsSource, shellSource] = await Promise.all([
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
+    readFile(new URL("../components/owner-profile/OwnerProfileWorkspaceShell.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(shellSource, /kk-workspace-shell/);
+  assert.match(shellSource, /kk-workspace-header/);
+  assert.match(shellSource, /kk-workspace-main/);
+  assert.match(shellSource, /kk-workspace-local-footer/);
+  assert.match(shellSource, /kk-workspace-mobile-nav/);
+  assert.match(shellSource, /env\(safe-area-inset-bottom\)/);
+  assert.match(globalsSource, /kk-workspace-header[\s\S]*text-align: start/);
+  assert.match(globalsSource, /kk-workspace-local-footer[\s\S]*text-align: start/);
+  assert.match(globalsSource, /@media \(max-width: 767px\)[\s\S]*kk-workspace-header[\s\S]*text-align: start/);
+  assert.match(globalsSource, /kk-workspace-main[\s\S]*padding-bottom: calc\(7rem \+ env\(safe-area-inset-bottom\)\)/);
 });

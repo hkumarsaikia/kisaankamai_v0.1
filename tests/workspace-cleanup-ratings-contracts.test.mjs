@@ -36,8 +36,8 @@ test("owner bookings, saved equipment, settings, and owner browse remove request
   assert.doesNotMatch(settingsForm, /Workspace[\s\S]*shared profile and verification metadata/);
   assert.doesNotMatch(ownerBrowser, /Equipment Search|Sort Equipment|Add Listing/);
   assert.doesNotMatch(ownerBrowser, /setQuery|setSortBy|SortKey/);
-  assert.match(workspaceShell, /flex min-h-screen flex-col/);
-  assert.match(workspaceShell, /<main className=\{`flex min-h-screen flex-col/);
+  assert.match(workspaceShell, /kk-workspace-main flex min-h-svh flex-col/);
+  assert.match(workspaceShell, /<main className="kk-workspace-main flex min-h-svh flex-col/);
   assert.match(workspaceShell, /<div className="mx-auto w-full min-w-0 max-w-6xl flex-1 px-4 pt-4 sm:px-6 sm:pt-8/);
 });
 

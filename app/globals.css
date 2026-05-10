@@ -213,6 +213,47 @@
     }
   }
 
+  .kk-workspace-header,
+  .kk-workspace-header :is(h1, h2, h3, h4, h5, h6, p, span, li, dd, figcaption, blockquote),
+  .kk-workspace-local-footer,
+  .kk-workspace-local-footer :is(h1, h2, h3, h4, h5, h6, p, span, li, dd, figcaption, blockquote, button, a),
+  .kk-workspace-mobile-nav,
+  .kk-workspace-mobile-nav :is(p, span, li, dd, figcaption, blockquote, a) {
+    text-align: start !important;
+    text-align-last: auto !important;
+    hyphens: manual !important;
+    overflow-wrap: normal !important;
+  }
+
+  .kk-workspace-main {
+    padding-bottom: calc(7rem + env(safe-area-inset-bottom));
+  }
+
+  @media (min-width: 1024px) {
+    .kk-workspace-main {
+      padding-bottom: 3rem;
+    }
+  }
+
+  @media (max-width: 767px) {
+    header,
+    header :is(h1, h2, h3, h4, h5, h6, p, span, li, dd, figcaption, blockquote),
+    nav,
+    nav :is(p, span, li, dd, figcaption, blockquote, a),
+    footer :is(button, a),
+    .kk-workspace-header,
+    .kk-workspace-header :is(h1, h2, h3, h4, h5, h6, p, span, li, dd, figcaption, blockquote),
+    .kk-workspace-local-footer,
+    .kk-workspace-local-footer :is(h1, h2, h3, h4, h5, h6, p, span, li, dd, figcaption, blockquote, button, a),
+    .kk-workspace-mobile-nav,
+    .kk-workspace-mobile-nav :is(p, span, li, dd, figcaption, blockquote, a) {
+      text-align: start !important;
+      text-align-last: auto !important;
+      hyphens: manual !important;
+      overflow-wrap: normal !important;
+    }
+  }
+
   .kk-profile-selection-hero-copy,
   .kk-profile-selection-hero-copy :is(h1, h2, p, span) {
     text-align: center;

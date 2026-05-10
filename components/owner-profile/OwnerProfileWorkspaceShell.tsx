@@ -7,7 +7,7 @@ import { ProfileDropdownMenu } from "@/components/ProfileDropdownMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LocalizedText, localizedText } from "@/lib/i18n";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type WorkspaceFamily = "owner-profile" | "renter-profile";
 type WorkspaceTab =
@@ -120,7 +120,7 @@ function LocalFooter({
   }));
 
   return (
-    <footer className="mt-16 border-t border-emerald-100 bg-white pb-8 pt-10 dark:border-slate-800 dark:bg-slate-950">
+    <footer className="kk-workspace-local-footer mt-10 border-t border-emerald-100 bg-white pb-[calc(7rem+env(safe-area-inset-bottom))] pt-6 dark:border-slate-800 dark:bg-slate-950 sm:mt-16 sm:pt-10 lg:pb-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-5 px-6 md:flex-row md:items-center md:justify-between">
         {config.footerMode === "text-left" ? (
           <>
@@ -295,7 +295,7 @@ function MobileBottomNav({
   const config = WORKSPACE_CONFIG[family];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-surface-container-highest bg-white px-4 py-2 dark:border-slate-800 dark:bg-slate-950 lg:hidden">
+    <nav className="kk-workspace-mobile-nav fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-surface-container-highest bg-white px-4 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 dark:border-slate-800 dark:bg-slate-950 lg:hidden">
       {config.mobileItems.map(({ key, href, icon, label }) => {
         const active = key === activeTab;
         return (
@@ -342,17 +342,12 @@ export function OwnerProfileWorkspaceShell({
   const resolvedTitle = text(title);
   const resolvedSubtitle = subtitle ? text(subtitle) : null;
 
-  const mainContentPadding = useMemo(
-    () => (config.addListingHref ? "pb-28 lg:pb-12" : "pb-24 lg:pb-12"),
-    [config.addListingHref]
-  );
-
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
   return (
-    <div className="bg-background font-body text-on-background antialiased dark:bg-slate-950 dark:text-slate-100">
+    <div className="kk-workspace-shell min-h-svh bg-background font-body text-on-background antialiased dark:bg-slate-950 dark:text-slate-100">
       {mobileOpen ? (
         <div className="fixed inset-0 z-[70] lg:hidden">
           <button
@@ -371,12 +366,12 @@ export function OwnerProfileWorkspaceShell({
         <Sidebar family={family} activeTab={activeTab} />
       </aside>
 
-      <main className={`flex min-h-screen flex-col ${mainContentPadding} lg:ml-64`}>
-        <header className="sticky top-0 z-30 border-b border-surface-container-highest bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95">
-          <div className="mx-auto flex max-w-6xl items-start justify-between gap-4 px-4 py-4 sm:px-6">
-            <div className="flex min-w-0 items-start gap-3">
+      <main className="kk-workspace-main flex min-h-svh flex-col lg:ml-64">
+        <header className="kk-workspace-header sticky top-0 z-30 border-b border-surface-container-highest bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95">
+          <div className="mx-auto flex max-w-6xl items-start justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
+            <div className="flex min-w-0 flex-1 items-start gap-2 sm:gap-3">
               <button
-                className="mt-1 rounded-xl p-2 text-on-surface transition-colors hover:bg-surface-container dark:text-slate-100 dark:hover:bg-slate-900 lg:hidden"
+                className="mt-1 shrink-0 rounded-xl p-2 text-on-surface transition-colors hover:bg-surface-container dark:text-slate-100 dark:hover:bg-slate-900 lg:hidden"
                 type="button"
                 onClick={() => setMobileOpen(true)}
                 aria-label="Open workspace menu"
@@ -384,19 +379,21 @@ export function OwnerProfileWorkspaceShell({
                 <span className="material-symbols-outlined">menu</span>
               </button>
               <div className="min-w-0">
-                <div className="mb-1 flex flex-wrap items-center gap-2 text-on-surface-variant">
-                  <span className="text-xs font-bold uppercase tracking-widest">{text(config.portalLabel)}</span>
+                <div className="mb-1 flex min-w-0 flex-wrap items-center gap-2 text-on-surface-variant">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] sm:text-xs">{text(config.portalLabel)}</span>
                 </div>
-                <h1 className="truncate text-2xl font-extrabold tracking-tight text-primary sm:text-3xl">
+                <h1 className="break-words text-[clamp(1.45rem,7vw,2rem)] font-extrabold leading-tight tracking-tight text-primary sm:text-3xl">
                   {resolvedTitle}
                 </h1>
                 {resolvedSubtitle ? (
-                  <p className="mt-1 max-w-3xl text-sm text-on-surface-variant">{resolvedSubtitle}</p>
+                  <p className="kk-workspace-subtitle mt-1 max-w-3xl text-sm leading-relaxed text-on-surface-variant">
+                    {resolvedSubtitle}
+                  </p>
                 ) : null}
               </div>
             </div>
 
-            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
               <ThemeToggle />
               <div className="hidden sm:block">
                 <HeaderLanguageControl />
