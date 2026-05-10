@@ -56,7 +56,9 @@ test("support page renders one selected language without inline bilingual slash 
 
   assert.match(supportSource, /useLanguage/);
   assert.match(supportSource, /langText/);
-  assert.match(supportSource, /Message \/ संदेश/);
+  assert.match(supportSource, /langText\("Message", "संदेश"\)/);
+  assert.match(supportSource, /langText\("We usually respond within 24 hours\.", "आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो\."\)/);
+  assert.doesNotMatch(supportSource, /Message \/ संदेश|We usually respond within 24 hours\. \/ आम्ही/);
   assert.doesNotMatch(supportSource, /Full Name\s*\/|Phone\s*\/|Email\s*\/|Category\s*\/|What happened\?\s*\/|Mobile Number\s*\/|District\s*\/|Description\s*\//);
 });
 
@@ -204,8 +206,41 @@ test("client bug reporting is throttled before hitting the backend rate limit", 
   const clientBugReportingSource = await readFile(new URL("../lib/client/bug-reporting.ts", import.meta.url), "utf8");
 
   assert.match(clientBugReportingSource, /CLIENT_REPORT_MAX_PER_MINUTE/);
+  assert.match(clientBugReportingSource, /CLIENT_REPORT_WINDOW_STORAGE_KEY/);
   assert.match(clientBugReportingSource, /clientReportWindow/);
+  assert.match(clientBugReportingSource, /readStoredReportWindow/);
+  assert.match(clientBugReportingSource, /writeStoredReportWindow/);
+  assert.match(clientBugReportingSource, /localStorage\.getItem\(CLIENT_REPORT_WINDOW_STORAGE_KEY\)/);
+  assert.match(clientBugReportingSource, /localStorage\.setItem\(\s*CLIENT_REPORT_WINDOW_STORAGE_KEY/);
   assert.match(clientBugReportingSource, /shouldDispatchClientReport/);
   assert.match(clientBugReportingSource, /return false/);
   assert.match(clientBugReportingSource, /dispatchEnvelope\(baseEnvelope\(input\)\)/);
+});
+
+test("root layout keeps icon fonts and public session bootstrap lean", async () => {
+  const layoutSource = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
+
+  assert.match(layoutSource, /materialSymbolsIconNames/);
+  assert.match(layoutSource, /icon_names=\$\{materialSymbolsIconNames\}/);
+  assert.match(layoutSource, /display=block/);
+  assert.doesNotMatch(layoutSource, /opsz,wght,FILL,GRAD@20\.\.48,100\.\.700,0\.\.1,-50\.\.200/);
+  assert.doesNotMatch(layoutSource, /import \{ getCurrentSession \} from "@\/lib\/server\/local-auth"/);
+  assert.match(layoutSource, /SESSION_COOKIE_NAME/);
+  assert.match(layoutSource, /await import\("@\/lib\/server\/local-auth"\)/);
+  assert.match(layoutSource, /cookieStore\.get\(SESSION_COOKIE_NAME\)\?\.value/);
+});
+
+test("public marketing pages expose runtime Marathi copy in their main content", async () => {
+  const [categoriesSource, comingSoonSource, partnerSource] = await Promise.all([
+    readFile(new URL("../app/categories/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/coming-soon/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/partner/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(categoriesSource, /LocalizedText/);
+  assert.match(categoriesSource, /उपकरण श्रेणी/);
+  assert.match(comingSoonSource, /useLanguage/);
+  assert.match(comingSoonSource, /महाराष्ट्रातील १४ जिल्ह्यांमध्ये/);
+  assert.match(partnerSource, /useLanguage/);
+  assert.match(partnerSource, /महाराष्ट्रात कृषी उपकरणांची उपलब्धता वाढवा/);
 });

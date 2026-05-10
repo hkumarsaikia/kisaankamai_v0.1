@@ -103,6 +103,7 @@ Required runtime configuration includes:
 - Public feature-request, feedback, support, partner, owner-application, coming-soon notify, and newsletter forms write to Firestore first and mirror to Sheets where configured. The legacy `/api/forms/report` endpoint remains available for backend compatibility, but there is no public `/report` page.
 - Auth mutations, profile completion, public forms, and bug-report submissions use Firestore-backed rate limits by IP and relevant identifier. Logged-in public-form submissions include the authenticated user id in the limiter so reusing the account phone across forms does not block all form submission.
 - Owner listings accept up to 3 equipment photos. Those photos can be removed before submit, are saved to Cloud Storage, stored on the listing as public gallery URLs, and mirrored to Sheets as explicit URL/path columns.
+- Public generated marketing imagery is served through optimized WebP variants via `assetPath(...)`, while uploaded listing media keeps its original Storage URL. Material Symbols are loaded as a narrowed `icon_names` subset to avoid shipping the full glyph font to every page.
 - Map/satellite selection in Google Maps is persisted per browser and must not be overwritten by a hardcoded map type after the user selects satellite view.
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.

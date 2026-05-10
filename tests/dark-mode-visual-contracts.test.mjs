@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 
 const readSource = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
@@ -156,6 +156,20 @@ test("home hero prioritizes the first visual image for Lighthouse LCP", async ()
   assert.match(home, /loading=\{index === 0 \? "eager" : "lazy"\}/);
   assert.match(home, /priority=\{index === 0\}/);
   assert.match(home, /fetchPriority=\{index === 0 \? "high" : "auto"\}/);
+});
+
+test("generated marketing imagery is served through optimized webp assets", async () => {
+  const siteSource = await readSource("../lib/site.ts");
+
+  assert.match(siteSource, /GENERATED_IMAGE_WEBP_PATTERN/);
+  assert.match(siteSource, /\.webp/);
+  assert.match(siteSource, /path\.replace\(GENERATED_IMAGE_WEBP_PATTERN/);
+
+  await Promise.all(
+    ["hero_tractor", "harvester_action", "seed_drill", "modern_farm_tech"].map((name) =>
+      access(new URL(`../public/assets/generated/${name}.webp`, import.meta.url))
+    )
+  );
 });
 
 test("mobile icon controls keep accessible touch targets", async () => {

@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
 import { LazyMap } from "@/components/LazyMap";
+import { useLanguage } from "@/components/LanguageContext";
 import {
   COMING_SOON_CONTACT_PLACEHOLDER,
   COMING_SOON_NOTIFY_MODE,
@@ -19,6 +20,7 @@ const trustPartners = [
 ];
 
 export default function ComingSoonPage() {
+  const { langText } = useLanguage();
   const [notifyState, setNotifyState] = useState<"idle" | "form">("idle");
   const [isPending, startTransition] = useTransition();
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
@@ -63,7 +65,7 @@ export default function ComingSoonPage() {
         }, 1400);
       } catch (submitError) {
         setSubmitState("error");
-        setError(submitError instanceof Error ? submitError.message : "Could not submit this request.");
+        setError(submitError instanceof Error ? submitError.message : langText("Could not submit this request.", "ही विनंती सबमिट करता आली नाही."));
       }
     });
   };
@@ -75,7 +77,7 @@ export default function ComingSoonPage() {
           <div className="kk-dark-image-overlay opacity-[0.04] dark:opacity-[0.12]" />
           <div className="relative mx-auto max-w-screen-2xl px-8">
             <h2 className="mb-12 text-center text-sm font-bold uppercase tracking-[0.2em] text-outline">
-              Building Rural Prosperity with Strategic Partners
+              {langText("Building Rural Prosperity with Strategic Partners", "धोरणात्मक भागीदारीतून ग्रामीण समृद्धी")}
             </h2>
             <div className="flex flex-wrap items-center justify-center gap-12 opacity-60 grayscale transition-all duration-700 hover:grayscale-0 md:gap-24">
               {trustPartners.map((partner) => (
@@ -94,15 +96,17 @@ export default function ComingSoonPage() {
             <div className="flex flex-col gap-8 md:flex-row">
               <div className="flex-1 space-y-4">
                 <span className="inline-flex items-center gap-2 rounded-full bg-primary-fixed px-4 py-1 text-xs font-bold uppercase tracking-wider text-on-primary-fixed">
-                  Now Expanding
+                  {langText("Now Expanding", "आता विस्तार सुरू")}
                 </span>
                 <h3 className="font-headline text-4xl font-extrabold leading-tight tracking-tight text-primary">
-                  Operating across <br />
-                  14 Districts of Maharashtra
+                  {langText("Operating across", "सेवा सुरू आहे")} <br />
+                  {langText("14 Districts of Maharashtra", "महाराष्ट्रातील १४ जिल्ह्यांमध्ये")}
                 </h3>
                 <p className="max-w-md leading-relaxed text-on-surface-variant">
-                  Our expansion network is focused on dependable equipment delivery across the Northern Maharashtra
-                  service corridor.
+                  {langText(
+                    "Our expansion network is focused on dependable equipment delivery across the Northern Maharashtra service corridor.",
+                    "आमचे विस्तार नेटवर्क उत्तर महाराष्ट्रातील सेवा क्षेत्रात विश्वासार्ह उपकरण उपलब्धतेवर केंद्रित आहे."
+                  )}
                 </p>
                 <ul className="grid grid-cols-2 gap-x-4 gap-y-2 pt-4 text-sm font-semibold text-primary/80">
                   {NORTHERN_MAHARASHTRA_SERVICE_AREAS.map(({ areaLabel }) => (
@@ -131,9 +135,11 @@ export default function ComingSoonPage() {
             <div className="absolute right-0 top-0 h-32 w-32 -translate-y-12 translate-x-12 rounded-full bg-primary-container opacity-50 blur-3xl" />
             <div className="relative z-10">
               <h3 className="mb-4 font-headline text-3xl font-extrabold leading-tight">
-                Digital Farming in your pocket.
+                {langText("Digital Farming in your pocket.", "डिजिटल शेती तुमच्या मोबाईलमध्ये.")}
               </h3>
-              <p className="mb-8 text-lg opacity-80">Manage rentals and track earnings on the move.</p>
+              <p className="mb-8 text-lg opacity-80">
+                {langText("Manage rentals and track earnings on the move.", "भाडे व्यवहार आणि कमाईची माहिती प्रवासातही सांभाळा.")}
+              </p>
             </div>
 
             <div className="relative z-10 space-y-4">
@@ -141,7 +147,7 @@ export default function ComingSoonPage() {
                 <span className="material-symbols-outlined text-4xl">phone_iphone</span>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest opacity-60">Mobile App</p>
-                  <p className="font-bold">Coming Soon to iOS &amp; Play Store</p>
+                  <p className="font-bold">{langText("Coming Soon to iOS & Play Store", "लवकरच iOS आणि Play Store वर")}</p>
                 </div>
               </div>
 
@@ -153,7 +159,7 @@ export default function ComingSoonPage() {
                       type="button"
                       onClick={() => setNotifyState("form")}
                     >
-                      Notify Me
+                      {langText("Notify Me", "मला कळवा")}
                     </button>
                   ) : null}
 
@@ -184,10 +190,10 @@ export default function ComingSoonPage() {
                         {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                         <span>
                           {submitState === "pending"
-                            ? "Submitting..."
+                            ? langText("Submitting...", "सबमिट करत आहे...")
                             : submitState === "success"
-                              ? "Submitted"
-                              : "Submit"}
+                              ? langText("Submitted", "सबमिट झाले")
+                              : langText("Submit", "सबमिट करा")}
                         </span>
                         <span className="material-symbols-outlined text-lg">
                           {submitState === "success" ? "task_alt" : "send"}
@@ -211,7 +217,9 @@ export default function ComingSoonPage() {
               </div>
               <div>
                 <h4 className="font-headline text-xl font-extrabold text-primary">Need assistance?</h4>
-                <p className="text-on-surface-variant">Our support team is available from 8 AM to 8 PM.</p>
+                <p className="text-on-surface-variant">
+                  {langText("Our support team is available from 8 AM to 8 PM.", "आमची सपोर्ट टीम सकाळी ८ ते रात्री ८ उपलब्ध आहे.")}
+                </p>
               </div>
             </div>
             <div className="flex flex-wrap justify-center gap-4">

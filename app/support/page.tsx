@@ -75,7 +75,7 @@ export default function SupportPage() {
       ? langText("Submitting...", "सबमिट करत आहे...")
       : submitState === "success"
         ? langText("Submitted", "सबमिट झाले")
-        : "Submit Request";
+        : langText("Submit Request", "विनंती सबमिट करा");
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
@@ -170,25 +170,25 @@ export default function SupportPage() {
 
         <section className="mx-auto mb-24 grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-12">
           <div className="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-surface-container-high">
-            <h2 className="mb-2 font-headline text-3xl font-bold text-on-surface">Send us a message</h2>
+            <h2 className="mb-2 font-headline text-3xl font-bold text-on-surface">{langText("Send us a message", "आम्हाला संदेश पाठवा")}</h2>
             <p className="mb-8 font-body text-on-surface-variant">
-              We usually respond within 24 hours. / आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो.
+              {langText("We usually respond within 24 hours.", "आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो.")}
             </p>
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="font-label text-sm font-medium text-on-surface">Full Name</label>
+                  <label className="font-label text-sm font-medium text-on-surface">{langText("Full Name", "पूर्ण नाव")}</label>
                   <input
                     className={supportFormControlClass}
                     required
-                    placeholder="Your name"
+                    placeholder={langText("Your name", "तुमचे नाव")}
                     type="text"
                     value={formState.fullName}
                     onChange={(event) => updateField("fullName", event.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="font-label text-sm font-medium text-on-surface">Phone Number</label>
+                  <label className="font-label text-sm font-medium text-on-surface">{langText("Phone Number", "मोबाईल क्रमांक")}</label>
                   <input
                     className={supportFormControlClass}
                     required
@@ -201,7 +201,7 @@ export default function SupportPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="font-label text-sm font-medium text-on-surface">Issue Type</label>
+                <label className="font-label text-sm font-medium text-on-surface">{langText("Issue Type", "समस्या प्रकार")}</label>
                 <select
                   className={supportFormControlClass}
                   value={formState.inquiryType}
@@ -216,11 +216,11 @@ export default function SupportPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="font-label text-sm font-medium text-on-surface">Message / संदेश</label>
+                <label className="font-label text-sm font-medium text-on-surface">{langText("Message", "संदेश")}</label>
                 <textarea
                   className={supportFormControlClass}
                   required
-                  placeholder="Describe your issue in detail..."
+                  placeholder={langText("Describe your issue in detail...", "तुमची समस्या सविस्तर लिहा...")}
                   rows={4}
                   value={formState.message}
                   onChange={(event) => updateField("message", event.target.value)}

@@ -1,8 +1,23 @@
 import { AppLink as Link } from "@/components/AppLink";
 import { ContentImage } from "@/components/ContentImage";
+import { LocalizedText } from "@/components/LocalizedText";
 import { getMergedCategorySummariesFromEquipment } from "@/lib/equipment-categories";
 import { getEquipmentList } from "@/lib/server/equipment";
 import { assetPath } from "@/lib/site";
+
+const categoryMarathiNames: Record<string, string> = {
+  balers: "बेलर्स",
+  harvesters: "हार्वेस्टर्स",
+  implements: "अवजारे",
+  ploughs: "नांगर",
+  pumps: "पंप",
+  rotavators: "रोटाव्हेटर",
+  seeders: "सीडर्स",
+  sprayers: "स्प्रेअर्स",
+  threshers: "थ्रेशर्स",
+  tractors: "ट्रॅक्टर्स",
+  trolleys: "ट्रॉली",
+};
 
 export default async function Categories() {
   const equipment = await getEquipmentList();
@@ -14,10 +29,13 @@ export default async function Categories() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="mb-12">
             <h1 className="text-5xl font-black text-primary dark:text-emerald-50 mb-4 tracking-tight">
-              Equipment categories
+              <LocalizedText en="Equipment categories" mr="उपकरण श्रेणी" />
             </h1>
             <p className="text-slate-600 dark:text-slate-400 max-w-xl text-lg">
-              Browse live agricultural equipment categories published by owners on Kisan Kamai.
+              <LocalizedText
+                en="Browse live agricultural equipment categories published by owners on Kisan Kamai."
+                mr="किसान कमाईवर मालकांनी प्रकाशित केलेल्या कृषी उपकरणांच्या श्रेणी पहा."
+              />
             </p>
           </div>
 
@@ -46,10 +64,13 @@ export default async function Categories() {
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/92 via-primary/25 to-transparent dark:from-slate-950/95 dark:via-slate-950/35"></div>
                 <div className="absolute bottom-0 left-0 p-8 w-full">
                   <h3 className="text-3xl font-black text-white mb-2 tracking-wide">
-                    {category.name}
+                    <LocalizedText en={category.name} mr={categoryMarathiNames[category.slug] || category.name} />
                   </h3>
                   <div className="flex items-center gap-2 text-white font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                    {category.count} {category.count === 1 ? "listing" : "listings"}{" "}
+                    <LocalizedText
+                      en={`${category.count} ${category.count === 1 ? "listing" : "listings"}`}
+                      mr={`${category.count} लिस्टिंग`}
+                    />{" "}
                     <span className="material-symbols-outlined">chevron_right</span>
                   </div>
                 </div>

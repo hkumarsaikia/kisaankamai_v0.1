@@ -12,9 +12,9 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#143b2e",
     icons: [
       {
-        src: "/assets/generated/hero_tractor.png",
-        sizes: "512x512",
-        type: "image/png",
+        src: "/favicon.ico",
+        sizes: "64x64",
+        type: "image/svg+xml",
       },
     ],
   };

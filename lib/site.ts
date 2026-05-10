@@ -1,6 +1,7 @@
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 const EXTERNAL_PREFIX = /^(?:[a-z]+:)?\/\//i;
+const GENERATED_IMAGE_WEBP_PATTERN = /^\/assets\/generated\/([^?#]+)\.png(?=$|[?#])/;
 
 export function withBasePath(path: string): string {
   if (
@@ -19,5 +20,6 @@ export function withBasePath(path: string): string {
 }
 
 export function assetPath(path: string): string {
-  return withBasePath(path);
+  const optimizedGeneratedAsset = path.replace(GENERATED_IMAGE_WEBP_PATTERN, "/assets/generated/$1.webp");
+  return withBasePath(optimizedGeneratedAsset);
 }

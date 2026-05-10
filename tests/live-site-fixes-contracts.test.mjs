@@ -82,12 +82,13 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.doesNotMatch(support, /Search for answers/);
   assert.doesNotMatch(support, /1800-123-4567|Pune, Maharashtra/);
   assert.match(support, /Send us a message/);
-  assert.match(support, /We usually respond within 24 hours\. \/ आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो\./);
+  assert.match(support, /langText\("We usually respond within 24 hours\.", "आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो\."\)/);
   assert.match(support, /inquiryType/);
   assert.match(support, /Select a category/);
   assert.match(support, /Send Message/);
-  assert.match(support, /Message \/ संदेश/);
-  assert.doesNotMatch(support, /langText\("Submit Request"/);
+  assert.match(support, /langText\("Message", "संदेश"\)/);
+  assert.match(support, /langText\("Submit Request", "विनंती सबमिट करा"\)/);
+  assert.doesNotMatch(support, /Message \/ संदेश|We usually respond within 24 hours\. \/ आम्ही/);
   assert.match(support, /object-\[center_18%\]|object-\[center_35%\]|object-\[center_30%\]/);
   assert.match(support, /scrollTo\(\{\s*top:\s*0/);
   assert.match(support, /<section className="mx-auto mb-24 grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-12">/);

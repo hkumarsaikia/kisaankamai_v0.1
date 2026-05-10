@@ -5,7 +5,8 @@ import type { BugReportSource, BugSeverity, ClientBugEnvelope } from "@/lib/bug-
 
 const BUG_REPORT_ENDPOINT = "/api/bug-reports";
 const CLIENT_SESSION_STORAGE_KEY = "kisan-kamai-bug-client-session";
-const CLIENT_REPORT_MAX_PER_MINUTE = 8;
+const CLIENT_REPORT_WINDOW_STORAGE_KEY = "kisan-kamai-bug-report-window";
+const CLIENT_REPORT_MAX_PER_MINUTE = 4;
 const CLIENT_REPORT_DEDUP_WINDOW_MS = 30_000;
 
 const clientReportWindow = {
@@ -113,8 +114,63 @@ function buildClientReportSignature(input: Partial<ClientBugEnvelope> & Pick<Cli
   ].join(":");
 }
 
+function readStoredReportWindow(now: number) {
+  if (!canUseBrowserApis()) {
+    return;
+  }
+
+  try {
+    const stored = window.localStorage.getItem(CLIENT_REPORT_WINDOW_STORAGE_KEY);
+    if (!stored) {
+      return;
+    }
+
+    const parsed = JSON.parse(stored) as {
+      count?: unknown;
+      signatures?: unknown;
+      startedAt?: unknown;
+    };
+    const startedAt = typeof parsed.startedAt === "number" ? parsed.startedAt : 0;
+    if (!startedAt || now - startedAt > 60_000) {
+      return;
+    }
+
+    clientReportWindow.startedAt = startedAt;
+    clientReportWindow.count = typeof parsed.count === "number" ? parsed.count : 0;
+    clientReportWindow.signatures.clear();
+
+    if (parsed.signatures && typeof parsed.signatures === "object" && !Array.isArray(parsed.signatures)) {
+      Object.entries(parsed.signatures as Record<string, unknown>).forEach(([signature, lastSeenAt]) => {
+        if (typeof lastSeenAt === "number" && now - lastSeenAt <= CLIENT_REPORT_DEDUP_WINDOW_MS) {
+          clientReportWindow.signatures.set(signature, lastSeenAt);
+        }
+      });
+    }
+  } catch {
+    // Storage can fail in private browsing or hardened browser modes.
+  }
+}
+
+function writeStoredReportWindow() {
+  if (!canUseBrowserApis()) {
+    return;
+  }
+
+  try {
+    const storedReportWindow = JSON.stringify({
+      startedAt: clientReportWindow.startedAt,
+      count: clientReportWindow.count,
+      signatures: Object.fromEntries(clientReportWindow.signatures.entries()),
+    });
+    window.localStorage.setItem(CLIENT_REPORT_WINDOW_STORAGE_KEY, storedReportWindow);
+  } catch {
+    // Reporting should never fail the user-facing page.
+  }
+}
+
 function shouldDispatchClientReport(input: Partial<ClientBugEnvelope> & Pick<ClientBugEnvelope, "source" | "severity">) {
   const now = Date.now();
+  readStoredReportWindow(now);
 
   if (!clientReportWindow.startedAt || now - clientReportWindow.startedAt > 60_000) {
     clientReportWindow.startedAt = now;
@@ -129,17 +185,20 @@ function shouldDispatchClientReport(input: Partial<ClientBugEnvelope> & Pick<Cli
   }
 
   if (clientReportWindow.count >= CLIENT_REPORT_MAX_PER_MINUTE) {
+    writeStoredReportWindow();
     return false;
   }
 
   const signature = buildClientReportSignature(input);
   const lastSeenAt = clientReportWindow.signatures.get(signature);
   if (lastSeenAt && now - lastSeenAt < CLIENT_REPORT_DEDUP_WINDOW_MS) {
+    writeStoredReportWindow();
     return false;
   }
 
   clientReportWindow.count += 1;
   clientReportWindow.signatures.set(signature, now);
+  writeStoredReportWindow();
   return true;
 }
 

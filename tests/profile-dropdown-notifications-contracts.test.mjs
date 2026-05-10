@@ -107,13 +107,17 @@ test("docs describe the dropdown notification inbox and keep SMS providers out o
 });
 
 test("root metadata declares a real icon so dropdown QA has no favicon 404", async () => {
-  const [layout, faviconRoute] = await Promise.all([
+  const [layout, faviconRoute, manifest] = await Promise.all([
     readSource("../app/layout.tsx"),
     readSource("../app/favicon.ico/route.ts"),
+    readSource("../app/manifest.ts"),
   ]);
 
   assert.match(layout, /icons:/);
-  assert.match(layout, /\/assets\/generated\/hero_tractor\.png/);
+  assert.match(layout, /\/favicon\.ico/);
+  assert.doesNotMatch(layout, /icon:\s*\[\s*\{\s*url:\s*"\/assets\/generated\/hero_tractor\.png"/s);
+  assert.match(manifest, /\/favicon\.ico/);
+  assert.doesNotMatch(manifest, /\/assets\/generated\/hero_tractor\.png/);
   assert.match(faviconRoute, /image\/svg\+xml/);
   assert.match(faviconRoute, /Kisan Kamai/);
 });
