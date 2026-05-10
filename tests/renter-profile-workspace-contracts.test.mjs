@@ -90,6 +90,12 @@ test("renter workspace removes requested helper copy from pages and boards", asy
   ].forEach((copy) => {
     assert.doesNotMatch(combined, new RegExp(copy.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   });
+
+  assert.match(bookingsPage, /title=\{localizedText\("My Bookings", "माझी बुकिंग"\)\}/);
+  assert.doesNotMatch(bookingsBoard, /: langText\("My Bookings", "माझी बुकिंग"\)/);
+  assert.match(bookingsBoard, /variant === "dashboard"[\s\S]*Booking Overview/);
+  assert.match(savedBoard, /Clear Saved/);
+  assert.doesNotMatch(savedBoard, /<h2[^>]*>[\s\S]*Saved Equipment/);
 });
 
 test("renter-style views keep renter-family links and saved equipment flows", async () => {

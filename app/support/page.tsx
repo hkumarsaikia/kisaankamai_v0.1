@@ -56,7 +56,7 @@ const issueOptions = [
 ] as const;
 
 const supportFormControlClass =
-  "w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors";
+  "w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant text-on-surface placeholder:text-on-surface-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
 
 export default function SupportPage() {
   const { langText, text } = useLanguage();
@@ -119,7 +119,7 @@ export default function SupportPage() {
   return (
     <div className="min-h-screen bg-background font-body text-on-background">
       <main className="pt-20">
-        <section className="relative flex min-h-[716px] items-center justify-center overflow-hidden bg-primary px-6">
+        <section className="relative flex min-h-[716px] items-center justify-center overflow-hidden bg-primary px-6 dark:bg-primary-container">
           <div className="absolute inset-0 z-0">
             <img
               alt="Lush green agricultural fields in Maharashtra"
@@ -169,7 +169,7 @@ export default function SupportPage() {
         </section>
 
         <section className="mx-auto mb-24 grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-12">
-          <div className="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-surface-container-high">
+          <div className="lg:col-span-7 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-surface-container-high dark:border-slate-800 dark:bg-slate-950">
             <h2 className="mb-2 font-headline text-3xl font-bold text-on-surface">{langText("Send us a message", "आम्हाला संदेश पाठवा")}</h2>
             <p className="mb-8 font-body text-on-surface-variant">
               {langText("We usually respond within 24 hours.", "आम्ही साधारणपणे २४ तासांत प्रतिसाद देतो.")}
@@ -233,7 +233,7 @@ export default function SupportPage() {
                 type="submit"
                 aria-label={langText("Send Message", "संदेश पाठवा")}
                 disabled={isPending || submitState === "pending"}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-8 py-4 font-label font-medium text-on-primary transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70 md:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-8 py-4 font-label font-medium text-on-primary transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70 dark:text-white dark:hover:bg-primary-container/80 md:w-auto"
               >
                 {submitState === "pending" ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 {submitState === "success" ? <span className="material-symbols-outlined text-sm">check_circle</span> : null}
@@ -281,7 +281,7 @@ export default function SupportPage() {
                     <p className="mb-2 text-sm text-on-surface-variant dark:text-slate-300">
                       {langText("Quick text assistance", "जलद मजकूर मदत")}
                     </p>
-                    <a className="flex items-center gap-1 font-label font-semibold text-[#2E7D32] hover:underline" href={supportContact.whatsappHref}>
+                    <a className="flex items-center gap-1 font-label font-semibold text-[#2E7D32] hover:underline dark:text-emerald-300" href={supportContact.whatsappHref}>
                       {langText(`Chat with ${supportContact.primaryContactName}`, `${supportContact.primaryContactName} यांच्याशी चॅट करा`)}
                       <span className="material-symbols-outlined text-sm">open_in_new</span>
                     </a>

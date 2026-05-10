@@ -14,7 +14,7 @@ export default function OwnerExperience() {
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             <div className="text-white">
-              <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6">Your machinery,<br /><span className="text-secondary-container">Now a business.</span></h1>
+              <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6">Your machinery,<br /><span className="text-secondary-container dark:text-secondary-fixed">Now a business.</span></h1>
               <p className="text-lg md:text-xl text-slate-200 max-w-lg mb-8 leading-relaxed">Unlock the hidden value of your farm equipment. Join India's most trusted marketplace to earn up to ₹85,000 extra per season by renting to verified farmers.</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button className="px-8 py-4 bg-secondary-container text-on-secondary-container font-black text-lg rounded-xl hover:scale-105 transition-transform shadow-xl">Get Started Free</button>
@@ -84,7 +84,7 @@ export default function OwnerExperience() {
                 </div>
               </div>
               <div className="relative">
-                <div className="w-16 h-16 bg-secondary text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-secondary/20">
+                <div className="w-16 h-16 bg-secondary text-white rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-secondary/20 dark:bg-secondary-container dark:text-on-secondary-container">
                   <span className="material-symbols-outlined text-3xl">event_available</span>
                 </div>
                 <h4 className="text-xl font-bold mb-3">2. Manage Requests</h4>
@@ -118,7 +118,7 @@ export default function OwnerExperience() {
               {/*  Secondary 1  */}
               <div className="kk-depth-tile md:col-span-2 bg-surface-container rounded-3xl p-8 flex items-center gap-6 group">
                 <div className="flex-1">
-                  <h4 className="text-xl font-bold text-primary-container mb-2">Verified Community</h4>
+                  <h4 className="text-xl font-bold text-primary-container dark:text-primary-fixed mb-2">Verified Community</h4>
                   <p className="text-slate-600 dark:text-slate-500">Every renter undergoes a strict KYC check. Rent with peace of mind knowing who is using your equipment.</p>
                 </div>
                 <div className="w-32 h-32 bg-white dark:bg-slate-800 rounded-2xl flex-shrink-0 shadow-sm overflow-hidden">
@@ -126,11 +126,11 @@ export default function OwnerExperience() {
                 </div>
               </div>
               {/*  Secondary 2  */}
-              <div className="bg-secondary text-white rounded-3xl p-8 flex flex-col justify-between">
+              <div className="bg-secondary text-white rounded-3xl p-8 flex flex-col justify-between dark:bg-secondary-container dark:text-on-secondary-container">
                 <span className="material-symbols-outlined text-4xl">trending_up</span>
                 <div>
                   <h4 className="text-lg font-bold mb-1">Maximized ROI</h4>
-                  <p className="text-sm text-secondary-fixed opacity-90">Recover your machinery investment 40% faster by filling idle days.</p>
+                  <p className="text-sm text-secondary-fixed opacity-90 dark:text-on-secondary-container/80">Recover your machinery investment 40% faster by filling idle days.</p>
                 </div>
               </div>
               {/*  Secondary 3  */}
@@ -154,7 +154,7 @@ export default function OwnerExperience() {
             <h2 className="text-4xl md:text-6xl font-black text-white mb-8">Ready to grow your farm business?</h2>
             <p className="text-emerald-100 text-xl mb-12 max-w-2xl mx-auto">Join 1,200+ equipment owners already earning with Kisan Kamai. Free to list, premium to use.</p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <button className="px-10 py-5 bg-secondary text-white font-black text-xl rounded-2xl hover:bg-secondary/90 transition-all shadow-2xl">Start Listing Now</button>
+              <button className="px-10 py-5 bg-secondary text-white font-black text-xl rounded-2xl hover:bg-secondary/90 transition-all shadow-2xl dark:bg-secondary-container dark:text-on-secondary-container dark:hover:bg-secondary-container/90">Start Listing Now</button>
               <button className="px-10 py-5 bg-transparent border-2 border-white/40 text-white font-bold text-xl rounded-2xl hover:bg-white/10 transition-all">Talk to an Agent</button>
             </div>
           </div>

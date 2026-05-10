@@ -110,7 +110,7 @@ export default function VerifyContactPage() {
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
             {user ? (
               <>
-                <Link href="/profile-selection" className="rounded-2xl bg-primary px-6 py-4 font-black text-white">
+                <Link href="/profile-selection" className="rounded-2xl bg-primary px-6 py-4 font-black text-white dark:bg-primary-container">
                   {langText("Go to profile selection", "प्रोफाइल निवडीकडे जा")}
                 </Link>
                 <Link href="/complete-profile" className="rounded-2xl border border-outline-variant px-6 py-4 font-black text-primary">
@@ -119,7 +119,7 @@ export default function VerifyContactPage() {
               </>
             ) : (
               <>
-                <Link href="/login" className="rounded-2xl bg-primary px-6 py-4 font-black text-white">
+                <Link href="/login" className="rounded-2xl bg-primary px-6 py-4 font-black text-white dark:bg-primary-container">
                   {langText("Sign in", "साइन इन करा")}
                 </Link>
                 <Link href="/register" className="rounded-2xl border border-outline-variant px-6 py-4 font-black text-primary">

@@ -153,9 +153,11 @@ test("home hero includes the compact register tile without unsupported payout co
 test("home hero prioritizes the first visual image for Lighthouse LCP", async () => {
   const home = await readSource("../app/page.tsx");
 
-  assert.match(home, /loading=\{index === 0 \? "eager" : "lazy"\}/);
-  assert.match(home, /priority=\{index === 0\}/);
-  assert.match(home, /fetchPriority=\{index === 0 \? "high" : "auto"\}/);
+  assert.match(home, /currentHeroSlide/);
+  assert.doesNotMatch(home, /heroSlides\.map\(\(slide, index\) => \(/);
+  assert.match(home, /loading="eager"/);
+  assert.match(home, /priority/);
+  assert.match(home, /fetchPriority="high"/);
 });
 
 test("generated marketing imagery is served through optimized webp assets", async () => {
@@ -238,4 +240,45 @@ test("feature request dark mode controls and CTA use readable contrast", async (
   assert.match(featureRequest, /has-\[:checked\]:bg-primary-container/);
   assert.match(featureRequest, /has-\[:checked\]:text-white/);
   assert.match(featureRequest, /Submit Feature Request/);
+});
+
+test("mobile dark mode public pages avoid invisible semantic CTA and form surfaces", async () => {
+  const [
+    home,
+    support,
+    faq,
+    ownerBenefits,
+    ownerExperience,
+    featureRequest,
+    terms,
+    register,
+    verifyContact,
+  ] = await Promise.all([
+    readSource("../app/page.tsx"),
+    readSource("../app/support/page.tsx"),
+    readSource("../app/faq/page.tsx"),
+    readSource("../app/owner-benefits/page.tsx"),
+    readSource("../app/owner-experience/page.tsx"),
+    readSource("../app/feature-request/page.tsx"),
+    readSource("../app/terms/page.tsx"),
+    readSource("../app/register/page.tsx"),
+    readSource("../app/verify-contact/page.tsx"),
+  ]);
+
+  assert.match(home, /bg-secondary text-white[^"`]*dark:bg-secondary-container[^"`]*dark:text-on-secondary-container/);
+  assert.match(home, /bg-primary text-white[^"`]*dark:bg-primary-container/);
+  assert.match(support, /bg-primary px-6[^"`]*dark:bg-primary-container/);
+  assert.match(support, /lg:col-span-7[^"`]*bg-white[^"`]*dark:bg-slate-950/);
+  assert.match(faq, /bg-white text-primary[^"`]*dark:bg-slate-950[^"`]*dark:text-emerald-100/);
+  assert.match(faq, /bg-secondary text-white[^"`]*dark:bg-secondary-container[^"`]*dark:text-on-secondary-container/);
+  assert.match(ownerBenefits, /py-24 bg-white relative[^"`]*dark:bg-slate-950/);
+  assert.match(ownerBenefits, /text-gray-700[^"`]*dark:text-slate-200/);
+  assert.match(ownerBenefits, /bg-gray-50[^"`]*dark:bg-slate-950[^"`]*dark:text-slate-100/);
+  assert.match(ownerExperience, /text-secondary-container[^"`]*dark:text-secondary-fixed/);
+  assert.match(ownerExperience, /bg-secondary text-white[^"`]*dark:bg-secondary-container[^"`]*dark:text-on-secondary-container/);
+  assert.match(ownerExperience, /text-primary-container[^"`]*dark:text-primary-fixed/);
+  assert.match(featureRequest, /text-inverse-primary[^"`]*dark:text-primary-fixed/);
+  assert.match(terms, /text-secondary-container[^"`]*dark:text-secondary-fixed/);
+  assert.match(register, /dark:text-on-primary-fixed/);
+  assert.match(verifyContact, /bg-primary[^"`]*text-white[^"`]*dark:bg-primary-container/);
 });

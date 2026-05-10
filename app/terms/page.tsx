@@ -130,7 +130,7 @@ export default function TermsAndSafetyPage() {
                   {langText("Essential Safety Checklist", "सुरक्षिततेची पडताळणी यादी")}
                 </h2>
                 <div className="p-8 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
-                  <p className="text-sm font-black uppercase tracking-widest text-secondary-container mb-4">
+                  <p className="text-sm font-black uppercase tracking-widest text-secondary-container dark:text-secondary-fixed mb-4">
                     {langText("Rule #1", "नियम #१")}
                   </p>
                   <p className="font-black text-2xl leading-tight">

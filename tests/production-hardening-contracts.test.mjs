@@ -228,12 +228,37 @@ test("root layout keeps icon fonts and public session bootstrap lean", async () 
 
   assert.match(layoutSource, /materialSymbolsIconNames/);
   assert.match(layoutSource, /icon_names=\$\{materialSymbolsIconNames\}/);
-  assert.match(layoutSource, /display=block/);
+  assert.match(layoutSource, /materialSymbolsStylesheetHref/);
+  assert.match(layoutSource, /kk-material-symbols-loader/);
+  assert.match(layoutSource, /strategy="afterInteractive"/);
+  assert.doesNotMatch(layoutSource, /rel="stylesheet"[\s\S]*Material\+Symbols\+Outlined/);
+  assert.match(layoutSource, /display=swap/);
   assert.doesNotMatch(layoutSource, /opsz,wght,FILL,GRAD@20\.\.48,100\.\.700,0\.\.1,-50\.\.200/);
   assert.doesNotMatch(layoutSource, /import \{ getCurrentSession \} from "@\/lib\/server\/local-auth"/);
   assert.match(layoutSource, /SESSION_COOKIE_NAME/);
   assert.match(layoutSource, /await import\("@\/lib\/server\/local-auth"\)/);
   assert.match(layoutSource, /cookieStore\.get\(SESSION_COOKIE_NAME\)\?\.value/);
+});
+
+test("homepage initial render avoids below-the-fold map and inactive hero image payload", async () => {
+  const [homeSource, layoutSource] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(homeSource, /currentHeroSlide/);
+  assert.doesNotMatch(homeSource, /heroSlides\.map\(\(slide, index\) => \(/);
+  assert.match(homeSource, /loading="eager"/);
+  assert.match(homeSource, /priority/);
+  assert.match(homeSource, /fetchPriority="high"/);
+  assert.match(homeSource, /window\.setTimeout/);
+  assert.match(homeSource, /12000/);
+  assert.match(homeSource, /window\.setInterval/);
+  assert.doesNotMatch(homeSource, /setInterval\(\(\) => \{\s*setCurrentSlide[\s\S]*\}, 5000\)/);
+  assert.match(homeSource, /deferUntilVisible=\{true\}/);
+  assert.doesNotMatch(homeSource, /deferUntilVisible=\{false\}/);
+  assert.match(layoutSource, /preload:\s*false/);
+  assert.match(layoutSource, /weight:\s*\["400", "500", "600", "700", "800"\]/);
 });
 
 test("public marketing pages expose runtime Marathi copy in their main content", async () => {

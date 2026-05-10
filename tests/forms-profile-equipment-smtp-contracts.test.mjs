@@ -241,7 +241,7 @@ test("dark-mode overlays and depth tiles avoid the requested vignette and white 
   assert.match(globals, /--kk-depth-sheen-opacity/);
   assert.match(dropdown, /kk-profile-trigger/);
   assert.doesNotMatch(dropdown, /shadow-\[0_16px_38px_-22px_rgba\(0,0,0,0\.85\)\]/);
-  assert.match(register, /dark:text-primary/);
+  assert.match(register, /dark:text-on-primary-fixed/);
   assert.doesNotMatch(forgot, /shadow-2xl/);
   assert.doesNotMatch(verifyOtp, /kk-dark-image-overlay/);
   assert.match(profileSelection, /dark:bg-slate-900/);

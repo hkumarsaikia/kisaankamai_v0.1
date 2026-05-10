@@ -98,7 +98,7 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.match(support, /<div className="space-y-3">/);
   assert.match(support, /mt-5 border-t border-outline-variant\/30 pt-5/);
   assert.doesNotMatch(support, /flex h-full flex-col justify-center rounded-3xl bg-surface-container p-8/);
-  assert.match(support, /w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors/);
+  assert.match(support, /w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant text-on-surface placeholder:text-on-surface-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500/);
   assert.doesNotMatch(support, /lg:order-2|lg:order-1|order-2|order-1/);
   assert.doesNotMatch(support, /Contact Us/);
   assert.doesNotMatch(support, /District or Taluka|Optional email/);
@@ -159,12 +159,12 @@ test("owner benefits uses compact selectors, all Maharashtra districts, and no r
   assert.match(ownerBenefits, /Last Month's Earnings/);
   assert.match(ownerBenefits, /How Much Could You Earn\?/);
   assert.match(ownerBenefits, /Average Daily Rate/);
-  assert.match(ownerBenefits, /<section className="py-24 bg-white relative">/);
-  assert.match(ownerBenefits, /glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto/);
-  assert.match(ownerBenefits, /block text-base font-bold text-gray-700 mb-2/);
-  assert.match(ownerBenefits, /block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium/);
+  assert.match(ownerBenefits, /<section className="py-24 bg-white relative dark:bg-slate-950">/);
+  assert.match(ownerBenefits, /glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto dark:border-slate-800 dark:bg-slate-900\/80/);
+  assert.match(ownerBenefits, /block text-base font-bold text-gray-700 dark:text-slate-200 mb-2/);
+  assert.match(ownerBenefits, /block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100/);
   assert.doesNotMatch(ownerBenefits, /focus:border-brand sm:text-sm rounded-xl/);
-  assert.match(ownerBenefits, /flex justify-between text-sm text-gray-500 mt-2 font-medium/);
+  assert.match(ownerBenefits, /flex justify-between text-sm text-gray-500 dark:text-slate-400 mt-2 font-medium/);
   assert.match(ownerBenefits, /bg-gradient-brand rounded-2xl p-8 text-white relative overflow-hidden flex flex-col justify-center/);
   assert.match(ownerBenefits, /text-brand-100 font-medium mb-2 uppercase tracking-wide text-sm/);
   assert.doesNotMatch(ownerBenefits, /kk-form-section glass-card mx-auto max-w-5xl/);
@@ -364,7 +364,10 @@ test("rent equipment pages expose base search, query sort, and compact no-equipm
   assert.match(viewSource, /available-search-panel/);
   assert.match(viewSource, /EquipmentSortMenu/);
   assert.match(sortMenuSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
-  assert.match(viewSource, /pb-0/);
+  assert.match(viewSource, /pb-12 md:pb-14/);
+  assert.match(viewSource, /px-4 pb-2 text-center md:px-8/);
+  assert.doesNotMatch(viewSource, /pt-\[5\.5rem\] md:pt-\[5\.5rem\] pb-0/);
+  assert.doesNotMatch(viewSource, /px-4 pb-0 text-center md:px-8/);
   assert.match(viewSource, /pt-\[5\.5rem\] md:pt-\[5\.5rem\]/);
   assert.match(viewSource, /equipment-card-media-frame/);
   assert.match(viewSource, /p-2\.5 md:p-3/);

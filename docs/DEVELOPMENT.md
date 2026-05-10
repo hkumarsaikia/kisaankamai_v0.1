@@ -95,7 +95,7 @@ Phone-only auth flow contract:
 - Language preference is server-readable through the `kk_language` cookie and mirrored into `localStorage` for client controls. The root layout must read that cookie and pass `initialLanguage` into `LanguageProvider`; do not reintroduce a client-only initial language because it causes saved-language flashes or hydration mismatches.
 - Public requests without a `kisan_kamai_session` cookie must not eagerly import the Firebase-backed session resolver from the root layout. Keep the dynamic session import guarded by the cookie check so anonymous pages avoid unnecessary Firebase/Admin cold-start work.
 - Generated marketing images under `/assets/generated/*.png` should have matching optimized `.webp` siblings. App image references should go through `assetPath(...)`, which serves the WebP variant for generated assets while leaving uploaded listing media unchanged.
-- Material Symbols must stay subset through the root layout `icon_names` URL with `display=block`. Add new icon names to that sorted list when introducing a new `material-symbols-outlined` glyph.
+- Material Symbols must stay subset through the root layout `icon_names` URL and be loaded by the deferred `kk-material-symbols-loader` script with the `noscript` fallback. Add new icon names to that sorted list when introducing a new `material-symbols-outlined` glyph.
 
 ## Ubuntu Runtime Notes
 
@@ -172,7 +172,7 @@ Do not move canonical runtime files into a bug-fix bundle. Source files, generat
 ## Public Data Contract
 
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
-- `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details. Keep the search panels compact below the fixed header on the base, query, and empty-state variants.
+- `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details. Keep the search panels compact below the fixed header on the base, query, and empty-state variants, but preserve a visible gap between the empty-state support CTA and the shared footer.
 - Public and workspace equipment tiles show availability only from listing data: active/current listings get a green dot, paused or future-available listings get a red dot. Public lists may still show paused complete listings so renters can inspect them, but booking actions must reject them until they become active/current.
 - All active Sort/Sorting controls on public rent-equipment and renter browse views must use the shared availability, price-low-to-high, and distance sort contract. Do not add visual-only sort buttons.
 - `/feature-request` is a live public form. Keep it wired to `/api/forms/feature-request`, the `feature-request` submission type, and the shared Firestore-backed submission pipeline.
@@ -195,6 +195,7 @@ Do not move canonical runtime files into a bug-fix bundle. Source files, generat
 - Profile photo uploads must return and apply the refreshed session immediately, then broadcast `session-refresh`, so the header dropdown and owner/renter workspace chrome update without requiring logout/login. Public equipment detail owner cards should read the latest owner profile/user `photoUrl` instead of relying on a stale listing snapshot.
 - Google Maps map/satellite selection is user state. Keep `components/MapComponent.tsx` persisting map type with `kk_google_map_type` and do not hardcode `terrain` over the user's selected view.
 - Public pages default to light mode. Dark mode is user-selected only and must keep forms, cards, images, and footer/header contrast readable.
+- Mobile dark-mode QA should cover public auth/form pages and workspace pages before release. Dark surfaces must not rely on light-only semantic pairs such as `bg-secondary text-white` or `bg-white text-primary` without explicit dark-mode counterparts.
 - Public banner imagery uses the shared `kk-banner-image-overlay` treatment. Do not apply that overlay to equipment listing/product photos because renters need to inspect machine images clearly.
 - Category tiles must keep their baseline catalog images. Owner-uploaded equipment photos should only affect listing cards and equipment detail galleries.
 - Ratings are equipment-only. Do not show owner/renter profile ratings, trust badges, or verification-rating pills in workspace profiles, booking cards, or owner cards. Equipment cards, saved equipment tiles, owner earnings cards, and equipment detail pages may show stars or rating numbers only through `getVisibleEquipmentRating(...)`, which requires both a positive equipment rating and a positive real `ratingCount`/`reviewCount`/`ratingsCount`. Seeded or owner-created listings must not default to fake 4.x ratings.
@@ -205,6 +206,7 @@ Do not move canonical runtime files into a bug-fix bundle. Source files, generat
 - Owner workspace dashboard and booking pages should stay operational and compact: do not reintroduce the removed owner KPI tiles, Fleet Snapshot tile, Manage Equipment CTA inside bookings, or owner-side Track actions. Owner bookings use details, call, approve, and decline actions only.
 - Owner workspace settings, feedback, and support forms use compact responsive layouts with balanced columns on desktop and a single-column flow on mobile. Avoid full-height centering that creates large empty gaps in these profile pages.
 - Primary submit/CTA controls should use the shared `kk-flow-button` and `kk-flow-spinner` animation primitives instead of one-off pulse/spinner treatments.
+- The home hero should keep only the active hero image in the initial render, defer the homepage map until it enters the viewport, and avoid auto-rotating the hero carousel during the first Lighthouse/Core Web Vitals window. Manual carousel controls may still change the hero immediately.
 - Small tile/card surfaces should use the shared `kk-depth-tile` treatment. Pointer-driven depth is installed globally by `components/DepthMotion.tsx` and must respect reduced-motion settings.
 - Sentence-length body copy is justified globally from `app/globals.css` for public and workspace pages on desktop and mobile. Keep navigation, buttons, inputs, labels, and form helper/error text start-aligned so controls remain readable.
 - Form rows mirror to Google Sheets with pending notification metadata. Keep email delivery in the bound Sheets Apps Script only when the workbook owner wants sheet-side alerts.

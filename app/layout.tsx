@@ -18,9 +18,14 @@ import { Suspense } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
-const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const mukta = Mukta({ weight: ["200", "300", "400", "500", "600", "700", "800"], subsets: ["latin", "devanagari"], variable: "--font-mukta" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", preload: false });
+const mukta = Mukta({
+  weight: ["400", "500", "600", "700", "800"],
+  subsets: ["latin", "devanagari"],
+  variable: "--font-mukta",
+  display: "swap",
+});
 const LANGUAGE_COOKIE_NAME = "kk_language";
 const SESSION_COOKIE_NAME = "kisan_kamai_session";
 const materialSymbolsIconNames = [
@@ -144,6 +149,7 @@ const materialSymbolsIconNames = [
   "workspace_premium",
   "wrong_location",
 ].join(",");
+const materialSymbolsStylesheetHref = `https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=${materialSymbolsIconNames}&display=swap`;
 
 function normalizeLanguage(value: string | undefined): Language {
   return value === "en" || value === "mr" ? value : DEFAULT_LANGUAGE;
@@ -267,10 +273,27 @@ export default async function RootLayout({
       <head>
         <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
-        <link
-          href={`https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&icon_names=${materialSymbolsIconNames}&display=block`}
-          rel="stylesheet"
-        />
+        <Script id="kk-material-symbols-loader" strategy="afterInteractive">
+          {`
+(() => {
+  try {
+    if (document.querySelector('link[data-kk-material-symbols="true"]')) {
+      return;
+    }
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = ${JSON.stringify(materialSymbolsStylesheetHref)};
+    link.dataset.kkMaterialSymbols = "true";
+    document.head.appendChild(link);
+  } catch (_error) {
+    // Icon font loading is non-critical; text labels remain available.
+  }
+})();
+`}
+        </Script>
+        <noscript>
+          <link data-kk-material-symbols="true" href={materialSymbolsStylesheetHref} rel="stylesheet" />
+        </noscript>
         <Script id="kk-language-boot" strategy="beforeInteractive">
           {languageBootScript}
         </Script>

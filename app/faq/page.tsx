@@ -135,14 +135,14 @@ export default function FAQ() {
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
                   href={supportContact.phoneHref}
-                  className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-50 transition-colors"
+                  className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-emerald-50 transition-colors dark:bg-slate-950 dark:text-emerald-100 dark:hover:bg-slate-900"
                 >
                   <span className="material-symbols-outlined">call</span>
                   {t("faq.call_support")}
                 </a>
                 <a
                   href={supportContact.whatsappHref}
-                  className="w-full sm:w-auto px-8 py-4 bg-secondary text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+                  className="w-full sm:w-auto px-8 py-4 bg-secondary text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity dark:bg-secondary-container dark:text-on-secondary-container dark:hover:bg-secondary-container/90"
                 >
                   <span className="material-symbols-outlined">chat</span>
                   {t("faq.whatsapp_us")}

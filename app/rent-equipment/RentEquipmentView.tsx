@@ -179,7 +179,7 @@ function NoEquipmentAvailable({
   const { langText } = useLanguage();
 
   return (
-    <div className="bg-surface text-on-surface pt-[5.5rem] md:pt-[5.5rem] pb-0">
+    <div className="bg-surface text-on-surface pt-[5.5rem] md:pt-[5.5rem] pb-12 md:pb-14">
       <div className="mx-auto mb-6 w-full max-w-4xl px-4 md:px-8">
         <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-2 shadow-sm md:p-3">
           <SearchForm
@@ -193,7 +193,7 @@ function NoEquipmentAvailable({
         </div>
       </div>
 
-      <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pb-0 text-center md:px-8">
+      <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pb-2 text-center md:px-8">
         <div className="pointer-events-none absolute -z-10 flex items-center justify-center opacity-5">
           <span className="material-symbols-outlined text-[260px] text-primary">agriculture</span>
         </div>

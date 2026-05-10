@@ -193,7 +193,7 @@ function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: st
                 <div className="flex h-9 w-9 items-center justify-center rounded-full border border-primary/10 bg-primary/10 dark:border-white/15 dark:bg-white/10">
                   <span className="material-symbols-outlined text-xl text-primary dark:text-emerald-50">{step.icon}</span>
                 </div>
-                <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[10px] font-black text-white dark:bg-secondary-container dark:text-secondary">
+                <span className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-[10px] font-black text-white dark:bg-secondary-container dark:text-on-secondary-container">
                   {step.number}
                 </span>
               </div>
@@ -206,7 +206,7 @@ function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: st
 
         <Link
           href={registerHref}
-          className="kk-flow-button block w-full rounded-2xl bg-secondary px-6 py-4 text-center text-lg font-black text-white shadow-[0_16px_35px_-24px_rgba(0,0,0,0.7)] dark:bg-secondary-container dark:text-secondary"
+          className="kk-flow-button block w-full rounded-2xl bg-secondary px-6 py-4 text-center text-lg font-black text-white shadow-[0_16px_35px_-24px_rgba(0,0,0,0.7)] dark:bg-secondary-container dark:text-on-secondary-container"
         >
           <span className="relative z-10">{langText("Register Now", "आता नोंदणी करा")}</span>
         </Link>
@@ -226,6 +226,7 @@ export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchLocation, setSearchLocation] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const currentHeroSlide = heroSlides[currentSlide];
 
   const homepageMarkers = HOMEPAGE_MARKERS.map((marker) => ({
     ...marker,
@@ -242,10 +243,19 @@ export default function Home() {
   }));
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-    }, 5000);
-    return () => clearInterval(timer);
+    let intervalId: number | undefined;
+    const startDelay = window.setTimeout(() => {
+      intervalId = window.setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+      }, 6000);
+    }, 12000);
+
+    return () => {
+      window.clearTimeout(startDelay);
+      if (intervalId) {
+        window.clearInterval(intervalId);
+      }
+    };
   }, []);
 
   const handleSearch = () => {
@@ -258,18 +268,18 @@ export default function Home() {
         {/* Hero Section */}
         <section className="relative min-h-[870px] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            {heroSlides.map((slide, index) => (
-              <ContentImage
-                key={slide.src}
-                className={`w-full h-full object-cover md:object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}
-                alt={langText(slide.altEn, slide.altMr)}
-                src={slide.src}
-                loading={index === 0 ? "eager" : "lazy"}
-                priority={index === 0}
-                fetchPriority={index === 0 ? "high" : "auto"}
-                decoding="async"
-              />
-            ))}
+            <ContentImage
+              key={currentHeroSlide.src}
+              className="absolute inset-0 h-full w-full object-cover opacity-100 transition-opacity duration-700 md:object-[center_15%]"
+              alt={langText(currentHeroSlide.altEn, currentHeroSlide.altMr)}
+              src={currentHeroSlide.src}
+              loading="eager"
+              priority
+              fetchPriority="high"
+              decoding="async"
+              quality={72}
+              sizes="100vw"
+            />
             <div className="kk-banner-image-overlay z-10" />
 
             {/* Slider Controls */}
@@ -466,7 +476,7 @@ export default function Home() {
                 <ul className="space-y-4">
                   {NORTHERN_MAHARASHTRA_SERVICE_AREAS.map(({ areaLabel }) => (
                     <li key={areaLabel} className="flex items-center gap-3 font-bold text-lg text-primary dark:text-emerald-50">
-                      <span className="w-6 h-6 bg-secondary text-white rounded-full flex items-center justify-center text-xs">✓</span>{" "}
+                      <span className="w-6 h-6 bg-secondary text-white rounded-full flex items-center justify-center text-xs dark:bg-secondary-container dark:text-on-secondary-container">✓</span>{" "}
                       {langText(
                         serviceAreaTranslations[areaLabel as keyof typeof serviceAreaTranslations]?.en || areaLabel,
                         serviceAreaTranslations[areaLabel as keyof typeof serviceAreaTranslations]?.mr || areaLabel
@@ -488,7 +498,7 @@ export default function Home() {
                       markers={homepageMarkers}
                       height="100%"
                       showControls={true}
-                      deferUntilVisible={false}
+                      deferUntilVisible={true}
                       className="rounded-none"
                     />
                   </div>
@@ -549,7 +559,7 @@ export default function Home() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-24 bg-primary text-white overflow-hidden relative">
+        <section className="py-24 bg-primary text-white overflow-hidden relative dark:bg-primary-container">
           <div className="absolute inset-0 z-0">
             <ContentImage className="w-full h-full object-cover" alt={langText("Tractors parked in a rural equipment yard at dusk", "संध्याकाळी ग्रामीण यंत्रसामग्रीच्या अंगणात उभे असलेले ट्रॅक्टर")} src={assetPath("/assets/generated/farm_yard.png")} loading="lazy" decoding="async" />
             <div className="kk-banner-image-overlay" />
@@ -558,7 +568,7 @@ export default function Home() {
             <h2 className="text-5xl font-black mb-8 leading-tight">{t("home.ready_to_transform_your_farming_journey")}</h2>
             <p className="text-xl text-white/70 mb-12">{t("home.join_thousands_of_farmers_in_maharashtra_using_kisan_kamai_to_access_world_class_machinery_today")}</p>
             <div className="flex flex-col sm:flex-row justify-center gap-6">
-              <Link href="/rent-equipment" className="bg-secondary text-white px-10 py-5 rounded-xl text-lg font-black hover:bg-secondary/90 shadow-xl transition-all text-center">
+              <Link href="/rent-equipment" className="bg-secondary text-white px-10 py-5 rounded-xl text-lg font-black hover:bg-secondary/90 shadow-xl transition-all text-center dark:bg-secondary-container dark:text-on-secondary-container dark:hover:bg-secondary-container/90">
                 {t("home.browse_equipment")}
               </Link>
             </div>

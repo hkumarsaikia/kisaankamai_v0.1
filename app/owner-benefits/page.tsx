@@ -126,38 +126,38 @@ export default function OwnerBenefitsPage() {
               <div className="relative flex items-center justify-center lg:h-[600px]">
                 <div className="absolute inset-0 rounded-full bg-[#143B2E]/20 blur-3xl" />
                 <div className="glass-card relative z-10 w-full max-w-md rotate-2 rounded-3xl border border-white/20 bg-white/10 p-6 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-transform duration-500 hover:rotate-0">
-                  <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
+                  <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
                     <img alt="Modern tractor" className="h-48 w-full object-cover" src={ownerMachineImage} />
                     <div className="p-6">
                       <div className="mb-4 flex items-start justify-between">
                         <div>
-                          <h3 className="text-xl font-bold text-gray-900">Mahindra 575 DI XP Plus</h3>
-                          <p className="text-sm text-gray-500">{langText("47 HP Tractor", "४७ HP ट्रॅक्टर")}</p>
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-slate-100">Mahindra 575 DI XP Plus</h3>
+                          <p className="text-sm text-gray-500 dark:text-slate-400">{langText("47 HP Tractor", "४७ HP ट्रॅक्टर")}</p>
                         </div>
                         <span className="flex items-center gap-1 rounded-full bg-green-100 px-2.5 py-1 text-xs font-bold text-green-700">
                           <span className="material-symbols-outlined text-sm">check_circle</span>
                           {langText("Verified", "पडताळलेले")}
                         </span>
                       </div>
-                      <div className="space-y-3 border-t border-gray-100 pt-4">
+                      <div className="space-y-3 border-t border-gray-100 pt-4 dark:border-slate-800">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-500">{langText("Estimated Monthly Earnings", "अंदाजित मासिक कमाई")}</span>
-                          <span className="font-bold text-gray-900">₹45,000</span>
+                          <span className="text-gray-500 dark:text-slate-400">{langText("Estimated Monthly Earnings", "अंदाजित मासिक कमाई")}</span>
+                          <span className="font-bold text-gray-900 dark:text-slate-100">₹45,000</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-500">{langText("Average Bookings", "सरासरी बुकिंग")}</span>
-                          <span className="font-semibold text-gray-700">{langText("12 Days/Month", "दर महिन्याला १२ दिवस")}</span>
+                          <span className="text-gray-500 dark:text-slate-400">{langText("Average Bookings", "सरासरी बुकिंग")}</span>
+                          <span className="font-semibold text-gray-700 dark:text-slate-200">{langText("12 Days/Month", "दर महिन्याला १२ दिवस")}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div className="absolute -bottom-6 -left-6 flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-xl">
+                  <div className="absolute -bottom-6 -left-6 flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-950">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600">
                       <span className="material-symbols-outlined">payments</span>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-gray-500">{langText("Last Month's Earnings", "मागील महिन्याची कमाई")}</p>
-                      <p className="text-lg font-bold text-gray-900">₹52,400</p>
+                      <p className="text-xs font-medium text-gray-500 dark:text-slate-400">{langText("Last Month's Earnings", "मागील महिन्याची कमाई")}</p>
+                      <p className="text-lg font-bold text-gray-900 dark:text-slate-100">₹52,400</p>
                     </div>
                   </div>
                 </div>
@@ -166,21 +166,21 @@ export default function OwnerBenefitsPage() {
           </div>
         </section>
 
-        <section className="py-24 bg-white relative">
+        <section className="py-24 bg-white relative dark:bg-slate-950">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">How Much Could You Earn?</h2>
-              <p className="text-lg text-gray-600">Select your equipment type and see an estimate based on the local market in Maharashtra.</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-slate-100 mb-4">How Much Could You Earn?</h2>
+              <p className="text-lg text-gray-600 dark:text-slate-300">Select your equipment type and see an estimate based on the local market in Maharashtra.</p>
             </div>
 
-            <div className="glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto">
+            <div className="glass-card rounded-3xl p-8 lg:p-12 border border-gray-100 shadow-xl max-w-5xl mx-auto dark:border-slate-800 dark:bg-slate-900/80">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div className="space-y-8">
                   <div>
-                    <label className="block text-base font-bold text-gray-700 mb-2">Equipment Type</label>
+                    <label className="block text-base font-bold text-gray-700 dark:text-slate-200 mb-2">Equipment Type</label>
                     <div className="relative">
                       <select
-                        className="kk-owner-benefits-select block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
+                        className="kk-owner-benefits-select block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                         style={ownerBenefitsSelectStyle}
                         value={selectedCategory.slug}
                         onChange={(event) => {
@@ -194,7 +194,7 @@ export default function OwnerBenefitsPage() {
                           </option>
                         ))}
                       </select>
-                      <div className="kk-owner-benefits-select-arrow pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                      <div className="kk-owner-benefits-select-arrow pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 dark:text-slate-400">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                         </svg>
@@ -203,10 +203,10 @@ export default function OwnerBenefitsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-base font-bold text-gray-700 mb-2">Operating District</label>
+                    <label className="block text-base font-bold text-gray-700 dark:text-slate-200 mb-2">Operating District</label>
                     <div className="relative">
                       <select
-                        className="kk-owner-benefits-select max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium"
+                        className="kk-owner-benefits-select max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                         style={ownerBenefitsSelectStyle}
                         value={district}
                         onChange={(event) => setDistrict(event.target.value)}
@@ -217,31 +217,31 @@ export default function OwnerBenefitsPage() {
                           </option>
                         ))}
                       </select>
-                      <div className="kk-owner-benefits-select-arrow pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                      <div className="kk-owner-benefits-select-arrow pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500 dark:text-slate-400">
                         <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                         </svg>
                       </div>
                     </div>
-                    <p className="mt-2 text-sm font-semibold text-gray-500">
+                    <p className="mt-2 text-sm font-semibold text-gray-500 dark:text-slate-400">
                       {langText("More locations coming soon...", "लवकरच आणखी ठिकाणे उपलब्ध होतील...")}
                     </p>
                   </div>
 
                   <div>
-                    <label className="flex justify-between text-base font-bold text-gray-700 mb-4">
+                    <label className="flex justify-between text-base font-bold text-gray-700 dark:text-slate-200 mb-4">
                       <span>Expected Usage</span>
-                      <span className="text-brand">{usageDays} Days/Month</span>
+                      <span className="text-brand dark:text-primary-fixed">{usageDays} Days/Month</span>
                     </label>
                     <input
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand"
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand dark:bg-slate-700"
                       max={25}
                       min={5}
                       type="range"
                       value={usageDays}
                       onChange={(event) => setUsageDays(Number(event.target.value))}
                     />
-                    <div className="flex justify-between text-sm text-gray-500 mt-2 font-medium">
+                    <div className="flex justify-between text-sm text-gray-500 dark:text-slate-400 mt-2 font-medium">
                       <span>5 Days</span>
                       <span>25 Days</span>
                     </div>

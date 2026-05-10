@@ -406,14 +406,14 @@ export default function FeatureRequestPage() {
 
             <div className="relative w-full overflow-hidden rounded-[1.5rem] bg-primary-container px-4 py-20 text-white">
               <div className="relative z-10 mx-auto flex max-w-2xl flex-col items-center gap-6 text-center">
-                <span className="material-symbols-outlined mb-2 text-5xl text-inverse-primary">handshake</span>
+                <span className="material-symbols-outlined mb-2 text-5xl text-inverse-primary dark:text-primary-fixed">handshake</span>
                 <h2 className="text-3xl font-black leading-tight tracking-tight md:text-4xl">
                   {langText(
                     "Help us shape the future of farm equipment access.",
                     "शेती उपकरणांच्या उपलब्धतेचे भविष्य घडवण्यासाठी मदत करा."
                   )}
                 </h2>
-                <p className="text-lg font-medium text-inverse-primary md:text-xl">
+                <p className="text-lg font-medium text-inverse-primary dark:text-primary-fixed md:text-xl">
                   {langText(
                     "Every serious request is reviewed by the Kisan Kamai team.",
                     "प्रत्येक महत्त्वाची विनंती किसान कमाई टीम तपासते."

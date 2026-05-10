@@ -59,10 +59,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-        <div>
-          <h2 className="text-3xl font-black text-primary">{langText("Saved Equipment", "जतन केलेली उपकरणे")}</h2>
-        </div>
+      <div className="flex justify-end">
         <button
           type="button"
           onClick={handleClearAll}

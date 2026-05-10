@@ -122,13 +122,15 @@ export function RenterBookingsBoard({
     <div className="space-y-8">
       <section className="space-y-5">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          <div>
-            <h2 className="font-headline text-3xl font-extrabold text-primary">
-              {variant === "dashboard"
-                ? langText("Booking Overview", "बुकिंग आढावा")
-                : langText("My Bookings", "माझी बुकिंग")}
-            </h2>
-          </div>
+          {variant === "dashboard" ? (
+            <div>
+              <h2 className="font-headline text-3xl font-extrabold text-primary">
+                {langText("Booking Overview", "बुकिंग आढावा")}
+              </h2>
+            </div>
+          ) : (
+            <div aria-hidden="true" />
+          )}
           <Link
             href="/renter-profile/browse"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white"
