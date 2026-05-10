@@ -31,6 +31,7 @@ interface LanguageContextType {
 }
 
 const STORAGE_KEY = "kk_language";
+const LANGUAGE_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
 const translationFallbackCache = new Map<string, string>();
 const translationFallbackRequests = new Map<string, Promise<string>>();
 const DEVANAGARI_REGEX = /\p{Script=Devanagari}/u;
@@ -43,6 +44,42 @@ function applyLanguageToDocument(language: Language) {
   document.documentElement.dataset.language = language;
   document.documentElement.classList.toggle("lang-mr", language === "mr");
   document.documentElement.classList.toggle("lang-en", language === "en");
+}
+
+function persistLanguagePreference(language: Language) {
+  try {
+    localStorage.setItem(STORAGE_KEY, language);
+  } catch {
+    // Ignore storage access issues and keep the in-memory language.
+  }
+
+  document.cookie = `${STORAGE_KEY}=${language}; Path=/; Max-Age=${LANGUAGE_COOKIE_MAX_AGE_SECONDS}; SameSite=Lax`;
+}
+
+function readInitialLanguage(initialLanguage?: Language): Language {
+  if (initialLanguage === "en" || initialLanguage === "mr") {
+    return initialLanguage;
+  }
+
+  if (typeof document !== "undefined") {
+    const bootLanguage = document.documentElement.dataset.language;
+    if (bootLanguage === "en" || bootLanguage === "mr") {
+      return bootLanguage;
+    }
+  }
+
+  if (typeof localStorage !== "undefined") {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved === "en" || saved === "mr") {
+        return saved;
+      }
+    } catch {
+      // Ignore storage access issues and keep the default language.
+    }
+  }
+
+  return DEFAULT_LANGUAGE;
 }
 
 function containsDevanagari(value: string) {
@@ -173,34 +210,19 @@ async function requestTranslationFallback(payload: TranslationFallbackPayload) {
   return requestPromise;
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
+export function LanguageProvider({ children, initialLanguage }: { children: React.ReactNode; initialLanguage?: Language }) {
   const [, setTranslationCacheVersion] = useState(0);
-  const [language, setLanguage] = useState<Language>(DEFAULT_LANGUAGE);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved === "en" || saved === "mr") {
-        setLanguage(saved);
-      }
-    } catch {
-      // Ignore storage access issues and keep the boot language.
-    }
-  }, []);
+  const [language, setLanguage] = useState<Language>(() => readInitialLanguage(initialLanguage));
 
   useEffect(() => {
     applyLanguageToDocument(language);
+    persistLanguagePreference(language);
   }, [language]);
 
   const handleSetLanguage = (nextLanguage: Language) => {
     applyLanguageToDocument(nextLanguage);
+    persistLanguagePreference(nextLanguage);
     setLanguage(nextLanguage);
-
-    try {
-      localStorage.setItem(STORAGE_KEY, nextLanguage);
-    } catch {
-      // Ignore storage access issues and keep the in-memory language.
-    }
   };
 
   const ensureTranslation = (payload: TranslationFallbackPayload) => {

@@ -201,7 +201,7 @@ export function ProfileFeedbackForm({
                   {[1, 2, 3, 4, 5].map((rating) => (
                     <button
                       key={rating}
-                      className="hover:scale-110 transition-transform"
+                      className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full transition-transform hover:scale-110 hover:bg-surface-container"
                       type="button"
                       onClick={() => updateField("rating", rating)}
                       aria-label={langText(`Set satisfaction to ${rating}`, `समाधान ${rating} करा`)}

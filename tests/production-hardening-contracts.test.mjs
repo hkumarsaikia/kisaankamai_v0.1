@@ -11,12 +11,27 @@ test("site defaults to light mode and does not follow system dark mode by defaul
   assert.match(layoutSource, /kk-theme-boot/);
 });
 
-test("language provider hydrates from the server default before applying saved language", async () => {
-  const languageSource = await readFile(new URL("../components/LanguageContext.tsx", import.meta.url), "utf8");
+test("language provider hydrates from the boot language to avoid saved-language flash", async () => {
+  const [languageSource, layoutSource] = await Promise.all([
+    readFile(new URL("../components/LanguageContext.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+  ]);
 
-  assert.match(languageSource, /useState<Language>\(DEFAULT_LANGUAGE\)/);
-  assert.match(languageSource, /localStorage\.getItem\(STORAGE_KEY\)/);
-  assert.doesNotMatch(languageSource, /const bootLanguage\s*=\s*document\.documentElement\.dataset\.language/);
+  assert.match(languageSource, /readInitialLanguage/);
+  assert.match(languageSource, /initialLanguage\?: Language/);
+  assert.match(languageSource, /useState<Language>\(\(\) => readInitialLanguage\(initialLanguage\)\)/);
+  assert.match(languageSource, /document\.cookie = `\$\{STORAGE_KEY\}=\$\{language\}/);
+  assert.match(languageSource, /document\.documentElement\.dataset\.language/);
+  assert.match(languageSource, /localStorage\.setItem\(STORAGE_KEY, language\)/);
+  assert.doesNotMatch(languageSource, /useState<Language>\(DEFAULT_LANGUAGE\)/);
+  assert.doesNotMatch(languageSource, /setLanguage\(saved\)/);
+
+  assert.match(layoutSource, /cookies\(\)/);
+  assert.match(layoutSource, /normalizeLanguage\(cookieStore\.get\(LANGUAGE_COOKIE_NAME\)\?\.value\)/);
+  assert.match(layoutSource, /<html lang=\{initialLanguage\} data-language=\{initialLanguage\}/);
+  assert.match(layoutSource, /<LanguageProvider initialLanguage=\{initialLanguage\}>/);
+  assert.match(layoutSource, /kk_language_cookie_migrated/);
+  assert.match(layoutSource, /window\.location\.replace\(window\.location\.href\)/);
 });
 
 test("categories keep a baseline catalog while merging live owner listing categories", async () => {
@@ -183,4 +198,14 @@ test("report API compatibility, rate limits, and booking conflicts have backend 
   assert.match(firebaseDataSource, /dateRangeOverlaps/);
   assert.match(firebaseDataSource, /duplicateBooking/);
   assert.match(firebaseDataSource, /This equipment already has a booking request for the selected dates/);
+});
+
+test("client bug reporting is throttled before hitting the backend rate limit", async () => {
+  const clientBugReportingSource = await readFile(new URL("../lib/client/bug-reporting.ts", import.meta.url), "utf8");
+
+  assert.match(clientBugReportingSource, /CLIENT_REPORT_MAX_PER_MINUTE/);
+  assert.match(clientBugReportingSource, /clientReportWindow/);
+  assert.match(clientBugReportingSource, /shouldDispatchClientReport/);
+  assert.match(clientBugReportingSource, /return false/);
+  assert.match(clientBugReportingSource, /dispatchEnvelope\(baseEnvelope\(input\)\)/);
 });

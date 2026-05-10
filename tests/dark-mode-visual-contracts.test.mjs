@@ -150,6 +150,32 @@ test("home hero includes the compact register tile without unsupported payout co
   assert.doesNotMatch(home, /Stay connected with owner-managed rental support/);
 });
 
+test("home hero prioritizes the first visual image for Lighthouse LCP", async () => {
+  const home = await readSource("../app/page.tsx");
+
+  assert.match(home, /loading=\{index === 0 \? "eager" : "lazy"\}/);
+  assert.match(home, /priority=\{index === 0\}/);
+  assert.match(home, /fetchPriority=\{index === 0 \? "high" : "auto"\}/);
+});
+
+test("mobile icon controls keep accessible touch targets", async () => {
+  const [login, register, forgotNewPassword, feedback] = await Promise.all([
+    readSource("../app/login/page.tsx"),
+    readSource("../app/register/page.tsx"),
+    readSource("../app/forgot-password/new-password/page.tsx"),
+    readSource("../components/profile/ProfileFeedbackForm.tsx"),
+  ]);
+
+  for (const source of [login, register, forgotNewPassword]) {
+    assert.match(source, /min-h-11/);
+    assert.match(source, /min-w-11/);
+  }
+
+  assert.match(feedback, /min-h-11/);
+  assert.match(feedback, /min-w-11/);
+  assert.match(feedback, /items-center justify-center/);
+});
+
 test("shared action controls use the refined flow animation primitives", async () => {
   const [globals, login, register, home] = await Promise.all([
     readSource("../app/globals.css"),

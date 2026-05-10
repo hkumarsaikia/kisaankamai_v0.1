@@ -6,7 +6,7 @@ test("root layout installs the single-language runtime inside the language provi
   const source = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 
   assert.match(source, /import \{ SingleLanguageRuntime \} from "@\/components\/SingleLanguageRuntime";/);
-  assert.match(source, /<LanguageProvider>\s*<SingleLanguageRuntime \/>/s);
+  assert.match(source, /<LanguageProvider(?:[^>]*)>\s*<SingleLanguageRuntime \/>/s);
 });
 
 test("single-language runtime does not mutate the DOM after first paint", async () => {

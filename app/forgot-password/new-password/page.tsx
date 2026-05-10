@@ -160,7 +160,7 @@ export default function NewPasswordPage() {
                   />
                   <button
                     type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary"
+                    className="absolute right-1.5 top-1/2 inline-flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-full text-outline transition-colors hover:bg-surface-container hover:text-primary"
                     onClick={() => setShowPassword((current) => !current)}
                     aria-label={langText("Toggle password visibility", "पासवर्ड दृश्यमानता बदला")}
                   >
@@ -188,7 +188,7 @@ export default function NewPasswordPage() {
                   />
                   <button
                     type="button"
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary"
+                    className="absolute right-1.5 top-1/2 inline-flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-full text-outline transition-colors hover:bg-surface-container hover:text-primary"
                     onClick={() => setShowConfirmPassword((current) => !current)}
                     aria-label={langText("Toggle confirm password visibility", "पासवर्ड पुष्टी दृश्यमानता बदला")}
                   >
@@ -221,7 +221,7 @@ export default function NewPasswordPage() {
                 </button>
                 <Link
                   href="/login"
-                  className="flex items-center justify-center gap-2 text-sm font-bold text-primary decoration-2 underline-offset-4 hover:underline"
+                  className="flex min-h-9 items-center justify-center gap-2 rounded-full px-3 text-sm font-bold text-primary decoration-2 underline-offset-4 hover:underline"
                 >
                   <span className="material-symbols-outlined text-[18px]">arrow_back</span>
                   {langText("Back to Sign In", "साइन इनकडे परत")}

@@ -436,7 +436,7 @@ export default function RegisterPage() {
                         <button
                           type="button"
                           onClick={() => setShowPassword((current) => !current)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary"
+                          className="absolute right-1.5 top-1/2 inline-flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-full text-outline transition-colors hover:bg-surface-container hover:text-primary"
                           aria-label={langText("Toggle password visibility", "पासवर्ड दृश्यमानता बदला")}
                         >
                           <span className="material-symbols-outlined">
@@ -619,7 +619,7 @@ export default function RegisterPage() {
 
                   <p className="text-center text-sm font-medium text-on-surface-variant">
                     {langText("Already have an account?", "आधीच खाते आहे का?")}{" "}
-                    <Link href="/login" className="font-bold text-primary hover:underline">
+                    <Link href="/login" className="inline-flex min-h-9 items-center rounded-full px-2 font-bold text-primary hover:underline">
                       {langText("Login here", "इथे लॉगिन करा")}
                     </Link>
                   </p>

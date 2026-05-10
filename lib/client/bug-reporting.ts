@@ -5,6 +5,14 @@ import type { BugReportSource, BugSeverity, ClientBugEnvelope } from "@/lib/bug-
 
 const BUG_REPORT_ENDPOINT = "/api/bug-reports";
 const CLIENT_SESSION_STORAGE_KEY = "kisan-kamai-bug-client-session";
+const CLIENT_REPORT_MAX_PER_MINUTE = 8;
+const CLIENT_REPORT_DEDUP_WINDOW_MS = 30_000;
+
+const clientReportWindow = {
+  startedAt: 0,
+  count: 0,
+  signatures: new Map<string, number>(),
+};
 
 function canUseBrowserApis() {
   return typeof window !== "undefined";
@@ -93,6 +101,48 @@ function isInternalBugRoute(targetUrl: URL) {
   return targetUrl.pathname === BUG_REPORT_ENDPOINT;
 }
 
+function buildClientReportSignature(input: Partial<ClientBugEnvelope> & Pick<ClientBugEnvelope, "source" | "severity">) {
+  return [
+    input.source,
+    input.severity,
+    input.pathname || (canUseBrowserApis() ? window.location.pathname : ""),
+    input.statusCode || "",
+    input.performance?.metricName || "",
+    input.error?.message || "",
+    Array.isArray(input.rawConsoleArgs) ? input.rawConsoleArgs.map((item) => String(item)).join("|").slice(0, 160) : "",
+  ].join(":");
+}
+
+function shouldDispatchClientReport(input: Partial<ClientBugEnvelope> & Pick<ClientBugEnvelope, "source" | "severity">) {
+  const now = Date.now();
+
+  if (!clientReportWindow.startedAt || now - clientReportWindow.startedAt > 60_000) {
+    clientReportWindow.startedAt = now;
+    clientReportWindow.count = 0;
+    clientReportWindow.signatures.clear();
+  }
+
+  for (const [signature, lastSeenAt] of clientReportWindow.signatures.entries()) {
+    if (now - lastSeenAt > CLIENT_REPORT_DEDUP_WINDOW_MS) {
+      clientReportWindow.signatures.delete(signature);
+    }
+  }
+
+  if (clientReportWindow.count >= CLIENT_REPORT_MAX_PER_MINUTE) {
+    return false;
+  }
+
+  const signature = buildClientReportSignature(input);
+  const lastSeenAt = clientReportWindow.signatures.get(signature);
+  if (lastSeenAt && now - lastSeenAt < CLIENT_REPORT_DEDUP_WINDOW_MS) {
+    return false;
+  }
+
+  clientReportWindow.count += 1;
+  clientReportWindow.signatures.set(signature, now);
+  return true;
+}
+
 function dispatchEnvelope(payload: ClientBugEnvelope) {
   const body = JSON.stringify(payload);
 
@@ -122,6 +172,10 @@ function dispatchEnvelope(payload: ClientBugEnvelope) {
 
 export function reportClientBug(input: Partial<ClientBugEnvelope> & Pick<ClientBugEnvelope, "source" | "severity">) {
   if (!canUseBrowserApis()) {
+    return;
+  }
+
+  if (!shouldDispatchClientReport(input)) {
     return;
   }
 

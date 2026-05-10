@@ -264,7 +264,9 @@ export default function Home() {
                 className={`w-full h-full object-cover md:object-[center_15%] absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0"}`}
                 alt={langText(slide.altEn, slide.altMr)}
                 src={slide.src}
-                loading="lazy"
+                loading={index === 0 ? "eager" : "lazy"}
+                priority={index === 0}
+                fetchPriority={index === 0 ? "high" : "auto"}
                 decoding="async"
               />
             ))}

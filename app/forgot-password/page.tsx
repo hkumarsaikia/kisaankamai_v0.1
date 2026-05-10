@@ -138,7 +138,7 @@ export default function ForgotPasswordPage() {
       <section className="relative z-10 flex w-full items-center justify-center bg-background/50 p-6 sm:p-12 md:w-1/2 lg:w-5/12">
         <div className="kk-auth-card flex w-full max-w-md flex-col rounded-3xl border border-white/40 bg-white/70 backdrop-blur-md p-10 shadow-[0_8px_32px_0_rgba(0,37,26,0.08)] transition-all duration-300 dark:border-slate-800 dark:bg-slate-900/80 sm:p-12">
           <Link
-            className="mb-10 inline-flex w-max items-center text-xs font-label font-medium uppercase tracking-wider text-on-surface-variant/70 transition-all duration-300 hover:text-primary"
+            className="mb-10 inline-flex min-h-9 w-max items-center rounded-full pr-2 text-xs font-label font-medium uppercase tracking-wider text-on-surface-variant/70 transition-all duration-300 hover:text-primary"
             href="/login"
           >
             <span className="material-symbols-outlined mr-1.5 text-base opacity-70">arrow_back</span>

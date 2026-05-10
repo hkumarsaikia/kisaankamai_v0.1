@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, Mukta } from "next/font/google";
+import { cookies } from "next/headers";
 import Script from "next/script";
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
@@ -10,6 +11,7 @@ import { NavigationTransitionProvider } from "@/components/NavigationTransitionP
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { SingleLanguageRuntime } from "@/components/SingleLanguageRuntime";
 import { SiteChrome } from "@/components/SiteChrome";
+import { DEFAULT_LANGUAGE, type Language } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { DEFAULT_SHARE_DESCRIPTION, getDefaultShareImageUrl, getMetadataBaseUrl, SITE_NAME } from "@/lib/site-metadata";
 import { Suspense } from "react";
@@ -19,11 +21,31 @@ import "./globals.css";
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const mukta = Mukta({ weight: ["200", "300", "400", "500", "600", "700", "800"], subsets: ["latin", "devanagari"], variable: "--font-mukta" });
+const LANGUAGE_COOKIE_NAME = "kk_language";
+
+function normalizeLanguage(value: string | undefined): Language {
+  return value === "en" || value === "mr" ? value : DEFAULT_LANGUAGE;
+}
+
 const languageBootScript = `
 (() => {
   try {
+    const cookieMatch = document.cookie.match(/(?:^|; )kk_language=(en|mr)(?:;|$)/);
+    const cookieLanguage = cookieMatch ? cookieMatch[1] : null;
     const saved = window.localStorage.getItem("kk_language");
-    const language = saved === "en" || saved === "mr" ? saved : "mr";
+    const savedLanguage = saved === "en" || saved === "mr" ? saved : null;
+
+    if (!cookieLanguage && savedLanguage && window.sessionStorage.getItem("kk_language_cookie_migrated") !== "1") {
+      window.sessionStorage.setItem("kk_language_cookie_migrated", "1");
+      document.cookie = "kk_language=" + savedLanguage + "; Path=/; Max-Age=31536000; SameSite=Lax";
+      window.location.replace(window.location.href);
+      return;
+    }
+
+    const language = cookieLanguage || "mr";
+    if (savedLanguage !== language) {
+      window.localStorage.setItem("kk_language", language);
+    }
     const root = document.documentElement;
     root.lang = language;
     root.dataset.language = language;
@@ -108,10 +130,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialLanguage = normalizeLanguage(cookieStore.get(LANGUAGE_COOKIE_NAME)?.value);
   const initialSession = await getCurrentSession();
 
   return (
-    <html lang="mr" data-language="mr" className="lang-mr" suppressHydrationWarning>
+    <html lang={initialLanguage} data-language={initialLanguage} className={`lang-${initialLanguage}`} suppressHydrationWarning>
       <head>
         <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
@@ -129,7 +153,7 @@ export default async function RootLayout({
       </head>
       <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
-          <LanguageProvider>
+          <LanguageProvider initialLanguage={initialLanguage}>
             <SingleLanguageRuntime />
             <DepthMotion />
             <AuthProvider initialSession={initialSession}>

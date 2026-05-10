@@ -214,7 +214,7 @@ export default function LoginPage() {
                     </label>
                     <Link
                       href="/forgot-password"
-                      className="text-[11px] font-bold uppercase tracking-widest text-secondary transition-colors hover:text-primary"
+                      className="-my-2 inline-flex min-h-9 items-center rounded-full px-2 text-[11px] font-bold uppercase tracking-widest text-secondary transition-colors hover:text-primary"
                     >
                       {langText("Forgot password?", "पासवर्ड विसरलात?")}
                     </Link>
@@ -239,7 +239,7 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword((current) => !current)}
-                      className="absolute right-5 top-1/2 -translate-y-1/2 text-outline transition-colors hover:text-primary"
+                      className="absolute right-2 top-1/2 inline-flex min-h-11 min-w-11 -translate-y-1/2 items-center justify-center rounded-full text-outline transition-colors hover:bg-surface-container hover:text-primary"
                       aria-label={langText("Toggle password visibility", "पासवर्ड दृश्यमानता बदला")}
                     >
                       <span className="material-symbols-outlined text-xl">
