@@ -6,7 +6,7 @@ import type { BugReportSource, BugSeverity, ClientBugEnvelope } from "@/lib/bug-
 const BUG_REPORT_ENDPOINT = "/api/bug-reports";
 const CLIENT_SESSION_STORAGE_KEY = "kisan-kamai-bug-client-session";
 const CLIENT_REPORT_WINDOW_STORAGE_KEY = "kisan-kamai-bug-report-window";
-const CLIENT_REPORT_MAX_PER_MINUTE = 4;
+const CLIENT_REPORT_MAX_PER_MINUTE = 2;
 const CLIENT_REPORT_DEDUP_WINDOW_MS = 30_000;
 
 const clientReportWindow = {

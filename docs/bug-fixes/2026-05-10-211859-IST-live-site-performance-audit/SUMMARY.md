@@ -17,6 +17,7 @@ Date: 2026-05-10 21:18:59 IST
 - `app/layout.tsx` uses a narrowed Material Symbols `icon_names` request with `display=block`.
 - `app/layout.tsx` dynamically imports the Firebase-backed session resolver only when `kisan_kamai_session` exists.
 - `lib/client/bug-reporting.ts` stores the client report budget in `localStorage` so full-page navigations and multi-route QA share the same client-side rate limit.
+- `components/PerformanceMonitor.tsx` reports only poor-rated web-vitals metrics to `/api/bug-reports`; needs-improvement metrics remain local browser observations.
 - `app/support/page.tsx` uses `langText(...)` instead of visible mixed-language slash labels.
 
 ## Verification Targets

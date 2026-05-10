@@ -203,9 +203,13 @@ test("report API compatibility, rate limits, and booking conflicts have backend 
 });
 
 test("client bug reporting is throttled before hitting the backend rate limit", async () => {
-  const clientBugReportingSource = await readFile(new URL("../lib/client/bug-reporting.ts", import.meta.url), "utf8");
+  const [clientBugReportingSource, performanceMonitorSource] = await Promise.all([
+    readFile(new URL("../lib/client/bug-reporting.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/PerformanceMonitor.tsx", import.meta.url), "utf8"),
+  ]);
 
   assert.match(clientBugReportingSource, /CLIENT_REPORT_MAX_PER_MINUTE/);
+  assert.match(clientBugReportingSource, /CLIENT_REPORT_MAX_PER_MINUTE\s*=\s*2/);
   assert.match(clientBugReportingSource, /CLIENT_REPORT_WINDOW_STORAGE_KEY/);
   assert.match(clientBugReportingSource, /clientReportWindow/);
   assert.match(clientBugReportingSource, /readStoredReportWindow/);
@@ -215,6 +219,8 @@ test("client bug reporting is throttled before hitting the backend rate limit", 
   assert.match(clientBugReportingSource, /shouldDispatchClientReport/);
   assert.match(clientBugReportingSource, /return false/);
   assert.match(clientBugReportingSource, /dispatchEnvelope\(baseEnvelope\(input\)\)/);
+  assert.match(performanceMonitorSource, /metric\.rating !== "poor"/);
+  assert.doesNotMatch(performanceMonitorSource, /metric\.rating === "good"/);
 });
 
 test("root layout keeps icon fonts and public session bootstrap lean", async () => {

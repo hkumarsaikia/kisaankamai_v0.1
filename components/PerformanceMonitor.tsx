@@ -176,7 +176,7 @@ export function PerformanceMonitor() {
       id: string;
       navigationType?: string;
     }) => {
-      if (metric.rating === "good") {
+      if (metric.rating !== "poor") {
         return;
       }
 
