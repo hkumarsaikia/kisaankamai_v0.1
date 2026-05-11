@@ -226,18 +226,27 @@ test("client bug reporting is throttled before hitting the backend rate limit", 
 test("root layout keeps icon fonts and public session bootstrap lean", async () => {
   const layoutSource = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 
-  assert.match(layoutSource, /materialSymbolsIconNames/);
-  assert.match(layoutSource, /icon_names=\$\{materialSymbolsIconNames\}/);
   assert.match(layoutSource, /materialSymbolsStylesheetHref/);
-  assert.match(layoutSource, /kk-material-symbols-loader/);
-  assert.match(layoutSource, /strategy="afterInteractive"/);
-  assert.doesNotMatch(layoutSource, /rel="stylesheet"[\s\S]*Material\+Symbols\+Outlined/);
+  assert.match(layoutSource, /Material\+Symbols\+Outlined:opsz,wght,FILL,GRAD@24,400,0\.\.1,0&display=swap/);
+  assert.match(layoutSource, /data-kk-material-symbols="true"/);
+  assert.match(layoutSource, /rel="stylesheet"/);
+  assert.doesNotMatch(layoutSource, /icon_names=/);
+  assert.doesNotMatch(layoutSource, /kk-material-symbols-loader/);
+  assert.doesNotMatch(layoutSource, /document\.createElement\("link"\)/);
   assert.match(layoutSource, /display=swap/);
   assert.doesNotMatch(layoutSource, /opsz,wght,FILL,GRAD@20\.\.48,100\.\.700,0\.\.1,-50\.\.200/);
   assert.doesNotMatch(layoutSource, /import \{ getCurrentSession \} from "@\/lib\/server\/local-auth"/);
   assert.match(layoutSource, /SESSION_COOKIE_NAME/);
   assert.match(layoutSource, /await import\("@\/lib\/server\/local-auth"\)/);
   assert.match(layoutSource, /cookieStore\.get\(SESSION_COOKIE_NAME\)\?\.value/);
+});
+
+test("production security headers force HTTPS after first secure visit", async () => {
+  const nextConfig = await readFile(new URL("../next.config.mjs", import.meta.url), "utf8");
+
+  assert.match(nextConfig, /Strict-Transport-Security/);
+  assert.match(nextConfig, /max-age=31536000; includeSubDomains; preload/);
+  assert.match(nextConfig, /isDev\s*\?\s*\[\]/);
 });
 
 test("homepage initial render avoids below-the-fold map and inactive hero image payload", async () => {

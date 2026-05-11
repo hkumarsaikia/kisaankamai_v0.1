@@ -29,7 +29,7 @@ The root app is the only public runtime.
 
 - Anonymous public requests should avoid unnecessary Firebase session work. The root layout only imports the session resolver when a valid-looking `kisan_kamai_session` cookie is present.
 - Generated site imagery is stored as optimized WebP siblings and routed through `assetPath(...)`; uploaded equipment photos remain untouched so owner media paths continue to match Firebase Storage URLs.
-- Material Symbols are loaded with a sorted `icon_names` subset instead of the full variable font payload.
+- Material Symbols are loaded through the valid full Google Fonts ligature stylesheet in the root layout head. Do not use the `icon_names` subset URL until a live browser check proves that generated URL returns `text/css`; an invalid subset URL makes the whole site render icon names as visible words.
 
 ## Root App Boundaries
 
