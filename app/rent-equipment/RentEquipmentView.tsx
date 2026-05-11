@@ -126,7 +126,7 @@ function SearchForm({
           onChange={(event) => onLocationChange(event.target.value)}
         />
       </div>
-      <button className="w-full md:w-auto bg-primary-container text-white px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-opacity" type="submit">
+      <button className="w-full rounded-lg bg-primary-container text-white dark:text-primary-fixed px-8 py-3 font-bold transition-opacity hover:opacity-90 md:w-auto" type="submit">
         {langText(buttonLabel?.en || "Search", buttonLabel?.mr || "शोधा")}
       </button>
     </form>
@@ -310,8 +310,8 @@ function EquipmentCard({ item, compact = false, priorityImage = false }: { item:
   }
 
   return (
-    <article className="flex flex-col bg-surface rounded-xl overflow-hidden border border-surface-variant hover:shadow-md transition-shadow group">
-      <div className="relative w-full aspect-square bg-surface-container-high overflow-hidden">
+    <article className="group grid grid-cols-[5rem_minmax(0,1fr)] overflow-hidden rounded-xl border border-surface-variant bg-surface shadow-sm transition-shadow hover:shadow-md sm:flex sm:flex-col">
+      <div className="relative m-2 h-24 w-16 self-start overflow-hidden rounded-lg bg-surface-container-high sm:m-0 sm:aspect-square sm:h-auto sm:w-full sm:self-auto sm:rounded-none">
         <AvailabilityDot item={item} />
         <ContentImage
           alt={item.name}
@@ -319,38 +319,44 @@ function EquipmentCard({ item, compact = false, priorityImage = false }: { item:
           fetchPriority={priorityImage ? "high" : undefined}
           loading={priorityImage ? "eager" : "lazy"}
           priority={priorityImage}
-          sizes="(max-width: 640px) calc(100vw - 4rem), (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 640px) 64px, (max-width: 1024px) 33vw, 25vw"
           src={assetPath(item.coverImage)}
         />
-        <div className="absolute left-3 top-3 rounded bg-surface-container-lowest/90 px-2 py-1 font-label text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm">
+        <div className="absolute left-3 top-3 hidden rounded bg-surface-container-lowest/90 px-2 py-1 font-label text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm sm:block">
           {text(item.category, { sourceLanguage: "en", cacheKey: `rent-badge-${item.id}` })}
         </div>
         {visibleRating ? (
-          <div className="equipment-rating-pill absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-black text-amber-700 shadow-sm backdrop-blur dark:bg-slate-950/85 dark:text-amber-200">
+          <div className="equipment-rating-pill absolute bottom-3 left-3 hidden items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-black text-amber-700 shadow-sm backdrop-blur dark:bg-slate-950/85 dark:text-amber-200 sm:inline-flex">
             <span className="material-symbols-outlined text-[15px]">star</span>
             {visibleRating.value.toFixed(1)}
           </div>
         ) : null}
       </div>
-      <div className="p-4 flex flex-col flex-grow">
-        <h3 className="text-on-surface text-lg font-bold leading-tight font-headline mb-1 group-hover:text-primary transition-colors">{item.name}</h3>
-        <p className="text-primary font-bold text-base mb-3 font-label">
+      <div className="flex min-w-0 flex-col p-3 sm:flex-grow sm:p-4">
+        <h3 className="mb-1 truncate font-headline text-base font-bold leading-tight text-on-surface transition-colors group-hover:text-primary sm:text-lg">{item.name}</h3>
+        <p className="mb-2 font-label text-sm font-bold text-primary sm:mb-3 sm:text-base">
           ₹{item.pricePerHour}{" "}
           <span className="text-on-surface-variant text-sm font-normal">
             {langText("/ hour", "प्रति तास")}
           </span>
         </p>
-        <div className="flex flex-col gap-2 mt-auto mb-4">
+        {visibleRating ? (
+          <div className="equipment-rating-pill mb-2 inline-flex w-fit items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-black text-amber-700 dark:bg-amber-500/10 dark:text-amber-200 sm:hidden">
+            <span className="material-symbols-outlined text-[14px]">star</span>
+            {visibleRating.value.toFixed(1)}
+          </div>
+        ) : null}
+        <div className="mt-auto mb-3 flex min-w-0 flex-col gap-1.5 sm:mb-4 sm:gap-2">
           <div className="flex items-center gap-2 text-on-surface-variant text-sm font-body">
-            <SharedIcon name="location" className="h-4 w-4" />
-            <span>{locationLabel}</span>
+            <SharedIcon name="location" className="h-4 w-4 shrink-0" />
+            <span className="truncate">{locationLabel}</span>
           </div>
           <div className="flex items-center gap-2 text-on-surface-variant text-sm font-body">
-            <span className="material-symbols-outlined text-[16px]">build</span>
-            <span>{item.hp}</span>
+            <span className="material-symbols-outlined shrink-0 text-[16px]">build</span>
+            <span className="truncate">{item.hp}</span>
           </div>
         </div>
-        <Link href={DETAIL_ROUTE_TEMPLATE(item.id)} className="w-full py-2.5 px-4 bg-primary-container text-white dark:text-primary-fixed rounded-lg font-label font-bold text-sm hover:bg-primary-container/90 transition-colors text-center">
+        <Link href={DETAIL_ROUTE_TEMPLATE(item.id)} className="w-full rounded-lg bg-primary-container px-3 py-2 text-center font-label text-sm font-bold text-white transition-colors hover:bg-primary-container/90 dark:text-primary-fixed sm:px-4 sm:py-2.5">
           {langText("View details", "तपशील पहा")}
         </Link>
       </div>
@@ -620,7 +626,7 @@ export default function RentEquipmentView({
                 <h1 className="font-headline text-[32px] font-bold leading-tight tracking-tight text-on-surface">
                   {langText("Available equipment", "उपलब्ध उपकरणे")}
                 </h1>
-                <p className="font-body text-base font-normal leading-normal text-on-surface-variant">
+                <p className="hidden font-body text-base font-normal leading-normal text-on-surface-variant sm:block">
                   {langText(
                     "Browse high-quality agricultural machinery available for rent.",
                     "भाड्याने उपलब्ध असलेली उच्च-गुणवत्तेची कृषी यंत्रे पाहा."

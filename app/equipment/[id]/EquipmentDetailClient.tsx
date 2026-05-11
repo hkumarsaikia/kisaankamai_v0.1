@@ -330,27 +330,30 @@ export default function EquipmentDetailClient({
 
         <section>
           <h2 className="mb-4 text-xl font-bold">{langText("Owner Details", "मालक तपशील")}</h2>
-          <div className="kk-owner-detail-card kk-depth-tile relative overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary-container/10 via-surface-container-lowest to-secondary-container/10 p-6 shadow-sm">
-            <div className="absolute right-0 top-0 h-28 w-28 -translate-y-10 translate-x-10 rounded-full bg-secondary/15 blur-2xl" />
-            <div className="relative flex flex-col items-center gap-6 sm:flex-row sm:items-center">
+          <div
+            className="kk-owner-detail-card relative max-w-2xl overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary-container/10 via-surface-container-lowest to-secondary-container/10 p-4 shadow-[0_18px_44px_-34px_rgba(0,37,26,0.75)] transition-[box-shadow,border-color] duration-300 hover:border-primary/20 hover:shadow-[0_24px_56px_-40px_rgba(0,37,26,0.82)] dark:border-emerald-400/10 dark:from-emerald-400/10 dark:via-slate-950 dark:to-orange-300/5"
+            data-depth-motion="static"
+          >
+            <div className="absolute right-0 top-0 h-20 w-20 -translate-y-8 translate-x-8 rounded-full bg-secondary/10 blur-2xl" />
+            <div className="relative flex items-center gap-4">
               {equipment.ownerPhotoUrl ? (
                 <img
                   alt={langText("Owner profile photo", "मालकाचा प्रोफाइल फोटो")}
-                  className="h-24 w-24 shrink-0 rounded-2xl border-4 border-white bg-surface-container object-cover shadow-lg dark:border-slate-900"
+                  className="h-16 w-16 shrink-0 rounded-2xl border-4 border-white bg-surface-container object-cover shadow-md dark:border-slate-900 sm:h-20 sm:w-20"
                   src={equipment.ownerPhotoUrl}
                 />
               ) : (
-                <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-surface-container text-slate-500 shadow-lg dark:border-slate-900">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-surface-container text-slate-500 shadow-md dark:border-slate-900 sm:h-20 sm:w-20">
                   <span className="material-symbols-outlined text-3xl">person</span>
                 </div>
               )}
-              <div className="flex-grow text-center sm:text-left">
+              <div className="min-w-0 flex-grow text-left">
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">
                   {langText("Equipment Owner", "उपकरण मालक")}
                 </p>
-                <h3 className="mt-2 text-2xl font-black text-on-surface">{equipment.ownerName}</h3>
+                <h3 className="mt-1 truncate text-xl font-black text-on-surface sm:text-2xl">{equipment.ownerName}</h3>
                 {equipment.ownerLocation ? (
-                  <div className="kk-owner-location-row mt-4 inline-flex max-w-full items-center justify-center gap-2 rounded-full border border-primary/10 bg-white/75 px-3.5 py-2 text-sm font-bold text-on-surface-variant shadow-sm backdrop-blur dark:border-emerald-400/15 dark:bg-slate-950/70 sm:justify-start">
+                  <div className="kk-owner-location-row mt-3 inline-flex max-w-full items-center gap-2 rounded-full border border-primary/10 bg-white/75 px-3 py-1.5 text-sm font-bold text-on-surface-variant shadow-sm backdrop-blur dark:border-emerald-400/15 dark:bg-slate-950/70">
                     <span className="material-symbols-outlined text-base text-primary">location_on</span>
                     <span className="truncate">{equipment.ownerLocation}</span>
                   </div>

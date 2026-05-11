@@ -298,6 +298,22 @@ test("responsive Next images include sizes and above-fold equipment images opt i
   assert.match(detailSource, /priority[\s\S]*loading="eager"[\s\S]*sizes=/);
   assert.match(rentSource, /priorityImage[\s\S]*loading=\{priorityImage \? "eager" : "lazy"\}/);
   assert.match(rentSource, /priorityImage=\{index === 0\}/);
+  assert.match(rentSource, /grid-cols-\[5rem_minmax\(0,1fr\)\]/);
+  assert.match(rentSource, /sizes="\(max-width: 640px\) 64px/);
+  assert.match(rentSource, /sm:hidden/);
+  assert.match(rentSource, /hidden font-body text-base[^"]*sm:block/);
+});
+
+test("public equipment discovery uses tagged cache and targeted owner profile joins", async () => {
+  const firebaseDataSource = await readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8");
+
+  assert.match(firebaseDataSource, /unstable_cache/);
+  assert.match(firebaseDataSource, /PUBLIC_EQUIPMENT_CACHE_TAG = "public-equipment-list"/);
+  assert.match(firebaseDataSource, /PUBLIC_EQUIPMENT_CACHE_REVALIDATE_SECONDS = 45/);
+  assert.match(firebaseDataSource, /listProfilesByUserIds/);
+  assert.match(firebaseDataSource, /getCachedPublicEquipmentList/);
+  assert.match(firebaseDataSource, /revalidateTag\(PUBLIC_EQUIPMENT_CACHE_TAG,\s*\{\s*expire:\s*0\s*\}\)/);
+  assert.doesNotMatch(firebaseDataSource, /export async function getPublicEquipmentList\(\) \{\s*noStore\(\)/);
 });
 
 test("public marketing pages expose runtime Marathi copy in their main content", async () => {

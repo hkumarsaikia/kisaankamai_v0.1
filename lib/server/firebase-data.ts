@@ -3,7 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import { unlink } from "node:fs/promises";
 import path from "node:path";
-import { unstable_noStore as noStore } from "next/cache";
+import { revalidateTag, unstable_cache, unstable_noStore as noStore } from "next/cache";
 import {
   isEquipmentCurrentlyAvailable,
   sanitizeEquipmentDescription,
@@ -49,6 +49,8 @@ const SUBMISSIONS_COLLECTION = "form-submissions";
 const AUTH_IDENTIFIERS_COLLECTION = "auth-identifiers";
 const DUPLICATE_PHONE_MESSAGE = "Account already exists. Please login with your registered mobile number.";
 const DUPLICATE_EMAIL_MESSAGE = "Account already exists. Please login with your registered phone number.";
+const PUBLIC_EQUIPMENT_CACHE_TAG = "public-equipment-list";
+const PUBLIC_EQUIPMENT_CACHE_REVALIDATE_SECONDS = 45;
 
 function db() {
   return getAdminDb();
@@ -770,6 +772,21 @@ async function listAllProfiles() {
   return snapshot.docs.map((doc) => mapProfileFromFirestore(doc.id, doc.data() as ProfileRecord));
 }
 
+async function listProfilesByUserIds(userIds: string[]) {
+  const uniqueUserIds = Array.from(new Set(userIds.map(normalizeOptionalString).filter(Boolean)));
+  if (!uniqueUserIds.length) {
+    return [];
+  }
+
+  const snapshots = await Promise.all(
+    uniqueUserIds.map((userId) => profilesCollection().doc(userId).get())
+  );
+
+  return snapshots
+    .filter((snapshot) => snapshot.exists)
+    .map((snapshot) => mapProfileFromFirestore(snapshot.id, snapshot.data() as ProfileRecord));
+}
+
 async function listSavedItemRecordsByUser(userId: string) {
   const snapshot = await savedItemsCollection().where("userId", "==", userId).get();
   return snapshot.docs.map((doc) => ({ ...(doc.data() as SavedItemRecord) }));
@@ -1267,6 +1284,7 @@ export async function updateLocalProfile(
     await releaseAuthIdentifier("phone", currentUser.phone, userId);
   }
 
+  revalidatePublicEquipmentList();
   await mirrorProfile({
     userId,
     profile: updatedProfile,
@@ -1289,6 +1307,22 @@ export async function resetLocalPassword(identifier: string, password: string) {
   });
 }
 
+function formatOwnerLocationFromProfile(profile?: ProfileRecord | null) {
+  if (!profile) {
+    return "";
+  }
+
+  const village = normalizeOptionalString(profile.village);
+  const district = normalizeOptionalString(profile.district);
+  const address = normalizeOptionalString(profile.address);
+
+  if (village && district) {
+    return `${village}, ${district}`;
+  }
+
+  return village || district || address;
+}
+
 export function listingToEquipmentRecord(
   listing: ListingRecord,
   ownerProfile?: ProfileRecord | null,
@@ -1298,6 +1332,14 @@ export function listingToEquipmentRecord(
     normalizeOptionalString(ownerProfile?.photoUrl) ||
     normalizeOptionalString(ownerUser?.photoUrl) ||
     undefined;
+  const ownerName =
+    normalizeOptionalString(ownerProfile?.fullName) ||
+    normalizeOptionalString(listing.ownerName) ||
+    "Equipment Owner";
+  const ownerLocation =
+    formatOwnerLocationFromProfile(ownerProfile) ||
+    normalizeOptionalString(listing.ownerLocation) ||
+    [listing.location, listing.district].filter(Boolean).join(", ");
 
   return {
     id: listing.id,
@@ -1316,8 +1358,8 @@ export function listingToEquipmentRecord(
     hp: listing.hp,
     distanceKm: listing.distanceKm,
     ownerUserId: listing.ownerUserId,
-    ownerName: listing.ownerName,
-    ownerLocation: listing.ownerLocation,
+    ownerName,
+    ownerLocation,
     ownerVerified: listing.ownerVerified,
     ownerPhotoUrl,
     coverImage: listing.coverImage,
@@ -1330,18 +1372,37 @@ export function listingToEquipmentRecord(
   };
 }
 
-export async function getPublicEquipmentList() {
-  noStore();
+async function loadPublicEquipmentList() {
+  const allListings = await listAllListings();
+  const listings = dedupePublicListings(allListings.filter(isPublicListingReady));
+  const profiles = await listProfilesByUserIds(listings.map((listing) => listing.ownerUserId));
+  const profileByUserId = new Map(profiles.map((profile) => [profile.userId, profile]));
+
+  return listings.map((listing) =>
+    listingToEquipmentRecord(listing, profileByUserId.get(listing.ownerUserId))
+  );
+}
+
+const getCachedPublicEquipmentList = unstable_cache(
+  loadPublicEquipmentList,
+  ["public-equipment-list-v2"],
+  {
+    revalidate: PUBLIC_EQUIPMENT_CACHE_REVALIDATE_SECONDS,
+    tags: [PUBLIC_EQUIPMENT_CACHE_TAG],
+  }
+);
+
+export function revalidatePublicEquipmentList() {
   try {
-    const [allListings, profiles] = await Promise.all([
-      listAllListings(),
-      listAllProfiles(),
-    ]);
-    const profileByUserId = new Map(profiles.map((profile) => [profile.userId, profile]));
-    const listings = dedupePublicListings(allListings.filter(isPublicListingReady));
-    return listings.map((listing) =>
-      listingToEquipmentRecord(listing, profileByUserId.get(listing.ownerUserId))
-    );
+    revalidateTag(PUBLIC_EQUIPMENT_CACHE_TAG, { expire: 0 });
+  } catch (error) {
+    captureServerException(error, { subsystem: "revalidatePublicEquipmentList" });
+  }
+}
+
+export async function getPublicEquipmentList() {
+  try {
+    return await getCachedPublicEquipmentList();
   } catch (error) {
     captureServerException(error, { subsystem: "getPublicEquipmentList" });
     return [];
@@ -1471,6 +1532,7 @@ export async function createListingRecord(
   });
 
   await listingsCollection().doc(nextListing.id).set(nextListing);
+  revalidatePublicEquipmentList();
   await mirrorListing(nextListing, "create");
   return nextListing;
 }
@@ -1496,6 +1558,7 @@ export async function updateListingRecord(
   });
 
   await listingsCollection().doc(listingId).set(updated, { merge: true });
+  revalidatePublicEquipmentList();
   await mirrorListing(updated, "update");
   return updated;
 }
@@ -1565,6 +1628,7 @@ export async function deleteListingRecord(listingId: string, ownerUserId: string
   }
 
   await batch.commit();
+  revalidatePublicEquipmentList();
 }
 
 export async function createBookingRecord(input: {

@@ -103,6 +103,9 @@ test("equipment detail workspace mobile layout prioritizes booking and removes f
   assert.match(detail, /workspaceBookingClassName/);
   assert.match(detail, /order-1 mb-2/);
   assert.match(detail, /kk-owner-detail-card/);
+  assert.match(detail, /data-depth-motion="static"/);
+  assert.match(detail, /max-w-2xl/);
+  assert.doesNotMatch(detail, /kk-owner-detail-card kk-depth-tile/);
   assert.match(detail, /disabled=\{isSubmitting \|\| \(!availability\.available && !isOwnListing\)\}/);
   assert.match(detail, /setIsSubmitting\(true\)/);
   assert.match(detail, /finally\s*\{[\s\S]*setIsSubmitting\(false\)/);
@@ -112,6 +115,9 @@ test("equipment detail workspace mobile layout prioritizes booking and removes f
   assert.doesNotMatch(detail, />\s*\{equipment\.district\}\s*<\/span>/);
   assert.match(detail, /kk-owner-location-row/);
   assert.match(detail, /equipment\.ownerLocation/);
+  assert.match(serverData, /formatOwnerLocationFromProfile/);
+  assert.match(serverData, /ownerName\s*=\s*[\s\S]*ownerProfile\?\.fullName[\s\S]*listing\.ownerName/);
+  assert.match(serverData, /ownerLocation\s*=\s*[\s\S]*formatOwnerLocationFromProfile\(ownerProfile\)[\s\S]*listing\.ownerLocation/);
   assert.match(actions, /isListingBookable/);
   assert.match(serverData, /isListingBookable/);
   assert.match(serverData, /This equipment is not available for booking right now\./);
