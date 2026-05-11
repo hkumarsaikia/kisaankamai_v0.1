@@ -103,7 +103,9 @@ test("equipment detail workspace mobile layout prioritizes booking and removes f
   assert.match(detail, /workspaceBookingClassName/);
   assert.match(detail, /order-1 mb-2/);
   assert.match(detail, /kk-owner-detail-card/);
-  assert.match(detail, /disabled=\{isPending \|\| \(!availability\.available && !isOwnListing\)\}/);
+  assert.match(detail, /disabled=\{isSubmitting \|\| \(!availability\.available && !isOwnListing\)\}/);
+  assert.match(detail, /setIsSubmitting\(true\)/);
+  assert.match(detail, /finally\s*\{[\s\S]*setIsSubmitting\(false\)/);
   assert.doesNotMatch(detail, /Features & Inclusions|वैशिष्ट्ये आणि समावेश/);
   assert.doesNotMatch(detail, /Work Type|कामाचा प्रकार/);
   assert.doesNotMatch(detail, /Operator included|Operator optional|ऑपरेटर समाविष्ट|ऑपरेटर ऐच्छिक/);

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useEffect, useMemo, useState, useTransition } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { createBookingAction } from "@/lib/actions/local-data";
 import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
@@ -47,12 +47,11 @@ export default function EquipmentDetailClient({
   const [error, setError] = useState("");
   const [ownListingToast, setOwnListingToast] = useState(false);
   const [loginToast, setLoginToast] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [formState, setFormState] = useState({
     fieldLocation: "",
     fieldPincode: "",
-    workType: equipment.workTypes[0] || "",
     startDate: new Date().toISOString().slice(0, 10),
     approxHours: "4",
     phone: "",
@@ -86,6 +85,7 @@ export default function EquipmentDetailClient({
   const visibleRating = getVisibleEquipmentRating(equipment);
   const availability = getEquipmentAvailability(equipment);
   const isOwnListing = Boolean(currentUserId && equipment.ownerUserId === currentUserId);
+  const defaultBookingTask = equipment.workTypes[0] || "General equipment work";
   const containerClassName =
     containerVariant === "workspace"
       ? DETAIL_BOOKING_LAYOUT.workspaceContainer
@@ -105,6 +105,10 @@ export default function EquipmentDetailClient({
 
   const handleBookingRequest = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setError("");
 
     if (isOwnListing) {
@@ -118,19 +122,20 @@ export default function EquipmentDetailClient({
       return;
     }
 
-    startTransition(async () => {
+    setIsSubmitting(true);
+
+    try {
       const result = await createBookingAction({
         sourcePath: `/equipment/${equipment.id}`,
         equipmentId: equipment.id,
         equipmentName: equipment.name,
         fieldLocation: formState.fieldLocation,
         fieldPincode: formState.fieldPincode,
-        workType: formState.workType,
         approxHours: formState.approxHours,
         phone: formState.phone,
         startDate: formState.startDate,
         duration: "",
-        task: formState.workType,
+        task: defaultBookingTask,
         fieldSize: "",
       });
 
@@ -158,7 +163,18 @@ export default function EquipmentDetailClient({
       }
 
       router.push(result.redirectTo || "/renter-profile");
-    });
+    } catch (submitError) {
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : langText(
+              "Could not submit the booking request right now.",
+              "सध्या बुकिंग विनंती सबमिट करता आली नाही."
+            )
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -560,10 +576,10 @@ export default function EquipmentDetailClient({
 
               <button
                 className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-white shadow-md transition hover:bg-primary-container"
-                disabled={isPending || (!availability.available && !isOwnListing)}
+                disabled={isSubmitting || (!availability.available && !isOwnListing)}
                 type="submit"
               >
-                {isPending
+                {isSubmitting
                   ? langText("Submitting...", "सबमिट होत आहे...")
                   : !availability.available && !isOwnListing
                     ? langText("Currently unavailable", "सध्या उपलब्ध नाही")

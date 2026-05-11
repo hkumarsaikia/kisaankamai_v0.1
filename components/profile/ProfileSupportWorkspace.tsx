@@ -4,7 +4,7 @@ import { postJson } from "@/lib/client/forms";
 import { useLanguage } from "@/components/LanguageContext";
 import type { LocalSession } from "@/lib/local-data/types";
 import { supportContact } from "@/lib/support-contact";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 
 type ProfileSupportWorkspaceProps = {
   family: "owner-profile" | "renter-profile";
@@ -25,7 +25,7 @@ export function ProfileSupportWorkspace({
   session,
 }: ProfileSupportWorkspaceProps) {
   const { langText } = useLanguage();
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState("");
   const [formState, setFormState] = useState({
@@ -50,34 +50,39 @@ export function ProfileSupportWorkspace({
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setError("");
     setSubmitState("pending");
+    setIsSubmitting(true);
 
-    startTransition(async () => {
-      try {
-        await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
-          fullName: formState.fullName,
-          phone: formState.phone,
-          email: formState.email || undefined,
-          category: formState.category || "general",
-          message: formState.message,
-          sourcePath:
-            family === "owner-profile"
-              ? "/owner-profile/support"
-              : "/renter-profile/support",
-        });
-        setSubmitState("success");
-      } catch (submitError) {
-        setSubmitState("error");
-        setError(
-          submitError instanceof Error
-            ? submitError.message
-            : langText("Support request failed.", "सपोर्ट विनंती अयशस्वी झाली.")
-        );
-      }
-    });
+    try {
+      await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
+        fullName: formState.fullName,
+        phone: formState.phone,
+        email: formState.email || undefined,
+        category: formState.category || "general",
+        message: formState.message,
+        sourcePath:
+          family === "owner-profile"
+            ? "/owner-profile/support"
+            : "/renter-profile/support",
+      });
+      setSubmitState("success");
+    } catch (submitError) {
+      setSubmitState("error");
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : langText("Support request failed.", "सपोर्ट विनंती अयशस्वी झाली.")
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -103,6 +108,7 @@ export function ProfileSupportWorkspace({
                       value={formState.fullName}
                       onChange={(event) => updateField("fullName", event.target.value)}
                       type="text"
+                      required
                     />
                   </label>
 
@@ -116,6 +122,7 @@ export function ProfileSupportWorkspace({
                       value={formState.phone}
                       onChange={(event) => updateField("phone", event.target.value)}
                       type="tel"
+                      required
                     />
                   </label>
                 </div>
@@ -142,6 +149,7 @@ export function ProfileSupportWorkspace({
                       className="w-full appearance-none rounded-lg border-outline-variant bg-surface-bright px-4 py-3 pr-12 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
                       value={formState.category}
                       onChange={(event) => updateField("category", event.target.value)}
+                      required
                     >
                       <option value="">{langText("Select a category", "प्रकार निवडा")}</option>
                       {SUPPORT_CATEGORIES.map((category) => (
@@ -166,6 +174,7 @@ export function ProfileSupportWorkspace({
                     rows={5}
                     value={formState.message}
                     onChange={(event) => updateField("message", event.target.value)}
+                    required
                   />
                 </label>
 
@@ -181,11 +190,11 @@ export function ProfileSupportWorkspace({
                       submitState === "success" ? "bg-emerald-600" : "bg-primary-container hover:bg-primary"
                     }`}
                     type="submit"
-                    disabled={isPending}
-                    data-loading={isPending ? "true" : "false"}
-                    aria-busy={isPending}
+                    disabled={isSubmitting}
+                    data-loading={isSubmitting ? "true" : "false"}
+                    aria-busy={isSubmitting}
                   >
-                    {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                    {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                     {submitLabel}
                     <span className="material-symbols-outlined ml-1">
                       {submitState === "success" ? "task_alt" : "send"}

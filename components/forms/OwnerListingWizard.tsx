@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createListingAction, updateListingAction } from "@/lib/actions/local-data";
 import { useLanguage } from "@/components/LanguageContext";
 import {
@@ -30,7 +30,7 @@ export function OwnerListingWizard({
   const router = useSmoothRouter();
   const [step, setStep] = useState(1);
   const [error, setError] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
   const [formState, setFormState] = useState({
     name: listing?.name || "",
@@ -61,11 +61,16 @@ export function OwnerListingWizard({
     setFormState((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
+    if (isSubmitting) {
+      return;
+    }
 
-    startTransition(async () => {
+    setError("");
+    setIsSubmitting(true);
+
+    try {
       const formData = new FormData();
       if (listing?.id) formData.set("listingId", listing.id);
       formData.set("name", formState.name);
@@ -91,7 +96,11 @@ export function OwnerListingWizard({
         return;
       }
       router.push(result.redirectTo || "/owner-profile");
-    });
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : langText("Could not save the listing.", "लिस्टिंग सेव्ह करता आली नाही."));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -428,7 +437,7 @@ export function OwnerListingWizard({
               <FormStepActions
                 backLabel={langText("Back", "मागे")}
                 nextLabel={
-                  isPending
+                  isSubmitting
                     ? langText("Saving...", "सेव्ह होत आहे...")
                     : listing
                       ? langText("Save listing", "लिस्टिंग सेव्ह करा")
@@ -436,7 +445,7 @@ export function OwnerListingWizard({
                 }
                 onBack={() => setStep(2)}
                 submit
-                disableNext={isPending}
+                disableNext={isSubmitting}
               />
             </section>
           </aside>

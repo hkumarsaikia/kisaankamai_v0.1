@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState, useTransition } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { LazyMap } from "@/components/LazyMap";
 import { useLanguage } from "@/components/LanguageContext";
 import {
@@ -22,7 +22,7 @@ const trustPartners = [
 export default function ComingSoonPage() {
   const { langText } = useLanguage();
   const [notifyState, setNotifyState] = useState<"idle" | "form">("idle");
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [contact, setContact] = useState("");
   const [error, setError] = useState("");
@@ -36,38 +36,39 @@ export default function ComingSoonPage() {
     };
   }, []);
 
-  const handleNotifySubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleNotifySubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!contact.trim()) {
+    if (!contact.trim() || isSubmitting) {
       return;
     }
 
     setError("");
     setSubmitState("pending");
+    setIsSubmitting(true);
 
-    startTransition(async () => {
-      try {
-        await postJson<{ ok: boolean; id: string }>("/api/forms/coming-soon-notify", {
-          contact: contact.trim(),
-          sourcePath: "/coming-soon",
-        });
-        setSubmitState("success");
-        setContact("");
+    try {
+      await postJson<{ ok: boolean; id: string }>("/api/forms/coming-soon-notify", {
+        contact: contact.trim(),
+        sourcePath: "/coming-soon",
+      });
+      setSubmitState("success");
+      setContact("");
 
-        if (resetTimeoutRef.current) {
-          window.clearTimeout(resetTimeoutRef.current);
-        }
-
-        resetTimeoutRef.current = window.setTimeout(() => {
-          setSubmitState("idle");
-          setNotifyState("idle");
-          resetTimeoutRef.current = null;
-        }, 1400);
-      } catch (submitError) {
-        setSubmitState("error");
-        setError(submitError instanceof Error ? submitError.message : langText("Could not submit this request.", "ही विनंती सबमिट करता आली नाही."));
+      if (resetTimeoutRef.current) {
+        window.clearTimeout(resetTimeoutRef.current);
       }
-    });
+
+      resetTimeoutRef.current = window.setTimeout(() => {
+        setSubmitState("idle");
+        setNotifyState("idle");
+        resetTimeoutRef.current = null;
+      }, 1400);
+    } catch (submitError) {
+      setSubmitState("error");
+      setError(submitError instanceof Error ? submitError.message : langText("Could not submit this request.", "ही विनंती सबमिट करता आली नाही."));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -175,7 +176,7 @@ export default function ComingSoonPage() {
                           setSubmitState("idle");
                           setError("");
                         }}
-                        disabled={isPending}
+                        disabled={isSubmitting}
                       />
                       {error ? <p className="rounded-xl bg-white/10 px-4 py-2 text-sm font-semibold text-white">{error}</p> : null}
                       <button
@@ -183,11 +184,11 @@ export default function ComingSoonPage() {
                           submitState === "success" ? "bg-emerald-600" : ""
                         }`}
                         type="submit"
-                        disabled={isPending || submitState === "success"}
-                        data-loading={isPending ? "true" : "false"}
-                        aria-busy={isPending}
+                        disabled={isSubmitting || submitState === "success"}
+                        data-loading={isSubmitting ? "true" : "false"}
+                        aria-busy={isSubmitting}
                       >
-                        {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                        {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                         <span>
                           {submitState === "pending"
                             ? langText("Submitting...", "सबमिट करत आहे...")

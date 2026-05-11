@@ -6,7 +6,7 @@ import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import { createListingAction, updateListingAction } from "@/lib/actions/local-data";
 import type { ListingRecord } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type ListEquipmentEditorPageProps = {
   listing?: ListingRecord | null;
@@ -30,7 +30,7 @@ export function ListEquipmentEditorPage({
 }: ListEquipmentEditorPageProps) {
   const { langText } = useLanguage();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [fileSlots, setFileSlots] = useState<Array<File | null>>([null, null, null]);
@@ -99,12 +99,17 @@ export function ListEquipmentEditorPage({
     updateFileSlot(index, null);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setError("");
     setSubmitState("pending");
+    setIsSubmitting(true);
 
-    startTransition(async () => {
+    try {
       const formData = new FormData();
       if (listing?.id) {
         formData.set("listingId", listing.id);
@@ -154,7 +159,12 @@ export function ListEquipmentEditorPage({
         router.push(result.redirectTo || "/owner-profile/browse");
         router.refresh();
       }, 700);
-    });
+    } catch (submitError) {
+      setSubmitState("error");
+      setError(submitError instanceof Error ? submitError.message : langText("Could not save the listing.", "लिस्टिंग जतन करता आली नाही."));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const submitLabel =
@@ -485,8 +495,11 @@ export function ListEquipmentEditorPage({
                     : "bg-primary hover:bg-primary-container"
                 }`}
                 type="submit"
-                disabled={isPending}
+                disabled={isSubmitting}
+                data-loading={isSubmitting ? "true" : "false"}
+                aria-busy={isSubmitting}
               >
+                {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 {submitLabel}
                 <span className="material-symbols-outlined text-sm">
                   {submitState === "success" ? "task_alt" : "check_circle"}

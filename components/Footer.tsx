@@ -5,14 +5,14 @@ import { useLanguage } from "@/components/LanguageContext";
 import { FOOTER_MARKETPLACE_LINKS, FOOTER_TRUST_LINKS } from "@/lib/site-navigation.js";
 import { SharedIcon } from "@/components/SharedIcon";
 import { postJson } from "@/lib/client/forms";
-import { type FormEvent, useState, useTransition } from "react";
+import { type FormEvent, useState } from "react";
 
 export const Footer = () => {
   const { t, langText } = useLanguage();
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const renderLabel = (link: { labelKey?: string; enLabel?: string; mrLabel?: string }) => {
     if (link.labelKey) {
       return t(link.labelKey as never);
@@ -20,25 +20,30 @@ export const Footer = () => {
 
     return langText(link.enLabel || "", link.mrLabel || link.enLabel || "");
   };
-  const handleNewsletterSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleNewsletterSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setStatus("pending");
     setMessage("");
+    setIsSubmitting(true);
 
-    startTransition(async () => {
-      try {
-        await postJson<{ ok: boolean; id: string }>("/api/forms/newsletter-subscription", {
-          email,
-          sourcePath: "/",
-        });
-        setStatus("success");
-        setMessage(langText("Subscribed", "सदस्यता झाली"));
-        setEmail("");
-      } catch (error) {
-        setStatus("error");
-        setMessage(error instanceof Error ? error.message : langText("Subscription failed.", "सदस्यता अयशस्वी झाली."));
-      }
-    });
+    try {
+      await postJson<{ ok: boolean; id: string }>("/api/forms/newsletter-subscription", {
+        email,
+        sourcePath: "/",
+      });
+      setStatus("success");
+      setMessage(langText("Subscribed", "सदस्यता झाली"));
+      setEmail("");
+    } catch (error) {
+      setStatus("error");
+      setMessage(error instanceof Error ? error.message : langText("Subscription failed.", "सदस्यता अयशस्वी झाली."));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -145,7 +150,7 @@ export const Footer = () => {
                   setMessage("");
                 }
               }}
-              disabled={isPending}
+              disabled={isSubmitting}
               required
             />
             <button
@@ -155,11 +160,11 @@ export const Footer = () => {
               className={`kk-flow-button flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-2 text-white transition-colors ${
                 status === "success" ? "bg-emerald-500" : "bg-emerald-600 hover:bg-emerald-500"
               }`}
-              data-loading={isPending ? "true" : "false"}
-              aria-busy={isPending}
-              disabled={isPending}
+              data-loading={isSubmitting ? "true" : "false"}
+              aria-busy={isSubmitting}
+              disabled={isSubmitting}
             >
-              {isPending ? (
+              {isSubmitting ? (
                 <span className="kk-flow-spinner h-4 w-4" aria-hidden="true" />
               ) : status === "success" ? (
                 <span className="material-symbols-outlined text-[20px]">task_alt</span>

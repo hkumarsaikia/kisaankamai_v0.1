@@ -201,7 +201,7 @@ export const bookingRequestSchema = z
     equipmentName: z.string().trim().optional().or(z.literal("")),
     fieldLocation: z.string().trim().min(2, "Enter the field location.").max(160),
     fieldPincode: z.union([sixDigitPincode, z.literal("")]).optional(),
-    workType: z.string().trim().min(2, "Select the work type.").max(120),
+    workType: z.string().trim().max(120).optional().or(z.literal("")),
     approxHours: z
       .union([z.literal(""), z.string(), z.number()])
       .optional()

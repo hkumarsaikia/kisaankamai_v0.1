@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { ChoicePills, FormField, FormGrid, FormNotice, FormSection, FormShell, FormStepActions, ReviewList } from "@/components/forms/FormKit";
@@ -10,7 +10,7 @@ export default function CompleteProfilePage() {
   const { user, profile, loading } = useAuth();
   const { t } = useLanguage();
   const [error, setError] = useState("");
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     phone: profile?.phone || "",
@@ -30,11 +30,16 @@ export default function CompleteProfilePage() {
     setFormData((current) => ({ ...current, [field]: value }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("");
+    if (isSubmitting) {
+      return;
+    }
 
-    startTransition(async () => {
+    setError("");
+    setIsSubmitting(true);
+
+    try {
       const result = await completeProfileAction(formData);
       if (!result.ok) {
         setError(result.error || t("complete-profile.could_not_save_profile"));
@@ -42,7 +47,11 @@ export default function CompleteProfilePage() {
       }
 
       window.location.href = result.redirectTo || "/profile-selection";
-    });
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : t("complete-profile.could_not_save_profile"));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (loading || !user) {
@@ -103,7 +112,7 @@ export default function CompleteProfilePage() {
                     { label: t("complete-profile.preferred_workspace"), value: formData.role === "owner" ? t("complete-profile.owner") : t("complete-profile.renter") },
                   ]}
                 />
-                <FormStepActions backLabel="Back" nextLabel={isPending ? t("complete-profile.saving") : t("complete-profile.complete_profile")} onBack={() => setStep(1)} submit disableNext={isPending} />
+                <FormStepActions backLabel="Back" nextLabel={isSubmitting ? t("complete-profile.saving") : t("complete-profile.complete_profile")} onBack={() => setStep(1)} submit disableNext={isSubmitting} />
               </FormSection>
             ) : null}
           </form>

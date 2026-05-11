@@ -241,9 +241,10 @@ test("root layout keeps icon fonts and public session bootstrap lean", async () 
 });
 
 test("homepage initial render avoids below-the-fold map and inactive hero image payload", async () => {
-  const [homeSource, layoutSource] = await Promise.all([
+  const [homeSource, layoutSource, nextConfigSource] = await Promise.all([
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../next.config.mjs", import.meta.url), "utf8"),
   ]);
 
   assert.match(homeSource, /currentHeroSlide/);
@@ -259,6 +260,7 @@ test("homepage initial render avoids below-the-fold map and inactive hero image 
   assert.doesNotMatch(homeSource, /deferUntilVisible=\{false\}/);
   assert.match(layoutSource, /preload:\s*false/);
   assert.match(layoutSource, /weight:\s*\["400", "500", "600", "700", "800"\]/);
+  assert.match(nextConfigSource, /qualities:\s*\[72,\s*75\]/);
 });
 
 test("public marketing pages expose runtime Marathi copy in their main content", async () => {

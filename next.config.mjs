@@ -105,6 +105,7 @@ const securityHeaders = [
 const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
   images: {
+    qualities: [72, 75],
     remotePatterns: [
       {
         protocol: "https",

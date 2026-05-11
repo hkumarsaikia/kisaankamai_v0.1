@@ -6,7 +6,7 @@ import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type ProfileSettingsFormProps = {
   family: "owner-profile" | "renter-profile";
@@ -51,7 +51,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
   const router = useRouter();
   const { refreshProfile, setSession } = useAuth();
   const profilePhotoInputRef = useRef<HTMLInputElement>(null);
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPhotoUploading, setIsPhotoUploading] = useState(false);
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [error, setError] = useState("");
@@ -172,50 +172,55 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setError("");
     setSubmitState("pending");
+    setIsSubmitting(true);
 
-    startTransition(async () => {
-      try {
-        const response = await fetch("/api/profile/complete", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            fullName: formState.fullName.trim(),
-            email: formState.email.trim() || undefined,
-            phone: formState.phone.replace(/\D/g, "").slice(-10),
-            village: formState.village.trim(),
-            address: formState.address.trim(),
-            pincode: formState.pincode.replace(/\D/g, "").slice(0, 6),
-            fieldArea: Number(formState.fieldArea || 0),
-            farmingTypes: [formState.farmingTypes.trim(), formState.equipmentOwned.trim()].filter(Boolean).join(" | "),
-            role: family === "owner-profile" ? "owner" : "renter",
-            district: formState.district.trim() || undefined,
-          }),
-        });
-        const payload = (await response.json().catch(() => ({}))) as {
-          ok?: boolean;
-          error?: string;
-        };
+    try {
+      const response = await fetch("/api/profile/complete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          fullName: formState.fullName.trim(),
+          email: formState.email.trim() || undefined,
+          phone: formState.phone.replace(/\D/g, "").slice(-10),
+          village: formState.village.trim(),
+          address: formState.address.trim(),
+          pincode: formState.pincode.replace(/\D/g, "").slice(0, 6),
+          fieldArea: Number(formState.fieldArea || 0),
+          farmingTypes: [formState.farmingTypes.trim(), formState.equipmentOwned.trim()].filter(Boolean).join(" | "),
+          role: family === "owner-profile" ? "owner" : "renter",
+          district: formState.district.trim() || undefined,
+        }),
+      });
+      const payload = (await response.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+      };
 
-        if (!response.ok || payload.ok === false) {
-          setSubmitState("error");
-          setError(payload.error || langText("Could not update settings.", "सेटिंग्ज अपडेट करता आल्या नाहीत."));
-          return;
-        }
-
-        setSubmitState("success");
-        window.setTimeout(() => router.refresh(), 650);
-      } catch (submitError) {
+      if (!response.ok || payload.ok === false) {
         setSubmitState("error");
-        setError(submitError instanceof Error ? submitError.message : langText("Could not update settings.", "सेटिंग्ज अपडेट करता आल्या नाहीत."));
+        setError(payload.error || langText("Could not update settings.", "सेटिंग्ज अपडेट करता आल्या नाहीत."));
+        return;
       }
-    });
+
+      setSubmitState("success");
+      window.setTimeout(() => router.refresh(), 650);
+    } catch (submitError) {
+      setSubmitState("error");
+      setError(submitError instanceof Error ? submitError.message : langText("Could not update settings.", "सेटिंग्ज अपडेट करता आल्या नाहीत."));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -444,8 +449,11 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                   submitState === "success" ? "bg-emerald-600" : "bg-primary hover:bg-primary/90"
                 }`}
                 type="submit"
-                disabled={isPending}
+                disabled={isSubmitting}
+                data-loading={isSubmitting ? "true" : "false"}
+                aria-busy={isSubmitting}
               >
+                {isSubmitting ? <span className="kk-flow-spinner mr-2 inline-block align-middle" aria-hidden="true" /> : null}
                 {submitLabel}
               </button>
             </div>

@@ -29,6 +29,12 @@ export const POST = withLoggedRoute("forms-booking-request", async (request: Nex
     authenticatedUserId: session.user.id,
   }));
 
+  const normalizedWorkType = payload.workType || payload.task || "General equipment work";
+  const bookingRequestPayload = {
+    ...payload,
+    workType: normalizedWorkType,
+    task: payload.task || normalizedWorkType,
+  };
   const listing = payload.equipmentId ? await getListingById(payload.equipmentId) : null;
   let bookingId: string | undefined;
 
@@ -55,7 +61,7 @@ export const POST = withLoggedRoute("forms-booking-request", async (request: Nex
 
   const submission = await createSubmissionRecord({
     type: "booking-request",
-    payload: payload as Record<string, unknown>,
+    payload: bookingRequestPayload as Record<string, unknown>,
     userId: session.user.id,
     listingId: listing?.id,
   });

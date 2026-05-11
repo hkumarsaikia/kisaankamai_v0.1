@@ -723,6 +723,12 @@ export async function createBookingAction(
         return { ok: false, error: "This equipment is not available for booking right now." };
       }
 
+      const normalizedWorkType = parsed.data.workType || parsed.data.task || "General equipment work";
+      const bookingRequestPayload = {
+        ...parsed.data,
+        workType: normalizedWorkType,
+        task: parsed.data.task || normalizedWorkType,
+      };
       const approxHours = parsed.data.approxHours || 8;
       const amount = Math.max(1, Number(approxHours)) * listing.pricePerHour;
       const startDate =
@@ -739,7 +745,7 @@ export async function createBookingAction(
 
       await createSubmissionRecord({
         type: "booking-request",
-        payload: parsed.data as Record<string, unknown>,
+        payload: bookingRequestPayload as Record<string, unknown>,
         userId: session.user.id,
         listingId: listing.id,
       });

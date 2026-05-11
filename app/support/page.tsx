@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useEffect, useState, useTransition } from "react";
+import { type FormEvent, useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageContext";
 import { postJson } from "@/lib/client/forms";
 import { assetPath } from "@/lib/site";
@@ -47,26 +47,20 @@ const supportHtmlCategories = [
   },
 ] as const;
 
-const issueOptions = [
-  "Select a category",
-  "Booking Inquiry",
-  "Pricing & Settlement",
-  "Equipment Listing Help",
-  "Other",
-] as const;
+const issueOptions = ["Booking Inquiry", "Pricing & Settlement", "Equipment Listing Help", "Other"] as const;
 
 const supportFormControlClass =
   "w-full px-4 py-3 rounded-xl bg-surface border border-outline-variant text-on-surface placeholder:text-on-surface-variant focus:border-primary-container focus:ring-1 focus:ring-primary-container transition-colors dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500";
 
 export default function SupportPage() {
   const { langText, text } = useLanguage();
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState("");
   const [formState, setFormState] = useState({
     fullName: "",
     phone: "",
-    inquiryType: "Select a category",
+    inquiryType: "",
     message: "",
   });
 
@@ -89,31 +83,36 @@ export default function SupportPage() {
     }
   };
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setError("");
     setSubmitState("pending");
+    setIsSubmitting(true);
 
-    startTransition(async () => {
-      try {
-        await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
-          fullName: formState.fullName,
-          phone: formState.phone,
-          category: formState.inquiryType,
-          inquiryType: formState.inquiryType,
-          message: formState.message,
-          sourcePath: "/support",
-        });
-        setSubmitState("success");
-      } catch (submitError) {
-        setSubmitState("error");
-        setError(
-          submitError instanceof Error
-            ? submitError.message
-            : langText("Support request failed.", "सहाय्य विनंती अयशस्वी झाली.")
-        );
-      }
-    });
+    try {
+      await postJson<{ ok: boolean; id: string }>("/api/forms/support-request", {
+        fullName: formState.fullName,
+        phone: formState.phone,
+        category: formState.inquiryType,
+        inquiryType: formState.inquiryType,
+        message: formState.message,
+        sourcePath: "/support",
+      });
+      setSubmitState("success");
+    } catch (submitError) {
+      setSubmitState("error");
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : langText("Support request failed.", "सहाय्य विनंती अयशस्वी झाली.")
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -204,9 +203,13 @@ export default function SupportPage() {
                 <label className="font-label text-sm font-medium text-on-surface">{langText("Issue Type", "समस्या प्रकार")}</label>
                 <select
                   className={supportFormControlClass}
+                  required
                   value={formState.inquiryType}
                   onChange={(event) => updateField("inquiryType", event.target.value)}
                 >
+                  <option disabled value="">
+                    {langText("Select a category", "प्रकार निवडा")}
+                  </option>
                   {issueOptions.map((option) => (
                     <option key={option} value={option}>
                       {option}
@@ -232,10 +235,10 @@ export default function SupportPage() {
               <button
                 type="submit"
                 aria-label={langText("Send Message", "संदेश पाठवा")}
-                disabled={isPending || submitState === "pending"}
+                disabled={isSubmitting || submitState === "pending"}
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-8 py-4 font-label font-medium text-on-primary transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70 dark:text-white dark:hover:bg-primary-container/80 md:w-auto"
               >
-                {submitState === "pending" ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 {submitState === "success" ? <span className="material-symbols-outlined text-sm">check_circle</span> : null}
                 {submitLabel}
                 <span className="material-symbols-outlined text-sm">arrow_forward</span>

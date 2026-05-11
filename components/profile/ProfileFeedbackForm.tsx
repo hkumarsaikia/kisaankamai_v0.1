@@ -4,7 +4,7 @@ import { postJson } from "@/lib/client/forms";
 import { useLanguage } from "@/components/LanguageContext";
 import type { LocalSession } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 
 type ProfileFeedbackFormProps = {
   family: "owner-profile" | "renter-profile";
@@ -34,7 +34,7 @@ export function ProfileFeedbackForm({
 }: ProfileFeedbackFormProps) {
   const { langText } = useLanguage();
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState("");
   const [formState, setFormState] = useState({
@@ -62,41 +62,46 @@ export function ProfileFeedbackForm({
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setError("");
     setSubmitState("pending");
+    setIsSubmitting(true);
 
-    startTransition(async () => {
-      try {
-        await postJson<{ ok: boolean; id: string }>("/api/forms/feedback", {
-          fullName: formState.fullName,
-          mobileNumber: formState.mobileNumber,
-          email: formState.email || undefined,
-          role: formState.role,
-          category: formState.category || "other",
-          subject: formState.category || "Workspace feedback",
-          message: formState.message,
-          rating: formState.rating,
-          contactMe: formState.contactMe,
-        });
-        setSubmitState("success");
-        window.setTimeout(() => {
-          router.push(
-            family === "owner-profile"
-              ? "/owner-profile/feedback/success"
-              : "/renter-profile/feedback/success"
-          );
-        }, 700);
-      } catch (submitError) {
-        setSubmitState("error");
-        setError(
-          submitError instanceof Error
-            ? submitError.message
-            : langText("Could not submit feedback.", "अभिप्राय सबमिट करता आला नाही.")
+    try {
+      await postJson<{ ok: boolean; id: string }>("/api/forms/feedback", {
+        fullName: formState.fullName,
+        mobileNumber: formState.mobileNumber,
+        email: formState.email || undefined,
+        role: formState.role,
+        category: formState.category || "other",
+        subject: formState.category || "Workspace feedback",
+        message: formState.message,
+        rating: formState.rating,
+        contactMe: formState.contactMe,
+      });
+      setSubmitState("success");
+      window.setTimeout(() => {
+        router.push(
+          family === "owner-profile"
+            ? "/owner-profile/feedback/success"
+            : "/renter-profile/feedback/success"
         );
-      }
-    });
+      }, 700);
+    } catch (submitError) {
+      setSubmitState("error");
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : langText("Could not submit feedback.", "अभिप्राय सबमिट करता आला नाही.")
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -115,6 +120,7 @@ export function ProfileFeedbackForm({
                   value={formState.fullName}
                   onChange={(event) => updateField("fullName", event.target.value)}
                   type="text"
+                  required
                 />
               </label>
 
@@ -128,6 +134,7 @@ export function ProfileFeedbackForm({
                   value={formState.mobileNumber}
                   onChange={(event) => updateField("mobileNumber", event.target.value)}
                   type="tel"
+                  required
                 />
               </label>
             </div>
@@ -142,6 +149,7 @@ export function ProfileFeedbackForm({
                     className="w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 py-3 pr-10 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                     value={formState.role}
                     onChange={(event) => updateField("role", event.target.value)}
+                    required
                   >
                     {ROLE_OPTIONS.map((role) => (
                       <option key={role.value} value={role.value}>
@@ -164,6 +172,7 @@ export function ProfileFeedbackForm({
                     className="w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 py-3 pr-10 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                     value={formState.category}
                     onChange={(event) => updateField("category", event.target.value)}
+                    required
                   >
                     <option value="">{langText("Select category", "श्रेणी निवडा")}</option>
                     {FEEDBACK_CATEGORIES.map((category) => (
@@ -189,6 +198,7 @@ export function ProfileFeedbackForm({
                 rows={5}
                 value={formState.message}
                 onChange={(event) => updateField("message", event.target.value)}
+                required
               />
             </label>
 
@@ -238,11 +248,11 @@ export function ProfileFeedbackForm({
                   submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
                 }`}
                 type="submit"
-                disabled={isPending}
-                data-loading={isPending ? "true" : "false"}
-                aria-busy={isPending}
+                disabled={isSubmitting}
+                data-loading={isSubmitting ? "true" : "false"}
+                aria-busy={isSubmitting}
               >
-                {isPending ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 {submitLabel}
                 <span className="material-symbols-outlined">
                   {submitState === "success" ? "task_alt" : "send"}
