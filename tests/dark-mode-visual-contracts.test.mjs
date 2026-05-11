@@ -137,10 +137,10 @@ test("home hero includes the compact register tile without unsupported payout co
 
   assert.match(home, /HomeRegisterTile/);
   assert.match(home, /useAuth/);
-  assert.match(home, /activeWorkspace/);
-  assert.match(home, /resolvePortalHref/);
-  assert.match(home, /registerHref/);
-  assert.doesNotMatch(home, /href="\/register"/);
+  assert.match(home, /const showRegisterTile = !user/);
+  assert.match(home, /showRegisterTile \? <HomeRegisterTile langText=\{langText\} \/> : null/);
+  assert.match(home, /justify-start lg:grid-cols-\[minmax\(560px,760px\)\]/);
+  assert.match(home, /href="\/register"/);
   assert.match(home, /Register Now/);
   assert.match(home, /Rent, List & Grow/);
   assert.match(home, /bg-white/);

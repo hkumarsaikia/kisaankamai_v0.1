@@ -12,7 +12,6 @@ import { HOMEPAGE_MARKERS } from "@/lib/map-data";
 import { NORTHERN_MAHARASHTRA_SERVICE_AREAS } from "@/lib/service-areas.js";
 import { assetPath } from "@/lib/site";
 import { SharedIcon } from "@/components/SharedIcon";
-import { resolvePortalHref } from "@/lib/workspace-routing.js";
 
 const heroSlides = [
   {
@@ -160,11 +159,6 @@ const homeRegisterSteps = [
 ] as const;
 
 function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: string) => string }) {
-  const { user, activeWorkspace } = useAuth();
-  const registerHref = user
-    ? resolvePortalHref(activeWorkspace === "owner" ? "owner" : "renter")
-    : "/register";
-
   return (
     <aside
       className="kk-depth-tile relative w-full max-w-[390px] overflow-hidden rounded-[2rem] border border-white/80 bg-white p-6 text-primary shadow-[0_30px_80px_-35px_rgba(0,0,0,0.7)] dark:border-white/10 dark:bg-surface-container-lowest dark:text-emerald-50 lg:justify-self-end"
@@ -211,7 +205,7 @@ function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: st
         </div>
 
         <Link
-          href={registerHref}
+          href="/register"
           className="kk-flow-button block w-full rounded-2xl bg-secondary px-6 py-4 text-center text-lg font-black text-white shadow-[0_16px_35px_-24px_rgba(0,0,0,0.7)] dark:bg-secondary-container dark:text-on-secondary-container"
         >
           <span className="relative z-10">{langText("Register Now", "आता नोंदणी करा")}</span>
@@ -228,11 +222,13 @@ function HomeRegisterTile({ langText }: { langText: (enText: string, mrText?: st
 
 export default function Home() {
   const { t, langText } = useLanguage();
+  const { user } = useAuth();
   const router = useSmoothRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [searchLocation, setSearchLocation] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const currentHeroSlide = heroSlides[currentSlide];
+  const showRegisterTile = !user;
 
   const homepageMarkers = HOMEPAGE_MARKERS.map((marker) => ({
     ...marker,
@@ -306,7 +302,13 @@ export default function Home() {
               <SharedIcon name="chevron-right" className="h-6 w-6" />
             </button>
           </div>
-          <div className="relative z-10 mx-auto grid w-full max-w-[min(1480px,calc(100vw-48px))] items-center justify-between gap-12 px-0 py-28 md:py-20 lg:grid-cols-[minmax(560px,760px)_minmax(320px,390px)] xl:gap-28 2xl:gap-36">
+          <div
+            className={`relative z-10 mx-auto grid w-full max-w-[min(1480px,calc(100vw-48px))] items-center gap-12 px-0 py-28 md:py-20 xl:gap-28 2xl:gap-36 ${
+              showRegisterTile
+                ? "justify-between lg:grid-cols-[minmax(560px,760px)_minmax(320px,390px)]"
+                : "justify-start lg:grid-cols-[minmax(560px,760px)]"
+            }`}
+          >
             <div className="max-w-2xl text-white lg:justify-self-start">
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/20 mb-6 mt-16 lg:mt-0">
                 <span className="w-2 h-2 bg-secondary rounded-full transform dark:bg-amber-400"></span>
@@ -351,7 +353,7 @@ export default function Home() {
                 </button>
               </div>
             </div>
-            <HomeRegisterTile langText={langText} />
+            {showRegisterTile ? <HomeRegisterTile langText={langText} /> : null}
           </div>
         </section>
 
