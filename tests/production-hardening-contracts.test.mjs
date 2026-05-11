@@ -227,10 +227,13 @@ test("root layout keeps icon fonts and public session bootstrap lean", async () 
   const layoutSource = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 
   assert.match(layoutSource, /materialSymbolsStylesheetHref/);
-  assert.match(layoutSource, /Material\+Symbols\+Outlined:opsz,wght,FILL,GRAD@24,400,0\.\.1,0&display=swap/);
+  assert.match(layoutSource, /materialSymbolIconNames = \[/);
+  assert.match(layoutSource, /Material\+Symbols\+Outlined:opsz,wght,FILL,GRAD@24,400,0\.\.1,0&icon_names=\$\{materialSymbolIconNames\.join\(","\)\}&display=swap/);
+  assert.match(layoutSource, /"search"/);
+  assert.match(layoutSource, /"person"/);
+  assert.match(layoutSource, /"support_agent"/);
   assert.match(layoutSource, /data-kk-material-symbols="true"/);
   assert.match(layoutSource, /rel="stylesheet"/);
-  assert.doesNotMatch(layoutSource, /icon_names=/);
   assert.doesNotMatch(layoutSource, /kk-material-symbols-loader/);
   assert.doesNotMatch(layoutSource, /document\.createElement\("link"\)/);
   assert.match(layoutSource, /display=swap/);

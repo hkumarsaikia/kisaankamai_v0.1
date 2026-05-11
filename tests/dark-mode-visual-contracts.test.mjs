@@ -83,7 +83,6 @@ test("visible route loading fallbacks are removed from public and profile routes
     "../app/list-equipment/loading.tsx",
     "../app/owner-profile/loading.tsx",
     "../app/profile-selection/loading.tsx",
-    "../app/rent-equipment/loading.tsx",
     "../app/renter-profile/loading.tsx",
     "../app/support/loading.tsx",
     "../app/equipment/[id]/loading.tsx",
@@ -94,6 +93,13 @@ test("visible route loading fallbacks are removed from public and profile routes
   for (const source of sources) {
     assert.doesNotMatch(source, /LoadingScreen|animate-pulse|animate-\[pulse/);
   }
+});
+
+test("rent equipment avoids a null segment loading boundary that shifts the footer during streaming", async () => {
+  await assert.rejects(
+    readSource("../app/rent-equipment/loading.tsx"),
+    /ENOENT/
+  );
 });
 
 test("terms dark-mode support tiles use deep readable surfaces rather than pale cards", async () => {

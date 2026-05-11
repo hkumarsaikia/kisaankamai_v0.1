@@ -138,12 +138,15 @@ test("profile settings save returns and applies a refreshed session", async () =
   assert.match(form, /emitAuthSyncEvent\("session-refresh"\)/, "settings save should broadcast profile changes to other tabs and surfaces");
 });
 
-test("Material Symbols stylesheet uses the valid full ligature font request", async () => {
+test("Material Symbols stylesheet uses a valid subset ligature font request", async () => {
   const layout = await source("app/layout.tsx");
 
-  assert.match(layout, /Material\+Symbols\+Outlined:opsz,wght,FILL,GRAD@24,400,0\.\.1,0&display=swap/);
+  assert.match(layout, /materialSymbolIconNames = \[/);
+  assert.match(layout, /Material\+Symbols\+Outlined:opsz,wght,FILL,GRAD@24,400,0\.\.1,0&icon_names=\$\{materialSymbolIconNames\.join\(","\)\}&display=swap/);
+  assert.match(layout, /"agriculture"/);
+  assert.match(layout, /"support_agent"/);
+  assert.match(layout, /"task_alt"/);
   assert.match(layout, /data-kk-material-symbols="true"/);
   assert.match(layout, /rel="stylesheet"/);
-  assert.doesNotMatch(layout, /icon_names=/);
   assert.doesNotMatch(layout, /kk-material-symbols-loader/);
 });
