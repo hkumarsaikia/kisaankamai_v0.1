@@ -88,6 +88,34 @@ function authIdentifierOperations(db, seedData) {
   ];
 }
 
+async function finalAuthUserIds(auth, seedData) {
+  const lookups = [
+    () => auth.getUser(seedData.owner.uid),
+    () => auth.getUser(seedData.renter.uid),
+    () => auth.getUserByPhoneNumber(toE164Phone(seedData.owner.phone)),
+    () => auth.getUserByPhoneNumber(toE164Phone(seedData.renter.phone)),
+    () => auth.getUserByEmail(seedData.owner.email),
+    () => auth.getUserByEmail(seedData.renter.email),
+  ];
+  const ids = new Set();
+
+  for (const lookup of lookups) {
+    try {
+      const user = await lookup();
+      if (user?.uid) {
+        ids.add(user.uid);
+      }
+    } catch (error) {
+      if (error?.code === "auth/user-not-found") {
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  return [...ids];
+}
+
 export function getFinalTestManifest() {
   return finalTestManifest;
 }
@@ -274,8 +302,11 @@ export async function cleanupFinalTestAccounts({ db, auth, dryRun = false } = {}
     await commitDeleteOperations(db, refs);
   }
 
+  const authUserIds = dryRun
+    ? [seedData.owner.uid, seedData.renter.uid]
+    : await finalAuthUserIds(auth, seedData);
   const authResults = [];
-  for (const uid of [seedData.owner.uid, seedData.renter.uid]) {
+  for (const uid of authUserIds) {
     try {
       if (!dryRun) {
         await auth.deleteUser(uid);

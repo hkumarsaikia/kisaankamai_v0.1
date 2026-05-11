@@ -102,4 +102,6 @@ test("final test account cleanup removes reserved auth identifiers before regist
   assert.match(cleanupSource, /phone:\$\{seedData\.renter\.phone\}/);
   assert.match(cleanupSource, /email:\$\{seedData\.owner\.email\}/);
   assert.match(cleanupSource, /email:\$\{seedData\.renter\.email\}/);
+  assert.match(cleanupSource, /getUserByPhoneNumber/);
+  assert.match(cleanupSource, /getUserByEmail/);
 });

@@ -27,6 +27,10 @@ test mode.
   fictional phone numbers through the Identity Toolkit Admin API.
 - Updated the live final-account E2E harness to inject the local matching token
   into the browser session for the public registration probe.
+- Expanded final test account cleanup so it removes Firebase Auth users by the
+  manifest UID, phone number, and email. The public registration probe can
+  create Firebase-assigned UIDs, and those must be removed before deterministic
+  seeding recreates the final accounts with manifest UIDs.
 
 ## Safety Boundary
 
