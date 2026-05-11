@@ -5,7 +5,7 @@ import { useLanguage } from "@/components/LanguageContext";
 import { FOOTER_MARKETPLACE_LINKS, FOOTER_TRUST_LINKS } from "@/lib/site-navigation.js";
 import { SharedIcon } from "@/components/SharedIcon";
 import { postJson } from "@/lib/client/forms";
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 
 export const Footer = () => {
   const { t, langText } = useLanguage();
@@ -13,6 +13,22 @@ export const Footer = () => {
   const [status, setStatus] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const resetTimerRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (resetTimerRef.current) {
+        window.clearTimeout(resetTimerRef.current);
+      }
+    };
+  }, []);
+
+  const clearResetTimer = () => {
+    if (resetTimerRef.current) {
+      window.clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
+    }
+  };
   const renderLabel = (link: { labelKey?: string; enLabel?: string; mrLabel?: string }) => {
     if (link.labelKey) {
       return t(link.labelKey as never);
@@ -29,6 +45,7 @@ export const Footer = () => {
     setStatus("pending");
     setMessage("");
     setIsSubmitting(true);
+    clearResetTimer();
 
     try {
       await postJson<{ ok: boolean; id: string }>("/api/forms/newsletter-subscription", {
@@ -38,6 +55,11 @@ export const Footer = () => {
       setStatus("success");
       setMessage(langText("Subscribed", "सदस्यता झाली"));
       setEmail("");
+      resetTimerRef.current = window.setTimeout(() => {
+        setStatus("idle");
+        setMessage("");
+        resetTimerRef.current = null;
+      }, 2200);
     } catch (error) {
       setStatus("error");
       setMessage(error instanceof Error ? error.message : langText("Subscription failed.", "सदस्यता अयशस्वी झाली."));
@@ -145,6 +167,7 @@ export const Footer = () => {
               value={email}
               onChange={(event) => {
                 setEmail(event.target.value);
+                clearResetTimer();
                 if (status !== "idle") {
                   setStatus("idle");
                   setMessage("");

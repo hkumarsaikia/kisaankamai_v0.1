@@ -8,6 +8,7 @@ const asyncPostJsonForms = [
   "components/Footer.tsx",
   "app/support/page.tsx",
   "app/coming-soon/page.tsx",
+  "app/catalog/[slug]/CatalogBookingForm.tsx",
   "components/profile/ProfileSupportWorkspace.tsx",
   "components/profile/ProfileFeedbackForm.tsx",
 ];
@@ -70,4 +71,77 @@ test("support category placeholders are not submitted as real support categories
   assert.match(support, /inquiryType:\s*""/);
   assert.match(support, /<option disabled value="">/);
   assert.match(support, /required[\s\S]*value=\{formState\.inquiryType\}/);
+});
+
+test("public and workspace forms surface useful validation errors and accept short real user messages", async () => {
+  const [validation, http, support, feedback, feature, partner, catalog] = await Promise.all([
+    source("lib/validation/forms.ts"),
+    source("lib/server/http.ts"),
+    source("components/profile/ProfileSupportWorkspace.tsx"),
+    source("components/profile/ProfileFeedbackForm.tsx"),
+    source("app/feature-request/page.tsx"),
+    source("app/partner/page.tsx"),
+    source("app/catalog/[slug]/CatalogBookingForm.tsx"),
+  ]);
+
+  for (const [schemaName, fieldName] of [
+    ["partnerInquirySchema", "message"],
+    ["feedbackSchema", "message"],
+    ["supportRequestSchema", "message"],
+    ["reportSubmissionSchema", "description"],
+    ["featureRequestSchema", "description"],
+  ]) {
+    const schemaStart = validation.indexOf(`export const ${schemaName}`);
+    assert.notEqual(schemaStart, -1, `${schemaName} should exist`);
+    const schemaEnd = validation.indexOf("export const", schemaStart + 1);
+    const schemaBlock = validation.slice(schemaStart, schemaEnd === -1 ? undefined : schemaEnd);
+    const fieldIndex = schemaBlock.indexOf(`${fieldName}:`);
+    assert.notEqual(fieldIndex, -1, `${schemaName}.${fieldName} should exist`);
+    const fieldBlock = schemaBlock.slice(fieldIndex, fieldIndex + 240);
+    assert.doesNotMatch(fieldBlock, /\.min\(10,/, `${schemaName}.${fieldName} should not reject ordinary short user messages`);
+    assert.match(fieldBlock, /\.min\([34],/, `${schemaName}.${fieldName} should keep a small non-empty message guard`);
+  }
+
+  assert.match(http, /firstFieldErrorMessage/, "server validation should return the first useful field-level message");
+  assert.doesNotMatch(http, /parsed\.error\.flatten\(\)\.formErrors\[0\] \|\| "Validation failed\."/);
+
+  for (const file of [support, feedback, feature, partner, catalog]) {
+    assert.doesNotMatch(file, /setError\(submitError\.message\)/, "forms should not show a generic Validation failed response when fieldErrors exist");
+    assert.match(file, /formatSubmissionError|formatFormError|fieldErrors/, "forms should format field-level submission errors");
+  }
+});
+
+test("dark workspace form buttons and headings remain readable in dark mode", async () => {
+  const [support, feedback] = await Promise.all([
+    source("components/profile/ProfileSupportWorkspace.tsx"),
+    source("components/profile/ProfileFeedbackForm.tsx"),
+  ]);
+
+  assert.doesNotMatch(support, /text-primary-container/, "support workspace should not use dark green text for headings or contact links on dark cards");
+  assert.doesNotMatch(support, /text-on-primary[\s\S]{0,140}bg-primary-container/, "support workspace submit button needs explicit readable text on dark green");
+  assert.match(support, /text-white/, "support workspace submit button should keep white text in dark mode");
+
+  assert.doesNotMatch(feedback, /text-on-primary[\s\S]{0,140}bg-primary-container/, "feedback submit button needs explicit readable text on dark green");
+  assert.match(feedback, /text-white/, "feedback submit button should keep white text in dark mode");
+});
+
+test("profile settings save returns and applies a refreshed session", async () => {
+  const [route, form] = await Promise.all([
+    source("app/api/profile/complete/route.ts"),
+    source("components/profile/ProfileSettingsForm.tsx"),
+  ]);
+
+  assert.match(route, /const nextSession = await updateLocalProfile/, "profile save route should keep the refreshed session returned by updateLocalProfile");
+  assert.match(route, /session: nextSession/, "profile save route should return the refreshed session");
+  assert.match(form, /payload\.session/, "settings form should consume the refreshed session");
+  assert.match(form, /setSession\(payload\.session\)/, "settings form should update AuthContext immediately after save");
+  assert.match(form, /emitAuthSyncEvent\("session-refresh"\)/, "settings save should broadcast profile changes to other tabs and surfaces");
+});
+
+test("Material Symbols subset includes every dynamic icon used by visible pages", async () => {
+  const layout = await source("app/layout.tsx");
+
+  for (const iconName of ["precision_manufacturing", "track_changes", "vibration"]) {
+    assert.match(layout, new RegExp(`"${iconName}"`), `${iconName} should be included in the Material Symbols subset`);
+  }
 });

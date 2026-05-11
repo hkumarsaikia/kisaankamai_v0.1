@@ -1,6 +1,6 @@
 "use client";
 
-import { postJson } from "@/lib/client/forms";
+import { formatSubmissionError, postJson } from "@/lib/client/forms";
 import { useLanguage } from "@/components/LanguageContext";
 import type { LocalSession } from "@/lib/local-data/types";
 import { supportContact } from "@/lib/support-contact";
@@ -45,6 +45,7 @@ export function ProfileSupportWorkspace({
 
   const updateField = (field: keyof typeof formState, value: string) => {
     setFormState((current) => ({ ...current, [field]: value }));
+    setError("");
     if (submitState !== "idle") {
       setSubmitState("idle");
     }
@@ -75,11 +76,7 @@ export function ProfileSupportWorkspace({
       setSubmitState("success");
     } catch (submitError) {
       setSubmitState("error");
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : langText("Support request failed.", "सपोर्ट विनंती अयशस्वी झाली.")
-      );
+      setError(formatSubmissionError(submitError, langText("Support request failed.", "सपोर्ट विनंती अयशस्वी झाली.")));
     } finally {
       setIsSubmitting(false);
     }
@@ -91,7 +88,7 @@ export function ProfileSupportWorkspace({
         <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <div className="bg-surface-container-lowest rounded-2xl shadow-xl p-6 md:p-10 border border-outline-variant/30 backdrop-blur-sm">
-              <h2 className="mb-6 flex items-center gap-2 font-headline text-2xl font-bold text-primary-container">
+              <h2 className="mb-6 flex items-center gap-2 font-headline text-2xl font-bold text-on-surface dark:text-emerald-200">
                 <span className="material-symbols-outlined text-secondary">edit_document</span>
                 {langText("Submit a Request", "विनंती सबमिट करा")}
               </h2>
@@ -186,8 +183,8 @@ export function ProfileSupportWorkspace({
 
                 <div className="pt-2">
                   <button
-                    className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-4 text-lg font-bold text-on-primary shadow-md transition-all hover:shadow-lg md:w-auto ${
-                      submitState === "success" ? "bg-emerald-600" : "bg-primary-container hover:bg-primary"
+                    className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-4 text-lg font-bold text-white shadow-md transition-all hover:shadow-lg md:w-auto ${
+                      submitState === "success" ? "bg-emerald-700" : "bg-[#0f4a38] hover:bg-[#17634c]"
                     }`}
                     type="submit"
                     disabled={isSubmitting}
@@ -217,7 +214,7 @@ export function ProfileSupportWorkspace({
                 {langText("Available 8 AM to 8 PM.", "सकाळी ८ ते रात्री ८ उपलब्ध.")}
               </p>
               <a
-                className="flex items-center gap-2 text-2xl font-bold text-primary-container transition-colors hover:text-primary"
+                className="flex items-center gap-2 text-2xl font-bold text-primary transition-colors hover:text-primary/80 dark:text-emerald-300"
                 href={supportContact.phoneHref}
               >
                 {supportContact.phoneDisplay}

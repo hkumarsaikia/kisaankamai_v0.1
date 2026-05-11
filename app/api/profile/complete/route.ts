@@ -88,8 +88,8 @@ export const POST = withLoggedRoute("profile-complete", async (request: NextRequ
     verificationDocuments: payload.verificationDocuments,
   } as Parameters<typeof updateLocalProfile>[1];
 
-  await updateLocalProfile(session.user.id, profileUpdate);
+  const nextSession = await updateLocalProfile(session.user.id, profileUpdate);
   await setWorkspaceCookie(preferredWorkspace);
 
-  return NextResponse.json({ ok: true, userId: session.user.id });
+  return NextResponse.json({ ok: true, userId: session.user.id, session: nextSession });
 });

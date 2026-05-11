@@ -204,6 +204,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       });
       const payload = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
+        session?: LocalSession | null;
         error?: string;
       };
 
@@ -214,6 +215,11 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       }
 
       setSubmitState("success");
+      if (payload.session) {
+        setSession(payload.session);
+      }
+      await refreshProfile();
+      emitAuthSyncEvent("session-refresh");
       window.setTimeout(() => router.refresh(), 650);
     } catch (submitError) {
       setSubmitState("error");
@@ -252,7 +258,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                 onClick={() => profilePhotoInputRef.current?.click()}
                 disabled={isPhotoUploading}
                 aria-label={langText("Upload or change profile photo", "प्रोफाइल फोटो अपलोड किंवा बदला")}
-                className="absolute bottom-2 right-2 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-white shadow-lg ring-4 ring-white transition-colors hover:bg-primary/90 disabled:opacity-60"
+                className="absolute bottom-2 right-2 flex h-12 w-12 items-center justify-center rounded-full bg-[#0f4a38] text-white shadow-lg ring-4 ring-white transition-colors hover:bg-[#17634c] disabled:opacity-60 dark:ring-slate-950"
               >
                 <span className="material-symbols-outlined text-[22px]">
                   {isPhotoUploading ? "hourglass_top" : "edit"}
@@ -446,7 +452,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </button>
               <button
                 className={`rounded-xl px-10 py-3.5 font-bold text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
-                  submitState === "success" ? "bg-emerald-600" : "bg-primary hover:bg-primary/90"
+                  submitState === "success" ? "bg-emerald-700" : "bg-[#0f4a38] hover:bg-[#17634c]"
                 }`}
                 type="submit"
                 disabled={isSubmitting}

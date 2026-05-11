@@ -2,7 +2,7 @@
 
 import { type FormEvent, useEffect, useState } from "react";
 import { useLanguage } from "@/components/LanguageContext";
-import { postJson } from "@/lib/client/forms";
+import { formatSubmissionError, postJson } from "@/lib/client/forms";
 import { assetPath } from "@/lib/site";
 import { supportContact } from "@/lib/support-contact";
 
@@ -102,14 +102,11 @@ export default function SupportPage() {
         message: formState.message,
         sourcePath: "/support",
       });
+      setError("");
       setSubmitState("success");
     } catch (submitError) {
       setSubmitState("error");
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : langText("Support request failed.", "सहाय्य विनंती अयशस्वी झाली.")
-      );
+      setError(formatSubmissionError(submitError, langText("Support request failed.", "सहाय्य विनंती अयशस्वी झाली.")));
     } finally {
       setIsSubmitting(false);
     }
@@ -236,7 +233,7 @@ export default function SupportPage() {
                 type="submit"
                 aria-label={langText("Send Message", "संदेश पाठवा")}
                 disabled={isSubmitting || submitState === "pending"}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container px-8 py-4 font-label font-medium text-on-primary transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-70 dark:text-white dark:hover:bg-primary-container/80 md:w-auto"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-8 py-4 font-label font-medium text-white transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-70 dark:bg-emerald-700 dark:hover:bg-emerald-600 md:w-auto"
               >
                 {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 {submitState === "success" ? <span className="material-symbols-outlined text-sm">check_circle</span> : null}

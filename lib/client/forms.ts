@@ -12,6 +12,26 @@ export class SubmissionError extends Error {
   }
 }
 
+export function firstSubmissionFieldError(error: unknown) {
+  if (!(error instanceof SubmissionError) || !error.fieldErrors) {
+    return "";
+  }
+
+  return Object.values(error.fieldErrors).find((messages) => messages?.[0])?.[0] || "";
+}
+
+export function formatSubmissionError(error: unknown, fallback = "Submission failed.") {
+  if (error instanceof SubmissionError) {
+    return firstSubmissionFieldError(error) || error.message || fallback;
+  }
+
+  if (error instanceof Error) {
+    return error.message || fallback;
+  }
+
+  return fallback;
+}
+
 export async function postJson<T>(url: string, payload: unknown) {
   const response = await fetch(url, {
     method: "POST",

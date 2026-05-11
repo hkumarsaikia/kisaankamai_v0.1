@@ -88,7 +88,7 @@ export const partnerInquirySchema = z
     contactPerson: z.string().trim().min(2, "Enter the contact person.").max(120),
     phone: tenDigitPhone,
     businessLocation: z.string().trim().min(2, "Enter the business location.").max(160),
-    message: z.string().trim().min(10, "Describe the partnership goals.").max(2000),
+    message: z.string().trim().min(3, "Describe the partnership goals.").max(2000),
   })
   .strict();
 
@@ -109,7 +109,7 @@ export const feedbackSchema = z
     role: z.enum(["farmer", "owner", "partner", "visitor", "other"]),
     category: z.string().trim().min(2, "Select a feedback category.").max(80),
     subject: z.string().trim().min(4, "Enter a subject.").max(160),
-    message: z.string().trim().min(10, "Enter your feedback.").max(2500),
+    message: z.string().trim().min(3, "Enter your feedback.").max(2500),
     rating: z.number().int().min(1).max(5).optional(),
     contactMe: z.boolean().optional().default(false),
   })
@@ -144,7 +144,7 @@ export const supportRequestSchema = z
     category: z.string().trim().min(2, "Select a category.").max(120),
     district: z.string().trim().min(2, "Enter your district or taluka.").max(160).optional().or(z.literal("")),
     inquiryType: z.string().trim().min(2, "Select an inquiry type.").max(120).optional(),
-    message: z.string().trim().min(10, "Describe how we can help.").max(2500),
+    message: z.string().trim().min(3, "Describe how we can help.").max(2500),
     sourcePath: z.string().trim().min(1).max(120),
   })
   .strict();
@@ -172,7 +172,7 @@ export const reportSubmissionSchema = z
     bookingId: z.string().trim().max(80).optional().or(z.literal("")),
     category: z.string().trim().min(2, "Select a report category.").max(120),
     title: z.string().trim().min(4, "Enter a short problem title.").max(160),
-    description: z.string().trim().min(10, "Describe what happened.").max(2500),
+    description: z.string().trim().min(3, "Describe what happened.").max(2500),
     urgency: z.enum(["Low", "Medium", "High Urgent"]).default("Medium"),
     sourcePath: z.string().trim().min(1).max(120).default("/report"),
   })
@@ -187,7 +187,7 @@ export const featureRequestSchema = z
     category: z
       .enum(["discovery", "machine_types", "booking", "payments", "support", "trust", "other"]),
     title: z.string().trim().min(4, "Enter a short feature title.").max(160),
-    description: z.string().trim().min(10, "Describe your idea.").max(2500),
+    description: z.string().trim().min(3, "Describe your idea.").max(2500),
     urgency: z.enum(["immediate", "season", "future"]).default("season"),
     contactMe: z.boolean().optional().default(false),
     sourcePath: z.string().trim().min(1).max(120).default("/feature-request"),

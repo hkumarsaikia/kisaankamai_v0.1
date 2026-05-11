@@ -16,6 +16,10 @@ export class HttpError extends Error {
   }
 }
 
+function firstFieldErrorMessage(fieldErrors: Record<string, string[] | undefined>) {
+  return Object.values(fieldErrors).find((messages) => messages?.[0])?.[0];
+}
+
 function isLoopbackHostname(hostname: string) {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
 }
@@ -128,10 +132,13 @@ export async function parseJsonBody<T extends ZodTypeAny>(request: NextRequest, 
 
   const parsed = schema.safeParse(json);
   if (!parsed.success) {
+    const flattened = parsed.error.flatten();
+    const fieldErrors = flattened.fieldErrors as Record<string, string[]>;
+
     throw new HttpError(
       400,
-      parsed.error.flatten().formErrors[0] || "Validation failed.",
-      parsed.error.flatten().fieldErrors as Record<string, string[]>
+      firstFieldErrorMessage(fieldErrors) || flattened.formErrors[0] || "Please check the highlighted fields.",
+      fieldErrors
     );
   }
 
@@ -161,11 +168,14 @@ export function handleRouteError(error: unknown) {
   }
 
   if (error instanceof z.ZodError) {
+    const flattened = error.flatten();
+    const fieldErrors = flattened.fieldErrors as Record<string, string[]>;
+
     return NextResponse.json(
       {
         ok: false,
-        error: error.flatten().formErrors[0] || "Validation failed.",
-        fieldErrors: error.flatten().fieldErrors,
+        error: firstFieldErrorMessage(fieldErrors) || flattened.formErrors[0] || "Please check the highlighted fields.",
+        fieldErrors,
       },
       { status: 400 }
     );

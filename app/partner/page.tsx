@@ -1,6 +1,6 @@
 "use client";
 
-import { SubmissionError, postJson } from "@/lib/client/forms";
+import { formatSubmissionError, postJson } from "@/lib/client/forms";
 import { useLanguage } from "@/components/LanguageContext";
 import { supportContact } from "@/lib/support-contact";
 import { partnerInquirySchema } from "@/lib/validation/forms";
@@ -114,14 +114,12 @@ export default function PartnerPage() {
 
     try {
       await postJson("/api/forms/partner-inquiry", parsed.data);
+      setError("");
       setSuccess(langText("Enquiry received. Our partnership team will contact you within 24 hours.", "चौकशी प्राप्त झाली. आमची भागीदारी टीम २४ तासांत संपर्क करेल."));
       event.currentTarget.reset();
     } catch (submitError) {
-      if (submitError instanceof SubmissionError) {
-        setError(submitError.message);
-      } else {
-        setError(langText("Could not submit your enquiry right now.", "आत्ता तुमची चौकशी सबमिट करता आली नाही."));
-      }
+      setSuccess("");
+      setError(formatSubmissionError(submitError, langText("Could not submit your enquiry right now.", "आत्ता तुमची चौकशी सबमिट करता आली नाही.")));
     } finally {
       setIsSubmitting(false);
     }

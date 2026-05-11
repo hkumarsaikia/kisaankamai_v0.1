@@ -2,6 +2,7 @@
 
 import { type FormEvent, useState } from "react";
 import { useLanguage } from "@/components/LanguageContext";
+import { formatSubmissionError, postJson } from "@/lib/client/forms";
 
 const featureHighlights = [
   {
@@ -88,33 +89,25 @@ export default function FeatureRequestPage() {
     setStatusMessage("");
 
     try {
-      const response = await fetch("/api/forms/feature-request", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({
-          fullName: formState.fullName,
-          phone: formState.phone,
-          role: formState.role,
-          location: formState.location,
-          category: formState.category,
-          title: formState.title,
-          description: formState.description,
-          urgency: formState.urgency,
-          contactMe: formState.contactMe,
-          sourcePath: "/feature-request",
-        }),
+      await postJson<{ ok: boolean; id: string }>("/api/forms/feature-request", {
+        fullName: formState.fullName,
+        phone: formState.phone,
+        role: formState.role,
+        location: formState.location,
+        category: formState.category,
+        title: formState.title,
+        description: formState.description,
+        urgency: formState.urgency,
+        contactMe: formState.contactMe,
+        sourcePath: "/feature-request",
       });
-      const payload = (await response.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
-
-      if (!response.ok || !payload?.ok) {
-        throw new Error(payload?.error || langText("Could not submit your feature request.", "तुमची फीचर विनंती सबमिट करता आली नाही."));
-      }
 
       setFormState(initialFormState);
+      setError("");
       setStatusMessage(langText("Submitted. Thank you for sharing your idea.", "सबमिट झाले. तुमची कल्पना शेअर केल्याबद्दल धन्यवाद."));
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : langText("Could not submit your feature request.", "तुमची फीचर विनंती सबमिट करता आली नाही."));
+      setStatusMessage("");
+      setError(formatSubmissionError(submitError, langText("Could not submit your feature request.", "तुमची फीचर विनंती सबमिट करता आली नाही.")));
     } finally {
       setIsSubmitting(false);
     }

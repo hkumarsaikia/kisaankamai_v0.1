@@ -1,6 +1,6 @@
 "use client";
 
-import { postJson, SubmissionError } from "@/lib/client/forms";
+import { formatSubmissionError, postJson, SubmissionError } from "@/lib/client/forms";
 import { bookingRequestSchema } from "@/lib/validation/forms";
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -57,7 +57,7 @@ export default function CatalogBookingForm({
           window.location.href = "/login";
           return;
         }
-        setError(submitError.message);
+        setError(formatSubmissionError(submitError, "Could not submit the booking callback right now."));
       } else {
         setError("Could not submit the booking callback right now.");
       }
@@ -105,4 +105,3 @@ export default function CatalogBookingForm({
     </form>
   );
 }
-

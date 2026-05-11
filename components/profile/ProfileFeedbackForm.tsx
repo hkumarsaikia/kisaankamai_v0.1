@@ -1,6 +1,6 @@
 "use client";
 
-import { postJson } from "@/lib/client/forms";
+import { formatSubmissionError, postJson } from "@/lib/client/forms";
 import { useLanguage } from "@/components/LanguageContext";
 import type { LocalSession } from "@/lib/local-data/types";
 import { useRouter } from "next/navigation";
@@ -57,6 +57,7 @@ export function ProfileFeedbackForm({
 
   const updateField = (field: keyof typeof formState, value: string | number | boolean) => {
     setFormState((current) => ({ ...current, [field]: value }));
+    setError("");
     if (submitState !== "idle") {
       setSubmitState("idle");
     }
@@ -94,11 +95,7 @@ export function ProfileFeedbackForm({
       }, 700);
     } catch (submitError) {
       setSubmitState("error");
-      setError(
-        submitError instanceof Error
-          ? submitError.message
-          : langText("Could not submit feedback.", "अभिप्राय सबमिट करता आला नाही.")
-      );
+      setError(formatSubmissionError(submitError, langText("Could not submit feedback.", "अभिप्राय सबमिट करता आला नाही.")));
     } finally {
       setIsSubmitting(false);
     }
@@ -244,8 +241,8 @@ export function ProfileFeedbackForm({
 
             <div className="pt-2">
               <button
-                className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 font-headline text-lg font-semibold text-on-primary shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg sm:w-auto ${
-                  submitState === "success" ? "bg-emerald-600" : "bg-primary-container"
+                className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 font-headline text-lg font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg sm:w-auto ${
+                  submitState === "success" ? "bg-emerald-700" : "bg-[#0f4a38] hover:bg-[#17634c]"
                 }`}
                 type="submit"
                 disabled={isSubmitting}

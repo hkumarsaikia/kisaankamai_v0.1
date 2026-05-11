@@ -8,7 +8,7 @@ import {
   COMING_SOON_NOTIFY_MODE,
 } from "@/lib/coming-soon-config.js";
 import { HOMEPAGE_MARKERS } from "@/lib/map-data";
-import { postJson } from "@/lib/client/forms";
+import { formatSubmissionError, postJson } from "@/lib/client/forms";
 import { NORTHERN_MAHARASHTRA_SERVICE_AREAS } from "@/lib/service-areas.js";
 import { supportContact } from "@/lib/support-contact";
 
@@ -65,7 +65,7 @@ export default function ComingSoonPage() {
       }, 1400);
     } catch (submitError) {
       setSubmitState("error");
-      setError(submitError instanceof Error ? submitError.message : langText("Could not submit this request.", "ही विनंती सबमिट करता आली नाही."));
+      setError(formatSubmissionError(submitError, langText("Could not submit this request.", "ही विनंती सबमिट करता आली नाही.")));
     } finally {
       setIsSubmitting(false);
     }
