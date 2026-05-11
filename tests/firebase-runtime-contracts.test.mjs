@@ -79,16 +79,21 @@ test("package scripts expose the Firebase, Sheets, seed, repo-sync, and Discord 
 });
 
 test("live phone OTP E2E test mode is token-gated without a broad production bypass", async () => {
-  const [routeSource, e2eSource] = await Promise.all([
+  const [routeSource, preflightSource, helperSource, e2eSource] = await Promise.all([
     readFile(new URL("../app/api/auth/phone-test-mode/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/register/preflight/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/phone-auth-test-mode.ts", import.meta.url), "utf8"),
     readFile(new URL("../scripts/live-final-account-e2e.mjs", import.meta.url), "utf8"),
   ]);
 
-  assert.match(routeSource, /x-kk-phone-auth-test-token/);
-  assert.match(routeSource, /timingSafeEqual/);
-  assert.match(routeSource, /FIREBASE_PRIVATE_KEY/);
-  assert.match(routeSource, /createHmac/);
-  assert.match(routeSource, /configuredTestNumbers/);
+  assert.match(routeSource, /isPhoneAuthTestModeAllowed/);
+  assert.match(preflightSource, /isPhoneAuthTestModeAllowed/);
+  assert.match(preflightSource, /testMode: true/);
+  assert.match(helperSource, /x-kk-phone-auth-test-token/);
+  assert.match(helperSource, /timingSafeEqual/);
+  assert.match(helperSource, /FIREBASE_PRIVATE_KEY/);
+  assert.match(helperSource, /createHmac/);
+  assert.match(helperSource, /configuredPhoneAuthTestNumbers/);
   assert.match(e2eSource, /KK_PHONE_AUTH_TEST_MODE_TOKEN/);
   assert.match(e2eSource, /FIREBASE_PRIVATE_KEY/);
   assert.match(e2eSource, /kk_phone_auth_test_token/);

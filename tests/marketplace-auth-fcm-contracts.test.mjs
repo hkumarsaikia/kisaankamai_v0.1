@@ -118,12 +118,21 @@ test("phone password auth repairs legacy credentials and reset uses the same cre
 });
 
 test("manual registration checks uniqueness before Firebase OTP and requires password-backed phone login", async () => {
-  const [registerSource, sessionRouteSource, typeSource, preflightSource, phoneTestModeRouteSource, firebaseAuthClientSource] = await Promise.all([
+  const [
+    registerSource,
+    sessionRouteSource,
+    typeSource,
+    preflightSource,
+    phoneTestModeRouteSource,
+    phoneTestModeHelperSource,
+    firebaseAuthClientSource,
+  ] = await Promise.all([
     readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/server/firebase-session-route.ts", import.meta.url), "utf8"),
     readFile(new URL("../lib/local-data/types.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/auth/register/preflight/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/api/auth/phone-test-mode/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/phone-auth-test-mode.ts", import.meta.url), "utf8"),
     readFile(new URL("../components/auth/firebase-auth-client.ts", import.meta.url), "utf8"),
   ]);
 
@@ -134,13 +143,16 @@ test("manual registration checks uniqueness before Firebase OTP and requires pas
   assert.match(registerSource, /\/api\/auth\/register\/preflight/);
   assert.match(registerSource, /\/api\/auth\/phone-test-mode/);
   assert.match(registerSource, /kk_phone_auth_test_token/);
+  assert.match(registerSource, /x-kk-phone-auth-test-token/);
   assert.match(registerSource, /disableAppVerificationForTesting/);
   assert.match(preflightSource, /assertRegistrationIdentifiersAvailable/);
+  assert.match(preflightSource, /isPhoneAuthTestModeAllowed/);
   assert.match(preflightSource, /Account already exists\. Please login with your registered mobile number\./);
   assert.match(preflightSource, /Account already exists\. Please login with your registered phone number\./);
-  assert.match(phoneTestModeRouteSource, /KK_PHONE_AUTH_TEST_MODE_TOKEN/);
-  assert.match(phoneTestModeRouteSource, /timingSafeEqual/);
-  assert.match(phoneTestModeRouteSource, /finalTestManifest/);
+  assert.match(phoneTestModeRouteSource, /isPhoneAuthTestModeAllowed/);
+  assert.match(phoneTestModeHelperSource, /KK_PHONE_AUTH_TEST_MODE_TOKEN/);
+  assert.match(phoneTestModeHelperSource, /timingSafeEqual/);
+  assert.match(phoneTestModeHelperSource, /finalTestManifest/);
   assert.match(firebaseAuthClientSource, /appVerificationDisabledForTesting/);
   assert.match(firebaseAuthClientSource, /disableAppVerificationForTesting/);
   assert.doesNotMatch(registerSource, /Create account with Google|GoogleAuthButton/);

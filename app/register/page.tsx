@@ -160,9 +160,22 @@ export default function RegisterPage() {
   };
 
   const preflightRegistration = async () => {
+    let token = "";
+    try {
+      token =
+        window.sessionStorage.getItem("kk_phone_auth_test_token") ||
+        window.localStorage.getItem("kk_phone_auth_test_token") ||
+        "";
+    } catch {
+      token = "";
+    }
+
     const response = await fetch("/api/auth/register/preflight", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { "x-kk-phone-auth-test-token": token } : {}),
+      },
       credentials: "include",
       body: JSON.stringify({
         phone: formState.phone,

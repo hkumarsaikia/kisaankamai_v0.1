@@ -84,8 +84,10 @@ npm run live:e2e:final-accounts
 `npm run firebase:phone-test-numbers` ensures the final owner/renter fictional
 phone numbers and OTP codes are configured in Firebase Auth. The live register
 page then asks `/api/auth/phone-test-mode` whether Firebase app verification may
-be disabled for that specific phone number. The route returns `enabled: true`
-only when all conditions are true:
+be disabled for that specific phone number, and the registration preflight uses
+the same token-gated final-number check so deterministic E2E is not blocked by
+reserved final-account state. The route returns `enabled: true` only when all
+conditions are true:
 
 - the phone is one of the configured final test phone numbers
 - the E2E browser supplies the matching token in `kk_phone_auth_test_token`

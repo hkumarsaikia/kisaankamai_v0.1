@@ -3,6 +3,7 @@ import { z } from "zod";
 import { withLoggedRoute } from "@/lib/server/bug-reporting";
 import { assertRegistrationIdentifiersAvailable } from "@/lib/server/firebase-data";
 import { HttpError, parseJsonBody } from "@/lib/server/http";
+import { isPhoneAuthTestModeAllowed } from "@/lib/server/phone-auth-test-mode";
 import { assertRateLimit, buildAuthRateLimitRules } from "@/lib/server/rate-limit";
 
 const DUPLICATE_PHONE_MESSAGE = "Account already exists. Please login with your registered mobile number.";
@@ -32,6 +33,9 @@ export const POST = withLoggedRoute("auth-register-preflight", async (request: N
         ...buildAuthRateLimitRules(request, "auth-register-preflight-email", payload.email, 5),
       ]
     );
+    if (isPhoneAuthTestModeAllowed(request, payload.phone)) {
+      return NextResponse.json({ ok: true, testMode: true });
+    }
     await assertRegistrationIdentifiersAvailable(payload);
 
     return NextResponse.json({ ok: true });
