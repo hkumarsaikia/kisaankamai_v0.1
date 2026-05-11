@@ -221,7 +221,7 @@ function NoEquipmentAvailable({
   );
 }
 
-function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compact?: boolean }) {
+function EquipmentCard({ item, compact = false, priorityImage = false }: { item: EquipmentRecord; compact?: boolean; priorityImage?: boolean }) {
   const { langText, text } = useLanguage();
   const locationLabel = [item.location, item.district, item.state].filter(Boolean).join(", ");
   const visibleRating = getVisibleEquipmentRating(item);
@@ -242,6 +242,10 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
           <ContentImage
             alt={item.name}
             className="h-full w-full rounded-xl object-cover object-center shadow-sm transition-transform duration-300 group-hover:scale-[1.015]"
+            fetchPriority={priorityImage ? "high" : undefined}
+            loading={priorityImage ? "eager" : "lazy"}
+            priority={priorityImage}
+            sizes="(max-width: 768px) calc(100vw - 3rem), 30vw"
             src={assetPath(item.coverImage)}
           />
 
@@ -312,6 +316,10 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
         <ContentImage
           alt={item.name}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          fetchPriority={priorityImage ? "high" : undefined}
+          loading={priorityImage ? "eager" : "lazy"}
+          priority={priorityImage}
+          sizes="(max-width: 640px) calc(100vw - 4rem), (max-width: 1024px) 33vw, 25vw"
           src={assetPath(item.coverImage)}
         />
         <div className="absolute left-3 top-3 rounded bg-surface-container-lowest/90 px-2 py-1 font-label text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm">
@@ -342,7 +350,7 @@ function EquipmentCard({ item, compact = false }: { item: EquipmentRecord; compa
             <span>{item.hp}</span>
           </div>
         </div>
-        <Link href={DETAIL_ROUTE_TEMPLATE(item.id)} className="w-full py-2.5 px-4 bg-primary-container text-on-primary-container rounded-lg font-label font-bold text-sm hover:bg-primary-container/90 transition-colors text-center">
+        <Link href={DETAIL_ROUTE_TEMPLATE(item.id)} className="w-full py-2.5 px-4 bg-primary-container text-white dark:text-primary-fixed rounded-lg font-label font-bold text-sm hover:bg-primary-container/90 transition-colors text-center">
           {langText("View details", "तपशील पहा")}
         </Link>
       </div>
@@ -467,7 +475,7 @@ export default function RentEquipmentView({
               <h3 className="text-2xl font-bold mb-4 font-headline">
                 {langText("Need help finding the right machine?", "योग्य मशिन शोधण्यासाठी मदत हवी आहे का?")}
               </h3>
-              <p className="text-on-primary-container text-lg mb-8 leading-relaxed max-w-md">
+              <p className="text-primary-fixed text-lg mb-8 leading-relaxed max-w-md">
                 {langText(
                   "Share your requirement and our team will help you match with a nearby owner.",
                   "तुमची गरज सांगा आणि आमची टीम तुम्हाला जवळच्या मालकाशी जुळवून देईल."
@@ -584,8 +592,8 @@ export default function RentEquipmentView({
           </div>
 
           <div className="flex flex-col gap-6 pb-12">
-            {sortedItems.map((item) => (
-              <EquipmentCard key={item.id} item={item} compact />
+            {sortedItems.map((item, index) => (
+              <EquipmentCard key={item.id} item={item} compact priorityImage={index === 0} />
             ))}
           </div>
         </main>
@@ -633,8 +641,8 @@ export default function RentEquipmentView({
           </div>
 
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {paginatedAvailableItems.map((item) => (
-              <EquipmentCard key={item.id} item={item} />
+            {paginatedAvailableItems.map((item, index) => (
+              <EquipmentCard key={item.id} item={item} priorityImage={index === 0} />
             ))}
           </div>
 

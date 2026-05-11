@@ -230,6 +230,8 @@ export default function EquipmentDetailClient({
               alt={equipment.name}
               className="object-cover"
               fill
+              priority
+              loading="eager"
               sizes="(min-width: 1280px) 900px, (min-width: 1024px) 66vw, 100vw"
               src={assetPath(selectedGalleryImage)}
             />

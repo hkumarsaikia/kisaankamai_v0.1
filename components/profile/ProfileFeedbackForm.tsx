@@ -213,7 +213,7 @@ export function ProfileFeedbackForm({
                       onClick={() => updateField("rating", rating)}
                       aria-label={langText(`Set satisfaction to ${rating}`, `समाधान ${rating} करा`)}
                     >
-                      <span className={`material-symbols-outlined text-3xl ${rating <= formState.rating ? "fill" : "text-outline-variant"}`}>
+                      <span className={`material-symbols-outlined text-3xl ${rating <= formState.rating ? "fill" : "text-outline-variant dark:text-slate-400"}`}>
                         star
                       </span>
                     </button>

@@ -131,7 +131,7 @@ export default function FAQ() {
           <div className="mt-24 p-8 md:p-12 bg-primary-container rounded-3xl relative overflow-hidden">
             <div className="relative z-10 text-center max-w-2xl mx-auto">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("faq.still_have_questions")}</h2>
-              <p className="text-on-primary-container text-lg mb-8">{t("faq.our_team_is_ready_to_help_you_find_the_right_equipment_or_help_you_list_your_own")}</p>
+              <p className="text-primary-fixed text-lg mb-8">{t("faq.our_team_is_ready_to_help_you_find_the_right_equipment_or_help_you_list_your_own")}</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
                   href={supportContact.phoneHref}

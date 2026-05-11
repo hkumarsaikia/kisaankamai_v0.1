@@ -156,6 +156,7 @@ export function OwnerWorkspaceOverview({
                         src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
                         alt={booking.listing?.name || "Equipment"}
                         fill
+                        sizes="48px"
                         className="object-cover"
                       />
                     </div>
@@ -220,9 +221,9 @@ export function OwnerWorkspaceOverview({
 
           <section className="relative overflow-hidden rounded-2xl bg-primary-container p-6 text-white shadow-lg">
             <div className="relative z-10">
-              <span className="text-[10px] font-black uppercase tracking-widest text-on-primary-container">Estimated Booking Value</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary-fixed">Estimated Booking Value</span>
               <div className="mt-1 text-3xl font-extrabold">₹{bookingValueInFlow.toLocaleString("en-IN")}</div>
-              <div className="mt-4 flex items-center gap-2 text-xs font-medium text-on-primary-container">
+              <div className="mt-4 flex items-center gap-2 text-xs font-medium text-primary-fixed/90">
                 <span className="material-symbols-outlined text-sm">trending_up</span>
                 {bookings.length} booking requests
               </div>
@@ -269,6 +270,7 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
             src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
             alt={listingName}
             fill
+            sizes="(max-width: 768px) 100vw, 128px"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         </div>

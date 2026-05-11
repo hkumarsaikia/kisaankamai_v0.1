@@ -336,7 +336,7 @@ export function OwnerListingWizard({
                 {previewImages.length ? (
                   previewImages.slice(0, MAX_LISTING_IMAGES).map((image, index) => (
                     <div key={`${image}-${index}`} className="relative aspect-square overflow-hidden rounded-[1.25rem] border border-outline-variant bg-surface-container-low">
-                      <Image src={image} alt={`Listing preview ${index + 1}`} fill className="object-cover" />
+                      <Image src={image} alt={`Listing preview ${index + 1}`} fill sizes="(max-width: 768px) 50vw, 160px" className="object-cover" />
                     </div>
                   ))
                 ) : (
@@ -354,7 +354,7 @@ export function OwnerListingWizard({
             <section className="overflow-hidden rounded-[2rem] border border-outline-variant bg-surface-container-lowest shadow-sm">
               <div className="relative h-56">
                 {previewImages[0] ? (
-                  <Image src={previewImages[0]} alt={formState.name || "Listing cover preview"} fill className="object-cover" />
+                  <Image src={previewImages[0]} alt={formState.name || "Listing cover preview"} fill sizes="(max-width: 1024px) 100vw, 360px" className="object-cover" />
                 ) : (
                   <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_center,_rgba(20,59,46,0.18),_rgba(20,59,46,0.02))]">
                     <span className="material-symbols-outlined text-6xl text-primary/35">agriculture</span>

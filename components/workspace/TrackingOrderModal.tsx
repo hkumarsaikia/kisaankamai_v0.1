@@ -72,7 +72,7 @@ export function TrackingOrderModal({
           <div className="flex flex-col gap-2">
             <a
               href={`tel:${dialTarget}`}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container py-3 font-label font-bold text-on-primary shadow-lg shadow-primary-container/20 transition-opacity hover:opacity-90"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary-container py-3 font-label font-bold text-white shadow-lg shadow-primary-container/20 transition-opacity hover:opacity-90 dark:text-primary-fixed"
             >
               <span className="material-symbols-outlined text-lg">call</span>
               {contactLabel}

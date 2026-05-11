@@ -17,7 +17,7 @@ export default function FeedbackSuccessPage() {
         <div className="flex flex-col items-center px-6 py-10 md:px-12 text-center">
           {/* Success Icon */}
           <div className="h-16 w-16 bg-primary-container rounded-full flex items-center justify-center mb-6 shadow-sm">
-            <span className="material-symbols-outlined text-4xl text-on-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+            <span className="material-symbols-outlined text-4xl text-white dark:text-primary-fixed" style={{ fontVariationSettings: "'FILL' 1" }}>
               check_circle
             </span>
           </div>
@@ -34,7 +34,7 @@ export default function FeedbackSuccessPage() {
           <div className="flex flex-col sm:flex-row w-full max-w-[600px] gap-4 justify-center items-center">
             <Link 
               href="/"
-              className="flex items-center justify-center rounded-lg h-12 px-6 bg-primary-container text-on-primary-container hover:bg-primary transition-colors text-base font-label font-semibold w-full sm:w-auto shadow-sm"
+              className="flex items-center justify-center rounded-lg h-12 px-6 bg-primary-container text-white hover:bg-primary transition-colors text-base font-label font-semibold w-full sm:w-auto shadow-sm dark:text-primary-fixed"
             >
               <span className="truncate">Back to Home</span>
             </Link>

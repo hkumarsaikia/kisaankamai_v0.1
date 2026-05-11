@@ -151,7 +151,7 @@ export default function OwnerBenefitsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="absolute -bottom-6 -left-6 flex items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-950">
+                  <div className="absolute -bottom-6 left-4 flex max-w-[calc(100%-2rem)] items-center gap-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-xl dark:border-slate-800 dark:bg-slate-950 sm:-left-6 sm:max-w-none">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-600">
                       <span className="material-symbols-outlined">payments</span>
                     </div>

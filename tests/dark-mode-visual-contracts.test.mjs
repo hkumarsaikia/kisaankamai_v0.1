@@ -252,7 +252,13 @@ test("mobile dark mode public pages avoid invisible semantic CTA and form surfac
     featureRequest,
     terms,
     register,
+    registerSuccess,
     verifyContact,
+    renterBookings,
+    ownerBookings,
+    savedListings,
+    trackingOrderModal,
+    rentEquipment,
   ] = await Promise.all([
     readSource("../app/page.tsx"),
     readSource("../app/support/page.tsx"),
@@ -262,7 +268,13 @@ test("mobile dark mode public pages avoid invisible semantic CTA and form surfac
     readSource("../app/feature-request/page.tsx"),
     readSource("../app/terms/page.tsx"),
     readSource("../app/register/page.tsx"),
+    readSource("../app/register/success/page.tsx"),
     readSource("../app/verify-contact/page.tsx"),
+    readSource("../components/renter-profile/RenterBookingsBoard.tsx"),
+    readSource("../components/profile/OwnerBookingsBoard.tsx"),
+    readSource("../components/profile/SavedListingsBoard.tsx"),
+    readSource("../components/workspace/TrackingOrderModal.tsx"),
+    readSource("../app/rent-equipment/RentEquipmentView.tsx"),
   ]);
 
   assert.match(home, /bg-secondary text-white[^"`]*dark:bg-secondary-container[^"`]*dark:text-on-secondary-container/);
@@ -274,11 +286,21 @@ test("mobile dark mode public pages avoid invisible semantic CTA and form surfac
   assert.match(ownerBenefits, /py-24 bg-white relative[^"`]*dark:bg-slate-950/);
   assert.match(ownerBenefits, /text-gray-700[^"`]*dark:text-slate-200/);
   assert.match(ownerBenefits, /bg-gray-50[^"`]*dark:bg-slate-950[^"`]*dark:text-slate-100/);
+  assert.match(ownerBenefits, /left-4[^"`]*max-w-\[calc\(100%-2rem\)\][^"`]*sm:-left-6/);
   assert.match(ownerExperience, /text-secondary-container[^"`]*dark:text-secondary-fixed/);
   assert.match(ownerExperience, /bg-secondary text-white[^"`]*dark:bg-secondary-container[^"`]*dark:text-on-secondary-container/);
   assert.match(ownerExperience, /text-primary-container[^"`]*dark:text-primary-fixed/);
   assert.match(featureRequest, /text-inverse-primary[^"`]*dark:text-primary-fixed/);
   assert.match(terms, /text-secondary-container[^"`]*dark:text-secondary-fixed/);
   assert.match(register, /dark:text-on-primary-fixed/);
+  assert.match(registerSuccess, /dark:bg-slate-950\/95/);
+  assert.match(registerSuccess, /text-primary-container dark:text-primary-fixed/);
   assert.match(verifyContact, /bg-primary[^"`]*text-white[^"`]*dark:bg-primary-container/);
+  assert.match(renterBookings, /bg-primary-container text-white dark:text-primary-fixed/);
+  assert.match(ownerBookings, /bg-primary-container text-white dark:text-primary-fixed/);
+  assert.match(savedListings, /dark:bg-slate-950\/90 dark:text-primary-fixed/);
+  assert.match(trackingOrderModal, /bg-primary-container[^"`]*text-white[^"`]*dark:text-primary-fixed/);
+  assert.match(rentEquipment, /bg-primary-container text-white dark:text-primary-fixed/);
+  assert.doesNotMatch(renterBookings, /bg-primary-container text-on-primary/);
+  assert.doesNotMatch(ownerBookings, /bg-primary-container text-on-primary/);
 });

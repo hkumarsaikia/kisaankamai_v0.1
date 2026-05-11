@@ -19,10 +19,10 @@ export default function RegisterSuccessPage() {
         </div>
 
         <section className="relative z-10 mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-3xl items-center px-4 py-12">
-          <div className="w-full rounded-[2rem] border border-white/20 bg-white/95 p-8 text-center shadow-2xl backdrop-blur-xl md:p-12">
+          <div className="w-full rounded-[2rem] border border-white/20 bg-white/95 p-8 text-center shadow-2xl backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/95 md:p-12">
             <div className="mb-8 flex justify-center">
-              <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-primary-container/20 bg-primary-container/10">
-                <span className="material-symbols-outlined text-6xl text-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+              <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-primary-container/20 bg-primary-container/10 dark:border-primary-fixed/25 dark:bg-primary-fixed/10">
+                <span className="material-symbols-outlined text-6xl text-primary-container dark:text-primary-fixed" style={{ fontVariationSettings: "'FILL' 1" }}>
                   check_circle
                 </span>
               </div>
@@ -43,12 +43,12 @@ export default function RegisterSuccessPage() {
             <div className="mt-10 flex flex-col items-center gap-4">
               <Link
                 href="/login"
-                className="flex min-w-[240px] items-center justify-center gap-3 rounded-xl bg-primary-container px-8 py-4 font-bold text-on-primary-container shadow-lg transition-all hover:bg-primary"
+                className="flex min-w-[240px] items-center justify-center gap-3 rounded-xl bg-primary-container px-8 py-4 font-bold text-white shadow-lg transition-all hover:bg-primary dark:text-primary-fixed"
               >
                 <span className="font-headline tracking-wide">{langText("Login", "लॉगिन करा")}</span>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
-              <Link href="/" className="text-sm font-semibold text-primary-container underline-offset-4 transition-all hover:underline">
+              <Link href="/" className="text-sm font-semibold text-primary-container underline-offset-4 transition-all hover:underline dark:text-primary-fixed">
                 {langText("Back to Homepage", "मुख्यपृष्ठावर परत जा")}
               </Link>
             </div>

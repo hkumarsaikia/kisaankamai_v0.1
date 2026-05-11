@@ -150,7 +150,7 @@ export function RenterBookingsBoard({
                 onClick={() => setActiveFilter(filter.key)}
                 className={`rounded-full px-4 py-2 text-sm font-bold transition-colors ${
                   active
-                    ? "bg-primary-container text-on-primary"
+                    ? "bg-primary-container text-white dark:text-primary-fixed"
                     : "border border-outline-variant bg-surface-container-lowest text-on-surface hover:bg-surface-container"
                 }`}
               >

@@ -55,6 +55,7 @@ export default function AboutPage() {
             alt="Expansive lush green sugarcane fields in western Maharashtra at sunrise"
             fill
             priority
+            sizes="100vw"
             className="object-cover"
           />
           <div className="kk-banner-image-overlay" />
@@ -121,6 +122,7 @@ export default function AboutPage() {
                 src={originImage}
                 alt="Modern red tractor parked in a vibrant green sugarcane field in Sangli"
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover"
               />
             </div>
@@ -146,7 +148,7 @@ export default function AboutPage() {
           <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 text-center md:grid-cols-3">
             {metrics.map((metric) => (
               <div key={metric.label.en} className="flex flex-col gap-2">
-                <span className="font-headline text-5xl font-extrabold text-on-primary-container">{metric.value}</span>
+                <span className="font-headline text-5xl font-extrabold text-white">{metric.value}</span>
                 <span className="text-xs font-bold uppercase tracking-widest text-primary-fixed">
                   {langText(metric.label.en, metric.label.mr)}
                 </span>
@@ -187,8 +189,8 @@ function PurposeCard({
   const { langText } = useLanguage();
 
   return (
-    <div className={`kk-depth-tile flex flex-col gap-6 rounded-[1.5rem] p-10 ${dark ? "bg-primary-container text-on-primary-container" : "border border-outline-variant/30 bg-surface-container-low"}`}>
-      <div className={`flex h-16 w-16 items-center justify-center rounded-xl ${dark ? "bg-on-primary-container text-primary-container" : "bg-primary-container text-on-primary-container"}`}>
+    <div className={`kk-depth-tile flex flex-col gap-6 rounded-[1.5rem] p-10 ${dark ? "bg-primary-container text-primary-fixed" : "border border-outline-variant/30 bg-surface-container-low"}`}>
+      <div className={`flex h-16 w-16 items-center justify-center rounded-xl ${dark ? "bg-primary-fixed text-primary-container" : "bg-primary-container text-white"}`}>
         <span className="material-symbols-outlined text-4xl">{icon}</span>
       </div>
       <div>

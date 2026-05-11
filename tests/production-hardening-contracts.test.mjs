@@ -261,6 +261,7 @@ test("homepage initial render avoids below-the-fold map and inactive hero image 
   assert.match(homeSource, /loading="eager"/);
   assert.match(homeSource, /priority/);
   assert.match(homeSource, /fetchPriority="high"/);
+  assert.match(homeSource, /sizes="\(max-width: 768px\) 342px, 50vw"/);
   assert.match(homeSource, /window\.setTimeout/);
   assert.match(homeSource, /12000/);
   assert.match(homeSource, /window\.setInterval/);
@@ -270,6 +271,30 @@ test("homepage initial render avoids below-the-fold map and inactive hero image 
   assert.match(layoutSource, /preload:\s*false/);
   assert.match(layoutSource, /weight:\s*\["400", "500", "600", "700", "800"\]/);
   assert.match(nextConfigSource, /qualities:\s*\[72,\s*75\]/);
+});
+
+test("responsive Next images include sizes and above-fold equipment images opt into eager loading", async () => {
+  const [aboutSource, detailSource, rentSource, ownerListingSource, ownerWorkspaceSource, renterWorkspaceSource] = await Promise.all([
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/equipment/[id]/EquipmentDetailClient.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/rent-equipment/RentEquipmentView.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/forms/OwnerListingWizard.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/workspace/OwnerWorkspaceOverview.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/workspace/RenterWorkspaceOverview.tsx", import.meta.url), "utf8"),
+  ]);
+
+  for (const source of [aboutSource, detailSource, ownerListingSource, ownerWorkspaceSource, renterWorkspaceSource]) {
+    const imageTags = source.match(/<Image[\s\S]*?\/>/g) || [];
+    for (const tag of imageTags) {
+      if (/\bfill\b/.test(tag)) {
+        assert.match(tag, /\bsizes=/);
+      }
+    }
+  }
+
+  assert.match(detailSource, /priority[\s\S]*loading="eager"[\s\S]*sizes=/);
+  assert.match(rentSource, /priorityImage[\s\S]*loading=\{priorityImage \? "eager" : "lazy"\}/);
+  assert.match(rentSource, /priorityImage=\{index === 0\}/);
 });
 
 test("public marketing pages expose runtime Marathi copy in their main content", async () => {

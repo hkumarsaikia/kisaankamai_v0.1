@@ -212,7 +212,7 @@ export default function ComingSoonPage() {
           <div className="flex flex-col items-center justify-between gap-8 rounded-[2rem] bg-surface-container-high px-8 py-12 md:flex-row md:px-16">
             <div className="flex items-center gap-6">
               <div className="rounded-2xl bg-primary-container p-4">
-                <span className="material-symbols-outlined text-4xl text-on-primary-container" style={{ fontVariationSettings: "'FILL' 1" }}>
+                <span className="material-symbols-outlined text-4xl text-white dark:text-primary-fixed" style={{ fontVariationSettings: "'FILL' 1" }}>
                   support_agent
                 </span>
               </div>

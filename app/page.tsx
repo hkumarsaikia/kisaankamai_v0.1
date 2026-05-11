@@ -426,7 +426,14 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid md:grid-cols-2 gap-20 items-center">
               <div className="relative">
-                <ContentImage className="rounded-[2.5rem] shadow-2xl relative z-10" alt={langText("Indian farmer leaning against a tractor with pride", "अभिमानाने ट्रॅक्टरला टेकून उभा भारतीय शेतकरी")} src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
+                <ContentImage
+                  className="rounded-[2.5rem] shadow-2xl relative z-10"
+                  alt={langText("Indian farmer leaning against a tractor with pride", "अभिमानाने ट्रॅक्टरला टेकून उभा भारतीय शेतकरी")}
+                  src={assetPath("/assets/generated/hero_tractor.png")}
+                  loading="lazy"
+                  decoding="async"
+                  sizes="(max-width: 768px) 342px, 50vw"
+                />
               </div>
               <div>
                 <h2 className="text-4xl font-black text-primary dark:text-emerald-50 mb-8 tracking-tight leading-tight">

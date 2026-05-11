@@ -97,8 +97,8 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                     type="button"
                     onClick={() => handleToggle(item.id)}
                     disabled={isPending}
-                    className={`absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full shadow-sm ${
-                      state === "success" ? "bg-emerald-600 text-white" : "bg-white/90 text-primary-container"
+                    className={`absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full shadow-sm transition-colors ${
+                      state === "success" ? "bg-emerald-600 text-white" : "bg-white/90 text-primary-container dark:bg-slate-950/90 dark:text-primary-fixed dark:ring-1 dark:ring-white/10"
                     }`}
                   >
                     <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>

@@ -154,6 +154,7 @@ export function RenterWorkspaceOverview({
                         src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
                         alt={booking.listing?.name || "Equipment"}
                         fill
+                        sizes="(max-width: 768px) 100vw, 320px"
                         className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       <span className="absolute left-3 top-3 rounded-full bg-primary-container px-3 py-1 text-[10px] font-bold uppercase tracking-tight text-white">
@@ -215,7 +216,7 @@ export function RenterWorkspaceOverview({
               {recommendedEquipment.map((item) => (
                 <Link key={item.title} href={item.href} className="group w-64 flex-none rounded-xl border border-outline-variant/30 bg-white p-3 transition-colors hover:border-primary-container">
                   <div className="relative mb-3 h-32 overflow-hidden rounded-lg">
-                    <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <Image src={item.image} alt={item.title} fill sizes="256px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
                   <p className="mb-1 text-xs font-medium text-tertiary">{item.category}</p>
                   <h4 className="mb-2 text-sm font-bold text-on-surface">{item.title}</h4>
@@ -251,7 +252,7 @@ export function RenterWorkspaceOverview({
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
                               <div className="relative h-10 w-10 overflow-hidden rounded-lg bg-surface-container">
-                                <Image src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")} alt={booking.listing?.name || "Equipment"} fill className="object-cover" />
+                                <Image src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")} alt={booking.listing?.name || "Equipment"} fill sizes="40px" className="object-cover" />
                               </div>
                               <div>
                                 <p className="text-sm font-bold text-on-surface">{booking.listing?.name || langText("Equipment", "उपकरण")}</p>
@@ -334,7 +335,7 @@ export function RenterWorkspaceOverview({
             <span className="material-symbols-outlined absolute -bottom-4 -right-4 rotate-12 text-8xl text-white/10">support_agent</span>
             <div className="relative z-10">
               <h3 className="mb-2 text-lg font-bold leading-tight text-white">Need help with your booking?</h3>
-              <p className="mb-6 text-xs text-on-primary-container opacity-90">Our field support team is available from 8 AM to 8 PM.</p>
+              <p className="mb-6 text-xs text-tertiary-fixed/90">Our field support team is available from 8 AM to 8 PM.</p>
               <Link href="/support" className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-xs font-extrabold text-tertiary-container shadow-lg shadow-tertiary-container/40 transition-transform hover:-translate-y-0.5">
                 <span className="material-symbols-outlined text-sm">call</span>
                 Contact Support

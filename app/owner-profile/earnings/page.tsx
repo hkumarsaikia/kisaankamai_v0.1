@@ -99,7 +99,7 @@ export default async function OwnerProfileEarningsPage() {
                     className="h-full w-full object-cover"
                     src={listing.coverImage}
                   />
-                  <div className="absolute right-2 top-2 rounded bg-primary-container px-2 py-1 text-xs font-bold text-on-primary">
+                  <div className="absolute right-2 top-2 rounded bg-primary-container px-2 py-1 text-xs font-bold text-white dark:text-primary-fixed">
                     {listing.status === "active"
                       ? <LocalizedText en="Active" mr="सक्रिय" />
                       : <LocalizedText en="Paused" mr="थांबवलेले" />}
