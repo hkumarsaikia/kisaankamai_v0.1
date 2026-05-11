@@ -69,13 +69,45 @@ deployed host. The script reads passwords from
 ignored `logs/runtime/final-test-accounts/latest-seed.json` file.
 
 Production public registration still uses Google's real Firebase reCAPTCHA
-challenge before SMS OTP. Complete that one browser step manually for a true
+challenge before phone verification. Complete that one browser step manually for a true
 public signup check, or use Firebase phone-number test mode in a controlled
 non-production environment. Do not bypass the production CAPTCHA in automation.
 
+For production-safe live automation of the public registration page, use the
+token-gated fictional-number path:
+
+```bash
+npm run firebase:phone-test-numbers
+npm run live:e2e:final-accounts
+```
+
+`npm run firebase:phone-test-numbers` ensures the final owner/renter fictional
+phone numbers and OTP codes are configured in Firebase Auth. The live register
+page then asks `/api/auth/phone-test-mode` whether Firebase app verification may
+be disabled for that specific phone number. The route returns `enabled: true`
+only when all conditions are true:
+
+- the phone is one of the configured final test phone numbers
+- the E2E browser supplies the matching token in `kk_phone_auth_test_token`
+- the token matches either `KK_PHONE_AUTH_TEST_MODE_TOKEN` or the token derived
+  from the existing Firebase Admin private key
+
+This keeps real public registration on the normal Firebase phone verification path
+while allowing deterministic full registration OTP automation for the dedicated
+test accounts.
+
 ## Test OTP Configuration
 
-Firebase does not expose fictional phone-number setup through the repo scripts. Add these two numbers manually in Firebase Console > Authentication > Sign-in method > Phone > Phone numbers for testing:
+The repo can configure these through the Identity Toolkit Admin API:
+
+```bash
+npm run firebase:phone-test-numbers -- --dry-run
+npm run firebase:phone-test-numbers
+```
+
+If the API credentials do not have permission to patch Identity Toolkit config,
+add these two numbers manually in Firebase Console > Authentication > Sign-in
+method > Phone > Phone numbers for testing:
 
 - `+91 90000 00101` -> `123456`
 - `+91 90000 00102` -> `123456`

@@ -136,14 +136,19 @@ export async function prepareEphemeralFirebaseAuth(auth: Auth) {
   return auth;
 }
 
-export function ensureInvisibleRecaptcha(auth: Auth, containerId: string, storeKey: string) {
+export function ensureInvisibleRecaptcha(
+  auth: Auth,
+  containerId: string,
+  storeKey: string,
+  disableAppVerificationForTesting = PHONE_AUTH_TEST_MODE
+) {
   const store = getRecaptchaStore();
   const existing = store[storeKey];
   if (existing) {
     return existing;
   }
 
-  auth.settings.appVerificationDisabledForTesting = PHONE_AUTH_TEST_MODE;
+  auth.settings.appVerificationDisabledForTesting = disableAppVerificationForTesting;
 
   const verifier = new RecaptchaVerifier(auth, containerId, {
     size: "invisible",
@@ -168,10 +173,20 @@ export async function startPhoneVerification(input: {
   phoneNumber: string;
   containerId: string;
   storeKey: string;
+  disableAppVerificationForTesting?: boolean;
 }) {
   const auth = input.auth || getFirebaseAuthClient();
   await prepareEphemeralFirebaseAuth(auth);
-  const verifier = ensureInvisibleRecaptcha(auth, input.containerId, input.storeKey);
+  const disableAppVerificationForTesting = Boolean(
+    PHONE_AUTH_TEST_MODE || input.disableAppVerificationForTesting
+  );
+  auth.settings.appVerificationDisabledForTesting = disableAppVerificationForTesting;
+  const verifier = ensureInvisibleRecaptcha(
+    auth,
+    input.containerId,
+    input.storeKey,
+    disableAppVerificationForTesting
+  );
   const confirmation = await signInWithPhoneNumber(auth, normalizeIndianPhoneNumber(input.phoneNumber), verifier);
   return confirmation.verificationId;
 }

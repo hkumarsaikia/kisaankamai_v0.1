@@ -91,6 +91,7 @@ Phone-only auth flow contract:
 - Manual register and profile updates must reserve identifiers in the `auth-identifiers` Firestore collection so a phone or optional email cannot create multiple accounts.
 - Booking and listing notifications are written to the Firestore notification inbox and delivered through Firebase Cloud Messaging when the user has enabled browser push. The profile dropdown must show the total unread badge, refresh the inbox on open/focus/visibility changes, and revert optimistic read changes if the read API fails. Do not add third-party phone-message providers until one is intentionally introduced.
 - Login, register preflight, register session creation, password reset, profile completion, public forms, and client bug reports use Firestore-backed per-IP/per-identifier rate limits. Public form routes should pass the authenticated user id when a session exists so a logged-in user can submit multiple different forms with the same account phone.
+- Full registration OTP E2E on the live host uses Firebase fictional phone numbers only. The public register page may call `/api/auth/phone-test-mode`, but that route returns `enabled: true` only when the phone is a configured final-account test number and the caller supplies the matching E2E token. The token may come from `KK_PHONE_AUTH_TEST_MODE_TOKEN` or be derived from the existing Firebase Admin private key. Do not enable `NEXT_PUBLIC_PHONE_AUTH_TEST_MODE` for the production live site because it is a broad client-side switch.
 - Client bug reporting is also throttled and deduplicated in the browser before `/api/bug-reports` is called. The report budget is stored in browser `localStorage`, not only in memory, so route-by-route QA and full navigations do not flood the backend rate limiter. Web-vitals diagnostics should only send poor-rated metrics; needs-improvement metrics are too noisy for production crawls.
 - Language preference is server-readable through the `kk_language` cookie and mirrored into `localStorage` for client controls. The root layout must read that cookie and pass `initialLanguage` into `LanguageProvider`; do not reintroduce a client-only initial language because it causes saved-language flashes or hydration mismatches.
 - Public requests without a `kisan_kamai_session` cookie must not eagerly import the Firebase-backed session resolver from the root layout. Keep the dynamic session import guarded by the cookie check so anonymous pages avoid unnecessary Firebase/Admin cold-start work.
@@ -163,9 +164,14 @@ npm run live:e2e:final-accounts
 This uses the final account manifest, resets only the dedicated final test
 accounts, runs live owner/renter listing and booking workflows, verifies
 in-app notification records, and removes the temporary live E2E listings and
-bookings before exiting. Public registration still reaches Google's real
-reCAPTCHA challenge on production; complete that one step manually when testing
-the full phone OTP UX.
+bookings before exiting. For full public registration OTP automation on the
+live host, configure Firebase fictional phone numbers with
+`npm run firebase:phone-test-numbers`. The E2E token is either the optional
+`KK_PHONE_AUTH_TEST_MODE_TOKEN` value or a token derived from the existing
+Firebase Admin private key already available to the server and local runner.
+The token-gated route enables Firebase's test-only app-verification bypass only
+for configured fictional final-account phone numbers; normal production users
+keep the real Firebase phone verification path.
 
 ## Launch Gate
 

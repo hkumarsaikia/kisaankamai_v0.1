@@ -66,6 +66,7 @@ test("package scripts expose the Firebase, Sheets, seed, repo-sync, and Discord 
   const packageSource = await readFile(new URL("../package.json", import.meta.url), "utf8");
 
   assert.match(packageSource, /"firebase:deploy"/);
+  assert.match(packageSource, /"firebase:phone-test-numbers"/);
   assert.match(packageSource, /"sheets:bootstrap"/);
   assert.match(packageSource, /"sheets:verify"/);
   assert.match(packageSource, /"sheets:backfill"/);
@@ -75,6 +76,22 @@ test("package scripts expose the Firebase, Sheets, seed, repo-sync, and Discord 
   assert.match(packageSource, /"repo:sync-live"/);
   assert.match(packageSource, /"discord:notify"/);
   assert.doesNotMatch(packageSource, /"cross-agent:/);
+});
+
+test("live phone OTP E2E test mode is token-gated without a broad production bypass", async () => {
+  const [routeSource, e2eSource] = await Promise.all([
+    readFile(new URL("../app/api/auth/phone-test-mode/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/live-final-account-e2e.mjs", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(routeSource, /x-kk-phone-auth-test-token/);
+  assert.match(routeSource, /timingSafeEqual/);
+  assert.match(routeSource, /FIREBASE_PRIVATE_KEY/);
+  assert.match(routeSource, /createHmac/);
+  assert.match(routeSource, /configuredTestNumbers/);
+  assert.match(e2eSource, /KK_PHONE_AUTH_TEST_MODE_TOKEN/);
+  assert.match(e2eSource, /FIREBASE_PRIVATE_KEY/);
+  assert.match(e2eSource, /kk_phone_auth_test_token/);
 });
 
 test("final test account cleanup removes reserved auth identifiers before registration probes", async () => {

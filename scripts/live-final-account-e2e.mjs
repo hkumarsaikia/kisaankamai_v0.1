@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import { createHmac } from "node:crypto";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import puppeteer from "puppeteer";
@@ -18,6 +19,8 @@ const RUN_ID = new Date().toISOString().replace(/[:.]/g, "-");
 const RUN_DIR = path.join(REPO_ROOT, "logs", "runtime", "live-final-account-e2e", RUN_ID);
 const SESSION_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 14;
 const E2E_FORWARDED_IP = `203.0.113.${(Date.now() % 180) + 20}`;
+const TOKEN_DERIVATION_CONTEXT = "kisan-kamai-phone-auth-test-mode-v1";
+const PHONE_AUTH_TEST_MODE_TOKEN = getPhoneAuthTestModeToken();
 const PNG_BYTES = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAWElEQVR4nO3PAQ3AMAzAsH78OfckLi26IF0x9La3BwAAAAAAwO8FdsYI2BkjYGeMgJ0xAnbGCNgZI2BnjICdMQJ2xgjYGSNgZ4yAnTECdsYI2BkjYGcPHFQCNjJhwB4AAAAASUVORK5CYII=",
   "base64"
@@ -53,6 +56,23 @@ function readSeedPasswords(manifest) {
     owner: { ...manifest.owner, password: ownerPassword },
     renter: { ...manifest.renter, password: renterPassword },
   };
+}
+
+function normalizePrivateKey(value) {
+  return String(value || "").trim().replace(/^["']|["']$/g, "").replace(/\\n/g, "\n");
+}
+
+function getPhoneAuthTestModeToken() {
+  if (process.env.KK_PHONE_AUTH_TEST_MODE_TOKEN) {
+    return process.env.KK_PHONE_AUTH_TEST_MODE_TOKEN;
+  }
+
+  const privateKey = normalizePrivateKey(process.env.FIREBASE_PRIVATE_KEY || "");
+  if (!privateKey) {
+    return "";
+  }
+
+  return createHmac("sha256", privateKey).update(TOKEN_DERIVATION_CONTEXT).digest("hex");
 }
 
 function makeScreenshotPath(name) {
@@ -166,14 +186,17 @@ async function newContextPage(browser, label) {
     ? await browser.createBrowserContext()
     : await browser.createIncognitoBrowserContext();
   const page = await context.newPage();
-  await page.evaluateOnNewDocument(() => {
+  await page.evaluateOnNewDocument((phoneAuthTestModeToken) => {
     try {
       localStorage.setItem("kk_language", "en");
       document.cookie = "kk_language=en; Path=/; SameSite=Lax";
+      if (phoneAuthTestModeToken) {
+        sessionStorage.setItem("kk_phone_auth_test_token", phoneAuthTestModeToken);
+      }
     } catch {
       // Keep the live default if browser storage is unavailable.
     }
-  });
+  }, PHONE_AUTH_TEST_MODE_TOKEN);
   await page.setCookie({
     name: "kk_language",
     value: "en",

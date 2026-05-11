@@ -178,6 +178,44 @@ export default function RegisterPage() {
     }
   };
 
+  const resolvePhoneAuthTestMode = async () => {
+    let token = "";
+    try {
+      token =
+        window.sessionStorage.getItem("kk_phone_auth_test_token") ||
+        window.localStorage.getItem("kk_phone_auth_test_token") ||
+        "";
+    } catch {
+      token = "";
+    }
+
+    if (!token) {
+      return false;
+    }
+
+    try {
+      const response = await fetch("/api/auth/phone-test-mode", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-kk-phone-auth-test-token": token,
+        },
+        credentials: "include",
+        cache: "no-store",
+        body: JSON.stringify({
+          phone: formState.phone,
+        }),
+      });
+      const payload = (await response.json().catch(() => null)) as
+        | { ok?: boolean; enabled?: boolean }
+        | null;
+
+      return Boolean(response.ok && payload?.ok && payload.enabled);
+    } catch {
+      return false;
+    }
+  };
+
   const startVerification = async () => {
     const validationError = validateRegisterForm();
     if (validationError) {
@@ -195,11 +233,13 @@ export default function RegisterPage() {
 
     try {
       await preflightRegistration();
+      const disableAppVerificationForTesting = await resolvePhoneAuthTestMode();
       const verificationId = await startPhoneVerification({
         auth,
         phoneNumber: formState.phone,
         containerId: "kk-register-recaptcha",
         storeKey: "register",
+        disableAppVerificationForTesting,
       });
       setConfirmationId(verificationId);
       setStage("otp");

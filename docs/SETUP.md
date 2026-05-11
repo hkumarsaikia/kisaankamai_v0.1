@@ -130,6 +130,7 @@ Keep these Firebase Authentication authorized domains present: `kisankamai.com`,
 - [ ] Firebase Console has fictional phone numbers configured:
   - [ ] `+91 90000 00101` with code `123456`
   - [ ] `+91 90000 00102` with code `123456`
+- [ ] Optional: App Hosting has the `KK_PHONE_AUTH_TEST_MODE_TOKEN` secret if you want a dedicated E2E token instead of the default token derived from the existing Firebase Admin private key.
 - [ ] Firebase Console has a Web Push VAPID key and the public key is exposed as `NEXT_PUBLIC_WEB_PUSH_PUBLIC_KEY`.
 - [ ] `npm run dev` starts the server on port 3000.
 - [ ] `npm run verify` passes.
