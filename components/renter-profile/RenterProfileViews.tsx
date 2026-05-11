@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import { OwnerRevenuePanel } from "@/components/workspace/OwnerRevenuePanel";
@@ -224,16 +225,18 @@ export function RenterProfileDashboardContent() {
 }
 
 export function RenterProfileBookingsContent() {
+  const { langText } = useLanguage();
+
   return (
     <div className="space-y-8">
       <section className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-lg font-bold text-primary">
-            New Requests
+            {langText("New Requests", "नवीन विनंत्या")}
             <span className="rounded-full bg-secondary-container px-2 py-0.5 text-xs text-on-secondary-container">3</span>
           </h2>
           <button type="button" className="text-sm font-bold text-secondary hover:underline">
-            मराठीत पहा
+            {langText("View in Marathi", "इंग्रजीत पहा")}
           </button>
         </div>
 

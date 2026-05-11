@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { useLanguage } from "@/components/LanguageContext";
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 import { supportContact } from "@/lib/support-contact";
@@ -411,14 +412,19 @@ export function OwnerProfileBrowseContent() {
 }
 
 export function OwnerProfileBookingsContent() {
+  const { langText } = useLanguage();
+
   return (
     <div className="space-y-8">
       <section className="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 md:p-8">
         <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h2 className="text-3xl font-black text-primary">My Bookings / माझे बुकिंग्ज</h2>
+            <h2 className="text-3xl font-black text-primary">{langText("My Bookings", "माझे बुकिंग्ज")}</h2>
             <p className="mt-2 text-sm text-on-surface-variant">
-              Review confirmed, active, and recently completed machine rentals.
+              {langText(
+                "Review confirmed, active, and recently completed machine rentals.",
+                "पुष्टी झालेली, सक्रिय आणि अलीकडे पूर्ण झालेली उपकरण भाड्याची बुकिंग तपासा.",
+              )}
             </p>
           </div>
           <Link
@@ -426,14 +432,20 @@ export function OwnerProfileBookingsContent() {
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
-            Rent New Equipment
+            {langText("Rent New Equipment", "नवीन उपकरण भाड्याने घ्या")}
           </Link>
         </div>
 
         <div className="mb-6 flex flex-wrap gap-3">
-          {["All Bookings", "Pending", "Confirmed", "Active", "Completed"].map((item, index) => (
+          {[
+            { en: "All Bookings", mr: "सर्व बुकिंग" },
+            { en: "Pending", mr: "प्रलंबित" },
+            { en: "Confirmed", mr: "पुष्टी" },
+            { en: "Active", mr: "सक्रिय" },
+            { en: "Completed", mr: "पूर्ण" },
+          ].map((item, index) => (
             <button
-              key={item}
+              key={item.en}
               type="button"
               className={`rounded-full px-4 py-2 text-sm font-bold ${
                 index === 0
@@ -441,7 +453,7 @@ export function OwnerProfileBookingsContent() {
                   : "border border-slate-200 bg-white text-on-surface dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               }`}
             >
-              {item}
+              {langText(item.en, item.mr)}
             </button>
           ))}
         </div>

@@ -121,44 +121,53 @@ export function RenterBookingsBoard({
   return (
     <div className="space-y-8">
       <section className="space-y-5">
-        <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-          {variant === "dashboard" ? (
+        {variant === "dashboard" ? (
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
               <h2 className="font-headline text-3xl font-extrabold text-primary">
                 {langText("Booking Overview", "बुकिंग आढावा")}
               </h2>
             </div>
-          ) : (
-            <div aria-hidden="true" />
-          )}
-          <Link
-            href="/renter-profile/browse"
-            className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white"
-          >
-            <span className="material-symbols-outlined text-[18px]">search</span>
-            {langText("Browse Equipment", "उपकरणे शोधा")}
-          </Link>
-        </div>
+            <Link
+              href="/renter-profile/browse"
+              className="inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-primary md:self-auto"
+            >
+              <span className="material-symbols-outlined text-[18px]">search</span>
+              {langText("Browse Equipment", "उपकरणे शोधा")}
+            </Link>
+          </div>
+        ) : null}
 
-        <div className="flex flex-wrap gap-2 border-b border-outline-variant/50 pb-2">
-          {FILTERS.map((filter) => {
-            const active = filter.key === activeFilter;
-            return (
-              <button
-                key={filter.key}
-                type="button"
-                onClick={() => setActiveFilter(filter.key)}
-                className={`rounded-full px-4 py-2 text-sm font-bold transition-colors ${
-                  active
-                    ? "bg-primary-container text-white dark:text-primary-fixed"
-                    : "border border-outline-variant bg-surface-container-lowest text-on-surface hover:bg-surface-container"
-                }`}
-              >
-                {langText(filter.label, FILTER_LABELS_MR[filter.label] || filter.label)}
-                <span className="ml-2 text-xs opacity-80">({countFilter(bookings, filter.key)})</span>
-              </button>
-            );
-          })}
+        <div className="flex flex-col gap-3 border-b border-outline-variant/50 pb-2 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-wrap gap-2">
+            {FILTERS.map((filter) => {
+              const active = filter.key === activeFilter;
+              return (
+                <button
+                  key={filter.key}
+                  type="button"
+                  onClick={() => setActiveFilter(filter.key)}
+                  className={`rounded-full px-4 py-2 text-sm font-bold transition-colors ${
+                    active
+                      ? "bg-primary-container text-white dark:text-primary-fixed"
+                      : "border border-outline-variant bg-surface-container-lowest text-on-surface hover:bg-surface-container"
+                  }`}
+                >
+                  {langText(filter.label, FILTER_LABELS_MR[filter.label] || filter.label)}
+                  <span className="ml-2 text-xs opacity-80">({countFilter(bookings, filter.key)})</span>
+                </button>
+              );
+            })}
+          </div>
+          {variant === "page" ? (
+            <Link
+              href="/renter-profile/browse"
+              className="inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white shadow-sm transition-colors hover:bg-primary md:self-auto"
+            >
+              <span className="material-symbols-outlined text-[18px]">search</span>
+              {langText("Browse Equipment", "उपकरणे शोधा")}
+            </Link>
+          ) : null}
         </div>
 
         {visibleBookings.length ? (

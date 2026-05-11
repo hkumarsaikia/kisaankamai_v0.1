@@ -79,6 +79,7 @@
     "autoprefixer": "^10.5.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^16.2.4",
+    "playwright": "^1.59.1",
     "postcss": "^8.5.10",
     "puppeteer": "^24.42.0",
     "tailwindcss": "^4.2.4",

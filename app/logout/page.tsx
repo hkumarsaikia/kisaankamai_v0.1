@@ -3,11 +3,13 @@
 import { useMemo, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
 import { useAuth } from "@/components/AuthContext";
+import { useLanguage } from "@/components/LanguageContext";
 import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { resolvePortalHref } from "@/lib/workspace-routing.js";
 
 export default function LogoutPage() {
   const { user, activeWorkspace } = useAuth();
+  const { langText } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -68,20 +70,17 @@ export default function LogoutPage() {
           </div>
 
           <h1 className="font-headline text-2xl font-bold text-slate-900 dark:text-white sm:text-3xl">
-            Sign out of Kisan Kamai?
+            {langText("Sign out of Kisan Kamai?", "किसान कमाईमधून साइन आउट करा?")}
           </h1>
-          <h2 className="mt-2 font-headline text-xl font-bold text-slate-800 dark:text-slate-200 sm:text-2xl">
-            किसान कमाईमधून साइन आउट करा?
-          </h2>
           <p className="mt-4 text-sm font-medium text-slate-600 dark:text-slate-300 sm:text-base">
-            You will need to sign back in to access your dashboard, bookings, or listings.
-          </p>
-          <p className="mt-2 text-sm text-slate-500 dark:text-slate-400 sm:text-base">
-            तुमच्या डॅशबोर्ड, बुकिंग किंवा सूचीमध्ये प्रवेश करण्यासाठी तुम्हाला पुन्हा साइन इन करावे लागेल.
+            {langText(
+              "You will need to sign back in to access your dashboard, bookings, or listings.",
+              "तुमच्या डॅशबोर्ड, बुकिंग किंवा सूचीमध्ये प्रवेश करण्यासाठी तुम्हाला पुन्हा साइन इन करावे लागेल."
+            )}
           </p>
           {user ? (
             <p className="mt-4 text-sm font-medium text-slate-500 dark:text-slate-400">
-              Signed in as {user.name || user.email || "your account"}.
+              {langText("Signed in as", "साइन इन केलेले खाते")}: {user.name || user.email || langText("your account", "तुमचे खाते")}.
             </p>
           ) : null}
 
@@ -98,18 +97,14 @@ export default function LogoutPage() {
               onClick={handleConfirm}
               type="button"
             >
-              <span>{loading ? "Signing out..." : "Confirm Sign Out"}</span>
-              <span className="text-sm opacity-80">|</span>
-              <span>साइन आउट निश्चित करा</span>
+              <span>{loading ? langText("Signing out...", "साइन आउट करत आहे...") : langText("Confirm Sign Out", "साइन आउट निश्चित करा")}</span>
             </button>
 
             <Link
               href={cancelHref}
               className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-outline-variant bg-white px-6 py-3.5 font-semibold text-slate-700 transition-all hover:bg-slate-50 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
             >
-              <span>Back</span>
-              <span className="text-sm opacity-60">|</span>
-              <span>मागे जा</span>
+              <span>{langText("Back", "मागे जा")}</span>
             </Link>
           </div>
         </div>

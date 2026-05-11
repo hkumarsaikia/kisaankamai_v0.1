@@ -96,18 +96,21 @@ export function RenterWorkspaceOverview({
   const totalBookingValue = bookings.reduce((sum, booking) => sum + booking.amount, 0);
   const completedBookingValue = completedBookings.reduce((sum, booking) => sum + booking.amount, 0);
   const activeBookingValue = Math.max(totalBookingValue - completedBookingValue, 0);
+  const bookingViewLabels: Record<typeof bookingView, string> = {
+    current: langText("Current", "सध्याचे"),
+    upcoming: langText("Upcoming", "आगामी"),
+    history: langText("History", "इतिहास"),
+  };
 
   return (
     <div className="space-y-8">
       <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-on-surface-variant">
-            <span>Renter Profile</span>
-            <span className="h-1 w-1 rounded-full bg-outline-variant" />
-            <span className="text-secondary">शेतकरी प्रोफाइल</span>
+            <span>{langText("Renter Profile", "भाडेकरू प्रोफाइल")}</span>
           </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-on-surface">
-            Renter Profile <span className="font-bold text-on-surface-variant">/ शेतकरी प्रोफाइल</span>
+            {langText("Renter Profile", "भाडेकरू प्रोफाइल")}
           </h1>
           <p className="mt-1 text-sm font-medium text-on-surface-variant">
             {langText(
@@ -127,7 +130,7 @@ export function RenterWorkspaceOverview({
                 bookingView === view ? "bg-primary-container text-white" : "hover:bg-white/70 hover:text-primary"
               }`}
             >
-              {view}
+              {bookingViewLabels[view]}
             </button>
           ))}
         </div>
@@ -148,7 +151,7 @@ export function RenterWorkspaceOverview({
               {displayedBookings.slice(0, 2).map((booking) => {
                 const listingId = booking.listing?.id || booking.listingId;
                 return (
-                  <article key={booking.id} className="group overflow-hidden rounded-2xl border border-outline-variant/50 bg-white shadow-sm transition-all hover:shadow-xl hover:shadow-primary-container/5">
+                  <article key={booking.id} className="group overflow-hidden rounded-2xl border border-outline-variant/50 bg-white shadow-sm transition-all hover:shadow-xl hover:shadow-primary-container/5 dark:border-slate-800 dark:bg-slate-900">
                     <div className="relative h-44">
                       <Image
                         src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
@@ -175,12 +178,12 @@ export function RenterWorkspaceOverview({
                         </p>
                         <p className="flex items-center gap-2">
                           <span className="material-symbols-outlined text-sm">person</span>
-                          Owner: {booking.ownerProfile?.fullName || langText("Owner", "मालक")}
+                          {langText("Owner", "मालक")}: {booking.ownerProfile?.fullName || langText("Owner", "मालक")}
                         </p>
                       </div>
                       <div className="flex gap-2">
                         <Link href={listingId ? `/renter-profile/equipment/${listingId}` : "/rent-equipment"} className="flex-1 rounded-lg bg-primary-container py-2 text-center text-xs font-bold text-white transition-opacity hover:opacity-90">
-                          Track Order
+                          {langText("Track Order", "ऑर्डर ट्रॅक करा")}
                         </Link>
             <a
               href={supportContact.phoneHref}
@@ -194,7 +197,7 @@ export function RenterWorkspaceOverview({
                 );
               })}
               {!displayedBookings.length ? (
-                <div className="rounded-2xl border border-dashed border-outline-variant bg-white p-8 text-sm font-medium text-on-surface-variant">
+                <div className="rounded-2xl border border-dashed border-outline-variant bg-white p-8 text-sm font-medium text-on-surface-variant dark:border-slate-700 dark:bg-slate-900">
                   {bookingView === "history"
                     ? langText("Completed rentals will appear here.", "पूर्ण झालेले व्यवहार येथे दिसतील.")
                     : langText("No bookings in this view yet. Browse equipment to start a new rental.", "या दृश्यात अजून बुकिंग नाहीत. नवीन भाडे सुरू करण्यासाठी उपकरणे पहा.")}
@@ -206,15 +209,15 @@ export function RenterWorkspaceOverview({
           <section>
             <div className="mb-6 flex items-center justify-between gap-4">
               <h2 className="text-lg font-bold text-on-surface">
-                Recommended for You <span className="font-normal text-on-surface-variant">/ तुमच्यासाठी शिफारस</span>
+                {langText("Recommended for You", "तुमच्यासाठी शिफारस")}
               </h2>
               <Link href="/rent-equipment" className="text-sm font-bold text-primary-container hover:underline">
-                Browse all
+                {langText("Browse all", "सर्व पहा")}
               </Link>
             </div>
             <div className="flex gap-4 overflow-x-auto pb-4">
               {recommendedEquipment.map((item) => (
-                <Link key={item.title} href={item.href} className="group w-64 flex-none rounded-xl border border-outline-variant/30 bg-white p-3 transition-colors hover:border-primary-container">
+                <Link key={item.title} href={item.href} className="group w-64 flex-none rounded-xl border border-outline-variant/30 bg-white p-3 transition-colors hover:border-primary-container dark:border-slate-800 dark:bg-slate-900">
                   <div className="relative mb-3 h-32 overflow-hidden rounded-lg">
                     <Image src={item.image} alt={item.title} fill sizes="256px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
                   </div>
@@ -230,9 +233,9 @@ export function RenterWorkspaceOverview({
 
           <section>
             <h2 className="mb-6 text-lg font-bold text-on-surface">
-              Recent History <span className="font-normal text-on-surface-variant">/ अलीकडील व्यवहार</span>
+              {langText("Recent History", "अलीकडील व्यवहार")}
             </h2>
-            <div className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-white">
+            <div className="overflow-hidden rounded-2xl border border-outline-variant/30 bg-white dark:border-slate-800 dark:bg-slate-900">
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[680px] text-left">
                   <thead className="border-b border-outline-variant/30 bg-surface-container-low">
@@ -288,7 +291,7 @@ export function RenterWorkspaceOverview({
         </div>
 
         <aside className="space-y-6">
-          <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="mb-4 flex items-center justify-between">
               <h3 className="font-bold text-on-surface">Booking Schedule</h3>
               <span className="material-symbols-outlined text-on-surface-variant">calendar_today</span>
@@ -315,7 +318,7 @@ export function RenterWorkspaceOverview({
             </div>
           </section>
 
-          <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h3 className="mb-1 font-bold text-on-surface">Booking Value Summary</h3>
             <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Current account</p>
             <div className="mb-4">

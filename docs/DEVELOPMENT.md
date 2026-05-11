@@ -60,11 +60,11 @@ KK_DISABLE_NICE=1 npm run build          # disable nice/ionice wrapping
 KK_VERIFY_SEQUENTIAL=1 npm run verify    # old sequential verification shape
 ```
 
-Chrome/Puppeteer checks should keep using the project npm scripts or the same
-environment variables when launched manually. Browser automation must use the
-fixed NVIDIA GPU route where this local machine controls the browser process.
-Build, lint, typecheck, Firebase CLI, and Sheets verification remain CPU/network
-bound even though they inherit the same GPU environment.
+Chrome/Puppeteer/Playwright checks should keep using the project npm scripts or
+the same environment variables when launched manually. Browser automation must
+use the fixed NVIDIA GPU route where this local machine controls the browser
+process. Build, lint, typecheck, Firebase CLI, and Sheets verification remain
+CPU/network bound even though they inherit the same GPU environment.
 
 ## Firebase Requirements
 
@@ -107,8 +107,9 @@ Phone-only auth flow contract:
 - Next.js 16 builds with Turbopack after removing legacy Pages Router stubs.
 - Protected pre-render route checks use the Next.js 16 `proxy.js` file convention; `/list-equipment` still performs server-side session verification after the proxy cookie-presence guard.
 - Puppeteer browser download is disabled; use `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome`.
+- Playwright is intentionally a `devDependency` for rendered QA. On Ubuntu 26.04, Playwright's managed Chromium package may be unavailable; launch Playwright with `executablePath: "/usr/bin/google-chrome"` instead of committing downloaded browser binaries.
 - Puppeteer is intentionally a `devDependency`. Do not move it back into production dependencies; browser automation and smoke checks are tooling, not runtime.
-- NVIDIA GPU routing is fixed for Chrome/Puppeteer rendering checks through the root runner, but build, lint, typecheck, Firebase verification, and Sheets verification remain CPU/network-bound.
+- NVIDIA GPU routing is fixed for Chrome/Puppeteer/Playwright rendering checks through the root runner, but build, lint, typecheck, Firebase verification, and Sheets verification remain CPU/network-bound.
 
 ## Logs
 

@@ -69,17 +69,20 @@ export function OwnerWorkspaceOverview({
   const bookingValueInFlow = bookings
     .filter((booking) => booking.status !== "cancelled")
     .reduce((sum, booking) => sum + booking.amount, 0);
+  const requestViewLabels: Record<typeof requestView, string> = {
+    active: langText("Active", "सक्रिय"),
+    upcoming: langText("Upcoming", "आगामी"),
+    history: langText("History", "इतिहास"),
+  };
 
   return (
     <div className="space-y-10">
       <section className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
           <div className="mb-2 flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-on-surface-variant">
-            <span>Owner Profile</span>
-            <span className="h-1 w-1 rounded-full bg-outline-variant" />
-            <span className="text-secondary">मराठी पोर्टल</span>
+            <span>{langText("Owner Profile", "मालक प्रोफाइल")}</span>
           </div>
-          <h1 className="text-3xl font-extrabold tracking-tight text-primary">Booking Management</h1>
+          <h1 className="text-3xl font-extrabold tracking-tight text-primary">{langText("Booking Management", "बुकिंग व्यवस्थापन")}</h1>
           <p className="mt-1 text-sm font-medium text-on-surface-variant">
             {langText(
               `Manage incoming requests for ${ownerName}'s equipment.`,
@@ -98,7 +101,7 @@ export function OwnerWorkspaceOverview({
                 requestView === view ? "bg-primary text-white" : "hover:bg-surface-container hover:text-primary"
               }`}
             >
-              {view}
+              {requestViewLabels[view]}
             </button>
           ))}
         </div>
@@ -109,11 +112,11 @@ export function OwnerWorkspaceOverview({
           <section className="space-y-6">
             <div className="flex items-center justify-between gap-4">
               <h2 className="flex items-center gap-2 text-lg font-bold text-primary">
-                New Requests
+                {langText("New Requests", "नवीन विनंत्या")}
                 <span className="rounded-full bg-secondary-container px-2 py-0.5 text-xs text-on-secondary-container">{displayedRequests.length}</span>
               </h2>
               <Link href="/owner-profile" className="text-sm font-bold text-secondary hover:underline">
-                मराठीत पहा
+                {langText("View all", "सर्व पहा")}
               </Link>
             </div>
 
@@ -122,18 +125,23 @@ export function OwnerWorkspaceOverview({
             ))}
 
             {!displayedRequests.length ? (
-              <div className="rounded-3xl border border-dashed border-outline-variant bg-white px-6 py-16 text-center">
+              <div className="rounded-3xl border border-dashed border-outline-variant bg-white px-6 py-16 text-center dark:border-slate-700 dark:bg-slate-900">
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface-container">
                   <span className="material-symbols-outlined text-4xl text-outline">inventory_2</span>
                 </div>
-                <h2 className="text-2xl font-bold text-primary">No new requests yet</h2>
-                <p className="mx-auto mt-2 max-w-sm text-on-surface-variant">Update your pricing or add professional photos to attract more farmers to your equipment.</p>
+                <h2 className="text-2xl font-bold text-primary">{langText("No new requests yet", "अजून नवीन विनंत्या नाहीत")}</h2>
+                <p className="mx-auto mt-2 max-w-sm text-on-surface-variant">
+                  {langText(
+                    "Update your pricing or add clear photos to attract more farmers to your equipment.",
+                    "तुमच्या उपकरणांकडे अधिक शेतकरी आकर्षित करण्यासाठी किंमत अद्यतनित करा किंवा स्पष्ट फोटो जोडा."
+                  )}
+                </p>
                 <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
                   <Link href="/list-equipment" className="rounded-xl bg-primary px-8 py-3 font-bold text-white transition-all hover:shadow-lg">
-                    Add New Listing
+                    {langText("Add New Listing", "नवीन लिस्टिंग जोडा")}
                   </Link>
-                  <Link href="/owner-profile" className="rounded-xl border border-surface-container-highest bg-white px-8 py-3 font-bold text-primary transition-all hover:bg-surface">
-                    Optimize Current
+                  <Link href="/owner-profile" className="rounded-xl border border-surface-container-highest bg-white px-8 py-3 font-bold text-primary transition-all hover:bg-surface dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900">
+                    {langText("Optimize Current", "सध्याची लिस्टिंग सुधारा")}
                   </Link>
                 </div>
               </div>
@@ -142,15 +150,15 @@ export function OwnerWorkspaceOverview({
 
           <section>
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-primary">Recently Completed</h2>
+              <h2 className="text-lg font-bold text-primary">{langText("Recently Completed", "अलीकडे पूर्ण झालेले")}</h2>
               <Link href="/owner-profile" className="text-sm font-bold text-on-surface-variant transition-colors hover:text-primary">
-                View All History
+                {langText("View All History", "संपूर्ण इतिहास पहा")}
               </Link>
             </div>
             <div className="overflow-x-auto pb-4">
               <div className="flex min-w-max gap-4">
                 {completedBookings.slice(0, 4).map((booking) => (
-                  <div key={booking.id} className="flex w-80 items-center gap-4 rounded-xl border border-surface-container-highest bg-white p-4">
+                  <div key={booking.id} className="flex w-80 items-center gap-4 rounded-xl border border-surface-container-highest bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                     <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-surface-container">
                       <Image
                         src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
@@ -169,7 +177,7 @@ export function OwnerWorkspaceOverview({
                   </div>
                 ))}
                 {!completedBookings.length ? (
-                  <div className="w-80 rounded-xl border border-dashed border-outline-variant bg-white p-6 text-sm text-on-surface-variant">
+                  <div className="w-80 rounded-xl border border-dashed border-outline-variant bg-white p-6 text-sm text-on-surface-variant dark:border-slate-700 dark:bg-slate-900">
                     Completed bookings will appear here.
                   </div>
                 ) : null}
@@ -179,7 +187,7 @@ export function OwnerWorkspaceOverview({
         </div>
 
         <aside className="space-y-8">
-          <section className="rounded-2xl border border-surface-container-highest bg-white p-6 shadow-sm">
+          <section className="rounded-2xl border border-surface-container-highest bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-base font-bold text-primary">Schedule</h2>
               <span className="material-symbols-outlined text-on-surface-variant">calendar_month</span>
@@ -234,13 +242,13 @@ export function OwnerWorkspaceOverview({
           <section className="rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
             <h3 className="mb-2 text-sm font-bold text-primary">Need help managing equipment?</h3>
             <p className="mb-4 text-xs leading-relaxed text-on-surface-variant">Our support team is available in Marathi and English to help you list or manage bookings.</p>
-            <Link href="/support" className="block rounded-lg border border-surface-container-highest bg-white py-2 text-xs font-bold text-primary transition-colors hover:bg-surface">
-              Contact Support
+            <Link href="/support" className="block rounded-lg border border-surface-container-highest bg-white py-2 text-xs font-bold text-primary transition-colors hover:bg-surface dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900">
+              {langText("Contact Support", "सपोर्टशी संपर्क करा")}
             </Link>
           </section>
 
-          <section className="rounded-2xl border border-outline-variant bg-white p-6 shadow-sm">
-            <h2 className="text-sm font-black uppercase tracking-[0.18em] text-secondary">Owner Snapshot</h2>
+          <section className="rounded-2xl border border-outline-variant bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+            <h2 className="text-sm font-black uppercase tracking-[0.18em] text-secondary">{langText("Owner Snapshot", "मालक आढावा")}</h2>
             <dl className="mt-5 space-y-4 text-sm">
               <Row label="Active listings" value={String(activeListings.length)} />
               <Row label="Village" value={village || "Not set"} />
@@ -248,7 +256,7 @@ export function OwnerWorkspaceOverview({
             </dl>
             <Link href="/list-equipment" className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-primary-container">
               <span className="material-symbols-outlined text-sm">add</span>
-              Add New Listing
+              {langText("Add New Listing", "नवीन लिस्टिंग जोडा")}
             </Link>
           </section>
         </aside>
@@ -258,12 +266,13 @@ export function OwnerWorkspaceOverview({
 }
 
 function RequestCard({ booking }: { booking: BookingSummary }) {
+  const { langText } = useLanguage();
   const listingName = booking.listing?.name || "Equipment";
   const renterName = booking.renterProfile?.fullName || "Renter";
   const renterVillage = booking.renterProfile?.village || booking.listing?.district || "Maharashtra";
 
   return (
-    <article className="group rounded-2xl border border-surface-container-highest bg-white p-5 shadow-sm transition-all hover:shadow-md">
+    <article className="group rounded-2xl border border-surface-container-highest bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="relative h-36 w-full flex-shrink-0 overflow-hidden rounded-xl bg-surface-container md:h-32 md:w-32">
           <Image
@@ -283,13 +292,13 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
                   {renterName.slice(0, 1).toUpperCase()}
                 </div>
                 <span className="text-sm font-semibold text-on-surface">
-                  {renterName} <span className="font-normal text-on-surface-variant">from {renterVillage}</span>
+                  {renterName} <span className="font-normal text-on-surface-variant">{langText("from", "येथून")} {renterVillage}</span>
                 </span>
               </div>
             </div>
             <div className="text-right">
               <span className="block text-lg font-extrabold text-primary">₹{booking.amount.toLocaleString("en-IN")}</span>
-              <span className="text-[10px] font-bold uppercase tracking-tight text-on-surface-variant">Estimated Total</span>
+              <span className="text-[10px] font-bold uppercase tracking-tight text-on-surface-variant">{langText("Estimated Total", "अंदाजित एकूण")}</span>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-4 border-y border-surface-container-highest py-3">
@@ -302,15 +311,15 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
               <span className="text-xs font-bold capitalize">{booking.status}</span>
             </div>
             {booking.status === "pending" ? (
-              <span className="ml-auto rounded bg-amber-50 px-2 py-1 text-[10px] font-black uppercase text-amber-700">Urgent</span>
+              <span className="ml-auto rounded bg-amber-50 px-2 py-1 text-[10px] font-black uppercase text-amber-700">{langText("Urgent", "तातडीचे")}</span>
             ) : null}
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <Link href="/owner-profile" className="flex-1 rounded-lg bg-primary py-2.5 text-center text-sm font-bold text-white transition-colors hover:bg-primary/90">
-              Review Request
+              {langText("Review Request", "विनंती तपासा")}
             </Link>
             <Link href="/owner-profile" className="rounded-lg border border-surface-container-highest px-6 py-2.5 text-center text-sm font-bold text-on-surface transition-colors hover:bg-surface-container">
-              Schedule
+              {langText("Schedule", "वेळापत्रक")}
             </Link>
             <a
               href={supportContact.phoneHref}
