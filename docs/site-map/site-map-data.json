@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-11T15:56:34.961Z",
+  "generatedAt": "2026-05-11T16:54:21.427Z",
   "summary": {
     "totalRoutes": 56,
     "sharedSurfaces": 4,
@@ -1017,7 +1017,7 @@
             "origins": [
               {
                 "file": "app/register/page.tsx",
-                "line": 662,
+                "line": 675,
                 "raw": "/login",
                 "context": "href"
               },
