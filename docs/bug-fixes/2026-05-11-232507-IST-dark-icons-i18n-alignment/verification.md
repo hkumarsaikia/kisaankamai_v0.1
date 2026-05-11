@@ -33,4 +33,8 @@ This record covers the dark-mode UI regression where Material Symbols appeared a
   - `/logout` dark mode: one selected language rendered at a time.
   - authenticated `/renter-profile/bookings` dark mode: no wide ligature text, no inline slash bilingual copy, and desktop Browse Equipment alignment delta was `0px`.
   - iPhone 13 dark-mode route pass: visible icons used the Material Symbols font and no inline slash bilingual text was detected.
-- Live smoke after Firebase App Hosting rollout remains the release verification target.
+- Live smoke after Firebase App Hosting rollout:
+  - `https://www.kisankamai.com/`, `/about`, and `/logout` returned `200`.
+  - unauthenticated `/renter-profile/bookings` redirected to `/login`, as expected.
+  - the live homepage includes the stable Material Symbols stylesheet and does not include `icon_names=`.
+  - authenticated live Playwright check reached `/renter-profile/bookings`, found no wide icon ligature text, no inline slash bilingual copy, and measured Browse Equipment alignment delta as `0px`.
