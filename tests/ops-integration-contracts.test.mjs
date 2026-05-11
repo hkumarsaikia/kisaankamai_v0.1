@@ -19,11 +19,21 @@ test("Discord tooling supports env-driven multi-webhook channels", async () => {
   );
   assert.equal(
     discordLib.resolveDiscordWebhookUrl({
-      channel: "unknown",
+      channel: "github",
       env: { DISCORD_WEBHOOK_URL: "https://discord.example/default" },
     }),
-    "https://discord.example/default"
+    ""
   );
+  assert.throws(
+    () =>
+      discordLib.resolveDiscordWebhookUrl({
+        channel: "unknown",
+        env: { DISCORD_WEBHOOK_URL: "https://discord.example/default" },
+      }),
+    /Unknown Discord notification channel/
+  );
+  assert.match(notifySource, /Named channels do not use DISCORD_WEBHOOK_URL fallback/);
+  assert.doesNotMatch(notifySource, /process\.env\.DISCORD_WEBHOOK_URL \|\| ""/);
   assert.match(notifySource, /--channel/);
   assert.match(notifySource, /sendDiscordWebhookToChannels/);
 });

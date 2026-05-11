@@ -13,14 +13,14 @@ if (options.help) {
     "Repeated fields are passed as --field Name=Value",
     "Repeated --channel or comma-separated channels send the same payload to multiple Discord webhooks.",
     "Channel env vars: DISCORD_WEBHOOK_OPS_URL, DISCORD_WEBHOOK_DEPLOY_URL, DISCORD_WEBHOOK_RELEASE_URL, DISCORD_WEBHOOK_GITHUB_URL, DISCORD_WEBHOOK_SECURITY_URL, DISCORD_WEBHOOK_SENTRY_URL",
-    "Fallback env var: DISCORD_WEBHOOK_URL",
+    "Named channels do not use DISCORD_WEBHOOK_URL fallback. Configure the channel env var, or pass --webhook-url for a one-off direct send.",
   ]);
   process.exit(0);
 }
 
 loadRepoEnv();
 
-const webhookUrl = getStringOption(options, "webhook-url", process.env.DISCORD_WEBHOOK_URL || "");
+const webhookUrl = getStringOption(options, "webhook-url", "");
 const channels = getStringArrayOption(options, "channel");
 const payloadFile = getStringOption(options, "payload-file", "");
 const payload = payloadFile ? JSON.parse(fs.readFileSync(payloadFile, "utf8")) : undefined;

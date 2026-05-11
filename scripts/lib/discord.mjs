@@ -23,13 +23,24 @@ export function normalizeDiscordChannels(channels = []) {
   return normalized.length ? [...new Set(normalized)] : ["ops"];
 }
 
+export function getDiscordChannelEnvName(channel = "ops") {
+  const envName = DISCORD_WEBHOOK_ENV_BY_CHANNEL[channel] || "";
+  if (!envName) {
+    throw new Error(
+      `Unknown Discord notification channel "${channel}". Expected one of: ${Object.keys(
+        DISCORD_WEBHOOK_ENV_BY_CHANNEL
+      ).join(", ")}.`
+    );
+  }
+  return envName;
+}
+
 export function resolveDiscordWebhookUrl({ channel = "ops", explicitUrl = "", env = process.env } = {}) {
+  const envName = getDiscordChannelEnvName(channel);
   if (explicitUrl) {
     return explicitUrl;
   }
-
-  const envName = DISCORD_WEBHOOK_ENV_BY_CHANNEL[channel] || "";
-  return (envName && env[envName]) || env.DISCORD_WEBHOOK_URL || "";
+  return env[envName] || "";
 }
 
 export async function sendDiscordWebhook({
@@ -99,7 +110,11 @@ export async function sendDiscordWebhookToChannels({
     });
 
     if (!resolvedWebhookUrl) {
-      throw new Error(`Missing Discord webhook URL for channel "${channel}".`);
+      throw new Error(
+        `Missing Discord webhook URL for channel "${channel}". Set ${getDiscordChannelEnvName(
+          channel
+        )}, or pass --webhook-url for a one-off direct notification.`
+      );
     }
 
     await sendDiscordWebhook({

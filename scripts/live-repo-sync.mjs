@@ -28,7 +28,7 @@ const repoRoot = getRepoRoot();
 const repoUrl = getStringOption(options, "repo-url", "");
 const branch = getStringOption(options, "branch", "main");
 const spreadsheetId = getStringOption(options, "sheet-id", "");
-const webhookUrl = getStringOption(options, "webhook-url", process.env.DISCORD_WEBHOOK_URL || "");
+const webhookUrl = getStringOption(options, "webhook-url", "");
 const discordChannel = getStringOption(options, "discord-channel", "github");
 const notify = getBooleanOption(options, "notify", false);
 const push = getBooleanOption(options, "push", false);
@@ -118,7 +118,7 @@ if (isSheetsConfigured(overrides)) {
   );
 }
 
-if (webhookUrl && (notify || options["webhook-url"] !== undefined)) {
+if (notify || webhookUrl) {
   await sendDiscordWebhookToChannels({
     channels: [discordChannel],
     webhookUrl,

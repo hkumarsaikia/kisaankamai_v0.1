@@ -90,6 +90,12 @@ Generic Discord webhook sender:
 npm run discord:notify -- --channel ops --title "Kisan Kamai" --summary "Backfill completed" --status success
 ```
 
+Named channels must use channel-specific webhook environment variables. The
+helper intentionally does not fall back from `--channel release`, `--channel
+deploy`, `--channel ops`, or `--channel github` to the generic
+`DISCORD_WEBHOOK_URL`, because that can post release/deploy/ops messages into
+one unrelated Discord channel.
+
 Repeated fields:
 
 ```bash
@@ -109,12 +115,32 @@ You can also send a prebuilt payload JSON file:
 npm run discord:notify -- --webhook-url "<url>" --payload-file payload.json
 ```
 
+Use `--webhook-url` only for a one-off direct send when you already know that
+the target webhook points to the right channel or thread. Do not combine a
+generic webhook URL with multiple named `--channel` values for release work.
+
+If Discord should post into a channel thread, store the thread-specific webhook
+URL for that channel, including Discord's `thread_id` query parameter when
+needed. The helper treats the URL as opaque and will preserve the thread target.
+
+Previously posted webhook messages cannot be moved to another channel or thread
+by this helper. Discord webhooks can only edit/delete messages when their
+message IDs were captured at send time; this repo does not store those IDs. For
+misrouted historical posts, manually delete the old posts in Discord or repost a
+short corrective summary into the correct channel once the channel webhook is
+configured.
+
 Channel env vars:
 
-- `DISCORD_WEBHOOK_URL`
 - `DISCORD_WEBHOOK_OPS_URL`
 - `DISCORD_WEBHOOK_DEPLOY_URL`
 - `DISCORD_WEBHOOK_RELEASE_URL`
 - `DISCORD_WEBHOOK_GITHUB_URL`
 - `DISCORD_WEBHOOK_SECURITY_URL`
 - `DISCORD_WEBHOOK_SENTRY_URL`
+
+Legacy direct-only env var:
+
+- `DISCORD_WEBHOOK_URL` is not used for named channel routing. Prefer
+  `--webhook-url` for one-off direct sends and the channel env vars above for
+  normal release notifications.
