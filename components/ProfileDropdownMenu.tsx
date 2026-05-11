@@ -23,7 +23,7 @@ type NotificationApiResponse = {
   error?: string;
 };
 
-const PROFILE_DROPDOWN_EXIT_MS = 170;
+const PROFILE_DROPDOWN_EXIT_MS = 210;
 const PROFILE_NOTIFICATIONS_REFRESH_MS = 60_000;
 
 const notificationToneClass: Record<NotificationTone, { row: string; icon: string }> = {
@@ -323,7 +323,8 @@ export function ProfileDropdownMenu({
       <button
         type="button"
         onClick={() => (panelOpen ? closeMenu() : openMenu())}
-        className={`kk-profile-trigger kk-depth-tile relative flex items-center gap-3 rounded-full border border-emerald-900/10 bg-white px-2 py-2 pr-4 text-left shadow-[0_16px_42px_-26px_rgba(15,23,42,0.72)] transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:shadow-[0_20px_52px_-34px_rgba(0,0,0,0.8)] ${triggerClassName}`}
+        className={`kk-profile-trigger kk-depth-tile relative flex items-center gap-3 rounded-full border border-emerald-900/10 bg-white px-2 py-2 pr-4 text-left dark:border-slate-700 dark:bg-slate-900 ${triggerClassName}`}
+        data-depth-motion="static"
         aria-expanded={panelOpen}
         aria-haspopup="menu"
         aria-label={t("header.aria.my_profile")}

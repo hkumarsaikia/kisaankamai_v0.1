@@ -50,23 +50,30 @@ test("profile dropdown uses a Firestore-backed notification inbox instead of sam
 });
 
 test("profile dropdown has smooth opaque panel states for desktop and mobile", async () => {
-  const [dropdown, globals, header] = await Promise.all([
+  const [dropdown, globals, header, depthMotion] = await Promise.all([
     readSource("../components/ProfileDropdownMenu.tsx"),
     readSource("../app/globals.css"),
     readSource("../components/Header.tsx"),
+    readSource("../components/DepthMotion.tsx"),
   ]);
 
   assert.match(dropdown, /kk-profile-dropdown-panel/);
   assert.match(dropdown, /kk-profile-notification-row/);
+  assert.match(dropdown, /data-depth-motion="static"/);
+  assert.match(depthMotion, /\.kk-depth-tile:not\(\[data-depth-motion='static'\]\)/);
   assert.match(dropdown, /data-state=\{panelVisible \? "open" : "closed"\}/);
   assert.match(dropdown, /requestAnimationFrame/);
   assert.match(dropdown, /window\.setTimeout\(.*PROFILE_DROPDOWN_EXIT_MS/s);
   assert.match(dropdown, /data-opaque-profile-menu/);
   assert.match(header, /panelMode="inline" fullWidth/);
 
+  assert.match(globals, /\.kk-profile-trigger\.kk-depth-tile/);
+  assert.match(globals, /--kk-profile-trigger-lift:\s*-2px/);
+  assert.match(globals, /transform:\s*translate3d\(0, var\(--kk-profile-trigger-lift\), 0\)/);
   assert.match(globals, /@keyframes kk-profile-dropdown-enter/);
   assert.match(globals, /@keyframes kk-profile-dropdown-exit/);
   assert.match(globals, /\.kk-profile-dropdown-panel\[data-state="open"\]/);
+  assert.match(globals, /animation:\s*kk-profile-dropdown-enter 240ms cubic-bezier\(0\.2, 0\.8, 0\.2, 1\) forwards/);
   assert.match(globals, /\.kk-profile-dropdown-panel\[data-state="closed"\]/);
   assert.match(globals, /\.kk-profile-notification-row/);
   assert.doesNotMatch(dropdown, /bg-white\/80|bg-white\/75|backdrop-blur-xl/);

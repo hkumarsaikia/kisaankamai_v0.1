@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 
-const TILE_SELECTOR = ".kk-depth-tile";
+const TILE_SELECTOR = ".kk-depth-tile:not([data-depth-motion='static'])";
 
 function resetTile(tile: HTMLElement) {
   tile.style.setProperty("--kk-depth-rotate-x", "0deg");
