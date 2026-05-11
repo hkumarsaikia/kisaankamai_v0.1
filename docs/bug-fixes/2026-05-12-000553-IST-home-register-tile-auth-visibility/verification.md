@@ -28,4 +28,8 @@ The homepage onboarding tile with `Rent, List & Grow` and `Register Now` should 
   - signed-out homepage showed `Rent, List & Grow`, `Register Now`, `/register` links, and a two-column hero grid (`730px 390px`).
   - authenticated homepage hid the tile, `Register Now`, and `/register` links, and switched to a one-column hero grid (`760px`).
   - after logout, the homepage showed the tile again and returned to the two-column hero grid.
-- Live smoke after Firebase App Hosting rollout remains the release verification target.
+- Live smoke after Firebase App Hosting rollout:
+  - `https://www.kisankamai.com/` and `https://kisankamai.com/` returned `200`.
+  - live signed-out homepage showed the register tile and two-column hero grid.
+  - live authenticated homepage hid the register tile and used a one-column hero grid.
+  - live logout made the register tile reappear.
