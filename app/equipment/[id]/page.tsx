@@ -25,31 +25,38 @@ export async function generateMetadata({
 
   const siteUrl = getSiteUrl().replace(/\/$/, "");
   const canonicalUrl = `${siteUrl}/equipment/${equipment.id}`;
+  const locationLabel = [equipment.location, equipment.district].filter(Boolean).join(", ");
+  const listingTitle = locationLabel
+    ? `${equipment.name} for Rent in ${locationLabel} | Kisan Kamai`
+    : `${equipment.name} for Rent | Kisan Kamai`;
+  const metaDescription =
+    equipment.description?.trim() ||
+    `${equipment.name} farm equipment listing on Kisan Kamai. Review the listed rate, equipment details, owner information, and booking request options.`;
   const coverImageUrl = equipment.coverImage.startsWith("http")
     ? equipment.coverImage
     : `${siteUrl}${assetPath(equipment.coverImage)}`;
 
   return {
-    title: `${equipment.name} | Kisan Kamai`,
-    description: equipment.description,
+    title: listingTitle,
+    description: metaDescription,
     alternates: {
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: `${equipment.name} | Kisan Kamai`,
-      description: equipment.description,
+      title: listingTitle,
+      description: metaDescription,
       url: canonicalUrl,
       images: [
         {
           url: coverImageUrl,
-          alt: equipment.name,
+          alt: `${equipment.name} equipment photo`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `${equipment.name} | Kisan Kamai`,
-      description: equipment.description,
+      title: listingTitle,
+      description: metaDescription,
       images: [coverImageUrl],
     },
   };

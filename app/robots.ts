@@ -7,6 +7,18 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
+        disallow: [
+          "/api/",
+          "/complete-profile",
+          "/list-equipment",
+          "/logout",
+          "/owner-experience",
+          "/owner-profile/",
+          "/profile-selection",
+          "/register/google-email",
+          "/renter-profile/",
+          "/verify-contact",
+        ],
       },
     ],
     sitemap: `${SITE_DOMAIN}/sitemap.xml`,

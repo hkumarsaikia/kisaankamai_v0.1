@@ -8,22 +8,13 @@ const STATIC_ROUTES = [
   "/categories",
   "/coming-soon",
   "/faq",
-  "/feature-request",
-  "/feedback",
   "/how-it-works",
-  "/list-equipment",
-  "/login",
   "/owner-benefits",
-  "/owner-experience",
-  "/owner-profile",
   "/partner",
-  "/profile-selection",
-  "/register",
   "/rent-equipment",
-  "/renter-profile",
   "/support",
   "/terms",
-  "/verify-contact",
+  "/trust-safety",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -32,7 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: new URL(route, SITE_DOMAIN).toString(),
     lastModified: now,
     changeFrequency: route === "/" ? "daily" : "weekly",
-    priority: route === "/" ? 1 : route === "/rent-equipment" || route === "/list-equipment" ? 0.9 : 0.7,
+    priority: route === "/" ? 1 : route === "/rent-equipment" ? 0.9 : 0.7,
   })) satisfies MetadataRoute.Sitemap;
 
   const equipmentEntries = (await getPublicEquipmentList()).map((item) => ({

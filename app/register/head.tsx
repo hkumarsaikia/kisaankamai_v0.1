@@ -2,8 +2,9 @@ import { renderHeadMetadata } from "@/lib/site-metadata";
 
 export default function Head() {
   return renderHeadMetadata({
-    title: "Create Account",
-    description: "Create your Kisan Kamai account and complete your renter or owner profile.",
+    title: "Create a Kisan Kamai Account",
+    description: "Create a Kisan Kamai account with your mobile number and complete the profile needed to rent or list equipment.",
     path: "/register",
+    noIndex: true,
   });
 }

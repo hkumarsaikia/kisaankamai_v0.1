@@ -89,7 +89,7 @@ export default function OwnerBenefitsPage() {
               <div className="max-w-2xl text-left">
                 <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#265f4d] bg-[#1c4036] px-3 py-1.5 text-sm font-semibold text-[#90cab4]">
                   <span className="material-symbols-outlined text-[18px]">trending_up</span>
-                  {langText("Maximize Your Profits", "तुमचा नफा वाढवा")}
+                  {langText("List with Clear Control", "स्पष्ट नियंत्रणासह सूचीबद्ध करा")}
                 </div>
                 <h1
                   aria-label={langText("Your Equipment, Your Growth.", "तुमची उपकरणे, तुमची वाढ.")}
@@ -101,8 +101,8 @@ export default function OwnerBenefitsPage() {
                 </h1>
                 <p className="mb-8 text-lg leading-relaxed text-gray-300">
                   {langText(
-                    "Turn your unused agricultural equipment into a consistent stream of income. Secure platform, verified farmers, and direct support.",
-                    "न वापरलेली शेती उपकरणे नियमित उत्पन्नात बदला. सुरक्षित प्लॅटफॉर्म, पडताळलेले शेतकरी आणि थेट सपोर्ट."
+                    "Turn unused agricultural equipment into direct booking opportunities. Set your availability, review renter requests, and coordinate work clearly.",
+                    "न वापरलेली शेती उपकरणे थेट बुकिंग संधींमध्ये बदला. उपलब्धता ठरवा, भाडेकरू विनंत्या पाहा आणि कामाचा स्पष्ट समन्वय करा."
                   )}
                 </p>
                 <div className="flex flex-col justify-start gap-4 sm:flex-row">

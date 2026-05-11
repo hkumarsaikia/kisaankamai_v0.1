@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-08T18:18:33.395Z",
+  "generatedAt": "2026-05-11T15:56:34.961Z",
   "summary": {
     "totalRoutes": 56,
     "sharedSurfaces": 4,
@@ -22,7 +22,7 @@
             "origins": [
               {
                 "file": "app/page.tsx",
-                "line": 348,
+                "line": 366,
                 "raw": "/categories",
                 "context": "href"
               }
@@ -33,43 +33,43 @@
             "origins": [
               {
                 "file": "app/page.tsx",
-                "line": 354,
+                "line": 372,
                 "raw": "/rent-equipment?query=tractors",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 365,
+                "line": 383,
                 "raw": "/rent-equipment?query=harvesters",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 376,
+                "line": 394,
                 "raw": "/rent-equipment?query=implements",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 387,
+                "line": 405,
                 "raw": "/rent-equipment?query=ploughs",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 398,
+                "line": 416,
                 "raw": "/rent-equipment?query=sprayers",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 559,
+                "line": 595,
                 "raw": "/rent-equipment",
                 "context": "href"
               },
               {
                 "file": "app/page.tsx",
-                "line": 252,
+                "line": 268,
                 "raw": "/rent-equipment?location={dynamic}&query={dynamic}",
                 "context": "router"
               }
@@ -80,7 +80,7 @@
             "origins": [
               {
                 "file": "app/page.tsx",
-                "line": 477,
+                "line": 502,
                 "raw": "/support",
                 "context": "href"
               }
@@ -95,7 +95,7 @@
             "context": "router",
             "origin": {
               "file": "app/page.tsx",
-              "line": 252,
+              "line": 268,
               "raw": "/rent-equipment?location={dynamic}&query={dynamic}",
               "context": "router"
             }
@@ -370,7 +370,7 @@
             "origins": [
               {
                 "file": "app/partner/page.tsx",
-                "line": 134,
+                "line": 158,
                 "raw": "/how-it-works",
                 "context": "href"
               }
@@ -554,7 +554,7 @@
             "origins": [
               {
                 "file": "app/categories/page.tsx",
-                "line": 28,
+                "line": 46,
                 "raw": "/rent-equipment?query={dynamic}",
                 "context": "href"
               }
@@ -578,7 +578,7 @@
             "origins": [
               {
                 "file": "app/equipment/[id]/page.tsx",
-                "line": 68,
+                "line": 75,
                 "raw": "/{dynamic}-profile/equipment/{dynamic}",
                 "context": "redirect"
               }
@@ -592,7 +592,7 @@
             "context": "redirect",
             "origin": {
               "file": "app/equipment/[id]/page.tsx",
-              "line": 68,
+              "line": 75,
               "raw": "/{dynamic}-profile/equipment/{dynamic}",
               "context": "redirect"
             }
@@ -1017,7 +1017,7 @@
             "origins": [
               {
                 "file": "app/register/page.tsx",
-                "line": 622,
+                "line": 662,
                 "raw": "/login",
                 "context": "href"
               },

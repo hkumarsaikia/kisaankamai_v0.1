@@ -2,8 +2,9 @@ import { renderHeadMetadata } from "@/lib/site-metadata";
 
 export default function Head() {
   return renderHeadMetadata({
-    title: "Feature Request",
-    description: "Share product ideas and workflow improvements for the Kisan Kamai platform.",
+    title: "Share Product Feedback",
+    description: "Send product ideas and workflow improvements that can help Kisan Kamai serve equipment owners and renters more clearly.",
     path: "/feature-request",
+    noIndex: true,
   });
 }

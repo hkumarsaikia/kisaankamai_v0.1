@@ -2,8 +2,8 @@ import { renderHeadMetadata } from "@/lib/site-metadata";
 
 export default function Head() {
   return renderHeadMetadata({
-    title: "Equipment Categories",
-    description: "Browse Kisan Kamai equipment categories across tractors, harvesters, implements, and more.",
+    title: "Farm Equipment Categories",
+    description: "Browse tractor, harvester, implement, sprayer, pump, baler, trolley, and seeder categories available through Kisan Kamai.",
     path: "/categories",
   });
 }

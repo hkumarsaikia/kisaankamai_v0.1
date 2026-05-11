@@ -147,6 +147,6 @@ const DEPRECATED_EQUIPMENT_DESCRIPTION =
 
 export function sanitizeEquipmentDescription(description: string) {
   return description === DEPRECATED_EQUIPMENT_DESCRIPTION
-    ? "A premium tractor listing with strong PTO output and regional owner coverage."
+    ? "A tractor listing with strong PTO output and regional owner coverage."
     : description;
 }

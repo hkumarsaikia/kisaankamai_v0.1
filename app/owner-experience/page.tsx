@@ -9,13 +9,13 @@ export default function OwnerExperience() {
         {/*  Hero Section  */}
         <section className="relative min-h-[819px] flex items-center overflow-hidden">
           <div className="absolute inset-0 z-0">
-            <ContentImage alt="Equipment Owner" className="w-full h-full object-cover" data-alt="A professional Indian farmer standing proudly next to a high-end modern green tractor in a vast sun-drenched wheat field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0zmJeaPs1dObsXyNQTGsEbQSjfDd3Z9ykBz-xrB7P0hPiFcpkwzGFOcrWyzF0eXBQcfWxCWOCdYc84KWMGrbtqqGa5q-uElB6dywQpDO3EIKlWxTZFK_cvotGftAsBHTVbmzksOQfpVpYlYlwd1tT4V_JSnYVj9cIfdJUU39NsQL6gsNfB8tQnRq9V0sydN3bqGj4rDk1oG4_Gp2YZ3O6E4HNXzWI7QByAbflUyoYR9lddSdlm7SflX6YiuIW0qPTC20y1rVWkHZD" loading="lazy" decoding="async" />
+            <ContentImage alt="Equipment owner standing beside a tractor in a sunlit field" className="w-full h-full object-cover" data-alt="A professional Indian farmer standing proudly next to a high-end modern green tractor in a vast sun-drenched wheat field at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0zmJeaPs1dObsXyNQTGsEbQSjfDd3Z9ykBz-xrB7P0hPiFcpkwzGFOcrWyzF0eXBQcfWxCWOCdYc84KWMGrbtqqGa5q-uElB6dywQpDO3EIKlWxTZFK_cvotGftAsBHTVbmzksOQfpVpYlYlwd1tT4V_JSnYVj9cIfdJUU39NsQL6gsNfB8tQnRq9V0sydN3bqGj4rDk1oG4_Gp2YZ3O6E4HNXzWI7QByAbflUyoYR9lddSdlm7SflX6YiuIW0qPTC20y1rVWkHZD" loading="lazy" decoding="async" />
             <div className="kk-banner-image-overlay" />
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
             <div className="text-white">
-              <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6">Your machinery,<br /><span className="text-secondary-container dark:text-secondary-fixed">Now a business.</span></h1>
-              <p className="text-lg md:text-xl text-slate-200 max-w-lg mb-8 leading-relaxed">Unlock the hidden value of your farm equipment. Join India's most trusted marketplace to earn up to ₹85,000 extra per season by renting to verified farmers.</p>
+              <h1 className="text-5xl md:text-7xl font-black leading-tight mb-6">Your machinery,<br /><span className="text-secondary-container dark:text-secondary-fixed">Ready for more work.</span></h1>
+              <p className="text-lg md:text-xl text-slate-200 max-w-lg mb-8 leading-relaxed">List farm equipment, receive booking requests, and coordinate directly with local renters while keeping control of your availability.</p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button className="px-8 py-4 bg-secondary-container text-on-secondary-container font-black text-lg rounded-xl hover:scale-105 transition-transform shadow-xl">Get Started Free</button>
                 <button className="px-8 py-4 bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold text-lg rounded-xl flex items-center gap-2 hover:bg-white/20 transition-all">
@@ -58,10 +58,10 @@ export default function OwnerExperience() {
         <section className="py-16 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex flex-wrap justify-center gap-12 md:gap-24 items-center opacity-70 grayscale hover:grayscale-0 transition-all font-bold text-slate-500">
-              <div className="flex items-center gap-2"><span className="material-symbols-outlined">verified_user</span> Verified Renters</div>
+              <div className="flex items-center gap-2"><span className="material-symbols-outlined">person_search</span> Renter Profiles</div>
               <div className="flex items-center gap-2"><span className="material-symbols-outlined">handshake</span> Direct Settlement</div>
-              <div className="flex items-center gap-2"><span className="material-symbols-outlined">shield_with_heart</span> Damage Support</div>
-              <div className="flex items-center gap-2"><span className="material-symbols-outlined">support_agent</span> 24/7 Assistance</div>
+              <div className="flex items-center gap-2"><span className="material-symbols-outlined">event_available</span> Availability Control</div>
+              <div className="flex items-center gap-2"><span className="material-symbols-outlined">support_agent</span> Support Requests</div>
             </div>
           </div>
         </section>
@@ -109,7 +109,7 @@ export default function OwnerExperience() {
             <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-2 gap-6 h-auto md:h-[600px]">
               {/*  Main Feature  */}
               <div className="kk-depth-tile md:col-span-2 md:row-span-2 bg-primary-container rounded-3xl p-10 flex flex-col justify-end relative overflow-hidden group">
-                <ContentImage alt="Control" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="Modern high-tech control panel inside a tractor cab with GPS navigation display and ergonomic controls in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHJBC_Z8UxCrm3y2H7Jtrd4pPovGFUHy07oagxN71Bkbx5t4Mgkmk3CAAQphOzfD_ps3gGx0lM0qKPmkJsplV-i9uND8aCiC2A5EoLObg7sdgW5LEvNrorixV6CKnAaCTIg_VPkHtmwWc7-1VhEyuPQv1pObkagixXSEhfZKOZtgs87ErXmlCkcxRf7Z6yTSvvFi1oEP8-jGGJZrtpqhora9ROHTD2eSpWRNcXP2p8ZXq9KZeXmq9LetFk2SBrLG_f1RCebz2mdOXW" loading="lazy" decoding="async" />
+                <ContentImage alt="Tractor control panel used to manage field work" className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:scale-105 transition-transform duration-700" data-alt="Modern high-tech control panel inside a tractor cab with GPS navigation display and ergonomic controls in soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHJBC_Z8UxCrm3y2H7Jtrd4pPovGFUHy07oagxN71Bkbx5t4Mgkmk3CAAQphOzfD_ps3gGx0lM0qKPmkJsplV-i9uND8aCiC2A5EoLObg7sdgW5LEvNrorixV6CKnAaCTIg_VPkHtmwWc7-1VhEyuPQv1pObkagixXSEhfZKOZtgs87ErXmlCkcxRf7Z6yTSvvFi1oEP8-jGGJZrtpqhora9ROHTD2eSpWRNcXP2p8ZXq9KZeXmq9LetFk2SBrLG_f1RCebz2mdOXW" loading="lazy" decoding="async" />
                 <div className="relative z-10">
                   <h3 className="text-3xl font-black text-white mb-4">Total Control over Availability</h3>
                   <p className="text-emerald-100 text-lg leading-relaxed">Decide exactly when your machines are available. Block dates for your own farm work with a single tap in the owner profile.</p>
@@ -118,19 +118,19 @@ export default function OwnerExperience() {
               {/*  Secondary 1  */}
               <div className="kk-depth-tile md:col-span-2 bg-surface-container rounded-3xl p-8 flex items-center gap-6 group">
                 <div className="flex-1">
-                  <h4 className="text-xl font-bold text-primary-container dark:text-primary-fixed mb-2">Verified Community</h4>
-                  <p className="text-slate-600 dark:text-slate-500">Every renter undergoes a strict KYC check. Rent with peace of mind knowing who is using your equipment.</p>
+                  <h4 className="text-xl font-bold text-primary-container dark:text-primary-fixed mb-2">Profile-backed Requests</h4>
+                  <p className="text-slate-600 dark:text-slate-500">Review renter details and booking information before you accept work for your equipment.</p>
                 </div>
                 <div className="w-32 h-32 bg-white dark:bg-slate-800 rounded-2xl flex-shrink-0 shadow-sm overflow-hidden">
-                  <ContentImage alt="Security" className="w-full h-full object-cover" data-alt="Close up of a hand holding a digital smartphone with a secure checkmark verification badge and green interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRLWVn3ooQucvqzhCFTn1ouEOZoLwL1m3sPyQgVU27EJqRdlsFl0WYvwA1dkWyfRCt0uVf-3J_o2Gyg1cZoqYB6aHeqtYmDAfCwEw9NShjphJksOrXGgc6AsUEESgZAUHLP7SbP0ShdUqt5VMuGogLvkg-AV6jZO33IVJ2riN1oVaHRsr0HQJ0enn5b7DodrUo5RQalS0qZXLBj3LPTKHrsQrsVsnmIyehGAeNPPyv6RXpYO_WXd-AtvjTNIqu9ApXnNe7uiLRRKqF" loading="lazy" decoding="async" />
+                  <ContentImage alt="Mobile profile screen for reviewing equipment requests" className="w-full h-full object-cover" data-alt="Close up of a hand holding a digital smartphone with a secure checkmark verification badge and green interface" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCRLWVn3ooQucvqzhCFTn1ouEOZoLwL1m3sPyQgVU27EJqRdlsFl0WYvwA1dkWyfRCt0uVf-3J_o2Gyg1cZoqYB6aHeqtYmDAfCwEw9NShjphJksOrXGgc6AsUEESgZAUHLP7SbP0ShdUqt5VMuGogLvkg-AV6jZO33IVJ2riN1oVaHRsr0HQJ0enn5b7DodrUo5RQalS0qZXLBj3LPTKHrsQrsVsnmIyehGAeNPPyv6RXpYO_WXd-AtvjTNIqu9ApXnNe7uiLRRKqF" loading="lazy" decoding="async" />
                 </div>
               </div>
               {/*  Secondary 2  */}
               <div className="bg-secondary text-white rounded-3xl p-8 flex flex-col justify-between dark:bg-secondary-container dark:text-on-secondary-container">
                 <span className="material-symbols-outlined text-4xl">trending_up</span>
                 <div>
-                  <h4 className="text-lg font-bold mb-1">Maximized ROI</h4>
-                  <p className="text-sm text-secondary-fixed opacity-90 dark:text-on-secondary-container/80">Recover your machinery investment 40% faster by filling idle days.</p>
+                  <h4 className="text-lg font-bold mb-1">Clear Listed Rates</h4>
+                  <p className="text-sm text-secondary-fixed opacity-90 dark:text-on-secondary-container/80">Set your rate and let renters see the estimate before they contact you.</p>
                 </div>
               </div>
               {/*  Secondary 3  */}
@@ -151,8 +151,8 @@ export default function OwnerExperience() {
             <div className="absolute inset-0 opacity-20" style={{ 'backgroundImage': 'radial-gradient(#ffffff 1px, transparent 1px)', 'backgroundSize': '40px 40px' }}></div>
           </div>
           <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
-            <h2 className="text-4xl md:text-6xl font-black text-white mb-8">Ready to grow your farm business?</h2>
-            <p className="text-emerald-100 text-xl mb-12 max-w-2xl mx-auto">Join 1,200+ equipment owners already earning with Kisan Kamai. Free to list, premium to use.</p>
+            <h2 className="text-4xl md:text-6xl font-black text-white mb-8">Ready to list your equipment?</h2>
+            <p className="text-emerald-100 text-xl mb-12 max-w-2xl mx-auto">Create an owner profile, add equipment photos, set availability, and handle renter conversations directly.</p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button className="px-10 py-5 bg-secondary text-white font-black text-xl rounded-2xl hover:bg-secondary/90 transition-all shadow-2xl dark:bg-secondary-container dark:text-on-secondary-container dark:hover:bg-secondary-container/90">Start Listing Now</button>
               <button className="px-10 py-5 bg-transparent border-2 border-white/40 text-white font-bold text-xl rounded-2xl hover:bg-white/10 transition-all">Talk to an Agent</button>

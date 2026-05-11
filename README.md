@@ -137,6 +137,7 @@ Manual Firebase Console prerequisites still required outside repo code:
 
 Runbooks:
 
+- SEO operations: `docs/SEO.md`
 - Google Sheets ops: `docs/OPERATIONS_GOOGLE_SHEETS.md`
 - Final test accounts: `docs/OPERATIONS_FINAL_TEST_ACCOUNTS.md`
 - Live repo sync + Discord: `docs/OPERATIONS_LIVE_REPO_SYNC.md`

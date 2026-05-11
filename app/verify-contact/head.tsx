@@ -5,5 +5,6 @@ export default function Head() {
     title: "Review Contact Details",
     description: "Review your saved contact details before continuing into Kisan Kamai.",
     path: "/verify-contact",
+    noIndex: true,
   });
 }

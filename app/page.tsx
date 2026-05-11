@@ -65,31 +65,37 @@ const markerSublabelTranslations = {
   },
 } as const;
 
-const testimonials = [
+const platformUseCases = [
   {
-    quoteEn:
-      "\"Renting a harvester through Kisan Kamai saved me 4 days of labor costs during the last peak season. The process was seamless.\"",
-    quoteMr:
-      "\"Kisan Kamai मधून हार्वेस्टर घेतल्यामुळे मागच्या हंगामात माझे ४ दिवसांचे मजुरीचे खर्च वाचले. संपूर्ण प्रक्रिया अतिशय सोपी होती.\"",
-    name: "Rajesh Deshmukh",
+    icon: "search",
+    titleEn: "Find equipment near your work area",
+    titleMr: "तुमच्या कामाच्या भागाजवळ उपकरणे शोधा",
+    textEn:
+      "Renters can compare available machines by category, location, price, and owner details before calling the owner.",
+    textMr:
+      "भाडेकरू मालकाला कॉल करण्यापूर्वी श्रेणी, ठिकाण, किंमत आणि मालक तपशीलानुसार उपलब्ध मशीन पाहू शकतात.",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
   },
   {
-    quoteEn:
-      "\"As a tractor owner, I was worried about utilization. Kisan Kamai helped me find local farmers who needed my equipment exactly when it was idle.\"",
-    quoteMr:
-      "\"ट्रॅक्टर मालक म्हणून मला वापर कमी होण्याची चिंता होती. Kisan Kamai मुळे माझे उपकरण रिकामे असताना त्याची गरज असलेले स्थानिक शेतकरी मला मिळाले.\"",
-    name: "Sanjay Kulkarni",
+    icon: "event_available",
+    titleEn: "Manage booking requests directly",
+    titleMr: "बुकिंग विनंत्या थेट व्यवस्थापित करा",
+    textEn:
+      "Owners can review requests, update availability, and coordinate timing directly with renters.",
+    textMr:
+      "मालक विनंत्या पाहू शकतात, उपलब्धता अपडेट करू शकतात आणि वेळेचा समन्वय थेट भाडेकरूंशी करू शकतात.",
     areaEn: "Mukhed Area",
     areaMr: "मुखेड परिसर",
   },
   {
-    quoteEn:
-      "\"The verification process for equipment is what makes me trust this platform. I know I am getting high-quality machinery every time.\"",
-    quoteMr:
-      "\"उपकरण पडताळणीची प्रक्रिया हीच मला या प्लॅटफॉर्मवर विश्वास ठेवायला भाग पाडते. प्रत्येक वेळी मला दर्जेदार यंत्रसामग्री मिळेल याची खात्री असते.\"",
-    name: "Vikas More",
+    icon: "handshake",
+    titleEn: "Settle details offline with clarity",
+    titleMr: "तपशील स्पष्ट करून ऑफलाइन व्यवहार करा",
+    textEn:
+      "The platform records the booking request while owners and renters confirm machine condition, timing, and final payment offline.",
+    textMr:
+      "प्लॅटफॉर्म बुकिंग विनंती नोंदवतो, तर मालक आणि भाडेकरू मशीनची स्थिती, वेळ आणि अंतिम पेमेंट ऑफलाइन निश्चित करतात.",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
   },
@@ -515,25 +521,36 @@ export default function Home() {
           </ScrollReveal>
         </section>
 
-        {/* Farmer Stories (Visual Only Stars) */}
+        {/* Practical Use Cases */}
         <section className="py-24 bg-surface">
           <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-4xl font-black text-primary dark:text-emerald-50 text-center mb-16 tracking-tight">{t("home.rooted_success_stories")}</h2>
+            <h2 className="text-4xl font-black text-primary dark:text-emerald-50 text-center mb-16 tracking-tight">
+              {langText("Practical ways to use Kisan Kamai", "Kisan Kamai वापरण्याचे व्यावहारिक मार्ग")}
+            </h2>
             <div className="grid md:grid-cols-3 gap-8">
-              {testimonials.map((item) => (
-                <div key={item.name} className="kk-depth-tile bg-surface-container-low p-8 rounded-3xl border border-outline-variant">
-                  <div className="flex gap-1 text-amber-500 mb-6">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <SharedIcon key={`${item.name}-star-${index}`} name="star" className="h-5 w-5" />
-                    ))}
+              {platformUseCases.map((item) => (
+                <div key={item.titleEn} className="kk-depth-tile bg-surface-container-low p-8 rounded-3xl border border-outline-variant">
+                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:bg-emerald-400/10 dark:text-emerald-200">
+                    <span className="material-symbols-outlined text-2xl">{item.icon}</span>
                   </div>
-                  <p className="text-on-surface-variant mb-8 italic leading-relaxed">
-                    {langText(item.quoteEn, item.quoteMr)}
+                  <h3 className="mb-4 text-xl font-black text-primary dark:text-emerald-50">
+                    {langText(item.titleEn, item.titleMr)}
+                  </h3>
+                  <p className="text-on-surface-variant mb-8 leading-relaxed">
+                    {langText(item.textEn, item.textMr)}
                   </p>
                   <div className="flex items-center gap-4">
-                    <ContentImage className="w-12 h-12 rounded-full object-cover" alt={item.name} src={assetPath("/assets/generated/farmer_portrait.png")} loading="lazy" decoding="async" />
+                    <ContentImage
+                      className="w-12 h-12 rounded-full object-cover"
+                      alt={langText("Farmer reviewing equipment access on Kisan Kamai", "Kisan Kamai वर उपकरणांची उपलब्धता पाहणारा शेतकरी")}
+                      src={assetPath("/assets/generated/farmer_portrait.png")}
+                      loading="lazy"
+                      decoding="async"
+                    />
                     <div>
-                      <h5 className="font-bold text-primary dark:text-emerald-50">{item.name}</h5>
+                      <h5 className="font-bold text-primary dark:text-emerald-50">
+                        {langText("Active service area", "सक्रिय सेवा क्षेत्र")}
+                      </h5>
                       <p className="text-xs font-label text-on-surface-variant">{langText(item.areaEn, item.areaMr)}</p>
                     </div>
                   </div>

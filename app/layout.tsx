@@ -13,7 +13,7 @@ import { SingleLanguageRuntime } from "@/components/SingleLanguageRuntime";
 import { SiteChrome } from "@/components/SiteChrome";
 import { DEFAULT_LANGUAGE, type Language } from "@/lib/i18n";
 import type { LocalSession } from "@/lib/local-data/types";
-import { DEFAULT_SHARE_DESCRIPTION, getDefaultShareImageUrl, getMetadataBaseUrl, SITE_NAME } from "@/lib/site-metadata";
+import { DEFAULT_SHARE_DESCRIPTION, getDefaultShareImageUrl, getMetadataBaseUrl, SITE_DOMAIN, SITE_NAME } from "@/lib/site-metadata";
 import { Suspense } from "react";
 import "leaflet/dist/leaflet.css";
 import "./globals.css";
@@ -234,7 +234,7 @@ const themeBootScript = `
 export const metadata: Metadata = {
   metadataBase: getMetadataBaseUrl(),
   title: {
-    default: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+    default: "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
     template: `%s | ${SITE_NAME}`,
   },
   description: DEFAULT_SHARE_DESCRIPTION,
@@ -255,7 +255,7 @@ export const metadata: Metadata = {
     type: "website",
     siteName: SITE_NAME,
     url: "/",
-    title: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+    title: "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
     description: DEFAULT_SHARE_DESCRIPTION,
     images: [
       {
@@ -268,10 +268,35 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+    title: "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
     description: DEFAULT_SHARE_DESCRIPTION,
     images: [getDefaultShareImageUrl()],
   },
+};
+
+const siteStructuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${SITE_DOMAIN}/#website`,
+      name: SITE_NAME,
+      url: SITE_DOMAIN,
+      description: DEFAULT_SHARE_DESCRIPTION,
+      inLanguage: ["en-IN", "mr-IN"],
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_DOMAIN}/rent-equipment?query={search_term_string}`,
+        "query-input": "required name=search_term_string",
+      },
+    },
+    {
+      "@type": "Organization",
+      "@id": `${SITE_DOMAIN}/#organization`,
+      name: SITE_NAME,
+      url: SITE_DOMAIN,
+    },
+  ],
 };
 
 export const dynamic = "force-dynamic";
@@ -297,6 +322,10 @@ export default async function RootLayout({
         <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
         <link data-kk-material-symbols="true" href={materialSymbolsStylesheetHref} rel="stylesheet" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteStructuredData) }}
+        />
         <Script id="kk-language-boot" strategy="beforeInteractive">
           {languageBootScript}
         </Script>

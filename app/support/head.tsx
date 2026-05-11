@@ -2,8 +2,8 @@ import { renderHeadMetadata } from "@/lib/site-metadata";
 
 export default function Head() {
   return renderHeadMetadata({
-    title: "Support",
-    description: "Reach Kisan Kamai support through direct call, WhatsApp, or the support request form.",
+    title: "Kisan Kamai Support",
+    description: "Contact Kisan Kamai support for help with equipment listings, booking requests, account access, and platform questions.",
     path: "/support",
   });
 }
