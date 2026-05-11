@@ -10,6 +10,7 @@ const LISTINGS_COLLECTION = "listings";
 const BOOKINGS_COLLECTION = "bookings";
 const PAYMENTS_COLLECTION = "payments";
 const SAVED_ITEMS_COLLECTION = "saved-items";
+const AUTH_IDENTIFIERS_COLLECTION = "auth-identifiers";
 
 function nowIso() {
   return new Date().toISOString();
@@ -30,6 +31,61 @@ function bookingDocId(sourceId) {
 
 function paymentDocId(sourceId) {
   return `${finalTestManifest.naming.paymentPrefix}-${String(sourceId).replace(/[^a-zA-Z0-9-]/g, "-")}`;
+}
+
+function authIdentifierRefs(db, seedData) {
+  return [
+    db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`phone:${seedData.owner.phone}`),
+    db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`phone:${seedData.renter.phone}`),
+    db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`email:${seedData.owner.email}`),
+    db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`email:${seedData.renter.email}`),
+  ];
+}
+
+function authIdentifierOperations(db, seedData) {
+  const timestamp = seedData.ownerUser.createdAt || nowIso();
+  return [
+    {
+      ref: db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`phone:${seedData.owner.phone}`),
+      data: {
+        kind: "phone",
+        value: seedData.owner.phone,
+        userId: seedData.owner.uid,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      },
+    },
+    {
+      ref: db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`phone:${seedData.renter.phone}`),
+      data: {
+        kind: "phone",
+        value: seedData.renter.phone,
+        userId: seedData.renter.uid,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      },
+    },
+    {
+      ref: db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`email:${seedData.owner.email}`),
+      data: {
+        kind: "email",
+        value: seedData.owner.email,
+        userId: seedData.owner.uid,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      },
+    },
+    {
+      ref: db.collection(AUTH_IDENTIFIERS_COLLECTION).doc(`email:${seedData.renter.email}`),
+      data: {
+        kind: "email",
+        value: seedData.renter.email,
+        userId: seedData.renter.uid,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      },
+    },
+  ];
 }
 
 export function getFinalTestManifest() {
@@ -211,6 +267,7 @@ export async function cleanupFinalTestAccounts({ db, auth, dryRun = false } = {}
     db.collection(USERS_COLLECTION).doc(seedData.renter.uid),
     db.collection(PROFILES_COLLECTION).doc(seedData.owner.uid),
     db.collection(PROFILES_COLLECTION).doc(seedData.renter.uid),
+    ...authIdentifierRefs(db, seedData),
   ];
 
   if (!dryRun) {
@@ -326,6 +383,7 @@ export async function seedFinalTestAccounts({
       ref: db.collection(SAVED_ITEMS_COLLECTION).doc(`${seedData.renter.uid}__${savedItem.listingId}`),
       data: savedItem,
     })),
+    ...authIdentifierOperations(db, seedData),
   ];
 
   await commitSetOperations(db, operations);

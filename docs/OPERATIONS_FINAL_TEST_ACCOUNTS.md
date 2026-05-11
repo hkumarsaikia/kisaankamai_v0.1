@@ -43,6 +43,36 @@ Dry-run:
 npm run cleanup:final-test-accounts -- --dry-run
 ```
 
+Cleanup removes the dedicated Firebase Auth users, Firestore users, profiles,
+fixture listings, bookings, payments, saved items, and the matching
+`auth-identifiers` reservations for the final account phone numbers and emails.
+Keep that identifier cleanup in place so the same final test contacts can be
+used again for registration probes after a full reset.
+
+## Live Owner/Renter E2E
+
+```bash
+npm run live:e2e:final-accounts
+```
+
+The live E2E script targets `https://www.kisankamai.com` by default and uses
+the dedicated final owner/renter accounts. It cleans previous final-test state,
+seeds the accounts, exercises password reset, login, owner listing publish with
+three photos, own-listing booking prevention, renter booking, owner decline,
+role switching, reciprocal owner/renter booking, approval, in-app notification
+records, protected/public route smokes, and then removes the temporary live
+E2E listings/bookings/submissions/notifications it created.
+
+Use `KK_LIVE_E2E_BASE_URL` only when intentionally pointing the run at another
+deployed host. The script reads passwords from
+`KK_FINAL_TEST_OWNER_PASSWORD`/`KK_FINAL_TEST_RENTER_PASSWORD` or from the
+ignored `logs/runtime/final-test-accounts/latest-seed.json` file.
+
+Production public registration still uses Google's real Firebase reCAPTCHA
+challenge before SMS OTP. Complete that one browser step manually for a true
+public signup check, or use Firebase phone-number test mode in a controlled
+non-production environment. Do not bypass the production CAPTCHA in automation.
+
 ## Test OTP Configuration
 
 Firebase does not expose fictional phone-number setup through the repo scripts. Add these two numbers manually in Firebase Console > Authentication > Sign-in method > Phone > Phone numbers for testing:

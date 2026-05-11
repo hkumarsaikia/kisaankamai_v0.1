@@ -71,7 +71,18 @@ test("package scripts expose the Firebase, Sheets, seed, repo-sync, and Discord 
   assert.match(packageSource, /"sheets:backfill"/);
   assert.match(packageSource, /"seed:final-test-accounts"/);
   assert.match(packageSource, /"cleanup:final-test-accounts"/);
+  assert.match(packageSource, /"live:e2e:final-accounts"/);
   assert.match(packageSource, /"repo:sync-live"/);
   assert.match(packageSource, /"discord:notify"/);
   assert.doesNotMatch(packageSource, /"cross-agent:/);
+});
+
+test("final test account cleanup removes reserved auth identifiers before registration probes", async () => {
+  const cleanupSource = await readFile(new URL("../scripts/lib/final-test-accounts.mjs", import.meta.url), "utf8");
+
+  assert.match(cleanupSource, /AUTH_IDENTIFIERS_COLLECTION/);
+  assert.match(cleanupSource, /phone:\$\{seedData\.owner\.phone\}/);
+  assert.match(cleanupSource, /phone:\$\{seedData\.renter\.phone\}/);
+  assert.match(cleanupSource, /email:\$\{seedData\.owner\.email\}/);
+  assert.match(cleanupSource, /email:\$\{seedData\.renter\.email\}/);
 });

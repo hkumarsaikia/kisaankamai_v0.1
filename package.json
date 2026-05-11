@@ -36,6 +36,7 @@
     "auth:repair-password-login-emails": "node scripts/repair-password-login-emails.mjs",
     "seed:final-test-accounts": "node scripts/final-test-accounts-seed.mjs",
     "cleanup:final-test-accounts": "node scripts/final-test-accounts-cleanup.mjs",
+    "live:e2e:final-accounts": "node scripts/live-final-account-e2e.mjs",
     "pause:mock-listings": "node scripts/pause-mock-listings.mjs",
     "repo:sync-live": "node scripts/live-repo-sync.mjs",
     "discord:notify": "node scripts/discord-webhook-notify.mjs"

@@ -151,6 +151,21 @@ npm run cleanup:final-test-accounts
 ```
 
 The latest local summaries are written to `logs/runtime/final-test-accounts/`.
+The cleanup flow also removes the final accounts' reserved `auth-identifiers`
+documents so a true registration probe can reuse those test phone numbers.
+
+Live owner/renter account verification:
+
+```bash
+npm run live:e2e:final-accounts
+```
+
+This uses the final account manifest, resets only the dedicated final test
+accounts, runs live owner/renter listing and booking workflows, verifies
+in-app notification records, and removes the temporary live E2E listings and
+bookings before exiting. Public registration still reaches Google's real
+reCAPTCHA challenge on production; complete that one step manually when testing
+the full phone OTP UX.
 
 ## Launch Gate
 

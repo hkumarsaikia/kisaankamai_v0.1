@@ -1,0 +1,123 @@
+{
+  "runId": "2026-05-11T14-26-02-337Z",
+  "baseUrl": "https://www.kisankamai.com",
+  "startedAt": "2026-05-11T14:26:02.357Z",
+  "checks": [
+    {
+      "name": "registration-ui-probe",
+      "owner": {
+        "ok": false,
+        "error": "Waiting failed: 90000ms exceeded"
+      },
+      "renter": {
+        "ok": false,
+        "error": "Waiting failed: 90000ms exceeded"
+      }
+    },
+    {
+      "name": "forgot-password-request-and-complete",
+      "ok": true,
+      "maskedPhone": "+91 90******01",
+      "uid": "kk-final-test-owner"
+    },
+    {
+      "name": "login-after-forgot-password",
+      "ok": true
+    },
+    {
+      "name": "owner-published-listing",
+      "ok": true,
+      "listingId": "listing-afa4c980",
+      "imageCount": 3,
+      "status": "active"
+    },
+    {
+      "name": "owner-renter-mode-own-listing-blocked",
+      "ok": true,
+      "listingId": "listing-afa4c980"
+    },
+    {
+      "name": "renter-booked-owner-listing",
+      "ok": true,
+      "bookingId": "BK-51a3eaf5",
+      "status": "pending",
+      "renterInboxStatus": 200,
+      "renterUnread": 1
+    },
+    {
+      "name": "owner-declined-booking-and-renter-notified",
+      "ok": true,
+      "bookingId": "BK-51a3eaf5",
+      "status": "cancelled"
+    },
+    {
+      "name": "renter-account-published-owner-listing",
+      "ok": true,
+      "listingId": "listing-e1db07dc",
+      "imageCount": 3,
+      "status": "active"
+    },
+    {
+      "name": "owner-account-booked-renter-owner-listing",
+      "ok": true,
+      "bookingId": "BK-43c85815",
+      "status": "pending"
+    },
+    {
+      "name": "renter-owner-approved-booking-and-owner-renter-notified",
+      "ok": true,
+      "bookingId": "BK-43c85815",
+      "status": "confirmed"
+    },
+    {
+      "name": "route-smoke:/owner-profile",
+      "ok": true,
+      "title": "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+      "bodyText": "Kisan Kamai\nRent Equipment\nCategories\nFeature Request\nSupport\nमराठी\nLogin\nRegister\nagriculture\nWelcome to Kisan Kamai\n\nSign in to your account\n\nMOBILE NUMBER\ncall\nPASSWORD\nFORGOT PASSWORD?\nlock\nvisibility\nLogin to Kisan Kamai\narrow_forward\n",
+      "hasHorizontalOverflow": false
+    },
+    {
+      "name": "route-smoke:/renter-profile",
+      "ok": true,
+      "title": "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+      "bodyText": "Kisan Kamai\nRent Equipment\nCategories\nFeature Request\nSupport\nमराठी\nLogin\nRegister\nagriculture\nWelcome to Kisan Kamai\n\nSign in to your account\n\nMOBILE NUMBER\ncall\nPASSWORD\nFORGOT PASSWORD?\nlock\nvisibility\nLogin to Kisan Kamai\narrow_forward\n",
+      "hasHorizontalOverflow": false
+    },
+    {
+      "name": "route-smoke:/rent-equipment",
+      "ok": true,
+      "title": "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+      "bodyText": "Kisan Kamai\nRent Equipment\nCategories\nFeature Request\nSupport\nमराठी\nLogin\nRegister\nSearch\nAvailable equipment\n\nBrowse high-quality agricultural machinery available for rent.\n\nfilter_list\nFilters\nsort\nAvailable equipment first\nexpand_more\nch",
+      "hasHorizontalOverflow": false
+    },
+    {
+      "name": "route-smoke:/rent-equipment?query=balers",
+      "ok": true,
+      "title": "Kisan Kamai | Modernize Your Farm, Maximize Your Yield",
+      "bodyText": "Kisan Kamai\nRent Equipment\nCategories\nFeature Request\nSupport\nमराठी\nLogin\nRegister\nUpdate Search\nagriculture\nsearch_off\nNo equipment available right now\n\nWe could not find exact matches for your search in the selected area. Inventory change",
+      "hasHorizontalOverflow": false
+    }
+  ],
+  "screenshots": [],
+  "consoleMessages": {
+    "register-owner": [],
+    "register-renter": [],
+    "owner-reset-login": [],
+    "owner-publish-and-own-book": [],
+    "renter-books-owner-listing": [],
+    "owner-declines-booking": [],
+    "renter-publishes-listing": [],
+    "owner-books-renter-listing": [],
+    "renter-owner-approves-booking": [],
+    "smoke-/owner-profile": [],
+    "smoke-/renter-profile": [],
+    "smoke-/rent-equipment": [],
+    "smoke-/rent-equipment?query=balers": []
+  },
+  "artifactsCleaned": {
+    "listings": 2,
+    "bookings": 2,
+    "refs": 16
+  },
+  "completedAt": "2026-05-11T14:32:54.291Z"
+}
