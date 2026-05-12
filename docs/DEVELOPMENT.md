@@ -96,7 +96,7 @@ Phone-only auth flow contract:
 - Language preference is server-readable through the `kk_language` cookie and mirrored into `localStorage` for client controls. The root layout must read that cookie and pass `initialLanguage` into `LanguageProvider`; do not reintroduce a client-only initial language because it causes saved-language flashes or hydration mismatches.
 - Public requests without a `kisan_kamai_session` cookie must not eagerly import the Firebase-backed session resolver from the root layout. Keep the dynamic session import guarded by the cookie check so anonymous pages avoid unnecessary Firebase/Admin cold-start work.
 - Generated marketing images under `/assets/generated/*.png` should have matching optimized `.webp` siblings. App image references should go through `assetPath(...)`, which serves the WebP variant for generated assets while leaving uploaded listing media unchanged.
-- Material Symbols must use the valid full ligature stylesheet from `app/layout.tsx` and be linked directly in the document head. Do not reintroduce the deferred `kk-material-symbols-loader` or an `icon_names` subset URL without live Chromium verification that the CSS request returns `200 text/css`; if the Google Fonts request fails, all icons render as visible words.
+- Material Symbols are self-hosted at `/public/fonts/material-symbols-outlined.woff2` and preloaded from `app/layout.tsx`. Do not reintroduce the deferred `kk-material-symbols-loader`, a remote-only Google Fonts stylesheet, or an `icon_names` subset URL; if the icon font request fails, ligature icon names can render as visible words.
 
 ## Ubuntu Runtime Notes
 
@@ -176,7 +176,7 @@ keep the real Firebase phone verification path.
 
 ## Launch Gate
 
-Run `npm run launch:gate` before any production deploy. It runs the standard root verification, validates Firebase/App Hosting config, compiles Firestore and Storage rules with a dry run, and verifies the operational workbook.
+Run `npm run launch:gate` before any production deploy. It runs the standard root verification, validates Firebase/App Hosting config, compiles Firestore and Storage rules with the debug dry-run mode used by this environment, and verifies the operational workbook with read-only retry handling for transient Google Sheets connection timeouts.
 
 ## Bug-Fix Evidence Bundles
 

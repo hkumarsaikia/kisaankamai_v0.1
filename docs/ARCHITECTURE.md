@@ -29,7 +29,9 @@ The root app is the only public runtime.
 
 - Anonymous public requests should avoid unnecessary Firebase session work. The root layout only imports the session resolver when a valid-looking `kisan_kamai_session` cookie is present.
 - Generated site imagery is stored as optimized WebP siblings and routed through `assetPath(...)`; uploaded equipment photos remain untouched so owner media paths continue to match Firebase Storage URLs.
-- Material Symbols are loaded through the valid full Google Fonts ligature stylesheet in the root layout head. Do not use the `icon_names` subset URL until a live browser check proves that generated URL returns `text/css`; an invalid subset URL makes the whole site render icon names as visible words.
+- Material Symbols are self-hosted from `/public/fonts/material-symbols-outlined.woff2` and preloaded by the root layout. Do not switch the site back to a remote-only icon stylesheet; if that request is blocked or delayed, icon ligature names can become visible text.
+- Public listing discovery uses the cached public equipment loader and first narrows Firestore reads to `active` and `paused` listings. If that status-filtered query fails in a misconfigured environment, the loader falls back to the full scan and reports the fallback through server observability.
+- Global UI motion uses the shared Kisan Kamai flow tokens in `app/globals.css`, the route transition provider, and the scroll reveal components. Route swaps, profile dropdowns, depth tiles, and scroll-reveal sections should use compositor-friendly opacity and transform transitions, with the reduced-motion guard preserved.
 
 ## Root App Boundaries
 

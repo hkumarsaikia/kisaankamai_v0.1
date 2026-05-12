@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 
+const FLOW_EASE: [number, number, number, number] = [0.16, 1, 0.3, 1];
+
 function useInViewportOnce<T extends HTMLElement>(threshold = 0.2) {
   const ref = useRef<T | null>(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -21,7 +23,7 @@ function useInViewportOnce<T extends HTMLElement>(threshold = 0.2) {
       },
       {
         threshold,
-        rootMargin: "0px 0px -10% 0px",
+        rootMargin: "0px 0px -12% 0px",
       }
     );
 
@@ -57,9 +59,9 @@ export function ScrollReveal({
     <motion.div
       ref={ref}
       className={className}
-      initial={{ opacity: 0, y: 28 }}
-      animate={isVisible ? { opacity: 1, y: 0 } : undefined}
-      transition={{ duration: 0.55, ease: "easeOut", delay }}
+      initial={{ opacity: 0, y: 34, scale: 0.985 }}
+      animate={isVisible ? { opacity: 1, y: 0, scale: 1 } : undefined}
+      transition={{ duration: 0.72, ease: FLOW_EASE, delay }}
     >
       {children}
     </motion.div>
@@ -94,7 +96,8 @@ export function ScrollRevealGroup({
         hidden: {},
         visible: {
           transition: {
-            staggerChildren: 0.12,
+            staggerChildren: 0.09,
+            delayChildren: 0.04,
           },
         },
       }}
@@ -121,11 +124,12 @@ export function ScrollRevealItem({
     <motion.div
       className={className}
       variants={{
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: 0, y: 24, scale: 0.99 },
         visible: {
           opacity: 1,
           y: 0,
-          transition: { duration: 0.45, ease: "easeOut" },
+          scale: 1,
+          transition: { duration: 0.58, ease: FLOW_EASE },
         },
       }}
     >

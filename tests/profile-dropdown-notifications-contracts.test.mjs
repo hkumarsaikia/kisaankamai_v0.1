@@ -73,7 +73,7 @@ test("profile dropdown has smooth opaque panel states for desktop and mobile", a
   assert.match(globals, /@keyframes kk-profile-dropdown-enter/);
   assert.match(globals, /@keyframes kk-profile-dropdown-exit/);
   assert.match(globals, /\.kk-profile-dropdown-panel\[data-state="open"\]/);
-  assert.match(globals, /animation:\s*kk-profile-dropdown-enter 240ms cubic-bezier\(0\.2, 0\.8, 0\.2, 1\) forwards/);
+  assert.match(globals, /animation:\s*kk-profile-dropdown-enter 320ms var\(--kk-ease-enter\) forwards/);
   assert.match(globals, /\.kk-profile-dropdown-panel\[data-state="closed"\]/);
   assert.match(globals, /\.kk-profile-notification-row/);
   assert.doesNotMatch(dropdown, /bg-white\/80|bg-white\/75|backdrop-blur-xl/);

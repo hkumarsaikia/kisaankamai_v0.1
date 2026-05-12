@@ -364,11 +364,12 @@ test("rent equipment pages expose base search, query sort, and compact no-equipm
   assert.match(viewSource, /available-search-panel/);
   assert.match(viewSource, /EquipmentSortMenu/);
   assert.match(sortMenuSource, /aria-label=\{langText\("Sort results", "निकाल क्रम लावा"\)\}/);
-  assert.match(viewSource, /pb-12 md:pb-14/);
-  assert.match(viewSource, /px-4 pb-2 text-center md:px-8/);
+  assert.match(viewSource, /min-h-\[calc\(100svh-5rem\)\]/);
+  assert.match(viewSource, /pb-20[\s\S]*md:pb-24/);
+  assert.match(viewSource, /px-4 pb-8 text-center md:px-8/);
   assert.doesNotMatch(viewSource, /pt-\[5\.5rem\] md:pt-\[5\.5rem\] pb-0/);
   assert.doesNotMatch(viewSource, /px-4 pb-0 text-center md:px-8/);
-  assert.match(viewSource, /pt-\[5\.5rem\] md:pt-\[5\.5rem\]/);
+  assert.match(viewSource, /pt-\[5\.5rem\][^"]*md:pt-\[5\.5rem\]/);
   assert.match(viewSource, /equipment-card-media-frame/);
   assert.match(viewSource, /p-2\.5 md:p-3/);
   assert.match(viewSource, /py-0 sm:px-6 lg:px-8/);

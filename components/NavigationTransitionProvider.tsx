@@ -94,7 +94,18 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
   );
 
   return (
-    <NavigationTransitionContext.Provider value={value}>{children}</NavigationTransitionContext.Provider>
+    <NavigationTransitionContext.Provider value={value}>
+      {children}
+      {isNavigating ? (
+        <>
+          <div aria-hidden="true" className="kk-route-transition-bar" />
+          <div aria-hidden="true" className="kk-route-transition-veil" />
+          <span className="sr-only" role="status" aria-live="polite">
+            Loading next page
+          </span>
+        </>
+      ) : null}
+    </NavigationTransitionContext.Provider>
   );
 }
 

@@ -27,7 +27,7 @@
     "test:contracts": "node scripts/hardware-tuned-runner.mjs test:contracts",
     "verify": "node scripts/hardware-tuned-runner.mjs verify",
     "firebase:preflight": "node scripts/firebase-preflight.mjs",
-    "firebase:rules:dry-run": "firebase deploy --only firestore,storage --project gokisaan --dry-run",
+    "firebase:rules:dry-run": "firebase deploy --only firestore,storage --project gokisaan --dry-run --debug",
     "launch:gate": "node scripts/hardware-tuned-runner.mjs launch:gate",
     "firebase:deploy": "firebase deploy --only firestore,storage --project gokisaan",
     "sheets:bootstrap": "node scripts/google-sheets-bootstrap.mjs",

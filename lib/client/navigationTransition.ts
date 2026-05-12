@@ -2,11 +2,11 @@
 
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 const EXTERNAL_HREF_PATTERN = /^(?:[a-z][a-z\d+\-.]*:)?\/\//i;
-const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const EASE_OUT: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
-export const PAGE_ENTER_DURATION_SECONDS = 0.24;
-export const VEIL_IN_DURATION_SECONDS = 0.12;
-export const VEIL_OUT_DURATION_SECONDS = 0.16;
+export const PAGE_ENTER_DURATION_SECONDS = 0.42;
+export const VEIL_IN_DURATION_SECONDS = 0.18;
+export const VEIL_OUT_DURATION_SECONDS = 0.24;
 export const REDUCED_DURATION_SECONDS = 0.1;
 export const NAVIGATION_TIMEOUT_MS = 3000;
 export const PREMIUM_EASE = EASE_OUT;

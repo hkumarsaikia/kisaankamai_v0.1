@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { SharedIcon } from "@/components/SharedIcon";
 
 export function BackToTop() {
   const [visible, setVisible] = useState(false);
@@ -22,7 +23,7 @@ export function BackToTop() {
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
       }`}
     >
-      <span className="material-symbols-outlined">arrow_upward</span>
+      <SharedIcon name="arrow-up" className="h-6 w-6" />
     </button>
   );
 }

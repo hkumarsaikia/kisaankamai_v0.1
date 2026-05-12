@@ -1,6 +1,14 @@
 @import "tailwindcss";
 @config "../tailwind.config.mjs";
 
+@font-face {
+  font-family: "Material Symbols Outlined";
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url("/fonts/material-symbols-outlined.woff2") format("woff2");
+}
+
 @layer base {
   :root {
     color-scheme: light;
@@ -51,6 +59,12 @@
     --color-inverse-on-surface: #eef1f9;
     --color-inverse-primary: #a6cfbd;
     --color-surface-tint: #406657;
+    --kk-ease-flow: cubic-bezier(0.3, 1.1, 0.4, 1);
+    --kk-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+    --kk-ease-exit: cubic-bezier(0.4, 0, 0.2, 1);
+    --kk-duration-fast: 180ms;
+    --kk-duration-base: 320ms;
+    --kk-duration-slow: 680ms;
   }
 
   .dark {
@@ -379,8 +393,8 @@
     --kk-depth-sheen-opacity: 0;
     will-change: transform, box-shadow, border-color;
     transition:
-      transform 520ms cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow 520ms cubic-bezier(0.16, 1, 0.3, 1),
+      transform 560ms var(--kk-ease-enter),
+      box-shadow 560ms var(--kk-ease-enter),
       border-color 300ms ease,
       background-color 300ms ease;
     transform:
@@ -407,7 +421,7 @@
       linear-gradient(315deg, rgba(255, 162, 116, 0.16), transparent 36%);
     transition:
       opacity 360ms ease,
-      transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+      transform 560ms var(--kk-ease-enter);
   }
 
   .kk-depth-tile > * {
@@ -441,8 +455,8 @@
     transform: translate3d(0, var(--kk-profile-trigger-lift), 0);
     transform-style: flat;
     transition:
-      transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
-      box-shadow 260ms cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform var(--kk-duration-base) var(--kk-ease-enter),
+      box-shadow var(--kk-duration-base) var(--kk-ease-enter),
       border-color 180ms ease,
       background-color 180ms ease;
     box-shadow:
@@ -503,12 +517,12 @@
   }
 
   .kk-profile-dropdown-panel[data-state="open"] {
-    animation: kk-profile-dropdown-enter 240ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: kk-profile-dropdown-enter 320ms var(--kk-ease-enter) forwards;
   }
 
   .kk-profile-dropdown-panel[data-state="closed"] {
     pointer-events: none;
-    animation: kk-profile-dropdown-exit 210ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: kk-profile-dropdown-exit 220ms var(--kk-ease-exit) forwards;
   }
 
   .kk-profile-notification-row {
@@ -533,6 +547,51 @@
 
   .kk-deep-cta {
     @apply bg-primary-container text-white shadow-[0_18px_40px_-22px_rgba(20,59,46,0.9)] transition-all hover:brightness-110 hover:shadow-[0_24px_48px_-26px_rgba(20,59,46,0.95)] active:scale-[0.98];
+  }
+
+  .kk-route-transition-veil {
+    position: fixed;
+    inset: 0;
+    z-index: 1200;
+    pointer-events: none;
+    opacity: 0;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(166, 207, 189, 0.14), transparent 36%),
+      linear-gradient(180deg, rgba(248, 249, 255, 0.42), rgba(248, 249, 255, 0));
+    animation: kk-route-veil 640ms var(--kk-ease-enter) forwards;
+  }
+
+  .kk-route-transition-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 1201;
+    height: 3px;
+    pointer-events: none;
+    overflow: hidden;
+    background: rgba(20, 59, 46, 0.08);
+  }
+
+  .kk-route-transition-bar::before {
+    content: "";
+    display: block;
+    height: 100%;
+    width: 42%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #143b2e, #00a870 58%, #ffa274);
+    transform: translateX(-120%);
+    animation: kk-route-bar 960ms var(--kk-ease-flow) infinite;
+  }
+
+  .dark .kk-route-transition-veil {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(166, 207, 189, 0.12), transparent 36%),
+      linear-gradient(180deg, rgba(12, 15, 19, 0.42), rgba(12, 15, 19, 0));
+  }
+
+  .dark .kk-route-transition-bar {
+    background: rgba(166, 207, 189, 0.08);
   }
 
   .kk-flow-button {
@@ -911,14 +970,40 @@
 @keyframes kk-profile-dropdown-enter {
   0% {
     opacity: 0;
-    transform: translate3d(0, -6px, 0) scale(0.992);
+    transform: translate3d(0, -10px, 0) scale(0.986);
   }
-  70% {
+  65% {
     opacity: 1;
   }
   100% {
     opacity: 1;
     transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes kk-route-veil {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -10px, 0);
+  }
+  35% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes kk-route-bar {
+  0% {
+    transform: translateX(-120%);
+  }
+  52% {
+    transform: translateX(84%);
+  }
+  100% {
+    transform: translateX(240%);
   }
 }
 
@@ -1071,7 +1156,9 @@
   .kk-depth-tile:hover,
   .kk-depth-tile:focus-within,
   .kk-profile-dropdown-panel,
-  .kk-profile-notification-row {
+  .kk-profile-notification-row,
+  .kk-route-transition-veil,
+  .kk-route-transition-bar::before {
     transform: none;
   }
 }

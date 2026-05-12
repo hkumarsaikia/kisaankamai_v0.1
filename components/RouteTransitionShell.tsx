@@ -28,8 +28,8 @@ export function RouteTransitionShell({
     <motion.div
       key={pathname}
       className={className}
-      initial={{ opacity: prefersReducedMotion ? 0.92 : 0.82 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: prefersReducedMotion ? 0.94 : 0.86, y: prefersReducedMotion ? 0 : 10 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{
         duration: prefersReducedMotion ? REDUCED_DURATION_SECONDS : PAGE_ENTER_DURATION_SECONDS,
         ease: PREMIUM_EASE,

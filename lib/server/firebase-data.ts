@@ -22,7 +22,7 @@ import type {
   UserRecord,
   UserRole,
 } from "@/lib/local-data/types";
-import type { Transaction } from "firebase-admin/firestore";
+import type { QuerySnapshot, Transaction } from "firebase-admin/firestore";
 import { getAdminAuth, getAdminDb } from "@/lib/server/firebase-admin";
 import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { sendPushNotificationToUsers } from "@/lib/server/firebase-messaging";
@@ -731,7 +731,17 @@ async function getExistingUserRecordById(userId: string) {
 }
 
 async function listAllListings() {
-  const snapshot = await listingsCollection().get();
+  let snapshot: QuerySnapshot;
+
+  try {
+    snapshot = await listingsCollection()
+      .where("status", "in", ["active", "paused"])
+      .get();
+  } catch (error) {
+    captureServerException(error, { subsystem: "listAllListings.statusFilteredFallback" });
+    snapshot = await listingsCollection().get();
+  }
+
   return snapshot.docs
     .map((doc) => mapListingFromFirestore(withFirestoreId(doc.id, doc.data() as ListingRecord)))
     .sort((left, right) => right.createdAt.localeCompare(left.createdAt));

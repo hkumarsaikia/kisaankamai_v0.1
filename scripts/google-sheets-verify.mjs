@@ -16,7 +16,34 @@ if (options.help) {
 loadRepoEnv();
 const spreadsheetId = getStringOption(options, "sheet-id", "");
 const overrides = spreadsheetId ? { spreadsheetId } : {};
-const result = await verifyWorkbookStructure(overrides);
+const VERIFY_ATTEMPTS = 3;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function verifyWorkbookStructureWithRetry() {
+  let lastError;
+
+  for (let attempt = 1; attempt <= VERIFY_ATTEMPTS; attempt += 1) {
+    try {
+      return await verifyWorkbookStructure(overrides);
+    } catch (error) {
+      lastError = error;
+      if (attempt === VERIFY_ATTEMPTS) {
+        break;
+      }
+
+      const message = error instanceof Error ? error.message : String(error);
+      console.warn(`Workbook verification attempt ${attempt} failed: ${message}`);
+      await sleep(attempt * 1500);
+    }
+  }
+
+  throw lastError;
+}
+
+const result = await verifyWorkbookStructureWithRetry();
 
 console.log(`Workbook verification for ${result.spreadsheetId}: ${result.ok ? "PASS" : "FAIL"}`);
 for (const check of result.sheetChecks) {

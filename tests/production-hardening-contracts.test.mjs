@@ -28,7 +28,9 @@ test("language provider hydrates from the boot language to avoid saved-language 
 
   assert.match(layoutSource, /cookies\(\)/);
   assert.match(layoutSource, /normalizeLanguage\(cookieStore\.get\(LANGUAGE_COOKIE_NAME\)\?\.value\)/);
-  assert.match(layoutSource, /<html lang=\{initialLanguage\} data-language=\{initialLanguage\}/);
+  assert.match(layoutSource, /lang=\{initialLanguage\}/);
+  assert.match(layoutSource, /data-language=\{initialLanguage\}/);
+  assert.match(layoutSource, /data-scroll-behavior="smooth"/);
   assert.match(layoutSource, /<LanguageProvider initialLanguage=\{initialLanguage\}>/);
   assert.match(layoutSource, /kk_language_cookie_migrated/);
   assert.match(layoutSource, /window\.location\.replace\(window\.location\.href\)/);
@@ -226,15 +228,14 @@ test("client bug reporting is throttled before hitting the backend rate limit", 
 test("root layout keeps icon fonts and public session bootstrap lean", async () => {
   const layoutSource = await readFile(new URL("../app/layout.tsx", import.meta.url), "utf8");
 
-  assert.match(layoutSource, /materialSymbolsStylesheetHref/);
-  assert.match(layoutSource, /Material\+Symbols\+Outlined:opsz,wght,FILL,GRAD@24,400,0\.\.1,0&display=swap/);
+  assert.match(layoutSource, /\/fonts\/material-symbols-outlined\.woff2/);
+  assert.match(layoutSource, /rel="preload"/);
   assert.doesNotMatch(layoutSource, /icon_names=/);
   assert.doesNotMatch(layoutSource, /materialSymbolIconNames/);
-  assert.match(layoutSource, /data-kk-material-symbols="true"/);
-  assert.match(layoutSource, /rel="stylesheet"/);
+  assert.doesNotMatch(layoutSource, /data-kk-material-symbols="true"/);
+  assert.doesNotMatch(layoutSource, /Material\+Symbols\+Outlined:opsz,wght,FILL,GRAD/);
   assert.doesNotMatch(layoutSource, /kk-material-symbols-loader/);
   assert.doesNotMatch(layoutSource, /document\.createElement\("link"\)/);
-  assert.match(layoutSource, /display=swap/);
   assert.doesNotMatch(layoutSource, /opsz,wght,FILL,GRAD@20\.\.48,100\.\.700,0\.\.1,-50\.\.200/);
   assert.doesNotMatch(layoutSource, /import \{ getCurrentSession \} from "@\/lib\/server\/local-auth"/);
   assert.match(layoutSource, /SESSION_COOKIE_NAME/);

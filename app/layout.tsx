@@ -28,9 +28,6 @@ const mukta = Mukta({
 });
 const LANGUAGE_COOKIE_NAME = "kk_language";
 const SESSION_COOKIE_NAME = "kisan_kamai_session";
-const materialSymbolsStylesheetHref =
-  "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap";
-
 function normalizeLanguage(value: string | undefined): Language {
   return value === "en" || value === "mr" ? value : DEFAULT_LANGUAGE;
 }
@@ -174,11 +171,23 @@ export default async function RootLayout({
   }
 
   return (
-    <html lang={initialLanguage} data-language={initialLanguage} className={`lang-${initialLanguage}`} suppressHydrationWarning>
+    <html
+      lang={initialLanguage}
+      data-language={initialLanguage}
+      data-scroll-behavior="smooth"
+      className={`lang-${initialLanguage}`}
+      suppressHydrationWarning
+    >
       <head>
         <link href="https://fonts.googleapis.com" rel="preconnect" />
         <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
-        <link data-kk-material-symbols="true" href={materialSymbolsStylesheetHref} rel="stylesheet" />
+        <link
+          as="font"
+          crossOrigin="anonymous"
+          href="/fonts/material-symbols-outlined.woff2"
+          rel="preload"
+          type="font/woff2"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteStructuredData) }}

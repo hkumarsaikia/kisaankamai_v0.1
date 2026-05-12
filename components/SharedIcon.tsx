@@ -11,6 +11,7 @@ type SharedIconName =
   | "chevron-left"
   | "chevron-right"
   | "search"
+  | "arrow-up"
   | "arrow-right"
   | "verified"
   | "support"
@@ -168,6 +169,17 @@ function renderIcon(name: SharedIconName) {
       return (
         <path
           d="M5 12h14m-5-5 5 5-5 5"
+          fill="none"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+        />
+      );
+    case "arrow-up":
+      return (
+        <path
+          d="M12 19V5m-5 5 5-5 5 5"
           fill="none"
           stroke="currentColor"
           strokeLinecap="round"

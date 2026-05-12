@@ -39,17 +39,18 @@ test("Discord tooling supports env-driven multi-webhook channels", async () => {
 });
 
 test("Firebase launch gate does not require Sentry", async () => {
-  const [packageSource, appHostingSource, runnerSource] = await Promise.all([
+  const [packageSource, appHostingSource, runnerSource, sheetsVerifySource] = await Promise.all([
     readFile(new URL("../package.json", import.meta.url), "utf8"),
     readFile(new URL("../apphosting.yaml", import.meta.url), "utf8"),
     readFile(new URL("../scripts/hardware-tuned-runner.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../scripts/google-sheets-verify.mjs", import.meta.url), "utf8"),
   ]);
   const packageJson = JSON.parse(packageSource);
 
   assert.equal(packageJson.scripts["firebase:preflight"], "node scripts/firebase-preflight.mjs");
   assert.equal(
     packageJson.scripts["firebase:rules:dry-run"],
-    "firebase deploy --only firestore,storage --project gokisaan --dry-run"
+    "firebase deploy --only firestore,storage --project gokisaan --dry-run --debug"
   );
   assert.equal(
     packageJson.scripts["launch:gate"],
@@ -58,7 +59,10 @@ test("Firebase launch gate does not require Sentry", async () => {
   assert.match(runnerSource, /runLaunchGate/);
   assert.match(runnerSource, /firebase-preflight\.mjs/);
   assert.match(runnerSource, /firestore,storage/);
+  assert.match(runnerSource, /"--debug"/);
   assert.match(runnerSource, /google-sheets-verify\.mjs/);
+  assert.match(sheetsVerifySource, /VERIFY_ATTEMPTS\s*=\s*3/);
+  assert.match(sheetsVerifySource, /verifyWorkbookStructureWithRetry/);
   assert.equal(packageJson.scripts["sentry:gate"], undefined);
   assert.doesNotMatch(appHostingSource, /SENTRY_/);
   assert.doesNotMatch(appHostingSource, /sentryDsn|nextPublicSentryDsn|sentryAuthToken|sentryOrg|sentryProject/);

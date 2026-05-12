@@ -283,7 +283,7 @@ async function runLaunchGate(forwardedArgs = []) {
   await runCommand("firebase:preflight", nodeScript(path.join(rootDir, "scripts", "firebase-preflight.mjs")));
   await runCommand("firebase:rules:dry-run", {
     command: resolveFirebaseCommand(),
-    args: ["deploy", "--only", "firestore,storage", "--project", "gokisaan", "--dry-run"],
+    args: ["deploy", "--only", "firestore,storage", "--project", "gokisaan", "--dry-run", "--debug"],
   });
   await runCommand("sheets:verify", nodeScript(path.join(rootDir, "scripts", "google-sheets-verify.mjs")));
 }
