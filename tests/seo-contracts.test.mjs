@@ -168,3 +168,24 @@ test("page share previews use route metadata exports, dedicated thumbnails, and 
     ].map((name) => access(new URL(`../public/assets/share/pages/${name}.jpg`, import.meta.url)))
   );
 });
+
+test("open browser tabs detect a newer App Hosting build and refresh safely", async () => {
+  const [layoutSource, monitorSource, routeSource, buildInfoSource] = await Promise.all([
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/BuildFreshnessMonitor.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/build-info/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/build-info.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(layoutSource, /getBuildRevision/);
+  assert.match(layoutSource, /<meta name="kisan-kamai-build-revision" content=\{buildRevision\}/);
+  assert.match(layoutSource, /<BuildFreshnessMonitor initialRevision=\{buildRevision\}/);
+  assert.match(monitorSource, /\/api\/build-info/);
+  assert.match(monitorSource, /cache: "no-store"/);
+  assert.match(monitorSource, /visibilitychange/);
+  assert.match(monitorSource, /window\.location\.reload\(\)/);
+  assert.match(routeSource, /export const dynamic = "force-dynamic"/);
+  assert.match(routeSource, /X-Kisan-Kamai-Revision/);
+  assert.match(routeSource, /CDN-Cache-Control/);
+  assert.match(buildInfoSource, /process\.env\.K_REVISION/);
+});

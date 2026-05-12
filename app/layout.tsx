@@ -6,12 +6,14 @@ import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
 import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
+import { BuildFreshnessMonitor } from "@/components/BuildFreshnessMonitor";
 import { DepthMotion } from "@/components/DepthMotion";
 import { NavigationTransitionProvider } from "@/components/NavigationTransitionProvider";
 import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { SingleLanguageRuntime } from "@/components/SingleLanguageRuntime";
 import { SiteChrome } from "@/components/SiteChrome";
 import { DEFAULT_LANGUAGE, type Language } from "@/lib/i18n";
+import { getBuildRevision } from "@/lib/build-info";
 import type { LocalSession } from "@/lib/local-data/types";
 import { DEFAULT_SHARE_DESCRIPTION, getDefaultShareImageUrl, getMetadataBaseUrl, SITE_DOMAIN, SITE_NAME } from "@/lib/site-metadata";
 import { Suspense } from "react";
@@ -171,6 +173,7 @@ export default async function RootLayout({
   const initialLanguage = normalizeLanguage(cookieStore.get(LANGUAGE_COOKIE_NAME)?.value);
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   let initialSession: LocalSession | null = null;
+  const buildRevision = getBuildRevision();
 
   if (sessionCookie && sessionCookie.trim() && sessionCookie !== "undefined" && sessionCookie !== "null") {
     const { getCurrentSession } = await import("@/lib/server/local-auth");
@@ -199,6 +202,7 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteStructuredData) }}
         />
+        <meta name="kisan-kamai-build-revision" content={buildRevision} />
         <Script id="kk-language-boot" strategy="beforeInteractive">
           {languageBootScript}
         </Script>
@@ -210,6 +214,7 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <LanguageProvider initialLanguage={initialLanguage}>
             <SingleLanguageRuntime />
+            <BuildFreshnessMonitor initialRevision={buildRevision} />
             <DepthMotion />
             <AuthProvider initialSession={initialSession}>
               <NavigationTransitionProvider>

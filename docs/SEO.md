@@ -29,6 +29,10 @@ copy sections, sitemap behavior, or programmatic page plans.
 - Share image URLs are deployment-versioned with `?v=...` from
   `NEXT_PUBLIC_SHARE_CACHE_VERSION`, `K_REVISION`, build IDs, or `v1`. This
   gives social crawlers a fresh image URL after each hosting rollout.
+- `BuildFreshnessMonitor` compares the page's initial build revision with
+  `/api/build-info` on focus, visibility change, and interval checks. If a user
+  keeps an old tab open during a Firebase App Hosting rollout, the browser
+  reloads when the live revision changes.
 - Mark auth, account, workspace, utility, and submission-only routes as
   `noIndex`.
 - Keep public descriptions factual. Do not add unsupported rankings,
@@ -82,6 +86,7 @@ curl -fsS https://www.kisankamai.com/ | grep -E "<title>|application/ld\\+json"
 curl -fsS https://www.kisankamai.com/robots.txt
 curl -fsS https://www.kisankamai.com/sitemap.xml
 curl -fsS https://www.kisankamai.com/support | grep -E "og:title|og:image|twitter:description"
+curl -fsS https://www.kisankamai.com/api/build-info
 ```
 
 Use Lighthouse SEO checks for rendered validation when Chrome is available.
