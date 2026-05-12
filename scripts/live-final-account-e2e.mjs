@@ -168,6 +168,11 @@ async function cleanupE2EArtifacts(db, userIds, prefix = "KK Live E2E") {
 }
 
 async function launchBrowser() {
+  const extraArgs = String(process.env.KK_PUPPETEER_EXTRA_ARGS || "")
+    .split(/\s+/)
+    .map((arg) => arg.trim())
+    .filter(Boolean);
+
   return puppeteer.launch({
     headless: "new",
     executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined,
@@ -175,7 +180,9 @@ async function launchBrowser() {
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
+      "--disable-quic",
       "--window-size=1440,1000",
+      ...extraArgs,
     ],
     defaultViewport: { width: 1440, height: 1000, deviceScaleFactor: 1 },
   });

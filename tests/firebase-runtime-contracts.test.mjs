@@ -97,6 +97,8 @@ test("live phone OTP E2E test mode is token-gated without a broad production byp
   assert.match(e2eSource, /KK_PHONE_AUTH_TEST_MODE_TOKEN/);
   assert.match(e2eSource, /FIREBASE_PRIVATE_KEY/);
   assert.match(e2eSource, /kk_phone_auth_test_token/);
+  assert.match(e2eSource, /--disable-quic/);
+  assert.match(e2eSource, /KK_PUPPETEER_EXTRA_ARGS/);
 });
 
 test("final test account cleanup removes reserved auth identifiers before registration probes", async () => {
