@@ -22,6 +22,15 @@
   - `/partner` returned 200.
   - Partnership enquiry submit showed `Submitting...`, set `aria-busy="true"`, called `/api/forms/partner-inquiry`, showed success, reset the fields, and emitted no `currentTarget`/`reset` runtime errors.
 
-## Pending
+## Live Release
 
-- Production rollout and live smoke checks are completed separately after commit and push.
+- Firebase App Hosting rollout: created for the release commit containing this fix.
+- Firestore/Storage rules: deployed.
+- Live smoke:
+  - `https://kisankamai.com/complete-profile` returned 404.
+  - `https://www.kisankamai.com/complete-profile` returned 404.
+  - `https://kisankamai.com/partner` returned 200.
+  - `https://www.kisankamai.com/partner` returned 200.
+- Live rendered QA:
+  - `/complete-profile` returned 404.
+  - `/partner` submit showed the loader, called the partner endpoint through an intercepted live browser request, rendered success, reset fields, and emitted no `currentTarget`/`reset` runtime error.
