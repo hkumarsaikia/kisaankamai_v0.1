@@ -46,3 +46,15 @@ PORT=3108 npm run dev
 
 - `GET /owner-benefits`: `200 text/html; charset=utf-8`
 - `GET /assets/share/kisan-kamai-og.jpg`: `200 image/jpeg`
+
+## Live Rollout QA
+
+Released commit `7fd265ae95e7be8e85ff086fb64cc262979b3a53` through Firebase App Hosting after pushing to `origin/main`.
+
+- Firebase App Hosting rollout: created successfully.
+- `npm run firebase:deploy`: Firestore and Storage rules deployed successfully.
+- `https://www.kisankamai.com/assets/share/kisan-kamai-og.jpg`: `200`, `Content-Type: image/jpeg`, `Content-Length: 93226`.
+- `https://kisankamai.com/assets/share/kisan-kamai-og.jpg`: `200`, `Content-Type: image/jpeg`, `Content-Length: 93226`.
+- `https://www.kisankamai.com/`, `https://kisankamai.com/`, `/owner-benefits`, `/about`, and `/rent-equipment`: `200`.
+- Live root HTML on both apex and `www` includes the dedicated `og:image`, `og:image:secure_url`, `og:image:type=image/jpeg`, `og:image:width=1200`, `og:image:height=630`, `twitter:image`, and `twitter:image:alt` tags.
+- Live Playwright rendered Marathi checks passed for `/`, `/owner-benefits`, `/about`, and `/rent-equipment`.
