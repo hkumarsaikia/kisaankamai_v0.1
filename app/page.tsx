@@ -67,34 +67,55 @@ const markerSublabelTranslations = {
 
 const farmerRatingTiles = [
   {
-    titleEn: "Clear equipment details",
-    titleMr: "स्पष्ट उपकरण तपशील",
-    textEn: "Farmers can review photos, rate, location, and owner details before making a booking request.",
-    textMr: "शेतकरी बुकिंग विनंती करण्यापूर्वी फोटो, दर, ठिकाण आणि मालक तपशील पाहू शकतात.",
-    labelEn: "Farmer review",
-    labelMr: "शेतकरी पुनरावलोकन",
+    titleEn: "Photos made selection easier",
+    titleMr: "फोटोंमुळे निवड सोपी झाली",
+    textEn: "I could compare the tractor photos, hourly rate, and owner location before calling. The booking request felt clear from the start.",
+    textMr: "कॉल करण्यापूर्वी ट्रॅक्टरचे फोटो, तासाचा दर आणि मालकाचे ठिकाण पाहता आले. सुरुवातीपासूनच बुकिंग विनंती स्पष्ट वाटली.",
+    labelEn: "Sample renter review",
+    labelMr: "नमुना भाडेकरू पुनरावलोकन",
+    nameEn: "Suresh Jadhav",
+    nameMr: "सुरेश जाधव",
+    roleEn: "Vegetable farmer",
+    roleMr: "भाजीपाला शेतकरी",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
+    avatar: assetPath("/assets/generated/maha_farmer_1.png"),
+    tagsEn: ["Tractor", "Clear photos", "Local owner"],
+    tagsMr: ["ट्रॅक्टर", "स्पष्ट फोटो", "स्थानिक मालक"],
   },
   {
-    titleEn: "Direct owner coordination",
-    titleMr: "मालकाशी थेट समन्वय",
-    textEn: "Owners and renters can confirm timing, machine condition, and field needs directly.",
-    textMr: "मालक आणि भाडेकरू वेळ, मशीनची स्थिती आणि शेतातील गरज थेट निश्चित करू शकतात.",
-    labelEn: "Owner review",
-    labelMr: "मालक पुनरावलोकन",
+    titleEn: "Requests came with context",
+    titleMr: "विनंत्या संदर्भासह आल्या",
+    textEn: "The renter shared field timing and work details before the call, so I knew whether my machine was suitable for the job.",
+    textMr: "कॉलपूर्वी भाडेकरूने शेताची वेळ आणि कामाचा तपशील दिला, त्यामुळे माझी मशीन त्या कामासाठी योग्य आहे का हे समजले.",
+    labelEn: "Sample owner review",
+    labelMr: "नमुना मालक पुनरावलोकन",
+    nameEn: "Meera Pawar",
+    nameMr: "मीरा पवार",
+    roleEn: "Equipment owner",
+    roleMr: "उपकरण मालक",
     areaEn: "Mukhed Area",
     areaMr: "मुखेड परिसर",
+    avatar: assetPath("/assets/generated/maha_farmer_2.png"),
+    tagsEn: ["Direct call", "Timing shared", "Owner control"],
+    tagsMr: ["थेट कॉल", "वेळ शेअर", "मालक नियंत्रण"],
   },
   {
-    titleEn: "Local support confidence",
-    titleMr: "स्थानिक सपोर्टचा विश्वास",
-    textEn: "Support stays available when a renter needs help finding equipment or contacting an owner.",
-    textMr: "भाडेकरूला उपकरण शोधण्यात किंवा मालकाशी संपर्क साधण्यात मदत हवी असल्यास सपोर्ट उपलब्ध राहतो.",
-    labelEn: "Support review",
-    labelMr: "सपोर्ट पुनरावलोकन",
+    titleEn: "Support helped narrow the search",
+    titleMr: "सपोर्टमुळे शोध कमी वेळात झाला",
+    textEn: "When I could not find the right machine nearby, support helped me explain the requirement and look for a closer owner.",
+    textMr: "जवळ योग्य मशीन सापडत नव्हती तेव्हा सपोर्टने गरज समजावून सांगायला आणि जवळचा मालक शोधायला मदत केली.",
+    labelEn: "Sample support review",
+    labelMr: "नमुना सपोर्ट पुनरावलोकन",
+    nameEn: "Ganesh More",
+    nameMr: "गणेश मोरे",
+    roleEn: "Smallholder farmer",
+    roleMr: "लहान शेतकरी",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
+    avatar: assetPath("/assets/generated/maha_farmer_3.png"),
+    tagsEn: ["Support", "Nearby search", "Clear requirement"],
+    tagsMr: ["सपोर्ट", "जवळचा शोध", "स्पष्ट गरज"],
   },
 ] as const;
 
@@ -554,27 +575,39 @@ export default function Home() {
                       ))}
                     </div>
                     <span className="rounded-full border border-primary/10 bg-white/70 px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-primary shadow-sm dark:border-emerald-400/20 dark:bg-slate-950/70 dark:text-emerald-100">
-                      {langText("Review", "पुनरावलोकन")}
+                      {langText(item.labelEn, item.labelMr)}
                     </span>
                   </div>
                   <h3 className="mb-4 text-2xl font-black leading-tight text-primary dark:text-emerald-50">
                     {langText(item.titleEn, item.titleMr)}
                   </h3>
                   <p className="flex-1 text-base leading-7 text-on-surface-variant">
-                    {langText(item.textEn, item.textMr)}
+                    “{langText(item.textEn, item.textMr)}”
                   </p>
+                  <div className="mt-6 flex flex-wrap gap-2">
+                    {item.tagsEn.map((tag, tagIndex) => (
+                      <span
+                        key={`${item.titleEn}-${tag}`}
+                        className="rounded-full bg-white/65 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-primary shadow-sm dark:bg-slate-950/60 dark:text-emerald-100"
+                      >
+                        {langText(tag, item.tagsMr[tagIndex])}
+                      </span>
+                    ))}
+                  </div>
                   <div className="mt-8 flex items-center gap-4 border-t border-outline-variant/70 pt-6">
                     <ContentImage
                       className="h-12 w-12 rounded-full object-cover ring-4 ring-white shadow-md dark:ring-slate-950"
-                      alt={langText("Farmer rating profile image", "शेतकरी रेटिंग प्रोफाइल प्रतिमा")}
-                      src={assetPath("/assets/generated/farmer_portrait.png")}
+                      alt={langText(`${item.nameEn} review profile image`, `${item.nameMr} पुनरावलोकन प्रोफाइल प्रतिमा`)}
+                      src={item.avatar}
                       loading="lazy"
                       decoding="async"
                       sizes="48px"
                     />
                     <div>
-                      <h5 className="font-black text-primary dark:text-emerald-50">{langText(item.labelEn, item.labelMr)}</h5>
-                      <p className="text-xs font-label text-on-surface-variant">{langText(item.areaEn, item.areaMr)}</p>
+                      <h5 className="font-black text-primary dark:text-emerald-50">{langText(item.nameEn, item.nameMr)}</h5>
+                      <p className="text-xs font-label font-semibold text-on-surface-variant">
+                        {langText(item.roleEn, item.roleMr)} · {langText(item.areaEn, item.areaMr)}
+                      </p>
                     </div>
                   </div>
                 </article>

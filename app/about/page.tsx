@@ -13,19 +13,28 @@ const values = [
   {
     icon: "verified_user",
     title: { en: "Trust", mr: "विश्वास" },
-    copy: "Every machine and owner on our platform undergoes a rigorous verification process.",
+    copy: {
+      en: "Every machine and owner on our platform goes through a verification review before being shown to farmers.",
+      mr: "शेतकऱ्यांसमोर दाखवण्यापूर्वी प्रत्येक मशीन आणि मालकाची पडताळणी केली जाते.",
+    },
     cacheKey: "about.value.trust",
   },
   {
     icon: "lightbulb",
     title: { en: "Innovation", mr: "नवोन्मेष" },
-    copy: "Leveraging modern technology to solve age-old rural agricultural challenges.",
+    copy: {
+      en: "We use practical technology to make rural equipment access easier, clearer, and faster to coordinate.",
+      mr: "ग्रामीण भागात उपकरणे मिळवणे सोपे, स्पष्ट आणि जलद व्हावे यासाठी आम्ही व्यावहारिक तंत्रज्ञान वापरतो.",
+    },
     cacheKey: "about.value.innovation",
   },
   {
     icon: "groups",
     title: { en: "Community", mr: "समुदाय" },
-    copy: "Deeply rooted in Sangli, Satara, and Kolhapur, serving our local farming brothers.",
+    copy: {
+      en: "We are built around local farming relationships across Northern Maharashtra.",
+      mr: "उत्तर महाराष्ट्रातील स्थानिक शेतकरी संबंधांवर आमचे व्यासपीठ उभे आहे.",
+    },
     cacheKey: "about.value.community",
   },
 ];
@@ -37,14 +46,14 @@ const metrics = [
 ];
 
 const team = [
-  "Rohit Nikaam",
-  "Pratik Shinde",
-  "Harshwardhan Shinde",
-  "Raksha Sonawane",
+  { en: "Rohit Nikaam", mr: "रोहित निकाम" },
+  { en: "Pratik Shinde", mr: "प्रतिक शिंदे" },
+  { en: "Harshwardhan Shinde", mr: "हर्षवर्धन शिंदे" },
+  { en: "Raksha Sonawane", mr: "रक्षा सोनवणे" },
 ];
 
 export default function AboutPage() {
-  const { langText, text } = useLanguage();
+  const { langText } = useLanguage();
 
   return (
     <div className="min-h-screen bg-background text-on-background">
@@ -68,9 +77,10 @@ export default function AboutPage() {
                 )}
               </h1>
               <p className="mt-6 font-headline text-2xl font-semibold leading-relaxed text-primary-fixed/90">
-                {text("A marketplace rooted in trust, local access, and shared prosperity for farmers and owners.", {
-                  cacheKey: "about.hero-subtitle",
-                })}
+                {langText(
+                  "A marketplace rooted in trust, local access, and shared prosperity for farmers and owners.",
+                  "शेतकरी आणि मालकांसाठी विश्वास, स्थानिक उपलब्धता आणि सामायिक प्रगतीवर आधारलेले मार्केटप्लेस."
+                )}
               </p>
             </div>
           </div>
@@ -138,7 +148,7 @@ export default function AboutPage() {
                   <span className="material-symbols-outlined text-4xl">{value.icon}</span>
                 </div>
                 <h3 className="text-2xl font-bold">{langText(value.title.en, value.title.mr)}</h3>
-                <p className="mt-4 text-on-surface-variant">{text(value.copy, { cacheKey: value.cacheKey })}</p>
+                <p className="mt-4 text-on-surface-variant">{langText(value.copy.en, value.copy.mr)}</p>
               </div>
             ))}
           </div>
@@ -162,10 +172,10 @@ export default function AboutPage() {
           <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {team.map((person) => (
               <div
-                key={person}
+                key={person.en}
                 className="kk-depth-tile rounded-2xl border border-outline-variant/30 bg-surface-container-low px-4 py-8 text-center"
               >
-                <h4 className="text-lg font-bold">{person}</h4>
+                <h4 className="text-lg font-bold">{langText(person.en, person.mr)}</h4>
               </div>
             ))}
           </div>

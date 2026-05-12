@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 
 test("public SEO metadata brands titles, supports noindex pages, and includes structured data", async () => {
   const [metadataSource, layoutSource] = await Promise.all([
@@ -10,13 +10,22 @@ test("public SEO metadata brands titles, supports noindex pages, and includes st
 
   assert.match(metadataSource, /normalizeTitle/);
   assert.match(metadataSource, /\$\{title\} \| \$\{SITE_NAME\}/);
+  assert.match(metadataSource, /DEFAULT_SHARE_IMAGE_PATH = "\/assets\/share\/kisan-kamai-og\.jpg"/);
+  assert.match(metadataSource, /og:image:type" content="image\/jpeg"/);
+  assert.match(metadataSource, /og:image:width" content="1200"/);
+  assert.match(metadataSource, /twitter:image:alt/);
   assert.match(metadataSource, /noIndex\?: boolean/);
   assert.match(metadataSource, /noindex,follow/);
   assert.match(layoutSource, /siteStructuredData/);
+  assert.match(layoutSource, /type: "image\/jpeg"/);
   assert.match(layoutSource, /"@type": "WebSite"/);
   assert.match(layoutSource, /SearchAction/);
   assert.match(layoutSource, /application\/ld\+json/);
   assert.match(layoutSource, /Rent and List Farm Equipment in Maharashtra/);
+});
+
+test("share preview image is a dedicated 1200x630 JPEG for social platforms", async () => {
+  await access(new URL("../public/assets/share/kisan-kamai-og.jpg", import.meta.url));
 });
 
 test("sitemap contains indexable public routes and excludes protected or utility routes", async () => {
@@ -64,6 +73,28 @@ test("public marketing copy avoids unsupported testimonial, ranking, and numeric
   assert.match(homeSource, /Farmer ratings/);
   assert.match(ownerExperienceSource, /Renter Profiles/);
   assert.match(ownerBenefitsSource, /Set your availability, review renter requests, and coordinate work clearly/);
+});
+
+test("public Marathi mode uses source-controlled labels for highlighted marketing and listing UI", async () => {
+  const [homeSource, ownerBenefitsSource, aboutSource, rentViewSource, marketLabelsSource] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-benefits/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/rent-equipment/RentEquipmentView.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/localized-market-labels.ts", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(homeSource, /Sample renter review/);
+  assert.match(homeSource, /नमुना भाडेकरू पुनरावलोकन/);
+  assert.match(ownerBenefitsSource, /तुम्ही किती कमाई करू शकता/);
+  assert.match(ownerBenefitsSource, /getLocalizedDistrictLabel/);
+  assert.match(aboutSource, /उत्तर महाराष्ट्रातील स्थानिक शेतकरी संबंधांवर/);
+  assert.match(rentViewSource, /getLocalizedCategoryLabel/);
+  assert.match(rentViewSource, /getLocalizedLocationParts/);
+  assert.match(marketLabelsSource, /Tractors/);
+  assert.match(marketLabelsSource, /ट्रॅक्टर्स/);
+  assert.match(marketLabelsSource, /Maharashtra/);
+  assert.match(marketLabelsSource, /महाराष्ट्र/);
 });
 
 test("live Lighthouse accessibility fixes keep labels and canonical paths valid", async () => {

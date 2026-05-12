@@ -12,6 +12,7 @@ import { DETAIL_ROUTE_TEMPLATE } from "@/lib/discovery-routes";
 import { createHubCirclesFromEquipment, createListingMarkersFromEquipment } from "@/lib/map-data";
 import { assetPath } from "@/lib/site";
 import { normalizeCategorySlug, type EquipmentCategorySummary } from "@/lib/equipment-categories";
+import { getLocalizedCategoryLabel, getLocalizedLocationParts } from "@/lib/localized-market-labels";
 import {
   getEquipmentAvailability,
   getVisibleEquipmentRating,
@@ -56,6 +57,26 @@ function getCategoryIcon(summary: EquipmentCategorySummary) {
     categoryIconBySlug[summary.category] ||
     "agriculture"
   );
+}
+
+function formatCount(value: number, language: "en" | "mr") {
+  return value.toLocaleString(language === "mr" ? "mr-IN" : "en-IN");
+}
+
+function formatMachinePower(value: string | number | undefined, language: "en" | "mr") {
+  const rawValue = String(value || "").trim();
+
+  if (!rawValue) {
+    return "";
+  }
+
+  if (language === "en") {
+    return rawValue;
+  }
+
+  return rawValue
+    .replace(/\d+/g, (match) => Number(match).toLocaleString("mr-IN"))
+    .replace(/\bHP\b/gi, "एचपी");
 }
 
 function buildSearchHref(location: string, query: string) {
@@ -223,13 +244,13 @@ function NoEquipmentAvailable({
 }
 
 function EquipmentCard({ item, compact = false, priorityImage = false }: { item: EquipmentRecord; compact?: boolean; priorityImage?: boolean }) {
-  const { langText, text } = useLanguage();
-  const locationLabel = [item.location, item.district, item.state].filter(Boolean).join(", ");
+  const { language, langText, text } = useLanguage();
+  const locationLabel = getLocalizedLocationParts([item.location, item.district, item.state], language);
   const visibleRating = getVisibleEquipmentRating(item);
-  const categoryLabel = text(item.categoryLabel, {
-    sourceLanguage: "en",
-    cacheKey: `rent-category-${item.id}`,
-  });
+  const rawCategoryLabel = item.categoryLabel.split("•")[0]?.trim() || item.category;
+  const categoryLabel = getLocalizedCategoryLabel(item.category || rawCategoryLabel, language, rawCategoryLabel);
+  const categoryBadge = getLocalizedCategoryLabel(item.category || rawCategoryLabel, language, rawCategoryLabel).toUpperCase();
+  const powerLabel = formatMachinePower(item.hp, language);
 
   if (compact) {
     const imageClassName = compact ? "h-36 sm:h-40 md:h-44" : "";
@@ -324,7 +345,7 @@ function EquipmentCard({ item, compact = false, priorityImage = false }: { item:
           src={assetPath(item.coverImage)}
         />
         <div className="absolute left-3 top-3 hidden rounded bg-surface-container-lowest/90 px-2 py-1 font-label text-xs font-bold uppercase tracking-wider text-primary backdrop-blur-sm sm:block">
-          {text(item.category, { sourceLanguage: "en", cacheKey: `rent-badge-${item.id}` })}
+          {categoryBadge}
         </div>
         {visibleRating ? (
           <div className="equipment-rating-pill absolute bottom-3 left-3 hidden items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-black text-amber-700 shadow-sm backdrop-blur dark:bg-slate-950/85 dark:text-amber-200 sm:inline-flex">
@@ -354,7 +375,7 @@ function EquipmentCard({ item, compact = false, priorityImage = false }: { item:
           </div>
           <div className="flex items-center gap-2 text-on-surface-variant text-sm font-body">
             <span className="material-symbols-outlined shrink-0 text-[16px]">build</span>
-            <span className="truncate">{item.hp}</span>
+            <span className="truncate">{powerLabel}</span>
           </div>
         </div>
         <Link href={DETAIL_ROUTE_TEMPLATE(item.id)} className="w-full rounded-lg bg-primary-container px-3 py-2 text-center font-label text-sm font-bold text-white transition-colors hover:bg-primary-container/90 dark:text-primary-fixed sm:px-4 sm:py-2.5">
@@ -378,7 +399,7 @@ export default function RentEquipmentView({
   initialLocation: string;
   initialQuery: string;
 }) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
   const [location, setLocation] = useState(initialLocation);
   const [query, setQuery] = useState(initialQuery);
   const [availablePage, setAvailablePage] = useState(1);
@@ -416,17 +437,19 @@ export default function RentEquipmentView({
 
   const querySummary = useMemo(() => {
     if (location) {
+      const localizedCount = formatCount(items.length, language);
       return langText(
         `Showing ${items.length} machines available in ${location}`,
-        `${location} येथे ${items.length} मशिन्स उपलब्ध आहेत`
+        `${location} येथे ${localizedCount} मशिन्स उपलब्ध आहेत`
       );
     }
 
+    const localizedCount = formatCount(items.length, language);
     return langText(
       `Showing ${items.length} machines available`,
-      `${items.length} मशिन्स उपलब्ध आहेत`
+      `${localizedCount} मशिन्स उपलब्ध आहेत`
     );
-  }, [items.length, langText, location]);
+  }, [items.length, language, langText, location]);
 
   if (!items.length) {
     return (
@@ -573,9 +596,9 @@ export default function RentEquipmentView({
                   <span className="material-symbols-outlined text-sm">
                     {getCategoryIcon(category)}
                   </span>
-                  {category.name}
+                  {getLocalizedCategoryLabel(category.slug || category.category, language, category.name)}
                   <span className="rounded-full bg-surface-container-high px-2 py-0.5 text-[11px] font-bold text-on-surface-variant">
-                    {category.count}
+                    {formatCount(category.count, language)}
                   </span>
                 </Link>
               ))}

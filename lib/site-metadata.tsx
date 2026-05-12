@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { assetPath } from "@/lib/site";
 
 export const SITE_NAME = "Kisan Kamai";
 export const SITE_DOMAIN = "https://www.kisankamai.com";
+export const DEFAULT_SHARE_IMAGE_PATH = "/assets/share/kisan-kamai-og.jpg";
 export const DEFAULT_SHARE_DESCRIPTION =
   "Rent and list farm equipment across Northern Maharashtra with Kisan Kamai. Browse machinery, manage bookings, and coordinate directly with local owners and renters.";
 
@@ -15,7 +15,7 @@ export function getCanonicalUrl(path = "/") {
 }
 
 export function getDefaultShareImageUrl() {
-  return new URL(assetPath("/assets/generated/hero_tractor.png"), getMetadataBaseUrl()).toString();
+  return new URL(DEFAULT_SHARE_IMAGE_PATH, getMetadataBaseUrl()).toString();
 }
 
 type PageMetadataInput = {
@@ -59,8 +59,10 @@ export function buildPageMetadata({
       images: [
         {
           url: shareImage,
+          secureUrl: shareImage,
           width: 1200,
           height: 630,
+          type: "image/jpeg",
           alt: fullTitle,
         },
       ],
@@ -69,7 +71,12 @@ export function buildPageMetadata({
       card: "summary_large_image",
       title: fullTitle,
       description,
-      images: [shareImage],
+      images: [
+        {
+          url: shareImage,
+          alt: fullTitle,
+        },
+      ],
     },
   };
 }
@@ -95,10 +102,16 @@ export function renderHeadMetadata({
       <meta property="og:url" content={canonical} />
       <meta property="og:site_name" content={SITE_NAME} />
       <meta property="og:image" content={shareImage} />
+      <meta property="og:image:secure_url" content={shareImage} />
+      <meta property="og:image:type" content="image/jpeg" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content={fullTitle} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={shareImage} />
+      <meta name="twitter:image:alt" content={fullTitle} />
     </>
   );
 }

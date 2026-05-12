@@ -114,8 +114,10 @@ export const metadata: Metadata = {
     images: [
       {
         url: getDefaultShareImageUrl(),
+        secureUrl: getDefaultShareImageUrl(),
         width: 1200,
         height: 630,
+        type: "image/jpeg",
         alt: SITE_NAME,
       },
     ],
@@ -124,7 +126,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
     description: DEFAULT_SHARE_DESCRIPTION,
-    images: [getDefaultShareImageUrl()],
+    images: [
+      {
+        url: getDefaultShareImageUrl(),
+        alt: SITE_NAME,
+      },
+    ],
   },
 };
 
