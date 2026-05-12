@@ -11,6 +11,7 @@ Request: check whether the live website scales properly across frontend, backend
 - Live public UI scan covered desktop/mobile and light/dark on `/`, `/rent-equipment`, `/rent-equipment?query=balers`, `/support`, `/owner-benefits`, `/forgot-password`, and `/profile-selection`.
   - 28 route/theme/viewport combinations checked.
   - No route failures, horizontal overflow, icon-font fallback, obvious inline English/Marathi slash strings, or console/page errors were found.
+- Post-deploy live public UI scan repeated the same 28 route/theme/viewport combinations after the App Hosting rollout and found no problems.
 
 ## Backend Scaling Fix
 

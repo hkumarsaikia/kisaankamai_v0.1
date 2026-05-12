@@ -1,0 +1,1114 @@
+[
+  {
+    "route": "/",
+    "viewport": "desktop",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 5170,
+    "viewportHeight": 1000,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "event_available",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified_user",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment",
+    "viewport": "desktop",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1450,
+    "viewportHeight": 1000,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "filter_list",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "sort",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "expand_more",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "done",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "currency_rupee",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "near_me",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment?query=balers",
+    "viewport": "desktop",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1370,
+    "viewportHeight": 1000,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search_off",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "support_agent",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/support",
+    "viewport": "desktop",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 2258,
+    "viewportHeight": 1000,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "person",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "calendar_today",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "handshake",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "chat",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "open_in_new",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/owner-benefits",
+    "viewport": "desktop",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 2170,
+    "viewportHeight": 1000,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "trending_up",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "payments",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/forgot-password",
+    "viewport": "desktop",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1450,
+    "viewportHeight": 1000,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_back",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "phone_iphone",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward_ios",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/profile-selection",
+    "viewport": "desktop",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1450,
+    "viewportHeight": 1000,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "lock",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "visibility",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/",
+    "viewport": "desktop",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 5170,
+    "viewportHeight": 1000,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "event_available",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified_user",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment",
+    "viewport": "desktop",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1450,
+    "viewportHeight": 1000,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "filter_list",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "sort",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "expand_more",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "done",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "currency_rupee",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "near_me",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment?query=balers",
+    "viewport": "desktop",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1370,
+    "viewportHeight": 1000,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search_off",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "support_agent",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/support",
+    "viewport": "desktop",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 2258,
+    "viewportHeight": 1000,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "person",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "calendar_today",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "handshake",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "chat",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "open_in_new",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/owner-benefits",
+    "viewport": "desktop",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 2170,
+    "viewportHeight": 1000,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "trending_up",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "payments",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/forgot-password",
+    "viewport": "desktop",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1450,
+    "viewportHeight": 1000,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_back",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "phone_iphone",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward_ios",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/profile-selection",
+    "viewport": "desktop",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 1440,
+    "clientWidth": 1440,
+    "horizontalOverflow": false,
+    "bodyHeight": 1450,
+    "viewportHeight": 1000,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "lock",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "visibility",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/",
+    "viewport": "mobile",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 9922,
+    "viewportHeight": 844,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "event_available",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified_user",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment",
+    "viewport": "mobile",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 2063,
+    "viewportHeight": 844,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "filter_list",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "sort",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "expand_more",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "done",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "currency_rupee",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "near_me",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment?query=balers",
+    "viewport": "mobile",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 1895,
+    "viewportHeight": 844,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search_off",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "support_agent",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/support",
+    "viewport": "mobile",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 4238,
+    "viewportHeight": 844,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "person",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "calendar_today",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "handshake",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "chat",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "open_in_new",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/owner-benefits",
+    "viewport": "mobile",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 3579,
+    "viewportHeight": 844,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "trending_up",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "payments",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/forgot-password",
+    "viewport": "mobile",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 1904,
+    "viewportHeight": 844,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_back",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "phone_iphone",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward_ios",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/profile-selection",
+    "viewport": "mobile",
+    "theme": "light",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 1904,
+    "viewportHeight": 844,
+    "themeDark": false,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "lock",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "visibility",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/",
+    "viewport": "mobile",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 9922,
+    "viewportHeight": 844,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "event_available",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified_user",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "verified",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment",
+    "viewport": "mobile",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 2063,
+    "viewportHeight": 844,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "filter_list",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "sort",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "expand_more",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "done",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "currency_rupee",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "near_me",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/rent-equipment?query=balers",
+    "viewport": "mobile",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Rent Farm Equipment in Maharashtra | Kisan Kamai | Kisan Kamai",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 1895,
+    "viewportHeight": 844,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "search_off",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "support_agent",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/support",
+    "viewport": "mobile",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 4238,
+    "viewportHeight": 844,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "person",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "calendar_today",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "handshake",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "build",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "chat",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "open_in_new",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/owner-benefits",
+    "viewport": "mobile",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 3579,
+    "viewportHeight": 844,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "trending_up",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "check_circle",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "payments",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/forgot-password",
+    "viewport": "mobile",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 1904,
+    "viewportHeight": 844,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_back",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "phone_iphone",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward_ios",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  },
+  {
+    "route": "/profile-selection",
+    "viewport": "mobile",
+    "theme": "dark",
+    "status": 200,
+    "errors": [],
+    "title": "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
+    "scrollWidth": 390,
+    "clientWidth": 390,
+    "horizontalOverflow": false,
+    "bodyHeight": 1904,
+    "viewportHeight": 844,
+    "themeDark": true,
+    "materialSymbolsOk": true,
+    "symbols": [
+      {
+        "text": "agriculture",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "call",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "lock",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "visibility",
+        "font": "\"Material Symbols Outlined\""
+      },
+      {
+        "text": "arrow_forward",
+        "font": "\"Material Symbols Outlined\""
+      }
+    ],
+    "doubleLanguageSlash": false
+  }
+]
