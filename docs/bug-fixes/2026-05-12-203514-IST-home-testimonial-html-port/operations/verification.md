@@ -51,8 +51,19 @@ Screenshots:
 
 ## Release Smoke
 
-Live deployment verification should confirm:
+Deployment commands:
 
-- `https://www.kisankamai.com/` returns 200.
-- `https://kisankamai.com/` returns 200.
-- Live rendered homepage testimonial cards match the new heading and supplied-card structure.
+```bash
+firebase apphosting:rollouts:create kisankamai-web-backend --git-commit b134922e759af67d0768736ac66b610921a977cf --project gokisaan --force
+npm run firebase:deploy
+```
+
+Result:
+
+- App Hosting rollout created successfully for commit `b134922e759af67d0768736ac66b610921a977cf`.
+- Firestore and Storage rules deployed successfully.
+- `https://www.kisankamai.com/` returned 200.
+- `https://kisankamai.com/` returned 200.
+- Live Playwright rendered checks passed on `www` in English and Marathi.
+- Live Playwright rendered checks passed on apex in English.
+- Live homepage testimonial cards render 3 cards, load all 3 profile images, show the new heading, and do not contain the removed legacy heading/subtitle/badge strings.
