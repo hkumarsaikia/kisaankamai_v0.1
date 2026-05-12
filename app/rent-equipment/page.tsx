@@ -2,6 +2,13 @@ import RentEquipmentView from "./RentEquipmentView";
 import { getRentEquipmentView } from "@/lib/discovery-routes";
 import { getMergedCategorySummariesFromEquipment } from "@/lib/equipment-categories";
 import { getEquipmentList } from "@/lib/server/equipment";
+import { buildPageMetadata } from "@/lib/site-metadata";
+
+export const metadata = buildPageMetadata({
+  title: "Rent Farm Equipment in Maharashtra",
+  description: "Browse tractors, implements, harvesters, pumps, seeders, and other farm equipment available through Kisan Kamai.",
+  path: "/rent-equipment",
+});
 
 const QUERY_ALIASES: Record<string, string[]> = {
   tractor: ["tractor"],

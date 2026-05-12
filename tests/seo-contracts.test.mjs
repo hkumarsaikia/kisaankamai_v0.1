@@ -65,3 +65,19 @@ test("public marketing copy avoids unsupported testimonial, ranking, and numeric
   assert.match(ownerExperienceSource, /Renter Profiles/);
   assert.match(ownerBenefitsSource, /Set your availability, review renter requests, and coordinate work clearly/);
 });
+
+test("live Lighthouse accessibility fixes keep labels and canonical paths valid", async () => {
+  const [headerSource, footerSource, homeSource, rentPageSource] = await Promise.all([
+    readFile(new URL("../components/Header.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/Footer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/rent-equipment/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(headerSource, /const accessibleLabel = `\$\{buttonLabel\} - \$\{ariaLabel\}`/);
+  assert.match(headerSource, /aria-label=\{accessibleLabel\}/);
+  assert.match(footerSource, /text-slate-400 text-xs font-normal/);
+  assert.match(homeSource, /aria-label=\{t\("home\.select_location"\)\}/);
+  assert.match(rentPageSource, /metadata = buildPageMetadata/);
+  assert.match(rentPageSource, /path: "\/rent-equipment"/);
+});

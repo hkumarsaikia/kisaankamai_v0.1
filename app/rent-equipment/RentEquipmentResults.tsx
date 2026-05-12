@@ -99,6 +99,7 @@ function ResultCard({
               : "bg-red-500 ring-red-500/20"
           }`}
           aria-label={availability.available ? "Available" : "Not available"}
+          role="img"
           title={availability.available ? "Available" : "Not available"}
         />
         {visibleRating ? (

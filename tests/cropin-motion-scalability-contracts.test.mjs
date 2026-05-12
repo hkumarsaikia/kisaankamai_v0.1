@@ -57,6 +57,7 @@ test("homepage restores farmer rating cards with refined Cropin-style surface tr
   assert.match(homeSource, /kk-farmer-rating-card/);
   assert.match(homeSource, /Farmer ratings/);
   assert.match(homeSource, /SharedIcon key=\{\`\$\{item\.titleEn\}-star-\$\{starIndex\}\`\} name="star"/);
+  assert.match(homeSource, /aria-hidden="true"[\s\S]*SharedIcon key=\{\`\$\{item\.titleEn\}-star-\$\{starIndex\}\`\} name="star"/);
   assert.doesNotMatch(homeSource, /platformUseCases/);
   assert.match(globals, /\.kk-farmer-rating-section/);
   assert.match(globals, /\.kk-farmer-rating-card::after/);

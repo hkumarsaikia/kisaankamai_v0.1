@@ -160,6 +160,7 @@ function AvailabilityDot({ item }: { item: EquipmentRecord }) {
           : "bg-red-500 ring-red-500/20"
       }`}
       aria-label={label}
+      role="img"
       title={label}
     />
   );

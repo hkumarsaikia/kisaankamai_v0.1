@@ -19,12 +19,13 @@ export const HeaderLanguageControl = ({ className = "" }: HeaderLanguageControlP
   const nextLanguage = language === "en" ? "mr" : "en";
   const buttonLabel = nextLanguage === "mr" ? t("language.marathi") : t("language.english");
   const ariaLabel = nextLanguage === "mr" ? t("language.switch_to_marathi") : t("language.switch_to_english");
+  const accessibleLabel = `${buttonLabel} - ${ariaLabel}`;
 
   return (
     <button
       type="button"
       onClick={() => setLanguage(nextLanguage)}
-      aria-label={ariaLabel}
+      aria-label={accessibleLabel}
       title={ariaLabel}
       className={`${className} inline-flex items-center gap-1.5 text-primary dark:text-primary-fixed px-3 py-2 hover:bg-emerald-50 dark:hover:bg-slate-900/50 rounded-lg transition-all font-mukta text-sm font-semibold`}
     >

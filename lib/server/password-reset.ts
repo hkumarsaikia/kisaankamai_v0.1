@@ -3,6 +3,7 @@ import "server-only";
 import { z } from "zod";
 import {
   createOrUpdatePasswordLoginCredential,
+  findUserById,
   findUserByPhone,
 } from "@/lib/server/firebase-data";
 import { getAdminAuth } from "@/lib/server/firebase-admin";
@@ -72,8 +73,8 @@ export async function completePasswordResetFromIdToken(input: {
     throw new Error("Phone verification is required before resetting the password.");
   }
 
-  const user = await findUserByPhone(verifiedPhone);
-  if (!user || user.id !== decoded.uid) {
+  const user = await findUserById(decoded.uid);
+  if (!user || normalizePhoneDigits(user.phone) !== normalizePhoneDigits(verifiedPhone)) {
     throw new Error("No Kisan Kamai account is linked to this verified mobile number.");
   }
 

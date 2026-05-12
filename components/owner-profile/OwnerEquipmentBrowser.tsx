@@ -48,6 +48,7 @@ export function OwnerEquipmentBrowser({
                       : "bg-red-500 ring-red-500/20"
                   }`}
                   aria-label={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                  role="img"
                   title={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
                 />
                 <img src={listing.coverImage} alt={listing.name} className="aspect-[4/3] w-full object-cover" />

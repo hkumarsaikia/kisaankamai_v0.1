@@ -202,7 +202,7 @@ export const Footer = () => {
             </p>
           ) : null}
           <div className="mt-6">
-            <p className="text-slate-500 text-xs font-normal">{t("Footer.operating_in")}</p>
+            <p className="text-slate-400 text-xs font-normal">{t("Footer.operating_in")}</p>
             <p className="text-white font-medium text-sm flex items-center gap-1 mt-1">
               <SharedIcon name="location" className="h-4 w-4 text-emerald-400" />
               {t("Footer.maharashtra_india")}

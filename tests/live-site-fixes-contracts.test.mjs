@@ -379,6 +379,8 @@ test("rent equipment pages expose base search, query sort, and compact no-equipm
   assert.match(pageSource, /balers:\s*\["baler"\]/);
   assert.match(pageSource, /pumps:\s*\["pump"\]/);
   assert.match(pageSource, /threshers:\s*\["thresher"\]/);
+  assert.match(pageSource, /metadata = buildPageMetadata/);
+  assert.match(pageSource, /path: "\/rent-equipment"/);
   assert.match(siteChromeSource, /pathname\.startsWith\("\/rent-equipment"\)/);
   assert.match(siteChromeRoutesSource, /pathname === "\/rent-equipment"/);
 });

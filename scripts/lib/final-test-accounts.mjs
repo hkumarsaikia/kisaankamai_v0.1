@@ -116,6 +116,27 @@ async function finalAuthUserIds(auth, seedData) {
   return [...ids];
 }
 
+async function finalFirestoreUserIds(db, seedData) {
+  const ids = new Set([seedData.owner.uid, seedData.renter.uid]);
+  const matches = [
+    { collection: USERS_COLLECTION, field: "phone", value: seedData.owner.phone },
+    { collection: USERS_COLLECTION, field: "phone", value: seedData.renter.phone },
+    { collection: USERS_COLLECTION, field: "email", value: seedData.owner.email },
+    { collection: USERS_COLLECTION, field: "email", value: seedData.renter.email },
+    { collection: PROFILES_COLLECTION, field: "phone", value: seedData.owner.phone },
+    { collection: PROFILES_COLLECTION, field: "phone", value: seedData.renter.phone },
+    { collection: PROFILES_COLLECTION, field: "email", value: seedData.owner.email },
+    { collection: PROFILES_COLLECTION, field: "email", value: seedData.renter.email },
+  ];
+
+  for (const match of matches) {
+    const snapshot = await db.collection(match.collection).where(match.field, "==", match.value).get();
+    snapshot.docs.forEach((doc) => ids.add(doc.id));
+  }
+
+  return [...ids];
+}
+
 export function getFinalTestManifest() {
   return finalTestManifest;
 }
@@ -285,16 +306,17 @@ export async function cleanupFinalTestAccounts({ db, auth, dryRun = false } = {}
   const bookingIds = seedData.bookings.map((booking) => booking.id);
   const paymentIds = seedData.payments.map((payment) => payment.id);
   const savedItemIds = seedData.savedItems.map((savedItem) => `${seedData.renter.uid}__${savedItem.listingId}`);
+  const firestoreUserIds = dryRun
+    ? [seedData.owner.uid, seedData.renter.uid]
+    : await finalFirestoreUserIds(db, seedData);
 
   const refs = [
     ...listingIds.map((id) => db.collection(LISTINGS_COLLECTION).doc(id)),
     ...bookingIds.map((id) => db.collection(BOOKINGS_COLLECTION).doc(id)),
     ...paymentIds.map((id) => db.collection(PAYMENTS_COLLECTION).doc(id)),
     ...savedItemIds.map((id) => db.collection(SAVED_ITEMS_COLLECTION).doc(id)),
-    db.collection(USERS_COLLECTION).doc(seedData.owner.uid),
-    db.collection(USERS_COLLECTION).doc(seedData.renter.uid),
-    db.collection(PROFILES_COLLECTION).doc(seedData.owner.uid),
-    db.collection(PROFILES_COLLECTION).doc(seedData.renter.uid),
+    ...firestoreUserIds.map((id) => db.collection(USERS_COLLECTION).doc(id)),
+    ...firestoreUserIds.map((id) => db.collection(PROFILES_COLLECTION).doc(id)),
     ...authIdentifierRefs(db, seedData),
   ];
 
@@ -328,8 +350,8 @@ export async function cleanupFinalTestAccounts({ db, auth, dryRun = false } = {}
       bookings: bookingIds.length,
       payments: paymentIds.length,
       savedItems: savedItemIds.length,
-      users: 2,
-      profiles: 2,
+      users: firestoreUserIds.length,
+      profiles: firestoreUserIds.length,
       authUsers: dryRun ? 2 : authResults.filter((entry) => entry.deleted).length,
     },
     authResults,

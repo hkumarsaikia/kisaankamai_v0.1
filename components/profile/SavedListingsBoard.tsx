@@ -117,6 +117,7 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                         : "bg-red-500 ring-red-500/20"
                     }`}
                     aria-label={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
+                    role="img"
                     title={availability.available ? langText("Available", "उपलब्ध") : langText("Not available", "उपलब्ध नाही")}
                   />
                 </div>

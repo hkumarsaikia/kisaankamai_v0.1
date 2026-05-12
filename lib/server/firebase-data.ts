@@ -720,6 +720,10 @@ async function getUserRecordById(userId: string) {
   return mapped;
 }
 
+export async function findUserById(userId: string) {
+  return getUserRecordById(userId);
+}
+
 async function getProfileRecordById(userId: string) {
   const snapshot = await profilesCollection().doc(userId).get();
   return snapshot.exists ? mapProfileFromFirestore(userId, snapshot.data() as ProfileRecord) : null;

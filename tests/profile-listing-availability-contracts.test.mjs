@@ -73,11 +73,15 @@ test("public and workspace equipment tiles use real listing availability for sor
   assert.match(rentView, /SortControl/);
   assert.match(rentView, /EquipmentSortMenu/);
   assert.match(rentView, /equipment-availability-dot/);
+  assert.match(rentView, /role="img"/);
   assert.match(renterBrowser, /sortEquipmentByAvailabilityPriceDistance/);
   assert.match(renterBrowser, /EquipmentSortMenu/);
   assert.match(renterBrowser, /equipment-availability-dot/);
+  assert.match(renterBrowser, /role="img"/);
   assert.match(ownerBrowser, /equipment-availability-dot/);
+  assert.match(ownerBrowser, /role="img"/);
   assert.match(savedBoard, /equipment-availability-dot/);
+  assert.match(savedBoard, /role="img"/);
   assert.match(sortMenu, /Available equipment first/);
   assert.match(sortMenu, /Lowest price first/);
   assert.match(sortMenu, /Nearest equipment first/);

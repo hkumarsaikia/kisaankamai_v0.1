@@ -325,6 +325,7 @@ export default function Home() {
                   <select 
                     className="w-full border-none focus:ring-0 text-on-surface bg-transparent cursor-pointer font-medium"
                     value={searchLocation}
+                    aria-label={t("home.select_location")}
                     onChange={(e) => setSearchLocation(e.target.value)}
                   >
                     <option className="bg-surface-container-lowest text-on-surface" value="" disabled>{t("home.select_location")}</option>
@@ -545,7 +546,7 @@ export default function Home() {
                   style={{ transitionDelay: `${index * 45}ms` }}
                 >
                   <div className="mb-7 flex items-center justify-between gap-4">
-                    <div className="flex gap-1.5 text-amber-500 dark:text-amber-300" aria-label={langText("Five star visual rating", "पाच तारे दृश्य रेटिंग")}>
+                    <div className="flex gap-1.5 text-amber-500 dark:text-amber-300" aria-hidden="true">
                       {Array.from({ length: 5 }).map((_, starIndex) => (
                         <SharedIcon key={`${item.titleEn}-star-${starIndex}`} name="star" className="h-5 w-5" />
                       ))}

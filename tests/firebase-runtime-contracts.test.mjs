@@ -109,4 +109,8 @@ test("final test account cleanup removes reserved auth identifiers before regist
   assert.match(cleanupSource, /email:\$\{seedData\.renter\.email\}/);
   assert.match(cleanupSource, /getUserByPhoneNumber/);
   assert.match(cleanupSource, /getUserByEmail/);
+  assert.match(cleanupSource, /finalFirestoreUserIds/);
+  assert.match(cleanupSource, /collection: USERS_COLLECTION/);
+  assert.match(cleanupSource, /collection: PROFILES_COLLECTION/);
+  assert.match(cleanupSource, /where\(match\.field, "==", match\.value\)/);
 });

@@ -160,8 +160,10 @@ test("password reset lookup accepts registered mobile number only and rejects un
     /"forgot-password\.email_or_phone"|"forgot-password\.otp_is_disabled_in_this_local_phase_reset_directly_using_your_registered_email_or_phone"|Reset directly using your registered email or phone|तुमच्या नोंदणीकृत ईमेल किंवा फोनने/
   );
   assert.match(resetSource, /resolvePasswordResetPhoneInput/);
+  assert.match(resetSource, /findUserById/);
   assert.doesNotMatch(resetSource, /findUserByIdentifier/);
   assert.match(resetSource, /findUserByPhone/);
+  assert.match(resetSource, /normalizePhoneDigits\(user\.phone\) !== normalizePhoneDigits\(verifiedPhone\)/);
   assert.match(resetSource, /Enter the registered mobile number for password reset\./);
   assert.match(resetSource, /No account exists for this mobile number\. Please create an account first\./);
 });
