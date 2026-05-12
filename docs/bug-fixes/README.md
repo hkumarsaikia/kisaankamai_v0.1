@@ -25,6 +25,7 @@ docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/
 
 ## Current Bundles
 
+- `2026-05-12-213622-IST-complete-profile-partner-submit/`: removed the active complete-profile route and fixed the partner enquiry submit loader/null-reset failure.
 - `2026-05-12-203514-IST-home-testimonial-html-port/`: homepage testimonial-card HTML port with simplified heading copy and public card badges/tags removed.
 - `2026-05-12-174051-IST-review-card-polish/`: homepage review-card label cleanup and card styling refinement so public cards no longer display sample badges.
 - `2026-05-12-170642-IST-share-preview-marathi-reviews/`: dedicated Open Graph/Twitter share image, realistic homepage review cards, and explicit Marathi labels for owner-benefits, about, and rent-equipment surfaces.

@@ -88,10 +88,15 @@ export default function PartnerPage() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+
     setError("");
     setSuccess("");
 
-    const form = new FormData(event.currentTarget);
+    const formElement = event.currentTarget;
+    const form = new FormData(formElement);
     const parsed = partnerInquirySchema.safeParse({
       organizationName: form.get("organizationName"),
       partnerType: form.get("partnerType"),
@@ -116,7 +121,7 @@ export default function PartnerPage() {
       await postJson("/api/forms/partner-inquiry", parsed.data);
       setError("");
       setSuccess(langText("Enquiry received. Our partnership team will contact you within 24 hours.", "चौकशी प्राप्त झाली. आमची भागीदारी टीम २४ तासांत संपर्क करेल."));
-      event.currentTarget.reset();
+      formElement.reset();
     } catch (submitError) {
       setSuccess("");
       setError(formatSubmissionError(submitError, langText("Could not submit your enquiry right now.", "आत्ता तुमची चौकशी सबमिट करता आली नाही.")));
@@ -325,12 +330,17 @@ export default function PartnerPage() {
 
               <div className="flex justify-end border-t border-outline-variant pt-4">
                 <button
-                  className="inline-flex min-w-[160px] items-center justify-center gap-2 rounded-lg bg-primary-container px-8 py-3 text-base font-bold text-white shadow-md transition-colors hover:bg-primary"
+                  aria-busy={isSubmitting}
+                  className="inline-flex min-w-[170px] items-center justify-center gap-2 rounded-lg bg-primary-container px-8 py-3 text-base font-bold text-white shadow-md transition-colors hover:bg-primary disabled:cursor-not-allowed disabled:opacity-80"
                   disabled={isSubmitting}
                   type="submit"
                 >
                   {isSubmitting ? langText("Submitting...", "सबमिट करत आहे...") : langText("Submit Enquiry", "चौकशी सबमिट करा")}
-                  <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+                  {isSubmitting ? (
+                    <span className="h-5 w-5 rounded-full border-2 border-white/40 border-t-white animate-spin" aria-hidden="true" />
+                  ) : (
+                    <span className="material-symbols-outlined text-[20px]" aria-hidden="true">arrow_forward</span>
+                  )}
                 </button>
               </div>
             </form>

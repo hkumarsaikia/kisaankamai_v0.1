@@ -113,8 +113,8 @@ export default function VerifyContactPage() {
                 <Link href="/profile-selection" className="rounded-2xl bg-primary px-6 py-4 font-black text-white dark:bg-primary-container">
                   {langText("Go to profile selection", "प्रोफाइल निवडीकडे जा")}
                 </Link>
-                <Link href="/complete-profile" className="rounded-2xl border border-outline-variant px-6 py-4 font-black text-primary">
-                  {langText("Edit contact details", "संपर्क तपशील संपादित करा")}
+                <Link href="/profile-selection" className="rounded-2xl border border-outline-variant px-6 py-4 font-black text-primary">
+                  {langText("Choose profile workspace", "प्रोफाइल वर्कस्पेस निवडा")}
                 </Link>
               </>
             ) : (

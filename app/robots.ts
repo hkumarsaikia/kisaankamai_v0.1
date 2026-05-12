@@ -9,7 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         disallow: [
           "/api/",
-          "/complete-profile",
           "/list-equipment",
           "/logout",
           "/owner-experience",

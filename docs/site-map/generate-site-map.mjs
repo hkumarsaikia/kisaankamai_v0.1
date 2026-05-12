@@ -134,7 +134,6 @@ function routeGroup(route) {
     route.startsWith("/login") ||
     route.startsWith("/register") ||
     route.startsWith("/forgot-password") ||
-    route.startsWith("/complete-profile") ||
     route.startsWith("/verify-contact") ||
     route.startsWith("/profile-selection")
   ) {

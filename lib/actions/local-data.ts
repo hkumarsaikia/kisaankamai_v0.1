@@ -34,7 +34,6 @@ import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import {
   bookingRequestSchema,
   callbackRequestSchema,
-  completeProfileSchema,
   feedbackSchema,
   loginInputSchema,
   registerInputSchema,
@@ -214,9 +213,7 @@ export async function loginAction(input: { phone: string; password: string }): P
 
       return {
         ok: true,
-        redirectTo: session.profile?.phone?.trim() && session.profile?.pincode?.trim()
-          ? "/profile-selection"
-          : "/complete-profile",
+        redirectTo: "/profile-selection",
       };
     } catch (error) {
       return { ok: false, error: safeErrorMessage(error, "Login failed.") };
@@ -271,49 +268,6 @@ export async function logoutAction(): Promise<ActionResult> {
       path: "/logout",
     });
     return { ok: true, redirectTo: "/" };
-  });
-}
-
-export async function completeProfileAction(input: {
-  phone: string;
-  pincode: string;
-  village?: string;
-  address?: string;
-  role: "renter" | "owner" | "both";
-}): Promise<ActionResult> {
-  return runLoggedAction("completeProfileAction", [input], async () => {
-    const session = await getCurrentSession();
-    if (!session) {
-      return { ok: false, error: "Login required." };
-    }
-
-    const parsed = completeProfileSchema.safeParse(input);
-    if (!parsed.success) {
-      return {
-        ok: false,
-        error:
-          parsed.error.flatten().formErrors[0] ||
-          Object.values(parsed.error.flatten().fieldErrors).find((value) => value?.[0])?.[0] ||
-          "Invalid profile details.",
-      };
-    }
-
-    try {
-      const preferredWorkspace = normalizeRolePreference(parsed.data.role);
-      await updateLocalProfile(session.user.id, {
-        phone: parsed.data.phone,
-        pincode: parsed.data.pincode,
-        village: parsed.data.village || session.profile.village,
-        address: parsed.data.address || session.profile.address,
-        rolePreference: preferredWorkspace,
-      });
-      await setWorkspaceCookie(preferredWorkspace);
-
-      revalidateCommonPaths();
-      return { ok: true, redirectTo: "/profile-selection" };
-    } catch (error) {
-      return { ok: false, error: safeErrorMessage(error, "Could not save profile.") };
-    }
   });
 }
 

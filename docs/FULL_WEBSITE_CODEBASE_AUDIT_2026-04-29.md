@@ -195,7 +195,7 @@ Upgrade/update notes:
 
 | Route | Current state | Main issues |
 | --- | --- | --- |
-| `/login` | Phone number plus password only. Redirects successful users to `/profile-selection` or `/complete-profile`. | Live login still requires production Firebase Auth and Firestore user records to be aligned. Legacy accounts may need the repair script. |
+| `/login` | Phone number plus password only. Redirects successful users to `/profile-selection`. | Live login still requires production Firebase Auth and Firestore user records to be aligned. Legacy accounts may need the repair script. |
 | `/register` | Firebase phone OTP registration with optional email metadata, password, profile details, duplicate preflight. | Uses Firebase phone auth and temporary browser state; live behavior depends on phone auth/reCAPTCHA configuration. |
 | `/register/success` | Registration success page. | Should remain plain login redirect flow, no `/login?pleaseLogin=1`. |
 | `/register/google-email` | Redirects back to `/register`. | Exists only as compatibility route after Google auth disablement. |
@@ -203,7 +203,7 @@ Upgrade/update notes:
 | `/forgot-password/verify-otp` | Firebase phone OTP verification for reset. | Depends on browser temporary storage and Firebase phone auth availability. |
 | `/forgot-password/new-password` | New password form posts reset token/password to server. | Endpoint bypasses shared same-origin/body-size helper. |
 | `/forgot-password/success` | Success page. | Visual state should be browser-smoked after future theme changes. |
-| `/complete-profile` | Session-protected profile completion. | Uses text inputs for phone/pincode/location; should align with registration district dropdown and duplicate identifier policy. |
+| `/complete-profile` | Removed from the active public app. | Profile edits now belong in the owner/renter settings screens and profile-selection flow. |
 | `/profile-selection` | Session-protected owner/renter selection. | Stores a workspace preference, not separate role-specific profiles. That may be fine, but it should be intentional. |
 | `/logout` | Clears session cookies. | POST route has no same-origin check. |
 
@@ -615,7 +615,7 @@ Current intended behavior:
 2. User enters password set during registration/reset.
 3. Server tries all known password-login email shapes.
 4. Server creates session cookie.
-5. User goes to `/profile-selection` or `/complete-profile`.
+5. User goes to `/profile-selection`.
 
 Remaining things to verify manually:
 

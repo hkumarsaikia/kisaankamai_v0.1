@@ -40,7 +40,6 @@ test("sitemap contains indexable public routes and excludes protected or utility
 
   for (const route of [
     "/api/",
-    "/complete-profile",
     "/list-equipment",
     "/login",
     "/owner-profile",

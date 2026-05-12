@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { constants } from "node:fs";
+import { access, readFile } from "node:fs/promises";
 import { test } from "node:test";
 
 const source = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
@@ -14,7 +15,6 @@ const asyncPostJsonForms = [
 ];
 
 const asyncActionForms = [
-  "app/complete-profile/page.tsx",
   "app/equipment/[id]/EquipmentDetailClient.tsx",
   "components/forms/OwnerListingWizard.tsx",
   "components/owner-profile/ListEquipmentEditorPage.tsx",
@@ -32,6 +32,35 @@ test("async JSON form submissions use explicit submitting state instead of React
     assert.match(file, /setIsSubmitting\(true\)/, `${path} should set submitting before the request`);
     assert.match(file, /finally\s*\{[\s\S]*setIsSubmitting\(false\)/, `${path} should clear submitting in finally`);
   }
+});
+
+test("complete profile page is removed from active routes and auth redirects", async () => {
+  await assert.rejects(
+    () => access(new URL("../app/complete-profile/page.tsx", import.meta.url), constants.F_OK),
+    /ENOENT/
+  );
+
+  const [loginRoute, localActions, googleButton, verifyContact] = await Promise.all([
+    source("app/api/auth/login/route.ts"),
+    source("lib/actions/local-data.ts"),
+    source("components/auth/GoogleAuthButton.tsx"),
+    source("app/verify-contact/page.tsx"),
+  ]);
+
+  for (const file of [loginRoute, localActions, googleButton, verifyContact]) {
+    assert.doesNotMatch(file, /\/complete-profile/);
+  }
+});
+
+test("partner enquiry submit keeps a stable form reference and visible loader", async () => {
+  const partner = await source("app/partner/page.tsx");
+
+  assert.match(partner, /const formElement = event\.currentTarget/);
+  assert.match(partner, /new FormData\(formElement\)/);
+  assert.match(partner, /formElement\.reset\(\)/);
+  assert.doesNotMatch(partner, /event\.currentTarget\.reset\(\)/);
+  assert.match(partner, /aria-busy=\{isSubmitting\}/);
+  assert.match(partner, /animate-spin/);
 });
 
 test("async server-action form submissions also use explicit request lifecycle state", async () => {

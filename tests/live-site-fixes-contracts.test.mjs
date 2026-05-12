@@ -233,6 +233,8 @@ test("partner page removes the Next Steps template but keeps enquiry submission"
   assert.doesNotMatch(partner, /Next Steps/);
   assert.match(partner, /\/api\/forms\/partner-inquiry/);
   assert.match(partner, /Submit Enquiry/);
+  assert.match(partner, /formElement\.reset\(\)/);
+  assert.match(partner, /animate-spin/);
 });
 
 test("forms and Sheets include email automation metadata and Apps Script source", async () => {

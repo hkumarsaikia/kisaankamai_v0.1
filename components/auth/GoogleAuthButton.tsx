@@ -46,10 +46,6 @@ type GoogleResolveResponse = {
   error?: string;
 };
 
-function isProfileComplete(session: LocalSession) {
-  return Boolean(session.profile?.phone?.trim() && session.profile?.pincode?.trim());
-}
-
 function persistPendingGoogleRegistration(payload: GoogleResolveResponse) {
   window.localStorage.setItem(
     "kk_google_registration",
@@ -153,7 +149,7 @@ export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProp
         }
 
         setSession(session);
-        window.location.href = isProfileComplete(session) ? "/profile-selection" : "/complete-profile";
+        window.location.href = "/profile-selection";
       })
       .catch((authError) => {
         if (!isActive) {
@@ -183,7 +179,7 @@ export function GoogleAuthButton({ label, className = "" }: GoogleAuthButtonProp
         return;
       }
       setSession(session);
-      window.location.href = isProfileComplete(session) ? "/profile-selection" : "/complete-profile";
+      window.location.href = "/profile-selection";
     } catch (authError) {
       setError(getGoogleAuthError(authError));
       setIsLoading(false);

@@ -47,9 +47,6 @@ export const POST = withLoggedRoute("auth-login", async (request: NextRequest) =
 
   return NextResponse.json({
     ok: true,
-    redirectTo:
-      session.profile?.phone?.trim() && session.profile?.pincode?.trim()
-        ? "/profile-selection"
-        : "/complete-profile",
+    redirectTo: "/profile-selection",
   });
 });
