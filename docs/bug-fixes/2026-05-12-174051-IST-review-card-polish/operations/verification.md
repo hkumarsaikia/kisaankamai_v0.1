@@ -47,8 +47,18 @@ Screenshots:
 
 ## Release Smoke
 
-Live deployment verification should confirm:
+Deployment commands:
 
-- `https://www.kisankamai.com/` returns 200.
-- `https://kisankamai.com/` returns 200.
-- Rendered homepage review cards on the live site do not contain public sample labels.
+```bash
+firebase apphosting:rollouts:create kisankamai-web-backend --git-commit a0a2d920088f1e620a43bcfbfd05599c841f2282 --project gokisaan --force
+npm run firebase:deploy
+```
+
+Result:
+
+- App Hosting rollout created successfully for commit `a0a2d920088f1e620a43bcfbfd05599c841f2282`.
+- Firestore and Storage rules deployed successfully.
+- `https://www.kisankamai.com/` returned 200.
+- `https://kisankamai.com/` returned 200.
+- Live Playwright rendered checks passed for both domains in English and Marathi.
+- Live homepage review cards render 3 cards and do not contain public `Sample`, `SAMPLE`, or `नमुना` labels.
