@@ -278,8 +278,17 @@ test("homepage initial render avoids below-the-fold map and inactive hero image 
 });
 
 test("responsive Next images include sizes and above-fold equipment images opt into eager loading", async () => {
-  const [aboutSource, detailSource, rentSource, ownerListingSource, ownerWorkspaceSource, renterWorkspaceSource] = await Promise.all([
+  const [
+    aboutSource,
+    contentImageSource,
+    detailSource,
+    rentSource,
+    ownerListingSource,
+    ownerWorkspaceSource,
+    renterWorkspaceSource,
+  ] = await Promise.all([
     readFile(new URL("../app/about/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/ContentImage.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/equipment/[id]/EquipmentDetailClient.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/rent-equipment/RentEquipmentView.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/forms/OwnerListingWizard.tsx", import.meta.url), "utf8"),
@@ -296,6 +305,9 @@ test("responsive Next images include sizes and above-fold equipment images opt i
     }
   }
 
+  assert.match(contentImageSource, /<picture>/);
+  assert.match(contentImageSource, /<source media="\(max-width: 767px\)"/);
+  assert.match(contentImageSource, /<img/);
   assert.match(detailSource, /priority[\s\S]*loading="eager"[\s\S]*sizes=/);
   assert.match(rentSource, /priorityImage[\s\S]*loading=\{priorityImage \? "eager" : "lazy"\}/);
   assert.match(rentSource, /priorityImage=\{index === 0\}/);

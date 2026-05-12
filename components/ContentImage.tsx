@@ -17,15 +17,28 @@ export function ContentImage({
   ...props
 }: ContentImageProps) {
   if (mobileSrc) {
+    const {
+      alt,
+      className,
+      decoding,
+      fetchPriority,
+      src,
+      style,
+    } = props;
+
     return (
       <picture>
         <source media="(max-width: 767px)" srcSet={mobileSrc} type="image/webp" />
-        <Image
+        <img
+          alt={alt}
+          className={className}
+          decoding={decoding}
+          fetchPriority={fetchPriority}
           height={height}
           loading={loading}
-          sizes={sizes}
+          src={String(src)}
+          style={style}
           width={width}
-          {...props}
         />
       </picture>
     );
