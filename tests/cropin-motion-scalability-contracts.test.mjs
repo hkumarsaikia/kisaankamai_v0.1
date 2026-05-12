@@ -71,6 +71,19 @@ test("public equipment loading narrows Firestore reads before fallback", async (
   assert.match(firebaseData, /snapshot = await listingsCollection\(\)\.get\(\)/);
 });
 
+test("workspace booking enrichment fetches only related listing and profile records", async () => {
+  const firebaseData = await readSource("../lib/server/firebase-data.ts");
+
+  assert.match(firebaseData, /FIRESTORE_TARGETED_READ_CHUNK_SIZE\s*=\s*50/);
+  assert.match(firebaseData, /async function listListingsByIds\(listingIds: string\[\]\)/);
+  assert.match(firebaseData, /listListingsByIds\(bookings\.map\(\(booking\) => booking\.listingId\)\)/);
+  assert.match(firebaseData, /listProfilesByUserIds\(bookings\.map\(\(booking\) => booking\.renterUserId\)\)/);
+  assert.match(firebaseData, /listProfilesByUserIds\(bookings\.map\(\(booking\) => booking\.ownerUserId\)\)/);
+  assert.doesNotMatch(firebaseData, /getOwnerBookings[\s\S]*?listAllProfiles\(\)[\s\S]*?export async function getRenterBookings/);
+  assert.doesNotMatch(firebaseData, /getRenterBookings[\s\S]*?listAllListings\(\)[\s\S]*?export async function getRenterSavedListings/);
+  assert.doesNotMatch(firebaseData, /getRenterSavedListings[\s\S]*?listAllListings\(\)[\s\S]*?export async function getOwnerPayments/);
+});
+
 test("empty rent-equipment pages reserve footer separation", async () => {
   const rentView = await readSource("../app/rent-equipment/RentEquipmentView.tsx");
 

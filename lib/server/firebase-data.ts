@@ -22,7 +22,7 @@ import type {
   UserRecord,
   UserRole,
 } from "@/lib/local-data/types";
-import type { QuerySnapshot, Transaction } from "firebase-admin/firestore";
+import type { DocumentSnapshot, QuerySnapshot, Transaction } from "firebase-admin/firestore";
 import { getAdminAuth, getAdminDb } from "@/lib/server/firebase-admin";
 import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { sendPushNotificationToUsers } from "@/lib/server/firebase-messaging";
@@ -51,6 +51,7 @@ const DUPLICATE_PHONE_MESSAGE = "Account already exists. Please login with your 
 const DUPLICATE_EMAIL_MESSAGE = "Account already exists. Please login with your registered phone number.";
 const PUBLIC_EQUIPMENT_CACHE_TAG = "public-equipment-list";
 const PUBLIC_EQUIPMENT_CACHE_REVALIDATE_SECONDS = 45;
+const FIRESTORE_TARGETED_READ_CHUNK_SIZE = 50;
 
 function db() {
   return getAdminDb();
@@ -781,24 +782,48 @@ function dedupePublicListings(listings: ListingRecord[]) {
   });
 }
 
-async function listAllProfiles() {
-  const snapshot = await profilesCollection().get();
-  return snapshot.docs.map((doc) => mapProfileFromFirestore(doc.id, doc.data() as ProfileRecord));
-}
-
 async function listProfilesByUserIds(userIds: string[]) {
   const uniqueUserIds = Array.from(new Set(userIds.map(normalizeOptionalString).filter(Boolean)));
   if (!uniqueUserIds.length) {
     return [];
   }
 
-  const snapshots = await Promise.all(
-    uniqueUserIds.map((userId) => profilesCollection().doc(userId).get())
-  );
+  const snapshots: DocumentSnapshot[] = [];
+  for (let index = 0; index < uniqueUserIds.length; index += FIRESTORE_TARGETED_READ_CHUNK_SIZE) {
+    snapshots.push(
+      ...(await Promise.all(
+        uniqueUserIds
+          .slice(index, index + FIRESTORE_TARGETED_READ_CHUNK_SIZE)
+          .map((userId) => profilesCollection().doc(userId).get())
+      ))
+    );
+  }
 
   return snapshots
     .filter((snapshot) => snapshot.exists)
     .map((snapshot) => mapProfileFromFirestore(snapshot.id, snapshot.data() as ProfileRecord));
+}
+
+async function listListingsByIds(listingIds: string[]) {
+  const uniqueListingIds = Array.from(new Set(listingIds.map(normalizeOptionalString).filter(Boolean)));
+  if (!uniqueListingIds.length) {
+    return [];
+  }
+
+  const snapshots: DocumentSnapshot[] = [];
+  for (let index = 0; index < uniqueListingIds.length; index += FIRESTORE_TARGETED_READ_CHUNK_SIZE) {
+    snapshots.push(
+      ...(await Promise.all(
+        uniqueListingIds
+          .slice(index, index + FIRESTORE_TARGETED_READ_CHUNK_SIZE)
+          .map((listingId) => listingsCollection().doc(listingId).get())
+      ))
+    );
+  }
+
+  return snapshots
+    .filter((snapshot) => snapshot.exists)
+    .map((snapshot) => mapListingFromFirestore(withFirestoreId(snapshot.id, snapshot.data() as ListingRecord)));
 }
 
 async function listSavedItemRecordsByUser(userId: string) {
@@ -1467,47 +1492,52 @@ export async function getOwnerListings(ownerUserId: string) {
 }
 
 export async function getOwnerBookings(ownerUserId: string) {
-  const [bookingsSnapshot, listings, profiles] = await Promise.all([
-    bookingsCollection().where("ownerUserId", "==", ownerUserId).get(),
-    listAllListings(),
-    listAllProfiles(),
-  ]);
-
-  return bookingsSnapshot.docs
+  const bookingsSnapshot = await bookingsCollection().where("ownerUserId", "==", ownerUserId).get();
+  const bookings = bookingsSnapshot.docs
     .map((doc) => mapBookingFromFirestore(withFirestoreId(doc.id, doc.data() as BookingRecord)))
+    .sort((left, right) => right.startDate.localeCompare(left.startDate));
+  const [listings, profiles] = await Promise.all([
+    listListingsByIds(bookings.map((booking) => booking.listingId)),
+    listProfilesByUserIds(bookings.map((booking) => booking.renterUserId)),
+  ]);
+  const listingById = new Map(listings.map((listing) => [listing.id, listing]));
+  const profileByUserId = new Map(profiles.map((profile) => [profile.userId, profile]));
+
+  return bookings
     .map((booking) => ({
       ...booking,
-      listing: listings.find((entry) => entry.id === booking.listingId) || null,
-      renterProfile: profiles.find((entry) => entry.userId === booking.renterUserId) || null,
-    }))
-    .sort((left, right) => right.startDate.localeCompare(left.startDate));
+      listing: listingById.get(booking.listingId) || null,
+      renterProfile: profileByUserId.get(booking.renterUserId) || null,
+    }));
 }
 
 export async function getRenterBookings(renterUserId: string) {
-  const [bookingsSnapshot, listings, profiles] = await Promise.all([
-    bookingsCollection().where("renterUserId", "==", renterUserId).get(),
-    listAllListings(),
-    listAllProfiles(),
-  ]);
-
-  return bookingsSnapshot.docs
+  const bookingsSnapshot = await bookingsCollection().where("renterUserId", "==", renterUserId).get();
+  const bookings = bookingsSnapshot.docs
     .map((doc) => mapBookingFromFirestore(withFirestoreId(doc.id, doc.data() as BookingRecord)))
+    .sort((left, right) => right.startDate.localeCompare(left.startDate));
+  const [listings, profiles] = await Promise.all([
+    listListingsByIds(bookings.map((booking) => booking.listingId)),
+    listProfilesByUserIds(bookings.map((booking) => booking.ownerUserId)),
+  ]);
+  const listingById = new Map(listings.map((listing) => [listing.id, listing]));
+  const profileByUserId = new Map(profiles.map((profile) => [profile.userId, profile]));
+
+  return bookings
     .map((booking) => ({
       ...booking,
-      listing: listings.find((entry) => entry.id === booking.listingId) || null,
-      ownerProfile: profiles.find((entry) => entry.userId === booking.ownerUserId) || null,
-    }))
-    .sort((left, right) => right.startDate.localeCompare(left.startDate));
+      listing: listingById.get(booking.listingId) || null,
+      ownerProfile: profileByUserId.get(booking.ownerUserId) || null,
+    }));
 }
 
 export async function getRenterSavedListings(renterUserId: string) {
-  const [savedItems, listings] = await Promise.all([
-    listSavedItemRecordsByUser(renterUserId),
-    listAllListings(),
-  ]);
+  const savedItems = await listSavedItemRecordsByUser(renterUserId);
+  const listings = await listListingsByIds(savedItems.map((entry) => entry.listingId));
+  const listingById = new Map(listings.map((listing) => [listing.id, listing]));
 
   return savedItems
-    .map((entry) => listings.find((listing) => listing.id === entry.listingId))
+    .map((entry) => listingById.get(entry.listingId))
     .filter((entry): entry is ListingRecord => Boolean(entry));
 }
 

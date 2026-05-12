@@ -25,6 +25,7 @@ docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/
 
 ## Current Bundles
 
+- `2026-05-12-154617-IST-scalability-live-audit/`: live frontend/UI scan, Lighthouse scaling evidence, and targeted Firestore read optimization for owner/renter workspace booking enrichment.
 - `2026-05-12-115707-IST-live-performance-workspace-audit/`: live final-account E2E hardening, password-reset duplicate-phone fix, Lighthouse accessibility/SEO patches, and performance evidence for home and rent-equipment.
 - `2026-05-12-103648-IST-home-farmer-rating-tiles/`: Homepage Cropin-inspired section refinement that restores farmer rating style tiles without unsupported named testimonials or numeric claims.
 - `2026-05-12-084714-IST-cropin-motion-scalability/`: Cropin-inspired motion timing, route transition flow, self-hosted icon font, status-filtered public listing reads, and empty rent-equipment spacing.
