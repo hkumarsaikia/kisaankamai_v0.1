@@ -71,51 +71,36 @@ const farmerRatingTiles = [
     titleMr: "फोटोंमुळे निवड सोपी झाली",
     textEn: "I could compare the tractor photos, hourly rate, and owner location before calling. The booking request felt clear from the start.",
     textMr: "कॉल करण्यापूर्वी ट्रॅक्टरचे फोटो, तासाचा दर आणि मालकाचे ठिकाण पाहता आले. सुरुवातीपासूनच बुकिंग विनंती स्पष्ट वाटली.",
-    labelEn: "Renter review",
-    labelMr: "भाडेकरू पुनरावलोकन",
     nameEn: "Suresh Jadhav",
     nameMr: "सुरेश जाधव",
-    roleEn: "Vegetable farmer",
-    roleMr: "भाजीपाला शेतकरी",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
-    avatar: assetPath("/assets/generated/maha_farmer_1.png"),
-    tagsEn: ["Tractor", "Clear photos", "Local owner"],
-    tagsMr: ["ट्रॅक्टर", "स्पष्ट फोटो", "स्थानिक मालक"],
+    avatar:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDzKCR9tka_l5Xl4VsISY-7RUiNMVGEj8ggSNUQ381-5179VnSB1OygePb35HsN4oEmmNLpjd8kQ-ZPX1VzUOfkL8nKL1uEnNLr4_QmclQHtkcfJxn0-LyGYdE_bmBJQPsap2SyNh7O6e2Nn2_5_pnRBsc5-UtqVSj91gByKSQMowixGGwxKumTE5QAyAKMVPyCy-4jzEE34YKOAYsTtbww5YJBXCYqjg3ACVH8m2o5EvUkb-_a9hkYwl_CmND_JHH_CWEsrplhWD0",
   },
   {
     titleEn: "Requests came with context",
     titleMr: "विनंत्या संदर्भासह आल्या",
     textEn: "The renter shared field timing and work details before the call, so I knew whether my machine was suitable for the job.",
     textMr: "कॉलपूर्वी भाडेकरूने शेताची वेळ आणि कामाचा तपशील दिला, त्यामुळे माझी मशीन त्या कामासाठी योग्य आहे का हे समजले.",
-    labelEn: "Owner review",
-    labelMr: "मालक पुनरावलोकन",
-    nameEn: "Meera Pawar",
-    nameMr: "मीरा पवार",
-    roleEn: "Equipment owner",
-    roleMr: "उपकरण मालक",
+    nameEn: "Rahul Pawar",
+    nameMr: "राहुल पवार",
     areaEn: "Mukhed Area",
     areaMr: "मुखेड परिसर",
-    avatar: assetPath("/assets/generated/maha_farmer_2.png"),
-    tagsEn: ["Direct call", "Timing shared", "Owner control"],
-    tagsMr: ["थेट कॉल", "वेळ शेअर", "मालक नियंत्रण"],
+    avatar:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuDpilKvHTV_g_KWSs3_fgBqOLGyppmu_UCVeWYMeEMufBIzWI0gLBiFC0mBGtawVUh8TcnA3eX2H9Bx1R9M50vjLNHeyfnFeyHntzU1XsJttl8Kj-LyIGnjNnwWBUt6QEbPPl5QYr7n647zZw50I-ItliwAxMWXIno5yorGKotJE-Gka6PD9402-PdVBQb2KkVmMLC_3GscVJIaHiwBbbuhOHzBOC7ABzJUP8hkoesIXNaPbX-Ho8oaCGQgfe2ok1lTfBRzVvY0LhU",
   },
   {
     titleEn: "Support helped narrow the search",
     titleMr: "सपोर्टमुळे शोध कमी वेळात झाला",
     textEn: "When I could not find the right machine nearby, support helped me explain the requirement and look for a closer owner.",
     textMr: "जवळ योग्य मशीन सापडत नव्हती तेव्हा सपोर्टने गरज समजावून सांगायला आणि जवळचा मालक शोधायला मदत केली.",
-    labelEn: "Support review",
-    labelMr: "सपोर्ट पुनरावलोकन",
     nameEn: "Ganesh More",
     nameMr: "गणेश मोरे",
-    roleEn: "Smallholder farmer",
-    roleMr: "लहान शेतकरी",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
-    avatar: assetPath("/assets/generated/maha_farmer_3.png"),
-    tagsEn: ["Support", "Nearby search", "Clear requirement"],
-    tagsMr: ["सपोर्ट", "जवळचा शोध", "स्पष्ट गरज"],
+    avatar:
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuBcS9zhb3o63vprGIi-qYfnA6I61iCZCjCB6Vd5YSkmVmgU6q1Lbo9PmjKHGSbmMxs_uMZdtZVwPAh1BzUn94BKWXa930OtylOTJTEvItoA1sHaY7eBh40DTq4bde_QJAxXZex5Wxq6_v0VVkhMYOV9-T0Zv7Ony8IcdALDBaOPGtwMkqSRwDiu59neUm-Pbp99D_I_Bzs_ViMdtQhlHDXAQm5hbd3AAs4Icj7E2NPvJGVuKRfy_4-Q6y0cKVSZoxkLN_SunNdpThY",
   },
 ] as const;
 
@@ -547,31 +532,25 @@ export default function Home() {
         {/* Farmer Rating Tiles */}
         <section className="kk-farmer-rating-section scroll-mt-28 py-20 md:py-24 bg-surface">
           <ScrollReveal className="max-w-7xl mx-auto px-6">
-            <div className="mx-auto mb-14 max-w-3xl text-center">
-              <p className="kk-farmer-rating-eyebrow mb-3 text-xs font-label font-black uppercase tracking-[0.08em] text-secondary dark:text-amber-300">
-                {langText("Farmer ratings", "शेतकरी रेटिंग")}
-              </p>
+            <div className="mx-auto mb-12 max-w-4xl text-center">
               <h2 className="text-3xl font-black leading-tight text-primary dark:text-emerald-50 tracking-tight md:text-4xl">
-                {langText("Rated for practical equipment access", "व्यावहारिक उपकरण उपलब्धतेसाठी रेट केलेले")}
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-on-surface-variant">
                 {langText(
-                  "Clear photos, direct owner coordination, and local support help farmers choose equipment with more confidence.",
-                  "स्पष्ट फोटो, मालकाशी थेट समन्वय आणि स्थानिक सपोर्टमुळे शेतकऱ्यांना उपकरणे अधिक आत्मविश्वासाने निवडता येतात."
+                  "Helping farmers choose equipment with confidence",
+                  "शेतकऱ्यांना आत्मविश्वासाने उपकरणे निवडण्यात मदत"
                 )}
-              </p>
+              </h2>
             </div>
-            <div className="grid gap-7 md:grid-cols-3">
+            <div className="grid items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
               {farmerRatingTiles.map((item, index) => (
                 <article
                   key={item.titleEn}
-                  className="kk-depth-tile kk-farmer-rating-card flex min-h-[360px] flex-col rounded-[1.5rem] border border-primary/10 bg-surface-container-lowest p-0"
+                  className="kk-farmer-rating-card flex h-full min-h-[320px] flex-col overflow-hidden rounded-[1.5rem] border border-outline-variant/50 bg-surface-container-lowest"
                   style={{ transitionDelay: `${index * 45}ms` }}
                 >
-                  <div className="flex items-start justify-between gap-5 border-b border-outline-variant/60 p-6 pb-5">
-                    <div className="flex min-w-0 items-center gap-4">
+                  <header className="flex items-start justify-between border-b border-surface-container p-4 md:p-6">
+                    <div className="flex min-w-0 items-center gap-3">
                       <ContentImage
-                        className="h-14 w-14 shrink-0 rounded-2xl object-cover ring-4 ring-white shadow-md dark:ring-slate-950"
+                        className="h-14 w-14 shrink-0 rounded-full object-cover"
                         alt={langText(`${item.nameEn} review profile image`, `${item.nameMr} पुनरावलोकन प्रोफाइल प्रतिमा`)}
                         src={item.avatar}
                         loading="lazy"
@@ -579,38 +558,27 @@ export default function Home() {
                         sizes="56px"
                       />
                       <div className="min-w-0">
-                        <h5 className="truncate text-base font-black text-primary dark:text-emerald-50">{langText(item.nameEn, item.nameMr)}</h5>
-                        <p className="text-xs font-label font-semibold text-on-surface-variant">
-                          {langText(item.roleEn, item.roleMr)} · {langText(item.areaEn, item.areaMr)}
+                        <h3 className="truncate text-lg font-bold leading-tight text-on-surface dark:text-emerald-50">
+                          {langText(item.nameEn, item.nameMr)}
+                        </h3>
+                        <p className="mt-1 text-sm font-semibold leading-snug text-on-surface-variant">
+                          {langText(item.areaEn, item.areaMr)}
                         </p>
                       </div>
                     </div>
-                    <span className="rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-primary shadow-sm dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-100">
-                      {langText(item.labelEn, item.labelMr)}
-                    </span>
-                  </div>
-                  <div className="flex flex-1 flex-col p-6 pt-5">
-                    <div className="mb-5 flex gap-1.5 text-amber-500 dark:text-amber-300" aria-hidden="true">
+                  </header>
+                  <div className="flex flex-1 flex-col p-4 md:p-6">
+                    <div className="mb-2 flex gap-1 text-lg leading-none text-[#e39454]" aria-hidden="true">
                       {Array.from({ length: 5 }).map((_, starIndex) => (
-                        <SharedIcon key={`${item.titleEn}-star-${starIndex}`} name="star" className="h-5 w-5" />
+                        <span key={`${item.titleEn}-star-${starIndex}`}>★</span>
                       ))}
                     </div>
-                    <h3 className="mb-4 text-2xl font-black leading-tight text-primary dark:text-emerald-50">
+                    <h4 className="mb-2 text-2xl font-bold leading-[1.3] text-on-surface dark:text-emerald-50">
                       {langText(item.titleEn, item.titleMr)}
-                    </h3>
-                    <p className="flex-1 text-base leading-7 text-on-surface-variant">
-                      “{langText(item.textEn, item.textMr)}”
+                    </h4>
+                    <p className="flex-1 text-justify text-base leading-6 text-on-surface-variant">
+                      &quot;{langText(item.textEn, item.textMr)}&quot;
                     </p>
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      {item.tagsEn.map((tag, tagIndex) => (
-                        <span
-                          key={`${item.titleEn}-${tag}`}
-                          className="rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-primary shadow-sm dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-100"
-                        >
-                          {langText(tag, item.tagsMr[tagIndex])}
-                        </span>
-                      ))}
-                    </div>
                   </div>
                 </article>
               ))}

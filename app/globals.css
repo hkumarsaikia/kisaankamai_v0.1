@@ -451,57 +451,49 @@
   }
 
   .kk-farmer-rating-section {
-    background:
-      radial-gradient(circle at 12% 28%, rgba(166, 207, 189, 0.26), transparent 30%),
-      radial-gradient(circle at 88% 72%, rgba(255, 162, 116, 0.14), transparent 32%),
-      linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-container-low) 100%);
+    background: var(--color-background);
   }
 
   .kk-farmer-rating-card {
     overflow: hidden;
     text-align: left;
-    background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(246, 251, 248, 0.94)),
-      radial-gradient(circle at 12% 10%, rgba(166, 207, 189, 0.22), transparent 34%);
-    border-color: rgba(20, 59, 46, 0.14);
+    transition:
+      transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 220ms ease;
+    background: var(--color-surface-container-lowest);
+    border-color: var(--color-outline-variant);
     box-shadow:
-      0 1px 0 rgba(255, 255, 255, 0.9) inset,
-      0 22px 62px -48px rgba(0, 37, 26, 0.86);
+      0 2px 12px -2px rgba(0, 0, 0, 0.04),
+      0 4px 6px -1px rgba(0, 0, 0, 0.02);
   }
 
   .dark .kk-farmer-rating-card {
-    background:
-      linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(5, 27, 21, 0.94)),
-      radial-gradient(circle at 12% 10%, rgba(166, 207, 189, 0.16), transparent 36%);
+    background: var(--color-surface-container-lowest);
     border-color: rgba(166, 207, 189, 0.18);
   }
 
+  .kk-farmer-rating-card:hover,
+  .kk-farmer-rating-card:focus-within {
+    transform: translateY(-2px);
+    border-color: rgba(20, 59, 46, 0.18);
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.05),
+      0 10px 10px -5px rgba(0, 0, 0, 0.02);
+  }
+
+  .dark .kk-farmer-rating-card:hover,
+  .dark .kk-farmer-rating-card:focus-within {
+    border-color: rgba(166, 207, 189, 0.28);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.08) inset,
+      0 20px 28px -18px rgba(0, 0, 0, 0.54);
+  }
+
   .kk-farmer-rating-card h3,
-  .kk-farmer-rating-card h5,
-  .kk-farmer-rating-card p {
+  .kk-farmer-rating-card h4,
+  .kk-farmer-rating-card header p {
     text-align: left;
-  }
-
-  .kk-farmer-rating-card::after {
-    content: "";
-    position: absolute;
-    inset: auto 18px 18px;
-    height: 4px;
-    border-radius: 999px;
-    pointer-events: none;
-    opacity: 0;
-    transform: scaleX(0.55);
-    transform-origin: left center;
-    background: linear-gradient(90deg, rgba(20, 59, 46, 0.72), rgba(255, 162, 116, 0.78));
-    transition:
-      opacity 420ms var(--kk-ease-enter),
-      transform 520ms var(--kk-ease-enter);
-  }
-
-  .kk-farmer-rating-card:hover::after,
-  .kk-farmer-rating-card:focus-within::after {
-    opacity: 1;
-    transform: scaleX(1);
   }
 
   .kk-profile-trigger.kk-depth-tile {

@@ -46,7 +46,7 @@ test("tile depth motion is requestAnimationFrame throttled for dense pages", asy
   assert.match(depthMotion, /document\.addEventListener\("pointermove", handlePointerMove, \{ passive: true \}\)/);
 });
 
-test("homepage restores farmer rating cards with refined Cropin-style surface treatment", async () => {
+test("homepage ports supplied testimonial cards without legacy badges or tags", async () => {
   const [homeSource, globals] = await Promise.all([
     readSource("../app/page.tsx"),
     readSource("../app/globals.css"),
@@ -55,12 +55,17 @@ test("homepage restores farmer rating cards with refined Cropin-style surface tr
   assert.match(homeSource, /farmerRatingTiles/);
   assert.match(homeSource, /kk-farmer-rating-section/);
   assert.match(homeSource, /kk-farmer-rating-card/);
-  assert.match(homeSource, /Farmer ratings/);
-  assert.match(homeSource, /SharedIcon key=\{\`\$\{item\.titleEn\}-star-\$\{starIndex\}\`\} name="star"/);
-  assert.match(homeSource, /aria-hidden="true"[\s\S]*SharedIcon key=\{\`\$\{item\.titleEn\}-star-\$\{starIndex\}\`\} name="star"/);
+  assert.match(homeSource, /Helping farmers choose equipment with confidence/);
+  assert.match(homeSource, /Rahul Pawar/);
+  assert.match(homeSource, /<span key=\{\`\$\{item\.titleEn\}-star-\$\{starIndex\}\`\}>★<\/span>/);
+  assert.match(homeSource, /rounded-full object-cover/);
+  assert.doesNotMatch(homeSource, /Farmer ratings|Rated for practical equipment access|Renter review|Owner review|Support review/);
+  assert.doesNotMatch(homeSource, /tagsEn|tagsMr|labelEn|labelMr/);
   assert.doesNotMatch(homeSource, /platformUseCases/);
   assert.match(globals, /\.kk-farmer-rating-section/);
-  assert.match(globals, /\.kk-farmer-rating-card::after/);
+  assert.match(globals, /0 2px 12px -2px rgba\(0, 0, 0, 0\.04\)/);
+  assert.match(globals, /transform:\s*translateY\(-2px\)/);
+  assert.doesNotMatch(globals, /\.kk-farmer-rating-card::after/);
 });
 
 test("public equipment loading narrows Firestore reads before fallback", async () => {

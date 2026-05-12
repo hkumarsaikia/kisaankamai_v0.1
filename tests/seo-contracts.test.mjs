@@ -70,7 +70,11 @@ test("public marketing copy avoids unsupported testimonial, ranking, and numeric
   assert.doesNotMatch(combined, /India's most trusted|1,200\+|₹85,000|40% faster|strict KYC|24\/7 Assistance/);
   assert.doesNotMatch(combined, /verified farmers|Verified Renters|premium to use/);
   assert.match(homeSource, /farmerRatingTiles/);
-  assert.match(homeSource, /Farmer ratings/);
+  assert.match(homeSource, /Helping farmers choose equipment with confidence/);
+  assert.doesNotMatch(
+    homeSource,
+    /Farmer ratings|Rated for practical equipment access|Clear photos, direct owner coordination/
+  );
   assert.match(ownerExperienceSource, /Renter Profiles/);
   assert.match(ownerBenefitsSource, /Set your availability, review renter requests, and coordinate work clearly/);
 });
@@ -84,9 +88,9 @@ test("public Marathi mode uses source-controlled labels for highlighted marketin
     readFile(new URL("../lib/localized-market-labels.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(homeSource, /Renter review/);
-  assert.match(homeSource, /भाडेकरू पुनरावलोकन/);
-  assert.doesNotMatch(homeSource, /Sample renter review|Sample owner review|Sample support review|नमुना/);
+  assert.match(homeSource, /शेतकऱ्यांना आत्मविश्वासाने उपकरणे निवडण्यात मदत/);
+  assert.match(homeSource, /राहुल पवार/);
+  assert.doesNotMatch(homeSource, /Sample renter review|Sample owner review|Sample support review|Renter review|Owner review|Support review|नमुना/);
   assert.match(ownerBenefitsSource, /तुम्ही किती कमाई करू शकता/);
   assert.match(ownerBenefitsSource, /getLocalizedDistrictLabel/);
   assert.match(aboutSource, /उत्तर महाराष्ट्रातील स्थानिक शेतकरी संबंधांवर/);
