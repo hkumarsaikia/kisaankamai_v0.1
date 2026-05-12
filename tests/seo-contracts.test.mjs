@@ -60,7 +60,8 @@ test("public marketing copy avoids unsupported testimonial, ranking, and numeric
   assert.doesNotMatch(combined, /Rooted Success Stories|testimonials|saved me|Rajesh Deshmukh|Sanjay Kulkarni|Vikas More/);
   assert.doesNotMatch(combined, /India's most trusted|1,200\+|₹85,000|40% faster|strict KYC|24\/7 Assistance/);
   assert.doesNotMatch(combined, /verified farmers|Verified Renters|premium to use/);
-  assert.match(homeSource, /platformUseCases/);
+  assert.match(homeSource, /farmerRatingTiles/);
+  assert.match(homeSource, /Farmer ratings/);
   assert.match(ownerExperienceSource, /Renter Profiles/);
   assert.match(ownerBenefitsSource, /Set your availability, review renter requests, and coordinate work clearly/);
 });

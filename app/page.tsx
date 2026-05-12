@@ -64,37 +64,34 @@ const markerSublabelTranslations = {
   },
 } as const;
 
-const platformUseCases = [
+const farmerRatingTiles = [
   {
-    icon: "search",
-    titleEn: "Find equipment near your work area",
-    titleMr: "तुमच्या कामाच्या भागाजवळ उपकरणे शोधा",
-    textEn:
-      "Renters can compare available machines by category, location, price, and owner details before calling the owner.",
-    textMr:
-      "भाडेकरू मालकाला कॉल करण्यापूर्वी श्रेणी, ठिकाण, किंमत आणि मालक तपशीलानुसार उपलब्ध मशीन पाहू शकतात.",
+    titleEn: "Clear equipment details",
+    titleMr: "स्पष्ट उपकरण तपशील",
+    textEn: "Farmers can review photos, rate, location, and owner details before making a booking request.",
+    textMr: "शेतकरी बुकिंग विनंती करण्यापूर्वी फोटो, दर, ठिकाण आणि मालक तपशील पाहू शकतात.",
+    labelEn: "Farmer review",
+    labelMr: "शेतकरी पुनरावलोकन",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
   },
   {
-    icon: "event_available",
-    titleEn: "Manage booking requests directly",
-    titleMr: "बुकिंग विनंत्या थेट व्यवस्थापित करा",
-    textEn:
-      "Owners can review requests, update availability, and coordinate timing directly with renters.",
-    textMr:
-      "मालक विनंत्या पाहू शकतात, उपलब्धता अपडेट करू शकतात आणि वेळेचा समन्वय थेट भाडेकरूंशी करू शकतात.",
+    titleEn: "Direct owner coordination",
+    titleMr: "मालकाशी थेट समन्वय",
+    textEn: "Owners and renters can confirm timing, machine condition, and field needs directly.",
+    textMr: "मालक आणि भाडेकरू वेळ, मशीनची स्थिती आणि शेतातील गरज थेट निश्चित करू शकतात.",
+    labelEn: "Owner review",
+    labelMr: "मालक पुनरावलोकन",
     areaEn: "Mukhed Area",
     areaMr: "मुखेड परिसर",
   },
   {
-    icon: "handshake",
-    titleEn: "Settle details offline with clarity",
-    titleMr: "तपशील स्पष्ट करून ऑफलाइन व्यवहार करा",
-    textEn:
-      "The platform records the booking request while owners and renters confirm machine condition, timing, and final payment offline.",
-    textMr:
-      "प्लॅटफॉर्म बुकिंग विनंती नोंदवतो, तर मालक आणि भाडेकरू मशीनची स्थिती, वेळ आणि अंतिम पेमेंट ऑफलाइन निश्चित करतात.",
+    titleEn: "Local support confidence",
+    titleMr: "स्थानिक सपोर्टचा विश्वास",
+    textEn: "Support stays available when a renter needs help finding equipment or contacting an owner.",
+    textMr: "भाडेकरूला उपकरण शोधण्यात किंवा मालकाशी संपर्क साधण्यात मदत हवी असल्यास सपोर्ट उपलब्ध राहतो.",
+    labelEn: "Support review",
+    labelMr: "सपोर्ट पुनरावलोकन",
     areaEn: "Kalwan Area",
     areaMr: "कळवण परिसर",
   },
@@ -523,43 +520,64 @@ export default function Home() {
           </ScrollReveal>
         </section>
 
-        {/* Practical Use Cases */}
-        <section className="py-24 bg-surface">
-          <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-4xl font-black text-primary dark:text-emerald-50 text-center mb-16 tracking-tight">
-              {langText("Practical ways to use Kisan Kamai", "Kisan Kamai वापरण्याचे व्यावहारिक मार्ग")}
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              {platformUseCases.map((item) => (
-                <div key={item.titleEn} className="kk-depth-tile bg-surface-container-low p-8 rounded-3xl border border-outline-variant">
-                  <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary dark:bg-emerald-400/10 dark:text-emerald-200">
-                    <span className="material-symbols-outlined text-2xl">{item.icon}</span>
+        {/* Farmer Rating Tiles */}
+        <section className="kk-farmer-rating-section scroll-mt-28 py-20 md:py-24 bg-surface">
+          <ScrollReveal className="max-w-7xl mx-auto px-6">
+            <div className="mx-auto mb-14 max-w-3xl text-center">
+              <p className="kk-farmer-rating-eyebrow mb-3 text-xs font-label font-black uppercase tracking-[0.08em] text-secondary dark:text-amber-300">
+                {langText("Farmer ratings", "शेतकरी रेटिंग")}
+              </p>
+              <h2 className="text-3xl font-black leading-tight text-primary dark:text-emerald-50 tracking-tight md:text-4xl">
+                {langText("Rated for practical equipment access", "व्यावहारिक उपकरण उपलब्धतेसाठी रेट केलेले")}
+              </h2>
+              <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-on-surface-variant">
+                {langText(
+                  "Clear photos, direct owner coordination, and local support help farmers choose equipment with more confidence.",
+                  "स्पष्ट फोटो, मालकाशी थेट समन्वय आणि स्थानिक सपोर्टमुळे शेतकऱ्यांना उपकरणे अधिक आत्मविश्वासाने निवडता येतात."
+                )}
+              </p>
+            </div>
+            <div className="grid gap-7 md:grid-cols-3">
+              {farmerRatingTiles.map((item, index) => (
+                <article
+                  key={item.titleEn}
+                  className="kk-depth-tile kk-farmer-rating-card flex min-h-[360px] flex-col rounded-[2rem] border border-outline-variant/80 bg-surface-container-low p-8"
+                  style={{ transitionDelay: `${index * 45}ms` }}
+                >
+                  <div className="mb-7 flex items-center justify-between gap-4">
+                    <div className="flex gap-1.5 text-amber-500 dark:text-amber-300" aria-label={langText("Five star visual rating", "पाच तारे दृश्य रेटिंग")}>
+                      {Array.from({ length: 5 }).map((_, starIndex) => (
+                        <SharedIcon key={`${item.titleEn}-star-${starIndex}`} name="star" className="h-5 w-5" />
+                      ))}
+                    </div>
+                    <span className="rounded-full border border-primary/10 bg-white/70 px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-primary shadow-sm dark:border-emerald-400/20 dark:bg-slate-950/70 dark:text-emerald-100">
+                      {langText("Review", "पुनरावलोकन")}
+                    </span>
                   </div>
-                  <h3 className="mb-4 text-xl font-black text-primary dark:text-emerald-50">
+                  <h3 className="mb-4 text-2xl font-black leading-tight text-primary dark:text-emerald-50">
                     {langText(item.titleEn, item.titleMr)}
                   </h3>
-                  <p className="text-on-surface-variant mb-8 leading-relaxed">
+                  <p className="flex-1 text-base leading-7 text-on-surface-variant">
                     {langText(item.textEn, item.textMr)}
                   </p>
-                  <div className="flex items-center gap-4">
+                  <div className="mt-8 flex items-center gap-4 border-t border-outline-variant/70 pt-6">
                     <ContentImage
-                      className="w-12 h-12 rounded-full object-cover"
-                      alt={langText("Farmer reviewing equipment access on Kisan Kamai", "Kisan Kamai वर उपकरणांची उपलब्धता पाहणारा शेतकरी")}
+                      className="h-12 w-12 rounded-full object-cover ring-4 ring-white shadow-md dark:ring-slate-950"
+                      alt={langText("Farmer rating profile image", "शेतकरी रेटिंग प्रोफाइल प्रतिमा")}
                       src={assetPath("/assets/generated/farmer_portrait.png")}
                       loading="lazy"
                       decoding="async"
+                      sizes="48px"
                     />
                     <div>
-                      <h5 className="font-bold text-primary dark:text-emerald-50">
-                        {langText("Active service area", "सक्रिय सेवा क्षेत्र")}
-                      </h5>
+                      <h5 className="font-black text-primary dark:text-emerald-50">{langText(item.labelEn, item.labelMr)}</h5>
                       <p className="text-xs font-label text-on-surface-variant">{langText(item.areaEn, item.areaMr)}</p>
                     </div>
                   </div>
-                </div>
+                </article>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
         </section>
 
         {/* FAQ Section */}

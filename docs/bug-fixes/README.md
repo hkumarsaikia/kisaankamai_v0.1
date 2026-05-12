@@ -25,5 +25,6 @@ docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/
 
 ## Current Bundles
 
+- `2026-05-12-103648-IST-home-farmer-rating-tiles/`: Homepage Cropin-inspired section refinement that restores farmer rating style tiles without unsupported named testimonials or numeric claims.
 - `2026-05-12-084714-IST-cropin-motion-scalability/`: Cropin-inspired motion timing, route transition flow, self-hosted icon font, status-filtered public listing reads, and empty rent-equipment spacing.
 - `2026-05-08-235352-IST-code-review-hardening/`: booking transition hardening, sort-menu accessibility, production dependency cleanup, site-map regeneration, and CodeRabbit verification.

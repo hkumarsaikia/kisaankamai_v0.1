@@ -450,6 +450,42 @@
     transform: translateY(0);
   }
 
+  .kk-farmer-rating-section {
+    background:
+      radial-gradient(circle at 12% 28%, rgba(166, 207, 189, 0.26), transparent 30%),
+      radial-gradient(circle at 88% 72%, rgba(255, 162, 116, 0.14), transparent 32%),
+      linear-gradient(180deg, var(--color-surface) 0%, var(--color-surface-container-low) 100%);
+  }
+
+  .kk-farmer-rating-card {
+    overflow: hidden;
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.72) inset,
+      0 28px 76px -54px rgba(0, 37, 26, 0.88);
+  }
+
+  .kk-farmer-rating-card::after {
+    content: "";
+    position: absolute;
+    inset: auto 18px 18px;
+    height: 4px;
+    border-radius: 999px;
+    pointer-events: none;
+    opacity: 0;
+    transform: scaleX(0.55);
+    transform-origin: left center;
+    background: linear-gradient(90deg, rgba(20, 59, 46, 0.72), rgba(255, 162, 116, 0.78));
+    transition:
+      opacity 420ms var(--kk-ease-enter),
+      transform 520ms var(--kk-ease-enter);
+  }
+
+  .kk-farmer-rating-card:hover::after,
+  .kk-farmer-rating-card:focus-within::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
   .kk-profile-trigger.kk-depth-tile {
     --kk-profile-trigger-lift: 0px;
     transform: translate3d(0, var(--kk-profile-trigger-lift), 0);

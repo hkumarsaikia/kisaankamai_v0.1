@@ -46,6 +46,22 @@ test("tile depth motion is requestAnimationFrame throttled for dense pages", asy
   assert.match(depthMotion, /document\.addEventListener\("pointermove", handlePointerMove, \{ passive: true \}\)/);
 });
 
+test("homepage restores farmer rating cards with refined Cropin-style surface treatment", async () => {
+  const [homeSource, globals] = await Promise.all([
+    readSource("../app/page.tsx"),
+    readSource("../app/globals.css"),
+  ]);
+
+  assert.match(homeSource, /farmerRatingTiles/);
+  assert.match(homeSource, /kk-farmer-rating-section/);
+  assert.match(homeSource, /kk-farmer-rating-card/);
+  assert.match(homeSource, /Farmer ratings/);
+  assert.match(homeSource, /SharedIcon key=\{\`\$\{item\.titleEn\}-star-\$\{starIndex\}\`\} name="star"/);
+  assert.doesNotMatch(homeSource, /platformUseCases/);
+  assert.match(globals, /\.kk-farmer-rating-section/);
+  assert.match(globals, /\.kk-farmer-rating-card::after/);
+});
+
 test("public equipment loading narrows Firestore reads before fallback", async () => {
   const firebaseData = await readSource("../lib/server/firebase-data.ts");
 
