@@ -3,7 +3,7 @@
 ## Scope
 
 - Added a dedicated social sharing preview image for WhatsApp, Telegram, Instagram, and other Open Graph/Twitter consumers.
-- Replaced the generic homepage farmer-rating cards with realistic sample review cards using distinct farmer profiles and Marathi copy.
+- Replaced the generic homepage farmer-rating cards with realistic review cards using distinct farmer profiles and Marathi copy.
 - Fixed source-controlled Marathi labels for the owner-benefits calculator, about-page value cards, and rent-equipment listing/category/location labels.
 
 ## Canonical Changes

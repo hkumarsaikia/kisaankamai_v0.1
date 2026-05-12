@@ -84,8 +84,9 @@ test("public Marathi mode uses source-controlled labels for highlighted marketin
     readFile(new URL("../lib/localized-market-labels.ts", import.meta.url), "utf8"),
   ]);
 
-  assert.match(homeSource, /Sample renter review/);
-  assert.match(homeSource, /नमुना भाडेकरू पुनरावलोकन/);
+  assert.match(homeSource, /Renter review/);
+  assert.match(homeSource, /भाडेकरू पुनरावलोकन/);
+  assert.doesNotMatch(homeSource, /Sample renter review|Sample owner review|Sample support review|नमुना/);
   assert.match(ownerBenefitsSource, /तुम्ही किती कमाई करू शकता/);
   assert.match(ownerBenefitsSource, /getLocalizedDistrictLabel/);
   assert.match(aboutSource, /उत्तर महाराष्ट्रातील स्थानिक शेतकरी संबंधांवर/);

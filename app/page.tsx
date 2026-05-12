@@ -71,8 +71,8 @@ const farmerRatingTiles = [
     titleMr: "फोटोंमुळे निवड सोपी झाली",
     textEn: "I could compare the tractor photos, hourly rate, and owner location before calling. The booking request felt clear from the start.",
     textMr: "कॉल करण्यापूर्वी ट्रॅक्टरचे फोटो, तासाचा दर आणि मालकाचे ठिकाण पाहता आले. सुरुवातीपासूनच बुकिंग विनंती स्पष्ट वाटली.",
-    labelEn: "Sample renter review",
-    labelMr: "नमुना भाडेकरू पुनरावलोकन",
+    labelEn: "Renter review",
+    labelMr: "भाडेकरू पुनरावलोकन",
     nameEn: "Suresh Jadhav",
     nameMr: "सुरेश जाधव",
     roleEn: "Vegetable farmer",
@@ -88,8 +88,8 @@ const farmerRatingTiles = [
     titleMr: "विनंत्या संदर्भासह आल्या",
     textEn: "The renter shared field timing and work details before the call, so I knew whether my machine was suitable for the job.",
     textMr: "कॉलपूर्वी भाडेकरूने शेताची वेळ आणि कामाचा तपशील दिला, त्यामुळे माझी मशीन त्या कामासाठी योग्य आहे का हे समजले.",
-    labelEn: "Sample owner review",
-    labelMr: "नमुना मालक पुनरावलोकन",
+    labelEn: "Owner review",
+    labelMr: "मालक पुनरावलोकन",
     nameEn: "Meera Pawar",
     nameMr: "मीरा पवार",
     roleEn: "Equipment owner",
@@ -105,8 +105,8 @@ const farmerRatingTiles = [
     titleMr: "सपोर्टमुळे शोध कमी वेळात झाला",
     textEn: "When I could not find the right machine nearby, support helped me explain the requirement and look for a closer owner.",
     textMr: "जवळ योग्य मशीन सापडत नव्हती तेव्हा सपोर्टने गरज समजावून सांगायला आणि जवळचा मालक शोधायला मदत केली.",
-    labelEn: "Sample support review",
-    labelMr: "नमुना सपोर्ट पुनरावलोकन",
+    labelEn: "Support review",
+    labelMr: "सपोर्ट पुनरावलोकन",
     nameEn: "Ganesh More",
     nameMr: "गणेश मोरे",
     roleEn: "Smallholder farmer",
@@ -565,49 +565,51 @@ export default function Home() {
               {farmerRatingTiles.map((item, index) => (
                 <article
                   key={item.titleEn}
-                  className="kk-depth-tile kk-farmer-rating-card flex min-h-[360px] flex-col rounded-[2rem] border border-outline-variant/80 bg-surface-container-low p-8"
+                  className="kk-depth-tile kk-farmer-rating-card flex min-h-[360px] flex-col rounded-[1.5rem] border border-primary/10 bg-surface-container-lowest p-0"
                   style={{ transitionDelay: `${index * 45}ms` }}
                 >
-                  <div className="mb-7 flex items-center justify-between gap-4">
-                    <div className="flex gap-1.5 text-amber-500 dark:text-amber-300" aria-hidden="true">
+                  <div className="flex items-start justify-between gap-5 border-b border-outline-variant/60 p-6 pb-5">
+                    <div className="flex min-w-0 items-center gap-4">
+                      <ContentImage
+                        className="h-14 w-14 shrink-0 rounded-2xl object-cover ring-4 ring-white shadow-md dark:ring-slate-950"
+                        alt={langText(`${item.nameEn} review profile image`, `${item.nameMr} पुनरावलोकन प्रोफाइल प्रतिमा`)}
+                        src={item.avatar}
+                        loading="lazy"
+                        decoding="async"
+                        sizes="56px"
+                      />
+                      <div className="min-w-0">
+                        <h5 className="truncate text-base font-black text-primary dark:text-emerald-50">{langText(item.nameEn, item.nameMr)}</h5>
+                        <p className="text-xs font-label font-semibold text-on-surface-variant">
+                          {langText(item.roleEn, item.roleMr)} · {langText(item.areaEn, item.areaMr)}
+                        </p>
+                      </div>
+                    </div>
+                    <span className="rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-primary shadow-sm dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-100">
+                      {langText(item.labelEn, item.labelMr)}
+                    </span>
+                  </div>
+                  <div className="flex flex-1 flex-col p-6 pt-5">
+                    <div className="mb-5 flex gap-1.5 text-amber-500 dark:text-amber-300" aria-hidden="true">
                       {Array.from({ length: 5 }).map((_, starIndex) => (
                         <SharedIcon key={`${item.titleEn}-star-${starIndex}`} name="star" className="h-5 w-5" />
                       ))}
                     </div>
-                    <span className="rounded-full border border-primary/10 bg-white/70 px-3 py-1 text-[11px] font-black uppercase tracking-[0.14em] text-primary shadow-sm dark:border-emerald-400/20 dark:bg-slate-950/70 dark:text-emerald-100">
-                      {langText(item.labelEn, item.labelMr)}
-                    </span>
-                  </div>
-                  <h3 className="mb-4 text-2xl font-black leading-tight text-primary dark:text-emerald-50">
-                    {langText(item.titleEn, item.titleMr)}
-                  </h3>
-                  <p className="flex-1 text-base leading-7 text-on-surface-variant">
-                    “{langText(item.textEn, item.textMr)}”
-                  </p>
-                  <div className="mt-6 flex flex-wrap gap-2">
-                    {item.tagsEn.map((tag, tagIndex) => (
-                      <span
-                        key={`${item.titleEn}-${tag}`}
-                        className="rounded-full bg-white/65 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-primary shadow-sm dark:bg-slate-950/60 dark:text-emerald-100"
-                      >
-                        {langText(tag, item.tagsMr[tagIndex])}
-                      </span>
-                    ))}
-                  </div>
-                  <div className="mt-8 flex items-center gap-4 border-t border-outline-variant/70 pt-6">
-                    <ContentImage
-                      className="h-12 w-12 rounded-full object-cover ring-4 ring-white shadow-md dark:ring-slate-950"
-                      alt={langText(`${item.nameEn} review profile image`, `${item.nameMr} पुनरावलोकन प्रोफाइल प्रतिमा`)}
-                      src={item.avatar}
-                      loading="lazy"
-                      decoding="async"
-                      sizes="48px"
-                    />
-                    <div>
-                      <h5 className="font-black text-primary dark:text-emerald-50">{langText(item.nameEn, item.nameMr)}</h5>
-                      <p className="text-xs font-label font-semibold text-on-surface-variant">
-                        {langText(item.roleEn, item.roleMr)} · {langText(item.areaEn, item.areaMr)}
-                      </p>
+                    <h3 className="mb-4 text-2xl font-black leading-tight text-primary dark:text-emerald-50">
+                      {langText(item.titleEn, item.titleMr)}
+                    </h3>
+                    <p className="flex-1 text-base leading-7 text-on-surface-variant">
+                      “{langText(item.textEn, item.textMr)}”
+                    </p>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                      {item.tagsEn.map((tag, tagIndex) => (
+                        <span
+                          key={`${item.titleEn}-${tag}`}
+                          className="rounded-full border border-primary/10 bg-primary/5 px-3 py-1 text-[11px] font-black uppercase tracking-[0.08em] text-primary shadow-sm dark:border-emerald-400/20 dark:bg-emerald-400/10 dark:text-emerald-100"
+                        >
+                          {langText(tag, item.tagsMr[tagIndex])}
+                        </span>
+                      ))}
                     </div>
                   </div>
                 </article>

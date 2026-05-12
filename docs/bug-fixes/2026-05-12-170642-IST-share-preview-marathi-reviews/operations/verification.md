@@ -26,7 +26,7 @@ node <playwright-rendered-marathi-check>
 
 Rendered checks passed for:
 
-- `/`: three homepage review cards render with the new sample review content and no old generic titles.
+- `/`: three homepage review cards render with the new review content and no old generic titles.
 - `/owner-benefits`: calculator labels render in Marathi.
 - `/about`: core value cards and team names render in Marathi.
 - `/rent-equipment`: public listing labels render localized category and Maharashtra location text.

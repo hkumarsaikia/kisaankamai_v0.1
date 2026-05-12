@@ -25,7 +25,8 @@ docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/
 
 ## Current Bundles
 
-- `2026-05-12-170642-IST-share-preview-marathi-reviews/`: dedicated Open Graph/Twitter share image, realistic homepage sample review cards, and explicit Marathi labels for owner-benefits, about, and rent-equipment surfaces.
+- `2026-05-12-174051-IST-review-card-polish/`: homepage review-card label cleanup and card styling refinement so public cards no longer display sample badges.
+- `2026-05-12-170642-IST-share-preview-marathi-reviews/`: dedicated Open Graph/Twitter share image, realistic homepage review cards, and explicit Marathi labels for owner-benefits, about, and rent-equipment surfaces.
 - `2026-05-12-154617-IST-scalability-live-audit/`: live frontend/UI scan, Lighthouse scaling evidence, and targeted Firestore read optimization for owner/renter workspace booking enrichment.
 - `2026-05-12-115707-IST-live-performance-workspace-audit/`: live final-account E2E hardening, password-reset duplicate-phone fix, Lighthouse accessibility/SEO patches, and performance evidence for home and rent-equipment.
 - `2026-05-12-103648-IST-home-farmer-rating-tiles/`: Homepage Cropin-inspired section refinement that restores farmer rating style tiles without unsupported named testimonials or numeric claims.
