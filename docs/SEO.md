@@ -20,6 +20,15 @@ copy sections, sitemap behavior, or programmatic page plans.
 - Use `buildPageMetadata(...)` or `renderHeadMetadata(...)` from
   `lib/site-metadata.tsx` so titles, canonical URLs, share metadata, and
   optional `noIndex` behavior stay consistent.
+- For App Router page bodies that are client components, expose route metadata
+  from a colocated `layout.tsx` and `lib/public-page-metadata.ts`. Do not rely
+  on `head.tsx` alone for social previews.
+- Give public routes a page-specific `imagePath` under `public/assets/share/`
+  so WhatsApp, Telegram, X, LinkedIn, Instagram, and other crawlers receive a
+  relevant thumbnail instead of the homepage fallback.
+- Share image URLs are deployment-versioned with `?v=...` from
+  `NEXT_PUBLIC_SHARE_CACHE_VERSION`, `K_REVISION`, build IDs, or `v1`. This
+  gives social crawlers a fresh image URL after each hosting rollout.
 - Mark auth, account, workspace, utility, and submission-only routes as
   `noIndex`.
 - Keep public descriptions factual. Do not add unsupported rankings,
@@ -72,6 +81,7 @@ After deployment, smoke-check:
 curl -fsS https://www.kisankamai.com/ | grep -E "<title>|application/ld\\+json"
 curl -fsS https://www.kisankamai.com/robots.txt
 curl -fsS https://www.kisankamai.com/sitemap.xml
+curl -fsS https://www.kisankamai.com/support | grep -E "og:title|og:image|twitter:description"
 ```
 
 Use Lighthouse SEO checks for rendered validation when Chrome is available.

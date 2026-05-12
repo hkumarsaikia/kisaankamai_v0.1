@@ -5,6 +5,7 @@ import { getEquipmentById, getEquipmentList } from "@/lib/server/equipment";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getSiteUrl } from "@/lib/runtime";
 import { assetPath } from "@/lib/site";
+import { getShareImageUrl, SITE_NAME } from "@/lib/site-metadata";
 
 export const dynamicParams = true;
 
@@ -18,7 +19,7 @@ export async function generateMetadata({
 
   if (!equipment) {
     return {
-      title: "Equipment Not Found | Kisan Kamai",
+      title: "Equipment Not Found",
       description: "The requested equipment listing is not available.",
     };
   }
@@ -27,14 +28,16 @@ export async function generateMetadata({
   const canonicalUrl = `${siteUrl}/equipment/${equipment.id}`;
   const locationLabel = [equipment.location, equipment.district].filter(Boolean).join(", ");
   const listingTitle = locationLabel
-    ? `${equipment.name} for Rent in ${locationLabel} | Kisan Kamai`
-    : `${equipment.name} for Rent | Kisan Kamai`;
+    ? `${equipment.name} for Rent in ${locationLabel}`
+    : `${equipment.name} for Rent`;
+  const fullListingTitle = `${listingTitle} | ${SITE_NAME}`;
   const metaDescription =
     equipment.description?.trim() ||
     `${equipment.name} farm equipment listing on Kisan Kamai. Review the listed rate, equipment details, owner information, and booking request options.`;
-  const coverImageUrl = equipment.coverImage.startsWith("http")
+  const baseCoverImageUrl = equipment.coverImage.startsWith("http")
     ? equipment.coverImage
     : `${siteUrl}${assetPath(equipment.coverImage)}`;
+  const coverImageUrl = getShareImageUrl(baseCoverImageUrl);
 
   return {
     title: listingTitle,
@@ -43,19 +46,22 @@ export async function generateMetadata({
       canonical: canonicalUrl,
     },
     openGraph: {
-      title: listingTitle,
+      title: fullListingTitle,
       description: metaDescription,
       url: canonicalUrl,
+      siteName: SITE_NAME,
+      type: "website",
       images: [
         {
           url: coverImageUrl,
+          secureUrl: coverImageUrl,
           alt: `${equipment.name} equipment photo`,
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: listingTitle,
+      title: fullListingTitle,
       description: metaDescription,
       images: [coverImageUrl],
     },

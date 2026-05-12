@@ -25,6 +25,7 @@ docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/
 
 ## Current Bundles
 
+- `2026-05-12-224733-IST-share-previews-cache-disclaimer/`: centered the how-it-works disclaimer card, moved public routes to App Router metadata layouts, added page-specific social thumbnails, and added deployment-versioned share image cache busting.
 - `2026-05-12-213622-IST-complete-profile-partner-submit/`: removed the active complete-profile route and fixed the partner enquiry submit loader/null-reset failure.
 - `2026-05-12-203514-IST-home-testimonial-html-port/`: homepage testimonial-card HTML port with simplified heading copy and public card badges/tags removed.
 - `2026-05-12-174051-IST-review-card-polish/`: homepage review-card label cleanup and card styling refinement so public cards no longer display sample badges.

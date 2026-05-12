@@ -14,8 +14,25 @@ export function getCanonicalUrl(path = "/") {
   return new URL(path, SITE_DOMAIN).toString();
 }
 
+function getShareCacheVersion() {
+  return (
+    process.env.NEXT_PUBLIC_SHARE_CACHE_VERSION ||
+    process.env.K_REVISION ||
+    process.env.GOOGLE_CLOUD_BUILD_ID ||
+    process.env.GITHUB_SHA ||
+    process.env.VERCEL_GIT_COMMIT_SHA ||
+    "v1"
+  );
+}
+
+export function getShareImageUrl(imagePath = DEFAULT_SHARE_IMAGE_PATH) {
+  const imageUrl = new URL(imagePath, getMetadataBaseUrl());
+  imageUrl.searchParams.set("v", getShareCacheVersion());
+  return imageUrl.toString();
+}
+
 export function getDefaultShareImageUrl() {
-  return new URL(DEFAULT_SHARE_IMAGE_PATH, getMetadataBaseUrl()).toString();
+  return getShareImageUrl(DEFAULT_SHARE_IMAGE_PATH);
 }
 
 type PageMetadataInput = {
@@ -23,6 +40,8 @@ type PageMetadataInput = {
   description: string;
   path: string;
   noIndex?: boolean;
+  imagePath?: string;
+  imageAlt?: string;
 };
 
 function normalizeTitle(title: string) {
@@ -34,12 +53,14 @@ export function buildPageMetadata({
   description,
   path,
   noIndex = false,
+  imagePath,
+  imageAlt,
 }: PageMetadataInput): Metadata {
-  const shareImage = getDefaultShareImageUrl();
+  const shareImage = getShareImageUrl(imagePath);
   const fullTitle = normalizeTitle(title);
 
   return {
-    title: fullTitle,
+    title,
     description,
     robots: noIndex
       ? {
@@ -63,7 +84,7 @@ export function buildPageMetadata({
           width: 1200,
           height: 630,
           type: "image/jpeg",
-          alt: fullTitle,
+          alt: imageAlt || fullTitle,
         },
       ],
     },
@@ -74,7 +95,7 @@ export function buildPageMetadata({
       images: [
         {
           url: shareImage,
-          alt: fullTitle,
+          alt: imageAlt || fullTitle,
         },
       ],
     },
@@ -86,9 +107,11 @@ export function renderHeadMetadata({
   description,
   path,
   noIndex = false,
+  imagePath,
+  imageAlt,
 }: PageMetadataInput) {
   const canonical = getCanonicalUrl(path);
-  const shareImage = getDefaultShareImageUrl();
+  const shareImage = getShareImageUrl(imagePath);
   const fullTitle = normalizeTitle(title);
 
   return (
@@ -106,12 +129,12 @@ export function renderHeadMetadata({
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
-      <meta property="og:image:alt" content={fullTitle} />
+      <meta property="og:image:alt" content={imageAlt || fullTitle} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={shareImage} />
-      <meta name="twitter:image:alt" content={fullTitle} />
+      <meta name="twitter:image:alt" content={imageAlt || fullTitle} />
     </>
   );
 }

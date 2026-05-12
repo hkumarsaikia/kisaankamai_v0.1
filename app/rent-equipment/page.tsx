@@ -8,6 +8,7 @@ export const metadata = buildPageMetadata({
   title: "Rent Farm Equipment in Maharashtra",
   description: "Browse tractors, implements, harvesters, pumps, seeders, and other farm equipment available through Kisan Kamai.",
   path: "/rent-equipment",
+  imagePath: "/assets/share/pages/rent-equipment.jpg",
 });
 
 const QUERY_ALIASES: Record<string, string[]> = {

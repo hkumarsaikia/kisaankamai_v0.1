@@ -147,16 +147,16 @@ export default function HowItWorksPage() {
         {/* Important Disclaimer */}
         <section className="py-12 bg-background">
           <div className="max-w-4xl mx-auto px-6">
-            <div className="bg-error-container/20 border-2 border-error/30 p-10 rounded-[2.5rem] relative overflow-hidden group">
+            <div className="bg-error-container/20 border-2 border-error/30 p-10 rounded-[2.5rem] relative overflow-hidden group text-center">
               <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:rotate-12 transition-transform duration-500">
                 <span className="material-symbols-outlined text-9xl text-error">warning</span>
               </div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-black text-error mb-6 flex items-center gap-3">
+                <h3 className="text-2xl font-black text-error mb-6 flex items-center justify-center gap-3">
                   <span className="material-symbols-outlined font-black">gpp_maybe</span>
                   {langText("Important Disclaimer", "महत्वाच्या सूचना")}
                 </h3>
-                <div className="text-error font-bold leading-relaxed space-y-4">
+                <div className="text-error font-bold leading-relaxed space-y-4 max-w-3xl mx-auto text-center">
                   <p>
                     {langText(
                       "Kisan Kamai does not collect or process payments on the platform. Agreements happen directly between users. Kisan Kamai is a marketplace platform and does not own any equipment.",

@@ -109,6 +109,18 @@ const securityHeaders = [
   { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
 ];
 
+const htmlFreshnessHeaders = [
+  {
+    key: "Cache-Control",
+    value: "private, no-cache, no-store, max-age=0, must-revalidate",
+  },
+  { key: "CDN-Cache-Control", value: "no-store" },
+];
+
+const sharePreviewHeaders = [
+  { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
@@ -131,6 +143,15 @@ const nextConfig = {
   },
   async headers() {
     return [
+      {
+        source:
+          "/:path((?!_next/static|_next/image|assets|fonts|favicon.ico|manifest.webmanifest|robots.txt|sitemap.xml).*)",
+        headers: [...securityHeaders, ...htmlFreshnessHeaders],
+      },
+      {
+        source: "/assets/share/:path*",
+        headers: [...securityHeaders, ...sharePreviewHeaders],
+      },
       {
         source: "/:path*",
         headers: securityHeaders,

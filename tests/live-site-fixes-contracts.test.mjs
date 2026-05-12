@@ -105,6 +105,15 @@ test("support page uses the provided contact form shape and removes owner suppor
   assert.doesNotMatch(support, /Owner Support Priority/);
 });
 
+test("how it works disclaimer card keeps warning copy centered", async () => {
+  const howItWorks = await readSource("../app/how-it-works/page.tsx");
+
+  assert.match(howItWorks, /Important Disclaimer/);
+  assert.match(howItWorks, /group text-center/);
+  assert.match(howItWorks, /flex items-center justify-center gap-3/);
+  assert.match(howItWorks, /max-w-3xl mx-auto text-center/);
+});
+
 test("forgot password uses the supplied reset layout while preserving the reset API flow", async () => {
   const forgot = await readSource("../app/forgot-password/page.tsx");
 
