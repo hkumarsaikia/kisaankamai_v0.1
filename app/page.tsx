@@ -16,6 +16,7 @@ import { SharedIcon } from "@/components/SharedIcon";
 const heroSlides = [
   {
     src: assetPath("/assets/generated/hero_tractor.png"),
+    mobileSrc: assetPath("/assets/generated/hero_tractor_mobile.webp"),
     altEn: "Tractor ready for field work at sunrise",
     altMr: "सकाळच्या प्रकाशात शेतातील कामासाठी तयार ट्रॅक्टर",
   },
@@ -271,6 +272,7 @@ export default function Home() {
               key={currentHeroSlide.src}
               className="absolute inset-0 h-full w-full object-cover opacity-100 transition-opacity duration-700 md:object-[center_15%]"
               alt={langText(currentHeroSlide.altEn, currentHeroSlide.altMr)}
+              mobileSrc={"mobileSrc" in currentHeroSlide ? currentHeroSlide.mobileSrc : undefined}
               src={currentHeroSlide.src}
               loading="eager"
               priority

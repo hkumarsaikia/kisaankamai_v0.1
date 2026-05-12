@@ -178,6 +178,7 @@ test("generated marketing imagery is served through optimized webp assets", asyn
       access(new URL(`../public/assets/generated/${name}.webp`, import.meta.url))
     )
   );
+  await access(new URL("../public/assets/generated/hero_tractor_mobile.webp", import.meta.url));
 });
 
 test("mobile icon controls keep accessible touch targets", async () => {

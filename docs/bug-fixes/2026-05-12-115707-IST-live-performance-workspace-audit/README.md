@@ -64,6 +64,8 @@ rollout in this pass and are stored under `generated/`.
 - Availability status dots with accessible labels now expose an image role.
 - Password reset completion and final test cleanup are hardened against stale
   duplicate phone records.
+- The home hero now serves a mobile-specific WebP source for the first LCP
+  image while keeping the existing desktop visual treatment.
 
 ## Verification
 
@@ -96,7 +98,8 @@ the final commit tied to this bundle.
 
 ## Remaining Performance Notes
 
-Home mobile LCP and Speed Index are still the largest performance opportunity.
-The current evidence points to mobile hero image sequencing, server response
-time, and initial JavaScript boot cost. That needs a deeper rendering/data
-sequencing pass rather than a small accessibility or metadata patch.
+Home mobile LCP and Speed Index should be watched across multiple production
+runs because App Hosting response time and mobile network emulation can vary.
+The first safe image-delivery fix in this bundle adds a mobile-specific hero
+source; deeper improvements would require a broader home-page JavaScript and
+rendering-sequence pass.

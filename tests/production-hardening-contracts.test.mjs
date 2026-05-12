@@ -263,6 +263,8 @@ test("homepage initial render avoids below-the-fold map and inactive hero image 
   assert.match(homeSource, /loading="eager"/);
   assert.match(homeSource, /priority/);
   assert.match(homeSource, /fetchPriority="high"/);
+  assert.match(homeSource, /hero_tractor_mobile\.webp/);
+  assert.match(homeSource, /mobileSrc=\{"mobileSrc" in currentHeroSlide \? currentHeroSlide\.mobileSrc : undefined\}/);
   assert.match(homeSource, /sizes="\(max-width: 768px\) 342px, 50vw"/);
   assert.match(homeSource, /window\.setTimeout/);
   assert.match(homeSource, /12000/);
