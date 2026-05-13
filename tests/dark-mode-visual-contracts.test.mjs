@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { access, readFile } from "node:fs/promises";
+import { access, readFile, stat } from "node:fs/promises";
 
 const readSource = (path) => readFile(new URL(path, import.meta.url), "utf8");
 
@@ -25,6 +25,9 @@ test("auth pages use shared dark-aware surfaces without the verify OTP vignette 
   }
   assert.match(verifyOtp, /kk-auth-page/);
   assert.doesNotMatch(verifyOtp, /kk-dark-image-overlay/);
+  assert.match(forgot, /mt-auto p-12 text-white/);
+  assert.doesNotMatch(forgot, /mt-auto p-12 text-on-primary/);
+  assert.match(forgot, /text-outline-variant dark:text-emerald-200/);
 
   assert.match(otpForm, /kk-auth-card/);
   assert.match(otpForm, /kk-otp-input/);
@@ -41,6 +44,7 @@ test("reported dark-mode problem pages do not use low-contrast primary-container
   for (const source of [rentView, support]) {
     assert.doesNotMatch(source, /text-primary-container/);
   }
+  assert.match(support, /text-primary dark:text-emerald-950/);
 });
 
 test("requested public banner imagery uses one shared overlay while product imagery stays clear", async () => {
@@ -179,6 +183,15 @@ test("generated marketing imagery is served through optimized webp assets", asyn
     )
   );
   await access(new URL("../public/assets/generated/hero_tractor_mobile.webp", import.meta.url));
+});
+
+test("self-hosted Material Symbols font is subset for the active icon set", async () => {
+  const font = await stat(new URL("../public/fonts/material-symbols-outlined.woff2", import.meta.url));
+
+  assert.ok(
+    font.size < 80_000,
+    `Material Symbols should stay subset for first-load performance; current size is ${font.size} bytes`
+  );
 });
 
 test("mobile icon controls keep accessible touch targets", async () => {

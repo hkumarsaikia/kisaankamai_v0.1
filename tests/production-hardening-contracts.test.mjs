@@ -237,6 +237,10 @@ test("root layout keeps icon fonts and public session bootstrap lean", async () 
   assert.doesNotMatch(layoutSource, /kk-material-symbols-loader/);
   assert.doesNotMatch(layoutSource, /document\.createElement\("link"\)/);
   assert.doesNotMatch(layoutSource, /opsz,wght,FILL,GRAD@20\.\.48,100\.\.700,0\.\.1,-50\.\.200/);
+  assert.match(layoutSource, /weight:\s*\["400",\s*"600",\s*"700"\]/);
+  assert.match(layoutSource, /variable:\s*"--font-mukta"[\s\S]*preload:\s*false/);
+  assert.doesNotMatch(layoutSource, /fonts\.googleapis\.com/);
+  assert.doesNotMatch(layoutSource, /fonts\.gstatic\.com/);
   assert.doesNotMatch(layoutSource, /import \{ getCurrentSession \} from "@\/lib\/server\/local-auth"/);
   assert.match(layoutSource, /SESSION_COOKIE_NAME/);
   assert.match(layoutSource, /await import\("@\/lib\/server\/local-auth"\)/);
@@ -273,7 +277,7 @@ test("homepage initial render avoids below-the-fold map and inactive hero image 
   assert.match(homeSource, /deferUntilVisible=\{true\}/);
   assert.doesNotMatch(homeSource, /deferUntilVisible=\{false\}/);
   assert.match(layoutSource, /preload:\s*false/);
-  assert.match(layoutSource, /weight:\s*\["400", "500", "600", "700", "800"\]/);
+  assert.match(layoutSource, /weight:\s*\["400", "600", "700"\]/);
   assert.match(nextConfigSource, /qualities:\s*\[72,\s*75\]/);
 });
 

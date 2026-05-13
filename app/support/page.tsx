@@ -251,7 +251,7 @@ export default function SupportPage() {
               <div className="space-y-3">
                 <div className="kk-deep-cta flex items-start gap-4 rounded-2xl border border-surface-container-high bg-white p-4 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary-fixed">
-                    <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
+                    <span className="material-symbols-outlined text-primary dark:text-emerald-950" style={{ fontVariationSettings: "'FILL' 1" }}>
                       call
                     </span>
                   </div>

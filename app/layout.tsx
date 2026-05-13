@@ -23,10 +23,11 @@ import "./globals.css";
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap", preload: false });
 const mukta = Mukta({
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "600", "700"],
   subsets: ["latin", "devanagari"],
   variable: "--font-mukta",
   display: "swap",
+  preload: false,
 });
 const LANGUAGE_COOKIE_NAME = "kk_language";
 const SESSION_COOKIE_NAME = "kisan_kamai_session";
@@ -189,8 +190,6 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <link href="https://fonts.googleapis.com" rel="preconnect" />
-        <link crossOrigin="anonymous" href="https://fonts.gstatic.com" rel="preconnect" />
         <link
           as="font"
           crossOrigin="anonymous"

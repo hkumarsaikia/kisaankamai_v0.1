@@ -119,7 +119,7 @@ export default function ForgotPasswordPage() {
           />
           <div className="kk-dark-image-overlay bg-gradient-to-t from-primary/60 via-transparent to-transparent" />
         </div>
-        <div className="relative z-10 mt-auto p-12 text-on-primary">
+        <div className="relative z-10 mt-auto p-12 text-white">
           <div className="mb-6 flex items-center gap-3">
             <span className="material-symbols-outlined text-4xl" style={{ fontVariationSettings: "'FILL' 1" }}>
               agriculture
@@ -167,7 +167,7 @@ export default function ForgotPasswordPage() {
               </span>
               <div className="relative">
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <span className="material-symbols-outlined text-outline-variant">phone_iphone</span>
+                  <span className="material-symbols-outlined text-outline-variant dark:text-emerald-200">phone_iphone</span>
                 </div>
                 <input
                   className="block w-full rounded-xl border border-outline-variant/40 bg-white/50 py-4 pl-10 pr-4 font-body text-on-surface shadow-sm transition-all duration-300 placeholder:text-on-surface-variant/40 focus:border-primary focus:ring-2 focus:ring-primary/10 dark:bg-slate-950 dark:text-white"
