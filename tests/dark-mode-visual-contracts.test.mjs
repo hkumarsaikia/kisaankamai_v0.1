@@ -69,6 +69,9 @@ test("latest dark-mode visibility fixes cover partner, coming soon, owner benefi
   assert.match(globals, /\.kk-login-toast-error/);
   assert.match(globals, /\.gm-style \.gm-style-pbc/);
   assert.match(globals, /text-align:\s*center !important/);
+  assert.match(globals, /\.gm-style \.gm-style-pbc > div/);
+  assert.match(globals, /\.gm-style \.gm-style-pbt > div/);
+  assert.match(globals, /text-align-last:\s*center !important/);
 });
 
 test("requested public banner imagery uses one shared overlay while product imagery stays clear", async () => {

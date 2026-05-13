@@ -138,6 +138,18 @@ Channel env vars:
 - `DISCORD_WEBHOOK_GITHUB_URL`
 - `DISCORD_WEBHOOK_SECURITY_URL`
 - `DISCORD_WEBHOOK_SENTRY_URL`
+- `DISCORD_WEBHOOK_BACKEND_URL`
+
+Backend activity notifications:
+
+- Runtime code uses `DISCORD_WEBHOOK_BACKEND_URL` for user registration,
+  login/session, profile updates, listing changes, booking changes, and public
+  form submissions.
+- Keep the backend webhook as an App Hosting secret or local-only environment
+  variable. Do not commit real webhook URLs to the repository.
+- In App Hosting, keep `DISCORD_WEBHOOK_BACKEND_URL` runtime-only. The backend
+  runtime service account needs `roles/secretmanager.secretAccessor` for the
+  backing Secret Manager secret.
 
 Legacy direct-only env var:
 

@@ -1,0 +1,76 @@
+{
+  "base": "http://localhost:3000",
+  "browser": "/usr/bin/google-chrome via Playwright",
+  "checks": [
+    [
+      "home",
+      {
+        "hasLogoWordmark": true,
+        "hasFooterFlag": true,
+        "brandLogoCount": 2,
+        "fontsReady": true,
+        "historyPatched": true
+      }
+    ],
+    [
+      "map-css",
+      {
+        "pbcTextAlign": "center",
+        "pbtTextAlign": "center",
+        "pbcMarginLeft": "432px",
+        "pbtMarginLeft": "432px"
+      }
+    ],
+    [
+      "register",
+      {
+        "hasOptionalIdentity": false,
+        "hasPhoneField": true
+      }
+    ],
+    [
+      "about-icons",
+      {
+        "fontReady": true,
+        "spans": [
+          {
+            "text": "track_changes",
+            "family": "\"Material Symbols Outlined\"",
+            "width": 24
+          },
+          {
+            "text": "visibility",
+            "family": "\"Material Symbols Outlined\"",
+            "width": 24
+          },
+          {
+            "text": "verified_user",
+            "family": "\"Material Symbols Outlined\"",
+            "width": 24
+          },
+          {
+            "text": "lightbulb",
+            "family": "\"Material Symbols Outlined\"",
+            "width": 24
+          },
+          {
+            "text": "groups",
+            "family": "\"Material Symbols Outlined\"",
+            "width": 24
+          }
+        ]
+      }
+    ],
+    [
+      "rent-empty",
+      {
+        "hasDeletedListing674": false,
+        "hasDeletedCodexListing": false,
+        "supportToFooterGap": 870
+      }
+    ]
+  ],
+  "failures": [],
+  "screenshots": "docs/bug-fixes/2026-05-14-012613-IST-maps-register-logo-backend-discord/screenshots",
+  "generatedAt": "2026-05-13T20:06:50.014Z"
+}

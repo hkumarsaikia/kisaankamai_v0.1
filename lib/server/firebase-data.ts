@@ -28,6 +28,7 @@ import { withFirestoreId } from "@/lib/server/firebase-local-helpers";
 import { sendPushNotificationToUsers } from "@/lib/server/firebase-messaging";
 import { captureServerException } from "@/lib/server/firebase-observability";
 import { deleteStorageObject } from "@/lib/server/firebase-storage";
+import { notifyBackendActivity } from "@/lib/server/backend-activity";
 import { mirrorBookingAndPayment, mirrorListing, mirrorProfile, mirrorSubmission } from "@/lib/server/sheets-mirror";
 import type { RegisterInput } from "@/lib/validation/forms";
 export {
@@ -1234,7 +1235,8 @@ export async function updateLocalProfile(
     >
   >
 ) {
-  const currentProfile = (await getProfileRecordById(userId)) || mapProfileFromFirestore(userId, null);
+  const existingProfile = await getProfileRecordById(userId);
+  const currentProfile = existingProfile || mapProfileFromFirestore(userId, null);
   const currentUser = await getUserRecordById(userId);
   const timestamp = nowIso();
 
@@ -1329,6 +1331,26 @@ export async function updateLocalProfile(
     profile: updatedProfile,
     source: "profile-update",
   });
+
+  if (existingProfile) {
+    await notifyBackendActivity({
+      event: "profile.updated",
+      title: "Profile updated",
+      summary: "A user profile was updated on the live website.",
+      actor: {
+        userId,
+        name: updatedProfile.fullName,
+        phone: updatedProfile.phone,
+        email: updatedProfile.email,
+      },
+      fields: [
+        { name: "Village", value: updatedProfile.village, inline: true },
+        { name: "District", value: updatedProfile.district, inline: true },
+        { name: "Pincode", value: updatedProfile.pincode, inline: true },
+        { name: "Photo updated", value: input.photoUrl !== undefined ? "Yes" : "No", inline: true },
+      ],
+    });
+  }
 
   return getLocalSessionByUserId(userId);
 }
@@ -1578,6 +1600,24 @@ export async function createListingRecord(
   await listingsCollection().doc(nextListing.id).set(nextListing);
   revalidatePublicEquipmentList();
   await mirrorListing(nextListing, "create");
+  await notifyBackendActivity({
+    event: "listing.created",
+    title: "Equipment listing created",
+    summary: `${nextListing.name} was published or saved by an equipment owner.`,
+    actor: {
+      userId: nextListing.ownerUserId,
+      name: nextListing.ownerName,
+    },
+    fields: [
+      { name: "Listing ID", value: nextListing.id, inline: true },
+      { name: "Status", value: nextListing.status, inline: true },
+      { name: "Category", value: nextListing.category, inline: true },
+      { name: "Location", value: [nextListing.location, nextListing.district, nextListing.state].filter(Boolean).join(", "), inline: false },
+      { name: "Rate", value: `₹${nextListing.pricePerHour} ${nextListing.unitLabel}`, inline: true },
+      { name: "Photos", value: nextListing.galleryImages.length, inline: true },
+    ],
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kisankamai.com"}/equipment/${nextListing.id}`,
+  });
   return nextListing;
 }
 
@@ -1604,6 +1644,24 @@ export async function updateListingRecord(
   await listingsCollection().doc(listingId).set(updated, { merge: true });
   revalidatePublicEquipmentList();
   await mirrorListing(updated, "update");
+  await notifyBackendActivity({
+    event: "listing.updated",
+    title: "Equipment listing updated",
+    summary: `${updated.name} was updated by its owner.`,
+    actor: {
+      userId: updated.ownerUserId,
+      name: updated.ownerName,
+    },
+    fields: [
+      { name: "Listing ID", value: updated.id, inline: true },
+      { name: "Status", value: updated.status, inline: true },
+      { name: "Category", value: updated.category, inline: true },
+      { name: "Location", value: [updated.location, updated.district, updated.state].filter(Boolean).join(", "), inline: false },
+      { name: "Rate", value: `₹${updated.pricePerHour} ${updated.unitLabel}`, inline: true },
+      { name: "Photos", value: updated.galleryImages.length, inline: true },
+    ],
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kisankamai.com"}/equipment/${updated.id}`,
+  });
   return updated;
 }
 
@@ -1673,6 +1731,21 @@ export async function deleteListingRecord(listingId: string, ownerUserId: string
 
   await batch.commit();
   revalidatePublicEquipmentList();
+  await notifyBackendActivity({
+    event: "listing.deleted",
+    title: "Equipment listing deleted",
+    summary: `${listing.name} and its linked operational records were removed.`,
+    actor: {
+      userId: listing.ownerUserId,
+      name: listing.ownerName,
+    },
+    fields: [
+      { name: "Listing ID", value: listing.id, inline: true },
+      { name: "Bookings removed", value: bookingsSnapshot.size, inline: true },
+      { name: "Saved items removed", value: savedSnapshot.size, inline: true },
+      { name: "Submissions removed", value: submissionsSnapshot.size, inline: true },
+    ],
+  });
 }
 
 export async function createBookingRecord(input: {
@@ -1762,6 +1835,26 @@ export async function createBookingRecord(input: {
   await batch.commit();
 
   await mirrorBookingAndPayment(nextBooking, nextPayment);
+  await notifyBackendActivity({
+    event: "booking.created",
+    title: "Booking request created",
+    summary: `${renterSession?.profile.fullName || renterSession?.user.name || "A renter"} requested ${listing.name}.`,
+    actor: {
+      userId: input.renterUserId,
+      name: renterSession?.profile.fullName || renterSession?.user.name,
+      phone: renterSession?.profile.phone || renterSession?.user.phone,
+      email: renterSession?.profile.email || renterSession?.user.email,
+    },
+    fields: [
+      { name: "Booking ID", value: nextBooking.id, inline: true },
+      { name: "Listing ID", value: nextBooking.listingId, inline: true },
+      { name: "Owner ID", value: nextBooking.ownerUserId, inline: true },
+      { name: "Date", value: `${nextBooking.startDate} to ${nextBooking.endDate}`, inline: true },
+      { name: "Estimated value", value: `₹${nextBooking.amount.toLocaleString("en-IN")}`, inline: true },
+      { name: "Status", value: nextBooking.status, inline: true },
+    ],
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kisankamai.com"}/equipment/${nextBooking.listingId}`,
+  });
   await notifyBookingCreated({
     booking: nextBooking,
     listingName: listing.name,
@@ -1927,6 +2020,23 @@ export async function updateBookingStatus(
   const refreshedPayment = paymentSnapshot.docs[0]?.data() as PaymentRecord | undefined;
   await mirrorBookingAndPayment(updated, refreshedPayment ? { ...refreshedPayment, status: paymentStatusForBookingStatus(status) } : undefined);
   const listing = await getListingById(updated.listingId);
+  await notifyBackendActivity({
+    event: "booking.status_updated",
+    title: "Booking status updated",
+    summary: `Booking ${updated.id} changed from ${booking.status} to ${updated.status}.`,
+    actor: {
+      userId: actorUserId,
+    },
+    fields: [
+      { name: "Booking ID", value: updated.id, inline: true },
+      { name: "Listing", value: listing?.name || updated.listingId, inline: true },
+      { name: "Previous status", value: booking.status, inline: true },
+      { name: "New status", value: updated.status, inline: true },
+      { name: "Actor role", value: actorRole, inline: true },
+      { name: "Estimated value", value: `₹${updated.amount.toLocaleString("en-IN")}`, inline: true },
+    ],
+    url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://www.kisankamai.com"}/${actorRole === "owner" ? "owner-profile/bookings" : "renter-profile/bookings"}`,
+  });
   await notifyBookingStatusChanged({
     booking: updated,
     previousStatus: booking.status,
@@ -1985,6 +2095,20 @@ export async function createSubmissionRecord(input: {
       submissionType: record.type,
     });
   }
+  await notifyBackendActivity({
+    event: "form.submitted",
+    title: "Form submitted",
+    summary: `A ${record.type} form was submitted on the live website.`,
+    actor: {
+      userId: record.userId,
+    },
+    fields: [
+      { name: "Submission ID", value: record.id, inline: true },
+      { name: "Type", value: record.type, inline: true },
+      { name: "Listing ID", value: record.listingId, inline: true },
+      { name: "Payload", value: record.payload, inline: false },
+    ],
+  });
   return record;
 }
 

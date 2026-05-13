@@ -52,6 +52,26 @@ test("footer sections include only the approved marketplace and trust routes", a
   );
 });
 
+test("brand logo and India footer marker use the shared logo component", async () => {
+  const [headerSource, footerSource, faviconRoute, manifestSource, logoSource] = await Promise.all([
+    readFile(new URL("../components/Header.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/Footer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/favicon.ico/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/manifest.ts", import.meta.url), "utf8"),
+    readFile(new URL("../components/BrandLogo.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(headerSource, /<BrandLogo/);
+  assert.match(footerSource, /<BrandLogo/);
+  assert.match(footerSource, /🇮🇳/);
+  assert.match(faviconRoute, /M16 32V20C16 17\.8/);
+  assert.match(faviconRoute, /#15803d/);
+  assert.match(manifestSource, /\/favicon\.ico/);
+  assert.match(logoSource, /Smart Equipment Rental/);
+  assert.match(logoSource, /Kisan/);
+  assert.match(logoSource, /Kamai/);
+});
+
 test("support page no longer contains the instant callback CTA", async () => {
   const source = await readFile(new URL("../app/support/page.tsx", import.meta.url), "utf8");
 

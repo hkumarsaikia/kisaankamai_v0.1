@@ -8,6 +8,7 @@ import {
   normalizeRolePreference,
   updateLocalProfile,
 } from "@/lib/server/firebase-data";
+import { notifyBackendActivity } from "@/lib/server/backend-activity";
 
 export const firebaseSessionRequestSchema = z.object({
   idToken: z.string().min(1),
@@ -86,6 +87,41 @@ export async function createFirebaseBackedSession(payload: FirebaseSessionReques
       email: payload.profile?.email,
       phone: payload.profile?.phone,
       password: payload.password,
+    });
+  }
+
+  if (!existingSession && payload.profile) {
+    await notifyBackendActivity({
+      event: "auth.registered",
+      title: "New user registered",
+      summary: "A new mobile-verified Kisan Kamai account was created.",
+      actor: {
+        userId: uid,
+        name: payload.profile.fullName,
+        phone: payload.profile.phone,
+        email: payload.profile.email,
+      },
+      fields: [
+        { name: "Village", value: payload.profile.village, inline: true },
+        { name: "District", value: payload.profile.district, inline: true },
+        { name: "Pincode", value: payload.profile.pincode, inline: true },
+        { name: "Workspace", value: payload.workspacePreference || "renter", inline: true },
+      ],
+    });
+  } else if (existingSession && !payload.profile) {
+    await notifyBackendActivity({
+      event: "auth.session_created",
+      title: "User session created",
+      summary: "A user signed in and a website session was created.",
+      actor: {
+        userId: uid,
+        name: existingSession.profile.fullName,
+        phone: existingSession.profile.phone || existingSession.user.phone,
+        email: existingSession.profile.email || existingSession.user.email,
+      },
+      fields: [
+        { name: "Active workspace", value: existingSession.activeWorkspace, inline: true },
+      ],
     });
   }
 

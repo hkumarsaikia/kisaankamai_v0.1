@@ -4,6 +4,7 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { FOOTER_MARKETPLACE_LINKS, FOOTER_TRUST_LINKS } from "@/lib/site-navigation.js";
 import { SharedIcon } from "@/components/SharedIcon";
+import { BrandLogo } from "@/components/BrandLogo";
 import { postJson } from "@/lib/client/forms";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
@@ -77,27 +78,12 @@ export const Footer = () => {
             className="block mb-8 transition-transform hover:-translate-y-1"
             aria-label="Kisan Kamai"
           >
-            <svg viewBox="0 0 350 80" className="w-full max-w-[280px] h-auto pointer-events-none select-none">
-              <defs>
-                <linearGradient id="cropin-grad-footer" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#10b981" />
-                  <stop offset="100%" stopColor="#06b6d4" />
-                </linearGradient>
-              </defs>
-              <text 
-                x="0" 
-                y="60" 
-                fontFamily="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
-                fontSize="64" 
-                fontWeight="200" 
-                fill="none" 
-                stroke="url(#cropin-grad-footer)" 
-                strokeWidth="1.5"
-                letterSpacing="-1.5"
-              >
-                Kisan Kamai
-              </text>
-            </svg>
+            <BrandLogo
+              inverse
+              showSubtitle
+              markClassName="h-12 w-12"
+              textClassName="min-w-0"
+            />
           </Link>
           <p className="text-slate-400 leading-relaxed mb-6 font-normal">
             {t("Footer.empowering_indian_farmers_through_shared_technology_and_machinery_access_rooted_in_trust")}
@@ -216,6 +202,9 @@ export const Footer = () => {
             "© 2026 Kisan Kamai. All rights reserved. Built with care for Bharat.",
             "© २०२६ किसान कमाई. सर्व हक्क राखीव. भारतासाठी जपून तयार केले."
           )}
+          <span className="ml-2 inline-block align-[-0.08em]" role="img" aria-label={langText("India", "भारत")}>
+            🇮🇳
+          </span>
         </p>
       </div>
     </footer>

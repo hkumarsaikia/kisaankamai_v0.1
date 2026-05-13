@@ -30,6 +30,7 @@ import {
 } from "@/lib/server/local-auth";
 import { resolvePortalHref } from "@/lib/workspace-routing.js";
 import { mirrorAuthEvent } from "@/lib/server/sheets-mirror";
+import { notifyBackendActivity } from "@/lib/server/backend-activity";
 import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import {
   bookingRequestSchema,
@@ -267,6 +268,19 @@ export async function logoutAction(): Promise<ActionResult> {
       outcome: "success",
       path: "/logout",
     });
+    if (session) {
+      await notifyBackendActivity({
+        event: "auth.logout",
+        title: "User logout",
+        summary: "A user signed out of the website.",
+        actor: {
+          userId: session.user.id,
+          name: session.profile.fullName || session.user.name,
+          phone: session.profile.phone || session.user.phone,
+          email: session.profile.email || session.user.email,
+        },
+      });
+    }
     return { ok: true, redirectTo: "/" };
   });
 }

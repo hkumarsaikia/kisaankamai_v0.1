@@ -12,6 +12,7 @@ export const DISCORD_WEBHOOK_ENV_BY_CHANNEL = {
   github: "DISCORD_WEBHOOK_GITHUB_URL",
   security: "DISCORD_WEBHOOK_SECURITY_URL",
   sentry: "DISCORD_WEBHOOK_SENTRY_URL",
+  backend: "DISCORD_WEBHOOK_BACKEND_URL",
 };
 
 export function normalizeDiscordChannels(channels = []) {

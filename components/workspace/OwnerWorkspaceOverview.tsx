@@ -127,7 +127,7 @@ export function OwnerWorkspaceOverview({
             {!displayedRequests.length ? (
               <div className="rounded-3xl border border-dashed border-outline-variant bg-white px-6 py-16 text-center dark:border-slate-700 dark:bg-slate-900">
                 <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-surface-container">
-                  <span className="material-symbols-outlined text-4xl text-outline">inventory_2</span>
+                  <span className="material-symbols-outlined text-4xl text-outline">inventory</span>
                 </div>
                 <h2 className="text-2xl font-bold text-primary">{langText("No new requests yet", "अजून नवीन विनंत्या नाहीत")}</h2>
                 <p className="mx-auto mt-2 max-w-sm text-on-surface-variant">

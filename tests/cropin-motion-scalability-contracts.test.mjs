@@ -32,10 +32,30 @@ test("page swaps and reveal animations use shared flow motion tokens", async () 
   assert.match(globals, /@keyframes kk-route-bar/);
   assert.match(navProvider, /kk-route-transition-bar/);
   assert.match(navProvider, /kk-route-transition-veil/);
+  assert.match(navProvider, /window\.history\.pushState/);
+  assert.match(navProvider, /window\.history\.replaceState/);
+  assert.match(navProvider, /getTransitionTarget\(String\(url\), window\.location\.pathname\)/);
+  assert.match(navProvider, /__kkNavigationTransitionPatched/);
+  assert.match(navProvider, /requestAnimationFrame\(patchHistory\)/);
+  assert.match(navProvider, /setTimeout\(patchHistory,\s*250\)/);
+  assert.match(globals, /\.kk-route-transition-veil::after/);
+  assert.match(globals, /@keyframes kk-route-orbit/);
   assert.match(routeShell, /y:\s*prefersReducedMotion \? 0 : 10/);
   assert.match(scrollReveal, /FLOW_EASE/);
   assert.match(scrollReveal, /scale:\s*0\.985/);
   assert.match(navTransition, /PAGE_ENTER_DURATION_SECONDS\s*=\s*0\.42/);
+});
+
+test("Material Symbols source icons avoid unsupported ligatures after self-hosted subsetting", async () => {
+  const sources = await Promise.all([
+    readSource("../app/rent-equipment/RentEquipmentView.tsx"),
+    readSource("../components/renter-profile/RenterProfileViews.tsx"),
+    readSource("../components/workspace/OwnerWorkspaceOverview.tsx"),
+  ]);
+
+  for (const source of sources) {
+    assert.doesNotMatch(source, /inventory_2/);
+  }
 });
 
 test("tile depth motion is requestAnimationFrame throttled for dense pages", async () => {

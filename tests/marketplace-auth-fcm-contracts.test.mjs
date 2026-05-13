@@ -164,6 +164,18 @@ test("manual registration checks uniqueness before Firebase OTP and requires pas
   assert.match(typeSource, /passwordLoginEmail/);
 });
 
+test("registration no longer asks for identity verification documents", async () => {
+  const registerSource = await readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8");
+
+  assert.doesNotMatch(registerSource, /Optional identity verification/);
+  assert.doesNotMatch(registerSource, /verificationDocumentTypes/);
+  assert.doesNotMatch(registerSource, /uploadVerificationDocuments/);
+  assert.doesNotMatch(registerSource, /idType/);
+  assert.doesNotMatch(registerSource, /idNumber/);
+  assert.doesNotMatch(registerSource, /Aadhaar Card|PAN Card|Voter ID|Driving License|Passport/);
+  assert.match(registerSource, /verificationStatus:\s*"not_submitted"/);
+});
+
 test("registration district selection is limited to Maharashtra districts", async () => {
   const [registerSource, districtSource] = await Promise.all([
     readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),

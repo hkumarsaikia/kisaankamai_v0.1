@@ -505,7 +505,7 @@ export function RenterProfileSupportContent() {
       <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {[
           ["event_busy", "Booking Issue"],
-          ["inventory_2", "Listing Issue"],
+          ["inventory", "Listing Issue"],
           ["handshake", "Pricing & Settlement"],
           ["verified_user", "Verification"],
         ].map(([icon, label]) => (

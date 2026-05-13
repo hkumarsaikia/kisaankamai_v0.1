@@ -8,7 +8,7 @@ test("Discord tooling supports env-driven multi-webhook channels", async () => {
 
   assert.deepEqual(
     Object.keys(discordLib.DISCORD_WEBHOOK_ENV_BY_CHANNEL).sort(),
-    ["deploy", "github", "ops", "release", "security", "sentry"].sort()
+    ["backend", "deploy", "github", "ops", "release", "security", "sentry"].sort()
   );
   assert.equal(
     discordLib.resolveDiscordWebhookUrl({
@@ -16,6 +16,13 @@ test("Discord tooling supports env-driven multi-webhook channels", async () => {
       env: { DISCORD_WEBHOOK_SECURITY_URL: "https://discord.example/security" },
     }),
     "https://discord.example/security"
+  );
+  assert.equal(
+    discordLib.resolveDiscordWebhookUrl({
+      channel: "backend",
+      env: { DISCORD_WEBHOOK_BACKEND_URL: "https://discord.example/backend" },
+    }),
+    "https://discord.example/backend"
   );
   assert.equal(
     discordLib.resolveDiscordWebhookUrl({
@@ -36,6 +43,53 @@ test("Discord tooling supports env-driven multi-webhook channels", async () => {
   assert.doesNotMatch(notifySource, /process\.env\.DISCORD_WEBHOOK_URL \|\| ""/);
   assert.match(notifySource, /--channel/);
   assert.match(notifySource, /sendDiscordWebhookToChannels/);
+});
+
+test("backend activity notifications are env-driven and never commit a real webhook", async () => {
+  const [
+    backendActivity,
+    firebaseData,
+    sessionRoute,
+    loginRoute,
+    localActions,
+    docsSource,
+    appHostingSource,
+  ] = await Promise.all([
+    readFile(new URL("../lib/server/backend-activity.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/firebase-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/server/firebase-session-route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/api/auth/login/route.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/actions/local-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../docs/OPERATIONS_LIVE_REPO_SYNC.md", import.meta.url), "utf8"),
+    readFile(new URL("../apphosting.yaml", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(backendActivity, /DISCORD_WEBHOOK_BACKEND_URL/);
+  assert.match(backendActivity, /DISCORD_WEBHOOK_BACKEND_NOTIFICATION_URL/);
+  assert.match(backendActivity, /BACKEND_DISCORD_TIMEOUT_MS\s*=\s*2200/);
+  assert.match(backendActivity, /captureServerException/);
+  assert.match(firebaseData, /event:\s*"listing\.created"/);
+  assert.match(firebaseData, /event:\s*"listing\.updated"/);
+  assert.match(firebaseData, /event:\s*"listing\.deleted"/);
+  assert.match(firebaseData, /event:\s*"booking\.created"/);
+  assert.match(firebaseData, /event:\s*"booking\.status_updated"/);
+  assert.match(firebaseData, /event:\s*"form\.submitted"/);
+  assert.match(sessionRoute, /event:\s*"auth\.registered"/);
+  assert.match(sessionRoute, /event:\s*"auth\.session_created"/);
+  assert.match(loginRoute, /event:\s*"auth\.login"/);
+  assert.match(localActions, /event:\s*"auth\.logout"/);
+  assert.match(docsSource, /DISCORD_WEBHOOK_BACKEND_URL/);
+  assert.match(docsSource, /Do not commit real webhook URLs/);
+  assert.match(appHostingSource, /variable:\s*DISCORD_WEBHOOK_BACKEND_URL/);
+  assert.match(appHostingSource, /secret:\s*discordWebhookBackendUrl/);
+  assert.match(
+    appHostingSource,
+    /variable:\s*DISCORD_WEBHOOK_BACKEND_URL[\s\S]*availability:\s*\n\s*-\s*RUNTIME/
+  );
+  assert.doesNotMatch(
+    `${backendActivity}\n${firebaseData}\n${sessionRoute}\n${loginRoute}\n${localActions}\n${docsSource}\n${appHostingSource}`,
+    /discord\.com\/api\/webhooks/
+  );
 });
 
 test("Firebase launch gate does not require Sentry", async () => {

@@ -9,14 +9,12 @@ import {
   getFirebaseAuthError,
   getOptionalFirebaseAuthClient,
   startPhoneVerification,
-  uploadVerificationDocuments,
   verifyPhoneOtp,
 } from "@/components/auth/firebase-auth-client";
 import { OtpVerificationForm } from "@/components/auth/OtpVerificationForm";
 import { useLanguage } from "@/components/LanguageContext";
 import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { MAHARASHTRA_DISTRICTS } from "@/lib/auth/india-districts";
-import type { VerificationDocumentRecord } from "@/lib/local-data/types";
 
 type RegisterFormState = {
   fullName: string;
@@ -26,24 +24,9 @@ type RegisterFormState = {
   village: string;
   district: string;
   pincode: string;
-  idType: string;
-  idNumber: string;
-};
-
-type UploadState = {
-  front: File | null;
-  back: File | null;
 };
 
 type VerificationStage = "form" | "otp" | "verifying" | "verified";
-
-const verificationDocumentTypes = [
-  "Aadhaar Card",
-  "PAN Card",
-  "Voter ID",
-  "Driving License",
-  "Passport",
-];
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -57,12 +40,6 @@ export default function RegisterPage() {
     village: "",
     district: "",
     pincode: "",
-    idType: "",
-    idNumber: "",
-  });
-  const [documents, setDocuments] = useState<UploadState>({
-    front: null,
-    back: null,
   });
   const [confirmationId, setConfirmationId] = useState("");
   const [otpDigits, setOtpDigits] = useState<string[]>(Array.from({ length: 6 }, () => ""));
@@ -109,11 +86,6 @@ export default function RegisterPage() {
     setError("");
   };
 
-  const updateDocument = (field: keyof UploadState, file: File | null) => {
-    setDocuments((current) => ({ ...current, [field]: file }));
-    setError("");
-  };
-
   const resetOtpStage = () => {
     setStage("form");
     setConfirmationId("");
@@ -150,10 +122,6 @@ export default function RegisterPage() {
 
     if (!formState.password || formState.password.length < 6) {
       return langText("Password must be at least 6 characters.", "पासवर्ड किमान 6 अक्षरांचा असावा.");
-    }
-
-    if ((documents.front || documents.back || formState.idNumber) && !formState.idType) {
-      return langText("Select the document type for verification.", "पडताळणीसाठी कागदपत्राचा प्रकार निवडा.");
     }
 
     return "";
@@ -284,17 +252,6 @@ export default function RegisterPage() {
         setIsOtpVerified(true);
       }
 
-      const verificationDocuments = await uploadVerificationDocuments({
-        auth,
-        documents: [
-          ...(documents.front ? [{ kind: "front" as const, file: documents.front }] : []),
-          ...(documents.back ? [{ kind: "back" as const, file: documents.back }] : []),
-        ],
-      });
-
-      const verificationPayload: VerificationDocumentRecord[] | undefined =
-        verificationDocuments.length ? verificationDocuments : undefined;
-
       await finishFirebaseAuthSession({
         auth,
         payload: {
@@ -308,11 +265,7 @@ export default function RegisterPage() {
             pincode: formState.pincode.trim(),
             fieldArea: 0,
             district: formState.district.trim(),
-            verificationStatus:
-              formState.idType || formState.idNumber || verificationDocuments.length ? "submitted" : "not_submitted",
-            verificationDocumentType: formState.idType.trim() || undefined,
-            verificationDocumentNumber: formState.idNumber.trim() || undefined,
-            verificationDocuments: verificationPayload,
+            verificationStatus: "not_submitted",
           },
         },
       });
@@ -559,93 +512,6 @@ export default function RegisterPage() {
                         maxLength={6}
                         disabled={isSubmitting}
                         required
-                      />
-                    </label>
-                  </div>
-                </section>
-
-                <section className="space-y-6">
-                  <div className="flex items-center gap-3 border-b border-primary-container/20 pb-4">
-                    <span className="material-symbols-outlined text-3xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                      verified_user
-                    </span>
-                    <h2 className="font-headline text-2xl font-bold text-primary">
-                      {langText("Optional identity verification", "पर्यायी ओळख पडताळणी")}
-                    </h2>
-                  </div>
-
-                  <p className="text-sm leading-relaxed text-on-surface-variant">
-                    {langText(
-                      "Upload identity documents now if you want them attached to your shared profile from day one.",
-                      "तुमच्या सामायिक प्रोफाइलशी पहिल्याच दिवशी जोडण्यासाठी तुम्ही आत्ता ओळख कागदपत्रे अपलोड करू शकता."
-                    )}
-                  </p>
-
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <label className="space-y-1.5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
-                        {langText("Document type", "कागदपत्राचा प्रकार")}
-                      </span>
-                      <select
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                        value={formState.idType}
-                        onChange={(event) => updateField("idType", event.target.value)}
-                        disabled={isSubmitting}
-                      >
-                        <option value="">
-                          {langText("Select a document type", "कागदपत्राचा प्रकार निवडा")}
-                        </option>
-                        {verificationDocumentTypes.map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                    </label>
-
-                    <label className="space-y-1.5">
-                      <span className="text-xs font-bold uppercase tracking-wider text-outline">
-                        {langText("Document number", "कागदपत्र क्रमांक")}
-                      </span>
-                      <input
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                        value={formState.idNumber}
-                        onChange={(event) => updateField("idNumber", event.target.value)}
-                        disabled={isSubmitting}
-                      />
-                    </label>
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center transition-colors hover:bg-surface-container-low">
-                      <span className="material-symbols-outlined text-3xl text-primary">upload_file</span>
-                      <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                        {langText("Front side", "समोरची बाजू")}
-                      </span>
-                      <span className="text-xs text-on-surface-variant">
-                        {documents.front?.name || langText("Image or PDF", "प्रतिमा किंवा PDF")}
-                      </span>
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept="image/*,.pdf"
-                        onChange={(event) => updateDocument("front", event.target.files?.[0] || null)}
-                      />
-                    </label>
-
-                    <label className="flex min-h-32 cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-primary-container/30 bg-surface-container-low/40 px-6 py-8 text-center transition-colors hover:bg-surface-container-low">
-                      <span className="material-symbols-outlined text-3xl text-primary">upload_file</span>
-                      <span className="text-xs font-bold uppercase tracking-wider text-primary">
-                        {langText("Back side", "मागची बाजू")}
-                      </span>
-                      <span className="text-xs text-on-surface-variant">
-                        {documents.back?.name || langText("Image or PDF", "प्रतिमा किंवा PDF")}
-                      </span>
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept="image/*,.pdf"
-                        onChange={(event) => updateDocument("back", event.target.files?.[0] || null)}
                       />
                     </label>
                   </div>

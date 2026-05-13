@@ -47,8 +47,8 @@ const categoryIconBySlug: Record<string, string> = {
   threshers: "precision_manufacturing",
   pump: "water_drop",
   pumps: "water_drop",
-  baler: "inventory_2",
-  balers: "inventory_2",
+  baler: "inventory",
+  balers: "inventory",
 };
 
 function getCategoryIcon(summary: EquipmentCategorySummary) {

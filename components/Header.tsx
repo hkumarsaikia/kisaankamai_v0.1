@@ -9,6 +9,7 @@ import { useAuth } from "./AuthContext";
 import { ProfileDropdownMenu } from "./ProfileDropdownMenu";
 import { HEADER_PRIMARY_LINKS } from "@/lib/site-navigation.js";
 import { SharedIcon } from "./SharedIcon";
+import { BrandLogo } from "./BrandLogo";
 
 type HeaderLanguageControlProps = {
   className?: string;
@@ -54,8 +55,15 @@ export const Header = () => {
 
           {/* Left: Logo + Nav */}
           <div className="flex items-center gap-8">
-            <Link href="/" className="text-2xl font-extrabold tracking-tighter text-emerald-900 dark:text-emerald-50 font-headline">
-              {t("common.brand")}
+            <Link
+              href="/"
+              className="group inline-flex items-center rounded-2xl outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-primary/35"
+              aria-label={t("common.brand")}
+            >
+              <BrandLogo
+                markClassName="h-8 w-8"
+                textClassName="hidden sm:flex"
+              />
             </Link>
             <div className="hidden lg:flex items-center gap-6 ml-4">
               {HEADER_PRIMARY_LINKS.map((link) => {
