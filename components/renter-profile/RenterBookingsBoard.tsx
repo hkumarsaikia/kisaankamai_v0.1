@@ -286,12 +286,6 @@ export function RenterBookingsBoard({
             <h3 className="font-headline text-2xl font-bold text-primary">
               {langText("No bookings in this section", "या विभागात बुकिंग नाहीत")}
             </h3>
-            <p className="mt-2 text-sm text-on-surface-variant">
-              {langText(
-                "Change the filter or browse equipment to place a new booking.",
-                "फिल्टर बदला किंवा नवीन बुकिंगसाठी उपकरणे शोधा."
-              )}
-            </p>
           </div>
         )}
       </section>

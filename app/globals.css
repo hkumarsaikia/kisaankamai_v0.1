@@ -699,6 +699,14 @@
     animation: kk-toast-5s 5000ms cubic-bezier(0.2, 0, 0, 1) both;
   }
 
+  .kk-login-toast-error {
+    @apply border-red-300/80 bg-red-50 text-red-700 shadow-red-950/20 dark:border-red-500/40 dark:bg-red-950/90 dark:text-red-100;
+  }
+
+  .kk-login-toast-error .material-symbols-outlined {
+    @apply text-red-600 dark:text-red-200;
+  }
+
   .kk-input {
     @apply flex min-h-12 w-full rounded-[1.15rem] border border-outline-variant bg-surface-container-lowest px-4 py-3 text-sm font-semibold text-on-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] outline-none transition-[border-color,box-shadow,background-color] placeholder:text-on-surface-variant focus:border-secondary focus:ring-2 focus:ring-secondary disabled:cursor-not-allowed disabled:opacity-60 file:mr-4 file:rounded-full file:border-0 file:bg-primary file:px-4 file:py-2 file:font-bold file:text-white;
   }
@@ -1173,6 +1181,26 @@
 .leaflet-popup-tip {
   background: var(--color-surface-container-lowest);
   color: var(--color-on-surface);
+}
+
+.gm-style .gm-style-pbc,
+.gm-style .gm-style-pbt {
+  width: 100% !important;
+  left: 0 !important;
+  right: 0 !important;
+  text-align: center !important;
+}
+
+.gm-style .gm-style-pbc {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.gm-style .gm-style-pbt {
+  display: block !important;
+  padding-inline: 1rem !important;
+  margin-inline: auto !important;
 }
 
 .no-scrollbar::-webkit-scrollbar,

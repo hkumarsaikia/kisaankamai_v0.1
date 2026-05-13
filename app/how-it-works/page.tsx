@@ -163,7 +163,7 @@ export default function HowItWorksPage() {
                       "किसान कमाई प्लॅटफॉर्मवर पेमेंट गोळा करत नाही किंवा त्यावर प्रक्रिया करत नाही. वापरकर्त्यांमध्ये थेट व्यवहार होतात."
                     )}
                   </p>
-                  <p className="text-xl uppercase tracking-tight bg-error-container text-on-error-container p-4 rounded-xl text-center">
+                  <p className="flex items-center justify-center rounded-xl bg-error-container p-4 text-center text-xl uppercase tracking-tight text-on-error-container">
                     {langText(
                       "Always verify machine condition before paying.",
                       "पेमेंट करण्यापूर्वी नेहमी मशीनची स्थिती तपासा."

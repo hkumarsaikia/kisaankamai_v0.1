@@ -86,7 +86,7 @@ export function EquipmentSortMenu({
         onClick={() => setOpen((current) => !current)}
         className={`group inline-flex h-11 w-full min-w-[12.5rem] items-center justify-between gap-3 rounded-xl px-4 text-sm font-black shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
           isPrimary
-            ? "border border-primary/20 bg-primary text-on-primary hover:bg-primary-container hover:shadow-lg"
+            ? "border border-primary/20 bg-primary text-white hover:bg-primary-container hover:shadow-lg dark:border-emerald-400/20 dark:bg-emerald-900 dark:text-white dark:hover:bg-emerald-800"
             : "border border-outline-variant bg-surface-container-lowest text-on-surface hover:border-primary/30 hover:bg-surface-container-low hover:shadow-md"
         }`}
       >
@@ -127,7 +127,7 @@ export function EquipmentSortMenu({
                   : "text-on-surface hover:bg-surface-container-low dark:text-slate-100 dark:hover:bg-slate-900"
               }`}
             >
-              <span className={`material-symbols-outlined mt-0.5 text-[21px] ${active ? "text-primary dark:text-emerald-200" : "text-on-surface-variant"}`}>
+              <span className={`material-symbols-outlined mt-0.5 text-[21px] ${active ? "text-primary dark:text-emerald-200" : "text-on-surface-variant dark:text-slate-300"}`}>
                 {option.icon}
               </span>
               <span className="min-w-0 flex-1">
@@ -136,7 +136,7 @@ export function EquipmentSortMenu({
                   {langText(option.description.en, option.description.mr)}
                 </span>
               </span>
-              {active ? <span className="material-symbols-outlined text-[18px] text-primary">done</span> : null}
+              {active ? <span className="material-symbols-outlined text-[18px] text-primary dark:text-emerald-200">done</span> : null}
             </button>
           );
         })}

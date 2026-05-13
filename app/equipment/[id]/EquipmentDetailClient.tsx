@@ -30,6 +30,38 @@ function deriveDriveLabel(equipment: EquipmentRecord) {
   return driveTag || null;
 }
 
+function normalizeLocationToken(value: string) {
+  return value.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function formatOwnerLocation(equipment: EquipmentRecord) {
+  const storedParts = equipment.ownerLocation
+    ? equipment.ownerLocation.split(",").map((part) => part.trim()).filter(Boolean)
+    : [];
+  const sourceParts = storedParts.length
+    ? storedParts
+    : [equipment.location, equipment.district].filter(Boolean);
+  const parts = [...sourceParts, equipment.state || "Maharashtra"];
+  const seen = new Set<string>();
+
+  return parts
+    .map((part) => part.trim())
+    .filter((part) => {
+      if (!part) {
+        return false;
+      }
+
+      const normalized = normalizeLocationToken(part);
+      if (seen.has(normalized)) {
+        return false;
+      }
+
+      seen.add(normalized);
+      return true;
+    })
+    .join(", ");
+}
+
 export default function EquipmentDetailClient({
   equipment,
   showBreadcrumbs = true,
@@ -85,6 +117,7 @@ export default function EquipmentDetailClient({
   const visibleRating = getVisibleEquipmentRating(equipment);
   const availability = getEquipmentAvailability(equipment);
   const isOwnListing = Boolean(currentUserId && equipment.ownerUserId === currentUserId);
+  const ownerLocationLabel = formatOwnerLocation(equipment);
   const defaultBookingTask = equipment.workTypes[0] || "General equipment work";
   const containerClassName =
     containerVariant === "workspace"
@@ -186,8 +219,8 @@ export default function EquipmentDetailClient({
         </div>
       ) : null}
       {loginToast ? (
-        <div className="kk-login-toast" role="status">
-          <span className="material-symbols-outlined text-primary">login</span>
+        <div className="kk-login-toast kk-login-toast-error" role="status">
+          <span className="material-symbols-outlined">login</span>
           <span>{langText("please login or register", "कृपया लॉगिन किंवा नोंदणी करा")}</span>
         </div>
       ) : null}
@@ -331,7 +364,7 @@ export default function EquipmentDetailClient({
         <section>
           <h2 className="mb-4 text-xl font-bold">{langText("Owner Details", "मालक तपशील")}</h2>
           <div
-            className="kk-owner-detail-card relative max-w-2xl overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary-container/10 via-surface-container-lowest to-secondary-container/10 p-4 shadow-[0_18px_44px_-34px_rgba(0,37,26,0.75)] transition-[box-shadow,border-color] duration-300 hover:border-primary/20 hover:shadow-[0_24px_56px_-40px_rgba(0,37,26,0.82)] dark:border-emerald-400/10 dark:from-emerald-400/10 dark:via-slate-950 dark:to-orange-300/5"
+            className="kk-owner-detail-card relative max-w-sm overflow-hidden rounded-2xl border border-primary/10 bg-gradient-to-br from-primary-container/10 via-surface-container-lowest to-secondary-container/10 p-4 shadow-[0_18px_44px_-34px_rgba(0,37,26,0.75)] transition-[box-shadow,border-color] duration-300 hover:border-primary/20 hover:shadow-[0_24px_56px_-40px_rgba(0,37,26,0.82)] dark:border-emerald-400/10 dark:from-emerald-400/10 dark:via-slate-950 dark:to-orange-300/5"
             data-depth-motion="static"
           >
             <div className="absolute right-0 top-0 h-20 w-20 -translate-y-8 translate-x-8 rounded-full bg-secondary/10 blur-2xl" />
@@ -339,11 +372,11 @@ export default function EquipmentDetailClient({
               {equipment.ownerPhotoUrl ? (
                 <img
                   alt={langText("Owner profile photo", "मालकाचा प्रोफाइल फोटो")}
-                  className="h-16 w-16 shrink-0 rounded-2xl border-4 border-white bg-surface-container object-cover shadow-md dark:border-slate-900 sm:h-20 sm:w-20"
+                  className="h-14 w-14 shrink-0 rounded-2xl border-4 border-white bg-surface-container object-cover shadow-md dark:border-slate-900 sm:h-16 sm:w-16"
                   src={equipment.ownerPhotoUrl}
                 />
               ) : (
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-surface-container text-slate-500 shadow-md dark:border-slate-900 sm:h-20 sm:w-20">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border-4 border-white bg-surface-container text-slate-500 shadow-md dark:border-slate-900 sm:h-16 sm:w-16">
                   <span className="material-symbols-outlined text-3xl">person</span>
                 </div>
               )}
@@ -351,11 +384,11 @@ export default function EquipmentDetailClient({
                 <p className="text-xs font-black uppercase tracking-[0.2em] text-primary">
                   {langText("Equipment Owner", "उपकरण मालक")}
                 </p>
-                <h3 className="mt-1 truncate text-xl font-black text-on-surface sm:text-2xl">{equipment.ownerName}</h3>
-                {equipment.ownerLocation ? (
-                  <div className="kk-owner-location-row mt-3 inline-flex max-w-full items-center gap-2 rounded-full border border-primary/10 bg-white/75 px-3 py-1.5 text-sm font-bold text-on-surface-variant shadow-sm backdrop-blur dark:border-emerald-400/15 dark:bg-slate-950/70">
+                <h3 className="mt-1 truncate text-xl font-black text-on-surface">{equipment.ownerName}</h3>
+                {ownerLocationLabel ? (
+                  <div className="kk-owner-location-row mt-3 inline-flex max-w-full items-center gap-2 rounded-full border border-primary/10 bg-white/75 px-3 py-1.5 text-xs font-bold text-on-surface-variant shadow-sm backdrop-blur dark:border-emerald-400/15 dark:bg-slate-950/70 sm:text-sm">
                     <span className="material-symbols-outlined text-base text-primary">location_on</span>
-                    <span className="truncate">{equipment.ownerLocation}</span>
+                    <span className="truncate">{ownerLocationLabel}</span>
                   </div>
                 ) : null}
               </div>
@@ -580,15 +613,20 @@ export default function EquipmentDetailClient({
               {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
 
               <button
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-white shadow-md transition hover:bg-primary-container"
+                className="kk-flow-button flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-white shadow-md transition hover:bg-primary-container"
                 disabled={isSubmitting || (!availability.available && !isOwnListing)}
+                data-loading={isSubmitting ? "true" : "false"}
+                aria-busy={isSubmitting}
                 type="submit"
               >
-                {isSubmitting
-                  ? langText("Submitting...", "सबमिट होत आहे...")
-                  : !availability.available && !isOwnListing
-                    ? langText("Currently unavailable", "सध्या उपलब्ध नाही")
-                    : langText("Book Now", "आता बुक करा")}
+                {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
+                <span>
+                  {isSubmitting
+                    ? langText("Submitting...", "सबमिट होत आहे...")
+                    : !availability.available && !isOwnListing
+                      ? langText("Currently unavailable", "सध्या उपलब्ध नाही")
+                      : langText("Book Now", "आता बुक करा")}
+                </span>
               </button>
             </div>
           </form>

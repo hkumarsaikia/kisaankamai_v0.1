@@ -271,12 +271,6 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
         ) : (
           <div className="rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-8 text-center">
             <h3 className="font-headline text-2xl font-bold text-primary">{langText("No bookings in this section", "या विभागात बुकिंग नाहीत")}</h3>
-            <p className="mt-2 text-sm text-on-surface-variant">
-              {langText(
-                "Change the filter or keep your listings active to receive new requests.",
-                "फिल्टर बदला किंवा नवीन विनंत्यांसाठी तुमच्या लिस्टिंग सक्रिय ठेवा."
-              )}
-            </p>
           </div>
         )}
       </section>

@@ -47,6 +47,30 @@ test("reported dark-mode problem pages do not use low-contrast primary-container
   assert.match(support, /text-primary dark:text-emerald-950/);
 });
 
+test("latest dark-mode visibility fixes cover partner, coming soon, owner benefits, sort menu, login toast, and map overlay", async () => {
+  const [partner, comingSoon, ownerBenefits, sortMenu, detail, globals] = await Promise.all([
+    readSource("../app/partner/page.tsx"),
+    readSource("../app/coming-soon/page.tsx"),
+    readSource("../app/owner-benefits/page.tsx"),
+    readSource("../components/equipment/EquipmentSortMenu.tsx"),
+    readSource("../app/equipment/[id]/EquipmentDetailClient.tsx"),
+    readSource("../app/globals.css"),
+  ]);
+
+  assert.match(partner, /dark:border-slate-700 dark:bg-slate-900\/85/);
+  assert.match(partner, /dark:bg-slate-800 dark:text-emerald-200/);
+  assert.match(comingSoon, /dark:bg-emerald-950 dark:text-emerald-50/);
+  assert.match(comingSoon, /dark:text-emerald-50 dark:placeholder:text-emerald-100\/60/);
+  assert.match(ownerBenefits, /dark:text-emerald-200/);
+  assert.match(ownerBenefits, /dark:accent-emerald-300/);
+  assert.match(sortMenu, /dark:bg-emerald-900 dark:text-white/);
+  assert.match(sortMenu, /dark:text-slate-300/);
+  assert.match(detail, /kk-login-toast kk-login-toast-error/);
+  assert.match(globals, /\.kk-login-toast-error/);
+  assert.match(globals, /\.gm-style \.gm-style-pbc/);
+  assert.match(globals, /text-align:\s*center !important/);
+});
+
 test("requested public banner imagery uses one shared overlay while product imagery stays clear", async () => {
   const entries = await Promise.all(
     [

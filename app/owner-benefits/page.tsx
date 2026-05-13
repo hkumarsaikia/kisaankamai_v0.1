@@ -245,12 +245,12 @@ export default function OwnerBenefitsPage() {
                   <div>
                     <label className="flex justify-between text-base font-bold text-gray-700 dark:text-slate-200 mb-4">
                       <span>{langText("Expected Usage", "अपेक्षित वापर")}</span>
-                      <span className="text-brand dark:text-primary-fixed">
+                      <span className="text-brand dark:text-emerald-200">
                         {formatNumber(usageDays)} {langText("Days/Month", "दिवस/महिना")}
                       </span>
                     </label>
                     <input
-                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand dark:bg-slate-700"
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand dark:bg-slate-700 dark:accent-emerald-300"
                       max={25}
                       min={5}
                       type="range"

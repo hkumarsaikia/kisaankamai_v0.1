@@ -108,7 +108,7 @@ test("equipment detail workspace mobile layout prioritizes booking and removes f
   assert.match(detail, /order-1 mb-2/);
   assert.match(detail, /kk-owner-detail-card/);
   assert.match(detail, /data-depth-motion="static"/);
-  assert.match(detail, /max-w-2xl/);
+  assert.match(detail, /max-w-sm/);
   assert.doesNotMatch(detail, /kk-owner-detail-card kk-depth-tile/);
   assert.match(detail, /disabled=\{isSubmitting \|\| \(!availability\.available && !isOwnListing\)\}/);
   assert.match(detail, /setIsSubmitting\(true\)/);

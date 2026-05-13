@@ -132,7 +132,7 @@ export default function ComingSoonPage() {
             </div>
           </div>
 
-          <div className="relative flex min-h-[400px] flex-col justify-between overflow-hidden rounded-[2rem] bg-primary p-10 text-on-primary shadow-2xl md:col-span-4">
+          <div className="relative flex min-h-[400px] flex-col justify-between overflow-hidden rounded-[2rem] bg-primary p-10 text-on-primary shadow-2xl dark:bg-emerald-950 dark:text-emerald-50 md:col-span-4">
             <div className="absolute right-0 top-0 h-32 w-32 -translate-y-12 translate-x-12 rounded-full bg-primary-container opacity-50 blur-3xl" />
             <div className="relative z-10">
               <h3 className="mb-4 font-headline text-3xl font-extrabold leading-tight">
@@ -144,7 +144,7 @@ export default function ComingSoonPage() {
             </div>
 
             <div className="relative z-10 space-y-4">
-              <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
+              <div className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md dark:border-emerald-300/15 dark:bg-white/5">
                 <span className="material-symbols-outlined text-4xl">phone_iphone</span>
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest opacity-60">Mobile App</p>
@@ -167,7 +167,7 @@ export default function ComingSoonPage() {
                   {notifyState === "form" ? (
                     <form className="space-y-3 transition-all duration-300 ease-out animate-in fade-in slide-in-from-bottom-1" onSubmit={handleNotifySubmit}>
                       <input
-                        className="w-full rounded-full border border-white/20 bg-white/10 px-5 py-4 text-white outline-none placeholder:text-white/65 focus:border-white/50"
+                        className="w-full rounded-full border border-white/20 bg-white/10 px-5 py-4 text-white outline-none placeholder:text-white/65 focus:border-white/50 dark:text-emerald-50 dark:placeholder:text-emerald-100/60"
                         placeholder={COMING_SOON_CONTACT_PLACEHOLDER}
                         type="text"
                         value={contact}

@@ -125,12 +125,6 @@ export function OwnerEquipmentBrowser({
         {!listings.length ? (
           <div className="rounded-[1.75rem] border border-dashed border-outline-variant bg-surface-container-low p-8 text-center">
             <h3 className="text-2xl font-black text-primary">{langText("No equipment matched this search", "या शोधाशी जुळणारी उपकरणे नाहीत")}</h3>
-            <p className="mt-3 text-sm text-on-surface-variant">
-              {langText(
-                "Try another keyword or sort order to find the listing you want to manage.",
-                "व्यवस्थापित करायची लिस्टिंग शोधण्यासाठी दुसरा शब्द किंवा क्रम वापरा."
-              )}
-            </p>
           </div>
         ) : null}
       </section>

@@ -112,6 +112,7 @@ test("how it works disclaimer card keeps warning copy centered", async () => {
   assert.match(howItWorks, /group text-center/);
   assert.match(howItWorks, /flex items-center justify-center gap-3/);
   assert.match(howItWorks, /max-w-3xl mx-auto text-center/);
+  assert.match(howItWorks, /flex items-center justify-center rounded-xl bg-error-container p-4 text-center text-xl uppercase/);
 });
 
 test("forgot password uses the supplied reset layout while preserving the reset API flow", async () => {
@@ -426,6 +427,12 @@ test("equipment detail has category breadcrumbs, public selectable three-photo g
   assert.match(detailSource, /kk-depth-tile/);
   assert.match(detailSource, /equipment\.ownerPhotoUrl/);
   assert.match(detailSource, /alt=\{langText\("Owner profile photo"/);
+  assert.match(detailSource, /formatOwnerLocation/);
+  assert.match(detailSource, /ownerLocationLabel/);
+  assert.doesNotMatch(detailSource, /\{equipment\.ownerLocation\}/);
+  assert.match(detailSource, /kk-login-toast kk-login-toast-error/);
+  assert.match(detailSource, /data-loading=\{isSubmitting \? "true" : "false"\}/);
+  assert.match(detailSource, /kk-flow-spinner/);
   assert.match(layoutSource, /bg-surface-container-lowest/);
   assert.match(layoutSource, /lg:max-h-none/);
   assert.doesNotMatch(layoutSource, /overflow-y-auto/);
@@ -470,6 +477,18 @@ test("terms page renders one language at a time without generated mixed Marathi 
   assert.doesNotMatch(termsSource, /"आम्ही "\s*\+\s*text/);
   assert.doesNotMatch(termsSource, />\s*"आमची भूमिका/);
   assert.doesNotMatch(termsSource, /नो ऑनलाइन पेमेंट/);
+});
+
+test("profile empty states omit the requested extra helper sentences", async () => {
+  const [ownerBrowse, ownerBookings, renterBookings] = await Promise.all([
+    readSource("../components/owner-profile/OwnerEquipmentBrowser.tsx"),
+    readSource("../components/profile/OwnerBookingsBoard.tsx"),
+    readSource("../components/renter-profile/RenterBookingsBoard.tsx"),
+  ]);
+
+  assert.doesNotMatch(ownerBrowse, /Try another keyword or sort order to find the listing you want to manage/);
+  assert.doesNotMatch(ownerBookings, /Change the filter or keep your listings active to receive new requests/);
+  assert.doesNotMatch(renterBookings, /Change the filter or browse equipment to place a new booking/);
 });
 
 test("global depth tiles use pointer-driven smooth 3D variables with reduced motion guard", async () => {

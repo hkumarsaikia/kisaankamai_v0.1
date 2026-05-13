@@ -186,9 +186,9 @@ export default function PartnerPage() {
             {ecosystemCards.map((card) => (
               <article
                 key={card.title}
-                className="kk-depth-tile rounded-xl border border-outline-variant/40 bg-surface-container-low p-8 shadow-sm transition-shadow hover:shadow-lg"
+                className="kk-depth-tile rounded-xl border border-outline-variant/40 bg-surface-container-low p-8 shadow-sm transition-shadow hover:shadow-lg dark:border-slate-700 dark:bg-slate-900/85"
               >
-                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-lg ${card.bgClass} ${card.colorClass}`}>
+                <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-lg ${card.bgClass} ${card.colorClass} dark:bg-slate-800 dark:text-emerald-200`}>
                   <span className="material-symbols-outlined text-3xl">{card.icon}</span>
                 </div>
                 <h3 className="text-xl font-bold text-on-surface">{tr(card.title)}</h3>
@@ -196,7 +196,7 @@ export default function PartnerPage() {
                 <ul className="mt-6 space-y-2">
                   {card.highlights.map((highlight) => (
                     <li key={highlight} className="flex items-center gap-2 text-sm text-on-surface">
-                      <span className={`material-symbols-outlined text-sm ${card.colorClass}`}>check_circle</span>
+                      <span className={`material-symbols-outlined text-sm ${card.colorClass} dark:text-emerald-200`}>check_circle</span>
                       {tr(highlight)}
                     </li>
                   ))}
