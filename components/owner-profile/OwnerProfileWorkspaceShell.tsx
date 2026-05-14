@@ -295,7 +295,10 @@ function MobileBottomNav({
   const config = WORKSPACE_CONFIG[family];
 
   return (
-    <nav className="kk-workspace-mobile-nav fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-surface-container-highest bg-white px-4 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 dark:border-slate-800 dark:bg-slate-950 lg:hidden">
+    <nav
+      className="kk-workspace-mobile-nav fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-surface-container-highest bg-white px-4 pb-[calc(0.5rem+env(safe-area-inset-bottom))] pt-2 dark:border-slate-800 dark:bg-slate-950 lg:hidden"
+      style={{ viewTransitionName: "persistent-workspace-mobile-nav" }}
+    >
       {config.mobileItems.map(({ key, href, icon, label }) => {
         const active = key === activeTab;
         return (
@@ -361,12 +364,18 @@ export function OwnerProfileWorkspaceShell({
         </div>
       ) : null}
 
-      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-surface-container-highest bg-white lg:block dark:border-slate-800 dark:bg-slate-950">
+      <aside
+        className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-surface-container-highest bg-white lg:block dark:border-slate-800 dark:bg-slate-950"
+        style={{ viewTransitionName: "persistent-workspace-sidebar" }}
+      >
         <Sidebar family={family} activeTab={activeTab} />
       </aside>
 
       <main className="kk-workspace-main flex min-h-svh flex-col lg:ml-64">
-        <header className="kk-workspace-header sticky top-0 z-30 border-b border-surface-container-highest bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95">
+        <header
+          className="kk-workspace-header sticky top-0 z-30 border-b border-surface-container-highest bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95"
+          style={{ viewTransitionName: "persistent-workspace-header" }}
+        >
           <div className="mx-auto flex max-w-6xl items-start justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4">
             <div className="flex min-w-0 flex-1 items-start gap-2 sm:gap-3">
               <button

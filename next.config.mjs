@@ -124,6 +124,9 @@ const sharePreviewHeaders = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
+  experimental: {
+    viewTransition: true,
+  },
   images: {
     qualities: [72, 75],
     remotePatterns: [

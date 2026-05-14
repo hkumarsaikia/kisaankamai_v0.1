@@ -31,7 +31,7 @@ The root app is the only public runtime.
 - Generated site imagery is stored as optimized WebP siblings and routed through `assetPath(...)`; uploaded equipment photos remain untouched so owner media paths continue to match Firebase Storage URLs.
 - Material Symbols are self-hosted from `/public/fonts/material-symbols-outlined.woff2` and preloaded by the root layout. Do not switch the site back to a remote-only icon stylesheet; if that request is blocked or delayed, icon ligature names can become visible text.
 - Public listing discovery uses the cached public equipment loader and first narrows Firestore reads to `active` and `paused` listings. If that status-filtered query fails in a misconfigured environment, the loader falls back to the full scan and reports the fallback through server observability.
-- Global UI motion uses the shared Kisan Kamai flow tokens in `app/globals.css`, the route transition provider, and the scroll reveal components. Route swaps, profile dropdowns, depth tiles, and scroll-reveal sections should use compositor-friendly opacity and transform transitions, with the reduced-motion guard preserved.
+- Global UI motion uses the shared Kisan Kamai flow tokens in `app/globals.css`, the route transition provider, React `<ViewTransition>`, and the scroll reveal components. `next.config.mjs` keeps `experimental.viewTransition` enabled, `app/template.tsx` wraps every page body with pathname-keyed `PageViewTransition`, `AppLink` tags link navigations with `transitionTypes`, and persistent header/footer/workspace chrome is isolated with `viewTransitionName`. Keep reduced-motion guards intact whenever motion code changes.
 
 ## Root App Boundaries
 

@@ -103,7 +103,10 @@ export const Footer = () => {
   };
 
   return (
-    <footer className="kk-site-footer w-full border-t border-slate-800 bg-slate-900 py-16 text-left dark:bg-black">
+    <footer
+      className="kk-site-footer w-full border-t border-slate-800 bg-slate-900 py-16 text-left dark:bg-black"
+      style={{ viewTransitionName: "persistent-footer" }}
+    >
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
         <div className="col-span-1 md:col-span-1">
           <Link 

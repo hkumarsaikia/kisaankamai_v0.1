@@ -10,6 +10,7 @@ export const VEIL_OUT_DURATION_SECONDS = 0.24;
 export const REDUCED_DURATION_SECONDS = 0.1;
 export const NAVIGATION_TIMEOUT_MS = 3000;
 export const PREMIUM_EASE = EASE_OUT;
+export type NavigationTransitionType = "nav-forward" | "nav-back";
 
 function ensureLeadingSlash(value: string): string {
   if (!value) {
@@ -76,6 +77,27 @@ export function getTransitionTarget(href: string, currentPathname?: string | nul
   }
 
   return targetPathname === normalizePathname(currentPathname) ? null : targetPathname;
+}
+
+function getPathDepth(pathname: string): number {
+  return normalizePathname(pathname).split("/").filter(Boolean).length;
+}
+
+export function getNavigationTransitionType(
+  href: string,
+  currentPathname?: string | null
+): NavigationTransitionType | null {
+  const targetPathname = getTransitionTarget(href, currentPathname);
+  if (!targetPathname) {
+    return null;
+  }
+
+  const currentPath = normalizePathname(currentPathname);
+  const targetDepth = getPathDepth(targetPathname);
+  const currentDepth = getPathDepth(currentPath);
+  const targetIsParent = currentPath.startsWith(`${targetPathname}/`);
+
+  return targetPathname === "/" || targetIsParent || targetDepth < currentDepth ? "nav-back" : "nav-forward";
 }
 
 export function isModifiedNavigationEvent(

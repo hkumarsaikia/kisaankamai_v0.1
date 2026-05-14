@@ -25,6 +25,7 @@ docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/
 
 ## Current Bundles
 
+- `2026-05-14-215020-IST-global-view-transitions/`: native React view transitions enabled across public and workspace routes with persistent chrome isolation.
 - `2026-05-13-002923-IST-performance-dark-mode-qa/`: dark-mode contrast fix for forgot-password, Material Symbols font subsetting, root font preload cleanup, and Lighthouse evidence for home and rent-equipment.
 - `2026-05-12-232805-IST-live-cache-freshness/`: verified live no-store headers and added a build-info freshness monitor so already-open tabs reload after newer App Hosting rollouts.
 - `2026-05-12-224733-IST-share-previews-cache-disclaimer/`: centered the how-it-works disclaimer card, moved public routes to App Router metadata layouts, added page-specific social thumbnails, and added deployment-versioned share image cache busting.

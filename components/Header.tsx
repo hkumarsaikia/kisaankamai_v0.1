@@ -50,7 +50,10 @@ export const Header = () => {
 
   return (
     <>
-      <header className="fixed top-0 w-full z-[1000] bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-emerald-100 dark:border-slate-800/50 shadow-sm">
+      <header
+        className="fixed top-0 w-full z-[1000] bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-emerald-100 dark:border-slate-800/50 shadow-sm"
+        style={{ viewTransitionName: "persistent-header" }}
+      >
         <div className="flex h-20 w-full max-w-7xl items-center justify-between gap-2 px-3 sm:px-4 lg:gap-8 lg:px-6 mx-auto">
 
           {/* Left: Logo + Nav */}
