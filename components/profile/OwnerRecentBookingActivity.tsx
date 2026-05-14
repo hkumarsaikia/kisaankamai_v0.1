@@ -21,10 +21,10 @@ type OwnerRecentBookingActivityProps = {
   bookings: BookingWithDetails[];
 };
 
-function formatDashboardDateRange(startDate: string, endDate: string) {
+function formatDashboardDateRange(startDate: string, endDate: string, locale: string) {
   const start = new Date(startDate);
   const end = new Date(endDate);
-  const formatter = new Intl.DateTimeFormat("en-IN", {
+  const formatter = new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "short",
   });
@@ -36,6 +36,14 @@ function formatDashboardDateRange(startDate: string, endDate: string) {
   const formattedStart = formatter.format(start);
   const formattedEnd = formatter.format(end);
   return formattedStart === formattedEnd ? formattedStart : `${formattedStart} - ${formattedEnd}`;
+}
+
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
 }
 
 function statusText(status: BookingRecord["status"], langText: (en: string, mr: string) => string) {
@@ -75,7 +83,8 @@ function actionStateKey(bookingId: string, action: ActionKey) {
 }
 
 export function OwnerRecentBookingActivity({ bookings }: OwnerRecentBookingActivityProps) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [localBookings, setLocalBookings] = useState(bookings);
@@ -181,7 +190,7 @@ export function OwnerRecentBookingActivity({ bookings }: OwnerRecentBookingActiv
                         <LocalizedText en="Dates" mr="तारखा" />
                       </p>
                       <p className="mt-1 whitespace-nowrap text-sm font-semibold text-on-background">
-                        {formatDashboardDateRange(booking.startDate, booking.endDate)}
+                        {formatDashboardDateRange(booking.startDate, booking.endDate, locale)}
                       </p>
                     </div>
                     <div>
@@ -189,13 +198,13 @@ export function OwnerRecentBookingActivity({ bookings }: OwnerRecentBookingActiv
                         <LocalizedText en="Total" mr="एकूण" />
                       </p>
                       <p className="mt-1 text-sm font-semibold text-on-background">
-                        ₹{booking.amount.toLocaleString("en-IN")}
+                        {formatCurrency(booking.amount, locale)}
                       </p>
                     </div>
                   </div>
 
                   {errorState[booking.id] ? (
-                    <div className="rounded-xl border border-error/20 bg-error-container px-3 py-2 text-xs font-semibold text-error">
+                    <div className="rounded-xl border border-error/20 bg-error-container px-3 py-2 text-xs font-semibold text-error" role="alert">
                       {errorState[booking.id]}
                     </div>
                   ) : null}

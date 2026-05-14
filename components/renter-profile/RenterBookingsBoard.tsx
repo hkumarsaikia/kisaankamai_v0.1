@@ -55,10 +55,10 @@ function mapBookingStatus(status: BookingRecord["status"]) {
   }
 }
 
-function formatDateRange(startDate: string, endDate: string) {
+function formatDateRange(startDate: string, endDate: string, locale: string) {
   const start = new Date(startDate);
   const end = new Date(endDate);
-  const formatter = new Intl.DateTimeFormat("en-IN", {
+  const formatter = new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "short",
   });
@@ -68,6 +68,14 @@ function formatDateRange(startDate: string, endDate: string) {
   }
 
   return `${formatter.format(start)} - ${formatter.format(end)}`;
+}
+
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
 }
 
 function countFilter(bookings: BookingWithDetails[], filter: FilterKey) {
@@ -82,7 +90,8 @@ export function RenterBookingsBoard({
   bookings,
   variant = "page",
 }: RenterBookingsBoardProps) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
   const [selectedBookingId, setSelectedBookingId] = useState<string | null>(null);
@@ -215,7 +224,7 @@ export function RenterBookingsBoard({
                           {langText("Dates", "तारखा")}
                         </p>
                         <p className="mt-1 text-sm font-semibold text-on-background">
-                          {formatDateRange(booking.startDate, booking.endDate)}
+                          {formatDateRange(booking.startDate, booking.endDate, locale)}
                         </p>
                       </div>
                       <div>
@@ -223,13 +232,13 @@ export function RenterBookingsBoard({
                           {langText("Total", "एकूण")}
                         </p>
                         <p className="mt-1 text-sm font-semibold text-on-background">
-                          ₹{booking.amount.toLocaleString("en-IN")}
+                          {formatCurrency(booking.amount, locale)}
                         </p>
                       </div>
                     </div>
 
                     {errorState[booking.id] ? (
-                      <div className="rounded-xl border border-error/20 bg-error-container px-3 py-2 text-sm font-medium text-error">
+                      <div className="rounded-xl border border-error/20 bg-error-container px-3 py-2 text-sm font-medium text-error" role="alert">
                         {errorState[booking.id]}
                       </div>
                     ) : null}
@@ -270,7 +279,7 @@ export function RenterBookingsBoard({
                         {!canCancel
                           ? langText("Cancelled", "रद्द")
                           : actionState === "pending"
-                            ? langText("Cancelling...", "रद्द करत आहे...")
+                            ? langText("Cancelling…", "रद्द करत आहे…")
                             : actionState === "success"
                               ? langText("Cancelled", "रद्द")
                               : langText("Cancel", "रद्द करा")}
@@ -297,7 +306,7 @@ export function RenterBookingsBoard({
         statusLabel={selectedBooking ? langText(mapBookingStatus(selectedBooking.status).badge, FILTER_LABELS_MR[mapBookingStatus(selectedBooking.status).badge] || mapBookingStatus(selectedBooking.status).badge) : ""}
         scheduledLabel={
           selectedBooking
-            ? `${langText("Scheduled for", "नियोजित")} ${formatDateRange(selectedBooking.startDate, selectedBooking.endDate)}`
+            ? `${langText("Scheduled for", "नियोजित")} ${formatDateRange(selectedBooking.startDate, selectedBooking.endDate, locale)}`
             : ""
         }
         operatorIncluded={selectedBooking?.listing?.operatorIncluded}

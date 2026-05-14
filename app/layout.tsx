@@ -252,6 +252,12 @@ export default async function RootLayout({
         </Script>
       </head>
       <body className={`${manrope.variable} ${inter.variable} ${mukta.variable} font-body bg-background text-on-surface antialiased min-h-screen flex flex-col`}>
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[2000] focus:rounded-full focus:bg-primary focus:px-5 focus:py-3 focus:text-sm focus:font-black focus:text-white focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-primary-fixed"
+        >
+          {initialLanguage === "mr" ? "मुख्य मजकुरावर जा" : "Skip to main content"}
+        </a>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <LanguageProvider initialLanguage={initialLanguage}>
             <SingleLanguageRuntime />

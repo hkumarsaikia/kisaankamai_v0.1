@@ -25,20 +25,24 @@ export const RenterSidebar = () => {
     <>
       {/* Mobile Toggle */}
       <button
-        className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 active:scale-95 transition-all"
+        type="button"
+        aria-label={mobileMenuOpen ? "Close renter menu" : "Open renter menu"}
+        className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 active:scale-95 transition-[background-color,transform]"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
-        <span className="material-symbols-outlined font-black">
+        <span className="material-symbols-outlined font-black" aria-hidden="true">
           {mobileMenuOpen ? "close" : "menu"}
         </span>
       </button>
 
       {/* Mobile Overlay */}
-      {mobileMenuOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
-          onClick={() => setMobileMenuOpen(false)}
-        />
+	      {mobileMenuOpen && (
+	        <button
+	          type="button"
+	          aria-label="Close renter menu"
+	          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+	          onClick={() => setMobileMenuOpen(false)}
+	        />
       )}
 
       {/* Sidebar */}

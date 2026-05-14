@@ -16,7 +16,9 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Header />
-      <main className={compactContentMain ? "" : "flex-grow"}>{children}</main>
+      <main id="main-content" className={compactContentMain ? "" : "flex-grow"}>
+        {children}
+      </main>
       <Footer />
     </>
   );

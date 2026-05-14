@@ -534,11 +534,11 @@
   }
 
   .kk-auth-input {
-    @apply w-full rounded-[1.25rem] border border-outline-variant bg-surface-container-lowest px-4 py-4 font-semibold text-on-surface outline-none transition-all placeholder:text-on-surface-variant focus:border-primary focus:ring-4 focus:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-70;
+    @apply w-full rounded-[1.25rem] border border-outline-variant bg-surface-container-lowest px-4 py-4 font-semibold text-on-surface outline-none transition-[background-color,border-color,box-shadow,opacity] placeholder:text-on-surface-variant focus:border-primary focus:ring-4 focus:ring-primary/15 disabled:cursor-not-allowed disabled:opacity-70;
   }
 
   .kk-otp-input {
-    @apply w-full rounded-xl border border-outline-variant bg-surface-container-low px-2 py-4 text-center text-xl font-bold text-on-surface outline-none transition-all placeholder:text-on-surface-variant focus:border-primary focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply w-full rounded-xl border border-outline-variant bg-surface-container-low px-2 py-4 text-center text-xl font-bold text-on-surface outline-none transition-[background-color,border-color,box-shadow,opacity] placeholder:text-on-surface-variant focus:border-primary focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .kk-dark-image-overlay {
@@ -801,8 +801,14 @@
     outline: none;
   }
 
+  .kk-profile-notification-row:focus-visible {
+    box-shadow:
+      0 0 0 3px rgba(20, 59, 46, 0.18),
+      0 18px 42px -30px rgba(15, 23, 42, 0.55);
+  }
+
   .kk-deep-cta {
-    @apply bg-primary-container text-white shadow-[0_18px_40px_-22px_rgba(20,59,46,0.9)] transition-all hover:brightness-110 hover:shadow-[0_24px_48px_-26px_rgba(20,59,46,0.95)] active:scale-[0.98];
+    @apply bg-primary-container text-white shadow-[0_18px_40px_-22px_rgba(20,59,46,0.9)] transition-[background-color,box-shadow,filter,transform] hover:brightness-110 hover:shadow-[0_24px_48px_-26px_rgba(20,59,46,0.95)] active:scale-[0.98];
   }
 
   .kk-route-transition-veil {
@@ -922,7 +928,7 @@
   }
 
   .kk-button-outline {
-    @apply inline-flex items-center justify-center gap-2 rounded-full border border-outline-variant bg-surface-container-lowest px-5 py-3 text-sm font-black text-on-surface transition-all hover:border-secondary hover:bg-surface-container-low;
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-outline-variant bg-surface-container-lowest px-5 py-3 text-sm font-black text-on-surface transition-[background-color,border-color,box-shadow,color,transform] hover:border-secondary hover:bg-surface-container-low;
   }
 
   .kk-icon-button {
@@ -1080,7 +1086,7 @@
   }
 
   .kk-form-primary-button {
-    @apply inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-black text-white transition-all hover:scale-[0.995] hover:bg-primary-container disabled:opacity-60;
+    @apply inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 font-black text-white transition-[background-color,opacity,transform] hover:scale-[0.995] hover:bg-primary-container disabled:opacity-60;
   }
 
   .kk-choice-pills {
@@ -1120,7 +1126,7 @@
   }
 
   .kk-form-search-input {
-    @apply w-full rounded-[1.15rem] border border-outline-variant bg-surface-container-lowest py-3 pl-12 pr-4 text-sm font-semibold text-on-surface shadow-[0_20px_40px_-30px_rgba(20,59,46,0.45)] outline-none transition-all placeholder:text-on-surface-variant focus:border-secondary focus:ring-2 focus:ring-secondary;
+    @apply w-full rounded-[1.15rem] border border-outline-variant bg-surface-container-lowest py-3 pl-12 pr-4 text-sm font-semibold text-on-surface shadow-[0_20px_40px_-30px_rgba(20,59,46,0.45)] outline-none transition-[background-color,border-color,box-shadow] placeholder:text-on-surface-variant focus:border-secondary focus:ring-2 focus:ring-secondary;
   }
 
   .kk-select-control {

@@ -80,7 +80,7 @@ export default function ComingSoonPage() {
             <h2 className="mb-12 text-center text-sm font-bold uppercase tracking-[0.2em] text-outline">
               {langText("Building Rural Prosperity with Strategic Partners", "धोरणात्मक भागीदारीतून ग्रामीण समृद्धी")}
             </h2>
-            <div className="flex flex-wrap items-center justify-center gap-12 opacity-60 grayscale transition-all duration-700 hover:grayscale-0 md:gap-24">
+            <div className="flex flex-wrap items-center justify-center gap-12 opacity-60 grayscale transition-[background-color,border-color,box-shadow,opacity,transform] duration-700 hover:grayscale-0 md:gap-24">
               {trustPartners.map((partner) => (
                 <div key={partner.icon} className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-4xl text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
@@ -153,7 +153,7 @@ export default function ComingSoonPage() {
               </div>
 
               {COMING_SOON_NOTIFY_MODE === "single-contact-reveal" ? (
-                <div className="overflow-hidden rounded-[2rem] transition-all duration-300 ease-out">
+                <div className="overflow-hidden rounded-[2rem] transition-[background-color,border-color,box-shadow,transform] duration-300 ease-out">
                   {notifyState === "idle" ? (
                     <button
                       className="kk-deep-cta w-full rounded-full py-4 font-bold"
@@ -165,8 +165,14 @@ export default function ComingSoonPage() {
                   ) : null}
 
                   {notifyState === "form" ? (
-                    <form className="space-y-3 transition-all duration-300 ease-out animate-in fade-in slide-in-from-bottom-1" onSubmit={handleNotifySubmit}>
+                    <form className="space-y-3 transition-[background-color,border-color,box-shadow,transform] duration-300 ease-out animate-in fade-in slide-in-from-bottom-1" onSubmit={handleNotifySubmit}>
+                      <label className="sr-only" htmlFor="coming-soon-contact">
+                        {langText("Mobile number or email", "मोबाईल नंबर किंवा ईमेल")}
+                      </label>
                       <input
+                        id="coming-soon-contact"
+                        name="contact"
+                        autoComplete="off"
                         className="w-full rounded-full border border-white/20 bg-white/10 px-5 py-4 text-white outline-none placeholder:text-white/65 focus:border-white/50 dark:text-emerald-50 dark:placeholder:text-emerald-100/60"
                         placeholder={COMING_SOON_CONTACT_PLACEHOLDER}
                         type="text"
@@ -191,7 +197,7 @@ export default function ComingSoonPage() {
                         {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                         <span>
                           {submitState === "pending"
-                            ? langText("Submitting...", "सबमिट करत आहे...")
+                            ? langText("Submitting…", "सबमिट करत आहे…")
                             : submitState === "success"
                               ? langText("Submitted", "सबमिट झाले")
                               : langText("Submit", "सबमिट करा")}
@@ -225,14 +231,14 @@ export default function ComingSoonPage() {
             </div>
             <div className="flex flex-wrap justify-center gap-4">
               <a
-                className="flex items-center gap-3 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 font-bold shadow-sm transition-all hover:shadow-md"
+                className="flex items-center gap-3 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 font-bold shadow-sm transition-[background-color,border-color,box-shadow,opacity,transform] hover:shadow-md"
                 href={supportContact.emailHref}
               >
                 <span className="material-symbols-outlined text-secondary">mail</span>
                 {supportContact.email}
               </a>
               <a
-                className="flex items-center gap-3 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 font-bold shadow-sm transition-all hover:shadow-md"
+                className="flex items-center gap-3 rounded-2xl border border-outline-variant/10 bg-surface-container-lowest px-6 py-4 font-bold shadow-sm transition-[background-color,border-color,box-shadow,opacity,transform] hover:shadow-md"
                 href={supportContact.phoneHref}
               >
                 <span className="material-symbols-outlined text-secondary">call</span>

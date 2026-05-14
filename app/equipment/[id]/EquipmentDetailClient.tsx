@@ -17,8 +17,8 @@ import { DETAIL_BOOKING_LAYOUT } from "@/lib/equipment-detail-layout.js";
 import { assetPath } from "@/lib/site";
 import { normalizeCategorySlug } from "@/lib/equipment-categories";
 
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("en-IN", {
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: "INR",
     maximumFractionDigits: 0,
@@ -75,7 +75,8 @@ export default function EquipmentDetailClient({
   currentUserId?: string | null;
 }) {
   const router = useSmoothRouter();
-  const { langText, text } = useLanguage();
+  const { language, langText, text } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const [error, setError] = useState("");
   const [ownListingToast, setOwnListingToast] = useState(false);
   const [loginToast, setLoginToast] = useState(false);
@@ -460,7 +461,7 @@ export default function EquipmentDetailClient({
             ].map((item) => (
               <details
                 key={item.q}
-                className="kk-depth-tile group rounded-lg border border-outline-variant bg-surface-container-lowest p-4 transition-all duration-200 hover:shadow-sm"
+                className="kk-depth-tile group rounded-lg border border-outline-variant bg-surface-container-lowest p-4 transition-[background-color,border-color,box-shadow,opacity,transform] duration-200 hover:shadow-sm"
               >
                 <summary className="flex list-none cursor-pointer items-center justify-between gap-3 font-medium">
                   <span>{item.q}</span>
@@ -479,7 +480,7 @@ export default function EquipmentDetailClient({
         <div className={bookingCardClassName}>
           <div className="mb-4 flex flex-col gap-3 border-b border-outline-variant pb-4 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <span className="text-3xl font-bold text-on-surface">{formatCurrency(equipment.pricePerHour)}</span>
+              <span className="text-3xl font-bold text-on-surface">{formatCurrency(equipment.pricePerHour, locale)}</span>
               <span className="text-on-surface-variant"> / {equipment.unitLabel}</span>
             </div>
             <span
@@ -508,13 +509,16 @@ export default function EquipmentDetailClient({
           <form className={DETAIL_BOOKING_LAYOUT.form} onSubmit={handleBookingRequest}>
             <div className={DETAIL_BOOKING_LAYOUT.fields}>
               <div>
-                <label className="mb-1 block text-sm font-medium text-on-surface">
-                  {langText("Field Location", "शेताचे ठिकाण")}
-                </label>
+	                <label htmlFor="booking-field-location" className="mb-1 block text-sm font-medium text-on-surface">
+	                  {langText("Field Location", "शेताचे ठिकाण")}
+	                </label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-3 top-3 text-on-surface-variant">location_on</span>
-                  <input
-                    className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 pl-10 focus:border-primary focus:ring-primary"
+	                  <input
+	                    id="booking-field-location"
+	                    name="fieldLocation"
+	                    autoComplete="address-level3"
+	                    className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 pl-10 focus:border-primary focus:ring-primary"
                     placeholder={langText("Enter village or landmark", "गाव किंवा खूणचिन्ह टाका")}
                     value={formState.fieldLocation}
                     onChange={(event) => setFormState((current) => ({ ...current, fieldLocation: event.target.value }))}
@@ -523,13 +527,16 @@ export default function EquipmentDetailClient({
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-on-surface">
-                  {langText("Field Pincode", "शेताचा पिनकोड")}
-                </label>
+	                <label htmlFor="booking-field-pincode" className="mb-1 block text-sm font-medium text-on-surface">
+	                  {langText("Field Pincode", "शेताचा पिनकोड")}
+	                </label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-3 top-3 text-on-surface-variant">pin_drop</span>
-                  <input
-                    className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 pl-10 focus:border-primary focus:ring-primary"
+	                  <input
+	                    id="booking-field-pincode"
+	                    name="fieldPincode"
+	                    autoComplete="postal-code"
+	                    className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 pl-10 focus:border-primary focus:ring-primary"
                     inputMode="numeric"
                     pattern="[0-9]{6}"
                     placeholder={langText("Enter 6-digit pincode", "६ अंकी पिनकोड टाका")}
@@ -547,22 +554,26 @@ export default function EquipmentDetailClient({
               <div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-on-surface">
-                      {langText("Start Date", "तारीख")}
-                    </label>
-                    <input
-                      className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:ring-primary"
+	                    <label htmlFor="booking-start-date" className="mb-1 block text-sm font-medium text-on-surface">
+	                      {langText("Start Date", "तारीख")}
+	                    </label>
+	                    <input
+	                      id="booking-start-date"
+	                      name="startDate"
+	                      className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:ring-primary"
                       type="date"
                       value={formState.startDate}
                       onChange={(event) => setFormState((current) => ({ ...current, startDate: event.target.value }))}
                     />
                   </div>
                   <div>
-                    <label className="mb-1 block text-sm font-medium text-on-surface">
-                      {langText("Approx Hours", "अंदाजे तास")}
-                    </label>
-                    <input
-                      className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:ring-primary"
+	                    <label htmlFor="booking-approx-hours" className="mb-1 block text-sm font-medium text-on-surface">
+	                      {langText("Approx Hours", "अंदाजे तास")}
+	                    </label>
+	                    <input
+	                      id="booking-approx-hours"
+	                      name="approxHours"
+	                      className="w-full rounded-lg border border-outline-variant bg-surface px-3 py-2 focus:border-primary focus:ring-primary"
                       min="1"
                       type="number"
                       value={formState.approxHours}
@@ -573,11 +584,16 @@ export default function EquipmentDetailClient({
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-on-surface">
-                  {langText("Phone Number", "फोन नंबर")}
-                </label>
-                <input
-                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 focus:border-primary focus:ring-primary"
+	                <label htmlFor="booking-phone" className="mb-1 block text-sm font-medium text-on-surface">
+	                  {langText("Phone Number", "फोन नंबर")}
+	                </label>
+	                <input
+	                  id="booking-phone"
+	                  name="phone"
+	                  type="tel"
+	                  autoComplete="tel"
+	                  inputMode="tel"
+	                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-2 focus:border-primary focus:ring-primary"
                   placeholder={langText("+91 00000 00000", "+९१ ००००० ०००००")}
                   value={formState.phone}
                   onChange={(event) =>
@@ -594,13 +610,13 @@ export default function EquipmentDetailClient({
               <div className="rounded-lg border border-outline-variant bg-surface p-3">
                 <div className="mb-2 flex justify-between text-sm">
                   <span className="text-on-surface-variant">
-                    {formatCurrency(equipment.pricePerHour)} x {estimatedHours} {langText("hours", "तास")}
+                    {formatCurrency(equipment.pricePerHour, locale)} x {estimatedHours.toLocaleString(locale)} {langText("hours", "तास")}
                   </span>
-                  <span>{formatCurrency(estimatedBase)}</span>
+                  <span>{formatCurrency(estimatedBase, locale)}</span>
                 </div>
                 <div className="mt-2 flex justify-between border-t border-outline-variant pt-2 text-base font-bold">
                   <span>{langText("Estimated Rental Value", "अंदाजित भाडे मूल्य")}</span>
-                  <span>{formatCurrency(estimatedBase)}</span>
+                  <span>{formatCurrency(estimatedBase, locale)}</span>
                 </div>
                 <p className="mt-2 text-center text-[11px] text-on-surface-variant">
                   {langText(
@@ -610,7 +626,7 @@ export default function EquipmentDetailClient({
                 </p>
               </div>
 
-              {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
+	              {error ? <p className="text-sm font-semibold text-error" role="alert">{error}</p> : null}
 
               <button
                 className="kk-flow-button flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-3 font-bold text-white shadow-md transition hover:bg-primary-container"
@@ -622,7 +638,7 @@ export default function EquipmentDetailClient({
                 {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                 <span>
                   {isSubmitting
-                    ? langText("Submitting...", "सबमिट होत आहे...")
+	                    ? langText("Submitting…", "सबमिट होत आहे…")
                     : !availability.available && !isOwnListing
                       ? langText("Currently unavailable", "सध्या उपलब्ध नाही")
                       : langText("Book Now", "आता बुक करा")}

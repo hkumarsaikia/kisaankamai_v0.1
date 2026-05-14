@@ -66,7 +66,7 @@ export default function SupportPage() {
 
   const submitLabel =
     submitState === "pending"
-      ? langText("Submitting...", "सबमिट करत आहे...")
+      ? langText("Submitting…", "सबमिट करत आहे…")
       : submitState === "success"
         ? langText("Submitted", "सबमिट झाले")
         : langText("Submit Request", "विनंती सबमिट करा");
@@ -117,11 +117,13 @@ export default function SupportPage() {
       <main className="pt-20">
         <section className="relative flex min-h-[716px] items-center justify-center overflow-hidden bg-primary px-6 dark:bg-primary-container">
           <div className="absolute inset-0 z-0">
-            <img
-              alt="Lush green agricultural fields in Maharashtra"
-              className="h-full w-full object-cover object-[center_18%]"
-              src={supportHeroImage}
-            />
+	            <img
+	              alt="Lush green agricultural fields in Maharashtra"
+	              className="h-full w-full object-cover object-[center_18%]"
+	              height={900}
+	              src={supportHeroImage}
+	              width={1600}
+	            />
             <div className="kk-banner-image-overlay" />
           </div>
           <div className="relative z-10 mx-auto max-w-4xl space-y-8 pt-12 text-center">
@@ -148,7 +150,7 @@ export default function SupportPage() {
                 key={category.value}
                 type="button"
                 onClick={() => updateField("inquiryType", category.value)}
-                className="group relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl border border-white shadow-xl p-8 text-left shadow-slate-200/50 transition-all duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-black/20"
+                className="group relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-xl border border-white shadow-xl p-8 text-left shadow-slate-200/50 transition-[background-color,border-color,box-shadow,transform] duration-300 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-900/80 dark:shadow-black/20"
               >
                 <div className={`absolute right-0 top-0 -mr-16 -mt-16 h-32 w-32 rounded-bl-full ${category.halo} opacity-20 transition-opacity group-hover:opacity-50`} />
                 <div className={`mb-6 flex h-14 w-14 items-center justify-center rounded-xl ${category.iconTone} transition-transform group-hover:scale-110`}>
@@ -173,9 +175,12 @@ export default function SupportPage() {
             <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <label className="font-label text-sm font-medium text-on-surface">{langText("Full Name", "पूर्ण नाव")}</label>
-                  <input
-                    className={supportFormControlClass}
+	                  <label htmlFor="support-full-name" className="font-label text-sm font-medium text-on-surface">{langText("Full Name", "पूर्ण नाव")}</label>
+	                  <input
+	                    id="support-full-name"
+	                    name="fullName"
+	                    autoComplete="name"
+	                    className={supportFormControlClass}
                     required
                     placeholder={langText("Your name", "तुमचे नाव")}
                     type="text"
@@ -184,8 +189,11 @@ export default function SupportPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="font-label text-sm font-medium text-on-surface">{langText("Phone Number", "मोबाईल क्रमांक")}</label>
-                  <input
+	                  <label htmlFor="support-phone" className="font-label text-sm font-medium text-on-surface">{langText("Phone Number", "मोबाईल क्रमांक")}</label>
+	                  <input
+	                    id="support-phone"
+	                    name="phone"
+	                    autoComplete="tel"
                     className={supportFormControlClass}
                     required
                     placeholder="+91"
@@ -197,8 +205,10 @@ export default function SupportPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="font-label text-sm font-medium text-on-surface">{langText("Issue Type", "समस्या प्रकार")}</label>
-                <select
+	                <label htmlFor="support-inquiry-type" className="font-label text-sm font-medium text-on-surface">{langText("Issue Type", "समस्या प्रकार")}</label>
+	                <select
+	                  id="support-inquiry-type"
+	                  name="inquiryType"
                   className={supportFormControlClass}
                   required
                   value={formState.inquiryType}
@@ -216,18 +226,20 @@ export default function SupportPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="font-label text-sm font-medium text-on-surface">{langText("Message", "संदेश")}</label>
-                <textarea
-                  className={supportFormControlClass}
+	                <label htmlFor="support-message" className="font-label text-sm font-medium text-on-surface">{langText("Message", "संदेश")}</label>
+	                <textarea
+	                  id="support-message"
+	                  name="message"
+	                  className={supportFormControlClass}
                   required
-                  placeholder={langText("Describe your issue in detail...", "तुमची समस्या सविस्तर लिहा...")}
+                  placeholder={langText("Describe your issue in detail…", "तुमची समस्या सविस्तर लिहा…")}
                   rows={4}
                   value={formState.message}
                   onChange={(event) => updateField("message", event.target.value)}
                 />
               </div>
 
-              {error ? <p className="rounded-xl bg-error-container px-4 py-3 text-sm font-semibold text-error">{error}</p> : null}
+	              {error ? <p className="rounded-xl bg-error-container px-4 py-3 text-sm font-semibold text-error" role="alert">{error}</p> : null}
 
               <button
                 type="submit"

@@ -13,7 +13,8 @@ type SavedListingsBoardProps = {
 };
 
 export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const router = useRouter();
   const [buttonState, setButtonState] = useState<
     Record<string, "idle" | "pending" | "success" | "error">
@@ -66,12 +67,12 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
           disabled={isPending || !listings.length}
           className="rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-on-surface disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
         >
-          {isPending ? langText("Updating...", "अपडेट करत आहे...") : langText("Clear Saved", "जतन केलेले साफ करा")}
+          {isPending ? langText("Updating…", "अपडेट करत आहे…") : langText("Clear Saved", "जतन केलेले साफ करा")}
         </button>
       </div>
 
       {error ? (
-        <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
+        <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error" role="alert">
           {error}
         </div>
       ) : null}
@@ -143,7 +144,11 @@ export function SavedListingsBoard({ listings }: SavedListingsBoardProps) {
                   </p>
                   <div className="mt-5 flex items-center justify-between">
                     <p className="text-lg font-extrabold text-primary-container dark:text-emerald-200">
-                      ₹{item.pricePerHour.toLocaleString("en-IN")} / {item.unitLabel}
+                      {new Intl.NumberFormat(locale, {
+                        style: "currency",
+                        currency: "INR",
+                        maximumFractionDigits: 0,
+                      }).format(item.pricePerHour)} / {item.unitLabel}
                     </p>
                     <Link
                       href={`/renter-profile/equipment/${item.id}`}

@@ -200,7 +200,7 @@ export default function VerifyOtpPage() {
             title={langText("Verify reset OTP", "रीसेट OTP पडताळा")}
             description={langText("Enter the six-digit code sent to", "तुमच्या मोबाईलवर पाठवलेला सहा अंकी कोड टाका")}
             submitLabel={langText("Verify and Continue", "पडताळणी करून पुढे जा")}
-            submittingLabel={langText("Verifying...", "पडताळणी होत आहे...")}
+            submittingLabel={langText("Verifying…", "पडताळणी होत आहे…")}
             resendLabel={langText("Resend OTP", "OTP पुन्हा पाठवा")}
             resendCountdownLabel={langText("Resend in", "पुन्हा पाठवा")}
             editLabel={langText("Edit details", "तपशील संपादित करा")}

@@ -66,6 +66,27 @@ const recommendedEquipment = [
   },
 ];
 
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatShortDate(value: string, locale: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "short",
+  }).format(date);
+}
+
 export function RenterWorkspaceOverview({
   renterName,
   bookings,
@@ -76,7 +97,8 @@ export function RenterWorkspaceOverview({
   payments: PaymentSummary[];
   savedListings: SavedListingSummary[];
 }) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const [bookingView, setBookingView] = useState<"current" | "upcoming" | "history">("current");
   const currentBookings = bookings.filter((booking) => booking.status !== "completed" && booking.status !== "cancelled" && booking.status !== "upcoming");
   const upcomingBookings = bookings.filter((booking) => booking.status === "upcoming");
@@ -144,14 +166,14 @@ export function RenterWorkspaceOverview({
                 {bookingViewTitle}
               </h2>
               <Link href="/renter-profile" className="text-sm font-bold text-primary-container hover:underline">
-                View All
+                {langText("View All", "सर्व पहा")}
               </Link>
             </div>
             <div className="grid gap-6 lg:grid-cols-2">
               {displayedBookings.slice(0, 2).map((booking) => {
                 const listingId = booking.listing?.id || booking.listingId;
                 return (
-                  <article key={booking.id} className="group overflow-hidden rounded-2xl border border-outline-variant/50 bg-white shadow-sm transition-all hover:shadow-xl hover:shadow-primary-container/5 dark:border-slate-800 dark:bg-slate-900">
+                  <article key={booking.id} className="group overflow-hidden rounded-2xl border border-outline-variant/50 bg-white shadow-sm transition-shadow hover:shadow-xl hover:shadow-primary-container/5 dark:border-slate-800 dark:bg-slate-900">
                     <div className="relative h-44">
                       <Image
                         src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
@@ -168,13 +190,13 @@ export function RenterWorkspaceOverview({
                       <div className="mb-2 flex items-start justify-between gap-4">
                         <h3 className="text-lg font-bold text-on-surface">{booking.listing?.name || langText("Equipment", "उपकरण")}</h3>
                         <p className="text-right text-sm font-extrabold text-primary">
-                          ₹{booking.amount.toLocaleString("en-IN")} <span className="block text-[10px] font-normal text-on-surface-variant">estimated</span>
+                          {formatCurrency(booking.amount, locale)} <span className="block text-[10px] font-normal text-on-surface-variant">{langText("estimated", "अंदाजित")}</span>
                         </p>
                       </div>
                       <div className="mb-5 space-y-2 text-sm text-on-surface-variant">
                         <p className="flex items-center gap-2">
                           <span className="material-symbols-outlined text-sm">event</span>
-                          {booking.startDate} - {booking.endDate}
+                          {formatShortDate(booking.startDate, locale)} - {formatShortDate(booking.endDate, locale)}
                         </p>
                         <p className="flex items-center gap-2">
                           <span className="material-symbols-outlined text-sm">person</span>
@@ -185,12 +207,13 @@ export function RenterWorkspaceOverview({
                         <Link href={listingId ? `/renter-profile/equipment/${listingId}` : "/rent-equipment"} className="flex-1 rounded-lg bg-primary-container py-2 text-center text-xs font-bold text-white transition-opacity hover:opacity-90">
                           {langText("Track Order", "ऑर्डर ट्रॅक करा")}
                         </Link>
-            <a
-              href={supportContact.phoneHref}
-              className="rounded-lg border border-outline-variant p-2 text-on-surface-variant transition-colors hover:bg-surface-container"
-            >
-              <span className="material-symbols-outlined text-xl">call</span>
-            </a>
+                        <a
+                          href={supportContact.phoneHref}
+                          aria-label={langText("Call support", "सपोर्टला कॉल करा")}
+                          className="rounded-lg border border-outline-variant p-2 text-on-surface-variant transition-colors hover:bg-surface-container"
+                        >
+                          <span className="material-symbols-outlined text-xl">call</span>
+                        </a>
                       </div>
                     </div>
                   </article>
@@ -240,11 +263,11 @@ export function RenterWorkspaceOverview({
                 <table className="w-full min-w-[680px] text-left">
                   <thead className="border-b border-outline-variant/30 bg-surface-container-low">
                     <tr>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Equipment</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Dates</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Total Amount</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Status</th>
-                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">Action</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">{langText("Equipment", "उपकरण")}</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">{langText("Dates", "तारखा")}</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">{langText("Total Amount", "एकूण रक्कम")}</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">{langText("Status", "स्थिती")}</th>
+                      <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-on-surface-variant">{langText("Action", "कृती")}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-outline-variant/20">
@@ -259,18 +282,24 @@ export function RenterWorkspaceOverview({
                               </div>
                               <div>
                                 <p className="text-sm font-bold text-on-surface">{booking.listing?.name || langText("Equipment", "उपकरण")}</p>
-                                <p className="text-[10px] text-on-surface-variant">Owner: {booking.ownerProfile?.fullName || langText("Owner", "मालक")}</p>
+                                <p className="text-[10px] text-on-surface-variant">
+                                  {langText("Owner", "मालक")}: {booking.ownerProfile?.fullName || langText("Owner", "मालक")}
+                                </p>
                               </div>
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-sm text-on-surface-variant">{booking.startDate} - {booking.endDate}</td>
-                          <td className="px-6 py-4 text-sm font-bold text-on-surface">₹{booking.amount.toLocaleString("en-IN")}</td>
+                          <td className="px-6 py-4 text-sm text-on-surface-variant">
+                            {formatShortDate(booking.startDate, locale)} - {formatShortDate(booking.endDate, locale)}
+                          </td>
+                          <td className="px-6 py-4 text-sm font-bold text-on-surface">{formatCurrency(booking.amount, locale)}</td>
                           <td className="px-6 py-4">
-                            <span className="rounded-full bg-on-primary-container/10 px-2 py-0.5 text-[10px] font-bold text-primary-container">Completed</span>
+                            <span className="rounded-full bg-on-primary-container/10 px-2 py-0.5 text-[10px] font-bold text-primary-container">
+                              {langText("Completed", "पूर्ण")}
+                            </span>
                           </td>
                           <td className="px-6 py-4">
                             <Link href={listingId ? `/renter-profile/equipment/${listingId}` : "/rent-equipment"} className="text-xs font-bold text-primary-container hover:underline">
-                              Re-book
+                              {langText("Re-book", "पुन्हा बुक करा")}
                             </Link>
                           </td>
                         </tr>
@@ -293,7 +322,7 @@ export function RenterWorkspaceOverview({
         <aside className="space-y-6">
           <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-bold text-on-surface">Booking Schedule</h3>
+              <h3 className="font-bold text-on-surface">{langText("Booking Schedule", "बुकिंग वेळापत्रक")}</h3>
               <span className="material-symbols-outlined text-on-surface-variant">calendar_today</span>
             </div>
             <div className="mb-4 grid grid-cols-7 gap-1 text-center">
@@ -309,39 +338,43 @@ export function RenterWorkspaceOverview({
             <div className="space-y-3">
               <div className="flex items-center gap-3 rounded-lg border-l-4 border-primary-container bg-surface-container-low p-2">
                 <div className="text-[10px] font-bold leading-tight text-on-surface-variant">12<br />Oct</div>
-                <div className="truncate text-xs font-bold text-on-surface">Equipment delivery</div>
+                <div className="truncate text-xs font-bold text-on-surface">{langText("Equipment delivery", "उपकरण वितरण")}</div>
               </div>
               <div className="flex items-center gap-3 rounded-lg border-l-4 border-secondary-container bg-surface-container-low p-2">
                 <div className="text-[10px] font-bold leading-tight text-on-surface-variant">18<br />Oct</div>
-                <div className="truncate text-xs font-bold text-on-surface">Pending request review</div>
+                <div className="truncate text-xs font-bold text-on-surface">{langText("Pending request review", "प्रलंबित विनंती तपासणी")}</div>
               </div>
             </div>
           </section>
 
           <section className="rounded-2xl border border-outline-variant/30 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h3 className="mb-1 font-bold text-on-surface">Booking Value Summary</h3>
-            <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Current account</p>
+            <h3 className="mb-1 font-bold text-on-surface">{langText("Booking Value Summary", "बुकिंग मूल्य सारांश")}</h3>
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">{langText("Current account", "सध्याचे खाते")}</p>
             <div className="mb-4">
-              <p className="text-3xl font-extrabold text-primary-container">₹{totalBookingValue.toLocaleString("en-IN")}</p>
-              <p className="text-xs font-medium text-on-surface-variant">Owner-listed estimates recorded so far</p>
+              <p className="text-3xl font-extrabold text-primary-container">{formatCurrency(totalBookingValue, locale)}</p>
+              <p className="text-xs font-medium text-on-surface-variant">
+                {langText("Owner-listed estimates recorded so far", "आतापर्यंत नोंदलेले मालकाने दिलेले अंदाज")}
+              </p>
             </div>
             <div className="space-y-3">
               <ProgressRow label="Completed" value={completedBookingValue} total={Math.max(totalBookingValue, 1)} tone="bg-primary-container" />
               <ProgressRow label="Active" value={activeBookingValue} total={Math.max(totalBookingValue, 1)} tone="bg-secondary-container" />
             </div>
             <Link href="/renter-profile" className="mt-6 block rounded-xl border border-outline-variant py-2.5 text-center text-xs font-bold transition-colors hover:bg-surface-container">
-              View Bookings
+              {langText("View Bookings", "बुकिंग पहा")}
             </Link>
           </section>
 
           <section className="relative overflow-hidden rounded-2xl bg-tertiary-container p-6">
             <span className="material-symbols-outlined absolute -bottom-4 -right-4 rotate-12 text-8xl text-white/10">support_agent</span>
             <div className="relative z-10">
-              <h3 className="mb-2 text-lg font-bold leading-tight text-white">Need help with your booking?</h3>
-              <p className="mb-6 text-xs text-tertiary-fixed/90">Our field support team is available from 8 AM to 8 PM.</p>
+              <h3 className="mb-2 text-lg font-bold leading-tight text-white">{langText("Need help with your booking?", "तुमच्या बुकिंगसाठी मदत हवी आहे का?")}</h3>
+              <p className="mb-6 text-xs text-tertiary-fixed/90">
+                {langText("Our field support team is available from 8 AM to 8 PM.", "आमची फील्ड सपोर्ट टीम सकाळी ८ ते रात्री ८ उपलब्ध आहे.")}
+              </p>
               <Link href="/support" className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-2.5 text-xs font-extrabold text-tertiary-container shadow-lg shadow-tertiary-container/40 transition-transform hover:-translate-y-0.5">
                 <span className="material-symbols-outlined text-sm">call</span>
-                Contact Support
+                {langText("Contact Support", "सपोर्टशी संपर्क करा")}
               </Link>
             </div>
           </section>
@@ -352,13 +385,15 @@ export function RenterWorkspaceOverview({
 }
 
 function ProgressRow({ label, value, total, tone }: { label: string; value: number; total: number; tone: string }) {
+  const { language } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const width = Math.min(100, Math.round((value / total) * 100));
 
   return (
     <div>
       <div className="mb-1 flex justify-between text-[10px] font-bold uppercase text-on-surface-variant">
         <span>{label}</span>
-        <span>₹{value.toLocaleString("en-IN")}</span>
+        <span>{formatCurrency(value, locale)}</span>
       </div>
       <div className="h-1.5 w-full overflow-hidden rounded-full bg-surface-container">
         <div className={`h-full ${tone}`} style={{ width: `${width}%` }} />

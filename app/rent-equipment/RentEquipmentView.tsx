@@ -79,7 +79,7 @@ function formatMachinePower(value: string | number | undefined, language: "en" |
     .replace(/\bHP\b/gi, "एचपी");
 }
 
-function buildSearchHref(location: string, query: string) {
+function buildSearchHref(location: string, query: string, sortBy: SortKey = "availability") {
   const params = new URLSearchParams();
   const normalizedLocation = location.trim();
   const normalizedQuery = query.trim();
@@ -92,6 +92,10 @@ function buildSearchHref(location: string, query: string) {
     params.set("query", normalizedQuery);
   }
 
+  if (sortBy !== "availability") {
+    params.set("sort", sortBy);
+  }
+
   const search = params.toString();
   return search ? `/rent-equipment?${search}` : "/rent-equipment";
 }
@@ -102,6 +106,7 @@ function SearchForm({
   onLocationChange,
   onQueryChange,
   buttonLabel,
+  sortBy = "availability",
   className = "",
 }: {
   location: string;
@@ -109,6 +114,7 @@ function SearchForm({
   onLocationChange: (value: string) => void;
   onQueryChange: (value: string) => void;
   buttonLabel?: LocalizedLabel;
+  sortBy?: SortKey;
   className?: string;
 }) {
   const { langText } = useLanguage();
@@ -116,7 +122,7 @@ function SearchForm({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    router.replace(buildSearchHref(location, query));
+    router.replace(buildSearchHref(location, query, sortBy));
   };
 
   return (
@@ -126,10 +132,12 @@ function SearchForm({
           name="search"
           className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-outline"
         />
-        <input
-          className="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container text-on-surface"
-          placeholder={langText("Search equipment...", "उपकरणे शोधा...")}
-          type="text"
+	        <input
+	          aria-label={langText("Search equipment", "उपकरणे शोधा")}
+	          name="query"
+	          className="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container text-on-surface"
+	          placeholder={langText("Search equipment…", "उपकरणे शोधा…")}
+	          type="text"
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
         />
@@ -139,8 +147,11 @@ function SearchForm({
           name="location"
           className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-outline"
         />
-        <input
-          className="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container text-on-surface"
+	        <input
+	          aria-label={langText("Location or pincode", "ठिकाण किंवा पिनकोड")}
+	          name="location"
+	          autoComplete="postal-code"
+	          className="w-full pl-10 pr-4 py-3 bg-surface-container-low border border-outline-variant rounded-lg focus:ring-2 focus:ring-primary-container text-on-surface"
           placeholder={langText("Location or pincode", "ठिकाण किंवा पिनकोड")}
           type="text"
           value={location}
@@ -210,6 +221,7 @@ function NoEquipmentAvailable({
             onLocationChange={onLocationChange}
             onQueryChange={onQueryChange}
             buttonLabel={{ en: "Update Search", mr: "शोध अपडेट करा" }}
+            sortBy="availability"
             className="flex flex-col gap-3 md:flex-row"
           />
         </div>
@@ -233,7 +245,7 @@ function NoEquipmentAvailable({
         </p>
         <Link
           href="/support"
-          className="kk-flow-button inline-flex items-center gap-3 rounded-xl bg-primary-container px-8 py-4 text-lg font-bold text-white shadow-md transition-all hover:bg-primary hover:shadow-lg"
+          className="kk-flow-button inline-flex items-center gap-3 rounded-xl bg-primary-container px-8 py-4 text-lg font-bold text-white shadow-md transition-[background-color,border-color,box-shadow,color,transform] hover:bg-primary hover:shadow-lg"
         >
           <span className="material-symbols-outlined">support_agent</span>
           <span>{langText("Call Our Expert Support", "तज्ञ सपोर्टला कॉल करा")}</span>
@@ -320,7 +332,7 @@ function EquipmentCard({ item, compact = false, priorityImage = false }: { item:
           <div className="mt-4 flex gap-3">
             <Link
               href={DETAIL_ROUTE_TEMPLATE(item.id)}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-6 py-3 text-sm font-bold text-white transition-all hover:bg-primary"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-6 py-3 text-sm font-bold text-white transition-[background-color,border-color,box-shadow,color,transform] hover:bg-primary"
             >
               {langText("View details", "तपशील पहा")}
               <SharedIcon name="arrow-right" className="h-[18px] w-[18px]" />
@@ -392,18 +404,21 @@ export default function RentEquipmentView({
   categorySummaries,
   initialLocation,
   initialQuery,
+  initialSort,
 }: {
   view: RentEquipmentViewMode;
   items: EquipmentRecord[];
   categorySummaries: EquipmentCategorySummary[];
   initialLocation: string;
   initialQuery: string;
+  initialSort: SortKey;
 }) {
   const { language, langText } = useLanguage();
+  const router = useSmoothRouter();
   const [location, setLocation] = useState(initialLocation);
   const [query, setQuery] = useState(initialQuery);
   const [availablePage, setAvailablePage] = useState(1);
-  const [sortBy, setSortBy] = useState<SortKey>("availability");
+  const [sortBy, setSortBy] = useState<SortKey>(initialSort);
   const activeCategorySlug = normalizeCategorySlug(initialQuery);
   const inventoryMarkers = useMemo(() => createListingMarkersFromEquipment(items), [items]);
   const inventoryCircles = useMemo(() => createHubCirclesFromEquipment(items), [items]);
@@ -422,6 +437,7 @@ export default function RentEquipmentView({
   const handleSortChange = (value: SortKey) => {
     setSortBy(value);
     setAvailablePage(1);
+    router.replace(buildSearchHref(location, query, value), { scroll: false });
   };
   const title = useMemo(() => {
     if (view === "available") {
@@ -472,6 +488,7 @@ export default function RentEquipmentView({
               query={query}
               onLocationChange={setLocation}
               onQueryChange={setQuery}
+              sortBy={sortBy}
               className="flex flex-col md:flex-row gap-4 items-center"
             />
           </div>
@@ -579,6 +596,7 @@ export default function RentEquipmentView({
                 query={query}
                 onLocationChange={setLocation}
                 onQueryChange={setQuery}
+                sortBy={sortBy}
                 className="flex flex-col md:flex-row items-center gap-2"
               />
             </div>
@@ -642,6 +660,7 @@ export default function RentEquipmentView({
                 query={query}
                 onLocationChange={setLocation}
                 onQueryChange={setQuery}
+                sortBy={sortBy}
                 className="flex flex-col gap-2 md:flex-row md:items-center"
               />
             </div>

@@ -19,22 +19,26 @@ export const OwnerSidebar = () => {
   return (
     <>
       {/* Mobile Toggle Button */}
-      <button 
-        className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 active:scale-95 transition-all"
+      <button
+        type="button"
+        aria-label={mobileMenuOpen ? "Close owner menu" : "Open owner menu"}
+        className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-emerald-600 text-white rounded-full shadow-lg hover:bg-emerald-700 active:scale-95 transition-[background-color,transform]"
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
       >
-        <span className="material-symbols-outlined font-black">
+        <span className="material-symbols-outlined font-black" aria-hidden="true">
           {mobileMenuOpen ? "close" : "menu"}
         </span>
       </button>
 
       {/* Mobile Overlay */}
-      {mobileMenuOpen && (
-        <div 
-          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm" 
-          onClick={() => setMobileMenuOpen(false)}
-        />
-      )}
+	      {mobileMenuOpen && (
+	        <button
+	          type="button"
+	          aria-label="Close owner menu"
+	          className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+	          onClick={() => setMobileMenuOpen(false)}
+	        />
+	      )}
 
       {/* Sidebar Component */}
       <aside className={`h-screen w-64 fixed left-0 top-0 border-r border-emerald-900/50 bg-emerald-950 dark:bg-slate-950 flex flex-col p-4 gap-2 shadow-2xl z-50 transition-transform duration-300 lg:translate-x-0 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
@@ -42,7 +46,7 @@ export const OwnerSidebar = () => {
           <h1 className="text-xl font-bold text-white tracking-tight">{t("common.brand")}</h1>
           <p className="text-xs text-emerald-400 font-medium tracking-wide">{t("ownerSidebar.section")}</p>
         </div>
-        
+
         <nav className="flex flex-col gap-1 flex-grow">
           {navItems.map((item) => {
             const isActive = pathname === item.path;
@@ -63,7 +67,7 @@ export const OwnerSidebar = () => {
             );
           })}
         </nav>
-        
+
         <div className="mt-auto flex flex-col gap-1 pb-4 lg:pb-0">
           <Link
             href="/list-equipment"

@@ -115,7 +115,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
 
   const submitLabel =
     submitState === "pending"
-      ? langText("Saving...", "जतन करत आहे...")
+      ? langText("Saving…", "जतन करत आहे…")
       : submitState === "success"
         ? langText("Saved", "जतन झाले")
         : langText("Save Changes", "बदल जतन करा");
@@ -240,7 +240,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
           </h2>
           <div className="flex flex-col items-center justify-center py-4">
             <div className="relative mb-6">
-              <div className="h-44 w-44 overflow-hidden rounded-full ring-4 ring-surface-container shadow-xl transition-all duration-300">
+              <div className="h-44 w-44 overflow-hidden rounded-full ring-4 ring-surface-container shadow-xl transition-[background-color,border-color,box-shadow,transform] duration-300">
                 {profilePhotoUrl ? (
                   <img
                     alt={langText("User Avatar", "वापरकर्ता अवतार")}
@@ -294,7 +294,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                     className="peer sr-only"
                     type="checkbox"
                   />
-                  <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
+                  <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-[background-color,border-color,box-shadow,opacity,transform] after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
                 </label>
               </div>
 
@@ -312,7 +312,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                     className="peer sr-only"
                     type="checkbox"
                   />
-                  <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
+                  <div className="h-7 w-14 rounded-full bg-surface-container-highest after:absolute after:left-[2px] after:top-[2px] after:h-6 after:w-6 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-[background-color,border-color,box-shadow,opacity,transform] after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white" />
                 </label>
               </div>
             </div>
@@ -327,8 +327,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <label className="col-span-1 md:col-span-2">
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Full Name", "पूर्ण नाव")}</span>
-                <input
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <input
+	                  name="fullName"
+	                  autoComplete="name"
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   type="text"
                   value={formState.fullName}
                   onChange={(event) => updateField("fullName", event.target.value)}
@@ -336,8 +338,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label>
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Phone Number", "फोन नंबर")}</span>
-                <input
-                  className="w-full cursor-not-allowed rounded-xl border border-outline-variant bg-surface-container-low px-5 py-4 text-on-surface opacity-60 shadow-sm transition-all"
+	                <input
+	                  name="phone"
+	                  autoComplete="tel"
+	                  className="w-full cursor-not-allowed rounded-xl border border-outline-variant bg-surface-container-low px-5 py-4 text-on-surface opacity-60 shadow-sm transition-[background-color,border-color,box-shadow,opacity,transform]"
                   type="tel"
                   value={formState.phone}
                   readOnly
@@ -346,8 +350,11 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label>
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Email Address", "ईमेल पत्ता")}</span>
-                <input
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <input
+	                  name="email"
+	                  autoComplete="email"
+	                  spellCheck={false}
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   type="email"
                   value={formState.email}
                   onChange={(event) => updateField("email", event.target.value)}
@@ -355,8 +362,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label className="col-span-1 md:col-span-2">
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Address", "पत्ता")}</span>
-                <textarea
-                  className="h-28 w-full resize-none rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <textarea
+	                  name="address"
+	                  autoComplete="street-address"
+	                  className="h-28 w-full resize-none rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   value={formState.address}
                   onChange={(event) => updateField("address", event.target.value)}
                 />
@@ -371,8 +380,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <label>
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Village", "गाव")}</span>
-                <input
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <input
+	                  name="village"
+	                  autoComplete="address-level3"
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   value={formState.village}
                   onChange={(event) => updateField("village", event.target.value)}
                   type="text"
@@ -380,8 +391,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label>
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("District", "जिल्हा")}</span>
-                <select
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <select
+	                  name="district"
+	                  autoComplete="address-level2"
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   value={formState.district}
                   onChange={(event) => updateField("district", event.target.value)}
                 >
@@ -395,8 +408,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label>
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Pincode", "पिनकोड")}</span>
-                <input
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <input
+	                  name="pincode"
+	                  autoComplete="postal-code"
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   value={formState.pincode}
                   onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
                   inputMode="numeric"
@@ -405,8 +420,9 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label>
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Farm Size (Acres)", "शेतीचे क्षेत्र (एकर)")}</span>
-                <input
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <input
+	                  name="fieldArea"
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   type="number"
                   value={formState.fieldArea}
                   onChange={(event) => updateField("fieldArea", event.target.value)}
@@ -414,8 +430,9 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label>
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Primary Crop", "मुख्य पीक")}</span>
-                <input
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <input
+	                  name="farmingTypes"
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   placeholder={langText("Enter primary crop", "मुख्य पीक प्रविष्ट करा")}
                   type="text"
                   value={formState.farmingTypes}
@@ -424,8 +441,9 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
               </label>
               <label className="col-span-1 md:col-span-2">
                 <span className="mb-3 block text-sm font-bold text-on-surface">{langText("Equipment Owned", "मालकीची उपकरणे")}</span>
-                <input
-                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-all focus:border-primary focus:ring-2 focus:ring-primary"
+	                <input
+	                  name="equipmentOwned"
+	                  className="w-full rounded-xl border border-outline-variant bg-surface-bright px-5 py-4 text-on-surface shadow-sm transition-[background-color,border-color,box-shadow] focus:border-primary focus:ring-2 focus:ring-primary"
                   placeholder={langText("e.g. Tractor (50 HP), Rotavator", "उदा. ट्रॅक्टर (५० HP), रोटाव्हेटर")}
                   type="text"
                   value={formState.equipmentOwned}
@@ -451,7 +469,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                 {langText("Discard Changes", "बदल रद्द करा")}
               </button>
               <button
-                className={`rounded-xl px-10 py-3.5 font-bold text-white shadow-lg shadow-primary/20 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
+                className={`rounded-xl px-10 py-3.5 font-bold text-white shadow-lg shadow-primary/20 transition-[background-color,border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-xl ${
                   submitState === "success" ? "bg-emerald-700" : "bg-[#0f4a38] hover:bg-[#17634c]"
                 }`}
                 type="submit"

@@ -335,7 +335,7 @@ export default function PartnerPage() {
                   disabled={isSubmitting}
                   type="submit"
                 >
-                  {isSubmitting ? langText("Submitting...", "सबमिट करत आहे...") : langText("Submit Enquiry", "चौकशी सबमिट करा")}
+                  {isSubmitting ? langText("Submitting…", "सबमिट करत आहे…") : langText("Submit Enquiry", "चौकशी सबमिट करा")}
                   {isSubmitting ? (
                     <span className="h-5 w-5 rounded-full border-2 border-white/40 border-t-white animate-spin" aria-hidden="true" />
                   ) : (

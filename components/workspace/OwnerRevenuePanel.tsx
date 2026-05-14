@@ -11,6 +11,14 @@ type PaymentSummary = {
   createdAt: string;
 };
 
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export function OwnerRevenuePanel({
   payments,
   linkedBookings,
@@ -18,7 +26,8 @@ export function OwnerRevenuePanel({
   payments: PaymentSummary[];
   linkedBookings: number;
 }) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
 
   const totalEstimatedValue = payments.reduce((sum, payment) => sum + payment.amount, 0);
   const openEstimatedValue = payments
@@ -43,9 +52,9 @@ export function OwnerRevenuePanel({
       </section>
 
       <section className="grid gap-4 md:grid-cols-3">
-        <StatCard label={langText("Total estimated value", "एकूण अंदाजित मूल्य")} value={`₹${totalEstimatedValue.toLocaleString("en-IN")}`} />
-        <StatCard label={langText("Completed booking value", "पूर्ण बुकिंग मूल्य")} value={`₹${completedEstimatedValue.toLocaleString("en-IN")}`} />
-        <StatCard label={langText("Open booking value", "उघडे बुकिंग मूल्य")} value={`₹${openEstimatedValue.toLocaleString("en-IN")}`} />
+        <StatCard label={langText("Total estimated value", "एकूण अंदाजित मूल्य")} value={formatCurrency(totalEstimatedValue, locale)} />
+        <StatCard label={langText("Completed booking value", "पूर्ण बुकिंग मूल्य")} value={formatCurrency(completedEstimatedValue, locale)} />
+        <StatCard label={langText("Open booking value", "उघडे बुकिंग मूल्य")} value={formatCurrency(openEstimatedValue, locale)} />
       </section>
 
       <section className="overflow-hidden rounded-[2rem] border border-outline-variant bg-surface-container-lowest shadow-sm">
@@ -69,7 +78,7 @@ export function OwnerRevenuePanel({
                 <tr key={payment.id} className="transition-colors hover:bg-surface-container-low">
                   <td className="px-6 py-4 text-sm font-semibold text-on-surface-variant">{payment.createdAt.slice(0, 10)}</td>
                   <td className="px-6 py-4 text-sm font-black text-primary">{payment.bookingId}</td>
-                  <td className="px-6 py-4 text-sm font-black text-secondary">₹{payment.amount.toLocaleString("en-IN")}</td>
+                  <td className="px-6 py-4 text-sm font-black text-secondary">{formatCurrency(payment.amount, locale)}</td>
                   <td className="px-6 py-4 text-sm text-on-surface-variant">
                     {langText("Direct Settlement", "थेट व्यवहार")}
                   </td>

@@ -1,4 +1,5 @@
 import RentEquipmentView from "./RentEquipmentView";
+import type { EquipmentSortKey } from "@/components/equipment/EquipmentSortMenu";
 import { getRentEquipmentView } from "@/lib/discovery-routes";
 import { getMergedCategorySummariesFromEquipment } from "@/lib/equipment-categories";
 import { getEquipmentList } from "@/lib/server/equipment";
@@ -33,6 +34,12 @@ const QUERY_ALIASES: Record<string, string[]> = {
   trolley: ["trolley"],
   trolleys: ["trolley"],
 };
+
+const SORT_KEYS = new Set<EquipmentSortKey>(["availability", "price-asc", "distance"]);
+
+function normalizeSortParam(value?: string): EquipmentSortKey {
+  return SORT_KEYS.has(value as EquipmentSortKey) ? (value as EquipmentSortKey) : "availability";
+}
 
 function matchesLocation(candidate: string, location: string) {
   if (!location) {
@@ -86,11 +93,12 @@ function expandQueryTerms(query: string) {
 export default async function RentEquipmentPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ location?: string; query?: string }>;
+  searchParams?: Promise<{ location?: string; query?: string; sort?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
   const location = resolvedSearchParams?.location || "";
   const query = resolvedSearchParams?.query || "";
+  const sort = normalizeSortParam(resolvedSearchParams?.sort);
   const items = await getEquipmentList();
   const categorySummaries = getMergedCategorySummariesFromEquipment(items);
   const normalizedQuery = query.trim().toLowerCase();
@@ -131,6 +139,7 @@ export default async function RentEquipmentPage({
       categorySummaries={categorySummaries}
       initialLocation={location}
       initialQuery={query}
+      initialSort={sort}
     />
   );
 }

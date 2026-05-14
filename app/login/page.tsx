@@ -188,6 +188,7 @@ export default function LoginPage() {
                     </span>
                     <input
                       id="phone"
+                      name="phone"
                       type="tel"
                       inputMode="numeric"
                       autoComplete="tel"
@@ -225,7 +226,9 @@ export default function LoginPage() {
                     </span>
                     <input
                       id="password"
+                      name="password"
                       type={showPassword ? "text" : "password"}
+                      autoComplete="current-password"
                       value={password}
                       onChange={(event) => {
                         setPassword(event.target.value);
@@ -262,7 +265,7 @@ export default function LoginPage() {
                     {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                     <span>
                       {isSubmitting
-                        ? langText("Please wait...", "कृपया प्रतीक्षा करा...")
+                        ? langText("Please wait…", "कृपया प्रतीक्षा करा…")
                         : langText("Login to Kisan Kamai", "किसान कमाईमध्ये लॉगिन करा")}
                     </span>
                     <span className="material-symbols-outlined text-2xl transition-transform group-hover:translate-x-1">

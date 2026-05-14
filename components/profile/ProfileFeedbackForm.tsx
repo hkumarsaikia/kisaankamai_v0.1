@@ -48,7 +48,7 @@ export function ProfileFeedbackForm({
 
   const submitLabel =
     submitState === "pending"
-      ? langText("Submitting...", "सबमिट करत आहे...")
+      ? langText("Submitting…", "सबमिट करत आहे…")
       : submitState === "success"
         ? langText("Submitted", "सबमिट झाले")
         : langText("Submit Feedback", "अभिप्राय सबमिट करा");
@@ -103,8 +103,10 @@ export function ProfileFeedbackForm({
                 <span className="mb-1.5 flex justify-between font-label text-sm font-semibold text-on-surface">
                   <span>{langText("Full Name", "पूर्ण नाव")}</span>
                 </span>
-                <input
-                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+	                <input
+	                  name="fullName"
+	                  autoComplete="name"
+	                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                   placeholder={langText("Rajaram Patil", "राजाराम पाटील")}
                   value={formState.fullName}
                   onChange={(event) => updateField("fullName", event.target.value)}
@@ -117,8 +119,10 @@ export function ProfileFeedbackForm({
                 <span className="mb-1.5 flex justify-between font-label text-sm font-semibold text-on-surface">
                   <span>{langText("Mobile Number", "मोबाईल नंबर")}</span>
                 </span>
-                <input
-                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+	                <input
+	                  name="mobileNumber"
+	                  autoComplete="tel"
+	                  className="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                   placeholder="+91 98765 43210"
                   value={formState.mobileNumber}
                   onChange={(event) => updateField("mobileNumber", event.target.value)}
@@ -131,11 +135,12 @@ export function ProfileFeedbackForm({
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <label>
                 <span className="mb-1.5 flex justify-between font-label text-sm font-semibold text-on-surface">
-                  <span>{langText("I am a...", "भूमिका")}</span>
+                  <span>{langText("I am a…", "भूमिका")}</span>
                 </span>
                 <div className="relative">
-                  <select
-                    className="w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 py-3 pr-10 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+	                  <select
+	                    name="role"
+	                    className="w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 py-3 pr-10 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                     value={formState.role}
                     onChange={(event) => updateField("role", event.target.value)}
                     required
@@ -157,8 +162,9 @@ export function ProfileFeedbackForm({
                   <span>{langText("Feedback Category", "श्रेणी")}</span>
                 </span>
                 <div className="relative">
-                  <select
-                    className="w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 py-3 pr-10 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+	                  <select
+	                    name="category"
+	                    className="w-full appearance-none rounded-lg border border-outline-variant bg-surface px-4 py-3 pr-10 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                     value={formState.category}
                     onChange={(event) => updateField("category", event.target.value)}
                     required
@@ -181,9 +187,10 @@ export function ProfileFeedbackForm({
               <span className="mb-1.5 flex justify-between font-label text-sm font-semibold text-on-surface">
                 <span>{langText("Your Feedback", "तुमचा संदेश")}</span>
               </span>
-              <textarea
-                className="w-full resize-none rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
-                placeholder={langText("Please describe your experience or issue in detail...", "तुमचा अनुभव किंवा समस्या सविस्तर लिहा...")}
+	              <textarea
+	                name="message"
+	                className="w-full resize-none rounded-lg border border-outline-variant bg-surface px-4 py-3 font-body text-on-surface outline-none transition-shadow focus:border-primary-container focus:ring-1 focus:ring-primary-container"
+	                placeholder={langText("Please describe your experience or issue in detail…", "तुमचा अनुभव किंवा समस्या सविस्तर लिहा…")}
                 rows={5}
                 value={formState.message}
                 onChange={(event) => updateField("message", event.target.value)}
@@ -226,14 +233,14 @@ export function ProfileFeedbackForm({
             </div>
 
             {error ? (
-              <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
-                {error}
-              </div>
+	              <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error" role="alert">
+	                {error}
+	              </div>
             ) : null}
 
             <div className="pt-2">
               <button
-                className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 font-headline text-lg font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:shadow-lg sm:w-auto ${
+	                className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-3.5 font-headline text-lg font-semibold text-white shadow-md transition-[background-color,box-shadow,opacity,transform] hover:-translate-y-0.5 hover:shadow-lg sm:w-auto ${
                   submitState === "success" ? "bg-emerald-700" : "bg-[#0f4a38] hover:bg-[#17634c]"
                 }`}
                 type="submit"

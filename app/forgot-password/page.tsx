@@ -136,9 +136,9 @@ export default function ForgotPasswordPage() {
       </section>
 
       <section className="relative z-10 flex w-full items-center justify-center bg-background/50 p-6 sm:p-12 md:w-1/2 lg:w-5/12">
-        <div className="kk-auth-card flex w-full max-w-md flex-col rounded-3xl border border-white/40 bg-white/70 backdrop-blur-md p-10 shadow-[0_8px_32px_0_rgba(0,37,26,0.08)] transition-all duration-300 dark:border-slate-800 dark:bg-slate-900/80 sm:p-12">
+        <div className="kk-auth-card flex w-full max-w-md flex-col rounded-3xl border border-white/40 bg-white/70 backdrop-blur-md p-10 shadow-[0_8px_32px_0_rgba(0,37,26,0.08)] transition-[background-color,border-color,box-shadow,transform] duration-300 dark:border-slate-800 dark:bg-slate-900/80 sm:p-12">
           <Link
-            className="mb-10 inline-flex min-h-9 w-max items-center rounded-full pr-2 text-xs font-label font-medium uppercase tracking-wider text-on-surface-variant/70 transition-all duration-300 hover:text-primary"
+            className="mb-10 inline-flex min-h-9 w-max items-center rounded-full pr-2 text-xs font-label font-medium uppercase tracking-wider text-on-surface-variant/70 transition-[background-color,border-color,box-shadow,transform] duration-300 hover:text-primary"
             href="/login"
           >
             <span className="material-symbols-outlined mr-1.5 text-base opacity-70">arrow_back</span>
@@ -170,10 +170,11 @@ export default function ForgotPasswordPage() {
                   <span className="material-symbols-outlined text-outline-variant dark:text-emerald-200">phone_iphone</span>
                 </div>
                 <input
-                  className="block w-full rounded-xl border border-outline-variant/40 bg-white/50 py-4 pl-10 pr-4 font-body text-on-surface shadow-sm transition-all duration-300 placeholder:text-on-surface-variant/40 focus:border-primary focus:ring-2 focus:ring-primary/10 dark:bg-slate-950 dark:text-white"
-                  id="contact-input"
-                  name="contact-input"
-                  placeholder={langText("Registered mobile number", "नोंदणीकृत मोबाईल नंबर")}
+                  className="block w-full rounded-xl border border-outline-variant/40 bg-white/50 py-4 pl-10 pr-4 font-body text-on-surface shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-300 placeholder:text-on-surface-variant/40 focus:border-primary focus:ring-2 focus:ring-primary/10 dark:bg-slate-950 dark:text-white"
+	                  id="contact-input"
+	                  name="contact-input"
+	                  autoComplete="tel"
+	                  placeholder={langText("Registered mobile number", "नोंदणीकृत मोबाईल नंबर")}
                   type="tel"
                   value={identifier}
                   onChange={(event) => {
@@ -187,13 +188,13 @@ export default function ForgotPasswordPage() {
             {error ? <FormNotice tone="error">{error}</FormNotice> : null}
 
             <button
-              className="kk-flow-button mt-10 flex w-full items-center justify-center rounded-xl bg-primary px-6 py-4 text-base font-label font-semibold text-on-primary shadow-[0_4px_14px_0_rgba(0,37,26,0.3)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_0_rgba(0,37,26,0.4)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:translate-y-0"
+              className="kk-flow-button mt-10 flex w-full items-center justify-center rounded-xl bg-primary px-6 py-4 text-base font-label font-semibold text-on-primary shadow-[0_4px_14px_0_rgba(0,37,26,0.3)] transition-[background-color,border-color,box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_0_rgba(0,37,26,0.4)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:translate-y-0"
               type="submit"
               disabled={isSubmitting}
               aria-busy={isSubmitting}
             >
               {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
-              {isSubmitting ? langText("Checking account...", "खाते तपासत आहे...") : langText("Send Reset Code", "रीसेट कोड पाठवा")}
+	              {isSubmitting ? langText("Checking account…", "खाते तपासत आहे…") : langText("Send Reset Code", "रीसेट कोड पाठवा")}
               <span className="material-symbols-outlined ml-3 text-sm">arrow_forward_ios</span>
             </button>
           </form>

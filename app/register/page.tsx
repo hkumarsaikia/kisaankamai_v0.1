@@ -302,11 +302,13 @@ export default function RegisterPage() {
   return (
     <div className="kk-auth-page bg-surface font-body text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
       <div className="absolute inset-0 z-0">
-        <img
-          alt="Kisan Kamai agriculture background"
-          className="h-full w-full object-cover grayscale-[10%] brightness-[90%]"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
-        />
+	        <img
+	          alt="Kisan Kamai agriculture background"
+	          className="h-full w-full object-cover grayscale-[10%] brightness-[90%]"
+	          height={900}
+	          src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxQOjwxd1GOcMalqWnNbjRE_PdmUfc0-NmR6Q4TuQErXFd_qzDuGiC_WdF1g7ttCtoM0UiVMbVLaVQm0WLKWYov6lMhQOFyseyikTrMes5EQXOe_I4a_6cw2Ae-j6WIH5Gaez5ZmPfqiySohcSrnOyQ_NlH63cuQmtxASSLmjDCc3vYWLKGGxXawj6rqyL0fVwYXIhDuPqyurvIFiseFluZhvpkLiRugKXITVBrfbosLWRWCYExgO7RrH5oe0TEtMmGSkIJsYbgPtE"
+	          width={1600}
+	        />
         <div className="kk-dark-image-overlay" />
       </div>
 
@@ -327,7 +329,7 @@ export default function RegisterPage() {
                 title={langText("Verify your mobile number", "तुमच्या मोबाईल नंबरची पडताळणी करा")}
                 description={langText("Enter the six-digit code sent to", "तुमच्या मोबाईलवर पाठवलेला सहा अंकी कोड टाका")}
                 submitLabel={langText("Verify and Continue", "पडताळणी करून पुढे जा")}
-                submittingLabel={langText("Verifying...", "पडताळणी होत आहे...")}
+                submittingLabel={langText("Verifying…", "पडताळणी होत आहे…")}
                 resendLabel={langText("Resend OTP", "OTP पुन्हा पाठवा")}
                 resendCountdownLabel={langText("Resend in", "पुन्हा पाठवा")}
                 editLabel={langText("Edit details", "तपशील संपादित करा")}
@@ -381,9 +383,11 @@ export default function RegisterPage() {
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Full name", "पूर्ण नाव")}
                       </span>
-                      <input
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                        value={formState.fullName}
+	                      <input
+	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
+	                        name="fullName"
+	                        autoComplete="name"
+	                        value={formState.fullName}
                         onChange={(event) => updateField("fullName", event.target.value)}
                         placeholder={langText("Rajesh Patil", "राजेश पाटील")}
                         disabled={isSubmitting}
@@ -395,9 +399,13 @@ export default function RegisterPage() {
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Mobile number", "मोबाईल नंबर")}
                       </span>
-                      <input
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                        value={formState.phone}
+	                      <input
+	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
+	                        name="phone"
+	                        type="tel"
+	                        autoComplete="tel"
+	                        inputMode="tel"
+	                        value={formState.phone}
                         onChange={(event) => updateField("phone", event.target.value)}
                         placeholder="+91 90000 00000"
                         disabled={isSubmitting}
@@ -409,9 +417,12 @@ export default function RegisterPage() {
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Email address (optional)", "ईमेल पत्ता (पर्यायी)")}
                       </span>
-                      <input
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                        value={formState.email}
+	                      <input
+	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
+	                        name="email"
+	                        autoComplete="email"
+	                        spellCheck={false}
+	                        value={formState.email}
                         onChange={(event) => updateField("email", event.target.value)}
                         placeholder="name@example.com"
                         type="email"
@@ -424,9 +435,11 @@ export default function RegisterPage() {
                         {langText("Password", "पासवर्ड")}
                       </span>
                       <div className="relative">
-                        <input
-                          className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 pr-12 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                          value={formState.password}
+	                        <input
+	                          className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 pr-12 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
+	                          name="password"
+	                          autoComplete="new-password"
+	                          value={formState.password}
                           onChange={(event) => updateField("password", event.target.value)}
                           placeholder="••••••••"
                           type={showPassword ? "text" : "password"}
@@ -463,9 +476,11 @@ export default function RegisterPage() {
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Village or town", "गाव किंवा शहर")}
                       </span>
-                      <input
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                        value={formState.village}
+	                      <input
+	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
+	                        name="village"
+	                        autoComplete="address-level3"
+	                        value={formState.village}
                         onChange={(event) => updateField("village", event.target.value)}
                         disabled={isSubmitting}
                         required
@@ -476,8 +491,10 @@ export default function RegisterPage() {
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("District", "जिल्हा")}
                       </span>
-                      <select
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
+	                      <select
+	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
+	                        name="district"
+	                        autoComplete="address-level2"
                         value={formState.district}
                         onChange={(event) => updateField("district", event.target.value)}
                         disabled={isSubmitting}
@@ -498,9 +515,11 @@ export default function RegisterPage() {
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Pincode", "पिनकोड")}
                       </span>
-                      <input
-                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-all focus:ring-2 focus:ring-primary-container/40"
-                        value={formState.pincode}
+	                      <input
+	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
+	                        name="pincode"
+	                        autoComplete="postal-code"
+	                        value={formState.pincode}
                         onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
                         inputMode="numeric"
                         maxLength={6}
@@ -522,7 +541,7 @@ export default function RegisterPage() {
                     {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                     <span>
                       {isSubmitting
-                        ? langText("Please wait...", "कृपया प्रतीक्षा करा...")
+	                        ? langText("Please wait…", "कृपया प्रतीक्षा करा…")
                         : langText("Create Account", "खाते तयार करा")}
                     </span>
                     <span className="material-symbols-outlined transition-transform group-hover:translate-x-1">

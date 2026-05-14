@@ -150,11 +150,13 @@ export default function NewPasswordPage() {
                     lock
                   </span>
                   <input
-                    id="new-password"
-                    type={showPassword ? "text" : "password"}
+	                    id="new-password"
+	                    name="new-password"
+	                    type={showPassword ? "text" : "password"}
+	                    autoComplete="new-password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
-                    className="w-full rounded-xl border border-outline-variant bg-surface py-4 pl-12 pr-12 font-medium transition-all placeholder:text-outline-variant focus:border-transparent focus:ring-2 focus:ring-primary"
+                    className="w-full rounded-xl border border-outline-variant bg-surface py-4 pl-12 pr-12 font-medium transition-[background-color,border-color,box-shadow,opacity,transform] placeholder:text-outline-variant focus:border-transparent focus:ring-2 focus:ring-primary"
                     placeholder="••••••••"
                     required
                   />
@@ -178,11 +180,13 @@ export default function NewPasswordPage() {
                     verified_user
                   </span>
                   <input
-                    id="confirm-password"
-                    type={showConfirmPassword ? "text" : "password"}
+	                    id="confirm-password"
+	                    name="confirm-password"
+	                    type={showConfirmPassword ? "text" : "password"}
+	                    autoComplete="new-password"
                     value={confirmPassword}
                     onChange={(event) => setConfirmPassword(event.target.value)}
-                    className="w-full rounded-xl border border-outline-variant bg-surface py-4 pl-12 pr-12 font-medium transition-all placeholder:text-outline-variant focus:border-transparent focus:ring-2 focus:ring-primary"
+                    className="w-full rounded-xl border border-outline-variant bg-surface py-4 pl-12 pr-12 font-medium transition-[background-color,border-color,box-shadow,opacity,transform] placeholder:text-outline-variant focus:border-transparent focus:ring-2 focus:ring-primary"
                     placeholder="••••••••"
                     required
                   />
@@ -214,9 +218,9 @@ export default function NewPasswordPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting || !identifier}
-                  className="flex w-full flex-col items-center rounded-xl bg-primary-container py-4 font-headline text-lg font-extrabold leading-tight text-white shadow-lg transition-all hover:bg-primary active:scale-[0.98] disabled:opacity-70"
+                  className="flex w-full flex-col items-center rounded-xl bg-primary-container py-4 font-headline text-lg font-extrabold leading-tight text-white shadow-lg transition-[background-color,border-color,box-shadow,opacity,transform] hover:bg-primary active:scale-[0.98] disabled:opacity-70"
                 >
-                  <span>{isSubmitting ? langText("Updating...", "अपडेट होत आहे...") : langText("Update Password", "पासवर्ड अपडेट करा")}</span>
+	                  <span>{isSubmitting ? langText("Updating…", "अपडेट होत आहे…") : langText("Update Password", "पासवर्ड अपडेट करा")}</span>
                   <span className="text-xs font-medium opacity-80">{langText("Secure reset", "सुरक्षित रीसेट")}</span>
                 </button>
                 <Link

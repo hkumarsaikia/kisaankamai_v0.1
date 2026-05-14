@@ -438,7 +438,7 @@ export function OwnerListingWizard({
                 backLabel={langText("Back", "मागे")}
                 nextLabel={
                   isSubmitting
-                    ? langText("Saving...", "सेव्ह होत आहे...")
+                    ? langText("Saving…", "सेव्ह होत आहे…")
                     : listing
                       ? langText("Save listing", "लिस्टिंग सेव्ह करा")
                       : langText("Create listing", "लिस्टिंग तयार करा")

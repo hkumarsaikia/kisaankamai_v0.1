@@ -69,16 +69,16 @@ export default function CatalogBookingForm({
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <div className="space-y-1.5">
-        <label className="kk-form-label">Field Location (Sangli Region Only)</label>
-        <div className="relative">
-          <span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">location_on</span>
-          <input className="kk-input pl-10" name="fieldLocation" placeholder="Village / Taluka name" type="text" />
+	        <label htmlFor="catalog-field-location" className="kk-form-label">Field Location (Sangli Region Only)</label>
+	        <div className="relative">
+	          <span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">location_on</span>
+	          <input id="catalog-field-location" className="kk-input pl-10" name="fieldLocation" autoComplete="address-level3" placeholder="Village / Taluka name" type="text" />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
-          <label className="kk-form-label">Work Type</label>
-          <select className="kk-input" name="workType">
+	          <label htmlFor="catalog-work-type" className="kk-form-label">Work Type</label>
+	          <select id="catalog-work-type" className="kk-input" name="workType">
             <option>Plowing</option>
             <option>Sowing</option>
             <option>Transport</option>
@@ -86,22 +86,22 @@ export default function CatalogBookingForm({
           </select>
         </div>
         <div className="space-y-1.5">
-          <label className="kk-form-label">Approx Hours</label>
-          <input className="kk-input" name="approxHours" placeholder="8" type="number" />
+	          <label htmlFor="catalog-approx-hours" className="kk-form-label">Approx Hours</label>
+	          <input id="catalog-approx-hours" className="kk-input" name="approxHours" placeholder="8" type="number" />
         </div>
       </div>
       <div className="space-y-1.5">
-        <label className="kk-form-label">Phone Number</label>
-        <div className="relative">
-          <span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">call</span>
-          <input className="kk-input pl-10" name="phone" placeholder="+91 00000 00000" type="tel" />
-        </div>
-      </div>
-      {error ? <p className="text-sm font-semibold text-red-600">{error}</p> : null}
-      {success ? <p className="text-sm font-semibold text-emerald-700">{success}</p> : null}
-      <Button className="w-full" disabled={isSubmitting} type="submit" variant="secondary">
-        {isSubmitting ? "Submitting..." : "Request Booking Callback"}
-      </Button>
+	        <label htmlFor="catalog-phone" className="kk-form-label">Phone Number</label>
+	        <div className="relative">
+	          <span className="material-symbols-outlined absolute left-3 top-3.5 text-outline text-lg">call</span>
+	          <input id="catalog-phone" className="kk-input pl-10" name="phone" autoComplete="tel" placeholder="+91 00000 00000" type="tel" />
+	        </div>
+	      </div>
+	      {error ? <p className="text-sm font-semibold text-red-600" role="alert">{error}</p> : null}
+	      {success ? <p className="text-sm font-semibold text-emerald-700" role="status" aria-live="polite">{success}</p> : null}
+	      <Button className="w-full" disabled={isSubmitting} type="submit" variant="secondary">
+	        {isSubmitting ? "Submitting…" : "Request Booking Callback"}
+	      </Button>
     </form>
   );
 }

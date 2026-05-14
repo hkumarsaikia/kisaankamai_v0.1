@@ -97,7 +97,7 @@ export default function LogoutPage() {
               onClick={handleConfirm}
               type="button"
             >
-              <span>{loading ? langText("Signing out...", "साइन आउट करत आहे...") : langText("Confirm Sign Out", "साइन आउट निश्चित करा")}</span>
+              <span>{loading ? langText("Signing out…", "साइन आउट करत आहे…") : langText("Confirm Sign Out", "साइन आउट निश्चित करा")}</span>
             </button>
 
             <Link

@@ -1,21 +1,35 @@
 import { OwnerProfileWorkspaceShell } from "@/components/owner-profile/OwnerProfileWorkspaceShell";
 import { LocalizedText } from "@/components/LocalizedText";
 import { getVisibleEquipmentRating } from "@/lib/equipment";
+import type { Language } from "@/lib/i18n";
 import { localizedText } from "@/lib/i18n";
 import { getCurrentSession } from "@/lib/server/local-auth";
 import { getOwnerBookings, getOwnerListings } from "@/lib/server/local-data";
+import { cookies } from "next/headers";
 
-function formatBookingDate(value: string) {
+function formatBookingDate(value: string, locale: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) {
     return value;
   }
 
-  return new Intl.DateTimeFormat("en-IN", {
+  return new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "short",
     year: "numeric",
   }).format(date);
+}
+
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function localeFromLanguage(language: Language) {
+  return language === "mr" ? "mr-IN" : "en-IN";
 }
 
 function bookingStatusLabel(status: string) {
@@ -49,6 +63,9 @@ function bookingStatusTone(status: string) {
 }
 
 export default async function OwnerProfileEarningsPage() {
+  const languageCookie = (await cookies()).get("kk_language")?.value;
+  const language: Language = languageCookie === "en" ? "en" : "mr";
+  const locale = localeFromLanguage(language);
   const session = await getCurrentSession();
   const [listings, bookings] = session
     ? await Promise.all([
@@ -118,7 +135,7 @@ export default async function OwnerProfileEarningsPage() {
                           <LocalizedText en="Listed Rate" mr="लिस्ट केलेला दर" />
                         </p>
                         <p className="break-words font-bold text-on-surface">
-                          ₹{listing.pricePerHour.toLocaleString("en-IN")}{" "}
+                          {formatCurrency(listing.pricePerHour, locale)}{" "}
                           <span className="text-sm font-normal">
                             <LocalizedText en="/ hour" mr="प्रति तास" />
                           </span>
@@ -168,7 +185,7 @@ export default async function OwnerProfileEarningsPage() {
                   return (
                     <tr key={booking.id} className="border-b border-outline-variant last:border-b-0">
                       <td className="p-4">
-                        <p className="font-medium text-on-surface">{formatBookingDate(booking.createdAt)}</p>
+                        <p className="font-medium text-on-surface">{formatBookingDate(booking.createdAt, locale)}</p>
                         <p className="text-xs text-on-surface-variant">#{booking.id}</p>
                       </td>
                       <td className="p-4 text-on-surface">{listing?.name || <LocalizedText en="Equipment Booking" mr="उपकरण बुकिंग" />}</td>
@@ -177,7 +194,7 @@ export default async function OwnerProfileEarningsPage() {
                           {bookingStatusLabel(booking.status)}
                         </span>
                       </td>
-                      <td className="p-4 font-bold text-on-surface">₹{booking.amount.toLocaleString("en-IN")}</td>
+                      <td className="p-4 font-bold text-on-surface">{formatCurrency(booking.amount, locale)}</td>
                       <td className="p-4">
                         <span className="inline-flex items-center gap-1 rounded bg-surface-container px-2 py-1 text-xs font-medium text-on-surface-variant">
                           <span className="material-symbols-outlined text-[14px]">handshake</span>

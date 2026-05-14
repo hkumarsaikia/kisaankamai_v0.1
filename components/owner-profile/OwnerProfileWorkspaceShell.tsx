@@ -371,7 +371,7 @@ export function OwnerProfileWorkspaceShell({
         <Sidebar family={family} activeTab={activeTab} />
       </aside>
 
-      <main className="kk-workspace-main flex min-h-svh flex-col lg:ml-64">
+      <main className="kk-workspace-main flex min-h-svh flex-col lg:ml-64" id="main-content">
         <header
           className="kk-workspace-header sticky top-0 z-30 border-b border-surface-container-highest bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95"
           style={{ viewTransitionName: "persistent-workspace-header" }}

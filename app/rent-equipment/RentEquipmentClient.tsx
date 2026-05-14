@@ -52,8 +52,11 @@ export default function RentEquipmentClient({
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline dark:text-slate-400">
               location_on
             </span>
-            <input
-              className="kk-form-search-input"
+	            <input
+	              aria-label={t("rent-equipment.RentEquipmentClient.enter_location_or_pincode")}
+	              name="location"
+	              autoComplete="postal-code"
+	              className="kk-form-search-input"
               placeholder={t("rent-equipment.RentEquipmentClient.enter_location_or_pincode")}
               value={location}
               onChange={(event) => setLocation(event.target.value)}
@@ -64,8 +67,10 @@ export default function RentEquipmentClient({
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline dark:text-slate-400">
               search
             </span>
-            <input
-              className="kk-form-search-input"
+	            <input
+	              aria-label={t("rent-equipment.RentEquipmentClient.search_tractors_harvesters")}
+	              name="query"
+	              className="kk-form-search-input"
               placeholder={t("rent-equipment.RentEquipmentClient.search_tractors_harvesters")}
               value={query}
               onChange={(event) => setQuery(event.target.value)}

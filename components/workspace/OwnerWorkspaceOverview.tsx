@@ -39,6 +39,27 @@ type PaymentSummary = {
   amount: number;
 };
 
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function formatShortDate(value: string, locale: string) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat(locale, {
+    day: "numeric",
+    month: "short",
+  }).format(date);
+}
+
 export function OwnerWorkspaceOverview({
   ownerName,
   village,
@@ -53,7 +74,8 @@ export function OwnerWorkspaceOverview({
   bookings: BookingSummary[];
   payments: PaymentSummary[];
 }) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const [requestView, setRequestView] = useState<"active" | "upcoming" | "history">("active");
 
   const activeListings = listings.filter((listing) => listing.status === "active");
@@ -137,10 +159,10 @@ export function OwnerWorkspaceOverview({
                   )}
                 </p>
                 <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                  <Link href="/list-equipment" className="rounded-xl bg-primary px-8 py-3 font-bold text-white transition-all hover:shadow-lg">
+                  <Link href="/list-equipment" className="rounded-xl bg-primary px-8 py-3 font-bold text-white transition-[box-shadow] hover:shadow-lg">
                     {langText("Add New Listing", "नवीन लिस्टिंग जोडा")}
                   </Link>
-                  <Link href="/owner-profile" className="rounded-xl border border-surface-container-highest bg-white px-8 py-3 font-bold text-primary transition-all hover:bg-surface dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900">
+                  <Link href="/owner-profile" className="rounded-xl border border-surface-container-highest bg-white px-8 py-3 font-bold text-primary transition-colors hover:bg-surface dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900">
                     {langText("Optimize Current", "सध्याची लिस्टिंग सुधारा")}
                   </Link>
                 </div>
@@ -169,16 +191,20 @@ export function OwnerWorkspaceOverview({
                       />
                     </div>
                     <div className="flex-1">
-                      <span className="block text-xs font-black uppercase tracking-tight text-on-surface-variant">Completed {booking.endDate}</span>
+                      <span className="block text-xs font-black uppercase tracking-tight text-on-surface-variant">
+                        {langText("Completed", "पूर्ण")} {formatShortDate(booking.endDate, locale)}
+                      </span>
                       <h4 className="text-sm font-bold text-primary">{booking.listing?.name || langText("Equipment", "उपकरण")}</h4>
-                      <span className="text-xs font-medium text-secondary">₹{booking.amount.toLocaleString("en-IN")} Earned</span>
+                      <span className="text-xs font-medium text-secondary">
+                        {formatCurrency(booking.amount, locale)} {langText("Estimated", "अंदाजित")}
+                      </span>
                     </div>
                     <span className="material-symbols-outlined text-emerald-600" style={{ fontVariationSettings: "'FILL' 1" }}>check_circle</span>
                   </div>
                 ))}
                 {!completedBookings.length ? (
                   <div className="w-80 rounded-xl border border-dashed border-outline-variant bg-white p-6 text-sm text-on-surface-variant dark:border-slate-700 dark:bg-slate-900">
-                    Completed bookings will appear here.
+                    {langText("Completed bookings will appear here.", "पूर्ण बुकिंग येथे दिसतील.")}
                   </div>
                 ) : null}
               </div>
@@ -189,7 +215,7 @@ export function OwnerWorkspaceOverview({
         <aside className="space-y-8">
           <section className="rounded-2xl border border-surface-container-highest bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-base font-bold text-primary">Schedule</h2>
+              <h2 className="text-base font-bold text-primary">{langText("Schedule", "वेळापत्रक")}</h2>
               <span className="material-symbols-outlined text-on-surface-variant">calendar_month</span>
             </div>
             <div className="mb-4 grid grid-cols-7 gap-1 text-center">
@@ -218,30 +244,37 @@ export function OwnerWorkspaceOverview({
             <div className="mt-6 space-y-3 border-t border-surface-container-highest pt-4">
               <div className="flex items-center gap-3">
                 <span className="h-2 w-2 rounded-full bg-primary" />
-                <span className="text-xs font-semibold">Request review today</span>
+                <span className="text-xs font-semibold">{langText("Request review today", "आज विनंती तपासा")}</span>
               </div>
               <div className="flex items-center gap-3">
                 <span className="h-2 w-2 rounded-full bg-secondary-container" />
-                <span className="text-xs font-semibold">Upcoming equipment pickup</span>
+                <span className="text-xs font-semibold">{langText("Upcoming equipment pickup", "आगामी उपकरण पिकअप")}</span>
               </div>
             </div>
           </section>
 
           <section className="relative overflow-hidden rounded-2xl bg-primary-container p-6 text-white shadow-lg">
             <div className="relative z-10">
-              <span className="text-[10px] font-black uppercase tracking-widest text-primary-fixed">Estimated Booking Value</span>
-              <div className="mt-1 text-3xl font-extrabold">₹{bookingValueInFlow.toLocaleString("en-IN")}</div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-primary-fixed">
+                {langText("Estimated Booking Value", "अंदाजित बुकिंग मूल्य")}
+              </span>
+              <div className="mt-1 text-3xl font-extrabold">{formatCurrency(bookingValueInFlow, locale)}</div>
               <div className="mt-4 flex items-center gap-2 text-xs font-medium text-primary-fixed/90">
                 <span className="material-symbols-outlined text-sm">trending_up</span>
-                {bookings.length} booking requests
+                {bookings.length.toLocaleString(locale)} {langText("booking requests", "बुकिंग विनंत्या")}
               </div>
             </div>
             <span className="material-symbols-outlined absolute -bottom-4 -right-4 text-[120px] text-white/10">request_quote</span>
           </section>
 
           <section className="rounded-2xl border border-dashed border-outline-variant bg-surface-container-low p-6 text-center">
-            <h3 className="mb-2 text-sm font-bold text-primary">Need help managing equipment?</h3>
-            <p className="mb-4 text-xs leading-relaxed text-on-surface-variant">Our support team is available in Marathi and English to help you list or manage bookings.</p>
+            <h3 className="mb-2 text-sm font-bold text-primary">{langText("Need help managing equipment?", "उपकरण व्यवस्थापनासाठी मदत हवी आहे का?")}</h3>
+            <p className="mb-4 text-xs leading-relaxed text-on-surface-variant">
+              {langText(
+                "Our support team is available in Marathi and English to help you list or manage bookings.",
+                "लिस्टिंग किंवा बुकिंग व्यवस्थापनासाठी आमची सपोर्ट टीम मराठी आणि इंग्रजीमध्ये उपलब्ध आहे."
+              )}
+            </p>
             <Link href="/support" className="block rounded-lg border border-surface-container-highest bg-white py-2 text-xs font-bold text-primary transition-colors hover:bg-surface dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900">
               {langText("Contact Support", "सपोर्टशी संपर्क करा")}
             </Link>
@@ -250,9 +283,9 @@ export function OwnerWorkspaceOverview({
           <section className="rounded-2xl border border-outline-variant bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h2 className="text-sm font-black uppercase tracking-[0.18em] text-secondary">{langText("Owner Snapshot", "मालक आढावा")}</h2>
             <dl className="mt-5 space-y-4 text-sm">
-              <Row label="Active listings" value={String(activeListings.length)} />
-              <Row label="Village" value={village || "Not set"} />
-              <Row label="Pincode" value={pincode || "Not set"} />
+              <Row label={langText("Active listings", "सक्रिय लिस्टिंग")} value={activeListings.length.toLocaleString(locale)} />
+              <Row label={langText("Village", "गाव")} value={village || langText("Not set", "निश्चित केलेले नाही")} />
+              <Row label={langText("Pincode", "पिनकोड")} value={pincode || langText("Not set", "निश्चित केलेले नाही")} />
             </dl>
             <Link href="/list-equipment" className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-primary-container">
               <span className="material-symbols-outlined text-sm">add</span>
@@ -266,13 +299,14 @@ export function OwnerWorkspaceOverview({
 }
 
 function RequestCard({ booking }: { booking: BookingSummary }) {
-  const { langText } = useLanguage();
-  const listingName = booking.listing?.name || "Equipment";
-  const renterName = booking.renterProfile?.fullName || "Renter";
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
+  const listingName = booking.listing?.name || langText("Equipment", "उपकरण");
+  const renterName = booking.renterProfile?.fullName || langText("Renter", "भाडेकरू");
   const renterVillage = booking.renterProfile?.village || booking.listing?.district || "Maharashtra";
 
   return (
-    <article className="group rounded-2xl border border-surface-container-highest bg-white p-5 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+    <article className="group rounded-2xl border border-surface-container-highest bg-white p-5 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="relative h-36 w-full flex-shrink-0 overflow-hidden rounded-xl bg-surface-container md:h-32 md:w-32">
           <Image
@@ -297,18 +331,20 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
               </div>
             </div>
             <div className="text-right">
-              <span className="block text-lg font-extrabold text-primary">₹{booking.amount.toLocaleString("en-IN")}</span>
+              <span className="block text-lg font-extrabold text-primary">{formatCurrency(booking.amount, locale)}</span>
               <span className="text-[10px] font-bold uppercase tracking-tight text-on-surface-variant">{langText("Estimated Total", "अंदाजित एकूण")}</span>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-4 border-y border-surface-container-highest py-3">
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-lg text-secondary">calendar_month</span>
-              <span className="text-xs font-bold">{booking.startDate} - {booking.endDate}</span>
+              <span className="text-xs font-bold">
+                {formatShortDate(booking.startDate, locale)} - {formatShortDate(booking.endDate, locale)}
+              </span>
             </div>
             <div className="flex items-center gap-2">
               <span className="material-symbols-outlined text-lg text-secondary">fact_check</span>
-              <span className="text-xs font-bold capitalize">{booking.status}</span>
+              <span className="text-xs font-bold capitalize">{statusLabel(booking.status, langText)}</span>
             </div>
             {booking.status === "pending" ? (
               <span className="ml-auto rounded bg-amber-50 px-2 py-1 text-[10px] font-black uppercase text-amber-700">{langText("Urgent", "तातडीचे")}</span>
@@ -323,6 +359,7 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
             </Link>
             <a
               href={supportContact.phoneHref}
+              aria-label={langText("Call support", "सपोर्टला कॉल करा")}
               className="flex h-10 w-10 items-center justify-center rounded-lg border border-surface-container-highest text-primary transition-colors hover:bg-surface-container"
             >
               <span className="material-symbols-outlined">call</span>
@@ -332,6 +369,23 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
       </div>
     </article>
   );
+}
+
+function statusLabel(status: string, langText: (english: string, marathi: string) => string) {
+  switch (status) {
+    case "confirmed":
+      return langText("Confirmed", "पुष्टी");
+    case "active":
+      return langText("Active", "सक्रिय");
+    case "upcoming":
+      return langText("Upcoming", "आगामी");
+    case "completed":
+      return langText("Completed", "पूर्ण");
+    case "cancelled":
+      return langText("Cancelled", "रद्द");
+    default:
+      return langText("Pending", "प्रलंबित");
+  }
 }
 
 function Row({ label, value }: { label: string; value: string }) {

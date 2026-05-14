@@ -170,7 +170,7 @@ export function ListEquipmentEditorPage({
   const submitLabel =
     submitState === "pending"
       ? listing
-        ? langText("Saving...", "जतन करत आहे...")
+        ? langText("Saving…", "जतन करत आहे…")
         : langText("Publishing...", "प्रकाशित करत आहे...")
       : submitState === "success"
         ? listing

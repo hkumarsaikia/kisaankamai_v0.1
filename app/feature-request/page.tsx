@@ -187,10 +187,13 @@ export default function FeatureRequestPage() {
                 <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="flex flex-col gap-2">
-                      <label className="font-label text-sm font-medium text-on-surface-variant">
-                        {langText("Full Name", "पूर्ण नाव")}
-                      </label>
-                      <input
+	                      <label htmlFor="feature-full-name" className="font-label text-sm font-medium text-on-surface-variant">
+	                        {langText("Full Name", "पूर्ण नाव")}
+	                      </label>
+	                      <input
+	                        id="feature-full-name"
+	                        name="fullName"
+	                        autoComplete="name"
                         className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         placeholder={langText("Enter your name", "तुमचे नाव टाका")}
                         type="text"
@@ -201,10 +204,13 @@ export default function FeatureRequestPage() {
                       />
                     </div>
                     <div className="flex flex-col gap-2">
-                      <label className="font-label text-sm font-medium text-on-surface-variant">
-                        {langText("Mobile Number", "मोबाईल नंबर")}
-                      </label>
-                      <input
+	                      <label htmlFor="feature-phone" className="font-label text-sm font-medium text-on-surface-variant">
+	                        {langText("Mobile Number", "मोबाईल नंबर")}
+	                      </label>
+	                      <input
+	                        id="feature-phone"
+	                        name="phone"
+	                        autoComplete="tel"
                         className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         placeholder="+91"
                         type="tel"
@@ -218,11 +224,13 @@ export default function FeatureRequestPage() {
 
                   <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="flex flex-col gap-2">
-                      <label className="font-label text-sm font-medium text-on-surface-variant">
-                        {langText("Role", "भूमिका")}
-                      </label>
-                      <div className="relative">
-                        <select
+	                      <label htmlFor="feature-role" className="font-label text-sm font-medium text-on-surface-variant">
+	                        {langText("Role", "भूमिका")}
+	                      </label>
+	                      <div className="relative">
+	                        <select
+	                          id="feature-role"
+	                          name="role"
                           className="kk-select-control h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface bg-none px-4 pr-12 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                           value={formState.role}
                           onChange={(event) => updateField("role", event.target.value)}
@@ -243,10 +251,13 @@ export default function FeatureRequestPage() {
                       </div>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <label className="font-label text-sm font-medium text-on-surface-variant">
-                        {langText("Village or District", "गाव किंवा जिल्हा")}
-                      </label>
-                      <input
+	                      <label htmlFor="feature-location" className="font-label text-sm font-medium text-on-surface-variant">
+	                        {langText("Village or District", "गाव किंवा जिल्हा")}
+	                      </label>
+	                      <input
+	                        id="feature-location"
+	                        name="location"
+	                        autoComplete="address-level2"
                         className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         placeholder={langText("e.g. Sangli, Satara", "उदा. सांगली, सातारा")}
                         type="text"
@@ -261,11 +272,13 @@ export default function FeatureRequestPage() {
                   <hr className="my-2 border-outline-variant" />
 
                   <div className="flex flex-col gap-2">
-                    <label className="font-label text-sm font-medium text-on-surface-variant">
-                      {langText("Feature Category", "सुविधेचा प्रकार")}
-                    </label>
-                    <div className="relative">
-                      <select
+	                    <label htmlFor="feature-category" className="font-label text-sm font-medium text-on-surface-variant">
+	                      {langText("Feature Category", "सुविधेचा प्रकार")}
+	                    </label>
+	                    <div className="relative">
+	                      <select
+	                        id="feature-category"
+	                        name="category"
                         className="kk-select-control h-12 w-full appearance-none rounded-lg border border-outline-variant bg-surface bg-none px-4 pr-12 text-on-surface outline-none transition-colors focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                         value={formState.category}
                         onChange={(event) => updateField("category", event.target.value)}
@@ -290,10 +303,12 @@ export default function FeatureRequestPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="font-label text-sm font-medium text-on-surface-variant">
-                      {langText("Feature Title", "सुविधेचे नाव")}
-                    </label>
-                    <input
+	                    <label htmlFor="feature-title" className="font-label text-sm font-medium text-on-surface-variant">
+	                      {langText("Feature Title", "सुविधेचे नाव")}
+	                    </label>
+	                    <input
+	                      id="feature-title"
+	                      name="title"
                       className="h-12 w-full rounded-lg border border-outline-variant bg-surface px-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                       placeholder={langText("Brief summary of your idea", "तुमच्या कल्पनेचा थोडक्यात सारांश")}
                       type="text"
@@ -305,10 +320,12 @@ export default function FeatureRequestPage() {
                   </div>
 
                   <div className="flex flex-col gap-2">
-                    <label className="font-label text-sm font-medium text-on-surface-variant">
-                      {langText("Describe Your Idea", "तुमची कल्पना सविस्तर सांगा")}
-                    </label>
-                    <textarea
+	                    <label htmlFor="feature-description" className="font-label text-sm font-medium text-on-surface-variant">
+	                      {langText("Describe Your Idea", "तुमची कल्पना सविस्तर सांगा")}
+	                    </label>
+	                    <textarea
+	                      id="feature-description"
+	                      name="description"
                       className="w-full resize-y rounded-lg border border-outline-variant bg-surface p-4 text-on-surface outline-none transition-colors placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container"
                       placeholder={langText(
                         "How would this feature help you in your daily farming or business operations?",
@@ -371,7 +388,7 @@ export default function FeatureRequestPage() {
                     </label>
                   </div>
 
-                  {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
+	                {error ? <p className="text-sm font-semibold text-error" role="alert">{error}</p> : null}
                   {statusMessage ? (
                     <p className="inline-flex items-center gap-2 text-sm font-semibold text-primary">
                       <span className="material-symbols-outlined text-[18px]">task_alt</span>
@@ -389,7 +406,7 @@ export default function FeatureRequestPage() {
                     >
                       {isSubmitting ? <span className="kk-flow-spinner" aria-hidden="true" /> : null}
                       {isSubmitting
-                        ? langText("Submitting...", "सबमिट होत आहे...")
+	                        ? langText("Submitting…", "सबमिट होत आहे…")
                         : langText("Submit Feature Request", "फीचर विनंती सबमिट करा")}
                     </button>
                   </div>

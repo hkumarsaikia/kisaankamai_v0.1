@@ -79,11 +79,13 @@ export default function OwnerBenefitsPage() {
       <main className="pt-20">
         <section className="relative overflow-hidden bg-gray-900 pb-28 pt-24">
           <div className="absolute inset-0 z-0">
-            <img
-              alt="Tractor at sunset"
-              className="h-full w-full object-cover"
-              src={ownerHeroImage}
-            />
+	            <img
+	              alt="Tractor at sunset"
+	              className="h-full w-full object-cover"
+	              height={900}
+	              src={ownerHeroImage}
+	              width={1600}
+	            />
             <div className="kk-banner-image-overlay" />
           </div>
 
@@ -130,7 +132,7 @@ export default function OwnerBenefitsPage() {
                 <div className="absolute inset-0 rounded-full bg-[#143B2E]/20 blur-3xl" />
                 <div className="glass-card relative z-10 w-full max-w-md rotate-2 rounded-3xl border border-white/20 bg-white/10 p-6 shadow-[0_8px_32px_rgba(0,0,0,0.08)] backdrop-blur-xl transition-transform duration-500 hover:rotate-0">
                   <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                    <img alt="Modern tractor" className="h-48 w-full object-cover" src={ownerMachineImage} />
+	                    <img alt="Modern tractor" className="h-48 w-full object-cover" height={360} src={ownerMachineImage} width={640} />
                     <div className="p-6">
                       <div className="mb-4 flex items-start justify-between">
                         <div>

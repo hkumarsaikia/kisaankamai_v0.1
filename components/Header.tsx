@@ -139,7 +139,12 @@ export const Header = () => {
       {/* Mobile nav */}
       {mobileOpen && (
         <div className="fixed inset-0 z-[60] lg:hidden">
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobileOpen(false)} />
+	          <button
+	            type="button"
+	            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+	            onClick={() => setMobileOpen(false)}
+	            aria-label={langText("Close navigation menu", "नेव्हिगेशन मेनू बंद करा")}
+	          />
           <div className="absolute top-20 left-0 right-0 bg-white dark:bg-slate-950 border-b border-emerald-100 dark:border-slate-800 shadow-xl p-6 space-y-2">
             {HEADER_PRIMARY_LINKS.map((link) => {
               const isActive = pathname === link.href;

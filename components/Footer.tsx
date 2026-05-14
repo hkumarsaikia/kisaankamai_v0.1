@@ -154,7 +154,7 @@ export const Footer = () => {
           <ul className="space-y-4">
             {FOOTER_MARKETPLACE_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-slate-400 hover:text-emerald-400 font-normal hover:underline underline-offset-4 transition-all duration-300">
+                <Link href={link.href} className="text-slate-400 hover:text-emerald-400 font-normal hover:underline underline-offset-4 transition-[background-color,border-color,box-shadow,opacity,transform] duration-300">
                   {renderLabel(link)}
                 </Link>
               </li>
@@ -166,7 +166,7 @@ export const Footer = () => {
           <ul className="space-y-4">
             {FOOTER_TRUST_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-slate-400 hover:text-emerald-400 font-normal hover:underline underline-offset-4 transition-all duration-300">
+                <Link href={link.href} className="text-slate-400 hover:text-emerald-400 font-normal hover:underline underline-offset-4 transition-[background-color,border-color,box-shadow,opacity,transform] duration-300">
                   {renderLabel(link)}
                 </Link>
               </li>
@@ -175,10 +175,17 @@ export const Footer = () => {
         </div>
         <div>
           <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.newsletter")}</h5>
-          <p className="text-slate-400 mb-4 font-normal">{t("Footer.stay_updated_on_agricultural_trends_and_new_equipment_listings")}</p>
-          <form className="flex gap-2" onSubmit={handleNewsletterSubmit}>
-            <input
-              className="bg-slate-800 border-none rounded-lg px-4 py-2 text-white w-full focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-500 font-normal"
+	          <p className="text-slate-400 mb-4 font-normal">{t("Footer.stay_updated_on_agricultural_trends_and_new_equipment_listings")}</p>
+	          <form className="flex gap-2" onSubmit={handleNewsletterSubmit}>
+	            <label htmlFor="footer-newsletter-email" className="sr-only">
+	              {t("Footer.email")}
+	            </label>
+	            <input
+	              id="footer-newsletter-email"
+	              name="email"
+	              autoComplete="email"
+	              spellCheck={false}
+	              className="bg-slate-800 border-none rounded-lg px-4 py-2 text-white w-full focus:ring-2 focus:ring-emerald-500 placeholder:text-slate-500 font-normal"
               placeholder={t("Footer.email")}
               type="email"
               value={email}
@@ -207,7 +214,7 @@ export const Footer = () => {
               {isSubmitting ? (
                 <span className="kk-flow-spinner h-4 w-4" aria-hidden="true" />
               ) : status === "success" ? (
-                <span className="material-symbols-outlined text-[20px]">task_alt</span>
+	                <span className="material-symbols-outlined text-[20px]" aria-hidden="true">task_alt</span>
               ) : (
                 <SharedIcon name="send" className="h-5 w-5" />
               )}

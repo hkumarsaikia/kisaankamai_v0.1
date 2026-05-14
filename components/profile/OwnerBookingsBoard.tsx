@@ -45,10 +45,10 @@ function mapBookingStatus(status: BookingRecord["status"]) {
   }
 }
 
-function formatDateRange(startDate: string, endDate: string) {
+function formatDateRange(startDate: string, endDate: string, locale: string) {
   const start = new Date(startDate);
   const end = new Date(endDate);
-  const formatter = new Intl.DateTimeFormat("en-IN", {
+  const formatter = new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "short",
   });
@@ -58,6 +58,14 @@ function formatDateRange(startDate: string, endDate: string) {
   }
 
   return `${formatter.format(start)} - ${formatter.format(end)}`;
+}
+
+function formatCurrency(value: number, locale: string) {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(value);
 }
 
 function countFilter(bookings: BookingWithDetails[], filter: FilterKey) {
@@ -73,7 +81,8 @@ function actionStateKey(bookingId: string, nextStatus: "confirmed" | "cancelled"
 }
 
 export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
-  const { langText } = useLanguage();
+  const { language, langText } = useLanguage();
+  const locale = language === "mr" ? "mr-IN" : "en-IN";
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState<FilterKey>("all");
   const [buttonState, setButtonState] = useState<Record<string, BookingActionState>>({});
@@ -195,19 +204,19 @@ export function OwnerBookingsBoard({ bookings }: OwnerBookingsBoardProps) {
                       <div>
                         <p className="font-label text-[11px] uppercase tracking-[0.18em] text-on-surface-variant">{langText("Dates", "तारखा")}</p>
                         <p className="mt-1 text-sm font-semibold text-on-background">
-                          {formatDateRange(booking.startDate, booking.endDate)}
+                          {formatDateRange(booking.startDate, booking.endDate, locale)}
                         </p>
                       </div>
                       <div>
                         <p className="font-label text-[11px] uppercase tracking-[0.18em] text-on-surface-variant">{langText("Total", "एकूण")}</p>
                         <p className="mt-1 text-sm font-semibold text-on-background">
-                          ₹{booking.amount.toLocaleString("en-IN")}
+                          {formatCurrency(booking.amount, locale)}
                         </p>
                       </div>
                     </div>
 
                     {errorState[booking.id] ? (
-                      <div className="rounded-xl border border-error/20 bg-error-container px-3 py-2 text-sm font-medium text-error">
+                      <div className="rounded-xl border border-error/20 bg-error-container px-3 py-2 text-sm font-medium text-error" role="alert">
                         {errorState[booking.id]}
                       </div>
                     ) : null}

@@ -38,7 +38,7 @@ export function ProfileSupportWorkspace({
 
   const submitLabel =
     submitState === "pending"
-      ? langText("Submitting...", "सबमिट करत आहे...")
+      ? langText("Submitting…", "सबमिट करत आहे…")
       : submitState === "success"
         ? langText("Submitted", "सबमिट झाले")
         : langText("Submit Request", "विनंती सबमिट करा");
@@ -99,8 +99,10 @@ export function ProfileSupportWorkspace({
                     <span className="block font-label text-sm font-semibold text-on-surface">
                       {langText("Full Name", "पूर्ण नाव")}
                     </span>
-                    <input
-                      className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+	                    <input
+	                      name="fullName"
+	                      autoComplete="name"
+	                      className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
                       placeholder={langText("Enter your full name", "तुमचे पूर्ण नाव प्रविष्ट करा")}
                       value={formState.fullName}
                       onChange={(event) => updateField("fullName", event.target.value)}
@@ -113,8 +115,10 @@ export function ProfileSupportWorkspace({
                     <span className="block font-label text-sm font-semibold text-on-surface">
                       {langText("Phone Number", "फोन नंबर")}
                     </span>
-                    <input
-                      className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+	                    <input
+	                      name="phone"
+	                      autoComplete="tel"
+	                      className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
                       placeholder="+91 XXXXX XXXXX"
                       value={formState.phone}
                       onChange={(event) => updateField("phone", event.target.value)}
@@ -128,8 +132,11 @@ export function ProfileSupportWorkspace({
                   <span className="block font-label text-sm font-semibold text-on-surface">
                     {langText("Email Address", "ईमेल पत्ता")}
                   </span>
-                  <input
-                    className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+	                  <input
+	                    name="email"
+	                    autoComplete="email"
+	                    spellCheck={false}
+	                    className="w-full rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
                     placeholder="your.email@example.com"
                     value={formState.email}
                     onChange={(event) => updateField("email", event.target.value)}
@@ -142,8 +149,9 @@ export function ProfileSupportWorkspace({
                     {langText("Issue Category", "समस्येचा प्रकार")}
                   </span>
                   <div className="relative">
-                    <select
-                      className="w-full appearance-none rounded-lg border-outline-variant bg-surface-bright px-4 py-3 pr-12 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+	                    <select
+	                      name="category"
+	                      className="w-full appearance-none rounded-lg border-outline-variant bg-surface-bright px-4 py-3 pr-12 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
                       value={formState.category}
                       onChange={(event) => updateField("category", event.target.value)}
                       required
@@ -165,8 +173,9 @@ export function ProfileSupportWorkspace({
                   <span className="block font-label text-sm font-semibold text-on-surface">
                     {langText("Issue Details", "समस्येचा तपशील")}
                   </span>
-                  <textarea
-                    className="w-full resize-none rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
+	                  <textarea
+	                    name="message"
+	                    className="w-full resize-none rounded-lg border-outline-variant bg-surface-bright px-4 py-3 text-on-surface transition-colors focus:border-primary-container focus:ring-primary-container"
                     placeholder={langText("Please describe your issue in detail.", "कृपया आपल्या समस्येचे सविस्तर वर्णन करा.")}
                     rows={5}
                     value={formState.message}
@@ -176,14 +185,14 @@ export function ProfileSupportWorkspace({
                 </label>
 
                 {error ? (
-                  <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error">
-                    {error}
-                  </div>
+	                  <div className="rounded-xl border border-error/20 bg-error-container px-4 py-3 text-sm font-medium text-error" role="alert">
+	                    {error}
+	                  </div>
                 ) : null}
 
                 <div className="pt-2">
                   <button
-                    className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-4 text-lg font-bold text-white shadow-md transition-all hover:shadow-lg md:w-auto ${
+	                    className={`kk-flow-button flex w-full items-center justify-center gap-2 rounded-xl px-8 py-4 text-lg font-bold text-white shadow-md transition-[background-color,box-shadow,opacity] hover:shadow-lg md:w-auto ${
                       submitState === "success" ? "bg-emerald-700" : "bg-[#0f4a38] hover:bg-[#17634c]"
                     }`}
                     type="submit"
@@ -232,7 +241,7 @@ export function ProfileSupportWorkspace({
                 {langText(`Chat with ${supportContact.primaryContactName}`, `${supportContact.primaryContactName} यांच्याशी चॅट करा`)}
               </p>
               <a
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#25D366] px-6 py-3 font-bold text-[#25D366] transition-all hover:bg-[#25D366] hover:text-white"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#25D366] px-6 py-3 font-bold text-[#25D366] transition-[background-color,border-color,box-shadow,color,transform] hover:bg-[#25D366] hover:text-white"
                 href={supportContact.whatsappHref}
               >
                 <span className="material-symbols-outlined">forum</span>
