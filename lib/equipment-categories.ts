@@ -15,7 +15,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Tractors",
     category: "tractor",
     count: 0,
-    coverImage: "/assets/generated/hero_tractor.png",
+    coverImage: "/assets/generated/hero_tractor.webp",
     sampleListingId: "",
   },
   {
@@ -23,7 +23,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Harvesters",
     category: "harvester",
     count: 0,
-    coverImage: "/assets/generated/harvester_action.png",
+    coverImage: "/assets/generated/harvester_action.webp",
     sampleListingId: "",
   },
   {
@@ -31,7 +31,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Implements",
     category: "implement",
     count: 0,
-    coverImage: "/assets/generated/implement_4k.png",
+    coverImage: "/assets/generated/implement_4k.webp",
     sampleListingId: "",
   },
   {
@@ -39,7 +39,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Ploughs",
     category: "plough",
     count: 0,
-    coverImage: "/assets/generated/plough_4k.png",
+    coverImage: "/assets/generated/plough_4k.webp",
     sampleListingId: "",
   },
   {
@@ -47,7 +47,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Sprayers",
     category: "sprayer",
     count: 0,
-    coverImage: "/assets/generated/sprayer.png",
+    coverImage: "/assets/generated/sprayer.webp",
     sampleListingId: "",
   },
   {
@@ -55,7 +55,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Rotavators",
     category: "rotavator",
     count: 0,
-    coverImage: "/assets/generated/rotavator.png",
+    coverImage: "/assets/generated/rotavator.webp",
     sampleListingId: "",
   },
   {
@@ -63,7 +63,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Seeders",
     category: "seeder",
     count: 0,
-    coverImage: "/assets/generated/seed_drill.png",
+    coverImage: "/assets/generated/seed_drill.webp",
     sampleListingId: "",
   },
   {
@@ -71,7 +71,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Threshers",
     category: "thresher",
     count: 0,
-    coverImage: "/assets/generated/thresher_4k.png",
+    coverImage: "/assets/generated/thresher_4k.webp",
     sampleListingId: "",
   },
   {
@@ -79,7 +79,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Pumps",
     category: "pump",
     count: 0,
-    coverImage: "/assets/generated/water_pump.png",
+    coverImage: "/assets/generated/water_pump.webp",
     sampleListingId: "",
   },
   {
@@ -87,7 +87,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Balers",
     category: "baler",
     count: 0,
-    coverImage: "/assets/generated/baler_4k.png",
+    coverImage: "/assets/generated/baler_4k.webp",
     sampleListingId: "",
   },
   {
@@ -95,7 +95,7 @@ export const BASE_EQUIPMENT_CATEGORIES: EquipmentCategorySummary[] = [
     name: "Trolleys",
     category: "trolley",
     count: 0,
-    coverImage: "/assets/generated/trolley.png",
+    coverImage: "/assets/generated/trolley.webp",
     sampleListingId: "",
   },
 ];

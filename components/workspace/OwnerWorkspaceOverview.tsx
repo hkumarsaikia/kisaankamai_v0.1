@@ -183,7 +183,7 @@ export function OwnerWorkspaceOverview({
                   <div key={booking.id} className="flex w-80 items-center gap-4 rounded-xl border border-surface-container-highest bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
                     <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-surface-container">
                       <Image
-                        src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
+                        src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.webp")}
                         alt={booking.listing?.name || "Equipment"}
                         fill
                         sizes="48px"
@@ -310,7 +310,7 @@ function RequestCard({ booking }: { booking: BookingSummary }) {
       <div className="flex flex-col gap-6 md:flex-row">
         <div className="relative h-36 w-full flex-shrink-0 overflow-hidden rounded-xl bg-surface-container md:h-32 md:w-32">
           <Image
-            src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
+            src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.webp")}
             alt={listingName}
             fill
             sizes="(max-width: 768px) 100vw, 128px"

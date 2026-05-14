@@ -124,6 +124,8 @@ export function sortEquipmentByAvailabilityPriceDistance<T extends EquipmentAvai
   pricePerHour: number;
   distanceKm: number;
 }>(items: T[], sortBy: "availability" | "price-asc" | "distance") {
+  const referenceDate = new Date();
+
   return [...items].sort((left, right) => {
     if (sortBy === "price-asc") {
       return left.pricePerHour - right.pricePerHour || left.distanceKm - right.distanceKm;
@@ -134,8 +136,8 @@ export function sortEquipmentByAvailabilityPriceDistance<T extends EquipmentAvai
     }
 
     return (
-      Number(isEquipmentCurrentlyAvailable(right)) -
-        Number(isEquipmentCurrentlyAvailable(left)) ||
+      Number(isEquipmentCurrentlyAvailable(right, referenceDate)) -
+        Number(isEquipmentCurrentlyAvailable(left, referenceDate)) ||
       left.pricePerHour - right.pricePerHour ||
       left.distanceKm - right.distanceKm
     );

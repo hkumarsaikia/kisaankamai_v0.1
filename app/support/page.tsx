@@ -6,7 +6,7 @@ import { formatSubmissionError, postJson } from "@/lib/client/forms";
 import { assetPath } from "@/lib/site";
 import { supportContact } from "@/lib/support-contact";
 
-const supportHeroImage = assetPath("/assets/generated/farmer_handshake.png");
+const supportHeroImage = assetPath("/assets/generated/farmer_handshake.webp");
 
 const supportHtmlCategories = [
   {

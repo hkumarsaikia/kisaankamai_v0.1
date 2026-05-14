@@ -246,6 +246,7 @@ export default async function RentEquipmentResults({
   const items = await getEquipmentList();
   const normalizedQuery = query.trim().toLowerCase();
   const queryTerms = expandQueryTerms(query);
+  const queryTermsArray = Array.from(queryTerms);
 
   const filteredItems = items.filter((item) => {
     const searchableText = [
@@ -262,7 +263,7 @@ export default async function RentEquipmentResults({
 
     const queryMatch =
       !normalizedQuery ||
-      Array.from(queryTerms).some((term) => searchableText.includes(term));
+      queryTermsArray.some((term) => searchableText.includes(term));
 
     return queryMatch && matchesEquipmentLocation(item, location);
   });

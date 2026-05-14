@@ -15,37 +15,39 @@ import { SharedIcon } from "@/components/SharedIcon";
 
 const heroSlides = [
   {
-    src: assetPath("/assets/generated/hero_tractor.png"),
+    src: assetPath("/assets/generated/hero_tractor.webp"),
     mobileSrc: assetPath("/assets/generated/hero_tractor_mobile.webp"),
     altEn: "Tractor ready for field work at sunrise",
     altMr: "सकाळच्या प्रकाशात शेतातील कामासाठी तयार ट्रॅक्टर",
   },
   {
-    src: assetPath("/assets/generated/harvester_action.png"),
+    src: assetPath("/assets/generated/harvester_action.webp"),
     altEn: "Harvester working through a crop field",
     altMr: "पिकाच्या शेतात काम करणारा हार्वेस्टर",
   },
   {
-    src: assetPath("/assets/generated/seed_drill.png"),
+    src: assetPath("/assets/generated/seed_drill.webp"),
     altEn: "Seed drill equipment prepared for the next sowing cycle",
     altMr: "पेरणीसाठी तयार ठेवलेले सीड ड्रिल उपकरण",
   },
   {
-    src: assetPath("/assets/generated/farmer_handshake.png"),
+    src: assetPath("/assets/generated/farmer_handshake.webp"),
     altEn: "Farmer and equipment owner agreeing on a rental",
     altMr: "शेतकरी आणि उपकरण मालक भाडे करार निश्चित करताना",
   },
   {
-    src: assetPath("/assets/generated/modern_farm_tech.png"),
+    src: assetPath("/assets/generated/modern_farm_tech.webp"),
     altEn: "Modern farm machinery staged in a working field",
     altMr: "कामाच्या शेतात उभी आधुनिक कृषी यंत्रसामग्री",
   },
   {
-    src: assetPath("/assets/generated/farm_yard.png"),
+    src: assetPath("/assets/generated/farm_yard.webp"),
     altEn: "Farm equipment yard at dusk",
     altMr: "संध्याकाळी शेतातील यंत्रसामग्रीचे अंगण",
   },
 ] as const;
+
+const categoryCardImageSizes = "(max-width: 767px) calc(100vw - 48px), (max-width: 1023px) calc((100vw - 72px) / 3), 240px";
 
 const serviceAreaTranslations = {
   "Kalwan Area": { en: "Kalwan Area", mr: "कळवण परिसर" },
@@ -249,18 +251,58 @@ export default function Home() {
   }));
 
   useEffect(() => {
-    let intervalId: number | undefined;
-    const startDelay = window.setTimeout(() => {
-      intervalId = window.setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
-      }, 6000);
-    }, 12000);
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (media.matches) {
+      return;
+    }
 
-    return () => {
-      window.clearTimeout(startDelay);
+    let intervalId: number | undefined;
+    let startDelay: number | undefined;
+
+    const stopCarousel = () => {
+      if (startDelay) {
+        window.clearTimeout(startDelay);
+        startDelay = undefined;
+      }
+
       if (intervalId) {
         window.clearInterval(intervalId);
+        intervalId = undefined;
       }
+    };
+
+    const startCarousel = () => {
+      if (document.visibilityState === "hidden" || intervalId || startDelay) {
+        return;
+      }
+
+      startDelay = window.setTimeout(() => {
+        startDelay = undefined;
+        if (document.visibilityState === "hidden") {
+          return;
+        }
+
+        intervalId = window.setInterval(() => {
+          setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+        }, 6000);
+      }, 12000);
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        stopCarousel();
+        return;
+      }
+
+      startCarousel();
+    };
+
+    startCarousel();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      stopCarousel();
     };
   }, []);
 
@@ -378,7 +420,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
               {/* Tractors */}
               <Link href="/rent-equipment?query=tractors" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
-                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("High-horsepower tractor parked in a vibrant green farm field", "हिरव्यागार शेतात उभा असलेला उच्च क्षमतेचा ट्रॅक्टर")} src={assetPath("/assets/generated/hero_tractor.png")} loading="lazy" decoding="async" />
+                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("High-horsepower tractor parked in a vibrant green farm field", "हिरव्यागार शेतात उभा असलेला उच्च क्षमतेचा ट्रॅक्टर")} src={assetPath("/assets/generated/hero_tractor.webp")} loading="lazy" decoding="async" sizes={categoryCardImageSizes} />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.tractors")}</h3>
@@ -389,7 +431,7 @@ export default function Home() {
               </Link>
               {/* Harvesters */}
               <Link href="/rent-equipment?query=harvesters" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
-                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Combine harvester working through a wheat field", "गव्हाच्या शेतात काम करणारा कॉम्बाईन हार्वेस्टर")} src={assetPath("/assets/generated/harvester_action.png")} loading="lazy" decoding="async" />
+                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Combine harvester working through a wheat field", "गव्हाच्या शेतात काम करणारा कॉम्बाईन हार्वेस्टर")} src={assetPath("/assets/generated/harvester_action.webp")} loading="lazy" decoding="async" sizes={categoryCardImageSizes} />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.harvesters")}</h3>
@@ -400,7 +442,7 @@ export default function Home() {
               </Link>
               {/* Implements */}
               <Link href="/rent-equipment?query=implements" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
-                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Agricultural implements including a rotavator and seed drill", "रोटाव्हेटर आणि सीड ड्रिलसह कृषी अवजारे")} src={assetPath("/assets/generated/implement_4k.png")} loading="lazy" decoding="async" />
+                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Agricultural implements including a rotavator and seed drill", "रोटाव्हेटर आणि सीड ड्रिलसह कृषी अवजारे")} src={assetPath("/assets/generated/implement_4k.webp")} loading="lazy" decoding="async" sizes={categoryCardImageSizes} />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.implements")}</h3>
@@ -411,7 +453,7 @@ export default function Home() {
               </Link>
               {/* Ploughs */}
               <Link href="/rent-equipment?query=ploughs" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
-                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Plough working through prepared soil", "तयार जमिनीत चालणारा नांगर")} src={assetPath("/assets/generated/plough_4k.png")} loading="lazy" decoding="async" />
+                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Plough working through prepared soil", "तयार जमिनीत चालणारा नांगर")} src={assetPath("/assets/generated/plough_4k.webp")} loading="lazy" decoding="async" sizes={categoryCardImageSizes} />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.ploughs")}</h3>
@@ -422,7 +464,7 @@ export default function Home() {
               </Link>
               {/* Sprayers */}
               <Link href="/rent-equipment?query=sprayers" className="group relative aspect-square overflow-hidden rounded-2xl shadow-lg cursor-pointer block">
-                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Crop sprayer ready for field coverage", "शेतात फवारणीसाठी तयार स्प्रेयर")} src={assetPath("/assets/generated/sprayer.png")} loading="lazy" decoding="async" />
+                <ContentImage className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={langText("Crop sprayer ready for field coverage", "शेतात फवारणीसाठी तयार स्प्रेयर")} src={assetPath("/assets/generated/sprayer.webp")} loading="lazy" decoding="async" sizes={categoryCardImageSizes} />
                 <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/75 via-black/35 to-transparent"></div>
                 <div className="absolute bottom-0 left-0 p-6 w-full">
                   <h3 className="text-xl font-bold text-white mb-2">{t("home.sprayers")}</h3>
@@ -443,7 +485,7 @@ export default function Home() {
                 <ContentImage
                   className="rounded-[2.5rem] shadow-2xl relative z-10"
                   alt={langText("Indian farmer leaning against a tractor with pride", "अभिमानाने ट्रॅक्टरला टेकून उभा भारतीय शेतकरी")}
-                  src={assetPath("/assets/generated/hero_tractor.png")}
+                  src={assetPath("/assets/generated/hero_tractor.webp")}
                   loading="lazy"
                   decoding="async"
                   sizes="(max-width: 768px) 342px, 50vw"
@@ -611,7 +653,7 @@ export default function Home() {
         {/* Final CTA */}
         <section className="py-24 bg-primary text-white overflow-hidden relative dark:bg-primary-container">
           <div className="absolute inset-0 z-0">
-            <ContentImage className="w-full h-full object-cover" alt={langText("Tractors parked in a rural equipment yard at dusk", "संध्याकाळी ग्रामीण यंत्रसामग्रीच्या अंगणात उभे असलेले ट्रॅक्टर")} src={assetPath("/assets/generated/farm_yard.png")} loading="lazy" decoding="async" />
+            <ContentImage className="w-full h-full object-cover" alt={langText("Tractors parked in a rural equipment yard at dusk", "संध्याकाळी ग्रामीण यंत्रसामग्रीच्या अंगणात उभे असलेले ट्रॅक्टर")} src={assetPath("/assets/generated/farm_yard.webp")} loading="lazy" decoding="async" />
             <div className="kk-banner-image-overlay" />
           </div>
           <div className="max-w-4xl mx-auto px-6 text-center relative z-10">

@@ -41,7 +41,12 @@ test("page swaps and reveal animations use shared flow motion tokens", async () 
   assert.match(navProvider, /setTimeout\(patchHistory,\s*250\)/);
   assert.doesNotMatch(globals, /\.kk-route-transition-veil::after/);
   assert.doesNotMatch(globals, /@keyframes kk-route-orbit/);
-  assert.match(routeShell, /y:\s*prefersReducedMotion \? 0 : 10/);
+  assert.doesNotMatch(routeShell, /framer-motion/);
+  assert.match(routeShell, /kk-route-shell-enter/);
+  assert.match(globals, /\.kk-route-shell-enter\s*\{/);
+  assert.match(globals, /@keyframes kk-route-shell-enter/);
+  assert.match(globals, /transform:\s*translate3d\(0,\s*10px,\s*0\)/);
+  assert.match(globals, /@media\s*\(prefers-reduced-motion:\s*reduce\)[\s\S]*\.kk-route-shell-enter/);
   assert.match(scrollReveal, /FLOW_EASE/);
   assert.match(scrollReveal, /scale:\s*0\.985/);
   assert.match(navTransition, /PAGE_ENTER_DURATION_SECONDS\s*=\s*0\.42/);

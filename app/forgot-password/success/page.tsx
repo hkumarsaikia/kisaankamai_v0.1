@@ -14,7 +14,7 @@ export default function PasswordResetSuccessPage() {
           <img
             alt="Farm equipment ready in a green field"
             className="h-full w-full object-cover"
-            src={assetPath("/assets/generated/modern_farm_tech.png")}
+            src={assetPath("/assets/generated/modern_farm_tech.webp")}
           />
           <div className="kk-dark-image-overlay" />
           <div className="absolute inset-0 bg-gradient-to-br from-white/88 via-white/72 to-primary-container/20 backdrop-blur-[2px] dark:from-surface/88 dark:via-surface/78 dark:to-primary-container/25" />

@@ -7,17 +7,15 @@ import { LanguageProvider } from "@/components/LanguageContext";
 import { AuthProvider } from "@/components/AuthContext";
 import { BackToTop } from "@/components/BackToTop";
 import { BuildFreshnessMonitor } from "@/components/BuildFreshnessMonitor";
+import { DeferredPerformanceMonitor } from "@/components/DeferredPerformanceMonitor";
 import { DepthMotion } from "@/components/DepthMotion";
 import { NavigationTransitionProvider } from "@/components/NavigationTransitionProvider";
-import { PerformanceMonitor } from "@/components/PerformanceMonitor";
 import { SingleLanguageRuntime } from "@/components/SingleLanguageRuntime";
 import { SiteChrome } from "@/components/SiteChrome";
 import { DEFAULT_LANGUAGE, type Language } from "@/lib/i18n";
 import { getBuildRevision } from "@/lib/build-info";
 import type { LocalSession } from "@/lib/local-data/types";
 import { DEFAULT_SHARE_DESCRIPTION, getDefaultShareImageUrl, getMetadataBaseUrl, SITE_DOMAIN, SITE_NAME } from "@/lib/site-metadata";
-import { Suspense } from "react";
-import "leaflet/dist/leaflet.css";
 import "./globals.css";
 
 const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope", display: "swap" });
@@ -269,9 +267,7 @@ export default async function RootLayout({
                   {children}
                 </SiteChrome>
               </NavigationTransitionProvider>
-              <Suspense fallback={null}>
-                <PerformanceMonitor />
-              </Suspense>
+              <DeferredPerformanceMonitor />
             </AuthProvider>
             <BackToTop />
           </LanguageProvider>

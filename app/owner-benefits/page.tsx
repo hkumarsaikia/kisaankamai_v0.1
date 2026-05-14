@@ -8,8 +8,8 @@ import { BASE_EQUIPMENT_CATEGORIES } from "@/lib/equipment-categories";
 import { getLocalizedDistrictLabel } from "@/lib/localized-market-labels";
 import { assetPath } from "@/lib/site";
 
-const ownerHeroImage = assetPath("/assets/generated/farm_yard.png");
-const ownerMachineImage = assetPath("/assets/generated/hero_tractor.png");
+const ownerHeroImage = assetPath("/assets/generated/farm_yard.webp");
+const ownerMachineImage = assetPath("/assets/generated/hero_tractor.webp");
 
 const categoryDetails: Record<
   string,

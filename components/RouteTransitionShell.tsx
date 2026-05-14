@@ -1,12 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { motion, useReducedMotion } from "framer-motion";
-import {
-  PAGE_ENTER_DURATION_SECONDS,
-  PREMIUM_EASE,
-  REDUCED_DURATION_SECONDS,
-} from "@/lib/client/navigationTransition";
 
 export function RouteTransitionShell({
   children,
@@ -18,24 +12,17 @@ export function RouteTransitionShell({
   enabled?: boolean;
 }) {
   const pathname = usePathname();
-  const prefersReducedMotion = useReducedMotion();
 
   if (!enabled) {
     return <div className={className}>{children}</div>;
   }
 
   return (
-    <motion.div
+    <div
       key={pathname}
-      className={className}
-      initial={{ opacity: prefersReducedMotion ? 0.94 : 0.86, y: prefersReducedMotion ? 0 : 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: prefersReducedMotion ? REDUCED_DURATION_SECONDS : PAGE_ENTER_DURATION_SECONDS,
-        ease: PREMIUM_EASE,
-      }}
+      className={className ? `${className} kk-route-shell-enter` : "kk-route-shell-enter"}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

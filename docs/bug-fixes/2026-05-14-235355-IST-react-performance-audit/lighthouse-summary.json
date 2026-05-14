@@ -1,0 +1,62 @@
+{
+  "lighthouse-home-mobile": {
+    "url": "http://localhost:3100/",
+    "fetchTime": "2026-05-14T18:24:01.600Z",
+    "scores": {
+      "performance": 81,
+      "accessibility": 98,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "metrics": {
+      "firstContentfulPaint": "1.5 s",
+      "largestContentfulPaint": "4.8 s",
+      "totalBlockingTime": "120 ms",
+      "cumulativeLayoutShift": "0",
+      "speedIndex": "1.5 s",
+      "serverResponseTime": "Root document took 20 ms",
+      "totalByteWeight": "Total size was 1,102 KiB",
+      "imageDeliverySavings": "Est savings of 352 KiB"
+    }
+  },
+  "lighthouse-home-mobile-after": {
+    "url": "http://localhost:3101/",
+    "fetchTime": "2026-05-14T18:28:45.414Z",
+    "scores": {
+      "performance": 82,
+      "accessibility": 98,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "metrics": {
+      "firstContentfulPaint": "1.5 s",
+      "largestContentfulPaint": "4.8 s",
+      "totalBlockingTime": "80 ms",
+      "cumulativeLayoutShift": "0",
+      "speedIndex": "1.5 s",
+      "serverResponseTime": "Root document took 130 ms",
+      "totalByteWeight": "Total size was 703 KiB",
+      "imageDeliverySavings": "Est savings of 38 KiB"
+    }
+  },
+  "lighthouse-rent-equipment-mobile": {
+    "url": "http://localhost:3100/rent-equipment",
+    "fetchTime": "2026-05-14T18:24:31.486Z",
+    "scores": {
+      "performance": 85,
+      "accessibility": 98,
+      "best-practices": 100,
+      "seo": 100
+    },
+    "metrics": {
+      "firstContentfulPaint": "1.7 s",
+      "largestContentfulPaint": "4.3 s",
+      "totalBlockingTime": "30 ms",
+      "cumulativeLayoutShift": "0",
+      "speedIndex": "1.7 s",
+      "serverResponseTime": "Root document took 20 ms",
+      "totalByteWeight": "Total size was 544 KiB",
+      "imageDeliverySavings": null
+    }
+  }
+}

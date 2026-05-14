@@ -856,6 +856,10 @@
     background: rgba(166, 207, 189, 0.08);
   }
 
+  .kk-route-shell-enter {
+    animation: kk-route-shell-enter 420ms var(--kk-ease-enter) both;
+  }
+
   .kk-flow-button {
     @apply relative isolate overflow-hidden transition-[transform,box-shadow,filter,background-color] duration-300 ease-out;
   }
@@ -1277,6 +1281,17 @@
   }
 }
 
+@keyframes kk-route-shell-enter {
+  0% {
+    opacity: 0.86;
+    transform: translate3d(0, 10px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @keyframes kk-profile-dropdown-exit {
   0% {
     opacity: 1;
@@ -1476,7 +1491,8 @@
   .kk-profile-dropdown-panel,
   .kk-profile-notification-row,
   .kk-route-transition-veil,
-  .kk-route-transition-bar::before {
+  .kk-route-transition-bar::before,
+  .kk-route-shell-enter {
     transform: none;
   }
 }

@@ -46,7 +46,7 @@ const recommendedEquipment = [
     price: "₹800",
     unit: "/ acre",
     href: "/rent-equipment?query=seeders",
-    image: assetPath("/assets/generated/seed_drill.png"),
+    image: assetPath("/assets/generated/seed_drill.webp"),
   },
   {
     title: "Kubota Harvester DC-68G",
@@ -54,7 +54,7 @@ const recommendedEquipment = [
     price: "₹2,200",
     unit: "/ hr",
     href: "/rent-equipment?query=harvesters",
-    image: assetPath("/assets/generated/harvester_action.png"),
+    image: assetPath("/assets/generated/harvester_action.webp"),
   },
   {
     title: "DJI Agras Drone T30",
@@ -62,7 +62,7 @@ const recommendedEquipment = [
     price: "₹450",
     unit: "/ acre",
     href: "/rent-equipment?query=sprayers",
-    image: assetPath("/assets/generated/sprayer.png"),
+    image: assetPath("/assets/generated/sprayer.webp"),
   },
 ];
 
@@ -176,7 +176,7 @@ export function RenterWorkspaceOverview({
                   <article key={booking.id} className="group overflow-hidden rounded-2xl border border-outline-variant/50 bg-white shadow-sm transition-shadow hover:shadow-xl hover:shadow-primary-container/5 dark:border-slate-800 dark:bg-slate-900">
                     <div className="relative h-44">
                       <Image
-                        src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")}
+                        src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.webp")}
                         alt={booking.listing?.name || "Equipment"}
                         fill
                         sizes="(max-width: 768px) 100vw, 320px"
@@ -278,7 +278,7 @@ export function RenterWorkspaceOverview({
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
                               <div className="relative h-10 w-10 overflow-hidden rounded-lg bg-surface-container">
-                                <Image src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.png")} alt={booking.listing?.name || "Equipment"} fill sizes="40px" className="object-cover" />
+                                <Image src={booking.listing?.coverImage || assetPath("/assets/generated/hero_tractor.webp")} alt={booking.listing?.name || "Equipment"} fill sizes="40px" className="object-cover" />
                               </div>
                               <div>
                                 <p className="text-sm font-bold text-on-surface">{booking.listing?.name || langText("Equipment", "उपकरण")}</p>
