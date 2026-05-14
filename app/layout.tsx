@@ -31,6 +31,7 @@ const mukta = Mukta({
 });
 const LANGUAGE_COOKIE_NAME = "kk_language";
 const SESSION_COOKIE_NAME = "kisan_kamai_session";
+const CRAWLER_HEADER_NAME = "x-kisan-kamai-crawler";
 function normalizeLanguage(value: string | undefined): Language {
   return value === "en" || value === "mr" ? value : DEFAULT_LANGUAGE;
 }
@@ -201,9 +202,11 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const headerStore = await headers();
   const languageCookie = cookieStore.get(LANGUAGE_COOKIE_NAME)?.value;
+  const crawlerRequest =
+    headerStore.get(CRAWLER_HEADER_NAME) === "1" || isCrawlerUserAgent(headerStore.get("user-agent"));
   const initialLanguage = languageCookie
     ? normalizeLanguage(languageCookie)
-    : isCrawlerUserAgent(headerStore.get("user-agent"))
+    : crawlerRequest
       ? "en"
       : DEFAULT_LANGUAGE;
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;

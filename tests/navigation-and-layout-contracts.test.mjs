@@ -273,7 +273,18 @@ test("list equipment redirects unauthenticated requests before the streaming fal
   assert.equal(loggedInLoginResponse.headers.get("location"), "https://www.kisankamai.com/owner-profile");
   assert.equal(loggedInRegisterResponse.status, 307);
   assert.equal(loggedInRegisterResponse.headers.get("location"), "https://www.kisankamai.com/renter-profile");
-  assert.deepEqual(config.matcher, ["/list-equipment", "/login", "/register", "/register/:path*", "/forgot-password/:path*"]);
+  const crawlerResponse = proxy(
+    new NextRequest("https://www.kisankamai.com/", {
+      headers: {
+        "user-agent": "Googlebot/2.1",
+      },
+    })
+  );
+
+  assert.equal(crawlerResponse.headers.get("x-middleware-request-x-kisan-kamai-crawler"), "1");
+  assert.deepEqual(config.matcher, [
+    "/((?!_next/static|_next/image|assets|brand|fonts|favicon.ico|manifest.webmanifest|robots.txt|sitemap.xml|api).*)",
+  ]);
 });
 
 test("base rent-equipment source keeps the avail-eq style controls and pagination", async () => {

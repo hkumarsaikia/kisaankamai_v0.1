@@ -6,6 +6,7 @@
 - Kept workspace feedback submissions on the same form after success so deleted success routes are not opened.
 - Removed the visible owner/renter profile label under the workspace logo and from the workspace header eyebrow.
 - Kept normal uncookied browser visits defaulted to Marathi while defaulting uncookied crawler/social-preview requests to English so Google and social snippets use English metadata and page language.
+- Added a proxy-level crawler marker header so App Hosting forwards crawler/social-preview intent into the layout render consistently.
 - Exposed stronger share-preview metadata for WhatsApp-style scrapers: `image_src`, `thumbnail`, `og:image:url`, and `og:locale`.
 - Switched `/favicon.ico` to the cart PNG mark and adjusted icon metadata so Google can pick up the cart favicon.
 - Removed the header logo subtitle, tightened the mobile header logo/action layout to prevent overlap, and made the footer wordmark transparent so the footer background shows through.
@@ -27,6 +28,7 @@
 - `lib/i18n.ts`
 - `lib/site-metadata.tsx`
 - `next.config.mjs`
+- `proxy.js`
 - Profile workspace, navigation, dropdown icon, and SEO contract tests.
 
 ## Verification
