@@ -87,8 +87,12 @@ Only run the rollout command after `npm run verify` and the launch gate checks p
 Generic Discord webhook sender:
 
 ```bash
-npm run discord:notify -- --channel ops --title "Kisan Kamai" --summary "Backfill completed" --status success
+npm run discord:notify -- --title "Kisan Kamai" --summary "Backfill completed" --status success
 ```
+
+The CLI defaults to the `github` channel, which is the correct target for
+developer updates, release notes, repository updates, and deployment summaries
+unless a more specific non-backend channel has been configured.
 
 Named channels must use channel-specific webhook environment variables. The
 helper intentionally does not fall back from `--channel release`, `--channel
@@ -145,6 +149,10 @@ Backend activity notifications:
 - Runtime code uses `DISCORD_WEBHOOK_BACKEND_URL` for user registration,
   login/session, profile updates, listing changes, booking changes, and public
   form submissions.
+- Do not use `--channel backend` for developer updates, release notes, deploy
+  notes, or repo-sync messages. The CLI blocks manual backend-channel sends
+  unless `--allow-backend-channel` is passed for an intentional backend webhook
+  test.
 - Keep the backend webhook as an App Hosting secret or local-only environment
   variable. Do not commit real webhook URLs to the repository.
 - In App Hosting, keep `DISCORD_WEBHOOK_BACKEND_URL` runtime-only. The backend

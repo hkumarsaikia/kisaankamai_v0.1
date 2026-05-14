@@ -41,6 +41,9 @@ test("Discord tooling supports env-driven multi-webhook channels", async () => {
   );
   assert.match(notifySource, /Named channels do not use DISCORD_WEBHOOK_URL fallback/);
   assert.doesNotMatch(notifySource, /process\.env\.DISCORD_WEBHOOK_URL \|\| ""/);
+  assert.match(notifySource, /rawChannels\.length \? rawChannels : \["github"\]/);
+  assert.match(notifySource, /allow-backend-channel/);
+  assert.match(notifySource, /reserved for live website backend activity/);
   assert.match(notifySource, /--channel/);
   assert.match(notifySource, /sendDiscordWebhookToChannels/);
 });
