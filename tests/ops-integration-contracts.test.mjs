@@ -71,6 +71,14 @@ test("backend activity notifications are env-driven and never commit a real webh
   assert.match(backendActivity, /DISCORD_WEBHOOK_BACKEND_NOTIFICATION_URL/);
   assert.match(backendActivity, /BACKEND_DISCORD_TIMEOUT_MS\s*=\s*2200/);
   assert.match(backendActivity, /captureServerException/);
+  assert.match(backendActivity, /EVENT_LABELS/);
+  assert.match(backendActivity, /humanizeFieldName/);
+  assert.match(backendActivity, /formatTechnicalId/);
+  assert.match(backendActivity, /name:\s*"Activity"/);
+  assert.match(backendActivity, /name:\s*"Account Ref"/);
+  assert.match(backendActivity, /Request Details/);
+  assert.doesNotMatch(backendActivity, /normalizeField\(\{ name: "Event"/);
+  assert.doesNotMatch(backendActivity, /JSON\.stringify\(value, null, 2\)/);
   assert.match(firebaseData, /event:\s*"listing\.created"/);
   assert.match(firebaseData, /event:\s*"listing\.updated"/);
   assert.match(firebaseData, /event:\s*"listing\.deleted"/);

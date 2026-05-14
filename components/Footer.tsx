@@ -7,6 +7,41 @@ import { SharedIcon } from "@/components/SharedIcon";
 import { postJson } from "@/lib/client/forms";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
+function FooterWordmark() {
+  return (
+    <svg
+      className="h-16 w-64 max-w-full"
+      viewBox="0 0 800 400"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-labelledby="kk-footer-wordmark-title"
+    >
+      <title id="kk-footer-wordmark-title">Kisan Kamai</title>
+      <defs>
+        <linearGradient id="kkFooterEmeraldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#10b981" stopOpacity="1" />
+          <stop offset="100%" stopColor="#06b6d4" stopOpacity="1" />
+        </linearGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="#002a1b" />
+      <text
+        x="50%"
+        y="55%"
+        textAnchor="middle"
+        fontFamily="Manrope, sans-serif"
+        fontSize="120"
+        fontWeight="700"
+        fill="none"
+        stroke="url(#kkFooterEmeraldGradient)"
+        strokeWidth="1.5"
+        letterSpacing="-2"
+      >
+        Kisan Kamai
+      </text>
+    </svg>
+  );
+}
+
 export const Footer = () => {
   const { t, langText } = useLanguage();
   const [email, setEmail] = useState("");
@@ -74,12 +109,10 @@ export const Footer = () => {
         <div className="col-span-1 md:col-span-1">
           <Link 
             href="/" 
-            className="mb-8 block transition-transform hover:-translate-y-1"
+            className="mb-8 block w-fit transition-transform hover:-translate-y-1"
             aria-label="Kisan Kamai"
           >
-            <span className="font-headline text-[2.75rem] font-black leading-none tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_#00a870]">
-              Kisan Kamai
-            </span>
+            <FooterWordmark />
           </Link>
           <p className="text-slate-400 leading-relaxed mb-6 font-normal">
             {t("Footer.empowering_indian_farmers_through_shared_technology_and_machinery_access_rooted_in_trust")}

@@ -212,16 +212,12 @@ export default function VerifyOtpPage() {
                   : undefined
             }
             bannerDescription={
-              !PHONE_RESET_OTP_ENABLED
-                ? undefined
-                : resendAvailableIn === 0 && !error
-                  ? langText("Use resend to receive a fresh reset code.", "नवीन रीसेट कोड मिळवण्यासाठी पुन्हा पाठवा निवडा.")
-                  : undefined
+              undefined
             }
             bannerTone={!PHONE_RESET_OTP_ENABLED ? "error" : "info"}
             view={isVerifying ? "loading" : "entry"}
           />
-          <div id="kk-reset-recaptcha" className="hidden" />
+          <div id="kk-reset-recaptcha" className="kk-recaptcha-slot" aria-hidden="true" />
         </div>
       </main>
     </div>

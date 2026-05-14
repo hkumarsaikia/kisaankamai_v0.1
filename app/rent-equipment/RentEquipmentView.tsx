@@ -201,8 +201,8 @@ function NoEquipmentAvailable({
   const { langText } = useLanguage();
 
   return (
-    <div className="flex min-h-[calc(100svh-5rem)] flex-col bg-surface pb-20 pt-[5.5rem] text-on-surface md:pb-24 md:pt-[5.5rem]">
-      <div className="mx-auto mb-6 w-full max-w-4xl px-4 md:px-8">
+    <div className="kk-rent-empty-shell flex min-h-[calc(100svh-14rem)] flex-col bg-surface pb-8 pt-[6.25rem] text-on-surface md:pb-10">
+      <div className="mx-auto mb-4 w-full max-w-4xl px-4 md:px-8">
         <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-2 shadow-sm md:p-3">
           <SearchForm
             location={location}
@@ -215,17 +215,17 @@ function NoEquipmentAvailable({
         </div>
       </div>
 
-      <section className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center px-4 pb-8 text-center md:px-8">
+      <section className="mx-auto flex w-full max-w-4xl flex-col items-center px-4 pb-8 text-center md:px-8">
         <div className="pointer-events-none absolute -z-10 flex items-center justify-center opacity-5">
           <span className="material-symbols-outlined text-[260px] text-primary">agriculture</span>
         </div>
-        <div className="mb-6 flex h-24 w-24 items-center justify-center rounded-full border border-outline-variant/30 bg-surface-container-low shadow-sm">
+        <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full border border-outline-variant/30 bg-surface-container-low shadow-sm">
           <span className="material-symbols-outlined text-4xl text-secondary">search_off</span>
         </div>
-        <h1 className="mb-4 font-headline text-4xl font-bold tracking-tight text-on-surface md:text-5xl">
+        <h1 className="mb-3 font-headline text-3xl font-bold tracking-tight text-on-surface md:text-5xl">
           {langText("No equipment available right now", "सध्या कोणतीही उपकरणे उपलब्ध नाहीत")}
         </h1>
-        <p className="mx-auto mb-7 max-w-2xl text-lg leading-relaxed text-on-surface-variant">
+        <p className="mx-auto mb-6 max-w-2xl text-base leading-relaxed text-on-surface-variant md:text-lg">
           {langText(
             "We could not find exact matches for your search in the selected area. Inventory changes daily, and our support team can help locate what you need manually.",
             "निवडलेल्या भागात तुमच्या शोधाशी जुळणारी उपकरणे सापडली नाहीत. यादी दररोज बदलते आणि आमची सपोर्ट टीम तुम्हाला आवश्यक उपकरण शोधण्यात मदत करू शकते."
@@ -464,8 +464,8 @@ export default function RentEquipmentView({
 
   if (view === "empty") {
     return (
-      <div className="bg-surface text-on-surface pt-20 pb-8 md:pt-20 md:pb-10">
-        <div className="max-w-7xl mx-auto px-6 mb-6">
+      <div className="kk-rent-empty-legacy bg-surface pb-8 pt-[6.25rem] text-on-surface md:pb-10">
+        <div className="max-w-7xl mx-auto px-6 mb-4">
           <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-outline-variant">
             <SearchForm
               location={location}
@@ -477,8 +477,8 @@ export default function RentEquipmentView({
           </div>
         </div>
 
-        <section className="max-w-7xl mx-auto px-6 mb-12">
-          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-12 md:p-20 text-center flex flex-col items-center">
+        <section className="max-w-7xl mx-auto px-6 mb-8">
+          <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant p-8 md:p-12 text-center flex flex-col items-center">
             <div className="w-24 h-24 bg-surface-container-low rounded-full flex items-center justify-center mb-6">
               <SharedIcon name="agriculture" className="h-16 w-16 text-primary opacity-35" />
             </div>
@@ -499,7 +499,7 @@ export default function RentEquipmentView({
           </div>
         </section>
 
-        <section className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        <section className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 mb-10">
           <div className="bg-primary-container text-white rounded-2xl p-8 flex flex-col justify-between relative overflow-hidden">
             <div className="relative z-10">
               <h3 className="text-2xl font-bold mb-4 font-headline">
@@ -567,9 +567,9 @@ export default function RentEquipmentView({
 
   if (view === "query-category") {
     return (
-      <div className="bg-background text-on-background antialiased min-h-screen flex flex-col pt-20 md:pt-20">
-        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-6 flex flex-col gap-6">
-          <div className="flex flex-col gap-4">
+      <div className="kk-rent-query-shell flex min-h-screen flex-col bg-background pt-[6.25rem] text-on-background antialiased">
+        <main className="flex-1 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-5 flex flex-col gap-5">
+          <div className="flex flex-col gap-3">
             <h1 className="text-2xl md:text-3xl font-bold text-on-background font-headline tracking-tight">
               {title}
             </h1>
@@ -582,7 +582,7 @@ export default function RentEquipmentView({
                 className="flex flex-col md:flex-row items-center gap-2"
               />
             </div>
-            <div className="flex overflow-x-auto pb-2 gap-3 hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex overflow-x-auto pb-1 gap-3 hide-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0">
               {categorySummaries.map((category) => (
                 <Link
                   key={category.slug}
@@ -605,7 +605,7 @@ export default function RentEquipmentView({
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-b border-surface-variant pb-4 pt-2">
+          <div className="flex items-center justify-between border-b border-surface-variant pb-3 pt-1">
             <p className="text-on-surface font-medium text-base font-body">
               <span className="font-bold">{querySummary}</span>
               <span className="text-sm text-on-surface-variant block mt-0.5">
@@ -621,7 +621,7 @@ export default function RentEquipmentView({
             </div>
           </div>
 
-          <div className="flex flex-col gap-6 pb-12">
+          <div className="flex flex-col gap-5 pb-10">
             {sortedItems.map((item, index) => (
               <EquipmentCard key={item.id} item={item} compact priorityImage={index === 0} />
             ))}
@@ -632,10 +632,10 @@ export default function RentEquipmentView({
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background pt-20 text-on-background antialiased md:pt-20">
-      <main className="mx-auto flex w-full max-w-[1200px] flex-1 px-4 py-0 sm:px-6 lg:px-8">
-        <div className="w-full rounded-b-xl bg-surface-container-lowest p-8 shadow-sm">
-          <div className="mb-8 flex flex-col gap-6">
+    <div className="kk-rent-available-shell flex min-h-screen flex-col bg-background pt-[6.25rem] text-on-background antialiased">
+      <main className="mx-auto flex w-full max-w-[1200px] flex-1 px-4 py-4 sm:px-6 lg:px-8">
+        <div className="w-full rounded-xl bg-surface-container-lowest p-5 shadow-sm sm:p-6">
+          <div className="mb-6 flex flex-col gap-5">
             <div className="available-search-panel rounded-xl border border-outline-variant bg-surface-container p-2 shadow-sm">
               <SearchForm
                 location={location}

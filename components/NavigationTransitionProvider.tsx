@@ -96,7 +96,7 @@ export function NavigationTransitionProvider({ children }: { children: ReactNode
 
       const targetPath = getTransitionTarget(String(url), window.location.pathname);
       if (targetPath) {
-        beginNavigation(targetPath);
+        window.setTimeout(() => beginNavigation(targetPath), 0);
       }
     };
 

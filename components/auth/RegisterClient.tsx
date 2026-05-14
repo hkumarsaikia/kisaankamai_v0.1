@@ -171,7 +171,7 @@ export function RegisterClient({ workspaceOptions }: RegisterClientProps) {
               <input className="kk-input" value={otp} onChange={(event) => setOtp(event.target.value)} />
             </FormField>
           ) : null}
-          <div id="kk-register-recaptcha" className="hidden" />
+          <div id="kk-register-recaptcha" className="kk-recaptcha-slot" aria-hidden="true" />
           {error ? <FormNotice tone="error">{error}</FormNotice> : null}
           <FormActions>
             <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">

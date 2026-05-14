@@ -35,6 +35,7 @@ test("page swaps and reveal animations use shared flow motion tokens", async () 
   assert.match(navProvider, /window\.history\.pushState/);
   assert.match(navProvider, /window\.history\.replaceState/);
   assert.match(navProvider, /getTransitionTarget\(String\(url\), window\.location\.pathname\)/);
+  assert.match(navProvider, /window\.setTimeout\(\(\) => beginNavigation\(targetPath\), 0\)/);
   assert.match(navProvider, /__kkNavigationTransitionPatched/);
   assert.match(navProvider, /requestAnimationFrame\(patchHistory\)/);
   assert.match(navProvider, /setTimeout\(patchHistory,\s*250\)/);
@@ -112,7 +113,9 @@ test("workspace booking enrichment fetches only related listing and profile reco
 test("empty rent-equipment pages reserve footer separation", async () => {
   const rentView = await readSource("../app/rent-equipment/RentEquipmentView.tsx");
 
-  assert.match(rentView, /min-h-\[calc\(100svh-5rem\)\]/);
-  assert.match(rentView, /md:pb-24/);
-  assert.match(rentView, /flex-1 flex-col items-center/);
+  assert.match(rentView, /kk-rent-empty-shell/);
+  assert.match(rentView, /min-h-\[calc\(100svh-14rem\)\]/);
+  assert.match(rentView, /pb-8 pt-\[6\.25rem\]/);
+  assert.match(rentView, /flex-col items-center/);
+  assert.doesNotMatch(rentView, /flex-1 flex-col items-center/);
 });

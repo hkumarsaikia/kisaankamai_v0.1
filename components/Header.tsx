@@ -61,8 +61,8 @@ export const Header = () => {
               aria-label={t("common.brand")}
             >
               <BrandLogo
-                markClassName="h-10 w-10 sm:h-11 sm:w-11"
-                textClassName="[&>span:first-child]:text-[1.1rem] sm:[&>span:first-child]:text-[1.25rem] [&>span:last-child]:text-[0.44rem] sm:[&>span:last-child]:text-[0.49rem]"
+                markClassName="h-12 w-12 sm:h-14 sm:w-14"
+                textClassName="[&>span:first-child]:text-[1.22rem] sm:[&>span:first-child]:text-[1.42rem] [&>span:last-child]:text-[0.42rem] sm:[&>span:last-child]:text-[0.48rem]"
               />
             </Link>
             <div className="hidden lg:flex items-center gap-6 ml-4">

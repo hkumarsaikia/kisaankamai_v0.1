@@ -552,6 +552,21 @@
     --kk-logo-surface: #ffffff;
   }
 
+  .kk-recaptcha-slot,
+  .grecaptcha-badge {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    clip-path: inset(50%) !important;
+    border: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
   .kk-brand-logo-inverse {
     --kk-logo-charcoal: #020617;
     --kk-logo-surface: #f8fafc;

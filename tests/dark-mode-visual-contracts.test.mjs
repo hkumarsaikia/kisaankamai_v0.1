@@ -25,6 +25,11 @@ test("auth pages use shared dark-aware surfaces without the verify OTP vignette 
   }
   assert.match(verifyOtp, /kk-auth-page/);
   assert.doesNotMatch(verifyOtp, /kk-dark-image-overlay/);
+  assert.match(verifyOtp, /kk-recaptcha-slot/);
+  assert.doesNotMatch(verifyOtp, /Use resend to receive a fresh reset code/);
+  assert.match(register, /kk-recaptcha-slot/);
+  assert.match(globals, /\.kk-recaptcha-slot/);
+  assert.match(globals, /\.grecaptcha-badge/);
   assert.match(forgot, /mt-auto p-12 text-white/);
   assert.doesNotMatch(forgot, /mt-auto p-12 text-on-primary/);
   assert.match(forgot, /text-outline-variant dark:text-emerald-200/);

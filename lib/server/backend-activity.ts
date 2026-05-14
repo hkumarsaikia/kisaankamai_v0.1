@@ -26,6 +26,20 @@ const BACKEND_DISCORD_TIMEOUT_MS = 2200;
 const MAX_FIELD_VALUE_LENGTH = 900;
 const MAX_SUMMARY_LENGTH = 1800;
 
+const EVENT_LABELS: Record<string, string> = {
+  "auth.login": "User login",
+  "auth.logout": "User logout",
+  "auth.registered": "New user registration",
+  "auth.session_created": "Session created",
+  "profile.updated": "Profile update",
+  "listing.created": "Equipment listing created",
+  "listing.updated": "Equipment listing updated",
+  "listing.deleted": "Equipment listing deleted",
+  "booking.created": "Booking request created",
+  "booking.status_updated": "Booking status updated",
+  "form.submitted": "Form submission received",
+};
+
 function getBackendDiscordWebhookUrl() {
   return (
     process.env.DISCORD_WEBHOOK_BACKEND_URL ||
@@ -34,7 +48,29 @@ function getBackendDiscordWebhookUrl() {
   ).trim();
 }
 
-function stringifyDiscordValue(value: unknown) {
+function humanizeFieldName(name: string) {
+  return name
+    .replace(/[_-]+/g, " ")
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/\b\w/g, (match) => match.toUpperCase())
+    .replace(/\bId\b/g, "ID")
+    .trim();
+}
+
+function formatTechnicalId(value: unknown) {
+  const normalized = String(value || "").trim();
+  if (!normalized) {
+    return "-";
+  }
+
+  return normalized.length > 14 ? `...${normalized.slice(-8)}` : normalized;
+}
+
+function formatEventLabel(event: string) {
+  return EVENT_LABELS[event] || humanizeFieldName(event);
+}
+
+function stringifyDiscordValue(value: unknown): string {
   if (value === undefined || value === null || value === "") {
     return "-";
   }
@@ -43,11 +79,22 @@ function stringifyDiscordValue(value: unknown) {
     return String(value);
   }
 
-  try {
-    return JSON.stringify(value, null, 2);
-  } catch {
-    return String(value);
+  if (Array.isArray(value)) {
+    const rows = value
+      .map((item) => stringifyDiscordValue(item))
+      .filter((item) => item && item !== "-");
+    return rows.length ? rows.join("\n") : "-";
   }
+
+  if (typeof value === "object") {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, nestedValue]) => nestedValue !== undefined && nestedValue !== null && nestedValue !== "")
+      .map(([key, nestedValue]) => `${humanizeFieldName(key)}: ${stringifyDiscordValue(nestedValue)}`);
+
+    return entries.length ? entries.join("\n") : "-";
+  }
+
+  return String(value);
 }
 
 function truncate(value: string, maxLength: number) {
@@ -55,8 +102,10 @@ function truncate(value: string, maxLength: number) {
 }
 
 function normalizeField(field: BackendActivityField) {
+  const fieldName = field.name === "Payload" ? "Request Details" : field.name || "Detail";
+
   return {
-    name: truncate(field.name || "Detail", 250),
+    name: truncate(fieldName, 250),
     value: truncate(stringifyDiscordValue(field.value), MAX_FIELD_VALUE_LENGTH),
     inline: field.inline !== false,
   };
@@ -71,7 +120,7 @@ export async function notifyBackendActivity(input: BackendActivityInput) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), BACKEND_DISCORD_TIMEOUT_MS);
   const actorFields: BackendActivityField[] = [
-    { name: "User ID", value: input.actor?.userId, inline: true },
+    { name: "Account Ref", value: formatTechnicalId(input.actor?.userId), inline: true },
     { name: "Name", value: input.actor?.name, inline: true },
     { name: "Mobile", value: input.actor?.phone, inline: true },
     { name: "Email", value: input.actor?.email, inline: true },
@@ -93,7 +142,7 @@ export async function notifyBackendActivity(input: BackendActivityInput) {
             url: input.url || undefined,
             color: 0x143b2e,
             fields: [
-              normalizeField({ name: "Event", value: input.event, inline: true }),
+              normalizeField({ name: "Activity", value: formatEventLabel(input.event), inline: true }),
               ...actorFields.map(normalizeField),
               ...(input.fields || []).map(normalizeField),
             ].slice(0, 25),

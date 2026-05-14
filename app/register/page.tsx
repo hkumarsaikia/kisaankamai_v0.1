@@ -348,7 +348,7 @@ export default function RegisterPage() {
                   "अभिनंदन! खाते तयार झाले आहे. तुम्ही दिलेल्या फोन नंबर आणि पासवर्डने लॉगिन करू शकता."
                 )}
               />
-              <div id="kk-register-recaptcha" className="hidden" />
+              <div id="kk-register-recaptcha" className="kk-recaptcha-slot" aria-hidden="true" />
             </div>
           ) : (
             <div className="kk-auth-card overflow-hidden">
@@ -362,7 +362,7 @@ export default function RegisterPage() {
               </div>
 
               <form className="space-y-8 px-6 py-8 sm:px-10 sm:py-10" onSubmit={handleSubmit}>
-                <div id="kk-register-recaptcha" className="hidden" />
+                <div id="kk-register-recaptcha" className="kk-recaptcha-slot" aria-hidden="true" />
 
                 {error ? <p className="text-sm font-semibold text-error">{error}</p> : null}
 

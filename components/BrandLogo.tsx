@@ -45,20 +45,20 @@ export function LogoMark({ className = "h-14 w-14" }: { className?: string }) {
 
 export function BrandLogo({
   className = "",
-  markClassName = "h-14 w-14",
+  markClassName = "h-16 w-16",
   textClassName = "",
   showSubtitle = true,
 }: BrandLogoProps) {
   return (
     <span
-      className={`kk-brand-logo inline-flex items-center gap-[18px] ${className}`}
+      className={`kk-brand-logo inline-flex items-center gap-[10px] ${className}`}
       aria-label="Kisan Kamai Smart Equipment Rental"
     >
       <span className="kk-brand-logo-mark flex shrink-0 items-center justify-center">
         <LogoMark className={markClassName} />
       </span>
-      <span className={`kk-brand-logo-text flex flex-col justify-center leading-none ${textClassName}`}>
-        <span className="font-label text-[1.75rem] font-extrabold leading-[1.1] tracking-[-0.03em]">
+      <span className={`kk-brand-logo-text flex min-w-0 flex-col justify-center leading-none ${textClassName}`}>
+        <span className="whitespace-nowrap font-label text-[1.95rem] font-extrabold leading-[1.05] tracking-[-0.03em]">
           <span className="text-[#15803d]">Kisan</span>{" "}
           <span className="text-[#1f2937]">Kamai</span>
         </span>

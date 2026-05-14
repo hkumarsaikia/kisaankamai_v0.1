@@ -66,8 +66,14 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.match(headerSource, /<BrandLogo/);
   assert.match(profileShell, /<BrandLogo/);
   assert.doesNotMatch(footerSource, /<BrandLogo/);
-  assert.match(footerSource, /\[-webkit-text-stroke:1px_#00a870\]/);
+  assert.match(footerSource, /FooterWordmark/);
+  assert.match(footerSource, /kkFooterEmeraldGradient/);
+  assert.match(footerSource, /stroke="url\(#kkFooterEmeraldGradient\)"/);
   assert.match(footerSource, /🇮🇳/);
+  assert.match(headerSource, /markClassName="h-12 w-12 sm:h-14 sm:w-14"/);
+  assert.match(logoSource, /gap-\[10px\]/);
+  assert.match(logoSource, /whitespace-nowrap/);
+  assert.match(profileShell, /showSubtitle=\{false\}/);
   assert.match(faviconRoute, /M16 32V20C16 17\.7909/);
   assert.match(faviconRoute, /#15803d/);
   assert.match(faviconRoute, /#f59e0b/);
@@ -269,6 +275,11 @@ test("list equipment redirects unauthenticated requests before the streaming fal
 test("base rent-equipment source keeps the avail-eq style controls and pagination", async () => {
   const source = await readFile(new URL("../app/rent-equipment/RentEquipmentView.tsx", import.meta.url), "utf8");
 
+  assert.match(source, /kk-rent-available-shell/);
+  assert.match(source, /kk-rent-query-shell/);
+  assert.match(source, /kk-rent-empty-shell/);
+  assert.match(source, /pt-\[6\.25rem\]/);
+  assert.doesNotMatch(source, /pt-20 md:pt-20/);
   assert.match(source, /Filters/);
   assert.match(source, /Sort/);
   assert.match(source, /chevron_left/);

@@ -269,12 +269,13 @@ function Sidebar({
           <Link
             href="/"
             onClick={onNavigate}
-            className="inline-flex rounded-2xl bg-white px-2 py-1 transition-transform hover:-translate-y-0.5 dark:bg-white"
+            className="inline-flex max-w-full rounded-2xl bg-white px-1.5 py-1 transition-transform hover:-translate-y-0.5 dark:bg-white"
             aria-label="Kisan Kamai Smart Equipment Rental"
           >
             <BrandLogo
-              markClassName="h-11 w-11"
-              textClassName="[&_.kk-brand-logo-text>span:first-child]:text-[1.15rem] [&_.kk-brand-logo-text>span:last-child]:text-[0.46rem]"
+              markClassName="h-12 w-12"
+              showSubtitle={false}
+              textClassName="[&>span:first-child]:text-[1.2rem]"
             />
           </Link>
           <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
