@@ -259,9 +259,6 @@ function Sidebar({
   activeTab: WorkspaceTab;
   onNavigate?: () => void;
 }) {
-  const { text } = useLanguage();
-  const config = WORKSPACE_CONFIG[family];
-
   return (
     <div className="flex h-full flex-col bg-white dark:bg-slate-950">
       <div className="space-y-4 px-6 py-8">
@@ -270,7 +267,7 @@ function Sidebar({
             href="/"
             onClick={onNavigate}
             className="inline-flex max-w-full rounded-2xl bg-white px-1.5 py-1 transition-transform hover:-translate-y-0.5 dark:bg-white"
-            aria-label="Kisan Kamai Smart Equipment Rental"
+            aria-label="Kisan Kamai"
           >
             <BrandLogo
               markClassName="h-12 w-12"
@@ -278,9 +275,6 @@ function Sidebar({
               textClassName="[&>span:first-child]:text-[1.2rem]"
             />
           </Link>
-          <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
-            {text(config.portalLabel)}
-          </p>
         </div>
       </div>
 
@@ -343,7 +337,6 @@ export function OwnerProfileWorkspaceShell({
 }: OwnerProfileWorkspaceShellProps) {
   const { text } = useLanguage();
   const pathname = usePathname();
-  const config = WORKSPACE_CONFIG[family];
   const [mobileOpen, setMobileOpen] = useState(false);
   const resolvedTitle = text(title);
   const resolvedSubtitle = subtitle ? text(subtitle) : null;
@@ -385,9 +378,6 @@ export function OwnerProfileWorkspaceShell({
                 <span className="material-symbols-outlined">menu</span>
               </button>
               <div className="min-w-0">
-                <div className="mb-1 flex min-w-0 flex-wrap items-center gap-2 text-on-surface-variant">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] sm:text-xs">{text(config.portalLabel)}</span>
-                </div>
                 <h1 className="break-words text-[clamp(1.45rem,7vw,2rem)] font-extrabold leading-tight tracking-tight text-primary sm:text-3xl">
                   {resolvedTitle}
                 </h1>

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 
 test("owner-profile workspace shell exposes owner-style navigation with earnings and add listing", async () => {
   const source = await readFile(
@@ -19,13 +19,12 @@ test("owner-profile workspace shell exposes owner-style navigation with earnings
 });
 
 test("owner-profile routes use the new owner dashboard, equipment browser, earnings views, and owner-only redirects", async () => {
-  const [root, activity, browse, earnings, saved, feedbackSuccess] = await Promise.all([
+  const [root, activity, browse, earnings, saved] = await Promise.all([
     readFile(new URL("../app/owner-profile/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/profile/OwnerRecentBookingActivity.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/browse/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/earnings/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-profile/saved/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/owner-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(root, /title=\{localizedText\("Owner Profile", "मालक प्रोफाइल"\)\}/);
@@ -49,9 +48,7 @@ test("owner-profile routes use the new owner dashboard, equipment browser, earni
   assert.doesNotMatch(earnings, /<LocalizedText en="Direct Settlement"/);
   assert.match(earnings, /activeTab="earnings"/);
   assert.match(saved, /redirect\("\/owner-profile\/browse"\)/);
-  assert.match(feedbackSuccess, /primaryHref="\/owner-profile"/);
-  assert.match(feedbackSuccess, /secondaryHref="\/owner-profile\/browse"/);
-  assert.doesNotMatch(feedbackSuccess, /RenterProfileViews/);
+  await assert.rejects(access(new URL("../app/owner-profile/feedback/success/page.tsx", import.meta.url)));
 });
 
 test("owner dashboard recent booking activity can decline pending requests and reflect cancelled state", async () => {
@@ -81,7 +78,7 @@ test("owner earnings content uses the revenue panel and owner-family links", asy
   assert.match(viewsSource, /OwnerRevenuePanel/);
   assert.doesNotMatch(viewsSource, /RenterPaymentsPanel/);
   assert.match(viewsSource, /href: "\/owner-profile\/bookings"/);
-  assert.match(viewsSource, /successHref="\/owner-profile\/feedback\/success"/);
+  assert.match(viewsSource, /successHref="\/owner-profile\/feedback"/);
   assert.match(viewsSource, /<Link href="\/owner-profile"/);
   assert.match(panelSource, /langText\("Booking Value", "बुकिंग मूल्य"\)/);
   assert.match(panelSource, /booking-linked estimates/);

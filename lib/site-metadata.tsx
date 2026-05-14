@@ -77,6 +77,7 @@ export function buildPageMetadata({
       url: path,
       siteName: SITE_NAME,
       type: "website",
+      locale: "en_IN",
       images: [
         {
           url: shareImage,
@@ -120,11 +121,14 @@ export function renderHeadMetadata({
       <meta name="description" content={description} />
       {noIndex ? <meta name="robots" content="noindex,follow" /> : null}
       <link rel="canonical" href={canonical} />
+      <link rel="image_src" href={shareImage} />
       <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
       <meta property="og:url" content={canonical} />
       <meta property="og:site_name" content={SITE_NAME} />
+      <meta property="og:locale" content="en_IN" />
       <meta property="og:image" content={shareImage} />
+      <meta property="og:image:url" content={shareImage} />
       <meta property="og:image:secure_url" content={shareImage} />
       <meta property="og:image:type" content="image/jpeg" />
       <meta property="og:image:width" content="1200" />
@@ -135,6 +139,7 @@ export function renderHeadMetadata({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={shareImage} />
       <meta name="twitter:image:alt" content={imageAlt || fullTitle} />
+      <meta name="thumbnail" content={shareImage} />
     </>
   );
 }

@@ -790,7 +790,7 @@ export function OwnerProfileFeedbackContent() {
     <FeedbackForm
       title="Help Us Improve Kisan Kamai"
       subtitle="Share your suggestions and service feedback for the renter experience."
-      successHref="/renter-profile/feedback/success"
+      successHref="/renter-profile/feedback"
       fields={
         <>
           <div className="grid gap-5 md:grid-cols-2">

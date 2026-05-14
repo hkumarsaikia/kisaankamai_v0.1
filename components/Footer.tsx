@@ -10,7 +10,7 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 function FooterWordmark() {
   return (
     <svg
-      className="h-16 w-64 max-w-full"
+      className="h-24 w-80 max-w-full"
       viewBox="0 0 800 400"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
@@ -23,7 +23,6 @@ function FooterWordmark() {
           <stop offset="100%" stopColor="#06b6d4" stopOpacity="1" />
         </linearGradient>
       </defs>
-      <rect width="100%" height="100%" fill="#002a1b" />
       <text
         x="50%"
         y="55%"

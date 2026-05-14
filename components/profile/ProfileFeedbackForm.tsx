@@ -3,7 +3,6 @@
 import { formatSubmissionError, postJson } from "@/lib/client/forms";
 import { useLanguage } from "@/components/LanguageContext";
 import type { LocalSession } from "@/lib/local-data/types";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type ProfileFeedbackFormProps = {
@@ -33,7 +32,6 @@ export function ProfileFeedbackForm({
   session,
 }: ProfileFeedbackFormProps) {
   const { langText } = useLanguage();
-  const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitState, setSubmitState] = useState<"idle" | "pending" | "success" | "error">("idle");
   const [error, setError] = useState("");
@@ -86,13 +84,7 @@ export function ProfileFeedbackForm({
         contactMe: formState.contactMe,
       });
       setSubmitState("success");
-      window.setTimeout(() => {
-        router.push(
-          family === "owner-profile"
-            ? "/owner-profile/feedback/success"
-            : "/renter-profile/feedback/success"
-        );
-      }, 700);
+      setFormState((current) => ({ ...current, category: "", message: "", rating: 4, contactMe: true }));
     } catch (submitError) {
       setSubmitState("error");
       setError(formatSubmissionError(submitError, langText("Could not submit feedback.", "अभिप्राय सबमिट करता आला नाही.")));

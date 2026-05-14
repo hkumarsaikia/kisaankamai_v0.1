@@ -145,11 +145,15 @@ const nextConfig = {
     return [
       {
         source:
-          "/:path((?!_next/static|_next/image|assets|fonts|favicon.ico|manifest.webmanifest|robots.txt|sitemap.xml).*)",
+          "/:path((?!_next/static|_next/image|assets|brand|fonts|favicon.ico|manifest.webmanifest|robots.txt|sitemap.xml).*)",
         headers: [...securityHeaders, ...htmlFreshnessHeaders],
       },
       {
         source: "/assets/share/:path*",
+        headers: [...securityHeaders, ...sharePreviewHeaders],
+      },
+      {
+        source: "/brand/:path*",
         headers: [...securityHeaders, ...sharePreviewHeaders],
       },
       {

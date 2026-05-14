@@ -51,18 +51,19 @@ export const Header = () => {
   return (
     <>
       <header className="fixed top-0 w-full z-[1000] bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-emerald-100 dark:border-slate-800/50 shadow-sm">
-        <div className="flex justify-between items-center w-full px-6 h-20 max-w-7xl mx-auto">
+        <div className="flex h-20 w-full max-w-7xl items-center justify-between gap-2 px-3 sm:px-4 lg:gap-8 lg:px-6 mx-auto">
 
           {/* Left: Logo + Nav */}
-          <div className="flex items-center gap-8">
+          <div className="flex min-w-0 flex-1 items-center gap-3 lg:gap-8">
             <Link
               href="/"
-              className="group inline-flex shrink-0 items-center rounded-2xl bg-white px-2 py-1 outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-primary/35 dark:bg-white"
+              className="group inline-flex min-w-0 shrink items-center rounded-2xl bg-white px-1.5 py-1 outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-primary/35 dark:bg-white sm:px-2"
               aria-label={t("common.brand")}
             >
               <BrandLogo
-                markClassName="h-12 w-12 sm:h-14 sm:w-14"
-                textClassName="[&>span:first-child]:text-[1.22rem] sm:[&>span:first-child]:text-[1.42rem] [&>span:last-child]:text-[0.42rem] sm:[&>span:last-child]:text-[0.48rem]"
+                markClassName="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14"
+                showSubtitle={false}
+                textClassName="[&>span:first-child]:text-[1.12rem] sm:[&>span:first-child]:text-[1.28rem] lg:[&>span:first-child]:text-[1.5rem]"
               />
             </Link>
             <div className="hidden lg:flex items-center gap-6 ml-4">
@@ -87,7 +88,7 @@ export const Header = () => {
           </div>
 
           {/* Right: Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:gap-3">
             <ThemeToggle />
             <HeaderLanguageControl className="hidden md:flex" />
 

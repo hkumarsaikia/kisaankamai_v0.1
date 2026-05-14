@@ -47,12 +47,14 @@ export function BrandLogo({
   className = "",
   markClassName = "h-16 w-16",
   textClassName = "",
-  showSubtitle = true,
+  showSubtitle = false,
 }: BrandLogoProps) {
+  const accessibleLabel = showSubtitle ? "Kisan Kamai Smart Equipment Rental" : "Kisan Kamai";
+
   return (
     <span
       className={`kk-brand-logo inline-flex items-center gap-[10px] ${className}`}
-      aria-label="Kisan Kamai Smart Equipment Rental"
+      aria-label={accessibleLabel}
     >
       <span className="kk-brand-logo-mark flex shrink-0 items-center justify-center">
         <LogoMark className={markClassName} />

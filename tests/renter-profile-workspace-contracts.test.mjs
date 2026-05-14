@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 
 test("renter-profile workspace shell exposes renter-style navigation with saved equipment and no earnings tab", async () => {
   const source = await readFile(
@@ -19,11 +19,10 @@ test("renter-profile workspace shell exposes renter-style navigation with saved 
 });
 
 test("renter-profile routes use the new renter booking board while preserving compatibility redirects", async () => {
-  const [root, bookings, earnings, feedbackSuccess] = await Promise.all([
+  const [root, bookings, earnings] = await Promise.all([
     readFile(new URL("../app/renter-profile/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/renter-profile/bookings/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/renter-profile/earnings/page.tsx", import.meta.url), "utf8"),
-    readFile(new URL("../app/renter-profile/feedback/success/page.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(root, /title=\{localizedText\("Renter Profile", "भाडेकरू प्रोफाइल"\)\}/);
@@ -36,9 +35,7 @@ test("renter-profile routes use the new renter booking board while preserving co
   assert.doesNotMatch(earnings, /redirect\("\/owner-profile\/earnings"\)/);
   assert.match(earnings, /Renter Activity/);
   assert.match(earnings, /href="\/renter-profile\/bookings"/);
-  assert.match(feedbackSuccess, /primaryHref="\/renter-profile"/);
-  assert.match(feedbackSuccess, /secondaryHref="\/renter-profile\/bookings"/);
-  assert.doesNotMatch(feedbackSuccess, /OwnerProfileViews/);
+  await assert.rejects(access(new URL("../app/renter-profile/feedback/success/page.tsx", import.meta.url)));
 });
 
 test("renter workspace removes requested helper copy from pages and boards", async () => {
@@ -106,7 +103,7 @@ test("renter-style views keep renter-family links and saved equipment flows", as
 
   assert.match(source, /href="\/renter-profile\/bookings"/);
   assert.match(source, /href="\/renter-profile\/browse"/);
-  assert.match(source, /successHref="\/renter-profile\/feedback\/success"/);
+  assert.match(source, /successHref="\/renter-profile\/feedback"/);
   assert.match(source, /<Link href="\/renter-profile"/);
   assert.match(source, /Clear Saved/);
   assert.match(source, /Manage your renter profile, preferences, and account controls\./);

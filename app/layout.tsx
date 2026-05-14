@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Manrope, Inter, Mukta } from "next/font/google";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import Script from "next/script";
 import { ThemeProvider } from "next-themes";
 import { LanguageProvider } from "@/components/LanguageContext";
@@ -33,6 +33,12 @@ const LANGUAGE_COOKIE_NAME = "kk_language";
 const SESSION_COOKIE_NAME = "kisan_kamai_session";
 function normalizeLanguage(value: string | undefined): Language {
   return value === "en" || value === "mr" ? value : DEFAULT_LANGUAGE;
+}
+
+function isCrawlerUserAgent(userAgent: string | null) {
+  return /\b(googlebot|bingbot|slurp|duckduckbot|baiduspider|yandexbot|facebookexternalhit|facebot|twitterbot|linkedinbot|telegrambot|whatsapp|discordbot|slackbot|applebot|pinterestbot)\b/i.test(
+    userAgent || ""
+  );
 }
 
 const languageBootScript = `
@@ -100,10 +106,6 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/brand/kisan-kamai-tractor.svg",
-        type: "image/svg+xml",
-      },
-      {
         url: "/brand/kisan-kamai-tractor-48.png",
         sizes: "48x48",
         type: "image/png",
@@ -114,8 +116,12 @@ export const metadata: Metadata = {
         type: "image/png",
       },
       {
-        url: "/favicon.ico",
+        url: "/brand/kisan-kamai-tractor.svg",
         type: "image/svg+xml",
+      },
+      {
+        url: "/favicon.ico",
+        type: "image/png",
       },
     ],
     apple: [
@@ -135,6 +141,7 @@ export const metadata: Metadata = {
     url: "/",
     title: "Kisan Kamai | Rent and List Farm Equipment in Maharashtra",
     description: DEFAULT_SHARE_DESCRIPTION,
+    locale: "en_IN",
     images: [
       {
         url: getDefaultShareImageUrl(),
@@ -192,7 +199,13 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = await cookies();
-  const initialLanguage = normalizeLanguage(cookieStore.get(LANGUAGE_COOKIE_NAME)?.value);
+  const headerStore = await headers();
+  const languageCookie = cookieStore.get(LANGUAGE_COOKIE_NAME)?.value;
+  const initialLanguage = languageCookie
+    ? normalizeLanguage(languageCookie)
+    : isCrawlerUserAgent(headerStore.get("user-agent"))
+      ? "en"
+      : DEFAULT_LANGUAGE;
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   let initialSession: LocalSession | null = null;
   const buildRevision = getBuildRevision();
@@ -211,6 +224,11 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <head>
+        <link rel="image_src" href={getDefaultShareImageUrl()} />
+        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <meta name="thumbnail" content={getDefaultShareImageUrl()} />
+        <meta property="og:locale" content="en_IN" />
+        <meta property="og:image:url" content={getDefaultShareImageUrl()} />
         <link
           as="font"
           crossOrigin="anonymous"

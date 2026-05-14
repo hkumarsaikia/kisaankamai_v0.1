@@ -587,7 +587,7 @@ export function RenterProfileFeedbackContent() {
     <FeedbackForm
       title="Help us build better tools for equipment owners"
       subtitle="Share platform, fleet, or booking feedback for the owner experience."
-      successHref="/owner-profile/feedback/success"
+      successHref="/owner-profile/feedback"
       fields={
         <>
           <div className="grid gap-5 md:grid-cols-2">

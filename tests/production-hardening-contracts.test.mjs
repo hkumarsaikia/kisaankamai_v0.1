@@ -12,9 +12,10 @@ test("site defaults to light mode and does not follow system dark mode by defaul
 });
 
 test("language provider hydrates from the boot language to avoid saved-language flash", async () => {
-  const [languageSource, layoutSource] = await Promise.all([
+  const [languageSource, layoutSource, i18nSource] = await Promise.all([
     readFile(new URL("../components/LanguageContext.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/i18n.ts", import.meta.url), "utf8"),
   ]);
 
   assert.match(languageSource, /readInitialLanguage/);
@@ -27,7 +28,13 @@ test("language provider hydrates from the boot language to avoid saved-language 
   assert.doesNotMatch(languageSource, /setLanguage\(saved\)/);
 
   assert.match(layoutSource, /cookies\(\)/);
-  assert.match(layoutSource, /normalizeLanguage\(cookieStore\.get\(LANGUAGE_COOKIE_NAME\)\?\.value\)/);
+  assert.match(layoutSource, /headers\(\)/);
+  assert.match(layoutSource, /const languageCookie = cookieStore\.get\(LANGUAGE_COOKIE_NAME\)\?\.value/);
+  assert.match(layoutSource, /languageCookie\s*\?\s*normalizeLanguage\(languageCookie\)/);
+  assert.match(layoutSource, /isCrawlerUserAgent\(headerStore\.get\("user-agent"\)\)/);
+  assert.match(layoutSource, /\?\s*"en"\s*:\s*DEFAULT_LANGUAGE/);
+  assert.match(layoutSource, /const language = cookieLanguage \|\| "mr"/);
+  assert.match(i18nSource, /DEFAULT_LANGUAGE: Language = "mr"/);
   assert.match(layoutSource, /lang=\{initialLanguage\}/);
   assert.match(layoutSource, /data-language=\{initialLanguage\}/);
   assert.match(layoutSource, /data-scroll-behavior="smooth"/);
