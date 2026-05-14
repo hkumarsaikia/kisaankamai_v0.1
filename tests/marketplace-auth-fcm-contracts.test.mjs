@@ -168,6 +168,7 @@ test("registration no longer asks for identity verification documents", async ()
   const registerSource = await readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8");
 
   assert.doesNotMatch(registerSource, /Optional identity verification/);
+  assert.doesNotMatch(registerSource, /Phone verification creates the account/);
   assert.doesNotMatch(registerSource, /verificationDocumentTypes/);
   assert.doesNotMatch(registerSource, /uploadVerificationDocuments/);
   assert.doesNotMatch(registerSource, /idType/);

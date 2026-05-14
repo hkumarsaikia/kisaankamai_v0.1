@@ -4,7 +4,6 @@ import { AppLink as Link } from "@/components/AppLink";
 import { useLanguage } from "@/components/LanguageContext";
 import { FOOTER_MARKETPLACE_LINKS, FOOTER_TRUST_LINKS } from "@/lib/site-navigation.js";
 import { SharedIcon } from "@/components/SharedIcon";
-import { BrandLogo } from "@/components/BrandLogo";
 import { postJson } from "@/lib/client/forms";
 import { type FormEvent, useEffect, useRef, useState } from "react";
 
@@ -75,15 +74,12 @@ export const Footer = () => {
         <div className="col-span-1 md:col-span-1">
           <Link 
             href="/" 
-            className="block mb-8 transition-transform hover:-translate-y-1"
+            className="mb-8 block transition-transform hover:-translate-y-1"
             aria-label="Kisan Kamai"
           >
-            <BrandLogo
-              inverse
-              showSubtitle
-              markClassName="h-12 w-12"
-              textClassName="min-w-0"
-            />
+            <span className="font-headline text-[2.75rem] font-black leading-none tracking-[-0.06em] text-transparent [-webkit-text-stroke:1px_#00a870]">
+              Kisan Kamai
+            </span>
           </Link>
           <p className="text-slate-400 leading-relaxed mb-6 font-normal">
             {t("Footer.empowering_indian_farmers_through_shared_technology_and_machinery_access_rooted_in_trust")}

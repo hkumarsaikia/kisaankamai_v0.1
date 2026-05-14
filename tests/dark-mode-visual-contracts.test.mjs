@@ -71,6 +71,8 @@ test("latest dark-mode visibility fixes cover partner, coming soon, owner benefi
   assert.match(globals, /text-align:\s*center !important/);
   assert.match(globals, /\.gm-style \.gm-style-pbc > div/);
   assert.match(globals, /\.gm-style \.gm-style-pbt > div/);
+  assert.match(globals, /\.gm-style \.gm-style-pbc \*/);
+  assert.match(globals, /\.gm-style \.gm-style-pbt \*/);
   assert.match(globals, /text-align-last:\s*center !important/);
 });
 

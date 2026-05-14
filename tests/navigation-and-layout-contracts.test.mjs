@@ -52,24 +52,34 @@ test("footer sections include only the approved marketplace and trust routes", a
   );
 });
 
-test("brand logo and India footer marker use the shared logo component", async () => {
-  const [headerSource, footerSource, faviconRoute, manifestSource, logoSource] = await Promise.all([
+test("brand logo, favicon, profile shell, and footer marker follow the approved brand treatment", async () => {
+  const [headerSource, footerSource, faviconRoute, manifestSource, logoSource, profileShell, layoutSource] = await Promise.all([
     readFile(new URL("../components/Header.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/Footer.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/favicon.ico/route.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/manifest.ts", import.meta.url), "utf8"),
     readFile(new URL("../components/BrandLogo.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/owner-profile/OwnerProfileWorkspaceShell.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(headerSource, /<BrandLogo/);
-  assert.match(footerSource, /<BrandLogo/);
+  assert.match(profileShell, /<BrandLogo/);
+  assert.doesNotMatch(footerSource, /<BrandLogo/);
+  assert.match(footerSource, /\[-webkit-text-stroke:1px_#00a870\]/);
   assert.match(footerSource, /🇮🇳/);
-  assert.match(faviconRoute, /M16 32V20C16 17\.8/);
+  assert.match(faviconRoute, /M16 32V20C16 17\.7909/);
   assert.match(faviconRoute, /#15803d/);
+  assert.match(faviconRoute, /#f59e0b/);
   assert.match(manifestSource, /\/favicon\.ico/);
+  assert.match(manifestSource, /\/brand\/kisan-kamai-tractor-192\.png/);
+  assert.match(layoutSource, /\/brand\/kisan-kamai-tractor\.svg/);
+  assert.match(layoutSource, /\/brand\/kisan-kamai-tractor-48\.png/);
   assert.match(logoSource, /Smart Equipment Rental/);
   assert.match(logoSource, /Kisan/);
   assert.match(logoSource, /Kamai/);
+  assert.doesNotMatch(logoSource, /Kamai<span className="text-secondary/);
+  assert.doesNotMatch(logoSource, /shadow-\[inset/);
 });
 
 test("support page no longer contains the instant callback CTA", async () => {
@@ -85,6 +95,8 @@ test("partner page uses the imported partnership body and requested CTA behavior
   const source = await readFile(new URL("../app/partner/page.tsx", import.meta.url), "utf8");
 
   assert.doesNotMatch(source, /Strategic Partnerships/);
+  assert.doesNotMatch(source, /Premium Partnership Enquiry/);
+  assert.match(source, /Partnership Enquiry/);
   assert.match(source, /Apply for Partnership/);
   assert.match(source, /Explore Ecosystem/);
   assert.match(source, /\/how-it-works/);

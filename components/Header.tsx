@@ -57,12 +57,12 @@ export const Header = () => {
           <div className="flex items-center gap-8">
             <Link
               href="/"
-              className="group inline-flex items-center rounded-2xl outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-primary/35"
+              className="group inline-flex shrink-0 items-center rounded-2xl bg-white px-2 py-1 outline-none transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-primary/35 dark:bg-white"
               aria-label={t("common.brand")}
             >
               <BrandLogo
-                markClassName="h-8 w-8"
-                textClassName="hidden sm:flex"
+                markClassName="h-10 w-10 sm:h-11 sm:w-11"
+                textClassName="[&>span:first-child]:text-[1.1rem] sm:[&>span:first-child]:text-[1.25rem] [&>span:last-child]:text-[0.44rem] sm:[&>span:last-child]:text-[0.49rem]"
               />
             </Link>
             <div className="hidden lg:flex items-center gap-6 ml-4">

@@ -210,7 +210,7 @@ export default function PartnerPage() {
           <div className="rounded-xl border border-outline-variant bg-surface-container-lowest p-6 shadow-sm md:p-10">
             <div className="border-b border-outline-variant pb-6">
               <h2 className="text-2xl font-bold text-on-surface md:text-3xl">
-                {langText("Premium Partnership Enquiry", "भागीदारी चौकशी")}
+                {langText("Partnership Enquiry", "भागीदारी चौकशी")}
               </h2>
               <p className="mt-2 text-sm text-on-surface-variant">
                 {langText(

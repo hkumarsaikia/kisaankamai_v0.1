@@ -100,8 +100,29 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
+        url: "/brand/kisan-kamai-tractor.svg",
+        type: "image/svg+xml",
+      },
+      {
+        url: "/brand/kisan-kamai-tractor-48.png",
+        sizes: "48x48",
+        type: "image/png",
+      },
+      {
+        url: "/brand/kisan-kamai-tractor-96.png",
+        sizes: "96x96",
+        type: "image/png",
+      },
+      {
         url: "/favicon.ico",
         type: "image/svg+xml",
+      },
+    ],
+    apple: [
+      {
+        url: "/brand/kisan-kamai-tractor-192.png",
+        sizes: "192x192",
+        type: "image/png",
       },
     ],
   },

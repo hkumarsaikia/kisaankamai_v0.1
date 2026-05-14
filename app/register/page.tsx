@@ -357,12 +357,6 @@ export default function RegisterPage() {
                   <h1 className="font-headline text-3xl font-extrabold tracking-tight text-primary sm:text-4xl">
                     {langText("Create your Kisan Kamai account", "तुमचे किसान कमाई खाते तयार करा")}
                   </h1>
-                  <p className="text-sm font-medium text-on-surface-variant sm:text-base">
-                    {langText(
-                      "Phone verification creates the account, and your password lets you sign in later with your mobile number.",
-                      "फोन पडताळणी खात्याची निर्मिती करते, आणि पासवर्डमुळे तुम्ही नंतर मोबाईल नंबरने लॉगिन करू शकता."
-                    )}
-                  </p>
                   {!auth ? <p className="text-sm font-semibold text-amber-700">{authUnavailableMessage}</p> : null}
                 </div>
               </div>

@@ -38,8 +38,8 @@ test("page swaps and reveal animations use shared flow motion tokens", async () 
   assert.match(navProvider, /__kkNavigationTransitionPatched/);
   assert.match(navProvider, /requestAnimationFrame\(patchHistory\)/);
   assert.match(navProvider, /setTimeout\(patchHistory,\s*250\)/);
-  assert.match(globals, /\.kk-route-transition-veil::after/);
-  assert.match(globals, /@keyframes kk-route-orbit/);
+  assert.doesNotMatch(globals, /\.kk-route-transition-veil::after/);
+  assert.doesNotMatch(globals, /@keyframes kk-route-orbit/);
   assert.match(routeShell, /y:\s*prefersReducedMotion \? 0 : 10/);
   assert.match(scrollReveal, /FLOW_EASE/);
   assert.match(scrollReveal, /scale:\s*0\.985/);

@@ -1,6 +1,7 @@
 "use client";
 
 import { AppLink as Link } from "@/components/AppLink";
+import { BrandLogo } from "@/components/BrandLogo";
 import { HeaderLanguageControl } from "@/components/Header";
 import { useLanguage } from "@/components/LanguageContext";
 import { ProfileDropdownMenu } from "@/components/ProfileDropdownMenu";
@@ -268,9 +269,13 @@ function Sidebar({
           <Link
             href="/"
             onClick={onNavigate}
-            className="text-xl font-bold text-primary transition-colors hover:text-primary-container"
+            className="inline-flex rounded-2xl bg-white px-2 py-1 transition-transform hover:-translate-y-0.5 dark:bg-white"
+            aria-label="Kisan Kamai Smart Equipment Rental"
           >
-            Kisan Kamai
+            <BrandLogo
+              markClassName="h-11 w-11"
+              textClassName="[&_.kk-brand-logo-text>span:first-child]:text-[1.15rem] [&_.kk-brand-logo-text>span:last-child]:text-[0.46rem]"
+            />
           </Link>
           <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.2em] text-on-surface-variant">
             {text(config.portalLabel)}
