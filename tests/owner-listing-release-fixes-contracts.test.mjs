@@ -74,7 +74,9 @@ test("profile sidebar label aligns with the logo mark start and favicon metadata
   ]);
 
   assert.match(shell, /kk-workspace-brand-block/);
-  assert.match(shell, /kk-workspace-portal-label mt-2 pl-1\.5/);
+  assert.match(shell, /kk-workspace-portal-label mt-2 pl-1\.5 font-label text-sm font-extrabold tracking-tight/);
+  assert.doesNotMatch(shell, /kk-workspace-portal-label[^"]*uppercase/);
+  assert.doesNotMatch(shell, /kk-workspace-portal-label[^"]*tracking-\[0\.22em\]/);
   assert.match(layout, /icon:\s*\[\s*\{\s*url:\s*"\/favicon\.ico"/s);
   assert.match(layout, /rel:\s*"icon"/);
   assert.match(manifest, /src:\s*"\/favicon\.ico"[\s\S]*sizes:\s*"48x48"/);

@@ -9,35 +9,25 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 
 function FooterWordmark() {
   return (
-    <svg
-      className="h-[4.75rem] w-[20rem] max-w-full"
-      viewBox="90 118 620 145"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-labelledby="kk-footer-wordmark-title"
+    <span
+      className="kk-footer-logo-text block max-w-full text-left leading-none"
+      style={{
+        fontFamily: "Manrope, sans-serif",
+        fontSize: "clamp(3rem, 4.75vw, 4.75rem)",
+        fontWeight: 800,
+        letterSpacing: "-2px",
+        margin: 0,
+        padding: 0,
+        textAlign: "left",
+        background: "linear-gradient(135deg, #10b981 0%, #06b6d4 100%)",
+        WebkitBackgroundClip: "text",
+        backgroundClip: "text",
+        WebkitTextFillColor: "#002a1b",
+        WebkitTextStroke: "3px transparent",
+      }}
     >
-      <title id="kk-footer-wordmark-title">Kisan Kamai</title>
-      <defs>
-        <linearGradient id="kkFooterEmeraldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#10b981" stopOpacity="1" />
-          <stop offset="100%" stopColor="#06b6d4" stopOpacity="1" />
-        </linearGradient>
-      </defs>
-      <text
-        x="400"
-        y="220"
-        textAnchor="middle"
-        fontFamily="Manrope, sans-serif"
-        fontSize="120"
-        fontWeight="700"
-        fill="none"
-        stroke="url(#kkFooterEmeraldGradient)"
-        strokeWidth="1.5"
-        letterSpacing="-2"
-      >
-        Kisan Kamai
-      </text>
-    </svg>
+      Kisan Kamai
+    </span>
   );
 }
 
