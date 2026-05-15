@@ -206,9 +206,10 @@ export default async function RootLayout({
   const hasBrowserLanguageHeader = Boolean(headerStore.get("accept-language")?.trim());
   const crawlerRequest =
     headerStore.get(CRAWLER_HEADER_NAME) === "1" || isCrawlerUserAgent(headerStore.get("user-agent"));
+  const crawlerSafeEnglishChrome = crawlerRequest || !hasBrowserLanguageHeader;
   const initialLanguage = languageCookie
     ? normalizeLanguage(languageCookie)
-    : crawlerRequest || !hasBrowserLanguageHeader
+    : crawlerSafeEnglishChrome
       ? "en"
       : DEFAULT_LANGUAGE;
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
@@ -269,7 +270,7 @@ export default async function RootLayout({
             <DepthMotion />
             <AuthProvider initialSession={initialSession}>
               <NavigationTransitionProvider>
-                <SiteChrome crawlerSafeLabels={crawlerRequest}>
+                <SiteChrome crawlerSafeLabels={crawlerSafeEnglishChrome}>
                   {children}
                 </SiteChrome>
               </NavigationTransitionProvider>
