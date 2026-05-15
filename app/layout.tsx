@@ -203,11 +203,12 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const headerStore = await headers();
   const languageCookie = cookieStore.get(LANGUAGE_COOKIE_NAME)?.value;
+  const hasBrowserLanguageHeader = Boolean(headerStore.get("accept-language")?.trim());
   const crawlerRequest =
     headerStore.get(CRAWLER_HEADER_NAME) === "1" || isCrawlerUserAgent(headerStore.get("user-agent"));
   const initialLanguage = languageCookie
     ? normalizeLanguage(languageCookie)
-    : crawlerRequest
+    : crawlerRequest || !hasBrowserLanguageHeader
       ? "en"
       : DEFAULT_LANGUAGE;
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
