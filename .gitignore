@@ -59,6 +59,7 @@ next-env.d.ts
 # misc local auth/tooling
 google_auth/
 FINAL_TEST_ACCOUNT_LOGIN_GUIDE.md
+my-video/
 
 # local migration/reference archive
 old/

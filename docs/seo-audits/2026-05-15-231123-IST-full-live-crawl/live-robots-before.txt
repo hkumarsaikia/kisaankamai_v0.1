@@ -1,0 +1,14 @@
+User-Agent: *
+Allow: /
+Disallow: /api/
+Disallow: /list-equipment
+Disallow: /logout
+Disallow: /owner-experience
+Disallow: /owner-profile/
+Disallow: /profile-selection
+Disallow: /register/google-email
+Disallow: /renter-profile/
+Disallow: /verify-contact
+
+Host: https://www.kisankamai.com
+Sitemap: https://www.kisankamai.com/sitemap.xml

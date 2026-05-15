@@ -1,0 +1,15 @@
+
+SEOmator Doctor
+Checking system setup...
+
+  ✓ Node.js: Node.js v24.15.0 installed
+  ✓ npm: npm v11.13.0 installed
+  ✓ Chrome/Chromium: Browser found (Google Chrome 148.0.7778.167)
+      /usr/bin/google-chrome
+  ✓ Global directory: ~/.seomator will be created on first use
+      /home/hkuma/.seomator
+  ✓ Local config: No seomator.toml (will use defaults)
+      Run `seomator init` to create one
+  ✓ Write permissions: Can write to home directory
+
+All 6 checks passed. Ready to audit!

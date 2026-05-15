@@ -161,7 +161,7 @@ export default function ForgotPasswordPage() {
           </div>
 
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <label className="block space-y-2">
+            <label className="block space-y-2" htmlFor="contact-input">
               <span className="mb-1 block text-xs font-label font-bold uppercase tracking-widest text-on-surface/60">
                 {langText("Mobile Number", "मोबाईल नंबर")}
               </span>

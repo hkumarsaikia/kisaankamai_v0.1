@@ -189,11 +189,12 @@ export default function OwnerBenefitsPage() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <div className="space-y-8">
                   <div>
-                    <label className="block text-base font-bold text-gray-700 dark:text-slate-200 mb-2">
+                    <label className="block text-base font-bold text-gray-700 dark:text-slate-200 mb-2" htmlFor="owner-benefits-equipment-type">
                       {langText("Equipment Type", "उपकरणाचा प्रकार")}
                     </label>
                     <div className="relative">
                       <select
+                        id="owner-benefits-equipment-type"
                         className="kk-owner-benefits-select block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                         style={ownerBenefitsSelectStyle}
                         value={selectedCategory.slug}
@@ -217,11 +218,12 @@ export default function OwnerBenefitsPage() {
                   </div>
 
                   <div>
-                    <label className="block text-base font-bold text-gray-700 dark:text-slate-200 mb-2">
+                    <label className="block text-base font-bold text-gray-700 dark:text-slate-200 mb-2" htmlFor="owner-benefits-district">
                       {langText("Operating District", "कामाचा जिल्हा")}
                     </label>
                     <div className="relative">
                       <select
+                        id="owner-benefits-district"
                         className="kk-owner-benefits-select max-h-64 block w-full pl-4 pr-10 py-3 text-base border-gray-200 focus:outline-none focus:ring-brand focus:border-brand rounded-xl bg-gray-50 appearance-none font-medium dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
                         style={ownerBenefitsSelectStyle}
                         value={district}
@@ -245,13 +247,14 @@ export default function OwnerBenefitsPage() {
                   </div>
 
                   <div>
-                    <label className="flex justify-between text-base font-bold text-gray-700 dark:text-slate-200 mb-4">
+                    <label className="flex justify-between text-base font-bold text-gray-700 dark:text-slate-200 mb-4" htmlFor="owner-benefits-usage-days">
                       <span>{langText("Expected Usage", "अपेक्षित वापर")}</span>
                       <span className="text-brand dark:text-emerald-200">
                         {formatNumber(usageDays)} {langText("Days/Month", "दिवस/महिना")}
                       </span>
                     </label>
                     <input
+                      id="owner-benefits-usage-days"
                       className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand dark:bg-slate-700 dark:accent-emerald-300"
                       max={25}
                       min={5}

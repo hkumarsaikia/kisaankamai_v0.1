@@ -228,3 +228,74 @@ test("open browser tabs detect a newer App Hosting build and refresh safely", as
   assert.match(routeSource, /CDN-Cache-Control/);
   assert.match(buildInfoSource, /process\.env\.K_REVISION/);
 });
+
+test("crawl-audit fixes keep bot metadata in head and filtered search URLs out of the index", async () => {
+  const [nextConfigSource, proxySource, metadataSource, layoutSource, pageMetadataSource, llmsSource] = await Promise.all([
+    readFile(new URL("../next.config.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../proxy.js", import.meta.url), "utf8"),
+    readFile(new URL("../lib/site-metadata.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../lib/public-page-metadata.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/llms.txt", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(nextConfigSource, /htmlLimitedBots/);
+  assert.match(nextConfigSource, /SEOmatorBot/);
+  assert.match(proxySource, /X-Robots-Tag/);
+  assert.match(proxySource, /noindex, follow/);
+  assert.match(proxySource, /pathname === "\/rent-equipment"/);
+  assert.match(proxySource, /searchParams\.size > 0/);
+  assert.doesNotMatch(metadataSource, /Northern Maharashtra with Kisan Kamai\. Browse machinery, manage bookings, and coordinate directly/);
+  assert.match(layoutSource, /publisher/);
+  assert.match(layoutSource, /contactPoint/);
+  assert.match(layoutSource, /sameAs/);
+  assert.match(pageMetadataSource, /Browse available farm equipment across Maharashtra/);
+  assert.match(pageMetadataSource, /Sign in to manage equipment listings, booking requests, saved machines, and profile settings/);
+  assert.match(llmsSource, /Kisan Kamai/);
+  assert.match(llmsSource, /https:\/\/www\.kisankamai\.com\/rent-equipment/);
+});
+
+test("seo-audited public forms expose explicit labels for static crawlers", async () => {
+  const [homeSource, registerSource, ownerBenefitsSource, partnerSource, forgotPasswordSource] = await Promise.all([
+    readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/register/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-benefits/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/partner/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/forgot-password/page.tsx", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(homeSource, /htmlFor="home-equipment-search"/);
+  assert.match(homeSource, /id="home-equipment-search"/);
+  for (const id of [
+    "register-full-name",
+    "register-phone",
+    "register-email",
+    "register-password",
+    "register-village",
+    "register-district",
+    "register-pincode",
+  ]) {
+    assert.match(registerSource, new RegExp(`htmlFor="${id}"`));
+    assert.match(registerSource, new RegExp(`id="${id}"`));
+  }
+
+  for (const id of ["owner-benefits-equipment-type", "owner-benefits-district", "owner-benefits-usage-days"]) {
+    assert.match(ownerBenefitsSource, new RegExp(`htmlFor="${id}"`));
+    assert.match(ownerBenefitsSource, new RegExp(`id="${id}"`));
+  }
+
+  for (const id of [
+    "partner-organization-name",
+    "partner-type",
+    "partner-business-location",
+    "partner-contact-person",
+    "partner-phone",
+    "partner-message",
+  ]) {
+    assert.match(partnerSource, new RegExp(`htmlFor="${id}"`));
+    assert.match(partnerSource, new RegExp(`id="${id}"`));
+  }
+
+  assert.match(forgotPasswordSource, /htmlFor="contact-input"/);
+  assert.match(forgotPasswordSource, /id="contact-input"/);
+});

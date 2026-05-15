@@ -386,7 +386,11 @@ export default function Home() {
                 </div>
                 <div className="flex-1 flex items-center gap-3 px-4 py-3">
                   <SharedIcon name="agriculture" className="h-5 w-5 text-secondary dark:text-emerald-400" />
+                  <label className="sr-only" htmlFor="home-equipment-search">
+                    {t("home.search_tractors_harvesters")}
+                  </label>
                   <input 
+                    id="home-equipment-search"
                     className="w-full border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant bg-transparent font-medium"
                     placeholder={t("home.search_tractors_harvesters")} 
                     type="text" 

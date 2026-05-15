@@ -121,9 +121,13 @@ const sharePreviewHeaders = [
   { key: "Cache-Control", value: "public, max-age=0, must-revalidate" },
 ];
 
+const htmlLimitedBotPattern =
+  /SEOmatorBot|Googlebot|Google-PageRenderer|AdsBot-Google|Bingbot|Slurp|DuckDuckBot|Baiduspider|YandexBot|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|TelegramBot|WhatsApp|Discordbot|Slackbot|Applebot|Pinterestbot|Screaming Frog SEO Spider/i;
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
+  htmlLimitedBots: htmlLimitedBotPattern,
   experimental: {
     viewTransition: true,
     serverActions: {

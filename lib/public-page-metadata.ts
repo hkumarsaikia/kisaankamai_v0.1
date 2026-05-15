@@ -19,56 +19,60 @@ export const publicPageMetadataInputs = {
   comingSoon: {
     title: "Kisan Kamai Expansion Updates",
     description:
-      "Track where Kisan Kamai is expanding next and request updates when farm equipment access launches near your area.",
+      "Track where Kisan Kamai is expanding next and request updates when farm equipment access becomes available near your area.",
     path: "/coming-soon",
     imagePath: "/assets/share/pages/coming-soon.jpg",
   },
   faq: {
     title: "Farm Equipment Rental FAQ",
     description:
-      "Find clear answers about renting equipment, listing machinery, direct settlement, support, and trust on Kisan Kamai.",
+      "Find clear answers about renting equipment, listing machinery, direct settlement, local support, account access, and trust on Kisan Kamai.",
     path: "/faq",
     imagePath: "/assets/share/pages/faq.jpg",
   },
   featureRequest: {
     title: "Share Product Feedback",
     description:
-      "Send product ideas and workflow improvements that can help Kisan Kamai serve equipment owners and renters more clearly.",
+      "Send product ideas, workflow requests, and practical improvements that help Kisan Kamai serve equipment owners and renters more clearly.",
     path: "/feature-request",
     imagePath: "/assets/share/pages/feature-request.jpg",
     noIndex: true,
   },
   feedback: {
     title: "Send Kisan Kamai Feedback",
-    description: "Share practical feedback about Kisan Kamai so the owner and renter experience can keep improving.",
+    description:
+      "Share practical feedback about Kisan Kamai so the owner, renter, listing, booking, and support experience can keep improving.",
     path: "/feedback",
     imagePath: "/assets/share/pages/feedback.jpg",
     noIndex: true,
   },
   forgotPassword: {
     title: "Reset Your Password",
-    description: "Reset a Kisan Kamai account password using the registered mobile number linked to your profile.",
+    description: "Reset your Kisan Kamai account password securely using the registered mobile number linked to your owner or renter profile.",
     path: "/forgot-password",
     imagePath: "/assets/share/pages/forgot-password.jpg",
     noIndex: true,
   },
   forgotPasswordVerifyOtp: {
     title: "Verify Password Reset",
-    description: "Verify the password reset step for the registered mobile number on your Kisan Kamai account.",
+    description:
+      "Verify the password reset step for the registered mobile number on your Kisan Kamai account before creating a new password.",
     path: "/forgot-password/verify-otp",
     imagePath: "/assets/share/pages/forgot-password.jpg",
     noIndex: true,
   },
   forgotPasswordNewPassword: {
     title: "Create a New Password",
-    description: "Set a new password for your Kisan Kamai account.",
+    description:
+      "Set a new password for your Kisan Kamai account after completing secure mobile-number password reset verification and return to login.",
     path: "/forgot-password/new-password",
     imagePath: "/assets/share/pages/forgot-password.jpg",
     noIndex: true,
   },
   forgotPasswordSuccess: {
     title: "Password Reset Complete",
-    description: "Your Kisan Kamai password reset steps are complete.",
+    description:
+      "Confirm that your Kisan Kamai password reset steps are complete and return to the login page to access your workspace securely.",
     path: "/forgot-password/success",
     imagePath: "/assets/share/pages/forgot-password.jpg",
     noIndex: true,
@@ -82,27 +86,31 @@ export const publicPageMetadataInputs = {
   },
   legal: {
     title: "Legal Policies",
-    description: "Review Kisan Kamai legal policies for using the farm equipment marketplace.",
+    description:
+      "Review Kisan Kamai legal policies, marketplace responsibilities, direct coordination rules, and safe farm equipment usage guidance.",
     path: "/legal",
     imagePath: "/assets/share/pages/terms.jpg",
   },
   listEquipment: {
     title: "List Farm Equipment",
-    description: "Create and manage owner listings for tractors, harvesters, implements, and other farm machinery on Kisan Kamai.",
+    description:
+      "Create and manage owner listings for tractors, harvesters, implements, and other farm machinery with photos, rates, and availability.",
     path: "/list-equipment",
     imagePath: "/assets/share/pages/list-equipment.jpg",
     noIndex: true,
   },
   login: {
-    title: "Account Login",
-    description: "Sign in to your Kisan Kamai owner or renter account with your registered mobile number.",
+    title: "Kisan Kamai Account Login",
+    description:
+      "Sign in to manage equipment listings, booking requests, saved machines, and profile settings with your registered mobile number.",
     path: "/login",
     imagePath: "/assets/share/pages/login.jpg",
     noIndex: true,
   },
   logout: {
     title: "Sign Out",
-    description: "Sign out of your Kisan Kamai account.",
+    description:
+      "Sign out of your Kisan Kamai owner or renter account and return to the public farm equipment marketplace safely from this device.",
     path: "/logout",
     imagePath: "/assets/share/pages/login.jpg",
     noIndex: true,
@@ -110,13 +118,14 @@ export const publicPageMetadataInputs = {
   ownerBenefits: {
     title: "Benefits for Equipment Owners",
     description:
-      "See how Kisan Kamai helps equipment owners list machinery, receive booking requests, and coordinate rentals directly.",
+      "See how Kisan Kamai helps equipment owners list machinery, receive booking requests, set availability, and coordinate rentals directly.",
     path: "/owner-benefits",
     imagePath: "/assets/share/pages/owner-benefits.jpg",
   },
   ownerExperience: {
     title: "Owner Experience",
-    description: "Review the owner-side equipment listing and booking workflow on Kisan Kamai.",
+    description:
+      "Review the owner-side equipment listing, booking request, availability, and direct renter coordination workflow on Kisan Kamai.",
     path: "/owner-experience",
     imagePath: "/assets/share/pages/owner-experience.jpg",
     noIndex: true,
@@ -130,47 +139,52 @@ export const publicPageMetadataInputs = {
   },
   profileSelection: {
     title: "Choose Your Workspace",
-    description: "Select the owner or renter workspace for your signed-in Kisan Kamai account.",
+    description:
+      "Select the owner or renter workspace for your signed-in Kisan Kamai account and continue to the right equipment workflow.",
     path: "/profile-selection",
     imagePath: "/assets/share/pages/profile-selection.jpg",
     noIndex: true,
   },
   register: {
     title: "Create a Kisan Kamai Account",
-    description: "Create a Kisan Kamai account with your mobile number and complete the profile needed to rent or list equipment.",
+    description:
+      "Create a Kisan Kamai account with your mobile number and complete the profile needed to rent, list, or manage farm equipment.",
     path: "/register",
     imagePath: "/assets/share/pages/register.jpg",
     noIndex: true,
   },
   rentEquipment: {
     title: "Rent Farm Equipment in Maharashtra",
-    description: "Browse tractors, implements, harvesters, pumps, seeders, and other farm equipment available through Kisan Kamai.",
+    description:
+      "Browse available farm equipment across Maharashtra, including tractors, implements, harvesters, pumps, seeders, and local owner listings.",
     path: "/rent-equipment",
     imagePath: "/assets/share/pages/rent-equipment.jpg",
   },
   support: {
     title: "Kisan Kamai Support",
     description:
-      "Contact Kisan Kamai support for help with equipment listings, booking requests, account access, and platform questions.",
+      "Contact Kisan Kamai support for help with equipment listings, booking requests, account access, direct coordination, and platform questions.",
     path: "/support",
     imagePath: "/assets/share/pages/support.jpg",
   },
   terms: {
     title: "Terms and Safety Guidelines",
     description:
-      "Review Kisan Kamai terms, direct-dealing guidelines, and safety rules for farm equipment owners and renters.",
+      "Review Kisan Kamai terms, direct-dealing guidelines, safety rules, and practical responsibilities for farm equipment owners and renters.",
     path: "/terms",
     imagePath: "/assets/share/pages/terms.jpg",
   },
   trustSafety: {
     title: "Trust and Safety for Equipment Rentals",
-    description: "Review practical trust and safety guidance for using Kisan Kamai to rent or list farm equipment.",
+    description:
+      "Review practical trust and safety guidance for using Kisan Kamai to rent, list, inspect, and coordinate farm equipment directly.",
     path: "/trust-safety",
     imagePath: "/assets/share/pages/trust-safety.jpg",
   },
   verifyContact: {
     title: "Review Contact Details",
-    description: "Review your saved contact details before continuing into Kisan Kamai.",
+    description:
+      "Review your saved contact details before continuing into Kisan Kamai owner or renter account workflows and direct equipment coordination.",
     path: "/verify-contact",
     imagePath: "/assets/share/pages/verify-contact.jpg",
     noIndex: true,

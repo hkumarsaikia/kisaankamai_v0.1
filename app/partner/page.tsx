@@ -238,18 +238,20 @@ export default function PartnerPage() {
                   {langText("Business Details", "व्यवसाय तपशील")}
                 </h3>
                 <div className="grid gap-5 md:grid-cols-2">
-                  <label className="space-y-1.5">
+                  <label className="space-y-1.5" htmlFor="partner-organization-name">
                     <span className="text-sm font-medium text-on-surface">{langText("Company Name *", "कंपनीचे नाव *")}</span>
                     <input
+                      id="partner-organization-name"
                       className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
                       name="organizationName"
                       placeholder="e.g. Mahila Vikas Agro"
                       type="text"
                     />
                   </label>
-                  <label className="space-y-1.5">
+                  <label className="space-y-1.5" htmlFor="partner-type">
                     <span className="text-sm font-medium text-on-surface">{langText("Partnership Type *", "भागीदारी प्रकार *")}</span>
                     <select
+                      id="partner-type"
                       className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none focus:border-primary focus:ring-1 focus:ring-primary"
                       defaultValue=""
                       name="partnerType"
@@ -265,11 +267,12 @@ export default function PartnerPage() {
                       <option value="Other Strategic Alliance">Other Strategic Alliance</option>
                     </select>
                   </label>
-                  <label className="space-y-1.5 md:col-span-2">
+                  <label className="space-y-1.5 md:col-span-2" htmlFor="partner-business-location">
                     <span className="text-sm font-medium text-on-surface">
                       {langText("Operating Regions in Maharashtra *", "महाराष्ट्रातील कार्यक्षेत्र *")}
                     </span>
                     <input
+                      id="partner-business-location"
                       className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
                       name="businessLocation"
                       placeholder="e.g. Pune, Satara, Sangli districts"
@@ -285,22 +288,24 @@ export default function PartnerPage() {
                   {langText("Contact Person", "संपर्क व्यक्ती")}
                 </h3>
                 <div className="grid gap-5 md:grid-cols-2">
-                  <label className="space-y-1.5">
+                  <label className="space-y-1.5" htmlFor="partner-contact-person">
                     <span className="text-sm font-medium text-on-surface">{langText("Full Name *", "पूर्ण नाव *")}</span>
                     <input
+                      id="partner-contact-person"
                       className="h-12 w-full rounded-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
                       name="contactPerson"
                       placeholder="Your full name"
                       type="text"
                     />
                   </label>
-                  <label className="space-y-1.5">
+                  <label className="space-y-1.5" htmlFor="partner-phone">
                     <span className="text-sm font-medium text-on-surface">{langText("Mobile Number *", "मोबाईल क्रमांक *")}</span>
                     <div className="flex">
                       <span className="flex items-center justify-center rounded-l-lg border border-r-0 border-outline bg-surface-container px-3 text-sm text-on-surface-variant">
                         +91
                       </span>
                       <input
+                        id="partner-phone"
                         className="h-12 w-full rounded-r-lg border border-outline bg-surface-container-lowest px-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
                         name="phone"
                         placeholder="10-digit mobile number"
@@ -316,11 +321,12 @@ export default function PartnerPage() {
                   <span className="material-symbols-outlined text-[18px] text-primary">description</span>
                   {langText("Proposal Details", "प्रस्ताव तपशील")}
                 </h3>
-                <label className="space-y-1.5">
+                <label className="space-y-1.5" htmlFor="partner-message">
                   <span className="text-sm font-medium text-on-surface">
                     {langText("Brief Description of Proposed Partnership *", "भागीदारी प्रस्तावाचे संक्षिप्त वर्णन *")}
                   </span>
                   <textarea
+                    id="partner-message"
                     className="min-h-[160px] w-full rounded-lg border border-outline bg-surface-container-lowest p-4 text-sm text-on-surface outline-none transition-shadow focus:border-primary focus:ring-1 focus:ring-primary"
                     name="message"
                     placeholder="How do you envision working with Kisan Kamai? What value does it bring to the rural ecosystem?"

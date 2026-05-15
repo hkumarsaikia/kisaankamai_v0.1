@@ -339,17 +339,19 @@ export default function FeatureRequestPage() {
                     />
                   </div>
 
-                  <div className="flex flex-col gap-3">
-                    <label className="font-label text-sm font-medium text-on-surface-variant">
+                  <fieldset className="flex flex-col gap-3">
+                    <legend className="font-label text-sm font-medium text-on-surface-variant">
                       {langText("How urgent is this need?", "ही गरज किती तातडीची आहे?")}
-                    </label>
+                    </legend>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                       {urgencyOptions.map((option) => (
                         <label
                           key={option.value}
+                          htmlFor={`feature-urgency-${option.value}`}
                           className="has-[:checked]:border-primary-container has-[:checked]:bg-primary-container has-[:checked]:text-white relative flex cursor-pointer rounded-lg border border-outline-variant bg-surface p-4 text-on-surface transition-colors hover:bg-surface-container-low"
                         >
                           <input
+                            id={`feature-urgency-${option.value}`}
                             className="peer sr-only"
                             name="urgency"
                             type="radio"
@@ -369,7 +371,7 @@ export default function FeatureRequestPage() {
                         </label>
                       ))}
                     </div>
-                  </div>
+                  </fieldset>
 
                   <div className="mt-2 flex items-center gap-3">
                     <input

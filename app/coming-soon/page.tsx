@@ -74,6 +74,9 @@ export default function ComingSoonPage() {
   return (
     <div className="bg-background text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container">
       <main className="min-h-screen pt-24">
+        <h1 className="sr-only">
+          {langText("Kisan Kamai expansion updates", "किसान कमाई विस्तार अपडेट")}
+        </h1>
         <section className="relative overflow-hidden bg-surface-container-low py-16">
           <div className="kk-dark-image-overlay opacity-[0.04] dark:opacity-[0.12]" />
           <div className="relative mx-auto max-w-screen-2xl px-8">

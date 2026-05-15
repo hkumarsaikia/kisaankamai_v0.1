@@ -180,6 +180,9 @@ const siteStructuredData = {
       url: SITE_DOMAIN,
       description: DEFAULT_SHARE_DESCRIPTION,
       inLanguage: ["en-IN", "mr-IN"],
+      publisher: {
+        "@id": `${SITE_DOMAIN}/#organization`,
+      },
       potentialAction: {
         "@type": "SearchAction",
         target: `${SITE_DOMAIN}/rent-equipment?query={search_term_string}`,
@@ -191,6 +194,25 @@ const siteStructuredData = {
       "@id": `${SITE_DOMAIN}/#organization`,
       name: SITE_NAME,
       url: SITE_DOMAIN,
+      logo: `${SITE_DOMAIN}/brand/kisan-kamai-tractor-192.png`,
+      sameAs: [
+        "https://x.com/kisankamai",
+        "https://linkedin.com/company/kisankamai",
+        "https://youtube.com/@kisankamai",
+      ],
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          telephone: "+91-84858-83531",
+          areaServed: "IN-MH",
+          availableLanguage: ["en", "mr"],
+        },
+      ],
+      areaServed: {
+        "@type": "AdministrativeArea",
+        name: "Maharashtra",
+      },
     },
   ],
 };

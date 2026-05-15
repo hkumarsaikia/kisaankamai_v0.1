@@ -1,0 +1,19 @@
+# Kisan Kamai
+
+Kisan Kamai is a farm equipment marketplace for Maharashtra. The website helps equipment renters browse local machinery, helps owners manage listings and booking requests, and keeps payment coordination direct between owner and renter.
+
+## Important URLs
+
+- Homepage: https://www.kisankamai.com/
+- Rent equipment: https://www.kisankamai.com/rent-equipment
+- Equipment categories: https://www.kisankamai.com/categories
+- Owner benefits: https://www.kisankamai.com/owner-benefits
+- How it works: https://www.kisankamai.com/how-it-works
+- Support: https://www.kisankamai.com/support
+- Terms and safety: https://www.kisankamai.com/terms
+
+## Notes for AI crawlers
+
+- Public marketplace and information pages are indexable.
+- Account, profile, listing-management, and API routes are not intended for indexing.
+- Kisan Kamai does not process online rental payments; owners and renters settle directly offline.

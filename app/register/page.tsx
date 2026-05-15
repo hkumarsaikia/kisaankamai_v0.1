@@ -379,11 +379,12 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="grid gap-6 md:grid-cols-2">
-                    <label className="space-y-1.5">
+                    <label className="space-y-1.5" htmlFor="register-full-name">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Full name", "पूर्ण नाव")}
                       </span>
 	                      <input
+	                        id="register-full-name"
 	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
 	                        name="fullName"
 	                        autoComplete="name"
@@ -395,11 +396,12 @@ export default function RegisterPage() {
                       />
                     </label>
 
-                    <label className="space-y-1.5">
+                    <label className="space-y-1.5" htmlFor="register-phone">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Mobile number", "मोबाईल नंबर")}
                       </span>
 	                      <input
+	                        id="register-phone"
 	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
 	                        name="phone"
 	                        type="tel"
@@ -413,11 +415,12 @@ export default function RegisterPage() {
                       />
                     </label>
 
-                    <label className="space-y-1.5">
+                    <label className="space-y-1.5" htmlFor="register-email">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Email address (optional)", "ईमेल पत्ता (पर्यायी)")}
                       </span>
 	                      <input
+	                        id="register-email"
 	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
 	                        name="email"
 	                        autoComplete="email"
@@ -430,12 +433,13 @@ export default function RegisterPage() {
                       />
                     </label>
 
-                    <label className="space-y-1.5">
+                    <label className="space-y-1.5" htmlFor="register-password">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Password", "पासवर्ड")}
                       </span>
                       <div className="relative">
 	                        <input
+	                          id="register-password"
 	                          className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 pr-12 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
 	                          name="password"
 	                          autoComplete="new-password"
@@ -472,11 +476,12 @@ export default function RegisterPage() {
                   </div>
 
                   <div className="grid gap-6 md:grid-cols-2">
-                    <label className="space-y-1.5">
+                    <label className="space-y-1.5" htmlFor="register-village">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Village or town", "गाव किंवा शहर")}
                       </span>
 	                      <input
+	                        id="register-village"
 	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
 	                        name="village"
 	                        autoComplete="address-level3"
@@ -487,11 +492,12 @@ export default function RegisterPage() {
                       />
                     </label>
 
-                    <label className="space-y-1.5">
+                    <label className="space-y-1.5" htmlFor="register-district">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("District", "जिल्हा")}
                       </span>
 	                      <select
+	                        id="register-district"
 	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
 	                        name="district"
 	                        autoComplete="address-level2"
@@ -511,11 +517,12 @@ export default function RegisterPage() {
                       </select>
                     </label>
 
-                    <label className="space-y-1.5 md:col-span-2">
+                    <label className="space-y-1.5 md:col-span-2" htmlFor="register-pincode">
                       <span className="text-xs font-bold uppercase tracking-wider text-outline">
                         {langText("Pincode", "पिनकोड")}
                       </span>
 	                      <input
+	                        id="register-pincode"
 	                        className="w-full rounded-xl bg-surface-container-low px-4 py-3.5 text-on-surface shadow-sm outline-none transition-[background-color,box-shadow] focus:ring-2 focus:ring-primary-container/40"
 	                        name="pincode"
 	                        autoComplete="postal-code"

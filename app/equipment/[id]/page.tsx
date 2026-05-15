@@ -9,6 +9,28 @@ import { getShareImageUrl, SITE_NAME } from "@/lib/site-metadata";
 
 export const dynamicParams = true;
 
+function buildEquipmentMetaDescription({
+  name,
+  description,
+  locationLabel,
+}: {
+  name: string;
+  description?: string;
+  locationLabel: string;
+}) {
+  const cleanDescription = description?.trim();
+  const baseDescription =
+    cleanDescription && cleanDescription.length >= 120
+      ? cleanDescription
+      : `${name} farm equipment rental${locationLabel ? ` in ${locationLabel}` : ""}. Review photos, listed rate, owner details, availability, and booking options before contacting the owner.`;
+
+  if (baseDescription.length <= 155) {
+    return baseDescription;
+  }
+
+  return `${baseDescription.slice(0, 152).trim()}...`;
+}
+
 export async function generateMetadata({
   params,
 }: {
@@ -31,9 +53,11 @@ export async function generateMetadata({
     ? `${equipment.name} for Rent in ${locationLabel}`
     : `${equipment.name} for Rent`;
   const fullListingTitle = `${listingTitle} | ${SITE_NAME}`;
-  const metaDescription =
-    equipment.description?.trim() ||
-    `${equipment.name} farm equipment listing on Kisan Kamai. Review the listed rate, equipment details, owner information, and booking request options.`;
+  const metaDescription = buildEquipmentMetaDescription({
+    name: equipment.name,
+    description: equipment.description,
+    locationLabel,
+  });
   const baseCoverImageUrl = equipment.coverImage.startsWith("http")
     ? equipment.coverImage
     : `${siteUrl}${assetPath(equipment.coverImage)}`;

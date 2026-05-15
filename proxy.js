@@ -32,11 +32,18 @@ function nextWithCrawlerHeader(request) {
     requestHeaders.set(CRAWLER_HEADER_NAME, "1");
   }
 
-  return NextResponse.next({
+  const response = NextResponse.next({
     request: {
       headers: requestHeaders,
     },
   });
+
+  const { pathname, searchParams } = request.nextUrl;
+  if (pathname === "/rent-equipment" && searchParams.size > 0) {
+    response.headers.set("X-Robots-Tag", "noindex, follow");
+  }
+
+  return response;
 }
 
 export function proxy(request) {
