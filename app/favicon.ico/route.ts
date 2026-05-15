@@ -2,12 +2,12 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 
 export async function GET() {
-  const faviconPng = await readFile(path.join(process.cwd(), "public/brand/kisan-kamai-tractor-48.png"));
+  const favicon = await readFile(path.join(process.cwd(), "public/brand/kisan-kamai-favicon.ico"));
 
-  return new Response(faviconPng, {
+  return new Response(favicon, {
     headers: {
-      "Content-Type": "image/png",
-      "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
+      "Content-Type": "image/x-icon",
+      "Cache-Control": "public, max-age=3600, stale-while-revalidate=86400",
     },
   });
 }

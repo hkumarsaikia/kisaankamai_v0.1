@@ -125,6 +125,7 @@ test("root metadata declares a real icon so dropdown QA has no favicon 404", asy
   assert.doesNotMatch(layout, /icon:\s*\[\s*\{\s*url:\s*"\/assets\/generated\/hero_tractor\.png"/s);
   assert.match(manifest, /\/favicon\.ico/);
   assert.doesNotMatch(manifest, /\/assets\/generated\/hero_tractor\.png/);
-  assert.match(faviconRoute, /image\/png/);
-  assert.match(faviconRoute, /kisan-kamai-tractor-48\.png/);
+  assert.match(faviconRoute, /public\/brand\/kisan-kamai-favicon\.ico/);
+  assert.match(faviconRoute, /image\/x-icon/);
+  assert.doesNotMatch(faviconRoute, /image\/png/);
 });

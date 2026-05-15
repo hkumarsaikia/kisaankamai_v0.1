@@ -53,7 +53,7 @@ test("footer sections include only the approved marketplace and trust routes", a
 });
 
 test("brand logo, favicon, profile shell, and footer marker follow the approved brand treatment", async () => {
-  const [headerSource, footerSource, faviconRoute, manifestSource, logoSource, profileShell, layoutSource, loginSource] = await Promise.all([
+  const [headerSource, footerSource, faviconRoute, manifestSource, logoSource, profileShell, layoutSource, loginSource, faviconBinary] = await Promise.all([
     readFile(new URL("../components/Header.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/Footer.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/favicon.ico/route.ts", import.meta.url), "utf8"),
@@ -62,6 +62,7 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
     readFile(new URL("../components/owner-profile/OwnerProfileWorkspaceShell.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../public/brand/kisan-kamai-favicon.ico", import.meta.url)),
   ]);
 
   assert.match(headerSource, /<BrandLogo/);
@@ -95,10 +96,14 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.doesNotMatch(profileShell, /kk-workspace-portal-label[^"]*tracking-\[0\.22em\]/);
   assert.match(profileShell, /lg:h-svh lg:overflow-hidden/);
   assert.match(profileShell, /lg:h-svh lg:min-h-0 lg:overflow-y-auto/);
-  assert.match(faviconRoute, /kisan-kamai-tractor-48\.png/);
-  assert.match(faviconRoute, /image\/png/);
+  assert.match(faviconRoute, /public\/brand\/kisan-kamai-favicon\.ico/);
+  assert.match(faviconRoute, /image\/x-icon/);
+  assert.doesNotMatch(faviconRoute, /image\/png/);
+  assert.deepEqual([...faviconBinary.subarray(0, 4)], [0, 0, 1, 0]);
   assert.match(layoutSource, /shortcut:\s*"\/favicon\.ico"/);
+  assert.match(layoutSource, /url:\s*"\/favicon\.ico"[\s\S]*type:\s*"image\/x-icon"/);
   assert.match(manifestSource, /\/favicon\.ico/);
+  assert.match(manifestSource, /src:\s*"\/favicon\.ico"[\s\S]*type:\s*"image\/x-icon"/);
   assert.match(manifestSource, /\/brand\/kisan-kamai-tractor-192\.png/);
   assert.match(layoutSource, /\/brand\/kisan-kamai-tractor\.svg/);
   assert.match(layoutSource, /\/brand\/kisan-kamai-tractor-48\.png/);
