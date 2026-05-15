@@ -278,7 +278,7 @@ function Sidebar({
               textClassName="[&>span:first-child]:text-[1.2rem]"
             />
           </Link>
-          <p className="kk-workspace-portal-label mt-2 pl-[4.2rem] font-label text-[0.68rem] font-black uppercase tracking-[0.22em] text-on-surface-variant">
+          <p className="kk-workspace-portal-label mt-2 pl-[0.375rem] font-label text-[0.68rem] font-black uppercase tracking-[0.22em] text-on-surface-variant">
             {text(config.portalLabel)}
           </p>
         </div>

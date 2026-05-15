@@ -1,9 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Legal Policies",
-    description: "Review Kisan Kamai legal policies for using the farm equipment marketplace.",
-    path: "/legal",
-  });
+  return renderPublicPageHead("legal");
 }

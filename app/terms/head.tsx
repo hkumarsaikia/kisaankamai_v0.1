@@ -1,9 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Terms and Safety Guidelines",
-    description: "Review Kisan Kamai terms, direct-dealing guidelines, and safety rules for farm equipment owners and renters.",
-    path: "/terms",
-  });
+  return renderPublicPageHead("terms");
 }

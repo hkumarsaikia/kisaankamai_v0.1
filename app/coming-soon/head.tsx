@@ -1,9 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Kisan Kamai Expansion Updates",
-    description: "Track where Kisan Kamai is expanding next and request updates when farm equipment access launches near your area.",
-    path: "/coming-soon",
-  });
+  return renderPublicPageHead("comingSoon");
 }

@@ -1420,8 +1420,6 @@
   width: 100% !important;
   max-width: 100% !important;
   min-width: 100% !important;
-  left: 0 !important;
-  right: 0 !important;
   text-align: center !important;
   text-align-last: center !important;
 }
@@ -1437,8 +1435,6 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  inset-inline: 0 !important;
-  transform: none !important;
   padding-inline: 1rem !important;
   margin-inline: auto !important;
   white-space: normal !important;
@@ -1464,25 +1460,20 @@
 
 .kk-google-map-gesture-overlay {
   box-sizing: border-box !important;
-  left: 50% !important;
-  right: auto !important;
-  top: 50% !important;
-  bottom: auto !important;
   display: flex !important;
-  width: min(calc(100% - 2rem), 34rem) !important;
-  min-width: 0 !important;
-  max-width: calc(100% - 2rem) !important;
+  width: 100% !important;
+  max-width: 100% !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 0 !important;
-  transform: translate(-50%, -50%) !important;
   text-align: center !important;
   text-align-last: center !important;
   white-space: normal !important;
 }
 
 .kk-google-map-gesture-overlay-text {
-  width: 100% !important;
+  display: block !important;
+  width: min(calc(100% - 2rem), 34rem) !important;
+  max-width: calc(100% - 2rem) !important;
   margin-inline: auto !important;
   text-align: center !important;
   text-align-last: center !important;

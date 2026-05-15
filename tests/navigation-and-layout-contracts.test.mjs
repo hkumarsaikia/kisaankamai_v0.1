@@ -80,6 +80,7 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.match(profileShell, /aria-label="Kisan Kamai"/);
   assert.match(profileShell, /text\(config\.portalLabel\)/);
   assert.match(profileShell, /kk-workspace-portal-label/);
+  assert.match(profileShell, /pl-\[0\.375rem\]/);
   assert.match(profileShell, /lg:h-svh lg:overflow-hidden/);
   assert.match(profileShell, /lg:h-svh lg:min-h-0 lg:overflow-y-auto/);
   assert.match(faviconRoute, /kisan-kamai-tractor-48\.png/);
@@ -98,8 +99,11 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.doesNotMatch(headerSource, /Smart Equipment Rental/);
   assert.doesNotMatch(logoSource, /Kamai<span className="text-secondary/);
   assert.doesNotMatch(logoSource, /shadow-\[inset/);
-  assert.match(footerSource, /max-w-\[88rem\]/);
-  assert.match(footerSource, /md:grid-cols-\[minmax\(18rem,1\.35fr\)_minmax\(10rem,0\.85fr\)_minmax\(10rem,0\.85fr\)_minmax\(18rem,1\.2fr\)\]/);
+  assert.match(footerSource, /max-w-\[96rem\]/);
+  assert.match(footerSource, /md:grid-cols-\[minmax\(20rem,1\.65fr\)_minmax\(10rem,0\.72fr\)_minmax\(10rem,0\.72fr\)_minmax\(22rem,1\.45fr\)\]/);
+  assert.match(footerSource, /md:justify-self-start/);
+  assert.match(footerSource, /md:justify-self-center/);
+  assert.match(footerSource, /md:justify-self-end/);
 });
 
 test("support page no longer contains the instant callback CTA", async () => {

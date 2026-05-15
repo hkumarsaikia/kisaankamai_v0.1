@@ -1,10 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Sign Out",
-    description: "Sign out of your Kisan Kamai account.",
-    path: "/logout",
-    noIndex: true,
-  });
+  return renderPublicPageHead("logout");
 }

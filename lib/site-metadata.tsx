@@ -35,7 +35,7 @@ export function getDefaultShareImageUrl() {
   return getShareImageUrl(DEFAULT_SHARE_IMAGE_PATH);
 }
 
-type PageMetadataInput = {
+export type PageMetadataInput = {
   title: string;
   description: string;
   path: string;

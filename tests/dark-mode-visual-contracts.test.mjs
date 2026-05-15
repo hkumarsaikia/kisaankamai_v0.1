@@ -82,6 +82,9 @@ test("latest dark-mode visibility fixes cover partner, coming soon, owner benefi
   assert.match(globals, /\.gm-style \.gm-style-pbc \*/);
   assert.match(globals, /\.gm-style \.gm-style-pbt \*/);
   assert.match(globals, /text-align-last:\s*center !important/);
+  assert.doesNotMatch(globals, /\.kk-google-map-gesture-overlay\s*\{[^}]*left:\s*50% !important/);
+  assert.doesNotMatch(globals, /\.kk-google-map-gesture-overlay\s*\{[^}]*transform:\s*translate\(-50%, -50%\) !important/);
+  assert.doesNotMatch(globals, /\.kk-google-map-gesture-overlay\s*\{[^}]*width:\s*min\(calc\(100% - 2rem\), 34rem\) !important/);
 });
 
 test("requested public banner imagery uses one shared overlay while product imagery stays clear", async () => {

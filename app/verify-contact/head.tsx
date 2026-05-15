@@ -1,10 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Review Contact Details",
-    description: "Review your saved contact details before continuing into Kisan Kamai.",
-    path: "/verify-contact",
-    noIndex: true,
-  });
+  return renderPublicPageHead("verifyContact");
 }

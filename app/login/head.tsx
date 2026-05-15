@@ -1,10 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Account Login",
-    description: "Sign in to your Kisan Kamai owner or renter account with your registered mobile number.",
-    path: "/login",
-    noIndex: true,
-  });
+  return renderPublicPageHead("login");
 }

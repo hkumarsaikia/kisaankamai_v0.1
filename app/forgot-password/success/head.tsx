@@ -1,10 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Password Reset Complete",
-    description: "Your Kisan Kamai password reset steps are complete.",
-    path: "/forgot-password/success",
-    noIndex: true,
-  });
+  return renderPublicPageHead("forgotPasswordSuccess");
 }

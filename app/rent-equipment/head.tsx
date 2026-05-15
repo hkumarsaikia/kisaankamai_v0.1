@@ -1,9 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Rent Farm Equipment in Maharashtra",
-    description: "Browse tractors, implements, harvesters, pumps, seeders, and other farm equipment available through Kisan Kamai.",
-    path: "/rent-equipment",
-  });
+  return renderPublicPageHead("rentEquipment");
 }

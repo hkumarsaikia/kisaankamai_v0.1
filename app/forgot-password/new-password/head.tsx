@@ -1,10 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Create a New Password",
-    description: "Set a new password for your Kisan Kamai account.",
-    path: "/forgot-password/new-password",
-    noIndex: true,
-  });
+  return renderPublicPageHead("forgotPasswordNewPassword");
 }

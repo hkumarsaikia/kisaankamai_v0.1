@@ -107,8 +107,8 @@ export const Footer = () => {
       className="kk-site-footer w-full border-t border-slate-800 bg-slate-900 py-16 text-left dark:bg-black"
       style={{ viewTransitionName: "persistent-footer" }}
     >
-      <div className="mx-auto grid max-w-[88rem] grid-cols-1 gap-10 px-5 text-sm sm:px-8 md:grid-cols-[minmax(18rem,1.35fr)_minmax(10rem,0.85fr)_minmax(10rem,0.85fr)_minmax(18rem,1.2fr)] xl:gap-20">
-        <div className="col-span-1 md:col-span-1">
+      <div className="mx-auto grid max-w-[96rem] grid-cols-1 gap-10 px-5 text-sm sm:px-8 md:grid-cols-[minmax(20rem,1.65fr)_minmax(10rem,0.72fr)_minmax(10rem,0.72fr)_minmax(22rem,1.45fr)] lg:gap-14 xl:gap-24 2xl:px-0">
+        <div className="col-span-1 md:col-span-1 md:justify-self-start">
           <Link 
             href="/" 
             className="mb-8 block w-fit transition-transform hover:-translate-y-1"
@@ -149,7 +149,7 @@ export const Footer = () => {
             </a>
           </div>
         </div>
-        <div>
+        <div className="md:justify-self-center">
           <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.marketplace")}</h5>
           <ul className="space-y-4">
             {FOOTER_MARKETPLACE_LINKS.map((link) => (
@@ -161,7 +161,7 @@ export const Footer = () => {
             ))}
           </ul>
         </div>
-        <div>
+        <div className="md:justify-self-center">
           <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.trust_and_company")}</h5>
           <ul className="space-y-4">
             {FOOTER_TRUST_LINKS.map((link) => (
@@ -173,7 +173,7 @@ export const Footer = () => {
             ))}
           </ul>
         </div>
-        <div>
+        <div className="w-full md:max-w-sm md:justify-self-end">
           <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.newsletter")}</h5>
 	          <p className="text-slate-400 mb-4 font-normal">{t("Footer.stay_updated_on_agricultural_trends_and_new_equipment_listings")}</p>
 	          <form className="flex gap-2" onSubmit={handleNewsletterSubmit}>
@@ -234,7 +234,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="mx-auto mt-16 max-w-[88rem] border-t border-slate-800 px-5 pt-8 text-center sm:px-8">
+      <div className="mx-auto mt-16 max-w-[96rem] border-t border-slate-800 px-5 pt-8 text-center sm:px-8 2xl:px-0">
         <p className="text-slate-400 text-sm font-normal">
           {langText(
             "© 2026 Kisan Kamai. All rights reserved. Built with care for Bharat.",

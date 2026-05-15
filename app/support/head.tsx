@@ -1,9 +1,5 @@
-import { renderHeadMetadata } from "@/lib/site-metadata";
+import { renderPublicPageHead } from "@/lib/public-page-head";
 
 export default function Head() {
-  return renderHeadMetadata({
-    title: "Kisan Kamai Support",
-    description: "Contact Kisan Kamai support for help with equipment listings, booking requests, account access, and platform questions.",
-    path: "/support",
-  });
+  return renderPublicPageHead("support");
 }

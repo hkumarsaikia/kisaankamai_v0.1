@@ -108,9 +108,9 @@ test("root app exposes production metadata and crawler/share endpoints", async (
   assert.match(siteMetadataSource, /https:\/\/www\.kisankamai\.com/);
   assert.match(robotsSource, /sitemap/i);
   assert.match(manifestSource, /Kisan Kamai/);
-  assert.match(categoriesHeadSource, /renderHeadMetadata/);
-  assert.match(faqHeadSource, /renderHeadMetadata/);
-  assert.match(forgotPasswordHeadSource, /renderHeadMetadata/);
+  assert.match(categoriesHeadSource, /renderPublicPageHead\("categories"\)/);
+  assert.match(faqHeadSource, /renderPublicPageHead\("faq"\)/);
+  assert.match(forgotPasswordHeadSource, /renderPublicPageHead\("forgotPassword"\)/);
 });
 
 test("sitemap and public equipment details only expose live public Firestore listings", async () => {

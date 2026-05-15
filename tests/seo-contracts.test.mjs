@@ -29,6 +29,7 @@ test("public SEO metadata brands titles, supports noindex pages, and includes st
   assert.match(layoutSource, /buildLanguageBootScript\(initialLanguage\)/);
   assert.match(layoutSource, /type: "image\/jpeg"/);
   assert.match(layoutSource, /max-image-preview:large/);
+  assert.match(layoutSource, /name="google" content="notranslate"/);
   assert.match(layoutSource, /og:image:url/);
   assert.match(layoutSource, /rel="image_src"/);
   assert.match(layoutSource, /"@type": "WebSite"/);
@@ -132,25 +133,47 @@ test("live Lighthouse accessibility fixes keep labels and canonical paths valid"
 });
 
 test("page share previews use route metadata exports, dedicated thumbnails, and cache-busted images", async () => {
-  const [metadataSource, pageMetadataSource, nextConfigSource, howItWorksLayout, supportLayout, ownerBenefitsLayout] = await Promise.all([
+  const [
+    metadataSource,
+    pageMetadataSource,
+    publicHeadSource,
+    nextConfigSource,
+    howItWorksLayout,
+    supportLayout,
+    ownerBenefitsLayout,
+    rentEquipmentHead,
+    supportHead,
+    ownerBenefitsHead,
+  ] = await Promise.all([
     readFile(new URL("../lib/site-metadata.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/public-page-metadata.ts", import.meta.url), "utf8"),
+    readFile(new URL("../lib/public-page-head.tsx", import.meta.url), "utf8"),
     readFile(new URL("../next.config.mjs", import.meta.url), "utf8"),
     readFile(new URL("../app/how-it-works/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/support/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/owner-benefits/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/rent-equipment/head.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/support/head.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-benefits/head.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(metadataSource, /imageUrl\.searchParams\.set\("v", getShareCacheVersion\(\)\)/);
   assert.match(metadataSource, /title,\s*\n\s*description,/);
   assert.match(nextConfigSource, /CDN-Cache-Control/);
   assert.match(nextConfigSource, /\/assets\/share\/:path\*/);
-  assert.match(pageMetadataSource, /ownerBenefits: buildPageMetadata\(\{[\s\S]*imagePath: "\/assets\/share\/pages\/owner-benefits\.jpg"/);
-  assert.match(pageMetadataSource, /support: buildPageMetadata\(\{[\s\S]*imagePath: "\/assets\/share\/pages\/support\.jpg"/);
-  assert.match(pageMetadataSource, /howItWorks: buildPageMetadata\(\{[\s\S]*imagePath: "\/assets\/share\/pages\/how-it-works\.jpg"/);
+  assert.match(pageMetadataSource, /ownerBenefits: \{[\s\S]*imagePath: "\/assets\/share\/pages\/owner-benefits\.jpg"/);
+  assert.match(pageMetadataSource, /support: \{[\s\S]*imagePath: "\/assets\/share\/pages\/support\.jpg"/);
+  assert.match(pageMetadataSource, /howItWorks: \{[\s\S]*imagePath: "\/assets\/share\/pages\/how-it-works\.jpg"/);
+  assert.match(pageMetadataSource, /rentEquipment: \{[\s\S]*imagePath: "\/assets\/share\/pages\/rent-equipment\.jpg"/);
+  assert.match(pageMetadataSource, /export const publicPageMetadataInputs/);
+  assert.match(publicHeadSource, /renderPublicPageHead/);
+  assert.match(publicHeadSource, /renderHeadMetadata\(publicPageMetadataInputs\[key\]\)/);
   assert.match(howItWorksLayout, /metadata = publicPageMetadata\.howItWorks/);
   assert.match(supportLayout, /metadata = publicPageMetadata\.support/);
   assert.match(ownerBenefitsLayout, /metadata = publicPageMetadata\.ownerBenefits/);
+  assert.match(rentEquipmentHead, /renderPublicPageHead\("rentEquipment"\)/);
+  assert.match(supportHead, /renderPublicPageHead\("support"\)/);
+  assert.match(ownerBenefitsHead, /renderPublicPageHead\("ownerBenefits"\)/);
 
   await Promise.all(
     [
