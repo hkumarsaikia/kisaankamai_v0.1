@@ -269,7 +269,7 @@ export default async function RootLayout({
             <DepthMotion />
             <AuthProvider initialSession={initialSession}>
               <NavigationTransitionProvider>
-                <SiteChrome>
+                <SiteChrome crawlerSafeLabels={crawlerRequest}>
                   {children}
                 </SiteChrome>
               </NavigationTransitionProvider>

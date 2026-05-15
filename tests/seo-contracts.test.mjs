@@ -26,6 +26,7 @@ test("public SEO metadata brands titles, supports noindex pages, and includes st
   assert.match(metadataSource, /noindex,follow/);
   assert.match(layoutSource, /siteStructuredData/);
   assert.match(layoutSource, /crawlerRequest \|\| !hasBrowserLanguageHeader/);
+  assert.match(layoutSource, /<SiteChrome crawlerSafeLabels=\{crawlerRequest\}/);
   assert.match(layoutSource, /buildLanguageBootScript\(initialLanguage\)/);
   assert.match(layoutSource, /type: "image\/jpeg"/);
   assert.match(layoutSource, /max-image-preview:large/);
@@ -116,13 +117,17 @@ test("public Marathi mode uses source-controlled labels for highlighted marketin
 });
 
 test("live Lighthouse accessibility fixes keep labels and canonical paths valid", async () => {
-  const [headerSource, footerSource, homeSource, rentPageSource] = await Promise.all([
+  const [headerSource, siteChromeSource, footerSource, homeSource, rentPageSource] = await Promise.all([
     readFile(new URL("../components/Header.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../components/SiteChrome.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/Footer.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/rent-equipment/page.tsx", import.meta.url), "utf8"),
   ]);
 
+  assert.match(headerSource, /crawlerSafeLabels/);
+  assert.match(headerSource, /\? "Marathi"/);
+  assert.match(siteChromeSource, /crawlerSafeLabels=\{crawlerSafeLabels\}/);
   assert.match(headerSource, /const accessibleLabel = `\$\{buttonLabel\} - \$\{ariaLabel\}`/);
   assert.match(headerSource, /aria-label=\{accessibleLabel\}/);
   assert.match(footerSource, /text-slate-400 text-xs font-normal/);

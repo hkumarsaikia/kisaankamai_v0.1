@@ -13,12 +13,18 @@ import { BrandLogo } from "./BrandLogo";
 
 type HeaderLanguageControlProps = {
   className?: string;
+  crawlerSafeLabels?: boolean;
 };
 
-export const HeaderLanguageControl = ({ className = "" }: HeaderLanguageControlProps) => {
+export const HeaderLanguageControl = ({ className = "", crawlerSafeLabels = false }: HeaderLanguageControlProps) => {
   const { language, setLanguage, t } = useLanguage();
   const nextLanguage = language === "en" ? "mr" : "en";
-  const buttonLabel = nextLanguage === "mr" ? t("language.marathi") : t("language.english");
+  const buttonLabel =
+    nextLanguage === "mr" && crawlerSafeLabels
+      ? "Marathi"
+      : nextLanguage === "mr"
+        ? t("language.marathi")
+        : t("language.english");
   const ariaLabel = nextLanguage === "mr" ? t("language.switch_to_marathi") : t("language.switch_to_english");
   const accessibleLabel = `${buttonLabel} - ${ariaLabel}`;
 
@@ -35,7 +41,7 @@ export const HeaderLanguageControl = ({ className = "" }: HeaderLanguageControlP
   );
 };
 
-export const Header = () => {
+export const Header = ({ crawlerSafeLabels = false }: { crawlerSafeLabels?: boolean }) => {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const { t, langText } = useLanguage();
@@ -93,7 +99,7 @@ export const Header = () => {
           {/* Right: Actions */}
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:gap-3">
             <ThemeToggle />
-            <HeaderLanguageControl className="hidden md:flex" />
+            <HeaderLanguageControl className="hidden md:flex" crawlerSafeLabels={crawlerSafeLabels} />
 
             {/* Show Login + Register only if not logged in */}
             {!user ? (

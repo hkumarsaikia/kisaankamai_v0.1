@@ -15,6 +15,9 @@ Date: 2026-05-15 10:21 IST
   text centers in the tile without moving the whole gesture overlay.
 - Keep crawler and share-preview HTML in English for Googlebot and social bots,
   even while normal browser visits can default to Marathi.
+- For crawler HTML, the language switch control renders `Marathi` instead of
+  the Marathi-script label so Google Search snippets do not pick up stray
+  Devanagari from site chrome.
 - Reuse the route metadata inputs for `head.tsx` files so non-homepage public
   links expose page-specific Open Graph and Twitter preview images.
 - Align owner/renter workspace labels from the logo/cart edge in the sidebar.

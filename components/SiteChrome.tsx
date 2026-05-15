@@ -5,7 +5,13 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { shouldHideSiteChrome } from "@/lib/site-chrome-routes";
 
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({
+  children,
+  crawlerSafeLabels = false,
+}: {
+  children: React.ReactNode;
+  crawlerSafeLabels?: boolean;
+}) {
   const pathname = usePathname() || "";
   const compactContentMain = pathname.startsWith("/rent-equipment");
 
@@ -15,7 +21,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Header />
+      <Header crawlerSafeLabels={crawlerSafeLabels} />
       <main id="main-content" className={compactContentMain ? "" : "flex-grow"}>
         {children}
       </main>
