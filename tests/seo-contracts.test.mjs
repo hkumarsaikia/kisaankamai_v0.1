@@ -30,7 +30,8 @@ test("public SEO metadata brands titles, supports noindex pages, and includes st
   assert.match(layoutSource, /<SiteChrome crawlerSafeLabels=\{crawlerSafeEnglishChrome\}/);
   assert.match(layoutSource, /buildLanguageBootScript\(initialLanguage\)/);
   assert.match(layoutSource, /type: "image\/jpeg"/);
-  assert.match(layoutSource, /max-image-preview:large/);
+  assert.match(layoutSource, /max-image-preview:none/);
+  assert.doesNotMatch(layoutSource, /max-image-preview:large/);
   assert.match(layoutSource, /name="google" content="notranslate"/);
   assert.match(layoutSource, /og:image:url/);
   assert.match(layoutSource, /rel="image_src"/);

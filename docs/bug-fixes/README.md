@@ -25,6 +25,7 @@ docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/
 
 ## Current Bundles
 
+- `2026-05-15-223357-IST-google-search-thumbnail-removal/`: changed Google crawler image preview policy to remove search-result thumbnails while preserving social share images.
 - `2026-05-15-214533-IST-google-search-favicon-ico/`: real ICO favicon signal for Google/browser favicon discovery, metadata and manifest type correction, and agent-browser validation.
 - `2026-05-15-151019-IST-owner-listing-upload-route/`: owner workspace listing route, three-photo upload body limit, listing/profile upload loaders, workspace footer copy, and favicon priority.
 - `2026-05-14-215020-IST-global-view-transitions/`: native React view transitions enabled across public and workspace routes with persistent chrome isolation.

@@ -234,7 +234,7 @@ export default async function RootLayout({
     >
       <head>
         <link rel="image_src" href={getDefaultShareImageUrl()} />
-        <meta name="robots" content="index,follow,max-image-preview:large" />
+        <meta name="robots" content="index,follow,max-image-preview:none" />
         <meta name="google" content="notranslate" />
         <meta name="thumbnail" content={getDefaultShareImageUrl()} />
         <meta property="og:locale" content="en_IN" />
