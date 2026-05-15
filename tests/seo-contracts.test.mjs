@@ -25,6 +25,8 @@ test("public SEO metadata brands titles, supports noindex pages, and includes st
   assert.match(metadataSource, /noIndex\?: boolean/);
   assert.match(metadataSource, /noindex,follow/);
   assert.match(layoutSource, /siteStructuredData/);
+  assert.match(layoutSource, /crawlerRequest[\s\S]*\?\s*"en"/);
+  assert.match(layoutSource, /buildLanguageBootScript\(initialLanguage\)/);
   assert.match(layoutSource, /type: "image\/jpeg"/);
   assert.match(layoutSource, /max-image-preview:large/);
   assert.match(layoutSource, /og:image:url/);

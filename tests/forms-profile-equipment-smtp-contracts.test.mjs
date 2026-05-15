@@ -98,6 +98,11 @@ test("profile settings use the supplied local page structure, uploads, readonly 
   assert.match(settings, /setSession\(payload\.session\)/);
   assert.match(settings, /emitAuthSyncEvent\("session-refresh"\)/);
   assert.match(settings, /refreshProfile\(\)/);
+  assert.match(settings, /buildProfileUpdatePayload/);
+  assert.match(settings, /hasProfileChanges/);
+  assert.match(settings, /Edit a field before saving\./);
+  assert.match(settings, /disabled=\{isSubmitting \|\| !hasProfileChanges\}/);
+  assert.match(settings, /setLastSavedPayload\(currentPayload\)/);
   assert.match(settings, /aria-label=\{langText\("Upload or change profile photo"/);
   assert.match(settings, /readOnly[\s\S]*Phone/);
   assert.match(settings, /MAHARASHTRA_DISTRICTS/);

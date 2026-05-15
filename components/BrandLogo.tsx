@@ -1,3 +1,7 @@
+"use client";
+
+import { useLanguage } from "@/components/LanguageContext";
+
 type BrandLogoProps = {
   className?: string;
   markClassName?: string;
@@ -49,7 +53,13 @@ export function BrandLogo({
   textClassName = "",
   showSubtitle = false,
 }: BrandLogoProps) {
-  const accessibleLabel = showSubtitle ? "Kisan Kamai Smart Equipment Rental" : "Kisan Kamai";
+  const { t, langText } = useLanguage();
+  const brandName = t("common.brand");
+  const brandParts = brandName.split(/\s+/).filter(Boolean);
+  const firstPart = brandParts[0] || brandName;
+  const secondPart = brandParts.slice(1).join(" ");
+  const subtitle = langText("Smart Equipment Rental", "स्मार्ट उपकरण भाडे");
+  const accessibleLabel = showSubtitle ? `${brandName} ${subtitle}` : brandName;
 
   return (
     <span
@@ -61,12 +71,17 @@ export function BrandLogo({
       </span>
       <span className={`kk-brand-logo-text flex min-w-0 flex-col justify-center leading-none ${textClassName}`}>
         <span className="whitespace-nowrap font-label text-[1.95rem] font-extrabold leading-[1.05] tracking-[-0.03em]">
-          <span className="text-[#15803d]">Kisan</span>{" "}
-          <span className="text-[#1f2937]">Kamai</span>
+          <span className="text-[#15803d]">{firstPart}</span>
+          {secondPart ? (
+            <>
+              {" "}
+              <span className="text-[#1f2937]">{secondPart}</span>
+            </>
+          ) : null}
         </span>
         {showSubtitle ? (
           <span className="mt-1 font-label text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-[#6b7280]">
-            Smart Equipment Rental
+            {subtitle}
           </span>
         ) : null}
       </span>

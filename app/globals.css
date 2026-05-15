@@ -1462,6 +1462,33 @@
   text-align-last: center !important;
 }
 
+.kk-google-map-gesture-overlay {
+  box-sizing: border-box !important;
+  left: 50% !important;
+  right: auto !important;
+  top: 50% !important;
+  bottom: auto !important;
+  display: flex !important;
+  width: min(calc(100% - 2rem), 34rem) !important;
+  min-width: 0 !important;
+  max-width: calc(100% - 2rem) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transform: translate(-50%, -50%) !important;
+  text-align: center !important;
+  text-align-last: center !important;
+  white-space: normal !important;
+}
+
+.kk-google-map-gesture-overlay-text {
+  width: 100% !important;
+  margin-inline: auto !important;
+  text-align: center !important;
+  text-align-last: center !important;
+  white-space: normal !important;
+}
+
 .no-scrollbar::-webkit-scrollbar,
 .hide-scrollbar::-webkit-scrollbar {
   display: none;

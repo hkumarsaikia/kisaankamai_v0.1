@@ -2,6 +2,7 @@
 
 import { type FormEvent, useState } from "react";
 import { AppLink as Link } from "@/components/AppLink";
+import { LogoMark } from "@/components/BrandLogo";
 import { useLanguage } from "@/components/LanguageContext";
 import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 
@@ -156,12 +157,7 @@ export default function LoginPage() {
           <div className="space-y-10">
             <div className="space-y-4 text-center">
               <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-primary-container/10 ring-1 ring-primary-container/20">
-                <span
-                  className="material-symbols-outlined text-5xl text-primary"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  agriculture
-                </span>
+                <LogoMark className="h-14 w-14" />
               </div>
               <div className="space-y-1">
                 <h1 className="font-headline text-3xl font-extrabold tracking-tight text-on-background">

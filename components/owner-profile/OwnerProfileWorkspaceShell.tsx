@@ -259,6 +259,9 @@ function Sidebar({
   activeTab: WorkspaceTab;
   onNavigate?: () => void;
 }) {
+  const { text } = useLanguage();
+  const config = WORKSPACE_CONFIG[family];
+
   return (
     <div className="flex h-full flex-col bg-white dark:bg-slate-950">
       <div className="space-y-4 px-6 py-8">
@@ -275,6 +278,9 @@ function Sidebar({
               textClassName="[&>span:first-child]:text-[1.2rem]"
             />
           </Link>
+          <p className="kk-workspace-portal-label mt-2 pl-[4.2rem] font-label text-[0.68rem] font-black uppercase tracking-[0.22em] text-on-surface-variant">
+            {text(config.portalLabel)}
+          </p>
         </div>
       </div>
 
@@ -349,7 +355,7 @@ export function OwnerProfileWorkspaceShell({
   }, [pathname]);
 
   return (
-    <div className="kk-workspace-shell min-h-svh bg-background font-body text-on-background antialiased dark:bg-slate-950 dark:text-slate-100">
+    <div className="kk-workspace-shell min-h-svh bg-background font-body text-on-background antialiased dark:bg-slate-950 dark:text-slate-100 lg:h-svh lg:overflow-hidden">
       {mobileOpen ? (
         <div className="fixed inset-0 z-[70] lg:hidden">
           <button
@@ -371,7 +377,7 @@ export function OwnerProfileWorkspaceShell({
         <Sidebar family={family} activeTab={activeTab} />
       </aside>
 
-      <main className="kk-workspace-main flex min-h-svh flex-col lg:ml-64" id="main-content">
+      <main className="kk-workspace-main flex min-h-svh flex-col lg:ml-64 lg:h-svh lg:min-h-0 lg:overflow-y-auto" id="main-content">
         <header
           className="kk-workspace-header sticky top-0 z-30 border-b border-surface-container-highest bg-white/95 backdrop-blur-md dark:border-slate-800 dark:bg-slate-950/95"
           style={{ viewTransitionName: "persistent-workspace-header" }}

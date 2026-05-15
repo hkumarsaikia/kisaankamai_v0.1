@@ -40,7 +40,8 @@ function isCrawlerUserAgent(userAgent: string | null) {
   );
 }
 
-const languageBootScript = `
+function buildLanguageBootScript(fallbackLanguage: Language) {
+  return `
 (() => {
   try {
     const cookieMatch = document.cookie.match(/(?:^|; )kk_language=(en|mr)(?:;|$)/);
@@ -55,7 +56,7 @@ const languageBootScript = `
       return;
     }
 
-    const language = cookieLanguage || "mr";
+    const language = cookieLanguage || "${fallbackLanguage}";
     if (savedLanguage !== language) {
       window.localStorage.setItem("kk_language", language);
     }
@@ -69,6 +70,7 @@ const languageBootScript = `
   }
 })();
 `;
+}
 const themeBootScript = `
 (() => {
   try {
@@ -103,6 +105,7 @@ export const metadata: Metadata = {
   applicationName: SITE_NAME,
   manifest: "/manifest.webmanifest",
   icons: {
+    shortcut: "/favicon.ico",
     icon: [
       {
         url: "/brand/kisan-kamai-tractor-48.png",
@@ -210,6 +213,7 @@ export default async function RootLayout({
   const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME)?.value;
   let initialSession: LocalSession | null = null;
   const buildRevision = getBuildRevision();
+  const languageBootScript = buildLanguageBootScript(initialLanguage);
 
   if (sessionCookie && sessionCookie.trim() && sessionCookie !== "undefined" && sessionCookie !== "null") {
     const { getCurrentSession } = await import("@/lib/server/local-auth");

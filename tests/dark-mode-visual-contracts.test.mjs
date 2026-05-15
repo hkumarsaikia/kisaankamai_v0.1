@@ -53,13 +53,14 @@ test("reported dark-mode problem pages do not use low-contrast primary-container
 });
 
 test("latest dark-mode visibility fixes cover partner, coming soon, owner benefits, sort menu, login toast, and map overlay", async () => {
-  const [partner, comingSoon, ownerBenefits, sortMenu, detail, globals] = await Promise.all([
+  const [partner, comingSoon, ownerBenefits, sortMenu, detail, globals, mapSource] = await Promise.all([
     readSource("../app/partner/page.tsx"),
     readSource("../app/coming-soon/page.tsx"),
     readSource("../app/owner-benefits/page.tsx"),
     readSource("../components/equipment/EquipmentSortMenu.tsx"),
     readSource("../app/equipment/[id]/EquipmentDetailClient.tsx"),
     readSource("../app/globals.css"),
+    readSource("../components/MapComponent.tsx"),
   ]);
 
   assert.match(partner, /dark:border-slate-700 dark:bg-slate-900\/85/);
@@ -74,6 +75,8 @@ test("latest dark-mode visibility fixes cover partner, coming soon, owner benefi
   assert.match(globals, /\.kk-login-toast-error/);
   assert.match(globals, /\.gm-style \.gm-style-pbc/);
   assert.match(globals, /text-align:\s*center !important/);
+  assert.match(mapSource, /kk-google-map-gesture-overlay/);
+  assert.match(globals, /\.kk-google-map-gesture-overlay/);
   assert.match(globals, /\.gm-style \.gm-style-pbc > div/);
   assert.match(globals, /\.gm-style \.gm-style-pbt > div/);
   assert.match(globals, /\.gm-style \.gm-style-pbc \*/);

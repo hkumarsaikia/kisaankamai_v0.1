@@ -6,7 +6,7 @@ import { useAuth } from "@/components/AuthContext";
 import { useLanguage } from "@/components/LanguageContext";
 import { emitAuthSyncEvent } from "@/lib/client/auth-sync";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type ProfileSettingsFormProps = {
   family: "owner-profile" | "renter-profile";
@@ -30,6 +30,19 @@ type SettingsState = {
   whatsappNotifications: boolean;
 };
 
+type ProfileUpdatePayload = {
+  fullName: string;
+  email?: string;
+  phone: string;
+  village: string;
+  address: string;
+  pincode: string;
+  fieldArea: number;
+  farmingTypes: string;
+  role: "owner" | "renter";
+  district?: string;
+};
+
 function labelForFamily(family: ProfileSettingsFormProps["family"]) {
   return family === "owner-profile" ? "Owner Profile" : "Renter Profile";
 }
@@ -45,18 +58,8 @@ function initialsFor(name: string) {
   );
 }
 
-export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProps) {
-  const { langText } = useLanguage();
-  const formId = `${family}-settings-form`;
-  const router = useRouter();
-  const { refreshProfile, setSession } = useAuth();
-  const profilePhotoInputRef = useRef<HTMLInputElement>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isPhotoUploading, setIsPhotoUploading] = useState(false);
-  const [submitState, setSubmitState] = useState<SubmitState>("idle");
-  const [error, setError] = useState("");
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState(session.profile.photoUrl || session.user.photoUrl || "");
-  const [formState, setFormState] = useState<SettingsState>({
+function buildInitialSettingsState(session: LocalSession): SettingsState {
+  return {
     fullName: session.profile.fullName || session.user.name || "",
     email: session.profile.email || session.user.email || "",
     phone: session.profile.phone || session.user.phone || "",
@@ -69,11 +72,57 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     equipmentOwned: "",
     publicVisibility: true,
     whatsappNotifications: true,
-  });
+  };
+}
+
+function buildProfileUpdatePayload(
+  state: SettingsState,
+  family: ProfileSettingsFormProps["family"]
+): ProfileUpdatePayload {
+  const farmingTypes = [state.farmingTypes.trim(), state.equipmentOwned.trim()].filter(Boolean).join(" | ");
+
+  return {
+    fullName: state.fullName.trim(),
+    email: state.email.trim() || undefined,
+    phone: state.phone.replace(/\D/g, "").slice(-10),
+    village: state.village.trim(),
+    address: state.address.trim(),
+    pincode: state.pincode.replace(/\D/g, "").slice(0, 6),
+    fieldArea: Number(state.fieldArea || 0),
+    farmingTypes,
+    role: family === "owner-profile" ? "owner" : "renter",
+    district: state.district.trim() || undefined,
+  };
+}
+
+function stableProfilePayload(payload: ProfileUpdatePayload) {
+  return JSON.stringify(payload);
+}
+
+export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProps) {
+  const { langText } = useLanguage();
+  const formId = `${family}-settings-form`;
+  const router = useRouter();
+  const { refreshProfile, setSession } = useAuth();
+  const profilePhotoInputRef = useRef<HTMLInputElement>(null);
+  const initialFormState = useMemo(() => buildInitialSettingsState(session), [session]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPhotoUploading, setIsPhotoUploading] = useState(false);
+  const [submitState, setSubmitState] = useState<SubmitState>("idle");
+  const [error, setError] = useState("");
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState(session.profile.photoUrl || session.user.photoUrl || "");
+  const [formState, setFormState] = useState<SettingsState>(initialFormState);
+  const [lastSavedPayload, setLastSavedPayload] = useState<ProfileUpdatePayload>(() =>
+    buildProfileUpdatePayload(initialFormState, family)
+  );
+  const currentPayload = useMemo(() => buildProfileUpdatePayload(formState, family), [family, formState]);
+  const hasProfileChanges = stableProfilePayload(currentPayload) !== stableProfilePayload(lastSavedPayload);
 
   useEffect(() => {
     setProfilePhotoUrl(session.profile.photoUrl || session.user.photoUrl || "");
-  }, [session.profile.photoUrl, session.user.photoUrl]);
+    setFormState(initialFormState);
+    setLastSavedPayload(buildProfileUpdatePayload(initialFormState, family));
+  }, [family, initialFormState, session.profile.photoUrl, session.user.photoUrl]);
 
   useEffect(() => {
     let isMounted = true;
@@ -96,11 +145,17 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
           return;
         }
 
-        setFormState((current) => ({
-          ...current,
-          district: payload.profile?.district || current.district,
-          farmingTypes: payload.profile?.farmingTypes || current.farmingTypes,
-        }));
+        setFormState((current) => {
+          const nextState = {
+            ...current,
+            district: payload.profile?.district || current.district,
+            farmingTypes: payload.profile?.farmingTypes || current.farmingTypes,
+          };
+          window.queueMicrotask(() => {
+            setLastSavedPayload(buildProfileUpdatePayload(nextState, family));
+          });
+          return nextState;
+        });
       } catch {
         // Session values are enough when the profile metadata endpoint is unavailable.
       }
@@ -111,7 +166,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [family]);
 
   const submitLabel =
     submitState === "pending"
@@ -179,6 +234,25 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
     }
 
     setError("");
+
+    if (!hasProfileChanges) {
+      setSubmitState("idle");
+      setError(langText("Edit a field before saving.", "जतन करण्यापूर्वी एखादे फील्ड बदला."));
+      return;
+    }
+
+    if (currentPayload.fullName.length < 2) {
+      setSubmitState("error");
+      setError(langText("Enter your full name before saving.", "जतन करण्यापूर्वी तुमचे पूर्ण नाव लिहा."));
+      return;
+    }
+
+    if (currentPayload.phone.length !== 10 || currentPayload.pincode.length !== 6) {
+      setSubmitState("error");
+      setError(langText("A valid phone number and 6-digit pincode are required.", "वैध फोन नंबर आणि ६ अंकी पिनकोड आवश्यक आहे."));
+      return;
+    }
+
     setSubmitState("pending");
     setIsSubmitting(true);
 
@@ -189,18 +263,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({
-          fullName: formState.fullName.trim(),
-          email: formState.email.trim() || undefined,
-          phone: formState.phone.replace(/\D/g, "").slice(-10),
-          village: formState.village.trim(),
-          address: formState.address.trim(),
-          pincode: formState.pincode.replace(/\D/g, "").slice(0, 6),
-          fieldArea: Number(formState.fieldArea || 0),
-          farmingTypes: [formState.farmingTypes.trim(), formState.equipmentOwned.trim()].filter(Boolean).join(" | "),
-          role: family === "owner-profile" ? "owner" : "renter",
-          district: formState.district.trim() || undefined,
-        }),
+        body: JSON.stringify(currentPayload),
       });
       const payload = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
@@ -215,6 +278,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
       }
 
       setSubmitState("success");
+      setLastSavedPayload(currentPayload);
       if (payload.session) {
         setSession(payload.session);
       }
@@ -334,6 +398,7 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                   type="text"
                   value={formState.fullName}
                   onChange={(event) => updateField("fullName", event.target.value)}
+                  required
                 />
               </label>
               <label>
@@ -416,6 +481,9 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                   onChange={(event) => updateField("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
                   inputMode="numeric"
                   type="text"
+                  required
+                  minLength={6}
+                  maxLength={6}
                 />
               </label>
               <label>
@@ -473,9 +541,14 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                   submitState === "success" ? "bg-emerald-700" : "bg-[#0f4a38] hover:bg-[#17634c]"
                 }`}
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !hasProfileChanges}
                 data-loading={isSubmitting ? "true" : "false"}
                 aria-busy={isSubmitting}
+                title={
+                  hasProfileChanges
+                    ? submitLabel
+                    : langText("Edit a field before saving.", "जतन करण्यापूर्वी एखादे फील्ड बदला.")
+                }
               >
                 {isSubmitting ? <span className="kk-flow-spinner mr-2 inline-block align-middle" aria-hidden="true" /> : null}
                 {submitLabel}

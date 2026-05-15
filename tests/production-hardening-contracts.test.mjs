@@ -35,7 +35,9 @@ test("language provider hydrates from the boot language to avoid saved-language 
   assert.match(layoutSource, /x-kisan-kamai-crawler/);
   assert.match(layoutSource, /isCrawlerUserAgent\(headerStore\.get\("user-agent"\)\)/);
   assert.match(layoutSource, /\?\s*"en"\s*:\s*DEFAULT_LANGUAGE/);
-  assert.match(layoutSource, /const language = cookieLanguage \|\| "mr"/);
+  assert.match(layoutSource, /buildLanguageBootScript\(fallbackLanguage: Language\)/);
+  assert.match(layoutSource, /const language = cookieLanguage \|\| "\$\{fallbackLanguage\}"/);
+  assert.match(layoutSource, /const languageBootScript = buildLanguageBootScript\(initialLanguage\)/);
   assert.match(i18nSource, /DEFAULT_LANGUAGE: Language = "mr"/);
   assert.match(proxySource, /x-kisan-kamai-crawler/);
   assert.match(proxySource, /isCrawlerUserAgent\(request\.headers\.get\("user-agent"\)\)/);

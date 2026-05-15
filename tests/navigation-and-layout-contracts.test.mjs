@@ -53,7 +53,7 @@ test("footer sections include only the approved marketplace and trust routes", a
 });
 
 test("brand logo, favicon, profile shell, and footer marker follow the approved brand treatment", async () => {
-  const [headerSource, footerSource, faviconRoute, manifestSource, logoSource, profileShell, layoutSource] = await Promise.all([
+  const [headerSource, footerSource, faviconRoute, manifestSource, logoSource, profileShell, layoutSource, loginSource] = await Promise.all([
     readFile(new URL("../components/Header.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/Footer.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/favicon.ico/route.ts", import.meta.url), "utf8"),
@@ -61,6 +61,7 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
     readFile(new URL("../components/BrandLogo.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/owner-profile/OwnerProfileWorkspaceShell.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/login/page.tsx", import.meta.url), "utf8"),
   ]);
 
   assert.match(headerSource, /<BrandLogo/);
@@ -77,19 +78,28 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.match(logoSource, /whitespace-nowrap/);
   assert.match(profileShell, /showSubtitle=\{false\}/);
   assert.match(profileShell, /aria-label="Kisan Kamai"/);
-  assert.doesNotMatch(profileShell, /text\(config\.portalLabel\)/);
+  assert.match(profileShell, /text\(config\.portalLabel\)/);
+  assert.match(profileShell, /kk-workspace-portal-label/);
+  assert.match(profileShell, /lg:h-svh lg:overflow-hidden/);
+  assert.match(profileShell, /lg:h-svh lg:min-h-0 lg:overflow-y-auto/);
   assert.match(faviconRoute, /kisan-kamai-tractor-48\.png/);
   assert.match(faviconRoute, /image\/png/);
+  assert.match(layoutSource, /shortcut:\s*"\/favicon\.ico"/);
   assert.match(manifestSource, /\/favicon\.ico/);
   assert.match(manifestSource, /\/brand\/kisan-kamai-tractor-192\.png/);
   assert.match(layoutSource, /\/brand\/kisan-kamai-tractor\.svg/);
   assert.match(layoutSource, /\/brand\/kisan-kamai-tractor-48\.png/);
   assert.match(logoSource, /showSubtitle = false/);
-  assert.match(logoSource, /Kisan/);
-  assert.match(logoSource, /Kamai/);
+  assert.match(logoSource, /useLanguage/);
+  assert.match(logoSource, /t\("common\.brand"\)/);
+  assert.match(logoSource, /brandParts/);
+  assert.match(loginSource, /LogoMark/);
+  assert.doesNotMatch(loginSource, /text-5xl text-primary[\s\S]*agriculture/);
   assert.doesNotMatch(headerSource, /Smart Equipment Rental/);
   assert.doesNotMatch(logoSource, /Kamai<span className="text-secondary/);
   assert.doesNotMatch(logoSource, /shadow-\[inset/);
+  assert.match(footerSource, /max-w-\[88rem\]/);
+  assert.match(footerSource, /md:grid-cols-\[minmax\(18rem,1\.35fr\)_minmax\(10rem,0\.85fr\)_minmax\(10rem,0\.85fr\)_minmax\(18rem,1\.2fr\)\]/);
 });
 
 test("support page no longer contains the instant callback CTA", async () => {

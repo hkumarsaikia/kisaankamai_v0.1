@@ -107,7 +107,7 @@ export const Footer = () => {
       className="kk-site-footer w-full border-t border-slate-800 bg-slate-900 py-16 text-left dark:bg-black"
       style={{ viewTransitionName: "persistent-footer" }}
     >
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-12 text-sm">
+      <div className="mx-auto grid max-w-[88rem] grid-cols-1 gap-10 px-5 text-sm sm:px-8 md:grid-cols-[minmax(18rem,1.35fr)_minmax(10rem,0.85fr)_minmax(10rem,0.85fr)_minmax(18rem,1.2fr)] xl:gap-20">
         <div className="col-span-1 md:col-span-1">
           <Link 
             href="/" 
@@ -234,7 +234,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-slate-800 text-center">
+      <div className="mx-auto mt-16 max-w-[88rem] border-t border-slate-800 px-5 pt-8 text-center sm:px-8">
         <p className="text-slate-400 text-sm font-normal">
           {langText(
             "© 2026 Kisan Kamai. All rights reserved. Built with care for Bharat.",

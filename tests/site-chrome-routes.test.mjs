@@ -28,20 +28,20 @@ test("shared site chrome is hidden across both profile route families", () => {
   assert.equal(shouldHideSiteChrome("/equipment/2"), false);
 });
 
-test("bare route shell is bypassed across both profile route families", () => {
-  assert.equal(shouldBypassRouteShell("/owner-profile"), true);
-  assert.equal(shouldBypassRouteShell("/owner-profile/bookings"), true);
-  assert.equal(shouldBypassRouteShell("/owner-profile/browse"), true);
-  assert.equal(shouldBypassRouteShell("/owner-profile/saved"), true);
-  assert.equal(shouldBypassRouteShell("/owner-profile/settings"), true);
-  assert.equal(shouldBypassRouteShell("/owner-profile/support"), true);
-  assert.equal(shouldBypassRouteShell("/owner-profile/feedback"), true);
-  assert.equal(shouldBypassRouteShell("/renter-profile"), true);
-  assert.equal(shouldBypassRouteShell("/renter-profile/bookings"), true);
-  assert.equal(shouldBypassRouteShell("/renter-profile/browse"), true);
-  assert.equal(shouldBypassRouteShell("/renter-profile/settings"), true);
-  assert.equal(shouldBypassRouteShell("/renter-profile/support"), true);
-  assert.equal(shouldBypassRouteShell("/renter-profile/feedback"), true);
+test("profile route families keep the global route shell for the same page loading animation", () => {
+  assert.equal(shouldBypassRouteShell("/owner-profile"), false);
+  assert.equal(shouldBypassRouteShell("/owner-profile/bookings"), false);
+  assert.equal(shouldBypassRouteShell("/owner-profile/browse"), false);
+  assert.equal(shouldBypassRouteShell("/owner-profile/saved"), false);
+  assert.equal(shouldBypassRouteShell("/owner-profile/settings"), false);
+  assert.equal(shouldBypassRouteShell("/owner-profile/support"), false);
+  assert.equal(shouldBypassRouteShell("/owner-profile/feedback"), false);
+  assert.equal(shouldBypassRouteShell("/renter-profile"), false);
+  assert.equal(shouldBypassRouteShell("/renter-profile/bookings"), false);
+  assert.equal(shouldBypassRouteShell("/renter-profile/browse"), false);
+  assert.equal(shouldBypassRouteShell("/renter-profile/settings"), false);
+  assert.equal(shouldBypassRouteShell("/renter-profile/support"), false);
+  assert.equal(shouldBypassRouteShell("/renter-profile/feedback"), false);
   assert.equal(shouldBypassRouteShell("/login"), false);
   assert.equal(shouldBypassRouteShell("/register"), false);
   assert.equal(shouldBypassRouteShell("/forgot-password"), false);

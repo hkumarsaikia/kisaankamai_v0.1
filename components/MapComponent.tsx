@@ -43,6 +43,41 @@ function applyGoogleMapType(map: google.maps.Map | null, nextMapTypeId: Persiste
   map.setMapTypeId(nextMapTypeId);
 }
 
+function centerGoogleGestureOverlay(container: HTMLElement | null) {
+  if (!container) {
+    return;
+  }
+
+  const gestureTextPattern = /use\s+(ctrl|⌘|command)\s*\+\s*scroll\s+to\s+zoom\s+the\s+map/i;
+  const candidates = Array.from(container.querySelectorAll<HTMLElement>("div")).filter((element) =>
+    gestureTextPattern.test(element.textContent || "")
+  );
+
+  candidates.forEach((element) => {
+    const overlay = (element.closest(".gm-style-pbc, .gm-style-pbt") as HTMLElement | null) || element.parentElement;
+    overlay?.classList.add("kk-google-map-gesture-overlay");
+    element.classList.add("kk-google-map-gesture-overlay-text");
+  });
+}
+
+function observeGoogleGestureOverlay(map: google.maps.Map | null) {
+  const container = map?.getDiv();
+  if (!container || typeof MutationObserver === "undefined") {
+    centerGoogleGestureOverlay(container || null);
+    return () => undefined;
+  }
+
+  centerGoogleGestureOverlay(container);
+  const observer = new MutationObserver(() => centerGoogleGestureOverlay(container));
+  observer.observe(container, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
+
+  return () => observer.disconnect();
+}
+
 function configureLeafletRuntime() {
   if (typeof window === "undefined" || hasConfiguredLeafletRuntime) {
     return;
@@ -335,6 +370,7 @@ function GoogleMapView({
   });
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const overlayObserverCleanupRef = useRef<(() => void) | null>(null);
   const centerObj = useMemo(() => ({ lat: center[0], lng: center[1] }), [center]);
 
   const persistMapType = (nextMapTypeId?: string | null) => {
@@ -362,6 +398,13 @@ function GoogleMapView({
 
     window.addEventListener("storage", handleStorage);
     return () => window.removeEventListener("storage", handleStorage);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      overlayObserverCleanupRef.current?.();
+      overlayObserverCleanupRef.current = null;
+    };
   }, []);
 
   if (loadError) {
@@ -400,6 +443,8 @@ function GoogleMapView({
         onLoad={(mapInstance) => {
           mapRef.current = mapInstance;
           mapInstance.setMapTypeId(readStoredGoogleMapType());
+          overlayObserverCleanupRef.current?.();
+          overlayObserverCleanupRef.current = observeGoogleGestureOverlay(mapInstance);
           if (markers.length > 1) {
             const bounds = new window.google.maps.LatLngBounds();
             markers.forEach((marker) => bounds.extend({ lat: marker.lat, lng: marker.lng }));
