@@ -16,7 +16,8 @@ test("forgot password success page localizes every visible paragraph", async () 
 test("workspace footer uses the requested exact trust copy with India flag", async () => {
   const source = await readSource("../components/owner-profile/OwnerProfileWorkspaceShell.tsx");
 
-  assert.match(source, /© 2026 Kisan Kamai\. Rooted in Trust\. Built with care for Bharat\.🇮🇳/);
+  assert.match(source, /© 2026 Kisan Kamai\. Rooted in Trust\. Built with care for Bharat\. 🇮🇳/);
+  assert.doesNotMatch(source, /Bharat\.🇮🇳/);
   assert.doesNotMatch(source, /Kisan Kamai © 2026 Kisan Kamai\. Rooted in Trust/);
 });
 

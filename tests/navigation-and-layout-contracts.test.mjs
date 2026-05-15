@@ -99,8 +99,10 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.doesNotMatch(headerSource, /Smart Equipment Rental/);
   assert.doesNotMatch(logoSource, /Kamai<span className="text-secondary/);
   assert.doesNotMatch(logoSource, /shadow-\[inset/);
-  assert.match(footerSource, /max-w-\[96rem\]/);
-  assert.match(footerSource, /md:grid-cols-\[minmax\(20rem,1\.65fr\)_minmax\(10rem,0\.72fr\)_minmax\(10rem,0\.72fr\)_minmax\(22rem,1\.45fr\)\]/);
+  assert.match(footerSource, /max-w-\[100rem\]/);
+  assert.match(footerSource, /md:grid-cols-\[minmax\(17rem,1\.18fr\)_minmax\(10rem,0\.62fr\)_minmax\(10rem,0\.62fr\)_minmax\(16rem,0\.86fr\)\]/);
+  assert.match(footerSource, /max-w-\[18\.5rem\]/);
+  assert.match(footerSource, /md:max-w-\[17rem\]/);
   assert.match(footerSource, /md:justify-self-start/);
   assert.match(footerSource, /md:justify-self-center/);
   assert.match(footerSource, /md:justify-self-end/);

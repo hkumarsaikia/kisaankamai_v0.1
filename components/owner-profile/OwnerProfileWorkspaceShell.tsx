@@ -58,8 +58,8 @@ const WORKSPACE_CONFIG = {
     ] as NavigationItem[],
     supportHref: "/owner-profile/support",
     localFooterText: localizedText(
-      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳",
-      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳"
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat. 🇮🇳",
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat. 🇮🇳"
     ),
     footerMode: "text-left",
     mobileItems: [
@@ -83,8 +83,8 @@ const WORKSPACE_CONFIG = {
     ] as NavigationItem[],
     supportHref: "/renter-profile/support",
     localFooterText: localizedText(
-      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳",
-      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳"
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat. 🇮🇳",
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat. 🇮🇳"
     ),
     footerMode: "text-left",
     mobileItems: [

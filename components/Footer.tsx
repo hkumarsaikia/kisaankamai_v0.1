@@ -10,7 +10,7 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 function FooterWordmark() {
   return (
     <svg
-      className="h-24 w-80 max-w-full"
+      className="h-28 w-[21rem] max-w-full sm:w-[24rem]"
       viewBox="0 0 800 400"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
@@ -107,8 +107,8 @@ export const Footer = () => {
       className="kk-site-footer w-full border-t border-slate-800 bg-slate-900 py-16 text-left dark:bg-black"
       style={{ viewTransitionName: "persistent-footer" }}
     >
-      <div className="mx-auto grid max-w-[96rem] grid-cols-1 gap-10 px-5 text-sm sm:px-8 md:grid-cols-[minmax(20rem,1.65fr)_minmax(10rem,0.72fr)_minmax(10rem,0.72fr)_minmax(22rem,1.45fr)] lg:gap-14 xl:gap-24 2xl:px-0">
-        <div className="col-span-1 md:col-span-1 md:justify-self-start">
+      <div className="mx-auto grid max-w-[100rem] grid-cols-1 gap-10 px-5 text-sm sm:px-8 md:grid-cols-[minmax(17rem,1.18fr)_minmax(10rem,0.62fr)_minmax(10rem,0.62fr)_minmax(16rem,0.86fr)] lg:gap-16 xl:gap-24 2xl:px-0">
+        <div className="col-span-1 md:col-span-1 md:justify-self-start md:pr-4">
           <Link 
             href="/" 
             className="mb-8 block w-fit transition-transform hover:-translate-y-1"
@@ -116,7 +116,7 @@ export const Footer = () => {
           >
             <FooterWordmark />
           </Link>
-          <p className="text-slate-400 leading-relaxed mb-6 font-normal">
+          <p className="mb-6 max-w-[18.5rem] text-slate-400 leading-relaxed font-normal">
             {t("Footer.empowering_indian_farmers_through_shared_technology_and_machinery_access_rooted_in_trust")}
           </p>
           <div className="flex gap-4">
@@ -173,9 +173,9 @@ export const Footer = () => {
             ))}
           </ul>
         </div>
-        <div className="w-full md:max-w-sm md:justify-self-end">
+        <div className="w-full md:max-w-[17rem] md:justify-self-end">
           <h5 className="text-emerald-500 font-bold uppercase tracking-widest text-xs mb-6">{t("Footer.newsletter")}</h5>
-	          <p className="text-slate-400 mb-4 font-normal">{t("Footer.stay_updated_on_agricultural_trends_and_new_equipment_listings")}</p>
+	          <p className="text-slate-400 mb-4 max-w-[16rem] font-normal">{t("Footer.stay_updated_on_agricultural_trends_and_new_equipment_listings")}</p>
 	          <form className="flex gap-2" onSubmit={handleNewsletterSubmit}>
 	            <label htmlFor="footer-newsletter-email" className="sr-only">
 	              {t("Footer.email")}
@@ -234,7 +234,7 @@ export const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="mx-auto mt-16 max-w-[96rem] border-t border-slate-800 px-5 pt-8 text-center sm:px-8 2xl:px-0">
+      <div className="mx-auto mt-16 max-w-[100rem] border-t border-slate-800 px-5 pt-8 text-center sm:px-8 2xl:px-0">
         <p className="text-slate-400 text-sm font-normal">
           {langText(
             "© 2026 Kisan Kamai. All rights reserved. Built with care for Bharat.",
