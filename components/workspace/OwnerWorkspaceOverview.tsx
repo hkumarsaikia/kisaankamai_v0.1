@@ -159,7 +159,7 @@ export function OwnerWorkspaceOverview({
                   )}
                 </p>
                 <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
-                  <Link href="/list-equipment" className="rounded-xl bg-primary px-8 py-3 font-bold text-white transition-[box-shadow] hover:shadow-lg">
+                  <Link href="/owner-profile/list-equipment" className="rounded-xl bg-primary px-8 py-3 font-bold text-white transition-[box-shadow] hover:shadow-lg">
                     {langText("Add New Listing", "नवीन लिस्टिंग जोडा")}
                   </Link>
                   <Link href="/owner-profile" className="rounded-xl border border-surface-container-highest bg-white px-8 py-3 font-bold text-primary transition-colors hover:bg-surface dark:border-slate-700 dark:bg-slate-950 dark:hover:bg-slate-900">
@@ -287,7 +287,7 @@ export function OwnerWorkspaceOverview({
               <Row label={langText("Village", "गाव")} value={village || langText("Not set", "निश्चित केलेले नाही")} />
               <Row label={langText("Pincode", "पिनकोड")} value={pincode || langText("Not set", "निश्चित केलेले नाही")} />
             </dl>
-            <Link href="/list-equipment" className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-primary-container">
+            <Link href="/owner-profile/list-equipment" className="mt-6 flex items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-primary-container">
               <span className="material-symbols-outlined text-sm">add</span>
               {langText("Add New Listing", "नवीन लिस्टिंग जोडा")}
             </Link>

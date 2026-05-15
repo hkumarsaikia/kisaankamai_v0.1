@@ -104,7 +104,7 @@ export function OwnerEquipmentBrowser({
 
                 <div className="grid grid-cols-2 gap-3">
                   <Link
-                    href={`/list-equipment?listingId=${listing.id}`}
+                    href={`/owner-profile/list-equipment?listingId=${listing.id}`}
                     className="rounded-xl border border-slate-200 px-4 py-3 text-center text-sm font-bold text-on-surface dark:border-slate-700 dark:text-slate-100"
                   >
                     {langText("Edit", "संपादन")}

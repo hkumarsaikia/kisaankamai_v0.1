@@ -58,8 +58,8 @@ const WORKSPACE_CONFIG = {
     ] as NavigationItem[],
     supportHref: "/owner-profile/support",
     localFooterText: localizedText(
-      "Kisan Kamai © 2026 Kisan Kamai. Rooted in Trust",
-      "Kisan Kamai © 2026 Kisan Kamai. विश्वासावर आधारलेले"
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳",
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳"
     ),
     footerMode: "text-left",
     mobileItems: [
@@ -69,7 +69,7 @@ const WORKSPACE_CONFIG = {
       { key: "browse", href: "/owner-profile/browse", label: localizedText("Equipment", "उपकरणे"), icon: "agriculture" },
       { key: "settings", href: "/owner-profile/settings", label: localizedText("Settings", "सेटिंग्ज"), icon: "settings" },
     ] as NavigationItem[],
-    addListingHref: "/list-equipment",
+    addListingHref: "/owner-profile/list-equipment",
   },
   "renter-profile": {
     portalLabel: localizedText("Renter Profile", "भाडेकरू प्रोफाइल"),
@@ -83,8 +83,8 @@ const WORKSPACE_CONFIG = {
     ] as NavigationItem[],
     supportHref: "/renter-profile/support",
     localFooterText: localizedText(
-      "Kisan Kamai © 2026 Kisan Kamai. Rooted in Trust",
-      "Kisan Kamai © 2026 Kisan Kamai. विश्वासावर आधारलेले"
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳",
+      "© 2026 Kisan Kamai. Rooted in Trust. Built with care for Bharat.🇮🇳"
     ),
     footerMode: "text-left",
     mobileItems: [
@@ -264,7 +264,7 @@ function Sidebar({
 
   return (
     <div className="flex h-full flex-col bg-white dark:bg-slate-950">
-      <div className="space-y-4 px-6 py-8">
+      <div className="kk-workspace-brand-block space-y-4 px-6 py-8">
         <div>
           <Link
             href="/"
@@ -278,7 +278,7 @@ function Sidebar({
               textClassName="[&>span:first-child]:text-[1.2rem]"
             />
           </Link>
-          <p className="kk-workspace-portal-label mt-2 pl-[0.375rem] font-label text-[0.68rem] font-black uppercase tracking-[0.22em] text-on-surface-variant">
+          <p className="kk-workspace-portal-label mt-2 pl-1.5 font-label text-[0.68rem] font-black uppercase tracking-[0.22em] text-on-surface-variant">
             {text(config.portalLabel)}
           </p>
         </div>

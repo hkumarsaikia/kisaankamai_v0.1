@@ -126,6 +126,9 @@ const nextConfig = {
   allowedDevOrigins: ["*.trycloudflare.com"],
   experimental: {
     viewTransition: true,
+    serverActions: {
+      bodySizeLimit: "64mb",
+    },
   },
   images: {
     qualities: [72, 75],

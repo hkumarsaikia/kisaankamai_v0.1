@@ -57,7 +57,7 @@ const dashboardTasks = [
   {
     title: "Review Equipment Gallery",
     icon: "add_a_photo",
-    href: "/list-equipment",
+    href: "/owner-profile/list-equipment",
   },
   {
     title: "Review Availability",
@@ -352,7 +352,7 @@ export function RenterProfileBrowseContent() {
               <span className="material-symbols-outlined text-[18px]">filter_list</span>
               Filter &amp; Sort
             </button>
-            <Link href="/list-equipment" className="inline-flex items-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white">
+            <Link href="/owner-profile/list-equipment" className="inline-flex items-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white">
               <span className="material-symbols-outlined text-[18px]">add</span>
               Add New Listing
             </Link>
@@ -393,7 +393,7 @@ export function RenterProfileBrowseContent() {
       <section className="rounded-[1.75rem] border border-dashed border-outline-variant bg-surface-container-low p-8 text-center dark:border-slate-700 dark:bg-slate-950/60">
         <h3 className="text-2xl font-black text-primary">Grow your fleet</h3>
         <p className="mt-3 text-sm text-on-surface-variant">Add another listing to reach more farmers and expand your seasonal bookings.</p>
-        <Link href="/list-equipment" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white">
+        <Link href="/owner-profile/list-equipment" className="mt-6 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-bold text-white">
           <span className="material-symbols-outlined text-[18px]">add</span>
           Add New Listing
         </Link>

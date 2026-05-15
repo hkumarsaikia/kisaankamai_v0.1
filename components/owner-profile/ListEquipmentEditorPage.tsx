@@ -59,6 +59,7 @@ export function ListEquipmentEditorPage({
   });
 
   const files = useMemo(() => fileSlots.filter((file): file is File => file instanceof File), [fileSlots]);
+  const isUploadingImages = isSubmitting && files.length > 0;
   const objectPreviewUrls = useMemo(
     () => fileSlots.map((file) => (file ? URL.createObjectURL(file) : "")),
     [fileSlots]
@@ -426,7 +427,13 @@ export function ListEquipmentEditorPage({
                 <span className="material-symbols-outlined text-secondary">add_photo_alternate</span>
                 {langText("Photos", "फोटो")}
               </h2>
-              <div className="grid gap-4 md:grid-cols-3">
+              <div className="relative grid gap-4 md:grid-cols-3" data-uploading={isUploadingImages ? "true" : "false"}>
+                {isUploadingImages ? (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center rounded-2xl bg-surface-container-lowest/82 text-sm font-extrabold text-primary shadow-inner backdrop-blur-sm">
+                    <span className="kk-flow-spinner mr-3" aria-hidden="true" />
+                    {langText("Uploading photos...", "फोटो अपलोड होत आहेत...")}
+                  </div>
+                ) : null}
                 {PHOTO_SLOT_LABELS.map((slotLabel, slot) => {
                   const previewUrl = objectPreviewUrls[slot];
 
@@ -453,6 +460,7 @@ export function ListEquipmentEditorPage({
                           className="hidden"
                           type="file"
                           accept="image/*"
+                          disabled={isSubmitting}
                           onChange={(event) => updateFileSlot(slot, event.target.files?.[0] || null)}
                         />
                       </label>

@@ -42,7 +42,7 @@ test("profile settings removes preferred workspace editing from the settings for
 
 test("list equipment has removable photo slots and owner-controlled availability", async () => {
   const [page, editor, actions] = await Promise.all([
-    readSource("../app/list-equipment/page.tsx"),
+    readSource("../app/owner-profile/list-equipment/page.tsx"),
     readSource("../components/owner-profile/ListEquipmentEditorPage.tsx"),
     readSource("../lib/actions/local-data.ts"),
   ]);

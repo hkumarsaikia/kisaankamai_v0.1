@@ -12,6 +12,12 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#143b2e",
     icons: [
       {
+        src: "/favicon.ico",
+        sizes: "48x48",
+        type: "image/png",
+        purpose: "any",
+      },
+      {
         src: "/brand/kisan-kamai-tractor-192.png",
         sizes: "192x192",
         type: "image/png",
@@ -22,11 +28,6 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
-      },
-      {
-        src: "/favicon.ico",
-        sizes: "64x64",
-        type: "image/png",
       },
     ],
   };

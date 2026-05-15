@@ -12,7 +12,7 @@ export const OwnerSidebar = () => {
 
   const navItems = [
     { name: t("ownerSidebar.profile"), icon: "dashboard", path: "/owner-profile" },
-    { name: t("ownerSidebar.add_new_listing"), icon: "add_circle", path: "/list-equipment" },
+    { name: t("ownerSidebar.add_new_listing"), icon: "add_circle", path: "/owner-profile/list-equipment" },
     { name: t("ownerSidebar.support"), icon: "help_center", path: "/support" },
   ];
 
@@ -70,7 +70,7 @@ export const OwnerSidebar = () => {
 
         <div className="mt-auto flex flex-col gap-1 pb-4 lg:pb-0">
           <Link
-            href="/list-equipment"
+            href="/owner-profile/list-equipment"
             onClick={() => setMobileMenuOpen(false)}
             className="flex justify-center items-center gap-3 px-4 py-3 bg-emerald-500 text-emerald-950 rounded-lg font-bold text-sm mb-4 transition-transform hover:brightness-110 active:scale-95 duration-150 ease-in-out"
           >

@@ -24,11 +24,11 @@ Current workspace behavior to know while validating `npm run dev`:
 - `/owner-profile/*` is the owner-side workspace family.
 - `/renter-profile/*` is the renter-side workspace family.
 - `/owner-profile/earnings` is the live owner earnings route.
-- `/list-equipment` supports create mode and edit mode via `?listingId=<id>`.
-- `/list-equipment` is the owner-controlled availability source. Available-now/date listings publish as active, temporarily unavailable listings publish as paused, and public tiles show the matching green/red availability dot.
-- `/list-equipment` is protected by the root `proxy.js` guard before App Router rendering, then re-verified server-side with the Firebase session cookie.
+- `/owner-profile/list-equipment` supports create mode and edit mode via `?listingId=<id>` inside the owner workspace.
+- `/list-equipment` is only a compatibility redirect into `/owner-profile/list-equipment`.
+- `/owner-profile/list-equipment` is the owner-controlled availability source. Available-now/date listings publish as active, temporarily unavailable listings publish as paused, and public tiles show the matching green/red availability dot.
 - successful booking submissions redirect back into `/renter-profile`.
-- owner listing edit buttons route into `/list-equipment?listingId=<id>`.
+- owner listing edit buttons route into `/owner-profile/list-equipment?listingId=<id>`.
 - `/support` is the public contact/help flow. The old public `/report` page is removed from navigation and sitemap.
 - `/feature-request` submits community feature ideas through `/api/forms/feature-request` into Firestore form submissions.
 - The footer newsletter submits through `/api/forms/newsletter-subscription` into Firestore and the `newsletter_subscriptions` Google Sheet.

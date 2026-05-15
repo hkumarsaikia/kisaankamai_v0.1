@@ -5,7 +5,7 @@ import { useLanguage } from "@/components/LanguageContext";
 import { assetPath } from "@/lib/site";
 
 export default function PasswordResetSuccessPage() {
-  const { langText, text } = useLanguage();
+  const { langText } = useLanguage();
 
   return (
     <div className="kk-auth-page flex flex-col bg-background font-body text-on-background">
@@ -58,9 +58,10 @@ export default function PasswordResetSuccessPage() {
               {langText("Your account is protected", "तुमचे खाते आता सुरक्षित आहे")}
             </h2>
             <p className="mx-auto max-w-md text-base leading-loose text-on-surface-variant">
-              {text("Keep this password private and contact support immediately if you did not request this reset.", {
-                cacheKey: "forgot-password.success.security-note",
-              })}
+              {langText(
+                "Keep this password private and contact support immediately if you did not request this reset.",
+                "हा पासवर्ड खाजगी ठेवा आणि तुम्ही हा रीसेट मागितला नसेल तर लगेच सपोर्टशी संपर्क साधा."
+              )}
             </p>
           </div>
         </section>

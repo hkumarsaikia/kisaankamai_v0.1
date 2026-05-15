@@ -13,7 +13,7 @@ test("owner-profile workspace shell exposes owner-style navigation with earnings
   assert.match(source, /href: "\/owner-profile\/browse", label: localizedText\("My Equipment", "माझी उपकरणे"\), icon: "agriculture"/);
   assert.match(source, /href: "\/owner-profile\/bookings", label: localizedText\("Bookings", "बुकिंग"\), icon: "event_note"/);
   assert.match(source, /supportHref: "\/owner-profile\/support"/);
-  assert.match(source, /addListingHref: "\/list-equipment"/);
+  assert.match(source, /addListingHref: "\/owner-profile\/list-equipment"/);
   assert.match(source, /footerMode: "text-left"/);
   assert.doesNotMatch(source, /href: "\/owner-profile\/saved", label: "Saved Equipment"/);
 });

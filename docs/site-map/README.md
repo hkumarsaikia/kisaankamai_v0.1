@@ -30,7 +30,7 @@ Current route conventions reflected by the generated sitemap:
 - `/owner-profile/*` is the owner workspace family.
 - `/renter-profile/*` is the renter workspace family.
 - `/owner-profile/earnings` is the canonical earnings route.
-- `/list-equipment?listingId=<id>` is the owner listing edit entrypoint.
+- `/owner-profile/list-equipment?listingId=<id>` is the owner listing edit entrypoint; `/list-equipment` only redirects there for compatibility.
 - `/support` is the public help/contact flow. `/report` is no longer a public route.
 - profile/workspace pages render the local workspace footer with the trust/legal split used in the active shell.
 

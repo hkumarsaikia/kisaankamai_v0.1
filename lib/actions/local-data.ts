@@ -132,6 +132,7 @@ function revalidateCommonPaths() {
   safeRevalidatePath("/");
   safeRevalidatePath("/rent-equipment");
   safeRevalidatePath("/owner-profile");
+  safeRevalidatePath("/owner-profile/list-equipment");
   safeRevalidatePath("/renter-profile");
   safeRevalidatePath("/list-equipment");
   safeRevalidatePath("/support");

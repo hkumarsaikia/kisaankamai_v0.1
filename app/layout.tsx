@@ -108,6 +108,12 @@ export const metadata: Metadata = {
     shortcut: "/favicon.ico",
     icon: [
       {
+        url: "/favicon.ico",
+        sizes: "48x48",
+        type: "image/png",
+        rel: "icon",
+      },
+      {
         url: "/brand/kisan-kamai-tractor-48.png",
         sizes: "48x48",
         type: "image/png",
@@ -120,10 +126,6 @@ export const metadata: Metadata = {
       {
         url: "/brand/kisan-kamai-tractor.svg",
         type: "image/svg+xml",
-      },
-      {
-        url: "/favicon.ico",
-        type: "image/png",
       },
     ],
     apple: [

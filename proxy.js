@@ -47,6 +47,12 @@ export function proxy(request) {
     return NextResponse.redirect(new URL(resolveWorkspaceDashboard(request), request.url));
   }
 
+  if (pathname === "/list-equipment" && hasSession) {
+    const redirectUrl = new URL("/owner-profile/list-equipment", request.url);
+    redirectUrl.search = request.nextUrl.search;
+    return NextResponse.redirect(redirectUrl);
+  }
+
   if (matchesRoutePrefix(pathname, PROTECTED_ROUTES) && !hasSession) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

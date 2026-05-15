@@ -80,7 +80,7 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.match(profileShell, /aria-label="Kisan Kamai"/);
   assert.match(profileShell, /text\(config\.portalLabel\)/);
   assert.match(profileShell, /kk-workspace-portal-label/);
-  assert.match(profileShell, /pl-\[0\.375rem\]/);
+  assert.match(profileShell, /kk-workspace-portal-label mt-2 pl-1\.5/);
   assert.match(profileShell, /lg:h-svh lg:overflow-hidden/);
   assert.match(profileShell, /lg:h-svh lg:min-h-0 lg:overflow-y-auto/);
   assert.match(faviconRoute, /kisan-kamai-tractor-48\.png/);
@@ -228,12 +228,14 @@ test("report source removes the requested support and guidance copy only", async
   assert.doesNotMatch(sitemapSource, /\/report/);
 });
 
-test("list equipment page keeps the owner workspace shell and removes the live preview tile", async () => {
-  const [pageSource, editorSource] = await Promise.all([
+test("owner profile list equipment route keeps the owner workspace shell and the legacy route redirects", async () => {
+  const [legacyPageSource, pageSource, editorSource] = await Promise.all([
     readFile(new URL("../app/list-equipment/page.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/owner-profile/list-equipment/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../components/owner-profile/ListEquipmentEditorPage.tsx", import.meta.url), "utf8"),
   ]);
 
+  assert.match(legacyPageSource, /redirect\(`\/owner-profile\/list-equipment\$\{query\}`\)/);
   assert.match(pageSource, /family="owner-profile"/);
   assert.match(pageSource, /activeTab="add-listing"/);
   assert.match(pageSource, /redirect\("\/login"\)/);
@@ -257,7 +259,7 @@ test("list equipment redirects unauthenticated requests before the streaming fal
   const { NextRequest } = await import("next/server.js");
   const guestResponse = proxy(new NextRequest("https://www.kisankamai.com/list-equipment"));
   const authenticatedResponse = proxy(
-    new NextRequest("https://www.kisankamai.com/list-equipment", {
+    new NextRequest("https://www.kisankamai.com/list-equipment?listingId=test-listing", {
       headers: {
         cookie: "kisan_kamai_session=test-session",
       },
@@ -266,7 +268,11 @@ test("list equipment redirects unauthenticated requests before the streaming fal
 
   assert.equal(guestResponse.status, 307);
   assert.equal(guestResponse.headers.get("location"), "https://www.kisankamai.com/login");
-  assert.equal(authenticatedResponse.headers.get("x-middleware-next"), "1");
+  assert.equal(authenticatedResponse.status, 307);
+  assert.equal(
+    authenticatedResponse.headers.get("location"),
+    "https://www.kisankamai.com/owner-profile/list-equipment?listingId=test-listing"
+  );
 
   const loggedInLoginResponse = proxy(
     new NextRequest("https://www.kisankamai.com/login", {

@@ -304,7 +304,10 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
           </h2>
           <div className="flex flex-col items-center justify-center py-4">
             <div className="relative mb-6">
-              <div className="h-44 w-44 overflow-hidden rounded-full ring-4 ring-surface-container shadow-xl transition-[background-color,border-color,box-shadow,transform] duration-300">
+              <div
+                className="relative h-44 w-44 overflow-hidden rounded-full ring-4 ring-surface-container shadow-xl transition-[background-color,border-color,box-shadow,transform] duration-300"
+                aria-busy={isPhotoUploading}
+              >
                 {profilePhotoUrl ? (
                   <img
                     alt={langText("User Avatar", "वापरकर्ता अवतार")}
@@ -316,6 +319,12 @@ export function ProfileSettingsForm({ family, session }: ProfileSettingsFormProp
                     {initialsFor(formState.fullName || session.user.name || labelForFamily(family))}
                   </div>
                 )}
+                {isPhotoUploading ? (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-slate-950/58 text-xs font-extrabold text-white backdrop-blur-sm" aria-live="polite">
+                    <span className="kk-flow-spinner" aria-hidden="true" />
+                    <span>{langText("Uploading profile photo...", "प्रोफाइल फोटो अपलोड होत आहे...")}</span>
+                  </div>
+                ) : null}
               </div>
               <button
                 type="button"

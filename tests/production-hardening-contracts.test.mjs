@@ -168,7 +168,7 @@ test("public listings require real owner media and no verified mock defaults", a
   assert.doesNotMatch(actionSource, /\/assets\/generated\/hero_tractor\.png/);
   assert.doesNotMatch(actionSource, /\["Verified"\]/);
   assert.match(editorSource, /BASE_EQUIPMENT_CATEGORIES/);
-  assert.match(ownerRegistrationSource, /redirect\("\/list-equipment"\)/);
+  assert.match(ownerRegistrationSource, /redirect\("\/owner-profile\/list-equipment"\)/);
 });
 
 test("report API compatibility, rate limits, and booking conflicts have backend contracts", async () => {

@@ -141,7 +141,7 @@ export function OwnerRecentBookingActivity({ bookings }: OwnerRecentBookingActiv
             <LocalizedText en="My Equipment" mr="माझी उपकरणे" />
           </Link>
           <Link
-            href="/list-equipment"
+            href="/owner-profile/list-equipment"
             className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-primary-container px-3 py-2 text-xs font-bold text-white transition-opacity hover:opacity-90 sm:text-sm"
           >
             <span className="material-symbols-outlined text-[18px]">add</span>
