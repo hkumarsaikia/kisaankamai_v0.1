@@ -74,11 +74,14 @@ test("latest dark-mode visibility fixes cover partner, coming soon, owner benefi
   assert.match(detail, /kk-login-toast kk-login-toast-error/);
   assert.match(globals, /\.kk-login-toast-error/);
   assert.match(globals, /\.gm-style \.gm-style-pbc/);
+  assert.match(globals, /\.gm-style \.gm-style-moc/);
+  assert.match(globals, /\.gm-style \.gm-style-mot/);
   assert.match(globals, /text-align:\s*center !important/);
   assert.match(mapSource, /kk-google-map-gesture-overlay/);
   assert.match(globals, /\.kk-google-map-gesture-overlay/);
   assert.match(mapSource, /isGoogleGestureInstructionElement/);
   assert.match(mapSource, /alignGoogleGestureInstruction/);
+  assert.match(mapSource, /querySelectorAll<HTMLElement>\("div, p, span"\)/);
   assert.match(mapSource, /--kk-map-gesture-shift-x/);
   assert.match(mapSource, /--kk-map-gesture-shift-y/);
   assert.doesNotMatch(mapSource, /element\.parentElement/);

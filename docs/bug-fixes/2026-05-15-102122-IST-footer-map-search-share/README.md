@@ -13,6 +13,9 @@ Date: 2026-05-15 10:21 IST
 - Follow-up: the Google Maps helper now targets only the smallest exact
   instruction text node and offsets that line from the live map bounds, so the
   text centers in the tile without moving the whole gesture overlay.
+- Live rendered QA showed Google now emits the instruction in `p.gm-style-mot`,
+  so the helper and CSS cover the `gm-style-moc` / `gm-style-mot` overlay path
+  as well as the older `gm-style-pbc` / `gm-style-pbt` path.
 - Keep crawler and share-preview HTML in English for Googlebot and social bots,
   even while normal browser visits can default to Marathi.
 - For crawler HTML, the language switch control renders `Marathi` instead of

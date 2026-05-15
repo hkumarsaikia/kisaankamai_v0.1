@@ -93,7 +93,9 @@ function centerGoogleGestureOverlay(container: HTMLElement | null) {
     element.style.removeProperty("--kk-map-gesture-shift-y");
   });
 
-  const candidates = Array.from(container.querySelectorAll<HTMLElement>("div")).filter(isGoogleGestureInstructionElement);
+  const candidates = Array.from(container.querySelectorAll<HTMLElement>("div, p, span")).filter(
+    isGoogleGestureInstructionElement
+  );
 
   candidates.forEach((element) => {
     const overlay = element.closest(".gm-style-pbc, .gm-style-pbt") as HTMLElement | null;
