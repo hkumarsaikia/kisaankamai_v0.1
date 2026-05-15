@@ -77,11 +77,17 @@ test("latest dark-mode visibility fixes cover partner, coming soon, owner benefi
   assert.match(globals, /text-align:\s*center !important/);
   assert.match(mapSource, /kk-google-map-gesture-overlay/);
   assert.match(globals, /\.kk-google-map-gesture-overlay/);
+  assert.match(mapSource, /isGoogleGestureInstructionElement/);
+  assert.match(mapSource, /alignGoogleGestureInstruction/);
+  assert.match(mapSource, /--kk-map-gesture-shift-x/);
+  assert.match(mapSource, /--kk-map-gesture-shift-y/);
+  assert.doesNotMatch(mapSource, /element\.parentElement/);
   assert.match(globals, /\.gm-style \.gm-style-pbc > div/);
   assert.match(globals, /\.gm-style \.gm-style-pbt > div/);
   assert.match(globals, /\.gm-style \.gm-style-pbc \*/);
   assert.match(globals, /\.gm-style \.gm-style-pbt \*/);
   assert.match(globals, /text-align-last:\s*center !important/);
+  assert.match(globals, /transform:\s*translate\(var\(--kk-map-gesture-shift-x, 0\), var\(--kk-map-gesture-shift-y, 0\)\) !important/);
   assert.doesNotMatch(globals, /\.kk-google-map-gesture-overlay\s*\{[^}]*left:\s*50% !important/);
   assert.doesNotMatch(globals, /\.kk-google-map-gesture-overlay\s*\{[^}]*transform:\s*translate\(-50%, -50%\) !important/);
   assert.doesNotMatch(globals, /\.kk-google-map-gesture-overlay\s*\{[^}]*width:\s*min\(calc\(100% - 2rem\), 34rem\) !important/);

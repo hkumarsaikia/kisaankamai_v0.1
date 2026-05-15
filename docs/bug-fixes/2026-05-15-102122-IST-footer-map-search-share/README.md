@@ -10,6 +10,9 @@ Date: 2026-05-15 10:21 IST
 - Fix Google Maps gesture overlay styling so only the `Use ctrl + scroll to
   zoom the map` text is centered. The Google overlay container is no longer
   narrowed or translated.
+- Follow-up: the Google Maps helper now targets only the smallest exact
+  instruction text node and offsets that line from the live map bounds, so the
+  text centers in the tile without moving the whole gesture overlay.
 - Keep crawler and share-preview HTML in English for Googlebot and social bots,
   even while normal browser visits can default to Marathi.
 - Reuse the route metadata inputs for `head.tsx` files so non-homepage public

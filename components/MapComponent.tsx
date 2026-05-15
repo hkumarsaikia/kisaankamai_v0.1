@@ -43,20 +43,63 @@ function applyGoogleMapType(map: google.maps.Map | null, nextMapTypeId: Persiste
   map.setMapTypeId(nextMapTypeId);
 }
 
+function normalizeGoogleGestureText(value: string) {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function isGoogleGestureInstruction(value: string) {
+  return /^use\s+(ctrl|⌘|command)\s*\+\s*scroll\s+to\s+zoom\s+the\s+map$/i.test(
+    normalizeGoogleGestureText(value)
+  );
+}
+
+function isGoogleGestureInstructionElement(element: HTMLElement) {
+  if (!isGoogleGestureInstruction(element.textContent || "")) {
+    return false;
+  }
+
+  return !Array.from(element.children).some((child) => isGoogleGestureInstruction(child.textContent || ""));
+}
+
+function alignGoogleGestureInstruction(container: HTMLElement, element: HTMLElement) {
+  const mapRoot = (element.closest(".gm-style") as HTMLElement | null) || container;
+  const mapRect = mapRoot.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+
+  if (!mapRect.width || !mapRect.height || !elementRect.width || !elementRect.height) {
+    return;
+  }
+
+  const mapCenterX = mapRect.left + mapRect.width / 2;
+  const mapCenterY = mapRect.top + mapRect.height / 2;
+  const elementCenterX = elementRect.left + elementRect.width / 2;
+  const elementCenterY = elementRect.top + elementRect.height / 2;
+
+  element.style.setProperty("--kk-map-gesture-shift-x", `${Math.round((mapCenterX - elementCenterX) * 10) / 10}px`);
+  element.style.setProperty("--kk-map-gesture-shift-y", `${Math.round((mapCenterY - elementCenterY) * 10) / 10}px`);
+}
+
 function centerGoogleGestureOverlay(container: HTMLElement | null) {
   if (!container) {
     return;
   }
 
-  const gestureTextPattern = /use\s+(ctrl|⌘|command)\s*\+\s*scroll\s+to\s+zoom\s+the\s+map/i;
-  const candidates = Array.from(container.querySelectorAll<HTMLElement>("div")).filter((element) =>
-    gestureTextPattern.test(element.textContent || "")
-  );
+  container.querySelectorAll<HTMLElement>(".kk-google-map-gesture-overlay").forEach((element) => {
+    element.classList.remove("kk-google-map-gesture-overlay");
+  });
+  container.querySelectorAll<HTMLElement>(".kk-google-map-gesture-overlay-text").forEach((element) => {
+    element.classList.remove("kk-google-map-gesture-overlay-text");
+    element.style.removeProperty("--kk-map-gesture-shift-x");
+    element.style.removeProperty("--kk-map-gesture-shift-y");
+  });
+
+  const candidates = Array.from(container.querySelectorAll<HTMLElement>("div")).filter(isGoogleGestureInstructionElement);
 
   candidates.forEach((element) => {
-    const overlay = (element.closest(".gm-style-pbc, .gm-style-pbt") as HTMLElement | null) || element.parentElement;
+    const overlay = element.closest(".gm-style-pbc, .gm-style-pbt") as HTMLElement | null;
     overlay?.classList.add("kk-google-map-gesture-overlay");
     element.classList.add("kk-google-map-gesture-overlay-text");
+    alignGoogleGestureInstruction(container, element);
   });
 }
 
@@ -67,15 +110,34 @@ function observeGoogleGestureOverlay(map: google.maps.Map | null) {
     return () => undefined;
   }
 
+  let animationFrame = 0;
+  const refreshOverlay = () => {
+    if (animationFrame) {
+      window.cancelAnimationFrame(animationFrame);
+    }
+
+    animationFrame = window.requestAnimationFrame(() => {
+      centerGoogleGestureOverlay(container);
+      animationFrame = 0;
+    });
+  };
+
   centerGoogleGestureOverlay(container);
-  const observer = new MutationObserver(() => centerGoogleGestureOverlay(container));
+  const observer = new MutationObserver(refreshOverlay);
   observer.observe(container, {
     childList: true,
     subtree: true,
     characterData: true,
   });
+  window.addEventListener("resize", refreshOverlay);
 
-  return () => observer.disconnect();
+  return () => {
+    if (animationFrame) {
+      window.cancelAnimationFrame(animationFrame);
+    }
+    observer.disconnect();
+    window.removeEventListener("resize", refreshOverlay);
+  };
 }
 
 function configureLeafletRuntime() {

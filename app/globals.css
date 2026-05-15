@@ -1475,9 +1475,11 @@
   width: min(calc(100% - 2rem), 34rem) !important;
   max-width: calc(100% - 2rem) !important;
   margin-inline: auto !important;
+  transform: translate(var(--kk-map-gesture-shift-x, 0), var(--kk-map-gesture-shift-y, 0)) !important;
   text-align: center !important;
   text-align-last: center !important;
   white-space: normal !important;
+  will-change: transform;
 }
 
 .no-scrollbar::-webkit-scrollbar,
