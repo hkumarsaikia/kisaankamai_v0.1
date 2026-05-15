@@ -70,6 +70,11 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.match(footerSource, /FooterWordmark/);
   assert.match(footerSource, /kkFooterEmeraldGradient/);
   assert.match(footerSource, /stroke="url\(#kkFooterEmeraldGradient\)"/);
+  assert.match(footerSource, /viewBox="90 118 620 145"/);
+  assert.match(footerSource, /className="h-\[4\.75rem\] w-\[20rem\] max-w-full"/);
+  assert.match(footerSource, /x="400"/);
+  assert.match(footerSource, /y="220"/);
+  assert.doesNotMatch(footerSource, /viewBox="0 0 800 400"/);
   assert.doesNotMatch(footerSource, /<rect width="100%" height="100%" fill="#002a1b"/);
   assert.match(footerSource, /🇮🇳/);
   assert.match(headerSource, /markClassName="h-10 w-10 sm:h-12 sm:w-12 lg:h-14 lg:w-14"/);
@@ -103,6 +108,7 @@ test("brand logo, favicon, profile shell, and footer marker follow the approved 
   assert.match(footerSource, /md:grid-cols-\[minmax\(17rem,1\.18fr\)_minmax\(10rem,0\.62fr\)_minmax\(10rem,0\.62fr\)_minmax\(16rem,0\.86fr\)\]/);
   assert.match(footerSource, /max-w-\[18\.5rem\]/);
   assert.match(footerSource, /md:max-w-\[17rem\]/);
+  assert.match(footerSource, /className="mb-6 block w-fit/);
   assert.match(footerSource, /md:justify-self-start/);
   assert.match(footerSource, /md:justify-self-center/);
   assert.match(footerSource, /md:justify-self-end/);

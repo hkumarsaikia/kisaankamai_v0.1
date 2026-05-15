@@ -10,8 +10,8 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 function FooterWordmark() {
   return (
     <svg
-      className="h-28 w-[21rem] max-w-full sm:w-[24rem]"
-      viewBox="0 0 800 400"
+      className="h-[4.75rem] w-[20rem] max-w-full"
+      viewBox="90 118 620 145"
       xmlns="http://www.w3.org/2000/svg"
       role="img"
       aria-labelledby="kk-footer-wordmark-title"
@@ -24,8 +24,8 @@ function FooterWordmark() {
         </linearGradient>
       </defs>
       <text
-        x="50%"
-        y="55%"
+        x="400"
+        y="220"
         textAnchor="middle"
         fontFamily="Manrope, sans-serif"
         fontSize="120"
@@ -107,11 +107,11 @@ export const Footer = () => {
       className="kk-site-footer w-full border-t border-slate-800 bg-slate-900 py-16 text-left dark:bg-black"
       style={{ viewTransitionName: "persistent-footer" }}
     >
-      <div className="mx-auto grid max-w-[100rem] grid-cols-1 gap-10 px-5 text-sm sm:px-8 md:grid-cols-[minmax(17rem,1.18fr)_minmax(10rem,0.62fr)_minmax(10rem,0.62fr)_minmax(16rem,0.86fr)] lg:gap-16 xl:gap-24 2xl:px-0">
+      <div className="mx-auto grid max-w-[100rem] grid-cols-1 items-start gap-10 px-5 text-sm sm:px-8 md:grid-cols-[minmax(17rem,1.18fr)_minmax(10rem,0.62fr)_minmax(10rem,0.62fr)_minmax(16rem,0.86fr)] lg:gap-16 xl:gap-24 2xl:px-0">
         <div className="col-span-1 md:col-span-1 md:justify-self-start md:pr-4">
           <Link 
             href="/" 
-            className="mb-8 block w-fit transition-transform hover:-translate-y-1"
+            className="mb-6 block w-fit transition-transform hover:-translate-y-1"
             aria-label="Kisan Kamai"
           >
             <FooterWordmark />
