@@ -2,5 +2,6 @@
 #
 # The tracked Python utility scripts currently use only the Python standard
 # library. Keep this file present so Python setup commands have a canonical
-# target, and add pinned third-party packages here only when a tracked Python
-# script actually requires them.
+# target. `python3 -m pip install -r requirements.txt` is intentionally a
+# no-op until a tracked Python script actually requires a pinned third-party
+# package.

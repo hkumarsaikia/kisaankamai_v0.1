@@ -133,10 +133,14 @@ Operational workbook tooling is script-based and lives under `scripts/`.
 ```bash
 npm run sheets:bootstrap
 npm run sheets:verify
+npm run sheets:decorate
 npm run sheets:backfill
 ```
 
-Use `docs/OPERATIONS_GOOGLE_SHEETS.md` for the workbook model, backfill scope, and verification flow.
+Use `docs/OPERATIONS_GOOGLE_SHEETS.md` for the workbook model, decoration
+scope, backfill scope, and verification flow. Decoration is a presentation
+layer only: it must preserve manifest headers, filters, mirrored rows, and
+backend data contracts.
 
 ## Final Test Accounts
 
@@ -194,6 +198,7 @@ Do not move canonical runtime files into a bug-fix bundle. Source files, generat
 ## Public Data Contract
 
 - `/categories` renders the baseline equipment catalog and merges live owner-published categories into it.
+- `/catalog/[slug]` is the approved programmatic SEO category page family. It is limited to baseline equipment category slugs, source-controlled category guidance, live listing counts, sitemap entries, and JSON-LD. Do not add category-location pages until they have enough first-party inventory and reviewed local content.
 - `/rent-equipment` and `/equipment/[id]` do not render mock listings. Empty public inventory should show a real empty state until owners publish complete listings with images and location details. Keep the search panels compact below the fixed header on the base, query, and empty-state variants, but preserve a visible gap between the empty-state support CTA and the shared footer.
 - Public and workspace equipment tiles show availability only from listing data: active/current listings get a green dot, paused or future-available listings get a red dot. Public lists may still show paused complete listings so renters can inspect them, but booking actions must reject them until they become active/current.
 - All active Sort/Sorting controls on public rent-equipment and renter browse views must use the shared availability, price-low-to-high, and distance sort contract. Do not add visual-only sort buttons.

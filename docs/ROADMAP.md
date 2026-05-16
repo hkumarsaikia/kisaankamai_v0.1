@@ -8,8 +8,8 @@
 
 ## Near-Term Priorities
 
-- Complete the remaining root-app Firebase migration polish.
-- Finish route-by-route UI cleanup for language consistency and dark-mode readability.
-- Keep owner/renter flows and listing/booking actions aligned with the Firebase-backed root runtime.
-- Reduce residual duplicated or legacy code paths inside the root app and operational tooling.
-- Continue reducing dependency audit surface without forced downgrades of core runtime packages.
+- Keep owner/renter flows, listing publication, booking transitions, profile sync, and notification inbox behavior aligned with the Firebase-backed root runtime.
+- Maintain route-by-route UI quality for language switching, dark-mode readability, mobile workspace layout, page-transition motion, and form loading states.
+- Monitor the approved `/catalog/[slug]` programmatic SEO layer through sitemap, metadata, structured-data, and crawl checks before considering any broader SEO page family.
+- Keep Google Sheets mirroring and the `Kisan Kamai HQ` decoration layer operational without letting Sheets become the database of record.
+- Reduce residual duplicated or legacy code paths and dependency audit surface without forced downgrades of core runtime packages.

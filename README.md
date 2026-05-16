@@ -35,6 +35,7 @@ Current workspace behavior to know while validating `npm run dev`:
 - `/coming-soon` notify submissions go through `/api/forms/coming-soon-notify` into Firestore and the `coming_soon_notifications` Google Sheet.
 - the public theme defaults to light mode; explicit dark-mode choices are still respected.
 - `/categories` shows the baseline equipment catalog and merges live owner-published categories into it.
+- `/catalog/[slug]` is the safe programmatic SEO category layer. It is limited to approved baseline equipment slugs, uses source-controlled category guidance, live listing counts, JSON-LD, sitemap entries, and related-category links. Do not generate category-location pages until there is enough first-party inventory and local editorial value.
 - `/rent-equipment` and equipment detail pages stay live-data only; they do not show mock equipment when Firestore has no published listings.
 - `/rent-equipment` and renter browse sorting use the shared availability, price-low-to-high, and distance order. Booking is blocked for paused or future-available listings.
 
@@ -55,6 +56,7 @@ npm run launch:gate
 npm run firebase:deploy
 npm run sheets:bootstrap
 npm run sheets:verify
+npm run sheets:decorate
 npm run sheets:backfill
 npm run seed:final-test-accounts -- --owner-password "<password>" --renter-password "<password>"
 npm run cleanup:final-test-accounts
@@ -109,6 +111,7 @@ Required runtime configuration includes:
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
 - Form rows mirror to Google Sheets with pending notification metadata. Email alerts are handled only by the optional bound Sheets Apps Script when the workbook owner installs and authorizes it.
+- `npm run sheets:decorate` adds polished Google Sheets banding, hidden gridlines, headers, tab colors, notes, and the `Kisan Kamai HQ` dashboard without moving header rows or mirrored data rows.
 
 ## Operational Tooling
 
@@ -117,6 +120,7 @@ Run the operational scripts from the repo root:
 ```bash
 npm run sheets:bootstrap
 npm run sheets:verify
+npm run sheets:decorate
 npm run sheets:backfill
 npm run seed:final-test-accounts -- --owner-password "<password>" --renter-password "<password>"
 npm run cleanup:final-test-accounts
@@ -138,6 +142,7 @@ Manual Firebase Console prerequisites still required outside repo code:
 Runbooks:
 
 - SEO operations: `docs/SEO.md`
+- Programmatic SEO: `docs/PROGRAMMATIC_SEO.md`
 - Google Sheets ops: `docs/OPERATIONS_GOOGLE_SHEETS.md`
 - Final test accounts: `docs/OPERATIONS_FINAL_TEST_ACCOUNTS.md`
 - Live repo sync + Discord: `docs/OPERATIONS_LIVE_REPO_SYNC.md`
@@ -149,3 +154,4 @@ Runbooks:
 - `main` is the only long-term branch target.
 - Vendored repositories in `vendor/` are reference-only and are not runtime dependencies.
 - Cross-agent handoff files are not part of the active root app.
+- Timestamped historical records under `docs/bug-fixes/` and generated crawl reports under `docs/seo-audits/` are evidence snapshots. Update index/current docs instead of rewriting old evidence unless the task explicitly asks to correct a historical artifact.

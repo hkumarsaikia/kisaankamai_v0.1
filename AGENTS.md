@@ -15,12 +15,14 @@ npm run lint
 npm run typecheck
 npm run build
 npm run verify
+npm run sheets:decorate
 ```
 
 - Use `npm run dev:logged` or `npm run start:logged` when you need captured runtime logs.
 - Runtime logs from the helper scripts live under `logs/runtime/`.
 - Start `npm run dev:public` before `npm run tunnel:public` when you need a shareable tunnel URL for the local app.
 - Treat `npm run verify` as the default root-app validation pass.
+- Use `npm run sheets:decorate` after workbook bootstrap/backfill when the production workbook needs the polished visual layer. The decoration script must keep manifest headers in row 1, preserve filters, and keep the `Kisan Kamai HQ` dashboard production-presentable for operational review.
 - Root npm commands are hardware-tuned through `scripts/hardware-tuned-runner.mjs`.
   The runner auto-detects CPU/RAM, uses cacheable checks where safe, and leaves
   system headroom instead of permanently changing global CPU policy.
@@ -54,8 +56,16 @@ Verify the implemented page visually against the supplied local HTML, not only b
 - Keep timestamped bug-fix records under `docs/bug-fixes/<YYYY-MM-DD-HHMMSS-TZ>-<short-slug>/`.
 - Do not move canonical source, lockfiles, generated docs used by tests, or runtime config into those folders; store review notes, manifests, verification summaries, and copied artifacts there.
 - Do not commit local credential guides, OTP notes, passwords, or webhook secrets. `FINAL_TEST_ACCOUNT_LOGIN_GUIDE.md` is local-only and ignored.
+- Treat timestamped `docs/bug-fixes/` and `docs/seo-audits/` outputs as immutable evidence unless the user explicitly asks to correct a historical artifact. Refresh the current docs, indexes, and runbooks instead.
+
+## Programmatic SEO
+
+- `/catalog/[slug]` is the approved programmatic SEO surface and is backed by `lib/programmatic-seo.ts`.
+- Only use approved baseline equipment category slugs in the sitemap.
+- Do not generate category-location pages until the route has enough first-party inventory and reviewed local content to avoid thin or duplicate pages.
 
 ## Repo Notes
 
 - `vendor/` is reference-only and should not be edited for product changes.
 - Use `/home/hkuma/Work/kisan_kamai` as the canonical working checkout. Do not create or continue work in `~/.config/superpowers/worktrees/kisan_kamai/...` unless explicitly requested by the user. If an old worktree must be removed, first verify it is clean and that its branch has no commits missing from `main`.
+- Clean only generated/editor artifacts by default. Do not delete or revert unrelated user/tool changes just to make `git status` shorter unless the user explicitly asks for a destructive cleanup of that scope.

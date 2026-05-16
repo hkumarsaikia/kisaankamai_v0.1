@@ -60,6 +60,9 @@ next-env.d.ts
 google_auth/
 FINAL_TEST_ACCOUNT_LOGIN_GUIDE.md
 my-video/
+.codex.file.backup-*
+.gemini/
+GEMINI.md
 
 # local migration/reference archive
 old/

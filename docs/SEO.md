@@ -98,6 +98,7 @@ After deployment, smoke-check:
 curl -fsS https://www.kisankamai.com/ | grep -E "<title>|application/ld\\+json"
 curl -fsS https://www.kisankamai.com/robots.txt
 curl -fsS https://www.kisankamai.com/sitemap.xml
+curl -fsS https://www.kisankamai.com/catalog/tractors | grep -E "<title>|application/ld\\+json"
 curl -fsS https://www.kisankamai.com/support | grep -E "og:title|og:image|twitter:description"
 curl -fsS https://www.kisankamai.com/api/build-info
 ```

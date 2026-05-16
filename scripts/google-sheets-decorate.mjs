@@ -1,12 +1,13 @@
 import { JWT } from "google-auth-library";
 import workbookManifest from "../data/operational-sheets-workbook.json" with { type: "json" };
-import { appendAuditEntry, upsertWorkbookMetaEntries } from "./lib/google-sheets.mjs";
+import { appendAuditEntry, readSheetRows, replaceSheetRows, upsertWorkbookMetaEntries } from "./lib/google-sheets.mjs";
 import { getGoogleSheetConfig, isSheetsConfigured, loadRepoEnv } from "./lib/env.mjs";
 import { getStringOption, parseArgs, printUsage } from "./lib/cli.mjs";
 
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 const DASHBOARD_TITLE = "Kisan Kamai HQ";
 const DASHBOARD_RANGE = `${DASHBOARD_TITLE}!A1:H80`;
+const SHEET_FONT = "Arial";
 
 const options = parseArgs();
 if (options.help) {
@@ -14,8 +15,8 @@ if (options.help) {
     "Usage: node scripts/google-sheets-decorate.mjs [--sheet-id <id>]",
     "",
     "Applies a polished visual layer to the operational Google Sheets workbook.",
-    "The script does not move or rewrite operational headers. Playful mascot",
-    "decorations are kept inside a separate dashboard tab.",
+    "The script does not move or rewrite operational headers. Dashboard copy",
+    "and formatting are kept production-presentable for operational review.",
   ]);
   process.exit(0);
 }
@@ -35,21 +36,21 @@ const sheetDefinitions = workbookManifest.sheets.map((sheet) => ({
 }));
 
 const sheetDesign = {
-  workbook_meta: { icon: "🧭", purpose: "Workbook settings and mirror notes", owner: "Ops", tone: "Slate" },
-  owners: { icon: "👨‍🌾", purpose: "Owner profile mirror", owner: "Profiles", tone: "Emerald" },
-  renters: { icon: "🧑‍🌾", purpose: "Renter profile mirror", owner: "Profiles", tone: "Sky" },
-  listings: { icon: "🚜", purpose: "Owner-published equipment", owner: "Marketplace", tone: "Harvest" },
-  bookings: { icon: "📅", purpose: "Booking requests and status", owner: "Bookings", tone: "Violet" },
-  payments: { icon: "🤝", purpose: "Direct settlement estimates", owner: "Finance notes", tone: "Amber" },
-  saved_items: { icon: "⭐", purpose: "Saved equipment mirror", owner: "Renter workspace", tone: "Teal" },
-  support_requests: { icon: "🛟", purpose: "Support and public request inbox", owner: "Support", tone: "Rose" },
-  booking_requests: { icon: "📬", purpose: "Public booking callback requests", owner: "Support", tone: "Indigo" },
-  newsletter_subscriptions: { icon: "📨", purpose: "Newsletter signups", owner: "Marketing", tone: "Green" },
-  coming_soon_notifications: { icon: "🔔", purpose: "Coming-soon interest list", owner: "Launch", tone: "Orange" },
-  feedback: { icon: "💬", purpose: "Owner and renter feedback", owner: "Product", tone: "Purple" },
-  bug_reports: { icon: "🐞", purpose: "Client bug reports", owner: "Engineering", tone: "Red" },
-  auth_events: { icon: "🔐", purpose: "Auth activity log", owner: "Security", tone: "Blue" },
-  sync_audit: { icon: "🧾", purpose: "Mirror and release audit trail", owner: "Ops", tone: "Graphite" },
+  workbook_meta: { code: "META", purpose: "Workbook settings and mirror notes", owner: "Operations", tone: "Slate" },
+  owners: { code: "OWN", purpose: "Owner profile mirror", owner: "Profiles", tone: "Emerald" },
+  renters: { code: "REN", purpose: "Renter profile mirror", owner: "Profiles", tone: "Sky" },
+  listings: { code: "LST", purpose: "Owner-published equipment", owner: "Marketplace", tone: "Harvest" },
+  bookings: { code: "BKG", purpose: "Booking requests and status", owner: "Bookings", tone: "Violet" },
+  payments: { code: "EST", purpose: "Direct settlement estimates", owner: "Finance notes", tone: "Amber" },
+  saved_items: { code: "SAV", purpose: "Saved equipment mirror", owner: "Renter workspace", tone: "Teal" },
+  support_requests: { code: "SUP", purpose: "Support and public request inbox", owner: "Support", tone: "Rose" },
+  booking_requests: { code: "CBK", purpose: "Public booking callback requests", owner: "Support", tone: "Indigo" },
+  newsletter_subscriptions: { code: "NEWS", purpose: "Newsletter signups", owner: "Marketing", tone: "Green" },
+  coming_soon_notifications: { code: "WAIT", purpose: "Coming-soon interest list", owner: "Launch", tone: "Orange" },
+  feedback: { code: "FDBK", purpose: "Owner and renter feedback", owner: "Product", tone: "Purple" },
+  bug_reports: { code: "BUG", purpose: "Client bug reports", owner: "Engineering", tone: "Red" },
+  auth_events: { code: "AUTH", purpose: "Auth activity log", owner: "Security", tone: "Blue" },
+  sync_audit: { code: "AUD", purpose: "Mirror and release audit trail", owner: "Operations", tone: "Graphite" },
 };
 
 const palette = {
@@ -178,7 +179,7 @@ function buildOperationalRequests(sheetStateMap) {
     const rowLimit = Math.min(Math.max(sheetState.rowCount, 120), 500);
     const tabColor = definition.tabColor || palette.primary;
     const accent = hexToRgbColor(tabColor);
-    const design = sheetDesign[definition.key] || { icon: "✨", purpose: "Operational mirror", owner: "Ops", tone: "Clean" };
+    const design = sheetDesign[definition.key] || { code: "OPS", purpose: "Operational mirror", owner: "Operations", tone: "Clean" };
 
     requests.push({
       updateSheetProperties: {
@@ -258,7 +259,7 @@ function buildOperationalRequests(sheetStateMap) {
               backgroundColorStyle: { rgbColor: accent },
               textFormat: {
                 bold: true,
-                fontFamily: "Manrope",
+                fontFamily: SHEET_FONT,
                 fontSize: 10,
                 foregroundColor: hexToRgbColor("#FFFFFF"),
               },
@@ -282,7 +283,7 @@ function buildOperationalRequests(sheetStateMap) {
           cell: {
             userEnteredFormat: {
               textFormat: {
-                fontFamily: "Manrope",
+                fontFamily: SHEET_FONT,
                 fontSize: 10,
                 foregroundColor: hexToRgbColor(palette.ink),
               },
@@ -303,7 +304,7 @@ function buildOperationalRequests(sheetStateMap) {
             endColumnIndex: 1,
           },
           cell: {
-            note: `${design.icon} ${definition.title}\n${design.purpose}\n\nDesign rule: tables remain operational; playful characters stay decorative and non-blocking.`,
+            note: `${design.code} - ${definition.title}\n${design.purpose}\n\nDesign rule: tables remain operational, filterable, and readable for production review.`,
           },
           fields: "note",
         },
@@ -381,21 +382,21 @@ async function ensureDashboardSheet() {
 function buildDashboardRows() {
   const timestamp = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
   const rows = [
-    ["🚜 Kisan Kamai Operations Garden ✨", "", "", "", "", "", "", ""],
-    ["A polished command sheet for the Firebase -> Google Sheets operational mirror. Decorative toys and pets stay here so data tabs remain clean.", "", "", "", "", "", "", ""],
+    ["Kisan Kamai Operations HQ", "", "", "", "", "", "", ""],
+    ["Production workbook for the Firebase-to-Google-Sheets operational mirror. Sheets support review and reporting; Firebase remains the source of truth.", "", "", "", "", "", "", ""],
     ["", "", "", "", "", "", "", ""],
-    ["🌾 Source of truth", "Firebase first; Sheets is a best-effort mirror.", "", "🚜 Live ops", "Profiles, listings, bookings, support.", "", "✨ Last decorated", timestamp],
-    ["🐾 Mascot corner", "🧸 toy tractor  🐕 guard pet  🐈 sheet helper", "", "🧼 Clean rule", "Readable tables first; glitter second.", "", "🔎 Quick check", "Run npm run sheets:verify"],
+    ["Source of truth", "Firebase first; Sheets is a best-effort mirror.", "", "Operational scope", "Profiles, listings, bookings, support.", "", "Last decorated", timestamp],
+    ["Data rule", "Do not edit mirrored rows as source data.", "", "Review rule", "Use filters, status columns, and audit tabs for triage.", "", "Quick check", "Run npm run sheets:verify"],
     ["", "", "", "", "", "", "", ""],
     ["Sheet map", "", "", "", "", "", "", ""],
-    ["Icon", "Sheet", "Purpose", "Live rows", "Owner", "Tone", "Signal", "Action"],
+    ["Code", "Sheet", "Purpose", "Live rows", "Owner", "Tone", "Signal", "Action"],
   ];
 
   for (const definition of sheetDefinitions) {
-    const design = sheetDesign[definition.key] || { icon: "✨", purpose: "Operational mirror", owner: "Ops", tone: "Clean" };
+    const design = sheetDesign[definition.key] || { code: "OPS", purpose: "Operational mirror", owner: "Operations", tone: "Clean" };
     const quotedTitle = quoteSheetTitle(definition.title);
     rows.push([
-      design.icon,
+      design.code,
       definition.title,
       design.purpose,
       `=MAX(COUNTA(${quotedTitle}!A:A)-1,0)`,
@@ -410,10 +411,10 @@ function buildDashboardRows() {
     ["", "", "", "", "", "", "", ""],
     ["Data flow", "", "", "", "", "", "", ""],
     ["Website action", "Firebase write", "Server mirror", "Google Sheets row", "Ops review", "Support follow-up", "Audit trail", "Done"],
-    ["👤 User submits", "🔥 Source of truth", "🪞 Best-effort mirror", "📊 Decorated tab", "👀 Human review", "📞 Call/message", "🧾 sync_audit", "✅"],
+    ["User submits", "Source of truth", "Best-effort mirror", "Decorated tab", "Human review", "Call/message", "sync_audit", "Complete"],
     ["", "", "", "", "", "", "", ""],
-    ["Design notes", "", "", "", "", "", "", ""],
-    ["✨ Glitter is structural: borders, banding, tab colors, and status chips.", "", "", "", "🐾 Pets/toys are dashboard-only so operational tables stay useful.", "", "", ""],
+    ["Workbook standard", "", "", "", "", "", "", ""],
+    ["Use clean headers, frozen filters, status-based conditional formatting, compact notes, and consistent row heights. Keep operational tabs readable before presentation styling.", "", "", "", "Dashboard content should explain ownership, data flow, and verification without temporary demo wording.", "", "", ""],
   );
 
   return rows;
@@ -453,7 +454,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
           userEnteredFormat: {
             backgroundColor: hexToRgbColor("#F7FBF8"),
             textFormat: {
-              fontFamily: "Manrope",
+              fontFamily: SHEET_FONT,
               fontSize: 10,
               foregroundColor: hexToRgbColor(palette.ink),
             },
@@ -508,7 +509,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
             backgroundColor: hexToRgbColor(palette.primary),
             textFormat: {
               bold: true,
-              fontFamily: "Manrope",
+              fontFamily: SHEET_FONT,
               fontSize: 22,
               foregroundColor: hexToRgbColor("#FFFFFF"),
             },
@@ -527,7 +528,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
             backgroundColor: hexToRgbColor("#E9F5ED"),
             textFormat: {
               italic: true,
-              fontFamily: "Manrope",
+              fontFamily: SHEET_FONT,
               fontSize: 10,
               foregroundColor: hexToRgbColor(palette.muted),
             },
@@ -543,7 +544,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
         cell: {
           userEnteredFormat: {
             backgroundColor: hexToRgbColor("#FFFFFF"),
-            textFormat: { fontFamily: "Manrope", fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
+            textFormat: { fontFamily: SHEET_FONT, fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
           },
         },
         fields: "userEnteredFormat(backgroundColor,textFormat)",
@@ -555,7 +556,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
         cell: {
           userEnteredFormat: {
             backgroundColor: hexToRgbColor(palette.primaryDeep),
-            textFormat: { bold: true, fontFamily: "Manrope", fontSize: 13, foregroundColor: hexToRgbColor("#FFFFFF") },
+            textFormat: { bold: true, fontFamily: SHEET_FONT, fontSize: 13, foregroundColor: hexToRgbColor("#FFFFFF") },
             horizontalAlignment: "CENTER",
           },
         },
@@ -568,7 +569,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
         cell: {
           userEnteredFormat: {
             backgroundColor: hexToRgbColor("#DFF1E6"),
-            textFormat: { bold: true, fontFamily: "Manrope", fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
+            textFormat: { bold: true, fontFamily: SHEET_FONT, fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
             horizontalAlignment: "CENTER",
           },
         },
@@ -581,7 +582,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
         cell: {
           userEnteredFormat: {
             backgroundColor: hexToRgbColor("#FFFFFF"),
-            textFormat: { fontFamily: "Manrope", fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
+            textFormat: { fontFamily: SHEET_FONT, fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
             verticalAlignment: "MIDDLE",
           },
         },
@@ -594,7 +595,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
         cell: {
           userEnteredFormat: {
             backgroundColor: hexToRgbColor(palette.amberSoft),
-            textFormat: { bold: true, fontFamily: "Manrope", fontSize: 11, foregroundColor: hexToRgbColor("#6A3B00") },
+            textFormat: { bold: true, fontFamily: SHEET_FONT, fontSize: 11, foregroundColor: hexToRgbColor("#6A3B00") },
             horizontalAlignment: "CENTER",
           },
         },
@@ -607,7 +608,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
         cell: {
           userEnteredFormat: {
             backgroundColor: hexToRgbColor("#EEF6F0"),
-            textFormat: { fontFamily: "Manrope", fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
+            textFormat: { fontFamily: SHEET_FONT, fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
             horizontalAlignment: "CENTER",
           },
         },
@@ -686,6 +687,15 @@ async function updateDashboardValues() {
   });
 }
 
+async function removeWorkbookMetaEntry(section, key) {
+  const rows = await readSheetRows("workbook_meta", overrides);
+  const dataRows = rows.slice(1);
+  const filteredRows = dataRows.filter((row) => row[0] !== section || row[1] !== key);
+  if (filteredRows.length !== dataRows.length) {
+    await replaceSheetRows("workbook_meta", filteredRows, overrides);
+  }
+}
+
 async function run() {
   const dashboardSheet = await ensureDashboardSheet();
   let state = await getSpreadsheetState();
@@ -725,13 +735,14 @@ async function run() {
       },
       {
         section: "design",
-        key: "decorative_dashboard",
+        key: "operations_dashboard",
         value: DASHBOARD_TITLE,
-        notes: "Strategic mascot/toy visuals live in this dashboard tab, not inside mirrored data rows.",
+        notes: "Production dashboard for workbook ownership, data-flow, and verification guidance.",
       },
     ],
     overrides
   );
+  await removeWorkbookMetaEntry("design", "decorative_dashboard");
 
   await appendAuditEntry(
     {
