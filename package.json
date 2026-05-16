@@ -32,6 +32,7 @@
     "firebase:deploy": "firebase deploy --only firestore,storage --project gokisaan",
     "sheets:bootstrap": "node scripts/google-sheets-bootstrap.mjs",
     "sheets:verify": "node scripts/google-sheets-verify.mjs",
+    "sheets:decorate": "node scripts/google-sheets-decorate.mjs",
     "sheets:backfill": "node scripts/google-sheets-backfill.mjs",
     "auth:repair-password-login-emails": "node scripts/repair-password-login-emails.mjs",
     "firebase:phone-test-numbers": "node scripts/configure-firebase-phone-test-numbers.mjs",

@@ -62,6 +62,19 @@ numeric/date formatting.
 npm run sheets:bootstrap
 ```
 
+Decorate the workbook after bootstrap or backfill:
+
+```bash
+npm run sheets:decorate
+```
+
+This keeps every operational tab structurally safe: header rows remain in row 1,
+filters remain attached to the existing tables, and mirrored data rows are not
+moved. The script applies polished tab colors, hidden gridlines, readable
+headers, soft banding, borders, notes, row heights, and column widths across the
+operational tabs. Playful toy, pet, sparkle, and tractor visuals are isolated in
+the `Kisan Kamai HQ` dashboard tab so the data tabs stay professional.
+
 Verify the workbook matches the manifest:
 
 ```bash
@@ -78,6 +91,7 @@ npm run sheets:backfill
 
 The operational workbook now includes:
 
+- `Kisan Kamai HQ` decorative dashboard and workbook map
 - `workbook_meta`
 - `owners`
 - `renters`
