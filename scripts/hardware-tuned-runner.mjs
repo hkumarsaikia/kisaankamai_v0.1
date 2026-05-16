@@ -9,6 +9,7 @@ const require = createRequire(import.meta.url);
 const rootDir = process.cwd();
 
 const PROFILES = new Set([
+  "exec",
   "dev",
   "dev:public",
   "dev:logged",
@@ -74,6 +75,7 @@ const CHROME_NVIDIA_GPU_ARGS = [
   "--disable-software-rasterizer",
 ];
 const DEFAULT_CHROME_PATH = "/usr/bin/google-chrome";
+const NVIDIA_EGL_VENDOR_FILE = "/usr/share/glvnd/egl_vendor.d/10_nvidia.json";
 
 function resolveChromeExecutablePath() {
   return process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_BIN || DEFAULT_CHROME_PATH;
@@ -88,6 +90,10 @@ function mergeNodeOptions(baseOptions, memoryMb) {
 }
 
 function tunedEnv(extra = {}) {
+  const optionalNvidiaEnv = existsSync(NVIDIA_EGL_VENDOR_FILE)
+    ? { __EGL_VENDOR_LIBRARY_FILENAMES: NVIDIA_EGL_VENDOR_FILE }
+    : {};
+
   return {
     ...process.env,
     NEXT_TELEMETRY_DISABLED: process.env.NEXT_TELEMETRY_DISABLED || "1",
@@ -97,6 +103,11 @@ function tunedEnv(extra = {}) {
     ),
     KK_GPU_MODE: "nvidia-fixed",
     KK_NVIDIA_GPU_REQUIRED: "1",
+    CUDA_DEVICE_ORDER: "PCI_BUS_ID",
+    CUDA_VISIBLE_DEVICES: "0",
+    NVIDIA_VISIBLE_DEVICES: "all",
+    NVIDIA_DRIVER_CAPABILITIES: "all",
+    PYTORCH_NVML_BASED_CUDA_CHECK: "1",
     KK_CHROME_GPU_ARGS: CHROME_NVIDIA_GPU_ARGS.join(" "),
     PUPPETEER_EXECUTABLE_PATH: resolveChromeExecutablePath(),
     CHROME_BIN: resolveChromeExecutablePath(),
@@ -106,6 +117,7 @@ function tunedEnv(extra = {}) {
     __VK_LAYER_NV_optimus: "NVIDIA_only",
     DRI_PRIME: "1",
     LIBVA_DRIVER_NAME: "nvidia",
+    ...optionalNvidiaEnv,
     KK_DETECTED_LOGICAL_CORES: String(hardware.logicalCores),
     KK_DETECTED_WORKERS: String(hardware.workers),
     KK_DETECTED_MEMORY_MB: String(hardware.totalMemoryMb),
@@ -256,9 +268,20 @@ async function runProfile(profile, forwardedArgs = []) {
       return runVerify(forwardedArgs);
     case "launch:gate":
       return runLaunchGate(forwardedArgs);
+    case "exec":
+      return runExec(forwardedArgs);
     default:
       throw new Error(`Unknown hardware-tuned profile: ${profile}`);
   }
+}
+
+async function runExec(forwardedArgs = []) {
+  const [command, ...args] = forwardedArgs;
+  if (!command) {
+    throw new Error("Usage: node scripts/hardware-tuned-runner.mjs exec <command> [...args]");
+  }
+
+  return runCommand("exec", { command, args });
 }
 
 async function runVerify(forwardedArgs = []) {

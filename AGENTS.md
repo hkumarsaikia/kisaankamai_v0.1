@@ -15,6 +15,7 @@ npm run lint
 npm run typecheck
 npm run build
 npm run verify
+npm run gpu:check
 npm run sheets:decorate
 ```
 
@@ -26,9 +27,10 @@ npm run sheets:decorate
 - Root npm commands are hardware-tuned through `scripts/hardware-tuned-runner.mjs`.
   The runner auto-detects CPU/RAM, uses cacheable checks where safe, and leaves
   system headroom instead of permanently changing global CPU policy.
-- Browser-capable commands must prefer the fixed NVIDIA GPU path. The runner
-  exports PRIME render offload variables, Chrome/Puppeteer executable paths, and
-  Chrome GPU flags for the NVIDIA dGPU by default.
+- Workspace commands must prefer the fixed NVIDIA GPU path. The runner exports
+  PRIME render offload variables, CUDA defaults, Chrome/Puppeteer executable
+  paths, and Chrome GPU flags for the NVIDIA dGPU by default. CPU-only commands
+  inherit the same environment even when there is no useful GPU work to offload.
 - Use `KK_CPU_MODE=balanced` by default. Use `KK_CPU_MODE=performance` only for
   short local bursts, `KK_CPU_MODE=eco` when keeping the desktop very responsive,
   `KK_MAX_WORKERS=<n>` for an explicit worker cap, and `KK_DISABLE_NICE=1` only

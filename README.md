@@ -50,6 +50,7 @@ npm run typecheck
 npm run build
 npm run test:contracts
 npm run verify
+npm run gpu:check
 npm run firebase:preflight
 npm run firebase:rules:dry-run
 npm run launch:gate
@@ -77,7 +78,8 @@ Ubuntu rebuild notes:
 - Tailwind/PostCSS config is ESM: `tailwind.config.mjs` and `postcss.config.mjs`.
 - Use `PUPPETEER_SKIP_DOWNLOAD=true npm ci` on Ubuntu so Puppeteer does not download browser binaries into dependency folders; use `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome` for browser checks.
 - Puppeteer is dev-only browser automation tooling. It must stay out of production dependencies.
-- NVIDIA GPU acceleration is only useful for browser rendering/profiling work, not for lint/typecheck/build.
+- Root npm scripts run through `scripts/hardware-tuned-runner.mjs` and inherit the fixed NVIDIA/CUDA workspace defaults. Browser rendering, Playwright/Puppeteer, CUDA-aware Python/ML tools, and other GPU-aware child processes should prefer the NVIDIA GTX 1650; lint/typecheck/build still remain CPU-bound work.
+- Manual shell commands can source `scripts/nvidia-workspace-env.sh`, or use the repo `.envrc` with `direnv allow`, to receive the same NVIDIA/CUDA defaults outside npm scripts.
 
 ## Firebase App Hosting
 

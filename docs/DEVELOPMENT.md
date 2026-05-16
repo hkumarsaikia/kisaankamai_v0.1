@@ -20,6 +20,7 @@ npm run typecheck
 npm run build
 npm run test:contracts
 npm run verify
+npm run gpu:check
 npm run firebase:preflight
 npm run firebase:rules:dry-run
 npm run launch:gate
@@ -47,8 +48,25 @@ settings, kernel settings, or permanent power policy. For system health it sets
 bounded Node memory, `UV_THREADPOOL_SIZE`, Node test concurrency, cached ESLint,
 and Linux `nice`/`ionice` priority wrappers when available. For GPU routing it
 sets fixed NVIDIA PRIME render offload variables, Chrome/Puppeteer executable
-paths, and Chrome GPU flags including GPU rasterization and disabled software
-rasterizer fallback.
+paths, CUDA defaults such as `CUDA_DEVICE_ORDER=PCI_BUS_ID` and
+`CUDA_VISIBLE_DEVICES=0`, and Chrome GPU flags including GPU rasterization and
+disabled software rasterizer fallback.
+
+Every root npm script now enters the same tuned environment, including Firebase,
+Sheets, repo-sync, live E2E, and Discord utility commands. CPU/network-bound
+commands still run their actual work on CPU or network services, but they inherit
+the fixed NVIDIA/CUDA environment so any browser, CUDA, Python ML, or GPU-aware
+child process prefers the NVIDIA device instead of the AMD integrated graphics.
+
+Manual shell commands can use the same workspace defaults by sourcing:
+
+```bash
+source scripts/nvidia-workspace-env.sh
+```
+
+The repo also includes `.envrc` with the same source line. If `direnv` is enabled
+on the machine, run `direnv allow` once from the repo root so new shells in this
+workspace automatically receive the NVIDIA/CUDA defaults.
 
 Useful overrides:
 
@@ -64,7 +82,7 @@ Chrome/Puppeteer/Playwright checks should keep using the project npm scripts or
 the same environment variables when launched manually. Browser automation must
 use the fixed NVIDIA GPU route where this local machine controls the browser
 process. Build, lint, typecheck, Firebase CLI, and Sheets verification remain
-CPU/network bound even though they inherit the same GPU environment.
+CPU/network bound even though they inherit the same NVIDIA/CUDA environment.
 
 ## Firebase Requirements
 
@@ -109,7 +127,7 @@ Phone-only auth flow contract:
 - Puppeteer browser download is disabled; use `PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome`.
 - Playwright is intentionally a `devDependency` for rendered QA. On Ubuntu 26.04, Playwright's managed Chromium package may be unavailable; launch Playwright with `executablePath: "/usr/bin/google-chrome"` instead of committing downloaded browser binaries.
 - Puppeteer is intentionally a `devDependency`. Do not move it back into production dependencies; browser automation and smoke checks are tooling, not runtime.
-- NVIDIA GPU routing is fixed for Chrome/Puppeteer/Playwright rendering checks through the root runner, but build, lint, typecheck, Firebase verification, and Sheets verification remain CPU/network-bound.
+- NVIDIA GPU and CUDA routing is fixed for root npm scripts through the root runner. Browser and GPU-aware child processes should use the NVIDIA device by default; build, lint, typecheck, Firebase verification, and Sheets verification remain CPU/network-bound.
 
 ## Logs
 

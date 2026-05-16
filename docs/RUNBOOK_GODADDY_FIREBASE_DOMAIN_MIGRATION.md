@@ -14,8 +14,8 @@ Deferred. Do not execute this runbook until:
 2. Confirm who controls the GoDaddy DNS zone for the production domain and `www`.
 3. Lower the existing GoDaddy DNS TTL ahead of the cutover window if the current records allow it.
 4. Capture the current GoDaddy DNS zone as a rollback snapshot.
-5. Run `node scripts/live-repo-sync.mjs --repo-url "<git-url>" --branch main` and save the result.
-6. Run `node scripts/google-sheets-verify.mjs` so the operational workbook is current before the cutover.
+5. Run `npm run repo:sync-live -- --repo-url "<git-url>" --branch main` and save the result.
+6. Run `npm run sheets:verify` so the operational workbook is current before the cutover.
 
 ## Firebase Side
 
@@ -39,8 +39,8 @@ Do not guess the DNS records ahead of time. Use the console-generated values for
 2. Confirm HTTPS certificate issuance.
 3. Confirm the root app resolves correctly on both the apex domain and `www`.
 4. Validate login, listing read paths, booking flows, and at least one Sheets-backed write path.
-5. Re-run `node scripts/live-repo-sync.mjs --repo-url "<git-url>" --branch main`.
-6. Re-run `node scripts/google-sheets-verify.mjs`.
+5. Re-run `npm run repo:sync-live -- --repo-url "<git-url>" --branch main`.
+6. Re-run `npm run sheets:verify`.
 
 ## Rollback
 

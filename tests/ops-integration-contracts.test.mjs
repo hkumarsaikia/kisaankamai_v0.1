@@ -112,10 +112,13 @@ test("Firebase launch gate does not require Sentry", async () => {
   ]);
   const packageJson = JSON.parse(packageSource);
 
-  assert.equal(packageJson.scripts["firebase:preflight"], "node scripts/firebase-preflight.mjs");
+  assert.equal(
+    packageJson.scripts["firebase:preflight"],
+    "node scripts/hardware-tuned-runner.mjs exec node scripts/firebase-preflight.mjs"
+  );
   assert.equal(
     packageJson.scripts["firebase:rules:dry-run"],
-    "firebase deploy --only firestore,storage --project gokisaan --dry-run --debug"
+    "node scripts/hardware-tuned-runner.mjs exec firebase deploy --only firestore,storage --project gokisaan --dry-run --debug"
   );
   assert.equal(
     packageJson.scripts["launch:gate"],
