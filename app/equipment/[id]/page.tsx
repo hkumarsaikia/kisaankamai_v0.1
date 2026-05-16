@@ -22,13 +22,13 @@ function buildEquipmentMetaDescription({
   const baseDescription =
     cleanDescription && cleanDescription.length >= 120
       ? cleanDescription
-      : `${name} farm equipment rental${locationLabel ? ` in ${locationLabel}` : ""}. Review photos, listed rate, owner details, availability, and booking options before contacting the owner.`;
+      : `${name} farm equipment rental${locationLabel ? ` in ${locationLabel}` : ""}. Review photos, rate, owner details, availability, and booking options.`;
 
-  if (baseDescription.length <= 155) {
+  if (baseDescription.length <= 130) {
     return baseDescription;
   }
 
-  return `${baseDescription.slice(0, 152).trim()}...`;
+  return `${baseDescription.slice(0, 127).trim()}...`;
 }
 
 export async function generateMetadata({

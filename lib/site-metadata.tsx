@@ -4,7 +4,7 @@ export const SITE_NAME = "Kisan Kamai";
 export const SITE_DOMAIN = "https://www.kisankamai.com";
 export const DEFAULT_SHARE_IMAGE_PATH = "/assets/share/kisan-kamai-og.jpg";
 export const DEFAULT_SHARE_DESCRIPTION =
-  "Rent and list farm equipment across Northern Maharashtra. Browse machines, manage bookings, and coordinate directly with local owners and renters.";
+  "Rent and list farm equipment across Maharashtra. Browse machines and manage bookings with local owners and renters nearby.";
 
 export function getMetadataBaseUrl() {
   return new URL(process.env.NEXT_PUBLIC_SITE_URL || process.env.NEXT_PUBLIC_APP_URL || SITE_DOMAIN);

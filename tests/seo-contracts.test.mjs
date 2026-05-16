@@ -229,11 +229,12 @@ test("open browser tabs detect a newer App Hosting build and refresh safely", as
   assert.match(buildInfoSource, /process\.env\.K_REVISION/);
 });
 
-test("crawl-audit fixes keep bot metadata in head and filtered search URLs out of the index", async () => {
-  const [nextConfigSource, proxySource, metadataSource, layoutSource, pageMetadataSource, llmsSource] = await Promise.all([
+test("crawl-audit fixes keep bot metadata in head and filtered search URLs canonical", async () => {
+  const [nextConfigSource, proxySource, metadataSource, equipmentSource, layoutSource, pageMetadataSource, llmsSource] = await Promise.all([
     readFile(new URL("../next.config.mjs", import.meta.url), "utf8"),
     readFile(new URL("../proxy.js", import.meta.url), "utf8"),
     readFile(new URL("../lib/site-metadata.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/equipment/[id]/page.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/layout.tsx", import.meta.url), "utf8"),
     readFile(new URL("../lib/public-page-metadata.ts", import.meta.url), "utf8"),
     readFile(new URL("../public/llms.txt", import.meta.url), "utf8"),
@@ -241,11 +242,11 @@ test("crawl-audit fixes keep bot metadata in head and filtered search URLs out o
 
   assert.match(nextConfigSource, /htmlLimitedBots/);
   assert.match(nextConfigSource, /SEOmatorBot/);
-  assert.match(proxySource, /X-Robots-Tag/);
-  assert.match(proxySource, /noindex, follow/);
-  assert.match(proxySource, /pathname === "\/rent-equipment"/);
-  assert.match(proxySource, /searchParams\.size > 0/);
+  assert.doesNotMatch(proxySource, /X-Robots-Tag/);
+  assert.doesNotMatch(proxySource, /noindex, follow/);
   assert.doesNotMatch(metadataSource, /Northern Maharashtra with Kisan Kamai\. Browse machinery, manage bookings, and coordinate directly/);
+  assert.match(metadataSource, /Browse machines and manage bookings with local owners and renters nearby/);
+  assert.match(equipmentSource, /slice\(0, 127\)/);
   assert.match(layoutSource, /publisher/);
   assert.match(layoutSource, /contactPoint/);
   assert.match(layoutSource, /sameAs/);
