@@ -1,0 +1,1959 @@
+{
+  "baseline": {
+    "url": "https://www.kisankamai.com",
+    "generatedAt": "2026-05-15T18:01:49.316Z",
+    "score": 96,
+    "crawledPages": 26,
+    "auditedPages": 26,
+    "issueCount": 967,
+    "byStatus": {
+      "warn": 835,
+      "fail": 132
+    },
+    "failCount": 132,
+    "warningCount": 835,
+    "topRules": [
+      {
+        "status": "warn",
+        "ruleId": "content-heading-length",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-word-count",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-sitemap-orphan-urls",
+        "categoryId": "crawl",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-inp",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-byline",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-expertise",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-citations",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-content-dates",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-privacy-policy",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-llms-txt",
+        "categoryId": "geo",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-anchor-text",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-external-valid",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-brotli",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-render-blocking",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "redirect-javascript",
+        "categoryId": "redirect",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-organization",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-required-fields",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "social-share-buttons",
+        "categoryId": "social",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-landmark-regions",
+        "categoryId": "a11y",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-heading-hierarchy",
+        "categoryId": "content",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-schema-drift",
+        "categoryId": "geo",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-breadcrumb",
+        "categoryId": "schema",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-heading-order",
+        "categoryId": "a11y",
+        "count": 24
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-semantic-html",
+        "categoryId": "geo",
+        "count": 23
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-description-length",
+        "categoryId": "core",
+        "count": 22
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-response-time",
+        "categoryId": "perf",
+        "count": 21
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-fcp",
+        "categoryId": "perf",
+        "count": 14
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-ttfb",
+        "categoryId": "perf",
+        "count": 13
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-responsive",
+        "categoryId": "images",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "mobile-interstitials",
+        "categoryId": "mobile",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-description",
+        "categoryId": "content",
+        "count": 11
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-canonical-loop",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-title-unique",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-canonical-redirect",
+        "categoryId": "crawl",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-sitemap-domain",
+        "categoryId": "crawl",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-size",
+        "categoryId": "images",
+        "count": 11
+      },
+      {
+        "status": "fail",
+        "ruleId": "links-broken-internal",
+        "categoryId": "links",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "security-https-redirect",
+        "categoryId": "security",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "url-internal-search",
+        "categoryId": "url",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-404-page",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-robots-txt-exists",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-robots-txt-valid",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-sitemap-exists",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "technical-sitemap-valid",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-lcp-hints",
+        "categoryId": "perf",
+        "count": 9
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-broken-html",
+        "categoryId": "content",
+        "count": 7
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-lcp",
+        "categoryId": "perf",
+        "count": 7
+      },
+      {
+        "status": "fail",
+        "ruleId": "cwv-lcp",
+        "categoryId": "perf",
+        "count": 7
+      }
+    ],
+    "allRuleCounts": [
+      {
+        "status": "warn",
+        "ruleId": "content-heading-length",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-word-count",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-sitemap-orphan-urls",
+        "categoryId": "crawl",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-inp",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-byline",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-expertise",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-citations",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-content-dates",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-privacy-policy",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-llms-txt",
+        "categoryId": "geo",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-anchor-text",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-external-valid",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-brotli",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-render-blocking",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "redirect-javascript",
+        "categoryId": "redirect",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-organization",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-required-fields",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "social-share-buttons",
+        "categoryId": "social",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-landmark-regions",
+        "categoryId": "a11y",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-heading-hierarchy",
+        "categoryId": "content",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-schema-drift",
+        "categoryId": "geo",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-breadcrumb",
+        "categoryId": "schema",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-heading-order",
+        "categoryId": "a11y",
+        "count": 24
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-semantic-html",
+        "categoryId": "geo",
+        "count": 23
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-description-length",
+        "categoryId": "core",
+        "count": 22
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-response-time",
+        "categoryId": "perf",
+        "count": 21
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-fcp",
+        "categoryId": "perf",
+        "count": 14
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-ttfb",
+        "categoryId": "perf",
+        "count": 13
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-responsive",
+        "categoryId": "images",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "mobile-interstitials",
+        "categoryId": "mobile",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-description",
+        "categoryId": "content",
+        "count": 11
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-canonical-loop",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-title-unique",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-canonical-redirect",
+        "categoryId": "crawl",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-sitemap-domain",
+        "categoryId": "crawl",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-size",
+        "categoryId": "images",
+        "count": 11
+      },
+      {
+        "status": "fail",
+        "ruleId": "links-broken-internal",
+        "categoryId": "links",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "security-https-redirect",
+        "categoryId": "security",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "url-internal-search",
+        "categoryId": "url",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-404-page",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-robots-txt-exists",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-robots-txt-valid",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "technical-sitemap-exists",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "technical-sitemap-valid",
+        "categoryId": "technical",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-lcp-hints",
+        "categoryId": "perf",
+        "count": 9
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-broken-html",
+        "categoryId": "content",
+        "count": 7
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-lcp",
+        "categoryId": "perf",
+        "count": 7
+      },
+      {
+        "status": "fail",
+        "ruleId": "cwv-lcp",
+        "categoryId": "perf",
+        "count": 7
+      },
+      {
+        "status": "fail",
+        "ruleId": "a11y-form-labels",
+        "categoryId": "a11y",
+        "count": 5
+      },
+      {
+        "status": "warn",
+        "ruleId": "mobile-horizontal-scroll",
+        "categoryId": "mobile",
+        "count": 5
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-response-time",
+        "categoryId": "perf",
+        "count": 5
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-robots-meta",
+        "categoryId": "core",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-editorial-policy",
+        "categoryId": "eeat",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-dimensions",
+        "categoryId": "images",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-modern-format",
+        "categoryId": "images",
+        "count": 3
+      },
+      {
+        "status": "fail",
+        "ruleId": "mobile-horizontal-scroll",
+        "categoryId": "mobile",
+        "count": 3
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-lazy-above-fold",
+        "categoryId": "perf",
+        "count": 3
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-aria-labels",
+        "categoryId": "a11y",
+        "count": 2
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-color-contrast",
+        "categoryId": "a11y",
+        "count": 2
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-lcp-hints",
+        "categoryId": "perf",
+        "count": 2
+      },
+      {
+        "status": "warn",
+        "ruleId": "url-stop-words",
+        "categoryId": "url",
+        "count": 2
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-form-labels",
+        "categoryId": "a11y",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "a11y-heading-order",
+        "categoryId": "a11y",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-description-pixel-width",
+        "categoryId": "content",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-meta-in-body",
+        "categoryId": "content",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "core-h1-present",
+        "categoryId": "core",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-h1-single",
+        "categoryId": "core",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "core-h1-single",
+        "categoryId": "core",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-title-length",
+        "categoryId": "core",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-cls",
+        "categoryId": "perf",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-background-seo",
+        "categoryId": "images",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-lazy-loading",
+        "categoryId": "images",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-lazy-above-fold",
+        "categoryId": "perf",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "social-og-image-size",
+        "categoryId": "social",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "technical-timeout",
+        "categoryId": "technical",
+        "count": 1
+      }
+    ],
+    "categoryResults": [
+      {
+        "categoryId": "core",
+        "score": 97,
+        "passCount": 442,
+        "warnCount": 50,
+        "failCount": 2
+      },
+      {
+        "categoryId": "technical",
+        "score": 99,
+        "passCount": 287,
+        "warnCount": 11,
+        "failCount": 40
+      },
+      {
+        "categoryId": "perf",
+        "score": 93,
+        "passCount": 411,
+        "warnCount": 130,
+        "failCount": 31
+      },
+      {
+        "categoryId": "links",
+        "score": 97,
+        "passCount": 431,
+        "warnCount": 52,
+        "failCount": 11
+      },
+      {
+        "categoryId": "images",
+        "score": 98,
+        "passCount": 332,
+        "warnCount": 32,
+        "failCount": 0
+      },
+      {
+        "categoryId": "security",
+        "score": 99,
+        "passCount": 405,
+        "warnCount": 11,
+        "failCount": 0
+      },
+      {
+        "categoryId": "crawl",
+        "score": 97,
+        "passCount": 420,
+        "warnCount": 48,
+        "failCount": 0
+      },
+      {
+        "categoryId": "schema",
+        "score": 94,
+        "passCount": 261,
+        "warnCount": 77,
+        "failCount": 0
+      },
+      {
+        "categoryId": "a11y",
+        "score": 95,
+        "passCount": 252,
+        "warnCount": 54,
+        "failCount": 6
+      },
+      {
+        "categoryId": "content",
+        "score": 94,
+        "passCount": 324,
+        "warnCount": 79,
+        "failCount": 39
+      },
+      {
+        "categoryId": "social",
+        "score": 97,
+        "passCount": 207,
+        "warnCount": 27,
+        "failCount": 0
+      },
+      {
+        "categoryId": "eeat",
+        "score": 88,
+        "passCount": 230,
+        "warnCount": 134,
+        "failCount": 0
+      },
+      {
+        "categoryId": "url",
+        "score": 99,
+        "passCount": 351,
+        "warnCount": 13,
+        "failCount": 0
+      },
+      {
+        "categoryId": "mobile",
+        "score": 96,
+        "passCount": 110,
+        "warnCount": 17,
+        "failCount": 3
+      },
+      {
+        "categoryId": "i18n",
+        "score": 100,
+        "passCount": 260,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "legal",
+        "score": 100,
+        "passCount": 26,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "js",
+        "score": 100,
+        "passCount": 338,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "redirect",
+        "score": 97,
+        "passCount": 182,
+        "warnCount": 26,
+        "failCount": 0
+      },
+      {
+        "categoryId": "htmlval",
+        "score": 100,
+        "passCount": 234,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "geo",
+        "score": 80,
+        "passCount": 56,
+        "warnCount": 74,
+        "failCount": 0
+      }
+    ]
+  },
+  "after": {
+    "url": "https://www.kisankamai.com",
+    "generatedAt": "2026-05-16T04:00:57.241Z",
+    "score": 97,
+    "crawledPages": 26,
+    "auditedPages": 26,
+    "issueCount": 826,
+    "byStatus": {
+      "warn": 771,
+      "fail": 55
+    },
+    "failCount": 55,
+    "warningCount": 771,
+    "topRules": [
+      {
+        "status": "warn",
+        "ruleId": "content-heading-length",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-word-count",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-sitemap-orphan-urls",
+        "categoryId": "crawl",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-inp",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-byline",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-expertise",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-citations",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-content-dates",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-privacy-policy",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-llms-txt",
+        "categoryId": "geo",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-anchor-text",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-external-valid",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-brotli",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-render-blocking",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "redirect-javascript",
+        "categoryId": "redirect",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-organization",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-required-fields",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "social-share-buttons",
+        "categoryId": "social",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-landmark-regions",
+        "categoryId": "a11y",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-schema-drift",
+        "categoryId": "geo",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-breadcrumb",
+        "categoryId": "schema",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-heading-hierarchy",
+        "categoryId": "content",
+        "count": 24
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-heading-order",
+        "categoryId": "a11y",
+        "count": 23
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-semantic-html",
+        "categoryId": "geo",
+        "count": 23
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-description-length",
+        "categoryId": "core",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-responsive",
+        "categoryId": "images",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "mobile-interstitials",
+        "categoryId": "mobile",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-description",
+        "categoryId": "content",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-canonical-loop",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-title-unique",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-ttfb",
+        "categoryId": "perf",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-size",
+        "categoryId": "images",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-response-time",
+        "categoryId": "perf",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "url-internal-search",
+        "categoryId": "url",
+        "count": 11
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-lcp-hints",
+        "categoryId": "perf",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-response-time",
+        "categoryId": "perf",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-lcp",
+        "categoryId": "perf",
+        "count": 8
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 7
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-broken-html",
+        "categoryId": "content",
+        "count": 6
+      },
+      {
+        "status": "warn",
+        "ruleId": "mobile-horizontal-scroll",
+        "categoryId": "mobile",
+        "count": 5
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-description-pixel-width",
+        "categoryId": "content",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-robots-meta",
+        "categoryId": "core",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-fcp",
+        "categoryId": "perf",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-editorial-policy",
+        "categoryId": "eeat",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-dimensions",
+        "categoryId": "images",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-modern-format",
+        "categoryId": "images",
+        "count": 3
+      },
+      {
+        "status": "fail",
+        "ruleId": "mobile-horizontal-scroll",
+        "categoryId": "mobile",
+        "count": 3
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-lazy-above-fold",
+        "categoryId": "perf",
+        "count": 3
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-color-contrast",
+        "categoryId": "a11y",
+        "count": 2
+      }
+    ],
+    "allRuleCounts": [
+      {
+        "status": "warn",
+        "ruleId": "content-heading-length",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-word-count",
+        "categoryId": "content",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "crawl-sitemap-orphan-urls",
+        "categoryId": "crawl",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-inp",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-byline",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-author-expertise",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-citations",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-content-dates",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-privacy-policy",
+        "categoryId": "eeat",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-llms-txt",
+        "categoryId": "geo",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-anchor-text",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "links-external-valid",
+        "categoryId": "links",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-brotli",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-render-blocking",
+        "categoryId": "perf",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "redirect-javascript",
+        "categoryId": "redirect",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-organization",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-required-fields",
+        "categoryId": "schema",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "social-share-buttons",
+        "categoryId": "social",
+        "count": 26
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-landmark-regions",
+        "categoryId": "a11y",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-schema-drift",
+        "categoryId": "geo",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "schema-breadcrumb",
+        "categoryId": "schema",
+        "count": 25
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-heading-hierarchy",
+        "categoryId": "content",
+        "count": 24
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-heading-order",
+        "categoryId": "a11y",
+        "count": 23
+      },
+      {
+        "status": "warn",
+        "ruleId": "geo-semantic-html",
+        "categoryId": "geo",
+        "count": 23
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-description-length",
+        "categoryId": "core",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-responsive",
+        "categoryId": "images",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "mobile-interstitials",
+        "categoryId": "mobile",
+        "count": 12
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-description",
+        "categoryId": "content",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-canonical-loop",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-title-unique",
+        "categoryId": "core",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-ttfb",
+        "categoryId": "perf",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-size",
+        "categoryId": "images",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-response-time",
+        "categoryId": "perf",
+        "count": 11
+      },
+      {
+        "status": "warn",
+        "ruleId": "url-internal-search",
+        "categoryId": "url",
+        "count": 11
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-lcp-hints",
+        "categoryId": "perf",
+        "count": 10
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-response-time",
+        "categoryId": "perf",
+        "count": 10
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-lcp",
+        "categoryId": "perf",
+        "count": 8
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-duplicate-near",
+        "categoryId": "content",
+        "count": 7
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-broken-html",
+        "categoryId": "content",
+        "count": 6
+      },
+      {
+        "status": "warn",
+        "ruleId": "mobile-horizontal-scroll",
+        "categoryId": "mobile",
+        "count": 5
+      },
+      {
+        "status": "warn",
+        "ruleId": "content-description-pixel-width",
+        "categoryId": "content",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-robots-meta",
+        "categoryId": "core",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "cwv-fcp",
+        "categoryId": "perf",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "eeat-editorial-policy",
+        "categoryId": "eeat",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-dimensions",
+        "categoryId": "images",
+        "count": 4
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-modern-format",
+        "categoryId": "images",
+        "count": 3
+      },
+      {
+        "status": "fail",
+        "ruleId": "mobile-horizontal-scroll",
+        "categoryId": "mobile",
+        "count": 3
+      },
+      {
+        "status": "warn",
+        "ruleId": "perf-lazy-above-fold",
+        "categoryId": "perf",
+        "count": 3
+      },
+      {
+        "status": "warn",
+        "ruleId": "a11y-color-contrast",
+        "categoryId": "a11y",
+        "count": 2
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-lcp-hints",
+        "categoryId": "perf",
+        "count": 2
+      },
+      {
+        "status": "warn",
+        "ruleId": "url-stop-words",
+        "categoryId": "url",
+        "count": 2
+      },
+      {
+        "status": "fail",
+        "ruleId": "a11y-heading-order",
+        "categoryId": "a11y",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "content-meta-in-body",
+        "categoryId": "content",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "core-h1-single",
+        "categoryId": "core",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "cwv-lcp",
+        "categoryId": "perf",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-background-seo",
+        "categoryId": "images",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "images-lazy-loading",
+        "categoryId": "images",
+        "count": 1
+      },
+      {
+        "status": "fail",
+        "ruleId": "perf-lazy-above-fold",
+        "categoryId": "perf",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "social-og-image-size",
+        "categoryId": "social",
+        "count": 1
+      },
+      {
+        "status": "warn",
+        "ruleId": "technical-timeout",
+        "categoryId": "technical",
+        "count": 1
+      }
+    ],
+    "categoryResults": [
+      {
+        "categoryId": "core",
+        "score": 98,
+        "passCount": 455,
+        "warnCount": 39,
+        "failCount": 0
+      },
+      {
+        "categoryId": "technical",
+        "score": 100,
+        "passCount": 337,
+        "warnCount": 1,
+        "failCount": 0
+      },
+      {
+        "categoryId": "perf",
+        "score": 94,
+        "passCount": 433,
+        "warnCount": 125,
+        "failCount": 14
+      },
+      {
+        "categoryId": "links",
+        "score": 97,
+        "passCount": 442,
+        "warnCount": 52,
+        "failCount": 0
+      },
+      {
+        "categoryId": "images",
+        "score": 98,
+        "passCount": 332,
+        "warnCount": 32,
+        "failCount": 0
+      },
+      {
+        "categoryId": "security",
+        "score": 100,
+        "passCount": 416,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "crawl",
+        "score": 99,
+        "passCount": 442,
+        "warnCount": 26,
+        "failCount": 0
+      },
+      {
+        "categoryId": "schema",
+        "score": 94,
+        "passCount": 261,
+        "warnCount": 77,
+        "failCount": 0
+      },
+      {
+        "categoryId": "a11y",
+        "score": 96,
+        "passCount": 261,
+        "warnCount": 50,
+        "failCount": 1
+      },
+      {
+        "categoryId": "content",
+        "score": 95,
+        "passCount": 327,
+        "warnCount": 78,
+        "failCount": 37
+      },
+      {
+        "categoryId": "social",
+        "score": 97,
+        "passCount": 207,
+        "warnCount": 27,
+        "failCount": 0
+      },
+      {
+        "categoryId": "eeat",
+        "score": 88,
+        "passCount": 230,
+        "warnCount": 134,
+        "failCount": 0
+      },
+      {
+        "categoryId": "url",
+        "score": 99,
+        "passCount": 351,
+        "warnCount": 13,
+        "failCount": 0
+      },
+      {
+        "categoryId": "mobile",
+        "score": 96,
+        "passCount": 110,
+        "warnCount": 17,
+        "failCount": 3
+      },
+      {
+        "categoryId": "i18n",
+        "score": 100,
+        "passCount": 260,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "legal",
+        "score": 100,
+        "passCount": 26,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "js",
+        "score": 100,
+        "passCount": 338,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "redirect",
+        "score": 97,
+        "passCount": 182,
+        "warnCount": 26,
+        "failCount": 0
+      },
+      {
+        "categoryId": "htmlval",
+        "score": 100,
+        "passCount": 234,
+        "warnCount": 0,
+        "failCount": 0
+      },
+      {
+        "categoryId": "geo",
+        "score": 80,
+        "passCount": 56,
+        "warnCount": 74,
+        "failCount": 0
+      }
+    ]
+  },
+  "delta": {
+    "score": 1,
+    "crawledPages": 0,
+    "issues": -141,
+    "failures": -77,
+    "warnings": -64
+  },
+  "largestRuleDeltas": [
+    {
+      "status": "warn",
+      "ruleId": "crawl-canonical-redirect",
+      "categoryId": "crawl",
+      "before": 11,
+      "after": 0,
+      "delta": -11
+    },
+    {
+      "status": "warn",
+      "ruleId": "crawl-sitemap-domain",
+      "categoryId": "crawl",
+      "before": 11,
+      "after": 0,
+      "delta": -11
+    },
+    {
+      "status": "fail",
+      "ruleId": "links-broken-internal",
+      "categoryId": "links",
+      "before": 11,
+      "after": 0,
+      "delta": -11
+    },
+    {
+      "status": "fail",
+      "ruleId": "perf-response-time",
+      "categoryId": "perf",
+      "before": 21,
+      "after": 10,
+      "delta": -11
+    },
+    {
+      "status": "warn",
+      "ruleId": "security-https-redirect",
+      "categoryId": "security",
+      "before": 11,
+      "after": 0,
+      "delta": -11
+    },
+    {
+      "status": "warn",
+      "ruleId": "core-description-length",
+      "categoryId": "core",
+      "before": 22,
+      "after": 12,
+      "delta": -10
+    },
+    {
+      "status": "warn",
+      "ruleId": "cwv-fcp",
+      "categoryId": "perf",
+      "before": 14,
+      "after": 4,
+      "delta": -10
+    },
+    {
+      "status": "fail",
+      "ruleId": "technical-404-page",
+      "categoryId": "technical",
+      "before": 10,
+      "after": 0,
+      "delta": -10
+    },
+    {
+      "status": "fail",
+      "ruleId": "technical-robots-txt-exists",
+      "categoryId": "technical",
+      "before": 10,
+      "after": 0,
+      "delta": -10
+    },
+    {
+      "status": "fail",
+      "ruleId": "technical-robots-txt-valid",
+      "categoryId": "technical",
+      "before": 10,
+      "after": 0,
+      "delta": -10
+    },
+    {
+      "status": "fail",
+      "ruleId": "technical-sitemap-exists",
+      "categoryId": "technical",
+      "before": 10,
+      "after": 0,
+      "delta": -10
+    },
+    {
+      "status": "warn",
+      "ruleId": "technical-sitemap-valid",
+      "categoryId": "technical",
+      "before": 10,
+      "after": 0,
+      "delta": -10
+    },
+    {
+      "status": "fail",
+      "ruleId": "cwv-lcp",
+      "categoryId": "perf",
+      "before": 7,
+      "after": 1,
+      "delta": -6
+    },
+    {
+      "status": "warn",
+      "ruleId": "perf-response-time",
+      "categoryId": "perf",
+      "before": 5,
+      "after": 11,
+      "delta": 6
+    },
+    {
+      "status": "fail",
+      "ruleId": "a11y-form-labels",
+      "categoryId": "a11y",
+      "before": 5,
+      "after": 0,
+      "delta": -5
+    },
+    {
+      "status": "warn",
+      "ruleId": "content-description-pixel-width",
+      "categoryId": "content",
+      "before": 0,
+      "after": 4,
+      "delta": 4
+    },
+    {
+      "status": "warn",
+      "ruleId": "content-duplicate-near",
+      "categoryId": "content",
+      "before": 10,
+      "after": 7,
+      "delta": -3
+    },
+    {
+      "status": "warn",
+      "ruleId": "a11y-aria-labels",
+      "categoryId": "a11y",
+      "before": 2,
+      "after": 0,
+      "delta": -2
+    },
+    {
+      "status": "warn",
+      "ruleId": "cwv-ttfb",
+      "categoryId": "perf",
+      "before": 13,
+      "after": 11,
+      "delta": -2
+    },
+    {
+      "status": "warn",
+      "ruleId": "a11y-form-labels",
+      "categoryId": "a11y",
+      "before": 1,
+      "after": 0,
+      "delta": -1
+    },
+    {
+      "status": "warn",
+      "ruleId": "a11y-heading-order",
+      "categoryId": "a11y",
+      "before": 24,
+      "after": 23,
+      "delta": -1
+    },
+    {
+      "status": "warn",
+      "ruleId": "content-broken-html",
+      "categoryId": "content",
+      "before": 7,
+      "after": 6,
+      "delta": -1
+    },
+    {
+      "status": "fail",
+      "ruleId": "content-description-pixel-width",
+      "categoryId": "content",
+      "before": 1,
+      "after": 0,
+      "delta": -1
+    },
+    {
+      "status": "fail",
+      "ruleId": "content-duplicate-near",
+      "categoryId": "content",
+      "before": 11,
+      "after": 10,
+      "delta": -1
+    },
+    {
+      "status": "warn",
+      "ruleId": "content-heading-hierarchy",
+      "categoryId": "content",
+      "before": 25,
+      "after": 24,
+      "delta": -1
+    }
+  ]
+}

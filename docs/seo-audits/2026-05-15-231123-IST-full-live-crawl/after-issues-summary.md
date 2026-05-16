@@ -1,28 +1,28 @@
-# Baseline SEOmator Issue Summary
+# After SEOmator Issue Summary
 
 - URL: https://www.kisankamai.com
-- Generated at: 2026-05-15T18:01:49.316Z
-- Overall score: 96
+- Generated at: 2026-05-16T04:00:57.241Z
+- Overall score: 97
 - Crawled pages: 26
 - Audited page URLs detected: 26
-- Total issues: 967
-- Failures: 132
-- Warnings: 835
+- Total issues: 826
+- Failures: 55
+- Warnings: 771
 
 ## Category Scores
 
 | Category | Score | Passed | Warnings | Failures |
 | --- | ---: | ---: | ---: | ---: |
-| core | 97 | 442 | 50 | 2 |
-| technical | 99 | 287 | 11 | 40 |
-| perf | 93 | 411 | 130 | 31 |
-| links | 97 | 431 | 52 | 11 |
+| core | 98 | 455 | 39 | 0 |
+| technical | 100 | 337 | 1 | 0 |
+| perf | 94 | 433 | 125 | 14 |
+| links | 97 | 442 | 52 | 0 |
 | images | 98 | 332 | 32 | 0 |
-| security | 99 | 405 | 11 | 0 |
-| crawl | 97 | 420 | 48 | 0 |
+| security | 100 | 416 | 0 | 0 |
+| crawl | 99 | 442 | 26 | 0 |
 | schema | 94 | 261 | 77 | 0 |
-| a11y | 95 | 252 | 54 | 6 |
-| content | 94 | 324 | 79 | 39 |
+| a11y | 96 | 261 | 50 | 1 |
+| content | 95 | 327 | 78 | 37 |
 | social | 97 | 207 | 27 | 0 |
 | eeat | 88 | 230 | 134 | 0 |
 | url | 99 | 351 | 13 | 0 |
@@ -57,24 +57,24 @@
 | warn | schema-required-fields | schema | 26 |
 | warn | social-share-buttons | social | 26 |
 | warn | a11y-landmark-regions | a11y | 25 |
-| warn | content-heading-hierarchy | content | 25 |
 | warn | geo-schema-drift | geo | 25 |
 | warn | schema-breadcrumb | schema | 25 |
-| warn | a11y-heading-order | a11y | 24 |
+| warn | content-heading-hierarchy | content | 24 |
+| warn | a11y-heading-order | a11y | 23 |
 | warn | geo-semantic-html | geo | 23 |
-| warn | core-description-length | core | 22 |
-| fail | perf-response-time | perf | 21 |
-| warn | cwv-fcp | perf | 14 |
-| warn | cwv-ttfb | perf | 13 |
+| warn | core-description-length | core | 12 |
 | warn | images-responsive | images | 12 |
 | warn | mobile-interstitials | mobile | 12 |
 | warn | content-duplicate-description | content | 11 |
-| fail | content-duplicate-near | content | 11 |
 | warn | core-canonical-loop | core | 11 |
 | warn | core-title-unique | core | 11 |
-| warn | crawl-canonical-redirect | crawl | 11 |
-| warn | crawl-sitemap-domain | crawl | 11 |
+| warn | cwv-ttfb | perf | 11 |
 | warn | images-size | images | 11 |
-| fail | links-broken-internal | links | 11 |
-| warn | security-https-redirect | security | 11 |
+| warn | perf-response-time | perf | 11 |
 | warn | url-internal-search | url | 11 |
+| fail | content-duplicate-near | content | 10 |
+| warn | perf-lcp-hints | perf | 10 |
+| fail | perf-response-time | perf | 10 |
+| warn | cwv-lcp | perf | 8 |
+| warn | content-duplicate-near | content | 7 |
+| warn | content-broken-html | content | 6 |
