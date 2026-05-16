@@ -301,7 +301,7 @@ test("seo-audited public forms expose explicit labels for static crawlers", asyn
   assert.match(forgotPasswordSource, /id="contact-input"/);
 });
 
-test("programmatic SEO category pages are data-backed, indexable, and guarded against thin expansion", async () => {
+test("catalog category routes remain redirect compatibility routes, not thin programmatic pages", async () => {
   const readOptionalSource = async (path) => {
     try {
       return await readFile(new URL(path, import.meta.url), "utf8");
@@ -323,26 +323,15 @@ test("programmatic SEO category pages are data-backed, indexable, and guarded ag
       readFile(new URL("../docs/SEO.md", import.meta.url), "utf8"),
     ]);
 
-  assert.doesNotMatch(catalogPageSource, /redirect\(`/);
-  assert.match(catalogPageSource, /generateMetadata/);
-  assert.match(catalogPageSource, /getProgrammaticCategoryPage/);
-  assert.match(catalogPageSource, /CollectionPage/);
-  assert.match(catalogPageSource, /BreadcrumbList/);
-  assert.match(catalogPageSource, /relatedCategorySlugs/);
-  assert.match(catalogPageSource, /notFound\(\)/);
+  assert.match(catalogPageSource, /redirect\(`/);
+  assert.match(catalogPageSource, /\/rent-equipment\?query=/);
+  assert.doesNotMatch(catalogPageSource, /generateMetadata/);
+  assert.doesNotMatch(catalogPageSource, /getProgrammaticCategoryPage/);
+  assert.doesNotMatch(catalogPageSource, /CollectionPage|BreadcrumbList|notFound\(\)/);
 
-  assert.match(programmaticSeoSource, /PROGRAMMATIC_CATEGORY_PAGES/);
-  assert.match(programmaticSeoSource, /getIndexableProgrammaticCategoryPages/);
-  assert.match(programmaticSeoSource, /buildProgrammaticCategoryPath/);
-  assert.match(programmaticSeoSource, /No category-location pages/);
-  for (const slug of ["tractors", "harvesters", "rotavators", "sprayers", "balers"]) {
-    assert.match(programmaticSeoSource, new RegExp(`page\\("${slug}"`));
-  }
-
-  assert.match(sitemapSource, /getIndexableProgrammaticCategoryPages/);
-  assert.match(sitemapSource, /programmaticCategoryEntries/);
-  assert.match(categoriesPageSource, /href=\{buildProgrammaticCategoryPath\(category\.slug\)\}/);
-  assert.match(seoDocsSource, /Programmatic SEO/);
-  assert.match(seoDocsSource, /category landing pages/);
-  assert.match(seoDocsSource, /Do not generate category-location pages/);
+  assert.equal(programmaticSeoSource, "");
+  assert.doesNotMatch(sitemapSource, /getIndexableProgrammaticCategoryPages|programmaticCategoryEntries|buildProgrammaticCategoryPath/);
+  assert.match(categoriesPageSource, /href=\{`\/rent-equipment\?query=\$\{encodeURIComponent\(category\.slug\)\}`\}/);
+  assert.match(seoDocsSource, /catalog compatibility route/);
+  assert.match(seoDocsSource, /Do not reintroduce indexable catalog category pages/);
 });

@@ -10,6 +10,6 @@
 
 - Keep owner/renter flows, listing publication, booking transitions, profile sync, and notification inbox behavior aligned with the Firebase-backed root runtime.
 - Maintain route-by-route UI quality for language switching, dark-mode readability, mobile workspace layout, page-transition motion, and form loading states.
-- Monitor the approved `/catalog/[slug]` programmatic SEO layer through sitemap, metadata, structured-data, and crawl checks before considering any broader SEO page family.
+- Keep `/catalog/[slug]` as a redirect-only compatibility route and evaluate any future category SEO landing pages through a reviewed content/data quality gate before implementation.
 - Keep Google Sheets mirroring and the `Kisan Kamai HQ` decoration layer operational without letting Sheets become the database of record.
 - Reduce residual duplicated or legacy code paths and dependency audit surface without forced downgrades of core runtime packages.

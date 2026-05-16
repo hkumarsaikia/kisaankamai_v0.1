@@ -2,7 +2,6 @@ import { AppLink as Link } from "@/components/AppLink";
 import { ContentImage } from "@/components/ContentImage";
 import { LocalizedText } from "@/components/LocalizedText";
 import { getMergedCategorySummariesFromEquipment } from "@/lib/equipment-categories";
-import { buildProgrammaticCategoryPath } from "@/lib/programmatic-seo";
 import { getEquipmentList } from "@/lib/server/equipment";
 import { assetPath } from "@/lib/site";
 
@@ -44,7 +43,7 @@ export default async function Categories() {
             {categories.map((category) => (
               <Link
                 key={category.slug}
-                href={buildProgrammaticCategoryPath(category.slug)}
+                href={`/rent-equipment?query=${encodeURIComponent(category.slug)}`}
                 className="group relative aspect-square overflow-hidden rounded-3xl border border-outline-variant bg-surface-container shadow-xl cursor-pointer block"
               >
                 {category.coverImage ? (

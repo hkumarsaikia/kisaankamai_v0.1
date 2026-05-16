@@ -138,9 +138,9 @@ test("catalog pages do not ship hardcoded mock equipment detail experiences", as
     assert.match(source, /\/rent-equipment/);
   }
 
-  assert.doesNotMatch(catalogSource, /redirect\(/);
-  assert.match(catalogSource, /getProgrammaticCategoryPage/);
-  assert.match(catalogSource, /CollectionPage/);
+  assert.match(catalogSource, /redirect\(/);
+  assert.doesNotMatch(catalogSource, /getProgrammaticCategoryPage/);
+  assert.doesNotMatch(catalogSource, /CollectionPage/);
   assert.match(gallerySource, /redirect\(/);
 });
 

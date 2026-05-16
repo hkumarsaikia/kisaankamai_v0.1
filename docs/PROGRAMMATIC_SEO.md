@@ -1,50 +1,45 @@
 # Programmatic SEO Strategy
 
-Kisan Kamai uses programmatic SEO only where the page has enough specific value
-to help a farmer or equipment owner. The current safe implementation is an
-equipment-category hub-and-spoke system.
-
-## Implemented Opportunity
-
-### Equipment Category Pages
-
-Route pattern:
+Kisan Kamai does not currently publish indexable programmatic SEO landing pages.
+The live category experience is the marketplace search page, and the catalog
+route family is kept only for compatibility:
 
 ```text
-/catalog/[slug]
+/catalog/[slug] -> /rent-equipment?query=<slug>
 ```
 
-Approved indexable slugs are sourced from `lib/programmatic-seo.ts` and mirror
-the baseline equipment categories already used across the marketplace:
+This contract restores the earlier category behavior for links such as
+`/catalog/tractors` and `/catalog/balers`: users should land on the filtered
+live equipment list, not a separate guide-style category page.
 
-- `tractors`
-- `harvesters`
-- `implements`
-- `ploughs`
-- `sprayers`
-- `rotavators`
-- `seeders`
-- `threshers`
-- `pumps`
-- `balers`
-- `trolleys`
+## Current Route Contract
 
-Each category page includes:
-
-- unique title and meta description
-- category-specific intro, use cases, selection tips, and safety note
-- live public listing count from Firestore
-- up to six live public listing cards when inventory exists
-- links to the live inventory search page
-- links to related category pages
-- `CollectionPage` JSON-LD
-- `BreadcrumbList` JSON-LD
-- sitemap inclusion through `app/sitemap.ts`
-
-The category hub at `/categories` links to these pages, making the pages
-reachable without relying only on XML sitemap discovery.
+- `/categories` is the public category hub.
+- Category cards link directly to `/rent-equipment?query=<slug>`.
+- `/catalog/[slug]` redirects to the same filtered search URL.
+- `/catalog/[slug]/gallery` also redirects to the filtered search URL.
+- `app/sitemap.ts` includes public static routes and public equipment detail
+  URLs only; it does not include `/catalog/[slug]`.
 
 ## Deferred Opportunities
+
+### Equipment Category Landing Pages
+
+Status: deferred.
+
+Reason: the May 16 category-page experiment changed the live category pages too
+much from the earlier marketplace behavior. Any future category SEO rollout must
+be explicitly approved before implementation and must preserve the product
+experience users expect from category links.
+
+Minimum requirements before reconsidering indexable category pages:
+
+- enough real public inventory for each category
+- page-specific title, description, intro, safety notes, and internal links
+- visible links to live inventory without replacing the marketplace flow
+- reviewed English and Marathi content
+- no fake availability, rankings, testimonials, pricing claims, or guarantees
+- no duplicate or thin pages in sitemap output
 
 ### Category + Location Pages
 
@@ -60,57 +55,30 @@ Reason: generating pages for every equipment category and Maharashtra district
 would create many low-value pages unless each page has enough real local
 inventory, local copy, and useful service-area data.
 
-Minimum data threshold before indexing a category-location page:
-
-- at least three public listings matching the category and district, or
-- one public listing plus manually reviewed local guidance, support coverage,
-  and nearby-category links
-- page-specific title, description, intro, local availability note, and related
-  nearby alternatives
-- no fake availability, rankings, testimonials, price claims, or guarantees
-
 Pages below the threshold should not be created or should remain `noindex`.
-
-### Equipment Comparison Pages
-
-Pattern:
-
-```text
-/compare/[equipment-a]-vs-[equipment-b]
-```
-
-Status: deferred.
-
-Reason: the product does not yet store enough normalized comparison attributes
-across listings to make these pages reliable.
-
-Required data before implementation:
-
-- normalized category, horsepower/capacity, unit rate, availability, and use
-  cases
-- enough live listings in both compared groups
-- editorial guidance that explains when each option is suitable
 
 ## Indexation Safeguards
 
-- Only `getIndexableProgrammaticCategoryPages()` feeds the sitemap.
-- Unknown `/catalog/[slug]` routes return `notFound()`.
-- Query URLs such as `/rent-equipment?query=tractors` remain live inventory
-  actions, not canonical category landing pages.
-- No category-location pages are generated in the current implementation.
-- Auth, workspace, form, and utility pages remain excluded from the sitemap.
+- Do not add `/catalog/[slug]` entries to `app/sitemap.ts`.
+- Do not recreate `lib/programmatic-seo.ts` without an approved rollout plan.
+- Do not link `/categories` cards to `/catalog/[slug]` while catalog routes are
+  compatibility redirects.
+- Do not generate category-location pages from keyword ideas alone.
 
-## Maintenance
+## Verification
 
-When adding a new baseline equipment category:
+Before releasing SEO or category-routing changes, run:
 
-1. Add the category to `BASE_EQUIPMENT_CATEGORIES`.
-2. Add a matching entry in `PROGRAMMATIC_CATEGORY_PAGES`.
-3. Add unique title, meta description, intro, use cases, tips, safety note, and
-   related categories.
-4. Run `node --test tests/seo-contracts.test.mjs`.
-5. Run `npm run test:contracts`.
-6. Run `npm run verify`.
+```bash
+npm run test:contracts
+npm run verify
+npm run launch:gate
+```
 
-Do not add bulk routes from keyword ideas alone. The route must be backed by
-useful first-party inventory or reviewed editorial data.
+After deployment, smoke-check:
+
+```bash
+curl -fsSI https://www.kisankamai.com/catalog/tractors | grep -Ei "HTTP/|location:"
+curl -fsSI https://www.kisankamai.com/catalog/balers | grep -Ei "HTTP/|location:"
+curl -fsS https://www.kisankamai.com/sitemap.xml | grep -q "/catalog/" && echo "unexpected catalog sitemap entry"
+```

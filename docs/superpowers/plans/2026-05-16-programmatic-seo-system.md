@@ -1,5 +1,9 @@
 # Programmatic SEO System Implementation Plan
 
+**Superseded:** The live `/catalog/[slug]` category-page rollout was reverted by
+`docs/superpowers/plans/2026-05-16-catalog-redirect-restore.md`. Current catalog
+routes are redirect-only compatibility routes.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build a safe programmatic SEO foundation around existing equipment category data without generating thin or duplicate location pages.

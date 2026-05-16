@@ -4,7 +4,11 @@
 
 **Goal:** Refresh the canonical workspace docs and clean safe local artifacts without rewriting historical evidence files or unrelated tool state.
 
-**Architecture:** Keep README/AGENTS/requirements as the entrypoints, update operational docs for current pSEO and Sheets workflows, and leave timestamped bug-fix bundles immutable. Clean only generated/editor artifacts that are clearly not source, credentials, or user-authored work.
+**Superseded note:** The pSEO route contract captured in this historical plan was
+later replaced by `2026-05-16-catalog-redirect-restore.md`. Current catalog
+routes are redirect-only compatibility routes.
+
+**Architecture:** Keep README/AGENTS/requirements as the entrypoints, update operational docs for the then-current pSEO and Sheets workflows, and leave timestamped bug-fix bundles immutable. Clean only generated/editor artifacts that are clearly not source, credentials, or user-authored work.
 
 **Tech Stack:** Markdown docs, npm scripts, Google Sheets operational tooling, Git.
 
@@ -18,7 +22,7 @@
 - Modify: `requirements.txt`
 
 - [x] Add current `sheets:decorate` workflow to root commands.
-- [x] Add current programmatic SEO category route contract.
+- [x] Add then-current programmatic SEO category route contract.
 - [x] Clarify cleanup policy for generated files, local skills, and historical docs.
 
 ### Task 2: Update Operational Docs
@@ -31,7 +35,7 @@
 - Modify: `docs/site-map/README.md`
 
 - [x] Add Google Sheets decoration workflow where Sheets operations are documented.
-- [x] Add current `/catalog/[slug]` pSEO architecture and verification.
+- [x] Add then-current `/catalog/[slug]` pSEO architecture and verification.
 - [x] Refresh roadmap priorities to match current live maintenance work.
 
 ### Task 3: Clean Safe Local Artifacts

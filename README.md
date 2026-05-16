@@ -35,7 +35,7 @@ Current workspace behavior to know while validating `npm run dev`:
 - `/coming-soon` notify submissions go through `/api/forms/coming-soon-notify` into Firestore and the `coming_soon_notifications` Google Sheet.
 - the public theme defaults to light mode; explicit dark-mode choices are still respected.
 - `/categories` shows the baseline equipment catalog and merges live owner-published categories into it.
-- `/catalog/[slug]` is the safe programmatic SEO category layer. It is limited to approved baseline equipment slugs, uses source-controlled category guidance, live listing counts, JSON-LD, sitemap entries, and related-category links. Do not generate category-location pages until there is enough first-party inventory and local editorial value.
+- `/catalog/[slug]` is a redirect-only compatibility route to `/rent-equipment?query=<slug>`. Do not reintroduce indexable category landing pages or category-location pages until there is enough first-party inventory, local editorial value, and an explicitly approved rollout plan.
 - `/rent-equipment` and equipment detail pages stay live-data only; they do not show mock equipment when Firestore has no published listings.
 - `/rent-equipment` and renter browse sorting use the shared availability, price-low-to-high, and distance order. Booking is blocked for paused or future-available listings.
 

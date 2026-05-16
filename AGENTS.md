@@ -62,8 +62,8 @@ Verify the implemented page visually against the supplied local HTML, not only b
 
 ## Programmatic SEO
 
-- `/catalog/[slug]` is the approved programmatic SEO surface and is backed by `lib/programmatic-seo.ts`.
-- Only use approved baseline equipment category slugs in the sitemap.
+- `/catalog/[slug]` is a compatibility redirect to `/rent-equipment?query=<slug>`, not an indexable programmatic SEO page.
+- Keep `/categories` linked to filtered live marketplace query pages unless the user explicitly approves a new SEO landing-page rollout.
 - Do not generate category-location pages until the route has enough first-party inventory and reviewed local content to avoid thin or duplicate pages.
 
 ## Repo Notes

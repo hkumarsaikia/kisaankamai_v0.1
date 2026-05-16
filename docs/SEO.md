@@ -64,23 +64,21 @@ be kept accurate. Avoid schema for claims the site does not visibly support.
 Detailed pSEO strategy and deferred route thresholds live in
 `docs/PROGRAMMATIC_SEO.md`.
 
-The first safe programmatic SEO layer is the approved equipment category page
-set under `/catalog/[slug]`. These category landing pages use:
+The catalog compatibility route is:
 
-- source-controlled category guidance in `lib/programmatic-seo.ts`
-- existing `BASE_EQUIPMENT_CATEGORIES` slugs only
-- live public listing counts and sample listings from Firestore
-- canonical category URLs, page-specific metadata, CollectionPage JSON-LD, and
-  BreadcrumbList JSON-LD
-- hub-and-spoke links from `/categories` to `/catalog/[slug]`
-- related-category links between category spokes
-- `/rent-equipment?query=<slug>` links only as live inventory actions, not as
-  canonical indexable category pages
+```text
+/catalog/[slug] -> /rent-equipment?query=<slug>
+```
 
-Do not generate category-location pages until every planned location page has
-enough first-party inventory, local copy, and useful local data to avoid thin or
-duplicate content. If those pages are introduced later, ship them behind an
-explicit quality gate and index only pages that meet the minimum data threshold.
+`/catalog/[slug]` is not an indexable category landing page. It remains a
+redirect-only surface so old/shared category URLs open the same live marketplace
+search that users saw before the May 16 programmatic SEO experiment.
+
+Do not reintroduce indexable catalog category pages, category-location pages, or
+bulk keyword routes until every planned page has enough first-party inventory,
+reviewed local copy, and useful local data to avoid thin or duplicate content.
+If those pages are introduced later, ship them behind an explicit quality gate
+and index only pages that meet the minimum data threshold.
 
 ## Verification
 
@@ -98,7 +96,7 @@ After deployment, smoke-check:
 curl -fsS https://www.kisankamai.com/ | grep -E "<title>|application/ld\\+json"
 curl -fsS https://www.kisankamai.com/robots.txt
 curl -fsS https://www.kisankamai.com/sitemap.xml
-curl -fsS https://www.kisankamai.com/catalog/tractors | grep -E "<title>|application/ld\\+json"
+curl -fsSI https://www.kisankamai.com/catalog/tractors | grep -Ei "HTTP/|location:"
 curl -fsS https://www.kisankamai.com/support | grep -E "og:title|og:image|twitter:description"
 curl -fsS https://www.kisankamai.com/api/build-info
 ```

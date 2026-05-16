@@ -31,7 +31,7 @@ Current route conventions reflected by the generated sitemap:
 - `/renter-profile/*` is the renter workspace family.
 - `/owner-profile/earnings` is the canonical earnings route.
 - `/owner-profile/list-equipment?listingId=<id>` is the owner listing edit entrypoint; `/list-equipment` only redirects there for compatibility.
-- `/categories` is the public category hub, and `/catalog/[slug]` is the approved indexable programmatic SEO category route family.
+- `/categories` is the public category hub, category cards link to `/rent-equipment?query=<slug>`, and `/catalog/[slug]` is a redirect-only compatibility route.
 - `/support` is the public help/contact flow. `/report` is no longer a public route.
 - profile/workspace pages render the local workspace footer with the trust/legal split used in the active shell.
 
