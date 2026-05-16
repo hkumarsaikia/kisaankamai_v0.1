@@ -61,13 +61,26 @@ be kept accurate. Avoid schema for claims the site does not visibly support.
 
 ## Programmatic SEO Assessment
 
-The codebase has equipment categories and live listing data, but it does not yet
-have enough differentiated content, routing depth, or editorial data to support
-large-scale location/category programmatic SEO pages safely.
+Detailed pSEO strategy and deferred route thresholds live in
+`docs/PROGRAMMATIC_SEO.md`.
 
-For now, improve existing public pages and live equipment detail pages. Do not
-generate thin category-location pages until there is a data-rich template with
-unique local value, internal linking, and a quality review path.
+The first safe programmatic SEO layer is the approved equipment category page
+set under `/catalog/[slug]`. These category landing pages use:
+
+- source-controlled category guidance in `lib/programmatic-seo.ts`
+- existing `BASE_EQUIPMENT_CATEGORIES` slugs only
+- live public listing counts and sample listings from Firestore
+- canonical category URLs, page-specific metadata, CollectionPage JSON-LD, and
+  BreadcrumbList JSON-LD
+- hub-and-spoke links from `/categories` to `/catalog/[slug]`
+- related-category links between category spokes
+- `/rent-equipment?query=<slug>` links only as live inventory actions, not as
+  canonical indexable category pages
+
+Do not generate category-location pages until every planned location page has
+enough first-party inventory, local copy, and useful local data to avoid thin or
+duplicate content. If those pages are introduced later, ship them behind an
+explicit quality gate and index only pages that meet the minimum data threshold.
 
 ## Verification
 

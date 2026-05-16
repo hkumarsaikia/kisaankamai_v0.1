@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getIndexableProgrammaticCategoryPages, buildProgrammaticCategoryPath } from "@/lib/programmatic-seo";
 import { getPublicEquipmentList } from "@/lib/server/firebase-data";
 import { SITE_DOMAIN } from "@/lib/site-metadata";
 
@@ -33,5 +34,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   })) satisfies MetadataRoute.Sitemap;
 
-  return [...staticEntries, ...equipmentEntries];
+  const programmaticCategoryEntries = getIndexableProgrammaticCategoryPages().map((category) => ({
+    url: new URL(buildProgrammaticCategoryPath(category.slug), SITE_DOMAIN).toString(),
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.75,
+  })) satisfies MetadataRoute.Sitemap;
+
+  return [...staticEntries, ...programmaticCategoryEntries, ...equipmentEntries];
 }

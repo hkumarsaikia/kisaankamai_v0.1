@@ -300,3 +300,49 @@ test("seo-audited public forms expose explicit labels for static crawlers", asyn
   assert.match(forgotPasswordSource, /htmlFor="contact-input"/);
   assert.match(forgotPasswordSource, /id="contact-input"/);
 });
+
+test("programmatic SEO category pages are data-backed, indexable, and guarded against thin expansion", async () => {
+  const readOptionalSource = async (path) => {
+    try {
+      return await readFile(new URL(path, import.meta.url), "utf8");
+    } catch (error) {
+      if (error && error.code === "ENOENT") {
+        return "";
+      }
+
+      throw error;
+    }
+  };
+
+  const [catalogPageSource, programmaticSeoSource, sitemapSource, categoriesPageSource, seoDocsSource] =
+    await Promise.all([
+      readFile(new URL("../app/catalog/[slug]/page.tsx", import.meta.url), "utf8"),
+      readOptionalSource("../lib/programmatic-seo.ts"),
+      readFile(new URL("../app/sitemap.ts", import.meta.url), "utf8"),
+      readFile(new URL("../app/categories/page.tsx", import.meta.url), "utf8"),
+      readFile(new URL("../docs/SEO.md", import.meta.url), "utf8"),
+    ]);
+
+  assert.doesNotMatch(catalogPageSource, /redirect\(`/);
+  assert.match(catalogPageSource, /generateMetadata/);
+  assert.match(catalogPageSource, /getProgrammaticCategoryPage/);
+  assert.match(catalogPageSource, /CollectionPage/);
+  assert.match(catalogPageSource, /BreadcrumbList/);
+  assert.match(catalogPageSource, /relatedCategorySlugs/);
+  assert.match(catalogPageSource, /notFound\(\)/);
+
+  assert.match(programmaticSeoSource, /PROGRAMMATIC_CATEGORY_PAGES/);
+  assert.match(programmaticSeoSource, /getIndexableProgrammaticCategoryPages/);
+  assert.match(programmaticSeoSource, /buildProgrammaticCategoryPath/);
+  assert.match(programmaticSeoSource, /No category-location pages/);
+  for (const slug of ["tractors", "harvesters", "rotavators", "sprayers", "balers"]) {
+    assert.match(programmaticSeoSource, new RegExp(`page\\("${slug}"`));
+  }
+
+  assert.match(sitemapSource, /getIndexableProgrammaticCategoryPages/);
+  assert.match(sitemapSource, /programmaticCategoryEntries/);
+  assert.match(categoriesPageSource, /href=\{buildProgrammaticCategoryPath\(category\.slug\)\}/);
+  assert.match(seoDocsSource, /Programmatic SEO/);
+  assert.match(seoDocsSource, /category landing pages/);
+  assert.match(seoDocsSource, /Do not generate category-location pages/);
+});

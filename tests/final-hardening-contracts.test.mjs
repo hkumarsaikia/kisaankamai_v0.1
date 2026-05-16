@@ -135,9 +135,13 @@ test("catalog pages do not ship hardcoded mock equipment detail experiences", as
   for (const source of [catalogSource, gallerySource]) {
     assert.doesNotMatch(source, /John Deere 5310 Performer|Mahindra|Kubota|Swaraj/);
     assert.doesNotMatch(source, /CatalogBookingForm/);
-    assert.match(source, /redirect\(/);
     assert.match(source, /\/rent-equipment/);
   }
+
+  assert.doesNotMatch(catalogSource, /redirect\(/);
+  assert.match(catalogSource, /getProgrammaticCategoryPage/);
+  assert.match(catalogSource, /CollectionPage/);
+  assert.match(gallerySource, /redirect\(/);
 });
 
 test("password reset lookup accepts registered mobile number only and rejects unknown accounts before OTP", async () => {
