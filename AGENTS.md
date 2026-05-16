@@ -22,7 +22,7 @@ npm run sheets:decorate
 - Runtime logs from the helper scripts live under `logs/runtime/`.
 - Start `npm run dev:public` before `npm run tunnel:public` when you need a shareable tunnel URL for the local app.
 - Treat `npm run verify` as the default root-app validation pass.
-- Use `npm run sheets:decorate` after workbook bootstrap/backfill when the production workbook needs the polished visual layer. The decoration script must keep manifest headers in row 1, preserve filters, and keep the `Kisan Kamai HQ` dashboard production-presentable for operational review.
+- Use `npm run sheets:decorate` after workbook bootstrap/backfill when the production workbook needs the polished visual layer. The decoration script must keep manifest headers in row 1, preserve filters, and keep the `Kisan Kamai HQ` dashboard production-presentable for operational review with native charts backed by hidden formula ranges.
 - Root npm commands are hardware-tuned through `scripts/hardware-tuned-runner.mjs`.
   The runner auto-detects CPU/RAM, uses cacheable checks where safe, and leaves
   system headroom instead of permanently changing global CPU policy.

@@ -6,7 +6,9 @@ import { getStringOption, parseArgs, printUsage } from "./lib/cli.mjs";
 
 const SHEETS_SCOPE = "https://www.googleapis.com/auth/spreadsheets";
 const DASHBOARD_TITLE = "Kisan Kamai HQ";
-const DASHBOARD_RANGE = `${DASHBOARD_TITLE}!A1:H80`;
+const CHART_DATA_TITLE = "Kisan Kamai Chart Data";
+const DASHBOARD_RANGE = `${DASHBOARD_TITLE}!A1:H120`;
+const CHART_DATA_RANGE = `${CHART_DATA_TITLE}!A1:Q80`;
 const SHEET_FONT = "Arial";
 
 const options = parseArgs();
@@ -67,6 +69,8 @@ const palette = {
   roseSoft: "#FCE8E6",
   blueSoft: "#E8F0FE",
 };
+
+const chartPalette = ["#0B4F37", "#2E7D5A", "#F2A23A", "#2563EB", "#7C3AED", "#DC2626", "#0F766E"];
 
 function hexToRgbColor(hex) {
   const normalized = hex.replace("#", "").trim();
@@ -138,7 +142,7 @@ async function sheetsFetch(path, init = {}) {
 
 async function getSpreadsheetState() {
   const fields =
-    "spreadsheetId,sheets(properties(sheetId,title,index,gridProperties(rowCount,columnCount,frozenRowCount,hideGridlines)),bandedRanges(bandedRangeId))";
+    "spreadsheetId,sheets(properties(sheetId,title,index,hidden,gridProperties(rowCount,columnCount,frozenRowCount,hideGridlines)),bandedRanges(bandedRangeId),charts(chartId,spec(title)))";
   const payload = await sheetsFetch(`?fields=${encodeURIComponent(fields)}`);
   return new Map(
     (payload.sheets || [])
@@ -149,9 +153,13 @@ async function getSpreadsheetState() {
         rowCount: sheet.properties?.gridProperties?.rowCount || 1000,
         columnCount: sheet.properties?.gridProperties?.columnCount || 26,
         frozenRowCount: sheet.properties?.gridProperties?.frozenRowCount || 0,
+        hidden: Boolean(sheet.properties?.hidden),
         bandedRangeIds: (sheet.bandedRanges || [])
           .map((banding) => banding.bandedRangeId)
           .filter((bandedRangeId) => Number.isInteger(bandedRangeId)),
+        chartIds: (sheet.charts || [])
+          .map((chart) => chart.chartId)
+          .filter((chartId) => Number.isInteger(chartId)),
       }))
       .filter((sheet) => sheet.title && Number.isInteger(sheet.sheetId))
       .map((sheet) => [sheet.title, sheet])
@@ -349,8 +357,28 @@ function buildOperationalRequests(sheetStateMap) {
 }
 
 async function ensureDashboardSheet() {
+  return ensureSheet(DASHBOARD_TITLE, {
+    index: 0,
+    rowCount: 120,
+    columnCount: 8,
+    frozenRowCount: 8,
+    hidden: false,
+  });
+}
+
+async function ensureChartDataSheet() {
+  return ensureSheet(CHART_DATA_TITLE, {
+    index: 1,
+    rowCount: 100,
+    columnCount: 17,
+    frozenRowCount: 1,
+    hidden: true,
+  });
+}
+
+async function ensureSheet(title, properties) {
   let sheetStateMap = await getSpreadsheetState();
-  if (!sheetStateMap.has(DASHBOARD_TITLE)) {
+  if (!sheetStateMap.has(title)) {
     await sheetsFetch(":batchUpdate", {
       method: "POST",
       body: JSON.stringify({
@@ -358,14 +386,15 @@ async function ensureDashboardSheet() {
           {
             addSheet: {
               properties: {
-                title: DASHBOARD_TITLE,
-                index: 0,
+                title,
+                index: properties.index,
                 gridProperties: {
-                  rowCount: 100,
-                  columnCount: 8,
-                  frozenRowCount: 8,
+                  rowCount: properties.rowCount,
+                  columnCount: properties.columnCount,
+                  frozenRowCount: properties.frozenRowCount,
                   hideGridlines: true,
                 },
+                hidden: properties.hidden,
                 tabColorStyle: { rgbColor: hexToRgbColor(palette.primary) },
               },
             },
@@ -376,7 +405,7 @@ async function ensureDashboardSheet() {
     sheetStateMap = await getSpreadsheetState();
   }
 
-  return sheetStateMap.get(DASHBOARD_TITLE);
+  return sheetStateMap.get(title);
 }
 
 function buildDashboardRows() {
@@ -415,6 +444,83 @@ function buildDashboardRows() {
     ["", "", "", "", "", "", "", ""],
     ["Workbook standard", "", "", "", "", "", "", ""],
     ["Use clean headers, frozen filters, status-based conditional formatting, compact notes, and consistent row heights. Keep operational tabs readable before presentation styling.", "", "", "", "Dashboard content should explain ownership, data flow, and verification without temporary demo wording.", "", "", ""],
+    ["", "", "", "", "", "", "", ""],
+    ["Live visual board", "", "", "", "", "", "", ""],
+    ["Interactive Google Sheets charts below are linked to formula-backed ranges in the hidden Kisan Kamai Chart Data sheet. They refresh automatically as mirrored rows change.", "", "", "", "", "", "", ""],
+  );
+
+  return rows;
+}
+
+function buildChartDataRows() {
+  const rows = Array.from({ length: 80 }, () => Array.from({ length: 17 }, () => ""));
+  const set = (rowIndex, columnIndex, value) => {
+    rows[rowIndex][columnIndex] = value;
+  };
+  const countRows = (title) => `=MAX(COUNTA(${quoteSheetTitle(title)}!A:A)-1,0)`;
+
+  set(0, 0, "Operational Area");
+  set(0, 1, "Live Rows");
+  for (const [index, definition] of sheetDefinitions.entries()) {
+    set(index + 1, 0, definition.title);
+    set(index + 1, 1, countRows(definition.title));
+  }
+
+  set(0, 3, "Booking Status");
+  set(0, 4, "Bookings");
+  for (const [index, status] of ["pending", "confirmed", "active", "completed", "cancelled"].entries()) {
+    set(index + 1, 3, status);
+    set(index + 1, 4, `=COUNTIF(bookings!F:F,D${index + 2})`);
+  }
+
+  set(0, 6, "Listing Status");
+  set(0, 7, "Listings");
+  for (const [index, status] of ["active", "paused", "draft", "archived", "deleted"].entries()) {
+    set(index + 1, 6, status);
+    set(index + 1, 7, `=COUNTIF(listings!H:H,G${index + 2})`);
+  }
+
+  set(0, 9, "Public Channel");
+  set(0, 10, "Rows");
+  const submissionSheets = [
+    ["Support", "support_requests"],
+    ["Booking callbacks", "booking_requests"],
+    ["Newsletter", "newsletter_subscriptions"],
+    ["Coming soon", "coming_soon_notifications"],
+    ["Feedback", "feedback"],
+    ["Bug reports", "bug_reports"],
+  ];
+  for (const [index, [label, title]] of submissionSheets.entries()) {
+    set(index + 1, 9, label);
+    set(index + 1, 10, countRows(title));
+  }
+
+  set(0, 12, "Notification Status");
+  set(0, 13, "Rows");
+  const notificationStatusCells = [
+    ["support_requests", "Q"],
+    ["booking_requests", "R"],
+    ["newsletter_subscriptions", "H"],
+    ["coming_soon_notifications", "I"],
+    ["feedback", "N"],
+  ];
+  for (const [index, status] of ["pending", "sending", "sent", "failed"].entries()) {
+    set(index + 1, 12, status);
+    set(
+      index + 1,
+      13,
+      `=${notificationStatusCells
+        .map(([title, column]) => `COUNTIF(${quoteSheetTitle(title)}!${column}:${column},M${index + 2})`)
+        .join("+")}`
+    );
+  }
+
+  set(0, 15, "Equipment Category");
+  set(0, 16, "Listings");
+  set(
+    1,
+    15,
+    '=IFERROR(QUERY(listings!G2:G,"select G, count(G) where G is not null group by G order by count(G) desc label G \'\', count(G) \'\'",0),{"No category",0})'
   );
 
   return rows;
@@ -425,7 +531,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
   const allRange = {
     sheetId,
     startRowIndex: 0,
-    endRowIndex: 80,
+    endRowIndex: 120,
     startColumnIndex: 0,
     endColumnIndex: 8,
   };
@@ -439,12 +545,13 @@ function buildDashboardFormatRequests(dashboardSheet) {
           gridProperties: {
             frozenRowCount: 8,
             hideGridlines: true,
-            rowCount: Math.max(dashboardSheet.rowCount || 100, 100),
+            rowCount: Math.max(dashboardSheet.rowCount || 120, 120),
             columnCount: 8,
           },
+          hidden: false,
           tabColorStyle: { rgbColor: hexToRgbColor(palette.primary) },
         },
-        fields: "gridProperties.frozenRowCount,gridProperties.hideGridlines,gridProperties.rowCount,gridProperties.columnCount,tabColorStyle",
+        fields: "gridProperties.frozenRowCount,gridProperties.hideGridlines,gridProperties.rowCount,gridProperties.columnCount,hidden,tabColorStyle",
       },
     },
     {
@@ -615,6 +722,44 @@ function buildDashboardFormatRequests(dashboardSheet) {
         fields: "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)",
       },
     },
+    {
+      mergeCells: {
+        range: { sheetId, startRowIndex: 31, endRowIndex: 32, startColumnIndex: 0, endColumnIndex: 8 },
+        mergeType: "MERGE_ALL",
+      },
+    },
+    {
+      mergeCells: {
+        range: { sheetId, startRowIndex: 32, endRowIndex: 33, startColumnIndex: 0, endColumnIndex: 8 },
+        mergeType: "MERGE_ALL",
+      },
+    },
+    {
+      repeatCell: {
+        range: { sheetId, startRowIndex: 31, endRowIndex: 32, startColumnIndex: 0, endColumnIndex: 8 },
+        cell: {
+          userEnteredFormat: {
+            backgroundColor: hexToRgbColor(palette.primaryDeep),
+            textFormat: { bold: true, fontFamily: SHEET_FONT, fontSize: 13, foregroundColor: hexToRgbColor("#FFFFFF") },
+            horizontalAlignment: "CENTER",
+          },
+        },
+        fields: "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)",
+      },
+    },
+    {
+      repeatCell: {
+        range: { sheetId, startRowIndex: 32, endRowIndex: 33, startColumnIndex: 0, endColumnIndex: 8 },
+        cell: {
+          userEnteredFormat: {
+            backgroundColor: hexToRgbColor("#E9F5ED"),
+            textFormat: { fontFamily: SHEET_FONT, fontSize: 10, foregroundColor: hexToRgbColor(palette.muted) },
+            horizontalAlignment: "CENTER",
+          },
+        },
+        fields: "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)",
+      },
+    },
   ];
 
   for (const [index, width] of [72, 190, 320, 100, 150, 120, 140, 170].entries()) {
@@ -640,6 +785,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
     [8, 23, 34],
     [25, 27, 38],
     [29, 30, 58],
+    [31, 33, 38],
   ]) {
     requests.push({
       updateDimensionProperties: {
@@ -655,6 +801,7 @@ function buildDashboardFormatRequests(dashboardSheet) {
     { startRowIndex: 7, endRowIndex: 23, startColumnIndex: 0, endColumnIndex: 8 },
     { startRowIndex: 25, endRowIndex: 27, startColumnIndex: 0, endColumnIndex: 8 },
     { startRowIndex: 29, endRowIndex: 30, startColumnIndex: 0, endColumnIndex: 8 },
+    { startRowIndex: 31, endRowIndex: 33, startColumnIndex: 0, endColumnIndex: 8 },
   ]) {
     requests.push({
       updateBorders: {
@@ -668,6 +815,285 @@ function buildDashboardFormatRequests(dashboardSheet) {
       },
     });
   }
+
+  return requests;
+}
+
+function buildChartDataFormatRequests(chartDataSheet) {
+  const sheetId = chartDataSheet.sheetId;
+  const requests = [
+    {
+      updateSheetProperties: {
+        properties: {
+          sheetId,
+          hidden: true,
+          gridProperties: {
+            frozenRowCount: 1,
+            hideGridlines: true,
+            rowCount: Math.max(chartDataSheet.rowCount || 100, 100),
+            columnCount: 17,
+          },
+          tabColorStyle: { rgbColor: hexToRgbColor("#6B7280") },
+        },
+        fields: "hidden,gridProperties.frozenRowCount,gridProperties.hideGridlines,gridProperties.rowCount,gridProperties.columnCount,tabColorStyle",
+      },
+    },
+    {
+      repeatCell: {
+        range: { sheetId, startRowIndex: 0, endRowIndex: 80, startColumnIndex: 0, endColumnIndex: 17 },
+        cell: {
+          userEnteredFormat: {
+            backgroundColor: hexToRgbColor("#F8FAFC"),
+            textFormat: { fontFamily: SHEET_FONT, fontSize: 10, foregroundColor: hexToRgbColor(palette.ink) },
+            verticalAlignment: "MIDDLE",
+          },
+        },
+        fields: "userEnteredFormat(backgroundColor,textFormat,verticalAlignment)",
+      },
+    },
+    {
+      repeatCell: {
+        range: { sheetId, startRowIndex: 0, endRowIndex: 1, startColumnIndex: 0, endColumnIndex: 17 },
+        cell: {
+          userEnteredFormat: {
+            backgroundColor: hexToRgbColor("#111827"),
+            textFormat: { bold: true, fontFamily: SHEET_FONT, fontSize: 10, foregroundColor: hexToRgbColor("#FFFFFF") },
+            horizontalAlignment: "CENTER",
+          },
+        },
+        fields: "userEnteredFormat(backgroundColor,textFormat,horizontalAlignment)",
+      },
+    },
+  ];
+
+  for (const [index, width] of Array.from({ length: 17 }, (_, index) => [index, index % 3 === 2 ? 34 : 150])) {
+    requests.push({
+      updateDimensionProperties: {
+        range: { sheetId, dimension: "COLUMNS", startIndex: index, endIndex: index + 1 },
+        properties: { pixelSize: width },
+        fields: "pixelSize",
+      },
+    });
+  }
+
+  return requests;
+}
+
+function sourceRange(sheetId, startRowIndex, endRowIndex, startColumnIndex, endColumnIndex) {
+  return {
+    sources: [
+      {
+        sheetId,
+        startRowIndex,
+        endRowIndex,
+        startColumnIndex,
+        endColumnIndex,
+      },
+    ],
+  };
+}
+
+function anchor(dashboardSheetId, rowIndex, columnIndex, widthPixels, heightPixels) {
+  return {
+    overlayPosition: {
+      anchorCell: { sheetId: dashboardSheetId, rowIndex, columnIndex },
+      offsetXPixels: 0,
+      offsetYPixels: 0,
+      widthPixels,
+      heightPixels,
+    },
+  };
+}
+
+function buildBasicChartRequest({
+  dashboardSheetId,
+  chartDataSheetId,
+  title,
+  subtitle,
+  chartType,
+  domain,
+  series,
+  rowIndex,
+  columnIndex,
+  widthPixels = 560,
+  heightPixels = 300,
+  leftAxisTitle = "Rows",
+  bottomAxisTitle = "",
+}) {
+  return {
+    addChart: {
+      chart: {
+        spec: {
+          title,
+          subtitle,
+          fontName: SHEET_FONT,
+          backgroundColorStyle: { rgbColor: hexToRgbColor("#FFFFFF") },
+          titleTextFormat: {
+            bold: true,
+            fontSize: 14,
+            foregroundColor: hexToRgbColor(palette.ink),
+          },
+          subtitleTextFormat: {
+            fontSize: 10,
+            foregroundColor: hexToRgbColor(palette.muted),
+          },
+          basicChart: {
+            chartType,
+            legendPosition: "NO_LEGEND",
+            axis: [
+              { position: "BOTTOM_AXIS", title: bottomAxisTitle },
+              { position: "LEFT_AXIS", title: leftAxisTitle },
+            ],
+            domains: [
+              {
+                domain: {
+                  sourceRange: sourceRange(chartDataSheetId, domain.startRowIndex, domain.endRowIndex, domain.startColumnIndex, domain.endColumnIndex),
+                },
+              },
+            ],
+            series: series.map((range, index) => ({
+              series: {
+                sourceRange: sourceRange(chartDataSheetId, range.startRowIndex, range.endRowIndex, range.startColumnIndex, range.endColumnIndex),
+              },
+              targetAxis: chartType === "BAR" ? "BOTTOM_AXIS" : "LEFT_AXIS",
+              colorStyle: { rgbColor: hexToRgbColor(chartPalette[index % chartPalette.length]) },
+            })),
+            headerCount: 1,
+          },
+        },
+        position: anchor(dashboardSheetId, rowIndex, columnIndex, widthPixels, heightPixels),
+      },
+    },
+  };
+}
+
+function buildPieChartRequest({
+  dashboardSheetId,
+  chartDataSheetId,
+  title,
+  subtitle,
+  domain,
+  series,
+  rowIndex,
+  columnIndex,
+  widthPixels = 560,
+  heightPixels = 300,
+}) {
+  return {
+    addChart: {
+      chart: {
+        spec: {
+          title,
+          subtitle,
+          fontName: SHEET_FONT,
+          backgroundColorStyle: { rgbColor: hexToRgbColor("#FFFFFF") },
+          titleTextFormat: {
+            bold: true,
+            fontSize: 14,
+            foregroundColor: hexToRgbColor(palette.ink),
+          },
+          subtitleTextFormat: {
+            fontSize: 10,
+            foregroundColor: hexToRgbColor(palette.muted),
+          },
+          pieChart: {
+            legendPosition: "RIGHT_LEGEND",
+            domain: {
+              sourceRange: sourceRange(chartDataSheetId, domain.startRowIndex, domain.endRowIndex, domain.startColumnIndex, domain.endColumnIndex),
+            },
+            series: {
+              sourceRange: sourceRange(chartDataSheetId, series.startRowIndex, series.endRowIndex, series.startColumnIndex, series.endColumnIndex),
+            },
+            threeDimensional: false,
+          },
+        },
+        position: anchor(dashboardSheetId, rowIndex, columnIndex, widthPixels, heightPixels),
+      },
+    },
+  };
+}
+
+function buildDashboardChartRequests(dashboardSheet, chartDataSheet) {
+  const dashboardSheetId = dashboardSheet.sheetId;
+  const chartDataSheetId = chartDataSheet.sheetId;
+  const requests = (dashboardSheet.chartIds || []).map((chartId) => ({
+    deleteEmbeddedObject: { objectId: chartId },
+  }));
+
+  requests.push(
+    buildBasicChartRequest({
+      dashboardSheetId,
+      chartDataSheetId,
+      title: "Operational Row Volume",
+      subtitle: "Live row counts from every operational tab",
+      chartType: "COLUMN",
+      domain: { startRowIndex: 0, endRowIndex: sheetDefinitions.length + 1, startColumnIndex: 0, endColumnIndex: 1 },
+      series: [{ startRowIndex: 0, endRowIndex: sheetDefinitions.length + 1, startColumnIndex: 1, endColumnIndex: 2 }],
+      rowIndex: 34,
+      columnIndex: 0,
+      leftAxisTitle: "Rows",
+      bottomAxisTitle: "Sheet",
+    }),
+    buildPieChartRequest({
+      dashboardSheetId,
+      chartDataSheetId,
+      title: "Booking Status Mix",
+      subtitle: "Current booking states from the bookings mirror",
+      domain: { startRowIndex: 1, endRowIndex: 6, startColumnIndex: 3, endColumnIndex: 4 },
+      series: { startRowIndex: 1, endRowIndex: 6, startColumnIndex: 4, endColumnIndex: 5 },
+      rowIndex: 34,
+      columnIndex: 4,
+    }),
+    buildBasicChartRequest({
+      dashboardSheetId,
+      chartDataSheetId,
+      title: "Listing Inventory Status",
+      subtitle: "Owner-published equipment state distribution",
+      chartType: "BAR",
+      domain: { startRowIndex: 0, endRowIndex: 6, startColumnIndex: 6, endColumnIndex: 7 },
+      series: [{ startRowIndex: 0, endRowIndex: 6, startColumnIndex: 7, endColumnIndex: 8 }],
+      rowIndex: 52,
+      columnIndex: 0,
+      leftAxisTitle: "Status",
+      bottomAxisTitle: "Listings",
+    }),
+    buildBasicChartRequest({
+      dashboardSheetId,
+      chartDataSheetId,
+      title: "Public Submission Channels",
+      subtitle: "Support, callback, newsletter, feedback, and bug-report intake",
+      chartType: "COLUMN",
+      domain: { startRowIndex: 0, endRowIndex: 7, startColumnIndex: 9, endColumnIndex: 10 },
+      series: [{ startRowIndex: 0, endRowIndex: 7, startColumnIndex: 10, endColumnIndex: 11 }],
+      rowIndex: 52,
+      columnIndex: 4,
+      leftAxisTitle: "Rows",
+      bottomAxisTitle: "Channel",
+    }),
+    buildPieChartRequest({
+      dashboardSheetId,
+      chartDataSheetId,
+      title: "Notification Email Status",
+      subtitle: "Pending, sending, sent, and failed rows across form mirrors",
+      domain: { startRowIndex: 1, endRowIndex: 5, startColumnIndex: 12, endColumnIndex: 13 },
+      series: { startRowIndex: 1, endRowIndex: 5, startColumnIndex: 13, endColumnIndex: 14 },
+      rowIndex: 70,
+      columnIndex: 0,
+    }),
+    buildBasicChartRequest({
+      dashboardSheetId,
+      chartDataSheetId,
+      title: "Equipment Category Mix",
+      subtitle: "Live listing categories from the listings mirror",
+      chartType: "COLUMN",
+      domain: { startRowIndex: 0, endRowIndex: 20, startColumnIndex: 15, endColumnIndex: 16 },
+      series: [{ startRowIndex: 0, endRowIndex: 20, startColumnIndex: 16, endColumnIndex: 17 }],
+      rowIndex: 70,
+      columnIndex: 4,
+      leftAxisTitle: "Listings",
+      bottomAxisTitle: "Category",
+    })
+  );
 
   return requests;
 }
@@ -687,6 +1113,21 @@ async function updateDashboardValues() {
   });
 }
 
+async function updateChartDataValues() {
+  await sheetsFetch(`/values/${encodeURIComponent(CHART_DATA_RANGE)}:clear`, {
+    method: "POST",
+    body: JSON.stringify({}),
+  });
+  await sheetsFetch(`/values/${encodeURIComponent(`${CHART_DATA_TITLE}!A1`)}?valueInputOption=USER_ENTERED`, {
+    method: "PUT",
+    body: JSON.stringify({
+      range: `${CHART_DATA_TITLE}!A1`,
+      majorDimension: "ROWS",
+      values: buildChartDataRows(),
+    }),
+  });
+}
+
 async function removeWorkbookMetaEntry(section, key) {
   const rows = await readSheetRows("workbook_meta", overrides);
   const dataRows = rows.slice(1);
@@ -698,6 +1139,7 @@ async function removeWorkbookMetaEntry(section, key) {
 
 async function run() {
   const dashboardSheet = await ensureDashboardSheet();
+  const chartDataSheet = await ensureChartDataSheet();
   let state = await getSpreadsheetState();
 
   await sheetsFetch(":batchUpdate", {
@@ -708,12 +1150,16 @@ async function run() {
   });
 
   await updateDashboardValues();
+  await updateChartDataValues();
   state = await getSpreadsheetState();
 
   const refreshedDashboardSheet = state.get(DASHBOARD_TITLE);
+  const refreshedChartDataSheet = state.get(CHART_DATA_TITLE);
   const requests = [
     ...buildOperationalRequests(state),
     ...buildDashboardFormatRequests(refreshedDashboardSheet || dashboardSheet),
+    ...buildChartDataFormatRequests(refreshedChartDataSheet || chartDataSheet),
+    ...buildDashboardChartRequests(refreshedDashboardSheet || dashboardSheet, refreshedChartDataSheet || chartDataSheet),
   ];
 
   if (requests.length) {
@@ -737,7 +1183,13 @@ async function run() {
         section: "design",
         key: "operations_dashboard",
         value: DASHBOARD_TITLE,
-        notes: "Production dashboard for workbook ownership, data-flow, and verification guidance.",
+        notes: "Production dashboard for workbook ownership, data-flow, verification guidance, and live native Google Sheets charts.",
+      },
+      {
+        section: "design",
+        key: "live_chart_data",
+        value: CHART_DATA_TITLE,
+        notes: "Hidden formula-backed sheet powering native dashboard charts. Charts update automatically when mirrored rows change.",
       },
     ],
     overrides
@@ -753,9 +1205,18 @@ async function run() {
       destination: "google-sheets",
       outcome: "success",
       operation: "decorate_workbook",
-      note: `Decorated ${sheetDefinitions.length} operational tabs plus ${DASHBOARD_TITLE}.`,
+      note: `Decorated ${sheetDefinitions.length} operational tabs plus ${DASHBOARD_TITLE} live charts.`,
       details_json: JSON.stringify({
         dashboard: DASHBOARD_TITLE,
+        chartDataSheet: CHART_DATA_TITLE,
+        charts: [
+          "Operational Row Volume",
+          "Booking Status Mix",
+          "Listing Inventory Status",
+          "Public Submission Channels",
+          "Notification Email Status",
+          "Equipment Category Mix",
+        ],
         operationalTabs: sheetDefinitions.map((definition) => definition.title),
         safety: "No operational header rows moved or rewritten beyond existing manifest headers.",
       }),
@@ -764,7 +1225,7 @@ async function run() {
   );
 
   console.log(
-    `Decorated workbook ${getGoogleSheetConfig(overrides).spreadsheetId} with ${sheetDefinitions.length} operational tabs and ${DASHBOARD_TITLE}.`
+    `Decorated workbook ${getGoogleSheetConfig(overrides).spreadsheetId} with ${sheetDefinitions.length} operational tabs, ${DASHBOARD_TITLE}, and live native charts.`
   );
 }
 

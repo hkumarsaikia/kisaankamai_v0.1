@@ -76,6 +76,12 @@ operational tabs. The `Kisan Kamai HQ` dashboard uses production-facing labels,
 ownership notes, verification prompts, and data-flow explanations instead of
 temporary demo-style decoration.
 
+The dashboard also contains native Google Sheets charts for the operational
+row volume, booking status mix, listing status mix, public submission channels,
+notification email status, and equipment category mix. Those charts are backed
+by formulas in the hidden `Kisan Kamai Chart Data` sheet, so they refresh
+automatically whenever mirrored rows are added or changed.
+
 Verify the workbook matches the manifest:
 
 ```bash
@@ -92,7 +98,8 @@ npm run sheets:backfill
 
 The operational workbook now includes:
 
-- `Kisan Kamai HQ` production operations dashboard and workbook map
+- `Kisan Kamai HQ` production operations dashboard, workbook map, and live chart board
+- `Kisan Kamai Chart Data` hidden formula source for dashboard charts
 - `workbook_meta`
 - `owners`
 - `renters`

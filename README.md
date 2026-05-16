@@ -111,7 +111,7 @@ Required runtime configuration includes:
 - Google Sheets is a secondary mirror for admin/reporting workflows only.
 - Sheets writes are best-effort and must never replace Firebase writes or block successful user-facing operations.
 - Form rows mirror to Google Sheets with pending notification metadata. Email alerts are handled only by the optional bound Sheets Apps Script when the workbook owner installs and authorizes it.
-- `npm run sheets:decorate` adds polished Google Sheets banding, hidden gridlines, headers, tab colors, notes, and the `Kisan Kamai HQ` dashboard without moving header rows or mirrored data rows.
+- `npm run sheets:decorate` adds polished Google Sheets banding, hidden gridlines, headers, tab colors, notes, the `Kisan Kamai HQ` dashboard, and native live charts powered by the hidden `Kisan Kamai Chart Data` formula sheet without moving header rows or mirrored data rows.
 
 ## Operational Tooling
 

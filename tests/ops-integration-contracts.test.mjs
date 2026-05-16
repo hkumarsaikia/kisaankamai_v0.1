@@ -201,6 +201,31 @@ test("generated site-map artifacts are current and do not render raw template ex
   assert.ok(new Date(siteMapData.generatedAt).getTime() >= Date.UTC(2026, 4, 8));
 });
 
+test("Google Sheets decoration builds live native dashboard charts", async () => {
+  const [decorateSource, docsSource] = await Promise.all([
+    readFile(new URL("../scripts/google-sheets-decorate.mjs", import.meta.url), "utf8"),
+    readFile(new URL("../docs/OPERATIONS_GOOGLE_SHEETS.md", import.meta.url), "utf8"),
+  ]);
+
+  assert.match(decorateSource, /CHART_DATA_TITLE\s*=\s*"Kisan Kamai Chart Data"/);
+  assert.match(decorateSource, /buildChartDataRows/);
+  assert.match(decorateSource, /buildDashboardChartRequests/);
+  assert.match(decorateSource, /addChart/);
+  assert.match(decorateSource, /deleteEmbeddedObject/);
+  assert.match(decorateSource, /COUNTIF\(bookings!F:F/);
+  assert.match(decorateSource, /QUERY\(listings!G2:G/);
+  assert.match(decorateSource, /Operational Row Volume/);
+  assert.match(decorateSource, /Booking Status Mix/);
+  assert.match(decorateSource, /Listing Inventory Status/);
+  assert.match(decorateSource, /Public Submission Channels/);
+  assert.match(decorateSource, /Notification Email Status/);
+  assert.match(decorateSource, /Equipment Category Mix/);
+  assert.match(decorateSource, /Hidden formula-backed sheet powering native dashboard charts/);
+  assert.match(docsSource, /native Google Sheets charts/);
+  assert.match(docsSource, /Kisan Kamai Chart Data/);
+  assert.match(docsSource, /refresh\s+automatically/);
+});
+
 test("Next 16 root app uses App Router-only Turbopack build and ESM configs", async () => {
   const [packageSource, buildSource, globalsSource, setupSource] = await Promise.all([
     readFile(new URL("../package.json", import.meta.url), "utf8"),

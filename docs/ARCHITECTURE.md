@@ -25,7 +25,7 @@ The root app is the only public runtime.
 - Client bug reports are throttled and deduplicated in the browser before the Firestore-backed reporting API applies its server rate limit. The browser budget persists in `localStorage` across route reloads to keep QA crawls from exhausting the server limiter. Web-vitals reports are limited to poor-rated metrics so normal needs-improvement observations do not become production noise.
 - Google Sheets mirroring is intentional. It runs after Firebase persistence for admin/reporting visibility and must remain best-effort.
 - A Google Sheets outage or misconfiguration must not block a successful Firebase-backed write path.
-- Google Sheets decoration is an operational view layer only. `npm run sheets:decorate` may change tab colors, banding, notes, hidden gridlines, and the `Kisan Kamai HQ` dashboard, but it must not move manifest headers or mutate mirrored user data.
+- Google Sheets decoration is an operational view layer only. `npm run sheets:decorate` may change tab colors, banding, notes, hidden gridlines, native dashboard charts, the hidden `Kisan Kamai Chart Data` formula sheet, and the `Kisan Kamai HQ` dashboard, but it must not move manifest headers or mutate mirrored user data.
 
 ## Performance Contract
 
